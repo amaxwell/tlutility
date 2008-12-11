@@ -270,7 +270,7 @@ static bool hasKeyPrefix(NSString *line)
         [attrString addAttribute:NSFontAttributeName value:boldFont range:NSMakeRange(previousLength, [attrString length] - previousLength)];
         
         previousLength = [attrString length];
-        [[attrString mutableString] appendFormat:@" %@\n", value];
+        [[attrString mutableString] appendFormat:@"%@\n", value];
         [attrString addAttribute:NSFontAttributeName value:userFont range:NSMakeRange(previousLength, [attrString length] - previousLength)];
     }
     
