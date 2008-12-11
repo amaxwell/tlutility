@@ -12,6 +12,7 @@
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		F99E51980EEE4AD5006E6B39 /* TLMURLFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = F99E51970EEE4AD5006E6B39 /* TLMURLFormatter.m */; };
+		F9ABAA5E0EF198D500497E0F /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = F9ABAA5D0EF198D500497E0F /* Credits.rtf */; };
 		F9B134610EEB1894007C0046 /* TLMAppController.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B134600EEB1894007C0046 /* TLMAppController.m */; };
 		F9B134680EEB19CB007C0046 /* TLMMainWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B134670EEB19CB007C0046 /* TLMMainWindowController.m */; };
 		F9B134710EEB1B13007C0046 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = F9B134700EEB1B13007C0046 /* MainWindow.xib */; };
@@ -67,6 +68,7 @@
 		8D1107320486CEB800E47090 /* TeX Live Manager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TeX Live Manager.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F99E51960EEE4AD5006E6B39 /* TLMURLFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMURLFormatter.h; sourceTree = "<group>"; };
 		F99E51970EEE4AD5006E6B39 /* TLMURLFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMURLFormatter.m; sourceTree = "<group>"; };
+		F9ABAA5D0EF198D500497E0F /* Credits.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = Credits.rtf; sourceTree = "<group>"; };
 		F9B1345F0EEB1894007C0046 /* TLMAppController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMAppController.h; sourceTree = "<group>"; };
 		F9B134600EEB1894007C0046 /* TLMAppController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMAppController.m; sourceTree = "<group>"; };
 		F9B134660EEB19CB007C0046 /* TLMMainWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMMainWindowController.h; sourceTree = "<group>"; };
@@ -194,6 +196,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				F9ABAA5D0EF198D500497E0F /* Credits.rtf */,
 				8D1107310486CEB800E47090 /* Info.plist */,
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
 				1DDD58140DA1D0A300B32029 /* MainMenu.xib */,
@@ -298,6 +301,7 @@
 				F9B134710EEB1B13007C0046 /* MainWindow.xib in Resources */,
 				F9B13B2B0EECEB05007C0046 /* InfoPanel.xib in Resources */,
 				F9F130560EED94D800D9968D /* Preferences.xib in Resources */,
+				F9ABAA5E0EF198D500497E0F /* Credits.rtf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
