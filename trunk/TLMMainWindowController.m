@@ -49,8 +49,6 @@ static char _TLMOperationQueueOperationContext;
 
 @synthesize _tableView, _progressIndicator, _hostnameField, _textView, _splitView;
 
-// for binding in IB
-@synthesize queue = _queue;
 
 - (id)init
 {

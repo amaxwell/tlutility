@@ -60,7 +60,6 @@
 @property (nonatomic, retain) IBOutlet NSTextField *_hostnameField;
 @property (nonatomic, retain) IBOutlet NSTextView *_textView;
 @property (nonatomic, retain) IBOutlet TLMSplitView *_splitView;
-@property (nonatomic, readonly, retain) NSOperationQueue *queue;
 
 - (IBAction)listUpdates:(id)sender;
 - (IBAction)updateAll:(id)sender;
