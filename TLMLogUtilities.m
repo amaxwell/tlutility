@@ -40,18 +40,24 @@
 #import <unistd.h>
 #import <asl.h>
 
-#define TLM_ASL_SENDER "tlmgr"
+#define TLM_ASL_SENDER "tlmgr_cwrapper"
 #define TLM_ASL_FACILITY NULL
 
 @interface BDSKLogMessage : NSObject
 {
-    NSDate *date;
-    NSString *message;
-    NSString *sender;
-    pid_t pid;
-    NSUInteger hash;
+@private
+    NSDate   *_date;
+    NSString *_message;
+    NSString *_sender;
+    pid_t     _pid;
 }
 - (id)initWithASLMessage:(aslmsg)msg;
+
+@property (readonly, copy) NSDate *date;
+@property (readonly, copy) NSString *message;
+@property (readonly, copy) NSString *sender;
+@property (readonly) pid_t pid;
+
 @end
 
 static int new_default_asl_query(aslmsg *newQuery, NSTimeInterval absoluteTime)
@@ -91,39 +97,17 @@ NSString * TLMLogStringSinceTime(NSTimeInterval absoluteTime)
     asl_set_filter(client, ASL_FILTER_MASK_UPTO(ASL_LEVEL_DEBUG));
     
     NSMutableSet *messages = [NSMutableSet set];
-    NSString *stderrString = nil;
         
     err = new_default_asl_query(&query, absoluteTime);
-    
-    BDSKLogMessage *logMessage;
-
-    // search for anything with our sender name as substring; captures some system logging
-    err = asl_set_query(query, ASL_KEY_MSG, TLM_ASL_SENDER, ASL_QUERY_OP_CASEFOLD | ASL_QUERY_OP_SUBSTRING | ASL_QUERY_OP_EQUAL);
-    if (err != 0)
-        fprintf(stderr, "asl_set_query message failed with error %d (%s)\n", err, strerror(err));
-    
-    response = asl_search(client, query);
-    
-    
-    while (NULL != (msg = aslresponse_next(response))) {
-        logMessage = [[BDSKLogMessage alloc] initWithASLMessage:msg];
-        if (logMessage)
-            [messages addObject:logMessage];
-        [logMessage release];
-    }
-    
-    aslresponse_free(response);
-    asl_free(query);
-
-    err = new_default_asl_query(&query, absoluteTime);
-    
+        
     // now search for messages that we've logged directly
     err = asl_set_query(query, ASL_KEY_SENDER, TLM_ASL_SENDER, ASL_QUERY_OP_EQUAL);
     if (err != 0)
         fprintf(stderr, "asl_set_query sender failed with error %d (%s)\n", err, strerror(err));
     
     response = asl_search(client, query);
-    
+    BDSKLogMessage *logMessage;
+
     while (NULL != (msg = aslresponse_next(response))) {
         logMessage = [[BDSKLogMessage alloc] initWithASLMessage:msg];
         if (logMessage)
@@ -138,16 +122,18 @@ NSString * TLMLogStringSinceTime(NSTimeInterval absoluteTime)
     // sort by date so we have a coherent list...
     NSArray *sortedMessages = [[messages allObjects] sortedArrayUsingSelector:@selector(compare:)];
     
-    // sends -description to each object
-    stderrString = [sortedMessages componentsJoinedByString:@"\n"];
-
-    
-    return stderrString;
+    // sends -description to each object    
+    return [sortedMessages componentsJoinedByString:@"\n"];
 }
 
 #pragma mark -
 
 @implementation BDSKLogMessage
+
+@synthesize date = _date;
+@synthesize message = _message;
+@synthesize sender = _sender;
+@synthesize pid = _pid;
 
 - (id)initWithASLMessage:(aslmsg)msg
 {
@@ -157,54 +143,48 @@ NSString * TLMLogStringSinceTime(NSTimeInterval absoluteTime)
         
         val = asl_get(msg, ASL_KEY_TIME);
         if (NULL == val) val = "0";
-        time_t theTime = strtol(val, NULL, 0);
-        date = [[NSDate dateWithTimeIntervalSince1970:theTime] copy];
-        hash = [date hash];
+        _date = (NSDate *)CFDateCreate(CFAllocatorGetDefault(), strtol(val, NULL, 0) - kCFAbsoluteTimeIntervalSince1970);
         
         val = asl_get(msg, ASL_KEY_SENDER);
         if (NULL == val) val = "Unknown";
-        sender = [[NSString alloc] initWithCString:val encoding:NSUTF8StringEncoding];
+        _sender = [[NSString alloc] initWithUTF8String:val];
         
         val = asl_get(msg, ASL_KEY_PID);
         if (NULL == val) val = "-1";
-        pid = strtol(val, NULL, 0);
+        _pid = strtol(val, NULL, 0);
         
         val = asl_get(msg, ASL_KEY_MSG);
         if (NULL == val) val = "Empty log message";
-        message = [[NSString alloc] initWithCString:val encoding:NSUTF8StringEncoding];
+        _message = [[NSString alloc] initWithUTF8String:val];
     }
     return self;
 }
 
 - (void)dealloc
 {
-    [date release];
-    [sender release];
-    [message release];
+    [_date release];
+    [_sender release];
+    [_message release];
     [super dealloc];
 }
 
-- (NSUInteger)hash { return hash; }
-- (NSDate *)date { return date; }
-- (NSString *)message { return message; }
-- (NSString *)sender { return sender; }
-- (int)pid { return pid; }
+- (NSUInteger)hash { return [_date hash]; }
 
 - (BOOL)isEqual:(id)other
 {
     if ([other isKindOfClass:[self class]] == NO)
         return NO;
-    if ([other pid] != pid)
+    if ([other pid] != _pid)
         return NO;
-    if ([[other message] isEqualToString:message] == NO)
+    if ([[other message] isEqualToString:_message] == NO)
         return NO;
-    if ([(NSString *)[other sender] isEqualToString:sender] == NO)
+    if ([(NSString *)[other sender] isEqualToString:_sender] == NO)
         return NO;
-    if ([[other date] compare:date] != NSOrderedSame)
+    if ([[other date] compare:_date] != NSOrderedSame)
         return NO;
     return YES;
 }
-- (NSString *)description { return [NSString stringWithFormat:@"%@ %@[%d]\t%@", date, sender, pid, message]; }
-- (NSComparisonResult)compare:(BDSKLogMessage *)other { return [[self date] compare:[other date]]; }
+- (NSString *)description { return [NSString stringWithFormat:@"%@ %@[%d]\t%@", _date, _sender, _pid, _message]; }
+- (NSComparisonResult)compare:(BDSKLogMessage *)other { return [_date compare:[other date]]; }
 
 @end
