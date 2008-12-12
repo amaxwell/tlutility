@@ -56,6 +56,16 @@ extern char **environ;
 /* http://www.cocoabuilder.com/archive/message/cocoa/2001/6/15/21704 */
 
 int main(int argc, char *argv[]) {
+    
+    uid_t old_uid = getuid();
+    
+    /* uint32_t 4294967295U */
+    char read_uid[12]; 
+    
+    /* cleverly save off the user's UID and pass it to ASL to limit searching */
+    snprintf(read_uid, sizeof(read_uid), "%u", old_uid);
+    
+    /* this call was the original purpose of the program */
     setuid(geteuid());
     
     /* 
@@ -137,6 +147,7 @@ int main(int argc, char *argv[]) {
         aslclient client = asl_open(TLM_ASL_SENDER, TLM_ASL_FACILITY, ASL_OPT_NO_DELAY);
         aslmsg m = asl_new(ASL_TYPE_MSG);
         asl_set(m, ASL_KEY_SENDER, TLM_ASL_SENDER);
+        asl_set(m, "ReadUID", read_uid);
         
         struct timeval tv;
         tv.tv_sec = 0;
