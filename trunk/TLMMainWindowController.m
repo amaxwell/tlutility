@@ -112,15 +112,20 @@ static char _TLMOperationQueueOperationContext;
 {
     NSTimeInterval prev = _lastQueryTime;
     _lastQueryTime = [NSDate timeIntervalSinceReferenceDate];
-    NSString *output = TLMLogStringWithTimeRange(prev, _lastQueryTime);
-    if (output) [[[_textView textStorage] mutableString] appendString:output];
+    NSString *output = TLMLogStringSinceTime(prev);
+    if (output) {
+        NSAttributedString *attrString = [[NSAttributedString alloc] initWithString:output attributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSColor blackColor], NSForegroundColorAttributeName, [NSFont userFixedPitchFontOfSize:0], NSFontAttributeName, nil]];
+        [[_textView textStorage] appendAttributedString:attrString];
+        [attrString release];
+        [_textView scrollRangeToVisible:NSMakeRange([[_textView textStorage] length], 0)];
+    }
 }
 
 - (void)_startLogQueries
 {
     if (nil == _logTimer) {
         _lastQueryTime = [NSDate timeIntervalSinceReferenceDate];
-        _logTimer = [NSTimer scheduledTimerWithTimeInterval:2.0 target:self selector:@selector(_logTimerFired:) userInfo:nil repeats:YES];
+        _logTimer = [NSTimer scheduledTimerWithTimeInterval:10.0 target:self selector:@selector(_logTimerFired:) userInfo:nil repeats:YES];
     }
 }
 
