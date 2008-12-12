@@ -48,13 +48,13 @@
     NSDate *date;
     NSString *message;
     NSString *sender;
-    int pid;
-    unsigned hash;
+    pid_t pid;
+    NSUInteger hash;
 }
 - (id)initWithASLMessage:(aslmsg)msg;
 @end
 
-static int new_default_asl_query(aslmsg *newQuery, double secondsAgo)
+static int new_default_asl_query(aslmsg *newQuery, NSTimeInterval absoluteTime)
 {
     int err;
     aslmsg query;
@@ -63,18 +63,14 @@ static int new_default_asl_query(aslmsg *newQuery, double secondsAgo)
     if (NULL == query)
         perror("asl_new");
     
-    const char *uid_string = [[NSString stringWithFormat:@"%d", getuid()] UTF8String];
-    err = asl_set_query(query, ASL_KEY_UID, uid_string, ASL_QUERY_OP_EQUAL | ASL_QUERY_OP_NUMERIC);
-    if (err != 0)
-        perror("asl_set_query uid");
-    
     const char *level_string = [[NSString stringWithFormat:@"%d", ASL_LEVEL_DEBUG] UTF8String];
     err = asl_set_query(query, ASL_KEY_LEVEL, level_string, ASL_QUERY_OP_LESS_EQUAL | ASL_QUERY_OP_NUMERIC);
     if (err != 0)
         perror("asl_set_query level");
     
-    // limit to last 24 hours
-    const char *time_string = [[NSString stringWithFormat:@"%fs", -abs(secondsAgo)] UTF8String];
+    // absolute time difference
+    NSUInteger secondsAgo = [NSDate timeIntervalSinceReferenceDate] - absoluteTime;
+    const char *time_string = [[NSString stringWithFormat:@"-%lus", secondsAgo] UTF8String];
     err = asl_set_query(query, ASL_KEY_TIME, time_string, ASL_QUERY_OP_GREATER_EQUAL);
     if (err != 0)
         perror("asl_set_query time");
@@ -84,7 +80,7 @@ static int new_default_asl_query(aslmsg *newQuery, double secondsAgo)
     return err;
 }
 
-NSString * TLMLogStringWithTimeRange(NSTimeInterval start, NSTimeInterval stop)
+NSString * TLMLogStringSinceTime(NSTimeInterval absoluteTime)
 {    
     aslmsg query, msg;
     aslresponse response;
@@ -96,60 +92,55 @@ NSString * TLMLogStringWithTimeRange(NSTimeInterval start, NSTimeInterval stop)
     
     NSMutableSet *messages = [NSMutableSet set];
     NSString *stderrString = nil;
+        
+    err = new_default_asl_query(&query, absoluteTime);
     
-    @try {
-        
-        err = new_default_asl_query(&query, ceil(stop - start));
-        
-        // search for anything with our sender name as substring; captures some system logging
-        err = asl_set_query(query, ASL_KEY_MSG, TLM_ASL_SENDER, ASL_QUERY_OP_CASEFOLD | ASL_QUERY_OP_SUBSTRING | ASL_QUERY_OP_EQUAL);
-        if (err != 0)
-            fprintf(stderr, "asl_set_query message failed with error %d (%s)\n", err, strerror(err));
-        
-        response = asl_search(client, query);
-        
-        BDSKLogMessage *logMessage;
-        
-        while (NULL != (msg = aslresponse_next(response))) {
-            logMessage = [[BDSKLogMessage alloc] initWithASLMessage:msg];
-            if (logMessage)
-                [messages addObject:logMessage];
-            [logMessage release];
-        }
-        
-        aslresponse_free(response);
-        asl_free(query);
-        
-        err = new_default_asl_query(&query, ceil(stop - start));
-        
-        // now search for messages that we've logged directly
-        err = asl_set_query(query, ASL_KEY_SENDER, TLM_ASL_SENDER, ASL_QUERY_OP_EQUAL);
-        if (err != 0)
-            fprintf(stderr, "asl_set_query sender failed with error %d (%s)\n", err, strerror(err));
-        
-        response = asl_search(client, query);
-        
-        while (NULL != (msg = aslresponse_next(response))) {
-            logMessage = [[BDSKLogMessage alloc] initWithASLMessage:msg];
-            if (logMessage)
-                [messages addObject:logMessage];
-            [logMessage release];
-        }
-        
-        // sort by date so we have a coherent list...
-        NSArray *sortedMessages = [[messages allObjects] sortedArrayUsingSelector:@selector(compare:)];
-        
-        // sends -description to each object
-        stderrString = [sortedMessages componentsJoinedByString:@"\n"];
+    BDSKLogMessage *logMessage;
+
+    // search for anything with our sender name as substring; captures some system logging
+    err = asl_set_query(query, ASL_KEY_MSG, TLM_ASL_SENDER, ASL_QUERY_OP_CASEFOLD | ASL_QUERY_OP_SUBSTRING | ASL_QUERY_OP_EQUAL);
+    if (err != 0)
+        fprintf(stderr, "asl_set_query message failed with error %d (%s)\n", err, strerror(err));
+    
+    response = asl_search(client, query);
+    
+    
+    while (NULL != (msg = aslresponse_next(response))) {
+        logMessage = [[BDSKLogMessage alloc] initWithASLMessage:msg];
+        if (logMessage)
+            [messages addObject:logMessage];
+        [logMessage release];
     }
-    @catch(id exception) {
-        stderrString = [NSString stringWithFormat:@"Caught exception \"%@\" when attempting to read standard error log.", exception];
+    
+    aslresponse_free(response);
+    asl_free(query);
+
+    err = new_default_asl_query(&query, absoluteTime);
+    
+    // now search for messages that we've logged directly
+    err = asl_set_query(query, ASL_KEY_SENDER, TLM_ASL_SENDER, ASL_QUERY_OP_EQUAL);
+    if (err != 0)
+        fprintf(stderr, "asl_set_query sender failed with error %d (%s)\n", err, strerror(err));
+    
+    response = asl_search(client, query);
+    
+    while (NULL != (msg = aslresponse_next(response))) {
+        logMessage = [[BDSKLogMessage alloc] initWithASLMessage:msg];
+        if (logMessage)
+            [messages addObject:logMessage];
+        [logMessage release];
     }
-    @finally {
-        aslresponse_free(response);
-        asl_free(query);
-        asl_close(client);
-    }
+    
+    aslresponse_free(response);
+    asl_free(query);
+    asl_close(client);
+    
+    // sort by date so we have a coherent list...
+    NSArray *sortedMessages = [[messages allObjects] sortedArrayUsingSelector:@selector(compare:)];
+    
+    // sends -description to each object
+    stderrString = [sortedMessages componentsJoinedByString:@"\n"];
+
     
     return stderrString;
 }
@@ -193,7 +184,7 @@ NSString * TLMLogStringWithTimeRange(NSTimeInterval start, NSTimeInterval stop)
     [super dealloc];
 }
 
-- (unsigned)hash { return hash; }
+- (NSUInteger)hash { return hash; }
 - (NSDate *)date { return date; }
 - (NSString *)message { return message; }
 - (NSString *)sender { return sender; }
