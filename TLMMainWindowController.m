@@ -125,7 +125,7 @@ static char _TLMOperationQueueOperationContext;
 {
     if (nil == _logTimer) {
         _lastQueryTime = [NSDate timeIntervalSinceReferenceDate];
-        _logTimer = [NSTimer scheduledTimerWithTimeInterval:10.0 target:self selector:@selector(_logTimerFired:) userInfo:nil repeats:YES];
+        _logTimer = [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(_logTimerFired:) userInfo:nil repeats:YES];
     }
 }
 
@@ -133,6 +133,7 @@ static char _TLMOperationQueueOperationContext;
 {
     [_logTimer invalidate];
     _logTimer = nil;
+    [self _logTimerFired:nil];
 }
 
 // NB: this will arrive on the queue's thread, at least under some conditions!
@@ -155,11 +156,10 @@ static char _TLMOperationQueueOperationContext;
 - (void)_appendLine:(NSString *)string color:(NSColor *)color
 {
     NSTextStorage *textStorage = [_textView textStorage];
-    if ([textStorage length])
-        [[textStorage mutableString] appendString:@"\n"];
     NSAttributedString *attrString = [[NSAttributedString alloc] initWithString:string attributes:[NSDictionary dictionaryWithObjectsAndKeys:color, NSForegroundColorAttributeName, [NSFont userFixedPitchFontOfSize:0], NSFontAttributeName, nil]];
     [textStorage appendAttributedString:attrString];
     [attrString release];
+    [[textStorage mutableString] appendString:@"\n"];
 }
 
 - (void)_updateLogWithOperation:(TLMOperation *)op
