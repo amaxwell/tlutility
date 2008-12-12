@@ -42,6 +42,7 @@
 #import "TLMUpdateOperation.h"
 #import "TLMSplitView.h"
 #import "TLMInfoController.h"
+#import "TLMLogUtilities.h"
 
 static char _TLMOperationQueueOperationContext;
 
@@ -107,11 +108,39 @@ static char _TLMOperationQueueOperationContext;
     }
 }
 
+- (void)_logTimerFired:(NSTimer *)timer
+{
+    NSTimeInterval prev = _lastQueryTime;
+    _lastQueryTime = [NSDate timeIntervalSinceReferenceDate];
+    NSString *output = TLMLogStringWithTimeRange(prev, _lastQueryTime);
+    if (output) [[[_textView textStorage] mutableString] appendString:output];
+}
+
+- (void)_startLogQueries
+{
+    if (nil == _logTimer) {
+        _lastQueryTime = [NSDate timeIntervalSinceReferenceDate];
+        _logTimer = [NSTimer scheduledTimerWithTimeInterval:2.0 target:self selector:@selector(_logTimerFired:) userInfo:nil repeats:YES];
+    }
+}
+
+- (void)_stopLogQueries
+{
+    [_logTimer invalidate];
+    _logTimer = nil;
+}
+
 // NB: this will arrive on the queue's thread, at least under some conditions!
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
     if (context == &_TLMOperationQueueOperationContext) {
         [self performSelectorOnMainThread:@selector(_operationCountChanged) withObject:nil waitUntilDone:NO];
+        if ([[_queue operations] count]) {
+            [self performSelectorOnMainThread:@selector(_startLogQueries) withObject:nil waitUntilDone:NO];
+        }
+        else {
+            [self performSelectorOnMainThread:@selector(_stopLogQueries) withObject:nil waitUntilDone:NO];
+        }
     }
     else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];

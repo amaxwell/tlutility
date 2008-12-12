@@ -53,6 +53,9 @@
     BOOL                 _sortAscending;
     NSOperationQueue    *_queue;
     CGFloat              _lastTextViewHeight;
+    
+    NSTimer             *_logTimer;
+    NSTimeInterval       _lastQueryTime;
 }
 
 @property (nonatomic, retain) IBOutlet NSTableView *_tableView;
