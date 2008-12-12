@@ -43,7 +43,15 @@
 #include <pwd.h>
 #include <string.h>
 
+#include <asl.h>
+#include <sys/time.h>
+
 extern char **environ;
+
+#define STACK_BUFFER_SIZE 2048
+#define TLM_ASL_SENDER "tlmgr_cwrapper"
+#define TLM_ASL_FACILITY NULL
+
 
 /* http://www.cocoabuilder.com/archive/message/cocoa/2001/6/15/21704 */
 
@@ -86,8 +94,87 @@ int main(int argc, char *argv[]) {
         fprintf(stderr, "argv[%d] = %s\n", i, argv[i]);
     }
 #endif
+    
+    int outpipe[2];
+    int errpipe[2];
+    
+    if (pipe(outpipe) < 0 || pipe(errpipe) < 0) {
+        perror("pipe failed");
+        exit(1);
+    }
+    
+    if (dup2(outpipe[1], STDOUT_FILENO) < 0) {
+        perror("dup2 stdout failed");
+        exit(1);
+    }
+    
+    if (dup2(errpipe[1], STDERR_FILENO) < 0) {
+        perror("dup2 stderr failed");
+        exit(1);
+    }
+    
     fprintf(stderr, "tlmgr_cwrapper: HOME = '%s'\n", getenv("HOME"));
-    i = execve(argv[2], &argv[2], environ);
-    if (i != 0) perror("tlmgr_cwrapper failed");
-    return i;
+
+    int ret = 0;
+    pid_t child = fork();
+    if (0 == child) {
+        i = execve(argv[2], &argv[2], environ);
+        _exit(i);
+    }
+    else if (-1 == child) {
+        perror("fork failed");
+        exit(1);
+    }
+    else {
+        
+        char *line, buf[STACK_BUFFER_SIZE];        
+        
+        fd_set fdset;
+        FD_ZERO(&fdset);
+        FD_SET(outpipe[0], &fdset);
+        FD_SET(errpipe[0], &fdset);
+        
+        aslclient client = asl_open(TLM_ASL_SENDER, TLM_ASL_FACILITY, ASL_OPT_NO_DELAY);
+        aslmsg m = asl_new(ASL_TYPE_MSG);
+        asl_set(m, ASL_KEY_SENDER, TLM_ASL_SENDER);
+        
+        struct timeval tv;
+        tv.tv_sec = 0;
+        tv.tv_usec = 100000;
+        
+        int max_fd = outpipe[0];
+        if (errpipe[0] > max_fd) max_fd = errpipe[0];
+        max_fd += 1;
+        
+        FILE *outstrm = fdopen(outpipe[0], "r");
+        FILE *errstrm = fdopen(errpipe[0], "r");
+        
+        int childStatus;
+        
+        while (select(max_fd, &fdset, NULL, NULL, &tv) > 0 || waitpid(child, &childStatus, WNOHANG) == 0) {
+            
+            if (FD_ISSET(outpipe[0], &fdset)) {
+                line = fgets(buf, sizeof(buf), outstrm);
+                asl_log(client, m, ASL_LEVEL_ERR, "%s", buf);
+            }
+            
+            if (FD_ISSET(errpipe[0], &fdset)) {
+                line = fgets(buf, sizeof(buf), errstrm);
+                asl_log(client, m, ASL_LEVEL_ERR, "%s", buf);
+            }
+            
+            FD_SET(outpipe[0], &fdset);
+            FD_SET(errpipe[0], &fdset);
+
+            tv.tv_sec = 0;
+            tv.tv_usec = 100000;
+        }    
+        fclose(errstrm);
+        fclose(outstrm);
+        asl_free(m);
+        asl_close(client);
+        
+        ret = WIFEXITED(childStatus) ? WEXITSTATUS(childStatus) : EXIT_FAILURE;
+    }
+    return ret;
 }
