@@ -37,4 +37,4 @@
  */
 #import <Cocoa/Cocoa.h>
 
-extern NSString * TLMLogStringWithTimeRange(NSTimeInterval start, NSTimeInterval stop);
+extern NSString * TLMLogStringSinceTime(NSTimeInterval absoluteTime);
