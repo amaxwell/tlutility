@@ -34,6 +34,7 @@
 		F9F1305B0EED94F700D9968D /* TLMPreferenceController.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F1305A0EED94F700D9968D /* TLMPreferenceController.m */; };
 		F9F56B470EF31EDC00E934A9 /* TLMASLStore.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F56B460EF31EDC00E934A9 /* TLMASLStore.m */; };
 		F9F56B4C0EF31F8800E934A9 /* TLMASLMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F56B4B0EF31F8800E934A9 /* TLMASLMessage.m */; };
+		F9F56BA10EF36F8B00E934A9 /* TLMLogDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F56BA00EF36F8B00E934A9 /* TLMLogDataSource.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -108,6 +109,8 @@
 		F9F56B460EF31EDC00E934A9 /* TLMASLStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMASLStore.m; sourceTree = "<group>"; };
 		F9F56B4A0EF31F8800E934A9 /* TLMASLMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMASLMessage.h; sourceTree = "<group>"; };
 		F9F56B4B0EF31F8800E934A9 /* TLMASLMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMASLMessage.m; sourceTree = "<group>"; };
+		F9F56B9F0EF36F8B00E934A9 /* TLMLogDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMLogDataSource.h; sourceTree = "<group>"; };
+		F9F56BA00EF36F8B00E934A9 /* TLMLogDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMLogDataSource.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -247,6 +250,8 @@
 		F9F56B7E0EF32F3500E934A9 /* Logging */ = {
 			isa = PBXGroup;
 			children = (
+				F9F56B9F0EF36F8B00E934A9 /* TLMLogDataSource.h */,
+				F9F56BA00EF36F8B00E934A9 /* TLMLogDataSource.m */,
 				F9ABABE80EF208A200497E0F /* TLMLogUtilities.h */,
 				F9ABABE90EF208A200497E0F /* TLMLogUtilities.m */,
 				F9F56B450EF31EDC00E934A9 /* TLMASLStore.h */,
@@ -352,6 +357,7 @@
 				F9ABABEA0EF208A200497E0F /* TLMLogUtilities.m in Sources */,
 				F9F56B470EF31EDC00E934A9 /* TLMASLStore.m in Sources */,
 				F9F56B4C0EF31F8800E934A9 /* TLMASLMessage.m in Sources */,
+				F9F56BA10EF36F8B00E934A9 /* TLMLogDataSource.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
