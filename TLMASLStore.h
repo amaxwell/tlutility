@@ -1,8 +1,8 @@
 //
-//  TLMMainWindowController.h
+//  TLMASLStore.h
 //  TeX Live Manager
 //
-//  Created by Adam Maxwell on 12/6/08.
+//  Created by Adam Maxwell on 12/12/08.
 /*
  This software is Copyright (c) 2008
  Adam Maxwell. All rights reserved.
@@ -38,39 +38,19 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class TLMSplitView;
+extern NSString * const TLMASLStoreUpdateNotification;
 
-@interface TLMMainWindowController : NSWindowController 
+@interface TLMASLStore : NSObject 
 {
 @private
-    NSTableView         *_tableView;
-    NSProgressIndicator *_progressIndicator;
-    NSTextField         *_hostnameField;
-    NSTextView          *_textView;
-    TLMSplitView        *_splitView;
-    
-    NSMutableArray      *_packages;
-    BOOL                 _sortAscending;
-    NSOperationQueue    *_queue;
-    CGFloat              _lastTextViewHeight;
-    
-    NSTableView         *_logTableView;
-    NSTimer             *_logTimer;
+    NSMutableArray   *_messagesByDate;
+    NSOperationQueue *_queryQueue;
+    NSDate           *_lastQueryDate;
 }
 
-@property (nonatomic, retain) IBOutlet NSTableView *_tableView;
-@property (nonatomic, retain) IBOutlet NSProgressIndicator *_progressIndicator;
-@property (nonatomic, retain) IBOutlet NSTextField *_hostnameField;
-@property (nonatomic, retain) IBOutlet NSTableView *_logTableView;
-@property (nonatomic, retain) IBOutlet TLMSplitView *_splitView;
++ (id)sharedStore;
+- (void)update;
 
-- (IBAction)listUpdates:(id)sender;
-- (IBAction)updateAll:(id)sender;
-
-- (IBAction)cancelAllOperations:(id)sender;
-
-- (IBAction)installSelectedRow:(id)sender;
-- (IBAction)removeSelectedRow:(id)sender;
-- (IBAction)showInfo:(id)sender;
+@property (readonly, retain) NSArray *messages;
 
 @end

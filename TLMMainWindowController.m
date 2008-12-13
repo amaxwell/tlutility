@@ -43,12 +43,13 @@
 #import "TLMSplitView.h"
 #import "TLMInfoController.h"
 #import "TLMLogUtilities.h"
+#import "TLMASLStore.h"
 
 static char _TLMOperationQueueOperationContext;
 
 @implementation TLMMainWindowController
 
-@synthesize _tableView, _progressIndicator, _hostnameField, _textView, _splitView;
+@synthesize _tableView, _progressIndicator, _hostnameField, _logTableView, _splitView;
 
 
 - (id)init
@@ -79,10 +80,17 @@ static char _TLMOperationQueueOperationContext;
     [_tableView setDelegate:nil];
     [_tableView setDataSource:nil];
     [_tableView release];
+    
     [_splitView setDelegate:nil];
     [_splitView release];
+    
     [_packages release];
     [_progressIndicator release];
+    
+    [_logTableView setDelegate:nil];
+    [_logTableView setDataSource:nil];
+    [_logTableView release];
+    
     [super dealloc];
 }
 
@@ -110,21 +118,13 @@ static char _TLMOperationQueueOperationContext;
 
 - (void)_logTimerFired:(NSTimer *)timer
 {
-    NSTimeInterval prev = _lastQueryTime;
-    _lastQueryTime = [NSDate timeIntervalSinceReferenceDate];
-    NSString *output = TLMLogStringSinceTime(prev);
-    if (output) {
-        NSAttributedString *attrString = [[NSAttributedString alloc] initWithString:output attributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSColor blackColor], NSForegroundColorAttributeName, [NSFont userFixedPitchFontOfSize:0], NSFontAttributeName, nil]];
-        [[_textView textStorage] appendAttributedString:attrString];
-        [attrString release];
-        [_textView scrollRangeToVisible:NSMakeRange([[_textView textStorage] length], 0)];
-    }
+    [_logTableView reloadData];
+    [[TLMASLStore sharedStore] update];
 }
 
 - (void)_startLogQueries
 {
     if (nil == _logTimer) {
-        _lastQueryTime = [NSDate timeIntervalSinceReferenceDate];
         _logTimer = [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(_logTimerFired:) userInfo:nil repeats:YES];
     }
 }
@@ -153,44 +153,11 @@ static char _TLMOperationQueueOperationContext;
     }
 }
 
-- (void)_appendLine:(NSString *)string color:(NSColor *)color
-{
-    NSTextStorage *textStorage = [_textView textStorage];
-    NSAttributedString *attrString = [[NSAttributedString alloc] initWithString:string attributes:[NSDictionary dictionaryWithObjectsAndKeys:color, NSForegroundColorAttributeName, [NSFont userFixedPitchFontOfSize:0], NSFontAttributeName, nil]];
-    [textStorage appendAttributedString:attrString];
-    [attrString release];
-    [[textStorage mutableString] appendString:@"\n"];
-}
-
-- (void)_updateLogWithOperation:(TLMOperation *)op
-{
-    NSTextStorage *textStorage = [_textView textStorage];
-    [textStorage beginEditing];
-    
-    [self _appendLine:@"------------------" color:[NSColor blackColor]];
-    [self _appendLine:[NSString stringWithFormat:@"%@: %@", [NSDate date], [op description]] color:[NSColor blackColor]];
-    
-    // append stdout/stderr
-    NSColor *color = [op failed] ? [NSColor redColor] : [NSColor blackColor];
-    [self _appendLine:[op errorMessages] ? [op errorMessages] : NSLocalizedString(@"No output", @"") color:color];
-
-    // make this the last line, so we have indication of what failed/succeeded
-    NSString *shortStatus = [op failed] ? NSLocalizedString(@"Operation failed", @"") : NSLocalizedString(@"Operation succeeded", @"");
-    [self _appendLine:shortStatus color:color];
-
-    // make sure the entire thing is using the correct font
-    [textStorage endEditing];
-    [_textView scrollRangeToVisible:NSMakeRange([textStorage length], 0)];
-}
-
 - (void)_handleListUpdatesFinishedNotification:(NSNotification *)aNote
 {
     NSParameterAssert([NSThread isMainThread]);
     TLMListUpdatesOperation *op = [aNote object];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:TLMOperationFinishedNotification object:op];
-    
-    // update now since we may append more to it...
-    [self _updateLogWithOperation:op];
 
     // Karl sez these are the packages that the next version of tlmgr will require you to install before installing anything else
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name IN { 'bin-texlive', 'texlive.infra' }"];
@@ -198,7 +165,8 @@ static char _TLMOperationQueueOperationContext;
     
     if ([packages count]) {
         // log for debugging, then display an alert so the user has some idea of what's going on...
-        [self _appendLine:[NSString stringWithFormat:@"Critical updates detected: %@", [packages valueForKey:@"name"]] color:[NSColor redColor]];
+        // FIXME: display in table
+        // [self _appendLine:[NSString stringWithFormat:@"Critical updates detected: %@", [packages valueForKey:@"name"]] color:[NSColor redColor]];
         NSAlert *alert = [[NSAlert new] autorelease];
         [alert setMessageText:NSLocalizedString(@"Critical Updates Available", @"")];
         [alert setAlertStyle:NSCriticalAlertStyle];
@@ -256,7 +224,6 @@ static char _TLMOperationQueueOperationContext;
             [_tableView reloadData];
         }
     }
-    [self _updateLogWithOperation:op];
 }
 
 // FIXME: add a property to operations instead of checking class
@@ -324,7 +291,7 @@ static char _TLMOperationQueueOperationContext;
 
 - (IBAction)removeSelectedRow:(id)sender;
 {
-    [self _appendLine:@"removeSelectedRow: is not implemented" color:[NSColor greenColor]];
+    // FIXME: [self _appendLine:@"removeSelectedRow: is not implemented" color:[NSColor greenColor]];
 }
 
 - (IBAction)listUpdates:(id)sender;
