@@ -38,7 +38,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface TLMLogMessage : NSObject 
+@interface TLMLogMessage : NSObject <NSCoding>
 {
 @private
     NSDate   *_date;
