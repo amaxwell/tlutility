@@ -66,6 +66,7 @@ static char _TLMOperationQueueOperationContext;
         [_queue setMaxConcurrentOperationCount:1];
         [_queue addObserver:self forKeyPath:@"operations" options:0 context:&_TLMOperationQueueOperationContext];
         _lastTextViewHeight = 0.0;
+        _updateInfrastructure = NO;
     }
     return self;
 }
@@ -149,8 +150,10 @@ static char _TLMOperationQueueOperationContext;
         [alert setAlertStyle:NSCriticalAlertStyle];
         [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"%d packages are available for update, but the TeX Live installer packages listed here must be updated first.", @""), [[op packages] count]]];
         [alert beginSheetModalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
+        _updateInfrastructure = YES;
     }
     else {
+        _updateInfrastructure = NO;
         packages = [op packages];
     }
     
@@ -174,32 +177,9 @@ static char _TLMOperationQueueOperationContext;
     
     // ignore operations that failed or were explicitly cancelled
     if ([op isCancelled] == NO) {
-        
-        if (nil == [op packageNames]) {
-            [self listUpdates:nil];
-        }
-        else if ([[op packageNames] count]) {
-            
-            // this is cheaper than doing listUpdates:
-            NSMutableSet *packageNames = [NSMutableSet set];
-            for (NSString *name in [op packageNames]) {
-                if ([op failed] == NO)
-                    [packageNames addObject:name];
-            }
-            
-            NSUInteger cnt = [_packages count];
-
-            while (cnt--) {
-                TLMPackage *package = [_packages objectAtIndex:cnt];
-                if ([packageNames containsObject:[package name]]) {
-                    // remove the name, then remove from _packages (which may be the only reference)
-                    [packageNames removeObject:[package name]];
-                    [_packages removeObjectAtIndex:cnt];
-                }
-                if ([packageNames count] == 0) break;
-            }
-            [_tableView reloadData];
-        }
+        // This is slow, but if infrastructure was updated or a package installed other dependencies, we have no way of manually removing from the list.
+        // FIXME: need to ensure the same mirror is used for this!
+        [self listUpdates:nil];
     }
 }
 
@@ -227,7 +207,8 @@ static char _TLMOperationQueueOperationContext;
     if ([[_tableView selectedRowIndexes] count] == 1 && [[_packages objectAtIndex:[_tableView selectedRow]] willBeRemoved])
         return NO;
         
-    return [[_tableView selectedRowIndexes] count] == 1;
+    // for multiple selection, just install and let tlmgr deal with any willBeRemoved packages
+    return [[_tableView selectedRowIndexes] count] > 0;
 }
 
 // tried validating toolbar items using bindings to queue.operations.@count but the queue sends KVO notifications on its own thread
@@ -285,7 +266,11 @@ static char _TLMOperationQueueOperationContext;
 - (void)updateAllAlertDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo;
 {
     if (NSAlertFirstButtonReturn == returnCode) {
-        TLMUpdateOperation *op = [[TLMUpdateOperation alloc] initWithPackageNames:nil];
+        NSArray *packageNames = nil;
+        // force an install of only these packages, since old versions of tlmgr may not do that
+        if (_updateInfrastructure)
+            packageNames = [NSArray arrayWithObjects:@"bin-texlive", @"texlive.infra", nil];
+        TLMUpdateOperation *op = [[TLMUpdateOperation alloc] initWithPackageNames:packageNames];
         [[NSNotificationCenter defaultCenter] addObserver:self 
                                                  selector:@selector(_handleInstallFinishedNotification:) 
                                                      name:TLMOperationFinishedNotification 
@@ -299,6 +284,7 @@ static char _TLMOperationQueueOperationContext;
 {
     NSAlert *alert = [[NSAlert new] autorelease];
     [alert setMessageText:NSLocalizedString(@"Update All Packages?", @"")];
+    // may not be correct for _updateInfrastructure, but tlmgr may remove stuff also...so leave it as-is
     [alert setInformativeText:NSLocalizedString(@"This will install all available updates and remove packages that no longer exist on the server.", @"")];
     [alert addButtonWithTitle:NSLocalizedString(@"Update", @"")];
     [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")];

@@ -12,7 +12,7 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="82"/>
+			<integer value="5"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -834,7 +834,7 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</bytes>
 																<int key="NSCellFlags">337772096</int>
 																<int key="NSCellFlags2">2048</int>
 																<string key="NSContents">Text Cell</string>
-																<object class="NSFont" key="NSSupport" id="418634152">
+																<object class="NSFont" key="NSSupport" id="197124589">
 																	<string key="NSName">Monaco</string>
 																	<double key="NSSize">10</double>
 																	<int key="NSfFlags">16</int>
@@ -869,7 +869,7 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</bytes>
 																<int key="NSCellFlags">337772096</int>
 																<int key="NSCellFlags2">2048</int>
 																<string key="NSContents">Text Cell</string>
-																<reference key="NSSupport" ref="418634152"/>
+																<reference key="NSSupport" ref="197124589"/>
 																<reference key="NSControlView" ref="650437859"/>
 																<reference key="NSBackgroundColor" ref="739807809"/>
 																<reference key="NSTextColor" ref="651245384"/>
@@ -903,7 +903,7 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</bytes>
 																<int key="NSCellFlags">337772096</int>
 																<int key="NSCellFlags2">2048</int>
 																<string key="NSContents">Text Cell</string>
-																<reference key="NSSupport" ref="418634152"/>
+																<reference key="NSSupport" ref="197124589"/>
 																<reference key="NSControlView" ref="650437859"/>
 																<reference key="NSBackgroundColor" ref="739807809"/>
 																<reference key="NSTextColor" ref="651245384"/>
@@ -929,7 +929,7 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</bytes>
 																<int key="NSCellFlags">337772096</int>
 																<int key="NSCellFlags2">2048</int>
 																<string key="NSContents">Text Cell</string>
-																<reference key="NSSupport" ref="418634152"/>
+																<reference key="NSSupport" ref="197124589"/>
 																<reference key="NSControlView" ref="650437859"/>
 																<reference key="NSBackgroundColor" ref="739807809"/>
 																<reference key="NSTextColor" ref="651245384"/>
@@ -952,7 +952,7 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</bytes>
 														</object>
 													</object>
 													<double key="NSRowHeight">17</double>
-													<int key="NSTvFlags">-702545920</int>
+													<int key="NSTvFlags">-635437056</int>
 													<reference key="NSDelegate"/>
 													<reference key="NSDataSource"/>
 													<int key="NSColumnAutoresizingStyle">4</int>
@@ -1065,11 +1065,7 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</bytes>
 																<int key="NSCellFlags">337772096</int>
 																<int key="NSCellFlags2">-2147481600</int>
 																<string key="NSContents">Text Cell</string>
-																<object class="NSFont" key="NSSupport" id="197124589">
-																	<string key="NSName">Monaco</string>
-																	<double key="NSSize">10</double>
-																	<int key="NSfFlags">16</int>
-																</object>
+																<reference key="NSSupport" ref="197124589"/>
 																<object class="NSDateFormatter" key="NSFormatter" id="370148165">
 																	<object class="NSMutableDictionary" key="NS.attributes">
 																		<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1158,7 +1154,7 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</bytes>
 													<reference key="NSBackgroundColor" ref="839407202"/>
 													<reference key="NSGridColor" ref="951091772"/>
 													<double key="NSRowHeight">17</double>
-													<int key="NSTvFlags">-692060160</int>
+													<int key="NSTvFlags">-624951296</int>
 													<reference key="NSDelegate"/>
 													<reference key="NSDataSource"/>
 													<int key="NSColumnAutoresizingStyle">4</int>
