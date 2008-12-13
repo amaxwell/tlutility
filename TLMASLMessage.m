@@ -45,6 +45,7 @@
 @synthesize message = _message;
 @synthesize sender = _sender;
 @synthesize pid = _pid;
+@synthesize level = _level;
 
 - (id)initWithASLMessage:(void *)message
 {
@@ -63,11 +64,16 @@
         
         val = asl_get(msg, ASL_KEY_PID);
         if (NULL == val) val = "-1";
-        _pid = strtol(val, NULL, 0);
+        pid_t pid = strtol(val, NULL, 0);
+        _pid = [[NSNumber alloc] initWithInteger:pid];
         
         val = asl_get(msg, ASL_KEY_MSG);
         if (NULL == val) val = "Empty log message";
         _message = [[NSString alloc] initWithUTF8String:val];
+        
+        val = asl_get(msg, ASL_KEY_LEVEL);
+        if (NULL == val) val = "";
+        _level = [[NSString alloc] initWithUTF8String:val];        
     }
     return self;
 }
@@ -77,6 +83,8 @@
     [_date release];
     [_sender release];
     [_message release];
+    [_pid release];
+    [_level release];
     [super dealloc];
 }
 

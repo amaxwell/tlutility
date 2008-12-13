@@ -44,7 +44,8 @@
     NSDate   *_date;
     NSString *_message;
     NSString *_sender;
-    pid_t     _pid;    
+    NSString *_level;
+    NSNumber *_pid;    
 }
 
 - (id)initWithASLMessage:(void *)msg;
@@ -52,6 +53,7 @@
 @property (readonly, copy) NSDate *date;
 @property (readonly, copy) NSString *message;
 @property (readonly, copy) NSString *sender;
-@property (readonly) pid_t pid;
+@property (readonly, copy) NSString *level;
+@property (readonly, copy) NSNumber *pid;
 
 @end
