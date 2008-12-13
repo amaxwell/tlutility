@@ -56,6 +56,7 @@
     [super dealloc];
 }
 
+// only encoded by NSPortCoder, which doesn't support key/value coding
 - (void)encodeWithCoder:(NSCoder *)coder
 {
     [coder encodeObject:_date];
