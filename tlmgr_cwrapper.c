@@ -49,8 +49,8 @@
 extern char **environ;
 
 #define STACK_BUFFER_SIZE 2048
-#define TLM_ASL_SENDER "tlmgr_cwrapper"
-#define TLM_ASL_FACILITY NULL
+#define TLM_ASL_SENDER "com.googlecode.mactlmgr"
+#define TLM_ASL_FACILITY "com.googlecode.mactlmgr.tlmgr_cwrapper"
 
 
 /* http://www.cocoabuilder.com/archive/message/cocoa/2001/6/15/21704 */
@@ -147,6 +147,7 @@ int main(int argc, char *argv[]) {
         aslclient client = asl_open(TLM_ASL_SENDER, TLM_ASL_FACILITY, ASL_OPT_NO_DELAY);
         aslmsg m = asl_new(ASL_TYPE_MSG);
         asl_set(m, ASL_KEY_SENDER, TLM_ASL_SENDER);
+        asl_set(m, ASL_KEY_FACILITY, TLM_ASL_FACILITY);
         asl_set(m, "ReadUID", read_uid);
         
         struct timeval tv;
@@ -166,7 +167,7 @@ int main(int argc, char *argv[]) {
             
             if (FD_ISSET(outpipe[0], &fdset)) {
                 line = fgets(buf, sizeof(buf), outstrm);
-                asl_log(client, m, ASL_LEVEL_ERR, "%s", buf);
+                asl_log(client, m, ASL_LEVEL_NOTICE, "%s", buf);
             }
             
             if (FD_ISSET(errpipe[0], &fdset)) {
