@@ -41,34 +41,8 @@
 #import <unistd.h>
 #import <asl.h>
 
-#define TLM_ASL_SENDER "tlmgr_cwrapper"
-#define TLM_ASL_FACILITY NULL
-
-static int new_default_asl_query(aslmsg *newQuery, NSTimeInterval absoluteTime)
-{
-    int err;
-    aslmsg query;
-    
-    query = asl_new(ASL_TYPE_QUERY);
-    if (NULL == query)
-        perror("asl_new");
-    
-    const char *level_string = [[NSString stringWithFormat:@"%d", ASL_LEVEL_DEBUG] UTF8String];
-    err = asl_set_query(query, ASL_KEY_LEVEL, level_string, ASL_QUERY_OP_LESS_EQUAL | ASL_QUERY_OP_NUMERIC);
-    if (err != 0)
-        perror("asl_set_query level");
-    
-    // absolute time difference
-    NSUInteger secondsAgo = [NSDate timeIntervalSinceReferenceDate] - absoluteTime + 1;
-    const char *time_string = [[NSString stringWithFormat:@"-%lus", secondsAgo] UTF8String];
-    err = asl_set_query(query, ASL_KEY_TIME, time_string, ASL_QUERY_OP_GREATER_EQUAL);
-    if (err != 0)
-        perror("asl_set_query time");
-    
-    *newQuery = query;
-    
-    return err;
-}
+#define TLM_ASL_SENDER "com.googlecode.mactlmgr"        /* common to all mactlmgr programs */
+#define TLM_ASL_FACILITY "com.googlecode.mactlmgr.gui"  /* specific to a given binary      */
 
 NSArray * TLMASLMessagesSinceDate(NSDate *date)
 {
@@ -78,16 +52,34 @@ NSArray * TLMASLMessagesSinceDate(NSDate *date)
     int err;
     
     aslclient client = asl_open(TLM_ASL_SENDER, TLM_ASL_FACILITY, ASL_OPT_NO_DELAY);
-    asl_set_filter(client, ASL_FILTER_MASK_UPTO(ASL_LEVEL_DEBUG));
     
     NSMutableArray *messages = [NSMutableArray array];
     
-    err = new_default_asl_query(&query, [date timeIntervalSinceReferenceDate]);
+    query = asl_new(ASL_TYPE_QUERY);
+    if (NULL == query)
+        perror("asl_new");
     
-    // now search for messages that we've logged directly
-    err = asl_set_query(query, ASL_KEY_SENDER, TLM_ASL_SENDER, ASL_QUERY_OP_EQUAL);
+    // round time up to ensure that we don't lose anything
+    NSUInteger secondsAgo = [NSDate timeIntervalSinceReferenceDate] - [date timeIntervalSinceReferenceDate] + 1;
+    const char *time_string = [[NSString stringWithFormat:@"-%lus", secondsAgo] UTF8String];
+    err = asl_set_query(query, ASL_KEY_TIME, time_string, ASL_QUERY_OP_GREATER_EQUAL);
     if (err != 0)
-        fprintf(stderr, "asl_set_query sender failed with error %d (%s)\n", err, strerror(err));
+        fprintf(stderr, "asl_set_query ASL_KEY_TIME failed with error %d (%s)\n", err, strerror(err));
+        
+    // now search for sender; all binaries use this prefix
+    err = asl_set_query(query, ASL_KEY_SENDER, TLM_ASL_SENDER, ASL_QUERY_OP_EQUAL | ASL_QUERY_OP_PREFIX);
+    if (err != 0) 
+        fprintf(stderr, "asl_set_query ASL_KEY_SENDER failed with error %d (%s)\n", err, strerror(err));
+
+    // now search for <= notice
+    err = asl_set_query(query, ASL_KEY_LEVEL, ASL_STRING_NOTICE, ASL_QUERY_OP_LESS_EQUAL);
+    if (err != 0) 
+        fprintf(stderr, "asl_set_query ASL_LEVEL_NOTICE failed with error %d (%s)\n", err, strerror(err));
+  
+    // now search for >= error
+    err = asl_set_query(query, ASL_KEY_LEVEL, ASL_STRING_ERR, ASL_QUERY_OP_GREATER_EQUAL);
+    if (err != 0) 
+        fprintf(stderr, "asl_set_query ASL_LEVEL_ERR failed with error %d (%s)\n", err, strerror(err));
     
     response = asl_search(client, query);
     TLMASLMessage *logMessage;

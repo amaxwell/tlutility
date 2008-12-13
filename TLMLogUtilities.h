@@ -37,5 +37,14 @@
  */
 #import <Cocoa/Cocoa.h>
 
+#ifndef _TLM_LOG_UTILITIES_H_
+#define _TLM_LOG_UTILITIES_H_
+
+__BEGIN_DECLS
+
 extern NSArray * TLMASLMessagesSinceDate(NSDate *date);
 extern NSString * TLMLogStringSinceTime(NSTimeInterval absoluteTime);
+
+__END_DECLS
+
+#endif /* _TLM_LOG_UTILITIES_H_ */
