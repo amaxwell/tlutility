@@ -37,4 +37,5 @@
  */
 #import <Cocoa/Cocoa.h>
 
+extern NSArray * TLMASLMessagesSinceDate(NSDate *date);
 extern NSString * TLMLogStringSinceTime(NSTimeInterval absoluteTime);

@@ -32,6 +32,8 @@
 		F9B13B2B0EECEB05007C0046 /* InfoPanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = F9B13B2A0EECEB05007C0046 /* InfoPanel.xib */; };
 		F9F130560EED94D800D9968D /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = F9F130550EED94D800D9968D /* Preferences.xib */; };
 		F9F1305B0EED94F700D9968D /* TLMPreferenceController.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F1305A0EED94F700D9968D /* TLMPreferenceController.m */; };
+		F9F56B470EF31EDC00E934A9 /* TLMASLStore.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F56B460EF31EDC00E934A9 /* TLMASLStore.m */; };
+		F9F56B4C0EF31F8800E934A9 /* TLMASLMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F56B4B0EF31F8800E934A9 /* TLMASLMessage.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -102,6 +104,10 @@
 		F9F130530EED94CC00D9968D /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/Preferences.xib; sourceTree = "<group>"; };
 		F9F130590EED94F700D9968D /* TLMPreferenceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMPreferenceController.h; sourceTree = "<group>"; };
 		F9F1305A0EED94F700D9968D /* TLMPreferenceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMPreferenceController.m; sourceTree = "<group>"; };
+		F9F56B450EF31EDC00E934A9 /* TLMASLStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMASLStore.h; sourceTree = "<group>"; };
+		F9F56B460EF31EDC00E934A9 /* TLMASLStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMASLStore.m; sourceTree = "<group>"; };
+		F9F56B4A0EF31F8800E934A9 /* TLMASLMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMASLMessage.h; sourceTree = "<group>"; };
+		F9F56B4B0EF31F8800E934A9 /* TLMASLMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMASLMessage.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -128,6 +134,7 @@
 			isa = PBXGroup;
 			children = (
 				F9C490D70EEEF44200E44FA6 /* Operations */,
+				F9F56B7E0EF32F3500E934A9 /* Logging */,
 				F9B134660EEB19CB007C0046 /* TLMMainWindowController.h */,
 				F9B134670EEB19CB007C0046 /* TLMMainWindowController.m */,
 				F9B1345F0EEB1894007C0046 /* TLMAppController.h */,
@@ -144,8 +151,6 @@
 				F9B134770EEB2065007C0046 /* TLMPackage.m */,
 				F9B1347B0EEB208C007C0046 /* TLMOutputParser.h */,
 				F9B1347C0EEB208C007C0046 /* TLMOutputParser.m */,
-				F9ABABE80EF208A200497E0F /* TLMLogUtilities.h */,
-				F9ABABE90EF208A200497E0F /* TLMLogUtilities.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -237,6 +242,19 @@
 				F9B13B1C0EECE7F3007C0046 /* TLMInfoOperation.m */,
 			);
 			name = Operations;
+			sourceTree = "<group>";
+		};
+		F9F56B7E0EF32F3500E934A9 /* Logging */ = {
+			isa = PBXGroup;
+			children = (
+				F9ABABE80EF208A200497E0F /* TLMLogUtilities.h */,
+				F9ABABE90EF208A200497E0F /* TLMLogUtilities.m */,
+				F9F56B450EF31EDC00E934A9 /* TLMASLStore.h */,
+				F9F56B460EF31EDC00E934A9 /* TLMASLStore.m */,
+				F9F56B4A0EF31F8800E934A9 /* TLMASLMessage.h */,
+				F9F56B4B0EF31F8800E934A9 /* TLMASLMessage.m */,
+			);
+			name = Logging;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -332,6 +350,8 @@
 				F9F1305B0EED94F700D9968D /* TLMPreferenceController.m in Sources */,
 				F99E51980EEE4AD5006E6B39 /* TLMURLFormatter.m in Sources */,
 				F9ABABEA0EF208A200497E0F /* TLMLogUtilities.m in Sources */,
+				F9F56B470EF31EDC00E934A9 /* TLMASLStore.m in Sources */,
+				F9F56B4C0EF31F8800E934A9 /* TLMASLMessage.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
