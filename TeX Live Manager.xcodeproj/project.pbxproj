@@ -31,12 +31,11 @@
 		F9B13B240EECEA73007C0046 /* TLMInfoController.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B13B170EECE5AE007C0046 /* TLMInfoController.m */; };
 		F9B13B2B0EECEB05007C0046 /* InfoPanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = F9B13B2A0EECEB05007C0046 /* InfoPanel.xib */; };
 		F9B6B5630EF460A400CF767F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 29B97325FDCFA39411CA2CEA /* Foundation.framework */; };
-		F9B6B5EB0EF4647400CF767F /* TLMASLMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F56B4B0EF31F8800E934A9 /* TLMASLMessage.m */; };
+		F9B6B5EB0EF4647400CF767F /* TLMLogMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F56B4B0EF31F8800E934A9 /* TLMLogMessage.m */; };
 		F9B6B5F80EF469A600CF767F /* TLMLogServer.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B6B5F70EF469A600CF767F /* TLMLogServer.m */; };
 		F9F130560EED94D800D9968D /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = F9F130550EED94D800D9968D /* Preferences.xib */; };
 		F9F1305B0EED94F700D9968D /* TLMPreferenceController.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F1305A0EED94F700D9968D /* TLMPreferenceController.m */; };
-		F9F56B470EF31EDC00E934A9 /* TLMASLStore.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F56B460EF31EDC00E934A9 /* TLMASLStore.m */; };
-		F9F56B4C0EF31F8800E934A9 /* TLMASLMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F56B4B0EF31F8800E934A9 /* TLMASLMessage.m */; };
+		F9F56B4C0EF31F8800E934A9 /* TLMLogMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F56B4B0EF31F8800E934A9 /* TLMLogMessage.m */; };
 		F9F56BA10EF36F8B00E934A9 /* TLMLogDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F56BA00EF36F8B00E934A9 /* TLMLogDataSource.m */; };
 /* End PBXBuildFile section */
 
@@ -110,10 +109,8 @@
 		F9F130530EED94CC00D9968D /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/Preferences.xib; sourceTree = "<group>"; };
 		F9F130590EED94F700D9968D /* TLMPreferenceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMPreferenceController.h; sourceTree = "<group>"; };
 		F9F1305A0EED94F700D9968D /* TLMPreferenceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMPreferenceController.m; sourceTree = "<group>"; };
-		F9F56B450EF31EDC00E934A9 /* TLMASLStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMASLStore.h; sourceTree = "<group>"; };
-		F9F56B460EF31EDC00E934A9 /* TLMASLStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMASLStore.m; sourceTree = "<group>"; };
-		F9F56B4A0EF31F8800E934A9 /* TLMASLMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMASLMessage.h; sourceTree = "<group>"; };
-		F9F56B4B0EF31F8800E934A9 /* TLMASLMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMASLMessage.m; sourceTree = "<group>"; };
+		F9F56B4A0EF31F8800E934A9 /* TLMLogMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMLogMessage.h; sourceTree = "<group>"; };
+		F9F56B4B0EF31F8800E934A9 /* TLMLogMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMLogMessage.m; sourceTree = "<group>"; };
 		F9F56B9F0EF36F8B00E934A9 /* TLMLogDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMLogDataSource.h; sourceTree = "<group>"; };
 		F9F56BA00EF36F8B00E934A9 /* TLMLogDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMLogDataSource.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -260,10 +257,8 @@
 				F9F56BA00EF36F8B00E934A9 /* TLMLogDataSource.m */,
 				F9ABABE80EF208A200497E0F /* TLMLogUtilities.h */,
 				F9ABABE90EF208A200497E0F /* TLMLogUtilities.m */,
-				F9F56B450EF31EDC00E934A9 /* TLMASLStore.h */,
-				F9F56B460EF31EDC00E934A9 /* TLMASLStore.m */,
-				F9F56B4A0EF31F8800E934A9 /* TLMASLMessage.h */,
-				F9F56B4B0EF31F8800E934A9 /* TLMASLMessage.m */,
+				F9F56B4A0EF31F8800E934A9 /* TLMLogMessage.h */,
+				F9F56B4B0EF31F8800E934A9 /* TLMLogMessage.m */,
 				F9B6B5F60EF469A600CF767F /* TLMLogServer.h */,
 				F9B6B5F70EF469A600CF767F /* TLMLogServer.m */,
 			);
@@ -363,8 +358,7 @@
 				F9F1305B0EED94F700D9968D /* TLMPreferenceController.m in Sources */,
 				F99E51980EEE4AD5006E6B39 /* TLMURLFormatter.m in Sources */,
 				F9ABABEA0EF208A200497E0F /* TLMLogUtilities.m in Sources */,
-				F9F56B470EF31EDC00E934A9 /* TLMASLStore.m in Sources */,
-				F9F56B4C0EF31F8800E934A9 /* TLMASLMessage.m in Sources */,
+				F9F56B4C0EF31F8800E934A9 /* TLMLogMessage.m in Sources */,
 				F9F56BA10EF36F8B00E934A9 /* TLMLogDataSource.m in Sources */,
 				F9B6B5F80EF469A600CF767F /* TLMLogServer.m in Sources */,
 			);
@@ -375,7 +369,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F9B139D40EECBE23007C0046 /* tlmgr_cwrapper.m in Sources */,
-				F9B6B5EB0EF4647400CF767F /* TLMASLMessage.m in Sources */,
+				F9B6B5EB0EF4647400CF767F /* TLMLogMessage.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

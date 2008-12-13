@@ -37,14 +37,14 @@
  */
 
 #import "TLMLogUtilities.h"
-#import "TLMASLMessage.h"
+#import "TLMLogMessage.h"
 #import <unistd.h>
 #import <asl.h>
 
 #define TLM_ASL_SENDER "com.googlecode.mactlmgr"        /* common to all mactlmgr programs */
 #define TLM_ASL_FACILITY "com.googlecode.mactlmgr.gui"  /* specific to a given binary      */
 
-NSArray * TLMASLMessagesSinceDate(NSDate *date)
+NSArray * TLMLogMessagesSinceDate(NSDate *date)
 {
     aslmsg query, msg;
     aslresponse response;
@@ -82,10 +82,10 @@ NSArray * TLMASLMessagesSinceDate(NSDate *date)
         fprintf(stderr, "asl_set_query ASL_LEVEL_ERR failed with error %d (%s)\n", err, strerror(err));
     
     response = asl_search(client, query);
-    TLMASLMessage *logMessage;
+    TLMLogMessage *logMessage;
     
     while (NULL != (msg = aslresponse_next(response))) {
-        logMessage = [[TLMASLMessage alloc] initWithASLMessage:msg];
+        logMessage = [[TLMLogMessage alloc] initWithASLMessage:msg];
         if (logMessage)
             [messages addObject:logMessage];
         [logMessage release];
@@ -100,7 +100,7 @@ NSArray * TLMASLMessagesSinceDate(NSDate *date)
 
 NSString * TLMLogStringSinceTime(NSTimeInterval absoluteTime)
 {    
-    NSArray *sortedMessages = TLMASLMessagesSinceDate([NSDate dateWithTimeIntervalSinceReferenceDate:absoluteTime]);
+    NSArray *sortedMessages = TLMLogMessagesSinceDate([NSDate dateWithTimeIntervalSinceReferenceDate:absoluteTime]);
     
     // sends -description to each object    
     return [sortedMessages componentsJoinedByString:@"\n"];

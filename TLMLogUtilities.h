@@ -42,7 +42,7 @@
 
 __BEGIN_DECLS
 
-extern NSArray * TLMASLMessagesSinceDate(NSDate *date);
+extern NSArray * TLMLogMessagesSinceDate(NSDate *date);
 extern NSString * TLMLogStringSinceTime(NSTimeInterval absoluteTime);
 
 __END_DECLS

@@ -43,7 +43,6 @@
 #import "TLMSplitView.h"
 #import "TLMInfoController.h"
 #import "TLMLogUtilities.h"
-#import "TLMASLStore.h"
 
 static char _TLMOperationQueueOperationContext;
 
@@ -119,12 +118,6 @@ static char _TLMOperationQueueOperationContext;
 {
     if (context == &_TLMOperationQueueOperationContext) {
         [self performSelectorOnMainThread:@selector(_operationCountChanged) withObject:nil waitUntilDone:NO];
-        if ([[_queue operations] count]) {
-            [_logDataSource performSelectorOnMainThread:@selector(startUpdates) withObject:nil waitUntilDone:NO];
-        }
-        else {
-            [_logDataSource performSelectorOnMainThread:@selector(stopUpdates) withObject:nil waitUntilDone:NO];
-        }
     }
     else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];

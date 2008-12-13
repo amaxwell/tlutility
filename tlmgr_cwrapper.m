@@ -45,7 +45,7 @@
 #include <sys/time.h>
 
 #import <Foundation/Foundation.h>
-#import "TLMASLMessage.h"
+#import "TLMLogMessage.h"
 #include <asl.h>
 
 extern char **environ;
@@ -54,7 +54,7 @@ extern char **environ;
 #define SENDER_NAME @"com.googlecode.mactlmgr.tlmgr_cwrapper"
 
 @protocol TLMLogServer <NSObject>
-- (oneway void)logMessage:(in bycopy TLMASLMessage *)message;
+- (oneway void)logMessage:(in bycopy TLMLogMessage *)message;
 @end
 
 
@@ -69,7 +69,7 @@ static void log_notice(NSString *format, ...)
     NSString *message = [[[NSString alloc] initWithFormat:format arguments:list] autorelease];
     va_end(list);
     
-    TLMASLMessage *msg = [[TLMASLMessage alloc] init];
+    TLMLogMessage *msg = [[TLMLogMessage alloc] init];
     [msg setDate:[NSDate date]];
     [msg setMessage:message];
     [msg setSender:SENDER_NAME];
@@ -92,7 +92,7 @@ static void log_error(NSString *format, ...)
     NSString *message = [[[NSString alloc] initWithFormat:format arguments:list] autorelease];
     va_end(list);
     
-    TLMASLMessage *msg = [[TLMASLMessage alloc] init];
+    TLMLogMessage *msg = [[TLMLogMessage alloc] init];
     [msg setDate:[NSDate date]];
     [msg setMessage:message];
     [msg setSender:SENDER_NAME];
