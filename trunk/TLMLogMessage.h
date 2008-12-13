@@ -1,5 +1,5 @@
 //
-//  TLMASLStore.h
+//  TLMLogMessage.h
 //  TeX Live Manager
 //
 //  Created by Adam Maxwell on 12/12/08.
@@ -38,19 +38,20 @@
 
 #import <Cocoa/Cocoa.h>
 
-extern NSString * const TLMASLStoreUpdateNotification;
-
-@interface TLMASLStore : NSObject 
+@interface TLMLogMessage : NSObject 
 {
 @private
-    NSMutableArray   *_messagesByDate;
-    NSOperationQueue *_queryQueue;
-    NSDate           *_lastQueryDate;
+    NSDate   *_date;
+    NSString *_message;
+    NSString *_sender;
+    NSString *_level;
+    NSNumber *_pid;    
 }
 
-+ (id)sharedStore;
-- (void)update;
-
-@property (readonly, retain) NSArray *messages;
+@property (readwrite, copy) NSDate *date;
+@property (readwrite, copy) NSString *message;
+@property (readwrite, copy) NSString *sender;
+@property (readwrite, copy) NSString *level;
+@property (readwrite, copy) NSNumber *pid;
 
 @end

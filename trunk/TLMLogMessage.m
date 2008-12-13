@@ -1,5 +1,5 @@
 //
-//  TLMASLMessage.m
+//  TLMLogMessage.m
 //  TeX Live Manager
 //
 //  Created by Adam Maxwell on 12/12/08.
@@ -36,47 +36,15 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "TLMASLMessage.h"
-#import <asl.h>
+#import "TLMLogMessage.h"
 
-@implementation TLMASLMessage
+@implementation TLMLogMessage
 
 @synthesize date = _date;
 @synthesize message = _message;
 @synthesize sender = _sender;
 @synthesize pid = _pid;
 @synthesize level = _level;
-
-- (id)initWithASLMessage:(void *)message
-{
-    self = [super init];
-    if (self) {
-        const char *val;
-        aslmsg msg = message;
-        
-        val = asl_get(msg, ASL_KEY_TIME);
-        if (NULL == val) val = "0";
-        _date = (NSDate *)CFDateCreate(CFAllocatorGetDefault(), strtol(val, NULL, 0) - kCFAbsoluteTimeIntervalSince1970);
-        
-        val = asl_get(msg, ASL_KEY_SENDER);
-        if (NULL == val) val = "Unknown";
-        _sender = [[NSString alloc] initWithUTF8String:val];
-        
-        val = asl_get(msg, ASL_KEY_PID);
-        if (NULL == val) val = "-1";
-        pid_t pid = strtol(val, NULL, 0);
-        _pid = [[NSNumber alloc] initWithInteger:pid];
-        
-        val = asl_get(msg, ASL_KEY_MSG);
-        if (NULL == val) val = "Empty log message";
-        _message = [[NSString alloc] initWithUTF8String:val];
-        
-        val = asl_get(msg, ASL_KEY_LEVEL);
-        if (NULL == val) val = "";
-        _level = [[NSString alloc] initWithUTF8String:val];        
-    }
-    return self;
-}
 
 - (void)dealloc
 {
@@ -112,7 +80,7 @@
 
 - (id)replacementObjectForPortCoder:(NSPortCoder *)encoder
 {
-    return [encoder isByref] ? [NSDistantObject proxyWithLocal:self connection:[encoder connection]] : self;
+    return [encoder isByref] ? (id)[NSDistantObject proxyWithLocal:self connection:[encoder connection]] : (id)self;
 }
 
 - (NSUInteger)hash { return [_date hash]; }
@@ -132,6 +100,6 @@
     return YES;
 }
 - (NSString *)description { return [NSString stringWithFormat:@"%@ %@[%d]\t%@", _date, _sender, _pid, _message]; }
-- (NSComparisonResult)compare:(TLMASLMessage *)other { return [_date compare:[other date]]; }
+- (NSComparisonResult)compare:(TLMLogMessage *)other { return [_date compare:[other date]]; }
 
 @end
