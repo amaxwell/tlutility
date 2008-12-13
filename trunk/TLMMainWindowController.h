@@ -54,6 +54,7 @@
     BOOL                 _sortAscending;
     NSOperationQueue    *_queue;
     CGFloat              _lastTextViewHeight;
+    BOOL                 _updateInfrastructure;
     
     TLMLogDataSource    *_logDataSource;
 }
