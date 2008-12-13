@@ -59,7 +59,7 @@ static int new_default_asl_query(aslmsg *newQuery, NSTimeInterval absoluteTime)
         perror("asl_set_query level");
     
     // absolute time difference
-    NSUInteger secondsAgo = [NSDate timeIntervalSinceReferenceDate] - absoluteTime;
+    NSUInteger secondsAgo = [NSDate timeIntervalSinceReferenceDate] - absoluteTime + 1;
     const char *time_string = [[NSString stringWithFormat:@"-%lus", secondsAgo] UTF8String];
     err = asl_set_query(query, ASL_KEY_TIME, time_string, ASL_QUERY_OP_GREATER_EQUAL);
     if (err != 0)

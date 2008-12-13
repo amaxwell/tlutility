@@ -39,6 +39,7 @@
 #import <Cocoa/Cocoa.h>
 
 @class TLMSplitView;
+@class TLMLogDataSource;
 
 @interface TLMMainWindowController : NSWindowController 
 {
@@ -54,15 +55,14 @@
     NSOperationQueue    *_queue;
     CGFloat              _lastTextViewHeight;
     
-    NSTableView         *_logTableView;
-    NSTimer             *_logTimer;
+    TLMLogDataSource    *_logDataSource;
 }
 
 @property (nonatomic, retain) IBOutlet NSTableView *_tableView;
 @property (nonatomic, retain) IBOutlet NSProgressIndicator *_progressIndicator;
 @property (nonatomic, retain) IBOutlet NSTextField *_hostnameField;
-@property (nonatomic, retain) IBOutlet NSTableView *_logTableView;
 @property (nonatomic, retain) IBOutlet TLMSplitView *_splitView;
+@property (nonatomic, retain) IBOutlet TLMLogDataSource *_logDataSource;
 
 - (IBAction)listUpdates:(id)sender;
 - (IBAction)updateAll:(id)sender;

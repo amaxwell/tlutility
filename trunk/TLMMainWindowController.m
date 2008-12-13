@@ -49,7 +49,7 @@ static char _TLMOperationQueueOperationContext;
 
 @implementation TLMMainWindowController
 
-@synthesize _tableView, _progressIndicator, _hostnameField, _logTableView, _splitView;
+@synthesize _tableView, _progressIndicator, _hostnameField, _splitView, _logDataSource;
 
 
 - (id)init
@@ -86,10 +86,7 @@ static char _TLMOperationQueueOperationContext;
     
     [_packages release];
     [_progressIndicator release];
-    
-    [_logTableView setDelegate:nil];
-    [_logTableView setDataSource:nil];
-    [_logTableView release];
+    [_logDataSource release];
     
     [super dealloc];
 }
@@ -116,36 +113,16 @@ static char _TLMOperationQueueOperationContext;
     }
 }
 
-- (void)_logTimerFired:(NSTimer *)timer
-{
-    [_logTableView reloadData];
-    [[TLMASLStore sharedStore] update];
-}
-
-- (void)_startLogQueries
-{
-    if (nil == _logTimer) {
-        _logTimer = [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(_logTimerFired:) userInfo:nil repeats:YES];
-    }
-}
-
-- (void)_stopLogQueries
-{
-    [_logTimer invalidate];
-    _logTimer = nil;
-    [self _logTimerFired:nil];
-}
-
 // NB: this will arrive on the queue's thread, at least under some conditions!
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
     if (context == &_TLMOperationQueueOperationContext) {
         [self performSelectorOnMainThread:@selector(_operationCountChanged) withObject:nil waitUntilDone:NO];
         if ([[_queue operations] count]) {
-            [self performSelectorOnMainThread:@selector(_startLogQueries) withObject:nil waitUntilDone:NO];
+            [_logDataSource performSelectorOnMainThread:@selector(startUpdates) withObject:nil waitUntilDone:NO];
         }
         else {
-            [self performSelectorOnMainThread:@selector(_stopLogQueries) withObject:nil waitUntilDone:NO];
+            [_logDataSource performSelectorOnMainThread:@selector(stopUpdates) withObject:nil waitUntilDone:NO];
         }
     }
     else {

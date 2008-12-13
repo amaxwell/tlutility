@@ -62,8 +62,14 @@ NSString * const TLMASLStoreUpdateNotification = @"TLMASLStoreUpdateNotification
 @synthesize lastQueryDate = _lastQueryDate;
 @synthesize messages = _messagesByDate;
 
+static NSDate *_applicationStartDate = nil;
+
 + (void)initialize
 {
+    // do any one-time setup, then setup singleton
+    if (nil == _applicationStartDate) 
+        _applicationStartDate = [NSDate new];
+    
     [self sharedStore];
 }
 
@@ -82,6 +88,7 @@ NSString * const TLMASLStoreUpdateNotification = @"TLMASLStoreUpdateNotification
         _queryQueue = [NSOperationQueue new];
         [_queryQueue setMaxConcurrentOperationCount:1];
         _messagesByDate = [NSMutableArray new];
+        _lastQueryDate = [_applicationStartDate copy];
     }
     return self;
 }
@@ -100,6 +107,7 @@ NSString * const TLMASLStoreUpdateNotification = @"TLMASLStoreUpdateNotification
 - (void)_startQuery
 {
     TLMASLQueryOperation *op = [[TLMASLQueryOperation alloc] initWithStore:self sinceDate:[self lastQueryDate]];
+    [self setLastQueryDate:[NSDate date]];
     [_queryQueue addOperation:op];
     [op release];
 }
@@ -119,6 +127,7 @@ NSString * const TLMASLStoreUpdateNotification = @"TLMASLStoreUpdateNotification
 {
     NSParameterAssert([NSThread isMainThread]);
     [_messagesByDate addObjectsFromArray:newMessages];
+    NSLog(@"took %.2f seconds for the query to return", -[_lastQueryDate timeIntervalSinceNow]);
     [[NSNotificationCenter defaultCenter] postNotificationName:TLMASLStoreUpdateNotification object:self];
 }
 
