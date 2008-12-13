@@ -42,20 +42,80 @@
 #include <sys/types.h>
 #include <pwd.h>
 #include <string.h>
-
-#include <asl.h>
 #include <sys/time.h>
+
+#import <Foundation/Foundation.h>
+#import "TLMASLMessage.h"
+#include <asl.h>
 
 extern char **environ;
 
-#define STACK_BUFFER_SIZE 2048
-#define TLM_ASL_SENDER "com.googlecode.mactlmgr"
-#define TLM_ASL_FACILITY "com.googlecode.mactlmgr.tlmgr_cwrapper"
+#define SERVER_NAME @"com.googlecode.mactlmgr.logserver"
+#define SENDER_NAME @"com.googlecode.mactlmgr.tlmgr_cwrapper"
+
+@protocol TLMLogServer <NSObject>
+- (oneway void)logMessage:(in bycopy TLMASLMessage *)message;
+@end
 
 
 /* http://www.cocoabuilder.com/archive/message/cocoa/2001/6/15/21704 */
 
+static id _logServer = nil;
+
+static void log_notice(NSString *format, ...)
+{
+    va_list list;
+    va_start(list, format);
+    NSString *message = [[[NSString alloc] initWithFormat:format arguments:list] autorelease];
+    va_end(list);
+    
+    TLMASLMessage *msg = [[TLMASLMessage alloc] init];
+    [msg setDate:[NSDate date]];
+    [msg setMessage:message];
+    [msg setSender:SENDER_NAME];
+    [msg setLevel:@ASL_STRING_NOTICE];
+    [msg setPid:[NSNumber numberWithInteger:getpid()]];
+    
+    @try {
+        [_logServer logMessage:msg];
+    }
+    @catch (id exception) {
+        // can't do much here... logging will cause an endless loop
+    }
+    [msg release];
+}
+
+static void log_error(NSString *format, ...)
+{
+    va_list list;
+    va_start(list, format);
+    NSString *message = [[[NSString alloc] initWithFormat:format arguments:list] autorelease];
+    va_end(list);
+    
+    TLMASLMessage *msg = [[TLMASLMessage alloc] init];
+    [msg setDate:[NSDate date]];
+    [msg setMessage:message];
+    [msg setSender:SENDER_NAME];
+    [msg setLevel:@ASL_STRING_ERR];
+    [msg setPid:[NSNumber numberWithInteger:getpid()]];
+    
+    @try {
+        [_logServer logMessage:msg];
+    }
+    @catch (id exception) {
+        // can't do much here... logging will cause an endless loop
+    }
+    [msg release];
+}
+    
 int main(int argc, char *argv[]) {
+    
+    NSAutoreleasePool *pool = [NSAutoreleasePool new];
+    
+    _logServer = [[NSConnection rootProxyForConnectionWithRegisteredName:SERVER_NAME host:nil] retain];
+    
+    if (nil == _logServer)
+        fprintf(stderr, "tlmgr_cwrapper: failed to establish connection to log server\n");
     
     uid_t old_uid = getuid();
     
@@ -75,7 +135,7 @@ int main(int argc, char *argv[]) {
      argv[n]: tlmgr arguments
      */
     if (argc < 2) {
-        fprintf(stderr, "tlmgr_cwrapper: insufficient arguments\n");
+        log_error(@"insufficient arguments");
         exit(1);
     }
     
@@ -83,7 +143,7 @@ int main(int argc, char *argv[]) {
     /* Don't accept 'yes' or 'no' or 'nitwit' as arguments. */
     char *c = argv[1];
     if (strlen(c) != 1 || ('y' != *c && 'n' != *c)) {
-        fprintf(stderr, "tlmgr_cwrapper: first argument '%s' was unrecognized\n", c);
+        log_error(@"first argument '%s' was not recognized", c);
         exit(1);
     }
     
@@ -91,7 +151,7 @@ int main(int argc, char *argv[]) {
     if ('y' == *c) {    
         struct passwd *pw = getpwuid(getuid());
         if (NULL == pw) {
-            perror("getpwuid failed in tlmgr_cwrapper");
+            log_error(@"getpwuid failed in tlmgr_cwrapper");
             exit(1);
         }
         setenv("HOME", pw->pw_dir, 1);
@@ -109,21 +169,21 @@ int main(int argc, char *argv[]) {
     int errpipe[2];
     
     if (pipe(outpipe) < 0 || pipe(errpipe) < 0) {
-        perror("pipe failed");
+        log_error(@"pipe failed in tlmgr_cwrapper");
         exit(1);
     }
     
     if (dup2(outpipe[1], STDOUT_FILENO) < 0) {
-        perror("dup2 stdout failed");
+        log_error(@"dup2 stdout failed in tlmgr_cwrapper");
         exit(1);
     }
     
     if (dup2(errpipe[1], STDERR_FILENO) < 0) {
-        perror("dup2 stderr failed");
+        log_error(@"dup2 stderr failed in tlmgr_cwrapper");
         exit(1);
     }
     
-    fprintf(stderr, "tlmgr_cwrapper: HOME = '%s'\n", getenv("HOME"));
+    log_notice(@"tlmgr_cwrapper: HOME = '%s'\n", getenv("HOME"));
 
     int ret = 0;
     pid_t child = fork();
@@ -137,18 +197,12 @@ int main(int argc, char *argv[]) {
     }
     else {
         
-        char *line, buf[STACK_BUFFER_SIZE];        
+        char *line, buf[2048];        
         
         fd_set fdset;
         FD_ZERO(&fdset);
         FD_SET(outpipe[0], &fdset);
         FD_SET(errpipe[0], &fdset);
-        
-        aslclient client = asl_open(TLM_ASL_SENDER, TLM_ASL_FACILITY, ASL_OPT_NO_DELAY);
-        aslmsg m = asl_new(ASL_TYPE_MSG);
-        asl_set(m, ASL_KEY_SENDER, TLM_ASL_SENDER);
-        asl_set(m, ASL_KEY_FACILITY, TLM_ASL_FACILITY);
-        asl_set(m, "ReadUID", read_uid);
         
         struct timeval tv;
         tv.tv_sec = 0;
@@ -167,12 +221,12 @@ int main(int argc, char *argv[]) {
             
             if (FD_ISSET(outpipe[0], &fdset)) {
                 line = fgets(buf, sizeof(buf), outstrm);
-                asl_log(client, m, ASL_LEVEL_NOTICE, "%s", buf);
+                log_notice(@"%s", buf);
             }
             
             if (FD_ISSET(errpipe[0], &fdset)) {
                 line = fgets(buf, sizeof(buf), errstrm);
-                asl_log(client, m, ASL_LEVEL_ERR, "%s", buf);
+                log_error(@"%s", buf);
             }
             
             FD_SET(outpipe[0], &fdset);
@@ -183,10 +237,10 @@ int main(int argc, char *argv[]) {
         }    
         fclose(errstrm);
         fclose(outstrm);
-        asl_free(m);
-        asl_close(client);
         
         ret = WIFEXITED(childStatus) ? WEXITSTATUS(childStatus) : EXIT_FAILURE;
     }
+    
+    [pool release];
     return ret;
 }

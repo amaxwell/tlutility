@@ -38,6 +38,7 @@
 
 #import "TLMUpdateOperation.h"
 #import "TLMPreferenceController.h"
+#import "TLMLogServer.h"
 #include <Security/Authorization.h>
 #include <Security/AuthorizationTags.h>
 
@@ -136,6 +137,7 @@
             if (status == errAuthorizationSuccess) {
                 
                 // communicationsPipe is only valid if the call succeeded, which is a major wtf
+                // note: this should no longer be used, since tlmgr_cwrapper handles logging
                 ssize_t bytesRead;
                 while ((bytesRead = read(fileno(communicationPipe), buffer, sizeof(buffer))) > 0) {
                     [outputData appendBytes:buffer length:bytesRead];
@@ -158,7 +160,11 @@
         }
     }
     
-    AuthorizationFree(authorization, kAuthorizationFlagDefaults);// 17
+    AuthorizationFree(authorization, kAuthorizationFlagDefaults);
+    
+    // tlmgr_cwrapper won't pass anything back up to us
+    if ([self errorMessages])
+        TLMLog(@"TLMUpdateOperation", @"%@", [self errorMessages]);
     
     [pool release];
 }

@@ -39,6 +39,7 @@
 #import "TLMOperation.h"
 #import "BDSKTask.h"
 #import "TLMPreferenceController.h"
+#import "TLMLogServer.h"
 
 NSString * const TLMOperationFinishedNotification = @"TLMOperationFinishedNotification";
 
@@ -129,8 +130,10 @@ static char _TLMOperationFinishedContext;
 - (void)_stderrDataAvailable:(NSNotification *)aNote
 {
     NSData *outputData = [[aNote userInfo] objectForKey:NSFileHandleNotificationDataItem];
-    if ([outputData length])
+    if ([outputData length]) {
         [self setErrorData:outputData];    
+        TLMLog(@"TLMOperation", @"%@", [self errorMessages]);
+    }
 }
 
 - (NSString *)errorMessages
@@ -191,7 +194,7 @@ static char _TLMOperationFinishedContext;
     if ([self isCancelled]) {
         [self setOutputData:nil];
     } else if (0 != status) {
-        NSLog(@"termination status of task %@ was %d", [_task launchPath], status);
+        TLMLog(@"TLMOperation", @"termination status of task %@ was %d", [_task launchPath], status);
         [self setFailed:YES];
     }
     

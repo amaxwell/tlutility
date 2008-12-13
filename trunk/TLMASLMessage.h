@@ -50,10 +50,10 @@
 
 - (id)initWithASLMessage:(void *)msg;
 
-@property (readonly, copy) NSDate *date;
-@property (readonly, copy) NSString *message;
-@property (readonly, copy) NSString *sender;
-@property (readonly, copy) NSString *level;
-@property (readonly, copy) NSNumber *pid;
+@property (readwrite, copy) NSDate *date;
+@property (readwrite, copy) NSString *message;
+@property (readwrite, copy) NSString *sender;
+@property (readwrite, copy) NSString *level;
+@property (readwrite, copy) NSNumber *pid;
 
 @end

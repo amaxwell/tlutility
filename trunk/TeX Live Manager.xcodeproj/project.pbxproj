@@ -24,12 +24,15 @@
 		F9B1371B0EEC4A72007C0046 /* TLMListUpdatesOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B1371A0EEC4A72007C0046 /* TLMListUpdatesOperation.m */; };
 		F9B137200EEC4A92007C0046 /* TLMUpdateOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B1371F0EEC4A92007C0046 /* TLMUpdateOperation.m */; };
 		F9B137330EEC4C6A007C0046 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9B137320EEC4C6A007C0046 /* Security.framework */; };
-		F9B139D40EECBE23007C0046 /* tlmgr_cwrapper.c in Sources */ = {isa = PBXBuildFile; fileRef = F9B139D30EECBE23007C0046 /* tlmgr_cwrapper.c */; };
+		F9B139D40EECBE23007C0046 /* tlmgr_cwrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B139D30EECBE23007C0046 /* tlmgr_cwrapper.m */; };
 		F9B139DA0EECBECD007C0046 /* tlmgr_cwrapper in CopyFiles */ = {isa = PBXBuildFile; fileRef = F9B139CB0EECBDFE007C0046 /* tlmgr_cwrapper */; };
 		F9B13ADE0EECDAC8007C0046 /* TLMSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B13ADB0EECD9DA007C0046 /* TLMSplitView.m */; };
 		F9B13B1D0EECE7F3007C0046 /* TLMInfoOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B13B1C0EECE7F3007C0046 /* TLMInfoOperation.m */; };
 		F9B13B240EECEA73007C0046 /* TLMInfoController.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B13B170EECE5AE007C0046 /* TLMInfoController.m */; };
 		F9B13B2B0EECEB05007C0046 /* InfoPanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = F9B13B2A0EECEB05007C0046 /* InfoPanel.xib */; };
+		F9B6B5630EF460A400CF767F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 29B97325FDCFA39411CA2CEA /* Foundation.framework */; };
+		F9B6B5EB0EF4647400CF767F /* TLMASLMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F56B4B0EF31F8800E934A9 /* TLMASLMessage.m */; };
+		F9B6B5F80EF469A600CF767F /* TLMLogServer.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B6B5F70EF469A600CF767F /* TLMLogServer.m */; };
 		F9F130560EED94D800D9968D /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = F9F130550EED94D800D9968D /* Preferences.xib */; };
 		F9F1305B0EED94F700D9968D /* TLMPreferenceController.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F1305A0EED94F700D9968D /* TLMPreferenceController.m */; };
 		F9F56B470EF31EDC00E934A9 /* TLMASLStore.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F56B460EF31EDC00E934A9 /* TLMASLStore.m */; };
@@ -94,7 +97,7 @@
 		F9B1371F0EEC4A92007C0046 /* TLMUpdateOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMUpdateOperation.m; sourceTree = "<group>"; };
 		F9B137320EEC4C6A007C0046 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = /System/Library/Frameworks/Security.framework; sourceTree = "<absolute>"; };
 		F9B139CB0EECBDFE007C0046 /* tlmgr_cwrapper */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = tlmgr_cwrapper; sourceTree = BUILT_PRODUCTS_DIR; };
-		F9B139D30EECBE23007C0046 /* tlmgr_cwrapper.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tlmgr_cwrapper.c; sourceTree = "<group>"; };
+		F9B139D30EECBE23007C0046 /* tlmgr_cwrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = tlmgr_cwrapper.m; sourceTree = "<group>"; };
 		F9B13ADA0EECD9DA007C0046 /* TLMSplitView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMSplitView.h; sourceTree = "<group>"; };
 		F9B13ADB0EECD9DA007C0046 /* TLMSplitView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMSplitView.m; sourceTree = "<group>"; };
 		F9B13B160EECE5AE007C0046 /* TLMInfoController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMInfoController.h; sourceTree = "<group>"; };
@@ -102,6 +105,8 @@
 		F9B13B1B0EECE7F3007C0046 /* TLMInfoOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMInfoOperation.h; sourceTree = "<group>"; };
 		F9B13B1C0EECE7F3007C0046 /* TLMInfoOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMInfoOperation.m; sourceTree = "<group>"; };
 		F9B13B2A0EECEB05007C0046 /* InfoPanel.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InfoPanel.xib; sourceTree = "<group>"; };
+		F9B6B5F60EF469A600CF767F /* TLMLogServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMLogServer.h; sourceTree = "<group>"; };
+		F9B6B5F70EF469A600CF767F /* TLMLogServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMLogServer.m; sourceTree = "<group>"; };
 		F9F130530EED94CC00D9968D /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/Preferences.xib; sourceTree = "<group>"; };
 		F9F130590EED94F700D9968D /* TLMPreferenceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMPreferenceController.h; sourceTree = "<group>"; };
 		F9F1305A0EED94F700D9968D /* TLMPreferenceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMPreferenceController.m; sourceTree = "<group>"; };
@@ -127,6 +132,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F9B6B5630EF460A400CF767F /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -199,7 +205,7 @@
 		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
-				F9B139D30EECBE23007C0046 /* tlmgr_cwrapper.c */,
+				F9B139D30EECBE23007C0046 /* tlmgr_cwrapper.m */,
 				32CA4F630368D1EE00C91783 /* TeX Live Manager_Prefix.pch */,
 				29B97316FDCFA39411CA2CEA /* main.m */,
 			);
@@ -258,6 +264,8 @@
 				F9F56B460EF31EDC00E934A9 /* TLMASLStore.m */,
 				F9F56B4A0EF31F8800E934A9 /* TLMASLMessage.h */,
 				F9F56B4B0EF31F8800E934A9 /* TLMASLMessage.m */,
+				F9B6B5F60EF469A600CF767F /* TLMLogServer.h */,
+				F9B6B5F70EF469A600CF767F /* TLMLogServer.m */,
 			);
 			name = Logging;
 			sourceTree = "<group>";
@@ -358,6 +366,7 @@
 				F9F56B470EF31EDC00E934A9 /* TLMASLStore.m in Sources */,
 				F9F56B4C0EF31F8800E934A9 /* TLMASLMessage.m in Sources */,
 				F9F56BA10EF36F8B00E934A9 /* TLMLogDataSource.m in Sources */,
+				F9B6B5F80EF469A600CF767F /* TLMLogServer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -365,7 +374,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F9B139D40EECBE23007C0046 /* tlmgr_cwrapper.c in Sources */,
+				F9B139D40EECBE23007C0046 /* tlmgr_cwrapper.m in Sources */,
+				F9B6B5EB0EF4647400CF767F /* TLMASLMessage.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -88,6 +88,33 @@
     [super dealloc];
 }
 
+- (void)encodeWithCoder:(NSCoder *)coder
+{
+    [coder encodeObject:_date];
+    [coder encodeObject:_message];
+    [coder encodeObject:_sender];
+    [coder encodeObject:_level];
+    [coder encodeObject:_pid];
+}
+
+- (id)initWithCoder:(NSCoder *)coder
+{
+    self = [super init];
+    if (self) {
+        _date = [[coder decodeObject] copy];
+        _message = [[coder decodeObject] copy];
+        _sender = [[coder decodeObject] copy];
+        _level = [[coder decodeObject] copy];
+        _pid = [[coder decodeObject] copy];
+    }
+    return self;
+}
+
+- (id)replacementObjectForPortCoder:(NSPortCoder *)encoder
+{
+    return [encoder isByref] ? [NSDistantObject proxyWithLocal:self connection:[encoder connection]] : self;
+}
+
 - (NSUInteger)hash { return [_date hash]; }
 
 - (BOOL)isEqual:(id)other

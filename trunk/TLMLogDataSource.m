@@ -9,6 +9,7 @@
 #import "TLMLogDataSource.h"
 #import "TLMASLMessage.h"
 #import "TLMASLStore.h"
+#import "TLMLogServer.h"
 
 @interface TLMLogDataSource()
 @property (readwrite, copy) NSArray *messages;
@@ -20,6 +21,11 @@
 @synthesize _tableView;
 @synthesize messages = _messages;
 
++ (void)initialize
+{
+    [TLMLogServer sharedServer];
+}
+
 - (id)init
 {
     self = [super init];
@@ -28,6 +34,10 @@
                                                  selector:@selector(_handleStoreUpdateNotification:) 
                                                      name:TLMASLStoreUpdateNotification 
                                                    object:[TLMASLStore sharedStore]];
+        [[NSNotificationCenter defaultCenter] addObserver:self 
+                                                 selector:@selector(_handleLogServerUpdateNotification:) 
+                                                     name:TLMLogServerUpdateNotification 
+                                                   object:[TLMLogServer sharedServer]];        
     }
     return self;
 }
@@ -46,6 +56,13 @@
     [super dealloc];
 }
 
+- (void)_handleLogServerUpdateNotification:(NSNotification *)aNote
+{
+    [self setMessages:[[TLMLogServer sharedServer] messages]];
+    [_tableView reloadData];
+    [_tableView scrollRowToVisible:([_tableView numberOfRows] - 1)];
+}    
+
 - (void)_handleStoreUpdateNotification:(NSNotification *)aNote
 {
     [self setMessages:[[TLMASLStore sharedStore] messages]];
@@ -55,7 +72,7 @@
 
 - (void)_timerFired:(NSTimer *)ignored
 {
-    [[TLMASLStore sharedStore] update];
+    //[[TLMASLStore sharedStore] update];
 }
 
 - (void)startUpdates;

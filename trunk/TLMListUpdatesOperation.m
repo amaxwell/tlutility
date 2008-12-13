@@ -39,6 +39,7 @@
 #import "TLMListUpdatesOperation.h"
 #import "TLMOutputParser.h"
 #import "TLMPreferenceController.h"
+#import "TLMLogServer.h"
 
 @interface TLMListUpdatesOperation()
 @property (readwrite, copy) NSURL *updateURL;
@@ -83,6 +84,7 @@
         
         NSString *installPrefix = @"tlmgr: installation location ";
         if ([lines count] && [[lines objectAtIndex:0] hasPrefix:installPrefix]) {
+            TLMLog(@"TLMListUpdatesOperation", @"%@", [lines objectAtIndex:0]);
             NSString *urlString = [[lines objectAtIndex:0] stringByReplacingOccurrencesOfString:installPrefix withString:@""];
             [self setUpdateURL:[NSURL URLWithString:urlString]];
             [lines removeObjectAtIndex:0];
