@@ -89,6 +89,9 @@
             [self setUpdateURL:[NSURL URLWithString:urlString]];
             [lines removeObjectAtIndex:0];
         }
+        else if ([lines count]) {
+            TLMLog(@"TLMListUpdatesOperation", @"Expected prefix \"%@\" but actual line was:\n%@", installPrefix, [lines objectAtIndex:0]);
+        }
         
         NSCharacterSet *nonWhitespace = [[NSCharacterSet whitespaceCharacterSet] invertedSet];
         for (NSString *line in lines) {
