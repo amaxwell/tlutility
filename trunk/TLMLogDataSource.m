@@ -38,6 +38,7 @@
 #import "TLMLogDataSource.h"
 #import "TLMLogMessage.h"
 #import "TLMLogServer.h"
+#import "TLMTableView.h"
 
 @interface TLMLogDataSource()
 @property (readwrite, copy) NSArray *messages;
@@ -96,6 +97,13 @@
 {
     TLMLogMessage *msg = [_messages objectAtIndex:row];
     return [msg valueForKey:[tableColumn identifier]];
+}
+
+- (void)tableView:(TLMTableView *)tableView writeSelectedRowsToPasteboard:(NSPasteboard *)pboard;
+{
+    [pboard declareTypes:[NSArray arrayWithObject:NSStringPboardType] owner:nil];
+    NSArray *messages = [_messages objectsAtIndexes:[_tableView selectedRowIndexes]];
+    [pboard setString:[messages componentsJoinedByString:@"\n"] forType:NSStringPboardType];
 }
 
 @end
