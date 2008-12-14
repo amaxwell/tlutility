@@ -92,19 +92,26 @@
         NSScanner *scanner = [[NSScanner alloc] initWithString:outputLine];
         
         NSString *packageName;
-        if ([scanner scanUpToString:@":" intoString:&packageName])
+        if ([scanner scanUpToString:@":" intoString:&packageName]) {
             [package setName:packageName];
+            
+            // scan past the colon
+            [scanner scanString:@":" intoString:NULL];
+        }
         
         if ([scanner scanString:@"local:" intoString:NULL]) {
             NSString *localVersion;
             if ([scanner scanCharactersFromSet:[NSCharacterSet alphanumericCharacterSet] intoString:&localVersion])
                 [package setLocalVersion:localVersion];
+            
+            // scan past the comma
+            [scanner scanString:@"," intoString:NULL];
         }
         
-        if ([scanner scanString:@"remote:" intoString:NULL]) {
+        if ([scanner scanString:@"source:" intoString:NULL]) {
             NSString *remoteVersion;
             if ([scanner scanCharactersFromSet:[NSCharacterSet alphanumericCharacterSet] intoString:&remoteVersion])
-                [package setLocalVersion:remoteVersion];
+                [package setRemoteVersion:remoteVersion];
         }
         [scanner release];
     }
@@ -118,36 +125,7 @@
     return package;
 }
 
-/*
- Package:    collection-latexextra
- Category:   Collection
- ShortDesc:  LaTeX supplementary packages
- LongDesc:   A large collection of add-on packages for LaTeX.
- Installed:  Yes
- Revision:   11521
- 
-*/
-
-/*
- Package:    bin-dvipdfm
- Category:   TLCore
- ShortDesc:  A DVI driver to produce PDF directly.
- LongDesc:   The driver offers a wide range of \special commands (including a colour stack), and supports compression of data streams, etc.
- Installed:  Yes
- Revision:   11188
- Collection: collection-basicbin
- 
-*/
-
-/*
- tlmgr: installation location http://ctan.math.utah.edu/tex-archive/systems/texlive/tlnet/2008/
- Package:    pdfcomment
- Category:   Package
- ShortDesc:  A user-friendly interface to pdf annotations.
- LongDesc:   For a long time pdfLaTeX has offered the command \pdfannot for inserting arbitrary PDF annotations. However, the command is presented in a form where additional knowledge of the definition of the PDF format is indispensable. This package is an answer to the – occasional – questions in newsgroups, about how one could use the comment function of Adobe Reader. At least for the writer of LaTeX code, the package offers a convenient and user-friendly means of using \pdfannot to provide comments in PDF files. Unfortunately, support of PDF annotations by PDF viewers is sparse to nonexistent. The reference viewer for the development of this package is Adobe Reader.
- Installed:  No
- Collection: collection-latexextra
-*/
+#pragma mark Info parsing
 
 static bool hasKeyPrefix(NSString *line)
 {
