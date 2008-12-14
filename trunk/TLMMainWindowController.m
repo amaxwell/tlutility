@@ -151,15 +151,14 @@ static char _TLMOperationQueueOperationContext;
     NSArray *packages = [[op packages] filteredArrayUsingPredicate:predicate];
     
     if ([packages count]) {
+        _updateInfrastructure = YES;
         // log for debugging, then display an alert so the user has some idea of what's going on...
-        // FIXME: display in table
-        // [self _appendLine:[NSString stringWithFormat:@"Critical updates detected: %@", [packages valueForKey:@"name"]] color:[NSColor redColor]];
+        TLMLog(nil, @"Critical updates detected: %@", [packages valueForKey:@"name"]);
         NSAlert *alert = [[NSAlert new] autorelease];
         [alert setMessageText:NSLocalizedString(@"Critical Updates Available", @"")];
         [alert setAlertStyle:NSCriticalAlertStyle];
         [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"%d packages are available for update, but the TeX Live installer packages listed here must be updated first.", @""), [[op packages] count]]];
         [alert beginSheetModalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
-        _updateInfrastructure = YES;
     }
     else {
         _updateInfrastructure = NO;
@@ -252,7 +251,7 @@ static char _TLMOperationQueueOperationContext;
 
 - (IBAction)removeSelectedRow:(id)sender;
 {
-    // FIXME: [self _appendLine:@"removeSelectedRow: is not implemented" color:[NSColor greenColor]];
+    TLMLog(nil, @"removeSelectedRow: is not implemented");
 }
 
 - (IBAction)listUpdates:(id)sender;
