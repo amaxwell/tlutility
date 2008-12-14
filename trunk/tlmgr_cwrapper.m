@@ -48,15 +48,9 @@
 #import "TLMLogMessage.h"
 #include <asl.h>
 
-extern char **environ;
-
-#define SERVER_NAME @"com.googlecode.mactlmgr.logserver"
 #define SENDER_NAME @"com.googlecode.mactlmgr.tlmgr_cwrapper"
 
-@protocol TLMLogServer <NSObject>
-- (oneway void)logMessage:(in bycopy TLMLogMessage *)message;
-@end
-
+extern char **environ;
 
 /* http://www.cocoabuilder.com/archive/message/cocoa/2001/6/15/21704 */
 
@@ -80,7 +74,7 @@ static void log_notice(NSString *format, ...)
         [_logServer logMessage:msg];
     }
     @catch (id exception) {
-        // can't do much here... logging will cause an endless loop
+        asl_log(NULL, NULL, ASL_LEVEL_ERR, "caught exception %s in log_notice", [[exception description] UTF8String]);
     }
     [msg release];
 }
@@ -103,7 +97,7 @@ static void log_error(NSString *format, ...)
         [_logServer logMessage:msg];
     }
     @catch (id exception) {
-        // can't do much here... logging will cause an endless loop
+        asl_log(NULL, NULL, ASL_LEVEL_ERR, "caught exception %s in log_notice", [[exception description] UTF8String]);
     }
     [msg release];
 }
@@ -112,19 +106,16 @@ int main(int argc, char *argv[]) {
     
     NSAutoreleasePool *pool = [NSAutoreleasePool new];
     
-    _logServer = [[NSConnection rootProxyForConnectionWithRegisteredName:SERVER_NAME host:nil] retain];
+    @try {
+        _logServer = [[NSConnection rootProxyForConnectionWithRegisteredName:SERVER_NAME host:nil] retain];
+    }
+    @catch (id exception) {
+        asl_log(NULL, NULL, ASL_LEVEL_ERR, "caught exception %s connecting to server", [[exception description] UTF8String]);
+    }
     
     if (nil == _logServer)
-        fprintf(stderr, "tlmgr_cwrapper: failed to establish connection to log server\n");
-    
-    uid_t old_uid = getuid();
-    
-    /* uint32_t 4294967295U */
-    char read_uid[12]; 
-    
-    /* cleverly save off the user's UID and pass it to ASL to limit searching */
-    snprintf(read_uid, sizeof(read_uid), "%u", old_uid);
-    
+        asl_log(NULL, NULL, ASL_LEVEL_ERR, "tlmgr_cwrapper: failed to establish connection to log server");
+        
     /* this call was the original purpose of the program */
     setuid(geteuid());
     
