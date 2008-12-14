@@ -43,6 +43,7 @@
 #include <pwd.h>
 #include <string.h>
 #include <sys/time.h>
+#include <sys/stat.h>
 
 #import <Foundation/Foundation.h>
 #import "TLMLogMessage.h"
@@ -56,66 +57,71 @@ extern char **environ;
 
 static id _logServer = nil;
 
-static void log_notice(NSString *format, ...)
+static void establish_log_connection()
 {
-    va_list list;
-    va_start(list, format);
-    NSString *message = [[[NSString alloc] initWithFormat:format arguments:list] autorelease];
-    va_end(list);
+    @try {
+        _logServer = [[NSConnection rootProxyForConnectionWithRegisteredName:SERVER_NAME host:nil] retain];
+        [_logServer setProtocolForProxy:@protocol(TLMLogServerProtocol)];
+    }
+    @catch (id exception) {
+        asl_log(NULL, NULL, ASL_LEVEL_ERR, "tlmgr_cwrapper: caught exception %s connecting to server", [[exception description] UTF8String]);
+        _logServer = nil;
+    }
+}    
+
+static void log_message_with_level(const char *level, NSString *message)
+{
+    if (nil == _logServer) establish_log_connection();
+    if (nil == _logServer) asl_log(NULL, NULL, ASL_LEVEL_ERR, "log_message_with_level: server is nil");
     
     TLMLogMessage *msg = [[TLMLogMessage alloc] init];
     [msg setDate:[NSDate date]];
     [msg setMessage:message];
     [msg setSender:SENDER_NAME];
-    [msg setLevel:@ASL_STRING_NOTICE];
+    [msg setLevel:[NSString stringWithUTF8String:level]];
     [msg setPid:[NSNumber numberWithInteger:getpid()]];
     
     @try {
         [_logServer logMessage:msg];
     }
     @catch (id exception) {
-        asl_log(NULL, NULL, ASL_LEVEL_ERR, "caught exception %s in log_notice", [[exception description] UTF8String]);
+        asl_log(NULL, NULL, ASL_LEVEL_ERR, "tlmgr_cwrapper: caught exception %s in log_notice", [[exception description] UTF8String]);
+        // log to asl as a fallback
+        asl_log(NULL, NULL, ASL_LEVEL_ERR, "%s", [message UTF8String]);
+        [_logServer release];
+        _logServer = nil;
     }
-    [msg release];
+    [msg release];    
+}
+
+static void log_notice(NSString *format, ...)
+{
+    va_list list;
+    va_start(list, format);
+    NSMutableString *message = [[NSMutableString alloc] initWithFormat:format arguments:list];
+    va_end(list);
+    // fgets preserves newlines, so trim them here instead of messing with the C-string buffer
+    CFStringTrimWhitespace((CFMutableStringRef)message);
+    log_message_with_level(ASL_STRING_NOTICE, message);
+    [message release];
 }
 
 static void log_error(NSString *format, ...)
 {
     va_list list;
     va_start(list, format);
-    NSString *message = [[[NSString alloc] initWithFormat:format arguments:list] autorelease];
+    NSMutableString *message = [[NSMutableString alloc] initWithFormat:format arguments:list];
     va_end(list);
-    
-    TLMLogMessage *msg = [[TLMLogMessage alloc] init];
-    [msg setDate:[NSDate date]];
-    [msg setMessage:message];
-    [msg setSender:SENDER_NAME];
-    [msg setLevel:@ASL_STRING_ERR];
-    [msg setPid:[NSNumber numberWithInteger:getpid()]];
-    
-    @try {
-        [_logServer logMessage:msg];
-    }
-    @catch (id exception) {
-        asl_log(NULL, NULL, ASL_LEVEL_ERR, "caught exception %s in log_notice", [[exception description] UTF8String]);
-    }
-    [msg release];
+    // fgets preserves newlines, so trim them here instead of messing with the C-string buffer
+    CFStringTrimWhitespace((CFMutableStringRef)message);
+    log_message_with_level(ASL_STRING_ERR, message);
+    [message release];
 }
     
 int main(int argc, char *argv[]) {
     
     NSAutoreleasePool *pool = [NSAutoreleasePool new];
     
-    @try {
-        _logServer = [[NSConnection rootProxyForConnectionWithRegisteredName:SERVER_NAME host:nil] retain];
-    }
-    @catch (id exception) {
-        asl_log(NULL, NULL, ASL_LEVEL_ERR, "caught exception %s connecting to server", [[exception description] UTF8String]);
-    }
-    
-    if (nil == _logServer)
-        asl_log(NULL, NULL, ASL_LEVEL_ERR, "tlmgr_cwrapper: failed to establish connection to log server");
-        
     /* this call was the original purpose of the program */
     setuid(geteuid());
     
@@ -156,6 +162,9 @@ int main(int argc, char *argv[]) {
     }
 #endif
     
+    /* ignore SIGPIPE */
+    signal(SIGPIPE, SIG_IGN);
+
     int outpipe[2];
     int errpipe[2];
     
@@ -222,6 +231,14 @@ int main(int argc, char *argv[]) {
             
             FD_SET(outpipe[0], &fdset);
             FD_SET(errpipe[0], &fdset);
+            
+            // Original tlmgr commits suicide when it updates itself, and waitpid doesn't catch it (or I'm doing something wrong).  Polling the filesystem like this is gross, but it works.
+            struct stat sb;
+            if (stat(argv[2], &sb) != 0) {
+                log_error(@"executable no longer exists at %s", argv[2]);
+                kill(child, SIGTERM);
+                exit(EXIT_FAILURE);
+            }
 
             tv.tv_sec = 0;
             tv.tv_usec = 100000;
