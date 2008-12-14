@@ -11,6 +11,7 @@
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		F94E74A20EF4965100E0B78F /* TLMTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = F94E74A10EF4965100E0B78F /* TLMTableView.m */; };
 		F99E51980EEE4AD5006E6B39 /* TLMURLFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = F99E51970EEE4AD5006E6B39 /* TLMURLFormatter.m */; };
 		F9ABAA5E0EF198D500497E0F /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = F9ABAA5D0EF198D500497E0F /* Credits.rtf */; };
 		F9B134610EEB1894007C0046 /* TLMAppController.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B134600EEB1894007C0046 /* TLMAppController.m */; };
@@ -71,6 +72,8 @@
 		32CA4F630368D1EE00C91783 /* TeX Live Manager_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TeX Live Manager_Prefix.pch"; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* TeX Live Manager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TeX Live Manager.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F94E74A00EF4965100E0B78F /* TLMTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMTableView.h; sourceTree = "<group>"; };
+		F94E74A10EF4965100E0B78F /* TLMTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMTableView.m; sourceTree = "<group>"; };
 		F99E51960EEE4AD5006E6B39 /* TLMURLFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMURLFormatter.h; sourceTree = "<group>"; };
 		F99E51970EEE4AD5006E6B39 /* TLMURLFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMURLFormatter.m; sourceTree = "<group>"; };
 		F9ABAA5D0EF198D500497E0F /* Credits.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = Credits.rtf; sourceTree = "<group>"; };
@@ -136,6 +139,7 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				F94E74BA0EF49AE100E0B78F /* Views */,
 				F9C490D70EEEF44200E44FA6 /* Operations */,
 				F9F56B7E0EF32F3500E934A9 /* Logging */,
 				F9B134660EEB19CB007C0046 /* TLMMainWindowController.h */,
@@ -146,8 +150,6 @@
 				F9B13B170EECE5AE007C0046 /* TLMInfoController.m */,
 				F9F130590EED94F700D9968D /* TLMPreferenceController.h */,
 				F9F1305A0EED94F700D9968D /* TLMPreferenceController.m */,
-				F9B13ADA0EECD9DA007C0046 /* TLMSplitView.h */,
-				F9B13ADB0EECD9DA007C0046 /* TLMSplitView.m */,
 				F99E51960EEE4AD5006E6B39 /* TLMURLFormatter.h */,
 				F99E51970EEE4AD5006E6B39 /* TLMURLFormatter.m */,
 				F9B134760EEB2065007C0046 /* TLMPackage.h */,
@@ -228,6 +230,17 @@
 				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F94E74BA0EF49AE100E0B78F /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				F9B13ADA0EECD9DA007C0046 /* TLMSplitView.h */,
+				F9B13ADB0EECD9DA007C0046 /* TLMSplitView.m */,
+				F94E74A00EF4965100E0B78F /* TLMTableView.h */,
+				F94E74A10EF4965100E0B78F /* TLMTableView.m */,
+			);
+			name = Views;
 			sourceTree = "<group>";
 		};
 		F9C490D70EEEF44200E44FA6 /* Operations */ = {
@@ -355,6 +368,7 @@
 				F9F56B4C0EF31F8800E934A9 /* TLMLogMessage.m in Sources */,
 				F9F56BA10EF36F8B00E934A9 /* TLMLogDataSource.m in Sources */,
 				F9B6B5F80EF469A600CF767F /* TLMLogServer.m in Sources */,
+				F94E74A20EF4965100E0B78F /* TLMTableView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
