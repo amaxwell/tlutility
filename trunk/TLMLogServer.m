@@ -41,11 +41,6 @@
 #import <asl.h>
 
 NSString * const TLMLogServerUpdateNotification = @"TLMLogServerUpdateNotification";
-#define SERVER_NAME @"com.googlecode.mactlmgr.logserver"
-
-@protocol TLMLogServer <NSObject>
-- (oneway void)logMessage:(in bycopy TLMLogMessage *)message;
-@end
 
 @implementation TLMLogServer
 

@@ -50,12 +50,6 @@
 @synthesize _tableView;
 @synthesize messages = _messages;
 
-+ (void)initialize
-{
-    // set up the server
-    [TLMLogServer sharedServer];
-}
-
 - (id)init
 {
     self = [super init];

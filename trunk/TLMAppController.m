@@ -39,11 +39,15 @@
 #import "TLMAppController.h"
 #import "TLMMainWindowController.h"
 #import "TLMPreferenceController.h"
+#import "TLMLogServer.h"
 
 @implementation TLMAppController
 
 + (void)initialize
 {
+    // force setup of the log server
+    [TLMLogServer sharedServer];
+    
     NSMutableDictionary *defaults = [NSMutableDictionary dictionary];
     // see /usr/local/texlive/2008/tlpkg/TeXLive/TLConfig.pm
     [defaults setObject:@"http://mirror.ctan.org/" forKey:TLMServerURLPreferenceKey];

@@ -55,3 +55,9 @@
 @property (readwrite, copy) NSNumber *pid;
 
 @end
+
+#define SERVER_NAME @"com.googlecode.mactlmgr.logserver"
+
+@protocol TLMLogServer <NSObject>
+- (oneway void)logMessage:(in bycopy TLMLogMessage *)message;
+@end
