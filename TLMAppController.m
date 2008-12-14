@@ -72,4 +72,10 @@
     [[TLMPreferenceController sharedPreferenceController] showWindow:nil];
 }
 
+- (IBAction)openDisasterRecoveryPage:(id)sender
+{
+    NSURL *aURL = [NSURL URLWithString:@"http://tug.org/texlive/tlmgr.html"];
+    [[NSWorkspace sharedWorkspace] openURL:aURL];
+}
+
 @end

@@ -47,5 +47,6 @@
 }
 
 - (IBAction)showPreferences:(id)sender;
+- (IBAction)openDisasterRecoveryPage:(id)sender;
 
 @end
