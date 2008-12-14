@@ -79,12 +79,18 @@ static char _TLMOperationFinishedContext;
 - (id)initWithCommand:(NSString *)absolutePath options:(NSArray *)options
 {
     NSParameterAssert(absolutePath);
-    NSFileManager *fm = [NSFileManager new];
-    NSParameterAssert([fm isExecutableFileAtPath:absolutePath]);
-    [fm release];
     NSParameterAssert(options);
-    self = [super init];
-    if (self) {
+    
+    NSFileManager *fm = [NSFileManager new];
+    BOOL exists = [fm isExecutableFileAtPath:absolutePath];
+    [fm release];
+
+    if (NO == exists) {
+        TLMLog(@"TLMOperation", @"No executable file at %@", absolutePath);
+        [self release];
+        self = nil;
+    }
+    else if ((self = [super init])) {
         _task = [BDSKTask new];
         [_task setLaunchPath:absolutePath];
         [_task setArguments:options];

@@ -54,8 +54,15 @@
 
 - (id)initWithPackageNames:(NSArray *)packageNames location:(NSURL *)location;
 {
-    self = [super init];
-    if (self) {
+    NSString *cmd = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath]; 
+    NSFileManager *fm = [NSFileManager new];
+    BOOL exists = [fm isExecutableFileAtPath:cmd];
+    [fm release];
+    
+    if (NO == exists) {
+        [self release];
+        self = nil;
+    } else if ((self = [super init])) {
         NSParameterAssert(location);
         _path = [[[NSBundle mainBundle] pathForAuxiliaryExecutable:@"tlmgr_cwrapper"] copy];
         NSParameterAssert(_path);
@@ -63,7 +70,6 @@
         
         NSString *useRoot = ([[NSUserDefaults standardUserDefaults] boolForKey:TLMUseRootHomePreferenceKey]) ? @"y" : @"n";
         NSString *locationString = [location absoluteString];
-        NSString *cmd = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath];        
         NSMutableArray *options = [NSMutableArray arrayWithObjects:useRoot, cmd, @"--location", locationString, @"update", nil];
         
         if (nil == packageNames) {
