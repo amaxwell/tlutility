@@ -54,16 +54,26 @@ NSString * const TLMLogServerUpdateNotification = @"TLMLogServerUpdateNotificati
     return sharedServer;
 }
 
+static NSConnection * __TLMLSCreateAndRegisterConnectionForServer(TLMLogServer *server)
+{
+    NSConnection *connection = [[NSConnection alloc] initWithReceivePort:[NSPort port] sendPort:nil];
+    [connection addRequestMode:NSModalPanelRunLoopMode];
+    [connection addRequestMode:NSEventTrackingRunLoopMode];
+    [connection setRootObject:[NSProtocolChecker protocolCheckerWithTarget:server protocol:@protocol(TLMLogServerProtocol)]];
+    if ([connection registerName:SERVER_NAME] == NO)
+        TLMLog(@"TLMLogServer", @"-[TLMLogServer init] Failed to register connection named %@", SERVER_NAME);
+    [[NSNotificationCenter defaultCenter] addObserver:server
+                                             selector:@selector(_handleConnectionDied:) 
+                                                 name:NSConnectionDidDieNotification
+                                               object:connection];            
+    return connection;
+}
+
 - (id)init
 {
     self = [super init];
     if (self) {
-        _connection = [[NSConnection connectionWithReceivePort:[NSPort port] sendPort:nil] retain];
-        [_connection addRequestMode:NSModalPanelRunLoopMode];
-        [_connection addRequestMode:NSEventTrackingRunLoopMode];
-        [_connection setRootObject:[NSProtocolChecker protocolCheckerWithTarget:self protocol:@protocol(TLMLogServer)]];
-        if ([_connection registerName:SERVER_NAME] == NO)
-            NSLog(@"Failed to register connection named %@", SERVER_NAME);
+        _connection = __TLMLSCreateAndRegisterConnectionForServer(self);
         [[NSNotificationCenter defaultCenter] addObserver:self 
                                                  selector:@selector(_handleApplicationTerminate:) 
                                                      name:NSApplicationWillTerminateNotification
@@ -75,6 +85,8 @@ NSString * const TLMLogServerUpdateNotification = @"TLMLogServerUpdateNotificati
 
 - (void)_destroyConnection
 {
+    // remove self as delegate so we don't get _handleConnectionDied: while terminating
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSConnectionDidDieNotification object:_connection];
     [[NSPortNameServer systemDefaultPortNameServer] removePortForName:SERVER_NAME];
     [[_connection sendPort] invalidate];
     [[_connection receivePort] invalidate];
@@ -82,6 +94,14 @@ NSString * const TLMLogServerUpdateNotification = @"TLMLogServerUpdateNotificati
     [_connection release];
     _connection = nil;
 }
+
+- (void)_handleConnectionDied:(NSNotification *)aNote
+{
+    TLMLog(@"TLMLogServer", @"Log server connection died, trying to recreate");
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSConnectionDidDieNotification object:_connection];
+    [self _destroyConnection];
+    _connection = __TLMLSCreateAndRegisterConnectionForServer(self);
+}    
 
 - (void)_handleApplicationTerminate:(NSNotification *)aNote
 {
