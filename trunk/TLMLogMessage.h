@@ -58,6 +58,6 @@
 
 #define SERVER_NAME @"com.googlecode.mactlmgr.logserver"
 
-@protocol TLMLogServer <NSObject>
+@protocol TLMLogServerProtocol <NSObject>
 - (oneway void)logMessage:(in bycopy TLMLogMessage *)message;
 @end
