@@ -31,7 +31,7 @@ extern NSString * const TLMUseRootHomePreferenceKey;
 @property (nonatomic, retain) IBOutlet NSButton *_rootHomeCheckBox;
 
 // composes TLMServerURLPreferenceKey and TLMServerPathPreferenceKey
-@property (readonly) NSURL *serverURL;
+@property (readonly) NSURL *defaultServerURL;
 
 // adds tlmgr to TLMTexBinPathPreferenceKey, standardizes path
 @property (readonly) NSString *tlmgrAbsolutePath;

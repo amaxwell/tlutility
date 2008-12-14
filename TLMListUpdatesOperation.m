@@ -52,7 +52,7 @@
 
 - (id)init
 {
-    NSString *location = [[[TLMPreferenceController sharedPreferenceController] serverURL] absoluteString];
+    NSString *location = [[[TLMPreferenceController sharedPreferenceController] defaultServerURL] absoluteString];
     NSArray *options = [NSArray arrayWithObjects:@"--location", location, @"update", @"--list", nil];
     NSString *cmd = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath];
     return [self initWithCommand:cmd options:options];

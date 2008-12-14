@@ -40,6 +40,7 @@
 #import "TLMInfoOperation.h"
 #import "TLMPackage.h"
 #import "TLMOutputParser.h"
+#import "TLMLogServer.h"
 
 @implementation TLMInfoController
 
@@ -144,21 +145,26 @@
     
     if (nil != package) {
         
-        [[self window] setTitle:[NSString stringWithFormat:NSLocalizedString(@"Searching%C", @""), 0x2026]];
-
-        [_tabView selectLastTabViewItem:nil];
-        [self _recenterSpinner];
-        [_spinner startAnimation:nil];
-
         TLMInfoOperation *op = [[TLMInfoOperation alloc] initWithPackageName:[package name]];
-        [[NSNotificationCenter defaultCenter] addObserver:self 
-                                                 selector:@selector(_handleInfoOperationFinishedNotification:) 
-                                                     name:TLMOperationFinishedNotification 
-                                                   object:op];
-        [_infoQueue addOperation:op];
-        [op release];
-        if ([[self window] isVisible] == NO)
-            [self showWindow:self];
+        if (op) {
+            
+            [[self window] setTitle:[NSString stringWithFormat:NSLocalizedString(@"Searching%C", @""), 0x2026]];
+            
+            [_tabView selectLastTabViewItem:nil];
+            [self _recenterSpinner];
+            [_spinner startAnimation:nil];
+            
+            
+            [[NSNotificationCenter defaultCenter] addObserver:self 
+                                                     selector:@selector(_handleInfoOperationFinishedNotification:) 
+                                                         name:TLMOperationFinishedNotification 
+                                                       object:op];
+            [_infoQueue addOperation:op];
+            [op release];
+            
+            if ([[self window] isVisible] == NO)
+                [self showWindow:self];
+        }
     }
     else {
         [[self window] setTitle:NSLocalizedString(@"Nothing Selected", @"")];

@@ -44,12 +44,17 @@
 #import "TLMInfoController.h"
 #import "TLMPreferenceController.h"
 #import "TLMLogServer.h"
+#import "TLMAppController.h"
 
 static char _TLMOperationQueueOperationContext;
 
 @implementation TLMMainWindowController
 
-@synthesize _tableView, _progressIndicator, _hostnameField, _splitView, _logDataSource;
+@synthesize _tableView;
+@synthesize _progressIndicator;
+@synthesize _hostnameField;
+@synthesize _splitView;
+@synthesize _logDataSource;
 @synthesize lastUpdateURL = _lastUpdateURL;
 
 - (id)init
@@ -96,10 +101,33 @@ static char _TLMOperationQueueOperationContext;
 - (void)awakeFromNib
 {
     [[self window] setTitle:[[NSBundle mainBundle] objectForInfoDictionaryKey:(id)kCFBundleNameKey]];
-    [self setLastUpdateURL:[[TLMPreferenceController sharedPreferenceController] serverURL]];
-        
-    // may as well populate the list immediately
+    [self setLastUpdateURL:[[TLMPreferenceController sharedPreferenceController] defaultServerURL]];        
+}
+
+- (void)windowDidLoad
+{
+    [super windowDidLoad];
+    
+    // may as well populate the list immediately; by now we should have the window to display a warning sheet
     [self listUpdates:nil];
+}
+
+- (BOOL)_checkCommandPathAndWarn:(BOOL)displayWarning
+{
+    NSString *cmdPath = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath];
+    BOOL exists = [[NSFileManager defaultManager] isExecutableFileAtPath:cmdPath];
+    
+    if (NO == exists) {
+        TLMLog(nil, @"tlmgr not found at \"%@\"", cmdPath);
+        if (displayWarning) {
+            NSAlert *alert = [[NSAlert new] autorelease];
+            [alert setMessageText:NSLocalizedString(@"TeX installation not found", @"")];
+            [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"The tlmgr tool does not exist at %@.  Please fix this in the preferences or install TeX Live.", @""), cmdPath]];
+            [alert beginSheetModalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
+        }
+    }
+    
+    return exists;
 }
 
 - (NSString *)windowNibName { return @"MainWindow"; }
@@ -129,7 +157,7 @@ static char _TLMOperationQueueOperationContext;
 - (void)setLastUpdateURL:(NSURL *)aURL
 {
     if (nil == aURL) {
-        NSURL *defaultURL = [[TLMPreferenceController sharedPreferenceController] updateURL];
+        NSURL *defaultURL = [[TLMPreferenceController sharedPreferenceController] defaultServerURL];
         TLMLog(nil, @"A nil URL was passed to %@; using default %@ instead", NSStringFromSelector(_cmd), defaultURL);
         aURL = defaultURL;
     }
@@ -171,6 +199,14 @@ static char _TLMOperationQueueOperationContext;
     [self setLastUpdateURL:[op updateURL]];
 }
 
+- (void)installFailureAlertDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)context
+{
+    if (NSAlertFirstButtonReturn == returnCode)
+        [[NSApp delegate] openDisasterRecoveryPage:nil];
+    else
+        TLMLog(nil, @"User chose not to open %@ after failure", @"http://tug.org/texlive/tlmgr.html");
+}
+
 - (void)_handleInstallFinishedNotification:(NSNotification *)aNote
 {
     NSParameterAssert([NSThread isMainThread]);
@@ -179,9 +215,22 @@ static char _TLMOperationQueueOperationContext;
     
     // ignore operations that failed or were explicitly cancelled
     if ([op isCancelled] == NO) {
-        // This is slow, but if infrastructure was updated or a package installed other dependencies, we have no way of manually removing from the list.
-        // FIXME: need to ensure the same mirror is used for this!
-        [self listUpdates:nil];
+        
+        // check to see if this was an infrastructure update, which may have wiped out tlmgr
+        if (_updateInfrastructure && NO == [self _checkCommandPathAndWarn:NO]) {
+            NSAlert *alert = [[NSAlert new] autorelease];
+            [alert setAlertStyle:NSCriticalAlertStyle];
+            [alert setMessageText:NSLocalizedString(@"The tlmgr tool no longer exists, possibly due to an update failure", @"")];
+            [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"Follow the instructions for Unix disaster recovery on the TeX Live web site at %@.  Would you like to go to that page now?  You can also open it later from the Help menu.", @""), @"http://tug.org/texlive/tlmgr.html"]];
+            [alert addButtonWithTitle:NSLocalizedString(@"Open Now", @"")];
+            [alert addButtonWithTitle:NSLocalizedString(@"Later", @"")];
+            [alert beginSheetModalForWindow:[self window] modalDelegate:self didEndSelector:@selector(installFailureAlertDidEnd:returnCode:contextInfo:) contextInfo:NULL];            
+        }
+        else {
+            // This is slow, but if infrastructure was updated or a package installed other dependencies, we have no way of manually removing from the list.
+            // FIXME: need to ensure the same mirror is used for this!
+            [self listUpdates:nil];
+        }
     }
 }
 
@@ -256,13 +305,17 @@ static char _TLMOperationQueueOperationContext;
 
 - (IBAction)listUpdates:(id)sender;
 {
-    TLMListUpdatesOperation *op = [TLMListUpdatesOperation new];
-    [[NSNotificationCenter defaultCenter] addObserver:self 
-                                             selector:@selector(_handleListUpdatesFinishedNotification:) 
-                                                 name:TLMOperationFinishedNotification 
-                                               object:op];
-    [_queue addOperation:op];
-    [op release];
+    if ([self _checkCommandPathAndWarn:YES]) {
+        TLMListUpdatesOperation *op = [TLMListUpdatesOperation new];
+        if (op) {
+            [[NSNotificationCenter defaultCenter] addObserver:self 
+                                                     selector:@selector(_handleListUpdatesFinishedNotification:) 
+                                                         name:TLMOperationFinishedNotification 
+                                                       object:op];
+            [_queue addOperation:op];
+            [op release];
+        }
+    }
 }
 
 - (void)updateAllAlertDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo;
@@ -273,24 +326,28 @@ static char _TLMOperationQueueOperationContext;
         if (_updateInfrastructure)
             packageNames = [NSArray arrayWithObjects:@"bin-texlive", @"texlive.infra", nil];
         TLMUpdateOperation *op = [[TLMUpdateOperation alloc] initWithPackageNames:packageNames location:_lastUpdateURL];
-        [[NSNotificationCenter defaultCenter] addObserver:self 
-                                                 selector:@selector(_handleInstallFinishedNotification:) 
-                                                     name:TLMOperationFinishedNotification 
-                                                   object:op];
-        [_queue addOperation:op];
-        [op release];    
+        if (op) {
+            [[NSNotificationCenter defaultCenter] addObserver:self 
+                                                     selector:@selector(_handleInstallFinishedNotification:) 
+                                                         name:TLMOperationFinishedNotification 
+                                                       object:op];
+            [_queue addOperation:op];
+            [op release];   
+        }
     }    
 }
 
 - (IBAction)updateAll:(id)sender;
 {
-    NSAlert *alert = [[NSAlert new] autorelease];
-    [alert setMessageText:NSLocalizedString(@"Update All Packages?", @"")];
-    // may not be correct for _updateInfrastructure, but tlmgr may remove stuff also...so leave it as-is
-    [alert setInformativeText:NSLocalizedString(@"This will install all available updates and remove packages that no longer exist on the server.", @"")];
-    [alert addButtonWithTitle:NSLocalizedString(@"Update", @"")];
-    [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")];
-    [alert beginSheetModalForWindow:[self window] modalDelegate:self didEndSelector:@selector(updateAllAlertDidEnd:returnCode:contextInfo:) contextInfo:NULL]; 
+    if ([self _checkCommandPathAndWarn:YES]) {
+        NSAlert *alert = [[NSAlert new] autorelease];
+        [alert setMessageText:NSLocalizedString(@"Update All Packages?", @"")];
+        // may not be correct for _updateInfrastructure, but tlmgr may remove stuff also...so leave it as-is
+        [alert setInformativeText:NSLocalizedString(@"This will install all available updates and remove packages that no longer exist on the server.", @"")];
+        [alert addButtonWithTitle:NSLocalizedString(@"Update", @"")];
+        [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")];
+        [alert beginSheetModalForWindow:[self window] modalDelegate:self didEndSelector:@selector(updateAllAlertDidEnd:returnCode:contextInfo:) contextInfo:NULL]; 
+    }
 }    
 
 - (BOOL)windowShouldClose:(id)sender;
@@ -313,18 +370,24 @@ static char _TLMOperationQueueOperationContext;
 
 - (IBAction)installSelectedRow:(id)sender;
 {
+    // !!! early return here if tlmgr doesn't exist
+    if (NO == [self _checkCommandPathAndWarn:YES])
+        return;
+    
     if ([[_tableView selectedRowIndexes] count] == [_packages count]) {
         [self updateAll:nil];
     }
     else {
         NSArray *packageNames = [[_packages valueForKey:@"name"] objectsAtIndexes:[_tableView selectedRowIndexes]];
         TLMUpdateOperation *op = [[TLMUpdateOperation alloc] initWithPackageNames:packageNames location:_lastUpdateURL];
-        [[NSNotificationCenter defaultCenter] addObserver:self 
-                                                 selector:@selector(_handleInstallFinishedNotification:) 
-                                                     name:TLMOperationFinishedNotification 
-                                                   object:op];
-        [_queue addOperation:op];
-        [op release];   
+        if (op) {
+            [[NSNotificationCenter defaultCenter] addObserver:self 
+                                                     selector:@selector(_handleInstallFinishedNotification:) 
+                                                         name:TLMOperationFinishedNotification 
+                                                       object:op];
+            [_queue addOperation:op];
+            [op release];   
+        }
     }
 }
 

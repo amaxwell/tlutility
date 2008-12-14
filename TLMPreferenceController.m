@@ -117,7 +117,7 @@ NSString * const TLMUseRootHomePreferenceKey = @"TLMUseRootHomePreferenceKey"; /
 
 - (NSString *)windowNibName { return @"Preferences"; }
 
-- (NSURL *)serverURL
+- (NSURL *)defaultServerURL
 {
     // There's a race here if the server path is ever user-settable, but at present it's only for future-proofing.
     NSURL *base = [NSURL URLWithString:[[NSUserDefaults standardUserDefaults] objectForKey:TLMServerURLPreferenceKey]];
