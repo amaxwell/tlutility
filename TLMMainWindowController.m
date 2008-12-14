@@ -42,14 +42,15 @@
 #import "TLMUpdateOperation.h"
 #import "TLMSplitView.h"
 #import "TLMInfoController.h"
-#import "TLMLogUtilities.h"
+#import "TLMPreferenceController.h"
+#import "TLMLogServer.h"
 
 static char _TLMOperationQueueOperationContext;
 
 @implementation TLMMainWindowController
 
 @synthesize _tableView, _progressIndicator, _hostnameField, _splitView, _logDataSource;
-
+@synthesize lastUpdateURL = _lastUpdateURL;
 
 - (id)init
 {
@@ -86,6 +87,7 @@ static char _TLMOperationQueueOperationContext;
     
     [_packages release];
     [_progressIndicator release];
+    [_lastUpdateURL release];
     [_logDataSource release];
     
     [super dealloc];
@@ -94,7 +96,7 @@ static char _TLMOperationQueueOperationContext;
 - (void)awakeFromNib
 {
     [[self window] setTitle:[[NSBundle mainBundle] objectForInfoDictionaryKey:(id)kCFBundleNameKey]];
-    [_hostnameField setStringValue:@""];
+    [self setLastUpdateURL:[[TLMPreferenceController sharedPreferenceController] serverURL]];
         
     // may as well populate the list immediately
     [self listUpdates:nil];
@@ -122,6 +124,20 @@ static char _TLMOperationQueueOperationContext;
     else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
+}
+
+- (void)setLastUpdateURL:(NSURL *)aURL
+{
+    if (nil == aURL) {
+        NSURL *defaultURL = [[TLMPreferenceController sharedPreferenceController] updateURL];
+        TLMLog(nil, @"A nil URL was passed to %@; using default %@ instead", NSStringFromSelector(_cmd), defaultURL);
+        aURL = defaultURL;
+    }
+    NSParameterAssert(aURL);
+    [_hostnameField setStringValue:[aURL absoluteString]];
+    
+    [_lastUpdateURL autorelease];
+    _lastUpdateURL = [aURL copy];
 }
 
 - (void)_handleListUpdatesFinishedNotification:(NSNotification *)aNote
@@ -153,13 +169,7 @@ static char _TLMOperationQueueOperationContext;
     [_packages setArray:packages];
     [_tableView reloadData];
     
-    // FIXME: this doesn't work correctly (only changes font when the text field is made responder?)
-    if ([op updateURL]) {
-        NSMutableAttributedString *attrString = [[NSMutableAttributedString alloc] initWithString:[[op updateURL] absoluteString]];
-        [attrString addAttribute:NSLinkAttributeName value:[op updateURL] range:NSMakeRange(0, [attrString length])];
-        [_hostnameField setAttributedStringValue:attrString];
-        [attrString release];
-    }
+    [self setLastUpdateURL:[op updateURL]];
 }
 
 - (void)_handleInstallFinishedNotification:(NSNotification *)aNote
@@ -263,7 +273,7 @@ static char _TLMOperationQueueOperationContext;
         // force an install of only these packages, since old versions of tlmgr may not do that
         if (_updateInfrastructure)
             packageNames = [NSArray arrayWithObjects:@"bin-texlive", @"texlive.infra", nil];
-        TLMUpdateOperation *op = [[TLMUpdateOperation alloc] initWithPackageNames:packageNames];
+        TLMUpdateOperation *op = [[TLMUpdateOperation alloc] initWithPackageNames:packageNames location:_lastUpdateURL];
         [[NSNotificationCenter defaultCenter] addObserver:self 
                                                  selector:@selector(_handleInstallFinishedNotification:) 
                                                      name:TLMOperationFinishedNotification 
@@ -309,7 +319,7 @@ static char _TLMOperationQueueOperationContext;
     }
     else {
         NSArray *packageNames = [[_packages valueForKey:@"name"] objectsAtIndexes:[_tableView selectedRowIndexes]];
-        TLMUpdateOperation *op = [[TLMUpdateOperation alloc] initWithPackageNames:packageNames];
+        TLMUpdateOperation *op = [[TLMUpdateOperation alloc] initWithPackageNames:packageNames location:_lastUpdateURL];
         [[NSNotificationCenter defaultCenter] addObserver:self 
                                                  selector:@selector(_handleInstallFinishedNotification:) 
                                                      name:TLMOperationFinishedNotification 

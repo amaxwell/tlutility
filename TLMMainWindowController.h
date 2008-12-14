@@ -55,6 +55,7 @@
     NSOperationQueue    *_queue;
     CGFloat              _lastTextViewHeight;
     BOOL                 _updateInfrastructure;
+    NSURL               *_lastUpdateURL;
     
     TLMLogDataSource    *_logDataSource;
 }
@@ -64,6 +65,7 @@
 @property (nonatomic, retain) IBOutlet NSTextField *_hostnameField;
 @property (nonatomic, retain) IBOutlet TLMSplitView *_splitView;
 @property (nonatomic, retain) IBOutlet TLMLogDataSource *_logDataSource;
+@property (nonatomic, copy) NSURL *lastUpdateURL;
 
 - (IBAction)listUpdates:(id)sender;
 - (IBAction)updateAll:(id)sender;

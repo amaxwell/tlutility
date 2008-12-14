@@ -48,7 +48,8 @@
     NSArray  *_packageNames;
 }
 
-- (id)initWithPackageNames:(NSArray *)packageNames;
+// designated initializer; location must be non-nil
+- (id)initWithPackageNames:(NSArray *)packageNames location:(NSURL *)location;
 
 @property(readonly, copy) NSArray *packageNames;
 

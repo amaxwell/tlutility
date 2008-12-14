@@ -48,21 +48,23 @@
 
 - (id)init
 {
-    return [self initWithPackageNames:nil];
+    NSAssert(0, @"Invalid initializer.  Location parameter is required.");
+    return [self initWithPackageNames:nil location:nil];
 }
 
-- (id)initWithPackageNames:(NSArray *)packageNames;
+- (id)initWithPackageNames:(NSArray *)packageNames location:(NSURL *)location;
 {
     self = [super init];
     if (self) {
+        NSParameterAssert(location);
         _path = [[[NSBundle mainBundle] pathForAuxiliaryExecutable:@"tlmgr_cwrapper"] copy];
         NSParameterAssert(_path);
         _packageNames = [packageNames copy];
         
         NSString *useRoot = ([[NSUserDefaults standardUserDefaults] boolForKey:TLMUseRootHomePreferenceKey]) ? @"y" : @"n";
-        NSString *location = [[[TLMPreferenceController sharedPreferenceController] serverURL] absoluteString];
+        NSString *locationString = [location absoluteString];
         NSString *cmd = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath];        
-        NSMutableArray *options = [NSMutableArray arrayWithObjects:useRoot, cmd, @"--location", location, @"update", nil];
+        NSMutableArray *options = [NSMutableArray arrayWithObjects:useRoot, cmd, @"--location", locationString, @"update", nil];
         
         if (nil == packageNames) {
             [options addObject:@"--all"];
