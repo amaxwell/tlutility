@@ -106,4 +106,14 @@
     [pboard setString:[messages componentsJoinedByString:@"\n"] forType:NSStringPboardType];
 }
 
+- (CGFloat)tableView:(NSTableView *)tableView heightOfRow:(NSInteger)row;
+{
+    NSTableColumn *tc = [tableView tableColumnWithIdentifier:@"message"];
+    static NSTextFieldCell *cell = nil;
+    if (nil == cell)
+        cell = [[tc dataCell] copy];
+    [cell setObjectValue:[self tableView:tableView objectValueForTableColumn:tc row:row]];
+    return [cell cellSize].height;
+}
+
 @end
