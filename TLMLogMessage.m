@@ -100,7 +100,7 @@
         return NO;
     return YES;
 }
-- (NSString *)description { return [NSString stringWithFormat:@"%@ %@[%d]\t%@", _date, _sender, _pid, _message]; }
+- (NSString *)description { return [NSString stringWithFormat:@"%@ %@ %@[%@]\t%@", _date, _level, _sender, _pid, _message]; }
 - (NSComparisonResult)compare:(TLMLogMessage *)other { return [_date compare:[other date]]; }
 
 @end
