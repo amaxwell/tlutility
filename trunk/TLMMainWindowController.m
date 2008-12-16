@@ -141,6 +141,9 @@ static char _TLMOperationQueueOperationContext;
     else {
         [_progressIndicator stopAnimation:nil];
     }
+    
+    // can either do this or post a custom event...
+    [[[self window] toolbar] validateVisibleItems];
 }
 
 // NB: this will arrive on the queue's thread, at least under some conditions!
