@@ -138,7 +138,6 @@ static char _TLMOperationFinishedContext;
     NSData *outputData = [[aNote userInfo] objectForKey:NSFileHandleNotificationDataItem];
     if ([outputData length]) {
         [self setErrorData:outputData];    
-        TLMLog(@"TLMOperation", @"%@", [self errorMessages]);
     }
 }
 
@@ -147,8 +146,6 @@ static char _TLMOperationFinishedContext;
     @synchronized(self) {
         if (nil == _errorMessages && [_errorData length]) {
             _errorMessages = [[NSString alloc] initWithData:_errorData encoding:NSUTF8StringEncoding];
-            if (nil == _errorMessages)
-                _errorMessages = [[NSString alloc] initWithData:_errorData encoding:NSMacOSRomanStringEncoding];
         }
     }
     return _errorMessages;
@@ -177,26 +174,28 @@ static char _TLMOperationFinishedContext;
     
     int status = -1;
     [_task launch];
-    if ([_task isRunning]) {
+    
         
-        // Reimplement -[NSTask waitUntilExit] so we can handle -[NSOperation cancel]
-        while ([_task isRunning] && [self isCancelled] == NO) {
-            // using +dateWithTimeIntervalSinceNow: can cause the autorelease pool to blow up
-            NSDate *expireDate = [[NSDate alloc] initWithTimeIntervalSinceNow:0.1];
-            [[NSRunLoop currentRunLoop] runMode:rlmode beforeDate:expireDate];
-            [expireDate release];
-        }
-        
-        if ([self isCancelled]) {
-            [_task terminate];
-        }
-        else {
-            // not cancelled, but make sure it's really done before calling -terminationStatus
-            [_task waitUntilExit];
-            status = [_task terminationStatus];
-        }
+    // Reimplement -[NSTask waitUntilExit] so we can handle -[NSOperation cancel].
+    while ([_task isRunning] && [self isCancelled] == NO) {
+        // using +dateWithTimeIntervalSinceNow: can cause the autorelease pool to blow up
+        NSDate *expireDate = [[NSDate alloc] initWithTimeIntervalSinceNow:0.2];
+        [[NSRunLoop currentRunLoop] runMode:rlmode beforeDate:expireDate];
+        [expireDate release];
     }
-
+        
+    if ([self isCancelled]) {
+        [_task terminate];
+    }
+    else {
+        // not cancelled, but make sure it's really done before calling -terminationStatus
+        [_task waitUntilExit];
+        status = [_task terminationStatus];
+        
+        // run the runloop again, since we have a race between -[NSTask isRunning] and actually getting data from the pipe
+        [[NSRunLoop currentRunLoop] runMode:rlmode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
+    }
+    
     signal(SIGPIPE, previousSignalMask);
 
     [nc removeObserver:self name:NSFileHandleReadToEndOfFileCompletionNotification object:outfh];
@@ -205,6 +204,7 @@ static char _TLMOperationFinishedContext;
     // don't try dealing with partial text data
     if ([self isCancelled]) {
         [self setOutputData:nil];
+        [self setErrorData:nil];
     } else if (0 != status) {
         TLMLog(@"TLMOperation", @"termination status of task %@ was %d", [_task launchPath], status);
         [self setFailed:YES];
