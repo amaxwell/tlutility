@@ -179,13 +179,19 @@ static char _TLMOperationFinishedContext;
     [_task launch];
     if ([_task isRunning]) {
         
-        while (nil == _outputData && [self isCancelled] == NO)
-            [[NSRunLoop currentRunLoop] runMode:rlmode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
+        // Reimplement -[NSTask waitUntilExit] so we can handle -[NSOperation cancel]
+        while ([_task isRunning] && [self isCancelled] == NO) {
+            // using +dateWithTimeIntervalSinceNow: can cause the autorelease pool to blow up
+            NSDate *expireDate = [[NSDate alloc] initWithTimeIntervalSinceNow:0.1];
+            [[NSRunLoop currentRunLoop] runMode:rlmode beforeDate:expireDate];
+            [expireDate release];
+        }
         
         if ([self isCancelled]) {
             [_task terminate];
         }
         else {
+            // not cancelled, but make sure it's really done before calling -terminationStatus
             [_task waitUntilExit];
             status = [_task terminationStatus];
         }
