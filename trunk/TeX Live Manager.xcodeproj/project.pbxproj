@@ -142,6 +142,7 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				F9A8BA6F0EF7668E00E35DC9 /* Model */,
 				F94E74BA0EF49AE100E0B78F /* Views */,
 				F9C490D70EEEF44200E44FA6 /* Operations */,
 				F9F56B7E0EF32F3500E934A9 /* Logging */,
@@ -155,12 +156,6 @@
 				F9F1305A0EED94F700D9968D /* TLMPreferenceController.m */,
 				F99E51960EEE4AD5006E6B39 /* TLMURLFormatter.h */,
 				F99E51970EEE4AD5006E6B39 /* TLMURLFormatter.m */,
-				F9B134760EEB2065007C0046 /* TLMPackage.h */,
-				F9B134770EEB2065007C0046 /* TLMPackage.m */,
-				F9A8BA360EF75C3B00E35DC9 /* TLMOutputParser2.h */,
-				F9A8BA370EF75C3B00E35DC9 /* TLMOutputParser2.m */,
-				F9B1347B0EEB208C007C0046 /* TLMOutputParser.h */,
-				F9B1347C0EEB208C007C0046 /* TLMOutputParser.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -246,6 +241,19 @@
 				F94E74A10EF4965100E0B78F /* TLMTableView.m */,
 			);
 			name = Views;
+			sourceTree = "<group>";
+		};
+		F9A8BA6F0EF7668E00E35DC9 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				F9B134760EEB2065007C0046 /* TLMPackage.h */,
+				F9B134770EEB2065007C0046 /* TLMPackage.m */,
+				F9A8BA360EF75C3B00E35DC9 /* TLMOutputParser2.h */,
+				F9A8BA370EF75C3B00E35DC9 /* TLMOutputParser2.m */,
+				F9B1347B0EEB208C007C0046 /* TLMOutputParser.h */,
+				F9B1347C0EEB208C007C0046 /* TLMOutputParser.m */,
+			);
+			name = Model;
 			sourceTree = "<group>";
 		};
 		F9C490D70EEEF44200E44FA6 /* Operations */ = {
