@@ -173,10 +173,12 @@ static char _TLMOperationQueueOperationContext;
     NSParameterAssert([NSThread isMainThread]);
     TLMListUpdatesOperation *op = [aNote object];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:TLMOperationFinishedNotification object:op];
+    
+    NSArray *allPackages = [op packages];
 
     // Karl sez these are the packages that the next version of tlmgr will require you to install before installing anything else
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name IN { 'bin-texlive', 'texlive.infra' }"];
-    NSArray *packages = [[op packages] filteredArrayUsingPredicate:predicate];
+    NSArray *packages = [allPackages filteredArrayUsingPredicate:predicate];
     
     if ([packages count]) {
         _updateInfrastructure = YES;
@@ -190,7 +192,7 @@ static char _TLMOperationQueueOperationContext;
     }
     else {
         _updateInfrastructure = NO;
-        packages = [op packages];
+        packages = allPackages;
     }
     
     [_packages setArray:packages];
