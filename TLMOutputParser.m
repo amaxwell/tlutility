@@ -52,7 +52,7 @@
     // e.g. "remove pageno (removed on server)"
     if ([outputLine hasPrefix:removePrefix]) {
         
-        // package will be removed by tlmgr update --all
+        // package will be removed by `tlmgr update --all`
         NSMutableString *mstatus = [NSMutableString stringWithString:outputLine];
         CFStringTrimWhitespace((CFMutableStringRef)mstatus);
         [mstatus deleteCharactersInRange:NSMakeRange(0, [removePrefix length])];
@@ -77,7 +77,7 @@
     // e.g. "auto-install: pstool"
     else if ([outputLine hasPrefix:@"auto-install:"]) {
         
-        // wtf does "auto-install" mean anyway? 
+        // package that will be installed automatically when running `tlmgr update --all`
         NSRange r = [outputLine rangeOfString:@"auto-install:"];
         [package setName:[[outputLine substringFromIndex:NSMaxRange(r)] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
         [package setStatus:NSLocalizedString(@"Not installed", @"")];
@@ -116,7 +116,7 @@
         [scanner release];
     }
     else {
-        // major wtf time here...
+        // This may happen with some packages in an intermediate version of tlmgr.  Not worth dealing with, since we'll typically be updating infrastructure immediately and never really use that output.
         [package setName:NSLocalizedString(@"Error parsing package string", @"")];
         [package setStatus:outputLine];
         [package setFailedToParse:YES];
