@@ -44,6 +44,7 @@
 @private
     NSArray *_packages;
     NSURL   *_updateURL;
+    SEL      _parseSelector;
 }
 
 // array of TLMPackage objects
