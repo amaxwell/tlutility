@@ -59,7 +59,7 @@
         NSRange r = [mstatus rangeOfCharacterFromSet:[NSCharacterSet whitespaceCharacterSet]];
         if (r.length) {
             [package setName:[mstatus substringToIndex:r.location]];
-            [package setStatus:NSLocalizedString(@"Needs removal", @"")];
+            [package setStatus:NSLocalizedString(@"Deleted on server", @"")];
             [package setWillBeRemoved:YES];
             [package setCurrentlyInstalled:YES];
         }
@@ -70,7 +70,7 @@
         // this is the old version of "removed on server"
         NSRange r = [outputLine rangeOfCharacterFromSet:[NSCharacterSet whitespaceCharacterSet]];
         [package setName:[outputLine substringToIndex:r.location]];
-        [package setStatus:NSLocalizedString(@"Needs removal", @"")];
+        [package setStatus:NSLocalizedString(@"Deleted on server", @"")];
         [package setWillBeRemoved:YES];
         [package setCurrentlyInstalled:YES];
     }
@@ -80,13 +80,13 @@
         // wtf does "auto-install" mean anyway? 
         NSRange r = [outputLine rangeOfString:@"auto-install:"];
         [package setName:[[outputLine substringFromIndex:NSMaxRange(r)] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
-        [package setStatus:NSLocalizedString(@"Needs install", @"")];
+        [package setStatus:NSLocalizedString(@"Not installed", @"")];
     }
     // e.g. "ifxetex: local: 9906, source: 10831"
     else if ([outputLine rangeOfString:@"local:"].length) {
         
         // package is installed, but needs update
-        [package setStatus:NSLocalizedString(@"Needs update", @"")];
+        [package setStatus:NSLocalizedString(@"Updated on server", @"")];
         [package setCurrentlyInstalled:YES];
         
         NSScanner *scanner = [[NSScanner alloc] initWithString:outputLine];
