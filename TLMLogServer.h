@@ -38,6 +38,7 @@
 
 #import <Cocoa/Cocoa.h>
 
+// posted on the main thread
 extern NSString * const TLMLogServerUpdateNotification;
 
 @interface TLMLogServer : NSObject 

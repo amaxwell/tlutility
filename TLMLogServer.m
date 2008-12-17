@@ -124,13 +124,21 @@ static NSConnection * __TLMLSCreateAndRegisterConnectionForServer(TLMLogServer *
     }
     return messages;
 }
+
+- (void)_notifyOnMainThread
+{
+    NSParameterAssert([NSThread isMainThread]);
+    [[NSNotificationCenter defaultCenter] postNotificationName:TLMLogServerUpdateNotification object:self];
+}
     
 - (oneway void)logMessage:(in bycopy TLMLogMessage *)message;
 {
     @synchronized(_messages) {
         [_messages addObject:message];
     }
-    [[NSNotificationCenter defaultCenter] postNotificationName:TLMLogServerUpdateNotification object:self];
+    NSArray *rlmodes = [[NSArray alloc] initWithObjects:(id *)&kCFRunLoopCommonModes count:1];
+    [self performSelectorOnMainThread:@selector(_notifyOnMainThread) withObject:nil waitUntilDone:NO modes:rlmodes];
+    [rlmodes release];
 }
 
 @end
