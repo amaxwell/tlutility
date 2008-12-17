@@ -12,6 +12,7 @@ NSString * const TLMServerURLPreferenceKey = @"TLMServerURLPreferenceKey";     /
 NSString * const TLMTexBinPathPreferenceKey = @"TLMTexBinPathPreferenceKey";   /* /usr/texbin                 */
 NSString * const TLMServerPathPreferenceKey = @"TLMServerPathPreferenceKey";   /* systems/texlive/tlnet/2008  */
 NSString * const TLMUseRootHomePreferenceKey = @"TLMUseRootHomePreferenceKey"; /* YES                         */
+NSString * const TLMInfraPathPreferenceKey = @"TLMInfraPathPreferenceKey";     /* update-tlmgr-latest.sh      */
 
 #define TLMGR_CMD @"tlmgr"
 

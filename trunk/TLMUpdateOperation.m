@@ -45,6 +45,7 @@
 @implementation TLMUpdateOperation
 
 @synthesize packageNames = _packageNames;
+@synthesize options = _options;
 
 - (id)init
 {
