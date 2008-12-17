@@ -94,7 +94,7 @@
     }
     
     if (NO == hasMachineReadable)
-        TLMLog(@"TLMListUpdatesOperation", @"*** WARNING *** tlmgr does not support the --machine-readable option");
+        TLMLog(@"TLMListUpdatesOperation", @"tlmgr does not support --machine-readable; ad-hoc parsing will be used");
     
     return hasMachineReadable;
 }
