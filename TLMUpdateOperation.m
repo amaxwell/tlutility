@@ -134,8 +134,6 @@
             }
 
             FILE *communicationPipe = NULL;
-            
-            // TODO: this sucks, since AEWP provides no way to cancel the underlying task.  Maybe the tlmgr_cwrapper could call back with its PID?  That means setting up some sort of IPC and dealing with privileges...
             authFlags = kAuthorizationFlagDefaults;
             status = AuthorizationExecuteWithPrivileges(authorization, cmdPath, authFlags, args, &communicationPipe);
             
