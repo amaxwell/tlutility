@@ -79,7 +79,8 @@
 {
     [self setMessages:[[TLMLogServer sharedServer] messages]];
     [_tableView reloadData];
-    [_tableView scrollRowToVisible:([_tableView numberOfRows] - 1)];
+    if ([_tableView numberOfRows])
+        [_tableView scrollRowToVisible:([_tableView numberOfRows] - 1)];
 }    
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView;
