@@ -121,7 +121,7 @@ static void log_error(NSString *format, ...)
 int main(int argc, char *argv[]) {
     
     NSAutoreleasePool *pool = [NSAutoreleasePool new];
-    
+        
     /* this call was the original purpose of the program */
     setuid(geteuid());
     
@@ -152,6 +152,19 @@ int main(int argc, char *argv[]) {
             exit(1);
         }
         setenv("HOME", pw->pw_dir, 1);
+    }
+    
+    /* This is a security issue, since we don't want to trust relative paths. */
+    NSString *nsPath = [NSString stringWithUTF8String:argv[2]];
+    if ([nsPath isAbsolutePath] == NO) {
+        log_error(@"*** ERROR *** rejecting insecure path %@", nsPath);
+        exit(1);
+    }
+    
+    /* This catches a stupid mistake that I've made a few times in configuring the task. */
+    if ([[NSFileManager defaultManager] isExecutableFileAtPath:nsPath] == NO) {
+        log_error(@"*** ERROR *** non-executable file at path %@", nsPath);
+        exit(1);
     }
     
     int i;

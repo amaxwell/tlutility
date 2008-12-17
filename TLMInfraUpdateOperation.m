@@ -47,7 +47,7 @@
         NSString *scriptPath = [[NSUserDefaults standardUserDefaults] objectForKey:TLMInfraPathPreferenceKey];
         _scriptPath = [[_updateDirectory stringByAppendingPathComponent:scriptPath] copy];
         NSString *useRoot = ([[NSUserDefaults standardUserDefaults] boolForKey:TLMUseRootHomePreferenceKey]) ? @"y" : @"n";
-        NSMutableArray *options = [NSMutableArray arrayWithObjects:useRoot, scriptPath, nil];
+        NSMutableArray *options = [NSMutableArray arrayWithObjects:useRoot, _scriptPath, nil];
         [self setOptions:options];
     }
     return self;
@@ -75,6 +75,7 @@
     NSData *scriptData = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
     BOOL success = NO;
     if (nil != scriptData) {
+        TLMLog(@"TLMInfraUpdateOperation", @"Downloaded %lu bytes", (unsigned long)[scriptData length]);
         if (NO == [scriptData writeToFile:_scriptPath options:0 error:&error])
             TLMLog(@"TLMInfraUpdateOperation", @"%@", error);
         else
