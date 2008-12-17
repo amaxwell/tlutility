@@ -130,12 +130,7 @@ static NSConnection * __TLMLSCreateAndRegisterConnectionForServer(TLMLogServer *
     @synchronized(_messages) {
         [_messages addObject:message];
     }
-    NSArray *rlmodes = [NSArray arrayWithObjects:NSDefaultRunLoopMode, NSModalPanelRunLoopMode, nil];
-    NSNotification *notification = [NSNotification notificationWithName:TLMLogServerUpdateNotification object:self];
-    [[NSNotificationQueue defaultQueue] enqueueNotification:notification 
-                                               postingStyle:NSPostASAP 
-                                               coalesceMask:NSNotificationCoalescingOnSender 
-                                                   forModes:rlmodes];
+    [[NSNotificationCenter defaultCenter] postNotificationName:TLMLogServerUpdateNotification object:self];
 }
 
 @end
