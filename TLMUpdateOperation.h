@@ -52,5 +52,6 @@
 - (id)initWithPackageNames:(NSArray *)packageNames location:(NSURL *)location;
 
 @property(readonly, copy) NSArray *packageNames;
+@property(readwrite, copy) NSArray *options;
 
 @end

@@ -14,6 +14,7 @@
 		F94E74A20EF4965100E0B78F /* TLMTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = F94E74A10EF4965100E0B78F /* TLMTableView.m */; };
 		F99E51980EEE4AD5006E6B39 /* TLMURLFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = F99E51970EEE4AD5006E6B39 /* TLMURLFormatter.m */; };
 		F9A8BA380EF75C3B00E35DC9 /* TLMOutputParser2.m in Sources */ = {isa = PBXBuildFile; fileRef = F9A8BA370EF75C3B00E35DC9 /* TLMOutputParser2.m */; };
+		F9A8BB370EF8B11200E35DC9 /* TLMInfraUpdateOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F9A8BB360EF8B11200E35DC9 /* TLMInfraUpdateOperation.m */; };
 		F9ABAA5E0EF198D500497E0F /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = F9ABAA5D0EF198D500497E0F /* Credits.rtf */; };
 		F9B134610EEB1894007C0046 /* TLMAppController.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B134600EEB1894007C0046 /* TLMAppController.m */; };
 		F9B134680EEB19CB007C0046 /* TLMMainWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B134670EEB19CB007C0046 /* TLMMainWindowController.m */; };
@@ -79,6 +80,8 @@
 		F99E51970EEE4AD5006E6B39 /* TLMURLFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMURLFormatter.m; sourceTree = "<group>"; };
 		F9A8BA360EF75C3B00E35DC9 /* TLMOutputParser2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMOutputParser2.h; sourceTree = "<group>"; };
 		F9A8BA370EF75C3B00E35DC9 /* TLMOutputParser2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMOutputParser2.m; sourceTree = "<group>"; };
+		F9A8BB350EF8B11200E35DC9 /* TLMInfraUpdateOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMInfraUpdateOperation.h; sourceTree = "<group>"; };
+		F9A8BB360EF8B11200E35DC9 /* TLMInfraUpdateOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMInfraUpdateOperation.m; sourceTree = "<group>"; };
 		F9ABAA5D0EF198D500497E0F /* Credits.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = Credits.rtf; sourceTree = "<group>"; };
 		F9B1345F0EEB1894007C0046 /* TLMAppController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMAppController.h; sourceTree = "<group>"; };
 		F9B134600EEB1894007C0046 /* TLMAppController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMAppController.m; sourceTree = "<group>"; };
@@ -269,6 +272,8 @@
 				F9B1371A0EEC4A72007C0046 /* TLMListUpdatesOperation.m */,
 				F9B13B1B0EECE7F3007C0046 /* TLMInfoOperation.h */,
 				F9B13B1C0EECE7F3007C0046 /* TLMInfoOperation.m */,
+				F9A8BB350EF8B11200E35DC9 /* TLMInfraUpdateOperation.h */,
+				F9A8BB360EF8B11200E35DC9 /* TLMInfraUpdateOperation.m */,
 			);
 			name = Operations;
 			sourceTree = "<group>";
@@ -383,6 +388,7 @@
 				F9B6B5F80EF469A600CF767F /* TLMLogServer.m in Sources */,
 				F94E74A20EF4965100E0B78F /* TLMTableView.m in Sources */,
 				F9A8BA380EF75C3B00E35DC9 /* TLMOutputParser2.m in Sources */,
+				F9A8BB370EF8B11200E35DC9 /* TLMInfraUpdateOperation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

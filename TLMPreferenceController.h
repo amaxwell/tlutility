@@ -11,6 +11,7 @@ extern NSString * const TLMServerURLPreferenceKey;
 extern NSString * const TLMTexBinPathPreferenceKey;
 extern NSString * const TLMServerPathPreferenceKey;
 extern NSString * const TLMUseRootHomePreferenceKey;
+extern NSString * const TLMInfraPathPreferenceKey;
 
 @interface TLMPreferenceController : NSWindowController 
 {

@@ -38,8 +38,11 @@
 
 #import "TLMMainWindowController.h"
 #import "TLMPackage.h"
+
 #import "TLMListUpdatesOperation.h"
 #import "TLMUpdateOperation.h"
+#import "TLMInfraUpdateOperation.h"
+
 #import "TLMSplitView.h"
 #import "TLMInfoController.h"
 #import "TLMPreferenceController.h"
@@ -252,6 +255,10 @@ static char _TLMOperationQueueOperationContext;
 
 - (BOOL)_validateInstallSelectedRow
 {
+    // require update all, for consistency with the dialog
+    if (_updateInfrastructure)
+        return NO;
+    
     if ([_packages count] == 0)
         return NO;
     
@@ -326,11 +333,13 @@ static char _TLMOperationQueueOperationContext;
 - (void)updateAllAlertDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo;
 {
     if (NSAlertFirstButtonReturn == returnCode) {
-        NSArray *packageNames = nil;
-        // force an install of only these packages, since old versions of tlmgr may not do that
-        if (_updateInfrastructure)
-            packageNames = [NSArray arrayWithObjects:@"bin-texlive", @"texlive.infra", nil];
-        TLMUpdateOperation *op = [[TLMUpdateOperation alloc] initWithPackageNames:packageNames location:_lastUpdateURL];
+        TLMUpdateOperation *op = nil;
+        if (_updateInfrastructure) {
+            op = [[TLMInfraUpdateOperation alloc] initWithLocation:_lastUpdateURL];
+        }
+        else {
+            op = [[TLMUpdateOperation alloc] initWithPackageNames:nil location:_lastUpdateURL];
+        }
         if (op) {
             [[NSNotificationCenter defaultCenter] addObserver:self 
                                                      selector:@selector(_handleInstallFinishedNotification:) 
