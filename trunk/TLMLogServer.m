@@ -131,7 +131,7 @@ static NSConnection * __TLMLSCreateAndRegisterConnectionForServer(TLMLogServer *
     [[NSNotificationCenter defaultCenter] postNotificationName:TLMLogServerUpdateNotification object:self];
 }
     
-- (oneway void)logMessage:(in bycopy TLMLogMessage *)message;
+- (void)logMessage:(in bycopy TLMLogMessage *)message;
 {
     @synchronized(_messages) {
         [_messages addObject:message];
@@ -139,6 +139,10 @@ static NSConnection * __TLMLSCreateAndRegisterConnectionForServer(TLMLogServer *
     NSArray *rlmodes = [[NSArray alloc] initWithObjects:(id *)&kCFRunLoopCommonModes count:1];
     [self performSelectorOnMainThread:@selector(_notifyOnMainThread) withObject:nil waitUntilDone:NO modes:rlmodes];
     [rlmodes release];
+    
+    // Herb S. requested this so there'd be a record of all messages in one place.
+    // If tlmgr_cwrapper fails to connect, it'll start logging to asl, so using this funnel point should be sufficient.
+    asl_log(NULL, NULL, ASL_LEVEL_ERR, "%s", [[message message] UTF8String]);
 }
 
 @end
