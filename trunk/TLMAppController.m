@@ -61,6 +61,11 @@
     [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
 }
 
+- (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender
+{
+    return ([_mainWindowController windowShouldClose:sender]) ? NSTerminateNow : NSTerminateCancel;
+}
+
 - (void)awakeFromNib
 {
     if (nil == _mainWindowController)
