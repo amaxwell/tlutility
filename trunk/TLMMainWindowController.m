@@ -118,6 +118,9 @@ static char _TLMOperationQueueOperationContext;
     
     // may as well populate the list immediately; by now we should have the window to display a warning sheet
     [self listUpdates:nil];
+    
+    // checkbox in IB doesn't work?
+    [[[self window] toolbar] setAutosavesConfiguration:YES];
 }
 
 - (void)_handleApplicationTerminate:(NSNotification *)aNote
