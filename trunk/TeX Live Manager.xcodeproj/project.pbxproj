@@ -12,6 +12,7 @@
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		F94E74A20EF4965100E0B78F /* TLMTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = F94E74A10EF4965100E0B78F /* TLMTableView.m */; };
+		F97E85740EFA18F400862882 /* TeXDistTool.icns in Resources */ = {isa = PBXBuildFile; fileRef = F97E85730EFA18F400862882 /* TeXDistTool.icns */; };
 		F99E51980EEE4AD5006E6B39 /* TLMURLFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = F99E51970EEE4AD5006E6B39 /* TLMURLFormatter.m */; };
 		F9A8BA380EF75C3B00E35DC9 /* TLMOutputParser2.m in Sources */ = {isa = PBXBuildFile; fileRef = F9A8BA370EF75C3B00E35DC9 /* TLMOutputParser2.m */; };
 		F9A8BB370EF8B11200E35DC9 /* TLMInfraUpdateOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F9A8BB360EF8B11200E35DC9 /* TLMInfraUpdateOperation.m */; };
@@ -73,9 +74,10 @@
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		32CA4F630368D1EE00C91783 /* TeX Live Manager_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TeX Live Manager_Prefix.pch"; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		8D1107320486CEB800E47090 /* TeX Live Manager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TeX Live Manager.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8D1107320486CEB800E47090 /* MacTeX Package Manager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "MacTeX Package Manager.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F94E74A00EF4965100E0B78F /* TLMTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMTableView.h; sourceTree = "<group>"; };
 		F94E74A10EF4965100E0B78F /* TLMTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMTableView.m; sourceTree = "<group>"; };
+		F97E85730EFA18F400862882 /* TeXDistTool.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = TeXDistTool.icns; sourceTree = "<group>"; };
 		F99E51960EEE4AD5006E6B39 /* TLMURLFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMURLFormatter.h; sourceTree = "<group>"; };
 		F99E51970EEE4AD5006E6B39 /* TLMURLFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMURLFormatter.m; sourceTree = "<group>"; };
 		F9A8BA360EF75C3B00E35DC9 /* TLMOutputParser2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMOutputParser2.h; sourceTree = "<group>"; };
@@ -183,7 +185,7 @@
 		19C28FACFE9D520D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8D1107320486CEB800E47090 /* TeX Live Manager.app */,
+				8D1107320486CEB800E47090 /* MacTeX Package Manager.app */,
 				F9B139CB0EECBDFE007C0046 /* tlmgr_cwrapper */,
 			);
 			name = Products;
@@ -214,6 +216,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				F97E85730EFA18F400862882 /* TeXDistTool.icns */,
 				F9ABAA5D0EF198D500497E0F /* Credits.rtf */,
 				8D1107310486CEB800E47090 /* Info.plist */,
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
@@ -294,9 +297,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		8D1107260486CEB800E47090 /* TeX Live Manager */ = {
+		8D1107260486CEB800E47090 /* TLM */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "TeX Live Manager" */;
+			buildConfigurationList = C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "TLM" */;
 			buildPhases = (
 				8D1107290486CEB800E47090 /* Resources */,
 				8D11072C0486CEB800E47090 /* Sources */,
@@ -308,10 +311,10 @@
 			dependencies = (
 				F9B139D60EECBE8F007C0046 /* PBXTargetDependency */,
 			);
-			name = "TeX Live Manager";
+			name = TLM;
 			productInstallPath = "$(HOME)/Applications";
 			productName = "TeX Live Manager";
-			productReference = 8D1107320486CEB800E47090 /* TeX Live Manager.app */;
+			productReference = 8D1107320486CEB800E47090 /* MacTeX Package Manager.app */;
 			productType = "com.apple.product-type.application";
 		};
 		F9B139CA0EECBDFE007C0046 /* tlmgr_cwrapper */ = {
@@ -342,7 +345,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				8D1107260486CEB800E47090 /* TeX Live Manager */,
+				8D1107260486CEB800E47090 /* TLM */,
 				F9B139CA0EECBDFE007C0046 /* tlmgr_cwrapper */,
 			);
 		};
@@ -359,6 +362,7 @@
 				F9B13B2B0EECEB05007C0046 /* InfoPanel.xib in Resources */,
 				F9F130560EED94D800D9968D /* Preferences.xib in Resources */,
 				F9ABAA5E0EF198D500497E0F /* Credits.rtf in Resources */,
+				F97E85740EFA18F400862882 /* TeXDistTool.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -464,7 +468,7 @@
 				GCC_WARN_SHADOW = YES;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				PRODUCT_NAME = "TeX Live Manager";
+				PRODUCT_NAME = "MacTeX Package Manager";
 			};
 			name = Debug;
 		};
@@ -478,7 +482,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				PRODUCT_NAME = "TeX Live Manager";
+				PRODUCT_NAME = "MacTeX Package Manager";
 			};
 			name = Release;
 		};
@@ -542,7 +546,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "TeX Live Manager" */ = {
+		C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "TLM" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C01FCF4B08A954540054247B /* Debug */,
