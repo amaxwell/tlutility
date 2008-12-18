@@ -75,12 +75,17 @@ static char _TLMOperationQueueOperationContext;
         [_queue addObserver:self forKeyPath:@"operations" options:0 context:&_TLMOperationQueueOperationContext];
         _lastTextViewHeight = 0.0;
         _updateInfrastructure = NO;
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(_handleApplicationTerminate:) 
+                                                     name:NSApplicationWillTerminateNotification
+                                                   object:NSApp];
     }
     return self;
 }
 
 - (void)dealloc
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [_queue removeObserver:self forKeyPath:@"operations"];
     [_queue cancelAllOperations];
     [_queue waitUntilAllOperationsAreFinished];
@@ -115,6 +120,12 @@ static char _TLMOperationQueueOperationContext;
     [self listUpdates:nil];
 }
 
+- (void)_handleApplicationTerminate:(NSNotification *)aNote
+{
+    [_queue cancelAllOperations];
+    // probably don't want to waitUntilAllOperationsAreFinished here, since we can't force an install operation to quit
+}
+
 - (BOOL)_checkCommandPathAndWarn:(BOOL)displayWarning
 {
     NSString *cmdPath = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath];
@@ -124,7 +135,7 @@ static char _TLMOperationQueueOperationContext;
         TLMLog(nil, @"tlmgr not found at \"%@\"", cmdPath);
         if (displayWarning) {
             NSAlert *alert = [[NSAlert new] autorelease];
-            [alert setMessageText:NSLocalizedString(@"TeX installation not found", @"")];
+            [alert setMessageText:NSLocalizedString(@"TeX installation not found.", @"")];
             [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"The tlmgr tool does not exist at %@.  Please fix this in the preferences or install TeX Live.", @""), cmdPath]];
             [alert beginSheetModalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
         }
@@ -174,6 +185,33 @@ static char _TLMOperationQueueOperationContext;
     _lastUpdateURL = [aURL copy];
 }
 
+- (void)_updateAll
+{
+    TLMUpdateOperation *op = nil;
+    if (_updateInfrastructure) {
+        op = [[TLMInfraUpdateOperation alloc] initWithLocation:_lastUpdateURL];
+    }
+    else {
+        op = [[TLMUpdateOperation alloc] initWithPackageNames:nil location:_lastUpdateURL];
+    }
+    
+    if (op) {
+        [[NSNotificationCenter defaultCenter] addObserver:self 
+                                                 selector:@selector(_handleInstallFinishedNotification:) 
+                                                     name:TLMOperationFinishedNotification 
+                                                   object:op];
+        [_queue addOperation:op];
+        [op release];   
+    }
+}
+
+- (void)infrastructureAlertDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo;
+{
+    if (NSAlertFirstButtonReturn == returnCode) {
+        [self _updateAll];
+    }
+}
+
 - (void)_handleListUpdatesFinishedNotification:(NSNotification *)aNote
 {
     NSParameterAssert([NSThread isMainThread]);
@@ -191,10 +229,14 @@ static char _TLMOperationQueueOperationContext;
         // log for debugging, then display an alert so the user has some idea of what's going on...
         TLMLog(nil, @"Critical updates detected: %@", [packages valueForKey:@"name"]);
         NSAlert *alert = [[NSAlert new] autorelease];
-        [alert setMessageText:NSLocalizedString(@"Critical Updates Available", @"")];
-        [alert setAlertStyle:NSCriticalAlertStyle];
-        [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"%d packages are available for update, but the TeX Live installer packages listed here must be updated first.", @""), [[op packages] count]]];
-        [alert beginSheetModalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
+        [alert setMessageText:NSLocalizedString(@"Critical updates available.", @"")];
+        [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"%d packages are available for update, but the TeX Live installer packages listed here must be updated first.  Update now?", @""), [[op packages] count]]];
+        [alert addButtonWithTitle:NSLocalizedString(@"Update", @"")];
+        [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")];
+        [alert beginSheetModalForWindow:[self window]
+                          modalDelegate:self 
+                         didEndSelector:@selector(infrastructureAlertDidEnd:returnCode:contextInfo:) 
+                            contextInfo:NULL];
     }
     else {
         _updateInfrastructure = NO;
@@ -222,17 +264,27 @@ static char _TLMOperationQueueOperationContext;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:TLMOperationFinishedNotification object:op];
     
     // ignore operations that failed or were explicitly cancelled
-    if ([op isCancelled] == NO) {
+    if ([op failed]) {
+        NSAlert *alert = [[NSAlert new] autorelease];
+        [alert setMessageText:NSLocalizedString(@"The installation failed.", @"")];
+        [alert setInformativeText:NSLocalizedString(@"The installation process appears to have failed.  Please check the log display below for details.", @"")];
+        [alert beginSheetModalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];                    
+    }
+    else if ([op isCancelled] == NO) {
         
         // check to see if this was an infrastructure update, which may have wiped out tlmgr
+        // NB: should never happen with the new update path (always using disaster recovery)
         if (_updateInfrastructure && NO == [self _checkCommandPathAndWarn:NO]) {
             NSAlert *alert = [[NSAlert new] autorelease];
             [alert setAlertStyle:NSCriticalAlertStyle];
-            [alert setMessageText:NSLocalizedString(@"The tlmgr tool no longer exists, possibly due to an update failure", @"")];
+            [alert setMessageText:NSLocalizedString(@"The tlmgr tool no longer exists, possibly due to an update failure.", @"")];
             [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"Follow the instructions for Unix disaster recovery on the TeX Live web site at %@.  Would you like to go to that page now?  You can also open it later from the Help menu.", @""), @"http://tug.org/texlive/tlmgr.html"]];
             [alert addButtonWithTitle:NSLocalizedString(@"Open Now", @"")];
             [alert addButtonWithTitle:NSLocalizedString(@"Later", @"")];
-            [alert beginSheetModalForWindow:[self window] modalDelegate:self didEndSelector:@selector(installFailureAlertDidEnd:returnCode:contextInfo:) contextInfo:NULL];            
+            [alert beginSheetModalForWindow:[self window] 
+                              modalDelegate:self 
+                             didEndSelector:@selector(installFailureAlertDidEnd:returnCode:contextInfo:) 
+                                contextInfo:NULL];            
         }
         else {
             // This is slow, but if infrastructure was updated or a package installed other dependencies, we have no way of manually removing from the list.
@@ -333,21 +385,7 @@ static char _TLMOperationQueueOperationContext;
 - (void)updateAllAlertDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo;
 {
     if (NSAlertFirstButtonReturn == returnCode) {
-        TLMUpdateOperation *op = nil;
-        if (_updateInfrastructure) {
-            op = [[TLMInfraUpdateOperation alloc] initWithLocation:_lastUpdateURL];
-        }
-        else {
-            op = [[TLMUpdateOperation alloc] initWithPackageNames:nil location:_lastUpdateURL];
-        }
-        if (op) {
-            [[NSNotificationCenter defaultCenter] addObserver:self 
-                                                     selector:@selector(_handleInstallFinishedNotification:) 
-                                                         name:TLMOperationFinishedNotification 
-                                                       object:op];
-            [_queue addOperation:op];
-            [op release];   
-        }
+        [self _updateAll];
     }    
 }
 
@@ -355,12 +393,15 @@ static char _TLMOperationQueueOperationContext;
 {
     if ([self _checkCommandPathAndWarn:YES]) {
         NSAlert *alert = [[NSAlert new] autorelease];
-        [alert setMessageText:NSLocalizedString(@"Update All Packages?", @"")];
+        [alert setMessageText:NSLocalizedString(@"Update all packages?", @"")];
         // may not be correct for _updateInfrastructure, but tlmgr may remove stuff also...so leave it as-is
         [alert setInformativeText:NSLocalizedString(@"This will install all available updates and remove packages that no longer exist on the server.", @"")];
         [alert addButtonWithTitle:NSLocalizedString(@"Update", @"")];
         [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")];
-        [alert beginSheetModalForWindow:[self window] modalDelegate:self didEndSelector:@selector(updateAllAlertDidEnd:returnCode:contextInfo:) contextInfo:NULL]; 
+        [alert beginSheetModalForWindow:[self window] 
+                          modalDelegate:self 
+                         didEndSelector:@selector(updateAllAlertDidEnd:returnCode:contextInfo:) 
+                            contextInfo:NULL]; 
     }
 }    
 
@@ -369,9 +410,9 @@ static char _TLMOperationQueueOperationContext;
     BOOL shouldClose = YES;
     if ([self _installIsRunning]) {
         NSAlert *alert = [[NSAlert new] autorelease];
-        [alert setMessageText:NSLocalizedString(@"Installation In Progress!", @"")];
+        [alert setMessageText:NSLocalizedString(@"Installation in progress!", @"")];
         [alert setAlertStyle:NSCriticalAlertStyle];
-        [alert setInformativeText:NSLocalizedString(@"If you close the window, the installation process may leave your TeX installation in an unknown state.  You can ignore this warning or wait until the installation finishes.", @"")];
+        [alert setInformativeText:NSLocalizedString(@"If you close the window, the installation process may leave your TeX installation in an unknown state.  You can ignore this warning and close the window, or wait until the installation finishes.", @"")];
         [alert addButtonWithTitle:NSLocalizedString(@"Wait", @"")];
         [alert addButtonWithTitle:NSLocalizedString(@"Ignore", @"")];
         
