@@ -89,6 +89,8 @@
     [[NSWorkspace sharedWorkspace] openURL:aURL];
 }
 
+#if 0
+
 - (BOOL)application:(NSApplication *)sender openFile:(NSString *)filename;
 {
     NSString *source = 
@@ -104,5 +106,6 @@
     return (nil != ret);
 }
 
+#endif
 
 @end

@@ -300,9 +300,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		8D1107260486CEB800E47090 /* TLM */ = {
+		8D1107260486CEB800E47090 /* TeX Live Utility */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "TLM" */;
+			buildConfigurationList = C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "TeX Live Utility" */;
 			buildPhases = (
 				8D1107290486CEB800E47090 /* Resources */,
 				8D11072C0486CEB800E47090 /* Sources */,
@@ -314,7 +314,7 @@
 			dependencies = (
 				F9B139D60EECBE8F007C0046 /* PBXTargetDependency */,
 			);
-			name = TLM;
+			name = "TeX Live Utility";
 			productInstallPath = "$(HOME)/Applications";
 			productName = "TeX Live Manager";
 			productReference = 8D1107320486CEB800E47090 /* TeX Live Utility.app */;
@@ -348,7 +348,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				8D1107260486CEB800E47090 /* TLM */,
+				8D1107260486CEB800E47090 /* TeX Live Utility */,
 				F9B139CA0EECBDFE007C0046 /* tlmgr_cwrapper */,
 			);
 		};
@@ -550,7 +550,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "TLM" */ = {
+		C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "TeX Live Utility" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C01FCF4B08A954540054247B /* Debug */,
