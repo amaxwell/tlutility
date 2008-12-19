@@ -75,7 +75,7 @@
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		32CA4F630368D1EE00C91783 /* TeX Live Manager_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TeX Live Manager_Prefix.pch"; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		8D1107320486CEB800E47090 /* MacTeX Package Manager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "MacTeX Package Manager.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8D1107320486CEB800E47090 /* TeX Live Utility.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TeX Live Utility.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F94E74A00EF4965100E0B78F /* TLMTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMTableView.h; sourceTree = "<group>"; };
 		F94E74A10EF4965100E0B78F /* TLMTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMTableView.m; sourceTree = "<group>"; };
 		F97E85730EFA18F400862882 /* TeXDistTool.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = TeXDistTool.icns; sourceTree = "<group>"; };
@@ -187,7 +187,7 @@
 		19C28FACFE9D520D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8D1107320486CEB800E47090 /* MacTeX Package Manager.app */,
+				8D1107320486CEB800E47090 /* TeX Live Utility.app */,
 				F9B139CB0EECBDFE007C0046 /* tlmgr_cwrapper */,
 			);
 			name = Products;
@@ -317,7 +317,7 @@
 			name = TLM;
 			productInstallPath = "$(HOME)/Applications";
 			productName = "TeX Live Manager";
-			productReference = 8D1107320486CEB800E47090 /* MacTeX Package Manager.app */;
+			productReference = 8D1107320486CEB800E47090 /* TeX Live Utility.app */;
 			productType = "com.apple.product-type.application";
 		};
 		F9B139CA0EECBDFE007C0046 /* tlmgr_cwrapper */ = {
@@ -472,7 +472,7 @@
 				GCC_WARN_SHADOW = YES;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				PRODUCT_NAME = "MacTeX Package Manager";
+				PRODUCT_NAME = "TeX Live Utility";
 			};
 			name = Debug;
 		};
@@ -486,7 +486,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				PRODUCT_NAME = "MacTeX Package Manager";
+				PRODUCT_NAME = "TeX Live Utility";
 			};
 			name = Release;
 		};
