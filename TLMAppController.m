@@ -89,4 +89,20 @@
     [[NSWorkspace sharedWorkspace] openURL:aURL];
 }
 
+- (BOOL)application:(NSApplication *)sender openFile:(NSString *)filename;
+{
+    NSString *source = 
+    @"tell application \"System Preferences\"\r"
+        @"activate\r"
+        @"set current pane to pane \"comp.text.tex.distribution.preference\"\r"
+    @"end tell";
+    NSAppleScript *script = [[[NSAppleScript alloc] initWithSource:source] autorelease];
+    NSDictionary *error = nil;  
+    id ret = [script executeAndReturnError:&error];
+    if (nil == ret)
+        NSLog(@"Failed to compile script: %@", error);
+    return (nil != ret);
+}
+
+
 @end

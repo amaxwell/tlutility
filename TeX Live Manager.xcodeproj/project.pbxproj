@@ -13,6 +13,7 @@
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		F94E74A20EF4965100E0B78F /* TLMTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = F94E74A10EF4965100E0B78F /* TLMTableView.m */; };
 		F97E85740EFA18F400862882 /* TeXDistTool.icns in Resources */ = {isa = PBXBuildFile; fileRef = F97E85730EFA18F400862882 /* TeXDistTool.icns */; };
+		F97E860C0EFA3BFD00862882 /* TeXDistDocument.icns in Resources */ = {isa = PBXBuildFile; fileRef = F97E860B0EFA3BFD00862882 /* TeXDistDocument.icns */; };
 		F99E51980EEE4AD5006E6B39 /* TLMURLFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = F99E51970EEE4AD5006E6B39 /* TLMURLFormatter.m */; };
 		F9A8BA380EF75C3B00E35DC9 /* TLMOutputParser2.m in Sources */ = {isa = PBXBuildFile; fileRef = F9A8BA370EF75C3B00E35DC9 /* TLMOutputParser2.m */; };
 		F9A8BB370EF8B11200E35DC9 /* TLMInfraUpdateOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F9A8BB360EF8B11200E35DC9 /* TLMInfraUpdateOperation.m */; };
@@ -78,6 +79,7 @@
 		F94E74A00EF4965100E0B78F /* TLMTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMTableView.h; sourceTree = "<group>"; };
 		F94E74A10EF4965100E0B78F /* TLMTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMTableView.m; sourceTree = "<group>"; };
 		F97E85730EFA18F400862882 /* TeXDistTool.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = TeXDistTool.icns; sourceTree = "<group>"; };
+		F97E860B0EFA3BFD00862882 /* TeXDistDocument.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = TeXDistDocument.icns; sourceTree = "<group>"; };
 		F99E51960EEE4AD5006E6B39 /* TLMURLFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMURLFormatter.h; sourceTree = "<group>"; };
 		F99E51970EEE4AD5006E6B39 /* TLMURLFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMURLFormatter.m; sourceTree = "<group>"; };
 		F9A8BA360EF75C3B00E35DC9 /* TLMOutputParser2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMOutputParser2.h; sourceTree = "<group>"; };
@@ -216,6 +218,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				F97E860B0EFA3BFD00862882 /* TeXDistDocument.icns */,
 				F97E85730EFA18F400862882 /* TeXDistTool.icns */,
 				F9ABAA5D0EF198D500497E0F /* Credits.rtf */,
 				8D1107310486CEB800E47090 /* Info.plist */,
@@ -363,6 +366,7 @@
 				F9F130560EED94D800D9968D /* Preferences.xib in Resources */,
 				F9ABAA5E0EF198D500497E0F /* Credits.rtf in Resources */,
 				F97E85740EFA18F400862882 /* TeXDistTool.icns in Resources */,
+				F97E860C0EFA3BFD00862882 /* TeXDistDocument.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

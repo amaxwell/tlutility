@@ -4,6 +4,29 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>texdist</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>TeXDistDocument</string>
+			<key>CFBundleTypeName</key>
+			<string>TeX Distribution Bridge</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>comp.text.tex.distribution.bridge</string>
+			</array>
+			<key>LSTypeIsPackage</key>
+			<true/>
+			<key>NSPersistentStoreTypeKey</key>
+			<string>XML</string>
+		</dict>
+	</array>
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIconFile</key>
@@ -20,14 +43,37 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>0.1</string>
-	<key>NSMainNibFile</key>
-	<string>MainMenu</string>
-	<key>NSPrincipalClass</key>
-	<string>NSApplication</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>10.5.5</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2008, Adam R. Maxwell.
 All Rights Reserved.</string>
+	<key>NSMainNibFile</key>
+	<string>MainMenu</string>
+	<key>NSPrincipalClass</key>
+	<string>NSApplication</string>
+	<key>UTExportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>com.apple.bundle</string>
+				<string>com.apple.package</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>TeX Distribution Bridge</string>
+			<key>UTTypeIconFile</key>
+			<string>TeXDistDocument</string>
+			<key>UTTypeIdentifier</key>
+			<string>comp.text.tex.distribution.bridge</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>texdist</string>
+				</array>
+			</dict>
+		</dict>
+	</array>
 </dict>
 </plist>
