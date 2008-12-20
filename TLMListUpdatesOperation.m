@@ -88,7 +88,7 @@
     // Karl's suggested test.  Safe to assume this error message won't change for the original tlmgr.
     if ([outputString hasPrefix:@"Unknown option:"])
         hasMachineReadable = NO;
-    else if (nil == outputString || [outputString rangeOfString:@"missing action"].length == 0) {
+    else if (nil == outputString || [outputString rangeOfString:@"unknown action"].length == 0) {
         // allow upstream to change this, but warn of any such changes
         TLMLog(@"TLMListUpdatesOperation", @"Unexpected output from test for tlmgr2: \"%@\"", outputString);
     }
@@ -119,56 +119,10 @@
     [super dealloc];
 }
 
-- (void)_parseResults2
+- (void)_parseResultsWithClass:(Class)parserClass URLPrefix:(NSString *)installPrefix
 {
-    NSParameterAssert([self isFinished]);
-    NSParameterAssert(nil == _packages);
-    
-    NSData *errorData = [self errorData];
-    if ([errorData length]) {
-        // e.g. tlmgr: installation location http://ctan.math.utah.edu/ctan/tex-archive/systems/texlive/tlnet/2008
-        NSString *errorString = [[[NSString alloc] initWithData:errorData encoding:NSUTF8StringEncoding] autorelease];
-        // seems to have a newline appended
-        errorString = [errorString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        NSString *installPrefix = @"tlmgr: installation location ";
-        if (errorString && [errorString hasPrefix:installPrefix]) {
-            TLMLog(@"TLMListUpdatesOperation", @"%@", errorString);
-            NSString *urlString = [errorString stringByReplacingOccurrencesOfString:installPrefix withString:@""];
-            [self setUpdateURL:[NSURL URLWithString:urlString]];
-        }
-        else if (errorString) {
-            TLMLog(@"TLMListUpdatesOperation", @"Expected prefix \"%@\" but actual line was:\n%@", installPrefix, errorString);
-        }
-    }
-    else {
-        TLMLog(@"TLMListUpdatesOperation", @"No URL read from standard error.");
-    }
-    
-    NSData *output = [self outputData];        
-    if ([output length]) {
-        NSMutableArray *packages = [NSMutableArray new];
-        NSString *outputString = [[NSString alloc] initWithData:output encoding:NSUTF8StringEncoding];        
-        NSArray *lines = [outputString componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
-        [outputString release];
-        
-        NSCharacterSet *nonWhitespace = [[NSCharacterSet whitespaceCharacterSet] invertedSet];
-        for (NSString *line in lines) {
-            if ([line rangeOfCharacterFromSet:nonWhitespace].length)
-                [packages addObject:[TLMOutputParser2 packageWithOutputLine:line]];
-        }
-        
-        _packages = [packages copy];
-        [packages release];
-    }
-    else {
-        TLMLog(@"TLMListUpdatesOperation", @"No data read from standard output stream.");
-    }
-}
-
-- (void)_parseResults
-{
-    NSParameterAssert([self isFinished]);
-    NSParameterAssert(nil == _packages);
+    NSParameterAssert(parserClass);
+    NSParameterAssert(installPrefix);
     
     NSData *output = [self outputData];        
     if ([output length]) {
@@ -177,9 +131,8 @@
         NSMutableArray *lines = [[[outputString componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]] mutableCopy] autorelease];
         [outputString release];
         
-        // tlmgr: installation location http://mirror.hmc.edu/ctan/systems/texlive/tlnet/2008
-        
-        NSString *installPrefix = @"tlmgr: installation location ";
+        // version 1: "tlmgr: installation location http://mirror.hmc.edu/ctan/systems/texlive/tlnet/2008"
+        // version 2: "installation-url http://mirror.hmc.edu/ctan/systems/texlive/tlnet/2008"
         if ([lines count] && [[lines objectAtIndex:0] hasPrefix:installPrefix]) {
             TLMLog(@"TLMListUpdatesOperation", @"%@", [lines objectAtIndex:0]);
             NSString *urlString = [[lines objectAtIndex:0] stringByReplacingOccurrencesOfString:installPrefix withString:@""];
@@ -193,7 +146,7 @@
         NSCharacterSet *nonWhitespace = [[NSCharacterSet whitespaceCharacterSet] invertedSet];
         for (NSString *line in lines) {
             if ([line rangeOfCharacterFromSet:nonWhitespace].length)
-                [packages addObject:[TLMOutputParser packageWithOutputLine:line]];
+                [packages addObject:[parserClass packageWithOutputLine:line]];
         }
         
         _packages = [packages copy];
@@ -202,6 +155,20 @@
     else {
         TLMLog(@"TLMListUpdatesOperation", @"No data read from standard output stream.");
     }
+}
+
+- (void)_parseResults2
+{
+    NSParameterAssert([self isFinished]);
+    NSParameterAssert(nil == _packages);
+    [self _parseResultsWithClass:[TLMOutputParser2 self] URLPrefix:@"location-url "];
+}
+
+- (void)_parseResults
+{
+    NSParameterAssert([self isFinished]);
+    NSParameterAssert(nil == _packages);
+    [self _parseResultsWithClass:[TLMOutputParser self] URLPrefix:@"tlmgr: installation location "];
 }
 
 - (NSArray *)packages
