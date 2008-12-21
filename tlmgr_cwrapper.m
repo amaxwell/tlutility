@@ -335,6 +335,7 @@ int main(int argc, char *argv[]) {
         
         ret = waitpid(child, &childStatus, WNOHANG | WUNTRACED);
         ret = (ret != 0 && WIFEXITED(childStatus)) ? WEXITSTATUS(childStatus) : EXIT_FAILURE;
+        log_notice(@"exit status of pid = %d was %d", child, ret);
     }
     
     [pool release];
