@@ -42,12 +42,15 @@
 #import "TLMListUpdatesOperation.h"
 #import "TLMUpdateOperation.h"
 #import "TLMInfraUpdateOperation.h"
+#import "TLMPapersizeOperation.h"
+#import "TLMAuthorizedOperation.h"
 
 #import "TLMSplitView.h"
 #import "TLMInfoController.h"
 #import "TLMPreferenceController.h"
 #import "TLMLogServer.h"
 #import "TLMAppController.h"
+#import "TLMPapersizeController.h"
 
 static char _TLMOperationQueueOperationContext;
 
@@ -193,9 +196,11 @@ static char _TLMOperationQueueOperationContext;
     TLMUpdateOperation *op = nil;
     if (_updateInfrastructure) {
         op = [[TLMInfraUpdateOperation alloc] initWithLocation:_lastUpdateURL];
+        TLMLog(nil, @"Beginning infrastructure update from %@", [_lastUpdateURL absoluteString]);
     }
     else {
         op = [[TLMUpdateOperation alloc] initWithPackageNames:nil location:_lastUpdateURL];
+        TLMLog(nil, @"Beginning update of all packages from %@", [_lastUpdateURL absoluteString]);
     }
     
     if (op) {
@@ -302,7 +307,7 @@ static char _TLMOperationQueueOperationContext;
 {
     NSArray *ops = [[[_queue operations] copy] autorelease];
     for (id op in ops) {
-        if ([op isKindOfClass:[TLMUpdateOperation class]])
+        if ([op isKindOfClass:[TLMAuthorizedOperation class]])
             return YES;
     }
     return NO;
@@ -354,6 +359,48 @@ static char _TLMOperationQueueOperationContext;
     [_queue cancelAllOperations];
 }
 
+- (void)_handlePapersizeFinishedNotification:(NSNotification *)aNote
+{
+    TLMPapersizeOperation *op = [aNote object];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:TLMOperationFinishedNotification object:op];
+    if ([op failed]) {
+        TLMLog(nil, @"Failed to change paper size.  Error was: %@", [op errorMessages]);
+    }
+}
+
+- (IBAction)papersizeSheetDidEnd:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)context
+{
+    [sheet orderOut:self];
+    TLMPapersizeController *psc = context;
+    [psc autorelease];
+    if (TLMPapersizeChanged == returnCode) {
+        TLMPapersizeOperation *op = nil;
+        if ([psc paperSize])
+            op = [[TLMPapersizeOperation alloc] initWithPapersize:[psc paperSize]];
+        else
+            TLMLog(nil, @"No paper size from %@", psc);
+        if (op) {
+            TLMLog(nil, @"Setting paper size to %@", [psc paperSize]);
+            [[NSNotificationCenter defaultCenter] addObserver:self 
+                                                     selector:@selector(_handlePapersizeFinishedNotification:) 
+                                                         name:TLMOperationFinishedNotification 
+                                                       object:op];
+            [_queue addOperation:op];
+            [op release];               
+        }
+    }
+}
+
+- (IBAction)changePapersize:(id)sender;
+{
+    TLMPapersizeController *psc = [TLMPapersizeController new];
+    [NSApp beginSheet:[psc window] 
+       modalForWindow:[self window] 
+        modalDelegate:self 
+       didEndSelector:@selector(papersizeSheetDidEnd:returnCode:contextInfo:) 
+          contextInfo:psc];
+}
+
 // TODO: should this be a toggle to show/hide?
 - (IBAction)showInfo:(id)sender;
 {
@@ -375,6 +422,7 @@ static char _TLMOperationQueueOperationContext;
     if ([self _checkCommandPathAndWarn:YES]) {
         TLMListUpdatesOperation *op = [TLMListUpdatesOperation new];
         if (op) {
+            TLMLog(nil, @"Updating list of available packages%C", 0x2026);
             [[NSNotificationCenter defaultCenter] addObserver:self 
                                                      selector:@selector(_handleListUpdatesFinishedNotification:) 
                                                          name:TLMOperationFinishedNotification 
@@ -439,6 +487,7 @@ static char _TLMOperationQueueOperationContext;
         NSArray *packageNames = [[_packages valueForKey:@"name"] objectsAtIndexes:[_tableView selectedRowIndexes]];
         TLMUpdateOperation *op = [[TLMUpdateOperation alloc] initWithPackageNames:packageNames location:_lastUpdateURL];
         if (op) {
+            TLMLog(nil, @"Beginning update of %@\nfrom %@", packageNames, [_lastUpdateURL absoluteString]);
             [[NSNotificationCenter defaultCenter] addObserver:self 
                                                      selector:@selector(_handleInstallFinishedNotification:) 
                                                          name:TLMOperationFinishedNotification 

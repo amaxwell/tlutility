@@ -1,8 +1,8 @@
 //
-//  TLMMainWindowController.h
+//  TLMPapersizeController.h
 //  TeX Live Manager
 //
-//  Created by Adam Maxwell on 12/6/08.
+//  Created by Adam Maxwell on 12/19/08.
 /*
  This software is Copyright (c) 2008
  Adam Maxwell. All rights reserved.
@@ -38,43 +38,24 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class TLMSplitView;
-@class TLMLogDataSource;
+enum {
+    TLMPapersizeCancelled = 0,
+    TLMPapersizeChanged   = 1
+};
+typedef NSInteger TLMPapersizeReturnCode;
 
-@interface TLMMainWindowController : NSWindowController 
+@interface TLMPapersizeController : NSWindowController
 {
 @private
-    NSTableView         *_tableView;
-    NSProgressIndicator *_progressIndicator;
-    NSTextField         *_hostnameField;
-    NSTextView          *_textView;
-    TLMSplitView        *_splitView;
-    
-    NSMutableArray      *_packages;
-    BOOL                 _sortAscending;
-    NSOperationQueue    *_queue;
-    CGFloat              _lastTextViewHeight;
-    BOOL                 _updateInfrastructure;
-    NSURL               *_lastUpdateURL;
-    
-    TLMLogDataSource    *_logDataSource;
+    NSMatrix *_sizeMatrix;
+    NSString *_paperSize;
 }
 
-@property (nonatomic, retain) IBOutlet NSTableView *_tableView;
-@property (nonatomic, retain) IBOutlet NSProgressIndicator *_progressIndicator;
-@property (nonatomic, retain) IBOutlet NSTextField *_hostnameField;
-@property (nonatomic, retain) IBOutlet TLMSplitView *_splitView;
-@property (nonatomic, retain) IBOutlet TLMLogDataSource *_logDataSource;
-@property (nonatomic, copy) NSURL *lastUpdateURL;
+- (IBAction)changeSize:(id)sender;
+- (IBAction)cancel:(id)sender;
+- (IBAction)accept:(id)sender;
 
-- (IBAction)listUpdates:(id)sender;
-- (IBAction)updateAll:(id)sender;
-- (IBAction)changePapersize:(id)sender;
-
-- (IBAction)cancelAllOperations:(id)sender;
-
-- (IBAction)installSelectedRow:(id)sender;
-- (IBAction)removeSelectedRow:(id)sender;
-- (IBAction)showInfo:(id)sender;
+@property (readwrite, copy) NSString *paperSize;
+@property (nonatomic, retain) IBOutlet NSMatrix *_sizeMatrix;
 
 @end

@@ -1,8 +1,8 @@
 //
-//  TLMMainWindowController.h
+//  TLMPapersizeOperation.m
 //  TeX Live Manager
 //
-//  Created by Adam Maxwell on 12/6/08.
+//  Created by Adam Maxwell on 12/19/08.
 /*
  This software is Copyright (c) 2008
  Adam Maxwell. All rights reserved.
@@ -36,45 +36,36 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import <Cocoa/Cocoa.h>
+#import "TLMPapersizeOperation.h"
+#import "TLMPreferenceController.h"
 
-@class TLMSplitView;
-@class TLMLogDataSource;
+@implementation TLMPapersizeOperation
 
-@interface TLMMainWindowController : NSWindowController 
+- (id)init
 {
-@private
-    NSTableView         *_tableView;
-    NSProgressIndicator *_progressIndicator;
-    NSTextField         *_hostnameField;
-    NSTextView          *_textView;
-    TLMSplitView        *_splitView;
-    
-    NSMutableArray      *_packages;
-    BOOL                 _sortAscending;
-    NSOperationQueue    *_queue;
-    CGFloat              _lastTextViewHeight;
-    BOOL                 _updateInfrastructure;
-    NSURL               *_lastUpdateURL;
-    
-    TLMLogDataSource    *_logDataSource;
+    NSAssert(0, @"Invalid initializer.  Location parameter is required.");
+    return [self initWithPapersize:nil];
 }
 
-@property (nonatomic, retain) IBOutlet NSTableView *_tableView;
-@property (nonatomic, retain) IBOutlet NSProgressIndicator *_progressIndicator;
-@property (nonatomic, retain) IBOutlet NSTextField *_hostnameField;
-@property (nonatomic, retain) IBOutlet TLMSplitView *_splitView;
-@property (nonatomic, retain) IBOutlet TLMLogDataSource *_logDataSource;
-@property (nonatomic, copy) NSURL *lastUpdateURL;
-
-- (IBAction)listUpdates:(id)sender;
-- (IBAction)updateAll:(id)sender;
-- (IBAction)changePapersize:(id)sender;
-
-- (IBAction)cancelAllOperations:(id)sender;
-
-- (IBAction)installSelectedRow:(id)sender;
-- (IBAction)removeSelectedRow:(id)sender;
-- (IBAction)showInfo:(id)sender;
+- (id)initWithPapersize:(NSString *)paperSize;
+{
+    NSParameterAssert(paperSize);
+    
+    NSString *cmd = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath]; 
+    NSFileManager *fm = [NSFileManager new];
+    BOOL exists = [fm isExecutableFileAtPath:cmd];
+    [fm release];
+    
+    if (NO == exists) {
+        [self release];
+        self = nil;
+    }
+    else if ((self = [super init])) {
+        NSString *useRoot = ([[NSUserDefaults standardUserDefaults] boolForKey:TLMUseRootHomePreferenceKey]) ? @"y" : @"n";
+        NSArray *options = [NSArray arrayWithObjects:useRoot, cmd, @"paper", paperSize, nil];
+        [self setOptions:options];
+    }
+    return self;
+}
 
 @end
