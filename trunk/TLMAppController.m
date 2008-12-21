@@ -45,6 +45,10 @@
 
 + (void)initialize
 {
+    static bool didInit = false;
+    if (true == didInit) return;
+    didInit = true;
+    
     // force setup of the log server
     [TLMLogServer sharedServer];
     
@@ -58,7 +62,26 @@
     [defaults setObject:[NSNumber numberWithBool:YES] forKey:TLMUseRootHomePreferenceKey];
     [defaults setObject:@"update-tlmgr-latest.sh" forKey:TLMInfraPathPreferenceKey];
     
+    // causes syslog performance problems if enabled by default
+    [defaults setObject:[NSNumber numberWithBool:NO] forKey:TLMUseSyslogPreferenceKey];
+    
     [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
+    
+    // make sure this is set up early enough to use tasks anywhere
+    [self updatePathEnvironment];
+}
+
++ (void)updatePathEnvironment;
+{
+    const char *path = getenv("PATH");
+    
+    // if we don't add this to the path, tlmgr falls all over itself when it tries to run kpsewhich
+    // set the path globally, since the app is basically useless without tlmgr
+    if (path) {
+        NSString *texbinPath = [[NSUserDefaults standardUserDefaults] objectForKey:TLMTexBinPathPreferenceKey];
+        NSString *newPath = [[NSString stringWithUTF8String:path] stringByAppendingFormat:@":%@", texbinPath];
+        setenv("PATH", [newPath fileSystemRepresentation], 1);
+    }    
 }
 
 - (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender

@@ -12,6 +12,7 @@ extern NSString * const TLMTexBinPathPreferenceKey;
 extern NSString * const TLMServerPathPreferenceKey;
 extern NSString * const TLMUseRootHomePreferenceKey;
 extern NSString * const TLMInfraPathPreferenceKey;
+extern NSString * const TLMUseSyslogPreferenceKey;
 
 @interface TLMPreferenceController : NSWindowController 
 {
@@ -19,6 +20,7 @@ extern NSString * const TLMInfraPathPreferenceKey;
     NSPathControl *_texbinPathControl;
     NSComboBox    *_serverComboBox;
     NSButton      *_rootHomeCheckBox;
+    NSButton      *_useSyslogCheckBox;
     NSArray       *_servers;
 }
 
@@ -26,10 +28,12 @@ extern NSString * const TLMInfraPathPreferenceKey;
 - (IBAction)changeTexBinPath:(id)sender;
 - (IBAction)changeServerURL:(id)sender;
 - (IBAction)toggleUseRootHome:(id)sender;
+- (IBAction)toggleUseSyslog:(id)sender;
 
 @property (nonatomic, retain) IBOutlet NSPathControl *_texbinPathControl;
 @property (nonatomic, retain) IBOutlet NSComboBox *_serverComboBox;
 @property (nonatomic, retain) IBOutlet NSButton *_rootHomeCheckBox;
+@property (nonatomic, retain) IBOutlet NSButton *_useSyslogCheckBox;
 
 // composes TLMServerURLPreferenceKey and TLMServerPathPreferenceKey
 @property (readonly) NSURL *defaultServerURL;
