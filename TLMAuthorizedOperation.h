@@ -1,8 +1,8 @@
 //
-//  TLMUpdateOperation.h
+//  TLMAuthorizedOperation.h
 //  TeX Live Manager
 //
-//  Created by Adam Maxwell on 12/7/08.
+//  Created by Adam Maxwell on 12/20/08.
 /*
  This software is Copyright (c) 2008
  Adam Maxwell. All rights reserved.
@@ -37,18 +37,16 @@
  */
 
 #import <Cocoa/Cocoa.h>
-#import "TLMAuthorizedOperation.h"
+#import "TLMOperation.h"
 
-// inherit from TLMOperation for notification posting and output extraction
-@interface TLMUpdateOperation : TLMAuthorizedOperation
+@interface TLMAuthorizedOperation : TLMOperation
 {
 @private
-    NSArray  *_packageNames;
+    NSString *_path;
+    NSArray  *_options;
+    
 }
 
-// designated initializer; location must be non-nil
-- (id)initWithPackageNames:(NSArray *)packageNames location:(NSURL *)location;
-
-@property(readonly, copy) NSArray *packageNames;
+@property(readwrite, copy) NSArray *options;
 
 @end
