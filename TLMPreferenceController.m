@@ -7,13 +7,14 @@
 
 #import "TLMPreferenceController.h"
 #import "TLMURLFormatter.h"
+#import "TLMAppController.h"
 
 NSString * const TLMServerURLPreferenceKey = @"TLMServerURLPreferenceKey";     /* http://mirror.ctan.org      */
 NSString * const TLMTexBinPathPreferenceKey = @"TLMTexBinPathPreferenceKey";   /* /usr/texbin                 */
 NSString * const TLMServerPathPreferenceKey = @"TLMServerPathPreferenceKey";   /* systems/texlive/tlnet/2008  */
 NSString * const TLMUseRootHomePreferenceKey = @"TLMUseRootHomePreferenceKey"; /* YES                         */
 NSString * const TLMInfraPathPreferenceKey = @"TLMInfraPathPreferenceKey";     /* update-tlmgr-latest.sh      */
-
+NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";     /* NO                          */
 #define TLMGR_CMD @"tlmgr"
 
 @implementation TLMPreferenceController
@@ -21,6 +22,7 @@ NSString * const TLMInfraPathPreferenceKey = @"TLMInfraPathPreferenceKey";     /
 @synthesize _texbinPathControl;
 @synthesize _serverComboBox;
 @synthesize _rootHomeCheckBox;
+@synthesize _useSyslogCheckBox;
 
 + (id)sharedPreferenceController;
 {
@@ -70,10 +72,8 @@ NSString * const TLMInfraPathPreferenceKey = @"TLMInfraPathPreferenceKey";     /
     [_serverComboBox setFormatter:[[TLMURLFormatter new] autorelease]];
     [_serverComboBox setDelegate:self];
     
-    if ([defaults boolForKey:TLMUseRootHomePreferenceKey])
-        [_rootHomeCheckBox setState:NSOnState];
-    else
-        [_rootHomeCheckBox setState:NSOffState];         
+    [_rootHomeCheckBox setState:[defaults boolForKey:TLMUseRootHomePreferenceKey]];
+    [_useSyslogCheckBox setState:[defaults boolForKey:TLMUseSyslogPreferenceKey]];
 }
 
 - (IBAction)toggleUseRootHome:(id)sender;
@@ -81,10 +81,18 @@ NSString * const TLMInfraPathPreferenceKey = @"TLMInfraPathPreferenceKey";     /
     [[NSUserDefaults standardUserDefaults] setBool:([sender state] == NSOnState) forKey:TLMUseRootHomePreferenceKey];
 }
 
+- (IBAction)toggleUseSyslog:(id)sender;
+{
+    [[NSUserDefaults standardUserDefaults] setBool:([sender state] == NSOnState) forKey:TLMUseSyslogPreferenceKey];
+}
+
 - (void)updateTeXBinPathWithURL:(NSURL *)aURL
 {
     [_texbinPathControl setURL:aURL];
     [[NSUserDefaults standardUserDefaults] setObject:[aURL path] forKey:TLMTexBinPathPreferenceKey];
+    
+    // update environment, or tlmgr will be non-functional
+    [TLMAppController updatePathEnvironment];
 }
 
 - (void)openPanelDidEnd:(NSOpenPanel*)panel returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo

@@ -46,6 +46,8 @@
     TLMMainWindowController *_mainWindowController;
 }
 
+// update $PATH from NSUserDefaults
++ (void)updatePathEnvironment;
 - (IBAction)showPreferences:(id)sender;
 - (IBAction)openDisasterRecoveryPage:(id)sender;
 
