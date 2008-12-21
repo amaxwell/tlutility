@@ -11,6 +11,8 @@
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		F90520DA0EFDCB5400B489FE /* TLMAuthorizedOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F90520D90EFDCB5400B489FE /* TLMAuthorizedOperation.m */; };
+		F905217F0EFEA98600B489FE /* PapersizeSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = F905217E0EFEA98600B489FE /* PapersizeSheet.xib */; };
 		F94E74A20EF4965100E0B78F /* TLMTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = F94E74A10EF4965100E0B78F /* TLMTableView.m */; };
 		F97E85740EFA18F400862882 /* TeXDistTool.icns in Resources */ = {isa = PBXBuildFile; fileRef = F97E85730EFA18F400862882 /* TeXDistTool.icns */; };
 		F97E860C0EFA3BFD00862882 /* TeXDistDocument.icns in Resources */ = {isa = PBXBuildFile; fileRef = F97E860B0EFA3BFD00862882 /* TeXDistDocument.icns */; };
@@ -37,10 +39,12 @@
 		F9B6B5630EF460A400CF767F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 29B97325FDCFA39411CA2CEA /* Foundation.framework */; };
 		F9B6B5EB0EF4647400CF767F /* TLMLogMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F56B4B0EF31F8800E934A9 /* TLMLogMessage.m */; };
 		F9B6B5F80EF469A600CF767F /* TLMLogServer.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B6B5F70EF469A600CF767F /* TLMLogServer.m */; };
+		F9E22FD50EFCBD2A00B0BE38 /* TLMPapersizeOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F9E22FD40EFCBD2A00B0BE38 /* TLMPapersizeOperation.m */; };
 		F9F130560EED94D800D9968D /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = F9F130550EED94D800D9968D /* Preferences.xib */; };
 		F9F1305B0EED94F700D9968D /* TLMPreferenceController.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F1305A0EED94F700D9968D /* TLMPreferenceController.m */; };
 		F9F56B4C0EF31F8800E934A9 /* TLMLogMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F56B4B0EF31F8800E934A9 /* TLMLogMessage.m */; };
 		F9F56BA10EF36F8B00E934A9 /* TLMLogDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F56BA00EF36F8B00E934A9 /* TLMLogDataSource.m */; };
+		F9FAA44E0EFCBECD0040EAB2 /* TLMPapersizeController.m in Sources */ = {isa = PBXBuildFile; fileRef = F9FAA44D0EFCBECD0040EAB2 /* TLMPapersizeController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -76,6 +80,9 @@
 		32CA4F630368D1EE00C91783 /* TeX Live Manager_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TeX Live Manager_Prefix.pch"; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* TeX Live Utility.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TeX Live Utility.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F90520D80EFDCB5400B489FE /* TLMAuthorizedOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMAuthorizedOperation.h; sourceTree = "<group>"; };
+		F90520D90EFDCB5400B489FE /* TLMAuthorizedOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMAuthorizedOperation.m; sourceTree = "<group>"; };
+		F905217E0EFEA98600B489FE /* PapersizeSheet.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PapersizeSheet.xib; sourceTree = "<group>"; };
 		F94E74A00EF4965100E0B78F /* TLMTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMTableView.h; sourceTree = "<group>"; };
 		F94E74A10EF4965100E0B78F /* TLMTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMTableView.m; sourceTree = "<group>"; };
 		F97E85730EFA18F400862882 /* TeXDistTool.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = TeXDistTool.icns; sourceTree = "<group>"; };
@@ -116,6 +123,8 @@
 		F9B13B2A0EECEB05007C0046 /* InfoPanel.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InfoPanel.xib; sourceTree = "<group>"; };
 		F9B6B5F60EF469A600CF767F /* TLMLogServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMLogServer.h; sourceTree = "<group>"; };
 		F9B6B5F70EF469A600CF767F /* TLMLogServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMLogServer.m; sourceTree = "<group>"; };
+		F9E22FD30EFCBD2A00B0BE38 /* TLMPapersizeOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMPapersizeOperation.h; sourceTree = "<group>"; };
+		F9E22FD40EFCBD2A00B0BE38 /* TLMPapersizeOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMPapersizeOperation.m; sourceTree = "<group>"; };
 		F9F130530EED94CC00D9968D /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/Preferences.xib; sourceTree = "<group>"; };
 		F9F130590EED94F700D9968D /* TLMPreferenceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMPreferenceController.h; sourceTree = "<group>"; };
 		F9F1305A0EED94F700D9968D /* TLMPreferenceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMPreferenceController.m; sourceTree = "<group>"; };
@@ -123,6 +132,8 @@
 		F9F56B4B0EF31F8800E934A9 /* TLMLogMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMLogMessage.m; sourceTree = "<group>"; };
 		F9F56B9F0EF36F8B00E934A9 /* TLMLogDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMLogDataSource.h; sourceTree = "<group>"; };
 		F9F56BA00EF36F8B00E934A9 /* TLMLogDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMLogDataSource.m; sourceTree = "<group>"; };
+		F9FAA44C0EFCBECD0040EAB2 /* TLMPapersizeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMPapersizeController.h; sourceTree = "<group>"; };
+		F9FAA44D0EFCBECD0040EAB2 /* TLMPapersizeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMPapersizeController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -163,6 +174,8 @@
 				F9F1305A0EED94F700D9968D /* TLMPreferenceController.m */,
 				F99E51960EEE4AD5006E6B39 /* TLMURLFormatter.h */,
 				F99E51970EEE4AD5006E6B39 /* TLMURLFormatter.m */,
+				F9FAA44C0EFCBECD0040EAB2 /* TLMPapersizeController.h */,
+				F9FAA44D0EFCBECD0040EAB2 /* TLMPapersizeController.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -227,6 +240,7 @@
 				F9B134700EEB1B13007C0046 /* MainWindow.xib */,
 				F9B13B2A0EECEB05007C0046 /* InfoPanel.xib */,
 				F9F130550EED94D800D9968D /* Preferences.xib */,
+				F905217E0EFEA98600B489FE /* PapersizeSheet.xib */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -280,6 +294,10 @@
 				F9B13B1C0EECE7F3007C0046 /* TLMInfoOperation.m */,
 				F9A8BB350EF8B11200E35DC9 /* TLMInfraUpdateOperation.h */,
 				F9A8BB360EF8B11200E35DC9 /* TLMInfraUpdateOperation.m */,
+				F9E22FD30EFCBD2A00B0BE38 /* TLMPapersizeOperation.h */,
+				F9E22FD40EFCBD2A00B0BE38 /* TLMPapersizeOperation.m */,
+				F90520D80EFDCB5400B489FE /* TLMAuthorizedOperation.h */,
+				F90520D90EFDCB5400B489FE /* TLMAuthorizedOperation.m */,
 			);
 			name = Operations;
 			sourceTree = "<group>";
@@ -367,6 +385,7 @@
 				F9ABAA5E0EF198D500497E0F /* Credits.rtf in Resources */,
 				F97E85740EFA18F400862882 /* TeXDistTool.icns in Resources */,
 				F97E860C0EFA3BFD00862882 /* TeXDistDocument.icns in Resources */,
+				F905217F0EFEA98600B489FE /* PapersizeSheet.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -397,6 +416,9 @@
 				F94E74A20EF4965100E0B78F /* TLMTableView.m in Sources */,
 				F9A8BA380EF75C3B00E35DC9 /* TLMOutputParser2.m in Sources */,
 				F9A8BB370EF8B11200E35DC9 /* TLMInfraUpdateOperation.m in Sources */,
+				F9E22FD50EFCBD2A00B0BE38 /* TLMPapersizeOperation.m in Sources */,
+				F9FAA44E0EFCBECD0040EAB2 /* TLMPapersizeController.m in Sources */,
+				F90520DA0EFDCB5400B489FE /* TLMAuthorizedOperation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

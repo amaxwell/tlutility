@@ -1,8 +1,8 @@
 //
-//  TLMMainWindowController.h
+//  TLMPapersizeOperation.h
 //  TeX Live Manager
 //
-//  Created by Adam Maxwell on 12/6/08.
+//  Created by Adam Maxwell on 12/19/08.
 /*
  This software is Copyright (c) 2008
  Adam Maxwell. All rights reserved.
@@ -37,44 +37,10 @@
  */
 
 #import <Cocoa/Cocoa.h>
+#import "TLMUpdateOperation.h"
 
-@class TLMSplitView;
-@class TLMLogDataSource;
+@interface TLMPapersizeOperation : TLMAuthorizedOperation
 
-@interface TLMMainWindowController : NSWindowController 
-{
-@private
-    NSTableView         *_tableView;
-    NSProgressIndicator *_progressIndicator;
-    NSTextField         *_hostnameField;
-    NSTextView          *_textView;
-    TLMSplitView        *_splitView;
-    
-    NSMutableArray      *_packages;
-    BOOL                 _sortAscending;
-    NSOperationQueue    *_queue;
-    CGFloat              _lastTextViewHeight;
-    BOOL                 _updateInfrastructure;
-    NSURL               *_lastUpdateURL;
-    
-    TLMLogDataSource    *_logDataSource;
-}
-
-@property (nonatomic, retain) IBOutlet NSTableView *_tableView;
-@property (nonatomic, retain) IBOutlet NSProgressIndicator *_progressIndicator;
-@property (nonatomic, retain) IBOutlet NSTextField *_hostnameField;
-@property (nonatomic, retain) IBOutlet TLMSplitView *_splitView;
-@property (nonatomic, retain) IBOutlet TLMLogDataSource *_logDataSource;
-@property (nonatomic, copy) NSURL *lastUpdateURL;
-
-- (IBAction)listUpdates:(id)sender;
-- (IBAction)updateAll:(id)sender;
-- (IBAction)changePapersize:(id)sender;
-
-- (IBAction)cancelAllOperations:(id)sender;
-
-- (IBAction)installSelectedRow:(id)sender;
-- (IBAction)removeSelectedRow:(id)sender;
-- (IBAction)showInfo:(id)sender;
+- (id)initWithPapersize:(NSString *)paperSize;
 
 @end
