@@ -44,6 +44,7 @@
 #include <string.h>
 #include <sys/time.h>
 #include <sys/stat.h>
+#include <sys/event.h>
 
 #import <Foundation/Foundation.h>
 #import "TLMLogMessage.h"
@@ -72,7 +73,16 @@ static void establish_log_connection()
 static void log_message_with_level(const char *level, NSString *message)
 {
     if (nil == _logServer) establish_log_connection();
-    if (nil == _logServer) asl_log(NULL, NULL, ASL_LEVEL_ERR, "log_message_with_level: server is nil");
+    
+    // !!! early return; if still not available, log to asl and bail out
+    if (nil == _logServer) {
+        static bool didWarn = false;
+        if (false == didWarn)
+            asl_log(NULL, NULL, ASL_LEVEL_ERR, "log_message_with_level: server is nil");
+        didWarn = true;
+        asl_log(NULL, NULL, ASL_LEVEL_ERR, "%s", [message UTF8String]);
+        return;
+    }
     
     TLMLogMessage *msg = [[TLMLogMessage alloc] init];
     [msg setDate:[NSDate date]];
@@ -117,6 +127,27 @@ static void log_error(NSString *format, ...)
     log_message_with_level(ASL_STRING_ERR, message);
     [message release];
 }
+
+static void log_lines_and_clear(NSMutableData *data, bool is_error)
+{
+    NSUInteger i, last = 0;
+    const char *ptr = [data bytes];
+    for (i = 0; i < [data length]; i++) {
+     
+        char ch = ptr[i];
+        if (ch == '\n') {
+            NSString *str = [[NSString alloc] initWithBytes:&ptr[last] length:(i - last) encoding:NSUTF8StringEncoding];
+            if (is_error)
+                log_error(@"%@", str);
+            else
+                log_notice(@"%@", str);
+            [str release];
+            last = i + 1;
+        }
+        
+    }
+    [data replaceBytesInRange:NSMakeRange(0, last) withBytes:NULL length:0];
+}
     
 int main(int argc, char *argv[]) {
     
@@ -131,7 +162,7 @@ int main(int argc, char *argv[]) {
      argv[2]: tlmgr
      argv[n]: tlmgr arguments
      */
-    if (argc < 2) {
+    if (argc < 3) {
         log_error(@"insufficient arguments");
         exit(1);
     }
@@ -201,6 +232,13 @@ int main(int argc, char *argv[]) {
     int ret = 0;
     pid_t child = fork();
     if (0 == child) {
+        
+        // set process group for killpg()
+        (void)setpgid(getpid(), getpid());
+        
+        close(outpipe[0]);
+        close(errpipe[0]);
+
         i = execve(argv[2], &argv[2], environ);
         _exit(i);
     }
@@ -209,41 +247,69 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
     else {
-        
-        char *line, buf[2048];        
-        
-        fd_set fdset;
-        FD_ZERO(&fdset);
-        FD_SET(outpipe[0], &fdset);
-        FD_SET(errpipe[0], &fdset);
-        
-        struct timeval tv;
-        tv.tv_sec = 0;
-        tv.tv_usec = 100000;
-        
-        int max_fd = outpipe[0];
-        if (errpipe[0] > max_fd) max_fd = errpipe[0];
-        max_fd += 1;
-        
-        FILE *outstrm = fdopen(outpipe[0], "r");
-        FILE *errstrm = fdopen(errpipe[0], "r");
-        
+                
         int childStatus;
         
-        while (select(max_fd, &fdset, NULL, NULL, &tv) > 0 || waitpid(child, &childStatus, WNOHANG) == 0) {
+        int kq_fd = kqueue();
+#define TLM_EVENT_COUNT 3
+        struct kevent events[TLM_EVENT_COUNT];
+        memset(events, 0, sizeof(struct kevent) * TLM_EVENT_COUNT);
+        
+        close(outpipe[1]);
+        close(errpipe[1]);
+        
+        EV_SET(&events[0], child, EVFILT_PROC, EV_ADD, NOTE_EXIT, 0, NULL);
+        EV_SET(&events[1], outpipe[0], EVFILT_READ, EV_ADD, 0, 0, NULL);
+        EV_SET(&events[2], errpipe[0], EVFILT_READ, EV_ADD, 0, 0, NULL);
+        kevent(kq_fd, events, TLM_EVENT_COUNT, NULL, 0, NULL);
+        
+        struct timespec ts;
+        ts.tv_sec = 0;
+        ts.tv_nsec = 100000000;
+        
+        bool stillRunning = true;        
+        struct kevent event;
+        
+        NSMutableData *errBuffer = [NSMutableData data];
+        NSMutableData *outBuffer = [NSMutableData data];
+        
+        int eventCount;
+        
+        while ((eventCount = kevent(kq_fd, NULL, 0, &event, 1, &ts)) != -1 && stillRunning) {
             
-            if (FD_ISSET(outpipe[0], &fdset)) {
-                line = fgets(buf, sizeof(buf), outstrm);
-                log_notice(@"%s", buf);
+            // if this was a timeout, don't try reading from the event
+            if (0 == eventCount)
+                continue;
+            
+            if (event.filter == EVFILT_PROC && (event.fflags & NOTE_EXIT) == NOTE_EXIT) {
+                
+                stillRunning = false;
+                log_notice(@"child process pid = %d exited", child);
             }
-            
-            if (FD_ISSET(errpipe[0], &fdset)) {
-                line = fgets(buf, sizeof(buf), errstrm);
-                log_error(@"%s", buf);
+            else if (event.filter == EVFILT_READ && event.ident == outpipe[0]) {
+                
+                ssize_t len = event.data;
+                char sbuf[2048];
+                char *buf = (len > sizeof(sbuf)) ? buf = malloc(len) : sbuf;
+                len = read(event.ident, buf, len);
+                [outBuffer appendBytes:buf length:len];
+                if (buf != sbuf) free(buf);
+                log_lines_and_clear(outBuffer, false);
             }
-            
-            FD_SET(outpipe[0], &fdset);
-            FD_SET(errpipe[0], &fdset);
+            else if (event.filter == EVFILT_READ && event.ident == errpipe[0]) {
+                
+                ssize_t len = event.data;
+                char sbuf[2048];
+                char *buf = (len > sizeof(sbuf)) ? buf = malloc(len) : sbuf;
+                len = read(event.ident, buf, len);
+                [errBuffer appendBytes:buf length:len];
+                if (buf != sbuf) free(buf);
+                log_lines_and_clear(errBuffer, true);
+            }
+            else {
+                
+                log_error(@"unhandled kevent with filter = %d", event.filter);
+            }
             
             // Original tlmgr commits suicide when it updates itself, and waitpid doesn't catch it (or I'm doing something wrong).  Polling the filesystem like this is gross, but it works.
             struct stat sb;
@@ -252,14 +318,23 @@ int main(int argc, char *argv[]) {
                 kill(child, SIGTERM);
                 exit(EXIT_FAILURE);
             }
-
-            tv.tv_sec = 0;
-            tv.tv_usec = 100000;
         }    
-        fclose(errstrm);
-        fclose(outstrm);
         
-        ret = WIFEXITED(childStatus) ? WEXITSTATUS(childStatus) : EXIT_FAILURE;
+        // log any leftovers
+        if ([outBuffer length]) {
+            NSString *str = [[NSString alloc] initWithData:outBuffer encoding:NSUTF8StringEncoding];
+            log_notice(@"%@", str);
+            [str release];
+        }
+        
+        if ([errBuffer length]) {
+            NSString *str = [[NSString alloc] initWithData:errBuffer encoding:NSUTF8StringEncoding];
+            log_notice(@"%@", str);
+            [str release];
+        }
+        
+        ret = waitpid(child, &childStatus, WNOHANG | WUNTRACED);
+        ret = (ret != 0 && WIFEXITED(childStatus)) ? WEXITSTATUS(childStatus) : EXIT_FAILURE;
     }
     
     [pool release];
