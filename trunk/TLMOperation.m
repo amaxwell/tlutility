@@ -51,21 +51,6 @@ static char _TLMOperationFinishedContext;
 @synthesize errorData = _errorData;
 @synthesize failed = _failed;
 
-+ (void)initialize
-{
-    static bool didInit = false;
-    if (true == didInit) return;
-    didInit = true;
-    const char *path = getenv("PATH");
-    
-    // if we don't add this to the path, tlmgr falls all over itself when it tries to run kpsewhich
-    if (path) {
-        NSString *texbinPath = [[NSUserDefaults standardUserDefaults] objectForKey:TLMTexBinPathPreferenceKey];
-        NSString *newPath = [[NSString stringWithUTF8String:path] stringByAppendingFormat:@":%@", texbinPath];
-        setenv("PATH", [newPath fileSystemRepresentation], 1);
-    }
-}
-
 - (id)init
 {
     self = [super init];
