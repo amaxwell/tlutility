@@ -43,6 +43,7 @@
 @private
     NSTableView *_tableView;
     NSArray     *_messages;
+    BOOL         _updateScheduled;
 }
 
 @property (nonatomic, retain) IBOutlet NSTableView *_tableView;

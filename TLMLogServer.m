@@ -36,6 +36,7 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#import "TLMPreferenceController.h"
 #import "TLMLogServer.h"
 #import "TLMLogMessage.h"
 #import <asl.h>
@@ -128,7 +129,11 @@ static NSConnection * __TLMLSCreateAndRegisterConnectionForServer(TLMLogServer *
 - (void)_notifyOnMainThread
 {
     NSParameterAssert([NSThread isMainThread]);
-    [[NSNotificationCenter defaultCenter] postNotificationName:TLMLogServerUpdateNotification object:self];
+    NSNotification *note = [NSNotification notificationWithName:TLMLogServerUpdateNotification object:self];
+    [[NSNotificationQueue defaultQueue] enqueueNotification:note
+                                               postingStyle:NSPostASAP
+                                               coalesceMask:NSNotificationCoalescingOnSender
+                                                   forModes:[NSArray arrayWithObject:(id)kCFRunLoopCommonModes]];
 }
     
 - (void)logMessage:(in bycopy TLMLogMessage *)message;
@@ -142,7 +147,9 @@ static NSConnection * __TLMLSCreateAndRegisterConnectionForServer(TLMLogServer *
     
     // Herb S. requested this so there'd be a record of all messages in one place.
     // If tlmgr_cwrapper fails to connect, it'll start logging to asl, so using this funnel point should be sufficient.
-    asl_log(NULL, NULL, ASL_LEVEL_ERR, "%s", [[message message] UTF8String]);
+    // Added a pref since setting paper size causes syslog to crap itself.
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:TLMUseSyslogPreferenceKey])
+        asl_log(NULL, NULL, ASL_LEVEL_ERR, "%s", [[message message] UTF8String]);
 }
 
 @end

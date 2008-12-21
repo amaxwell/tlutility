@@ -75,12 +75,27 @@
     [super dealloc];
 }
 
-- (void)_handleLogServerUpdateNotification:(NSNotification *)aNote
+- (void)_update
 {
+    // timer does not repeat
+    _updateScheduled = NO;
+    
     [self setMessages:[[TLMLogServer sharedServer] messages]];
     [_tableView reloadData];
     if ([_tableView numberOfRows])
-        [_tableView scrollRowToVisible:([_tableView numberOfRows] - 1)];
+        [_tableView scrollRowToVisible:([_tableView numberOfRows] - 1)];    
+}
+
+- (void)_scheduleUpdate
+{
+    _updateScheduled = YES;
+    [self performSelector:@selector(_update) withObject:nil afterDelay:0.3];
+}    
+
+- (void)_handleLogServerUpdateNotification:(NSNotification *)aNote
+{
+    if (NO == _updateScheduled)
+        [self _scheduleUpdate];
 }    
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView;
@@ -101,13 +116,42 @@
     [pboard setString:[messages componentsJoinedByString:@"\n"] forType:NSStringPboardType];
 }
 
+// do a fast literal search for newline characters, since we don't worry about surrogate pairs
+static bool __TLMStringIsSingleLine(CFStringRef aString)
+{
+    CFStringInlineBuffer buffer;
+    CFRange rng = CFRangeMake(0, CFStringGetLength(aString));
+    CFStringInitInlineBuffer(aString, &buffer, rng);
+    UniChar ch;
+    CFIndex i;
+    CFCharacterSetRef cset = CFCharacterSetGetPredefined(kCFCharacterSetNewline);
+    for (i = 0; i < rng.length; i++) {
+        ch = CFStringGetCharacterFromInlineBuffer(&buffer, i);
+        if (CFCharacterSetIsCharacterMember(cset, ch))
+            return false;
+    }
+    return true;
+}
+
 - (CGFloat)tableView:(NSTableView *)tableView heightOfRow:(NSInteger)row;
 {
     NSTableColumn *tc = [tableView tableColumnWithIdentifier:@"message"];
     static NSTextFieldCell *cell = nil;
-    if (nil == cell)
+    static CGFloat singleLineCellHeight = 0.0;
+    if (nil == cell) {
         cell = [[tc dataCell] copy];
-    [cell setObjectValue:[self tableView:tableView objectValueForTableColumn:tc row:row]];
+        [cell setStringValue:@"single line test"];
+        singleLineCellHeight = [cell cellSize].height;
+    }
+    id obj = [self tableView:tableView objectValueForTableColumn:tc row:row];
+    
+    // !!! early return; take a faster path here for the common case, which reduces CPU usage by ~3x
+    if (CFGetTypeID(obj) == CFStringGetTypeID() && __TLMStringIsSingleLine((CFStringRef)obj))
+        return singleLineCellHeight;
+
+    [cell setObjectValue:obj];
+    
+    // this has to set up a drawing context and use NSStringDrawing to figure out the height
     return [cell cellSize].height;
 }
 
