@@ -12,7 +12,7 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="5"/>
+			<integer value="91"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1155,13 +1155,14 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</bytes>
 													<reference key="NSBackgroundColor" ref="839407202"/>
 													<reference key="NSGridColor" ref="951091772"/>
 													<double key="NSRowHeight">17</double>
-													<int key="NSTvFlags">-624951296</int>
+													<int key="NSTvFlags">-608174080</int>
 													<reference key="NSDelegate"/>
 													<reference key="NSDataSource"/>
+													<string key="NSAutosaveName">Log tableview</string>
 													<int key="NSColumnAutoresizingStyle">4</int>
 													<int key="NSDraggingSourceMaskForLocal">15</int>
 													<int key="NSDraggingSourceMaskForNonLocal">0</int>
-													<bool key="NSAllowsTypeSelect">YES</bool>
+													<bool key="NSAllowsTypeSelect">NO</bool>
 												</object>
 											</object>
 											<string key="NSFrame">{{1, 17}, {465, 65}}</string>
