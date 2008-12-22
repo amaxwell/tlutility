@@ -46,6 +46,7 @@
     NSString   *_status;
     NSString   *_remoteVersion;
     NSString   *_localVersion;
+    NSNumber   *_size;
     
     BOOL        _willBeRemoved;
     BOOL        _currentlyInstalled;
@@ -59,6 +60,7 @@
 @property(copy, readwrite) NSString *status;
 @property(copy, readwrite) NSString *remoteVersion;
 @property(copy, readwrite) NSString *localVersion;
+@property(copy, readwrite) NSNumber *size;
 
 // true if no longer present on the server
 @property(readwrite) BOOL willBeRemoved;
