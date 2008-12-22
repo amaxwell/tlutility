@@ -115,6 +115,12 @@
         }
         [scanner release];
     }
+    else if ([outputLine hasPrefix:@"skipping forcibly removed package "]) {
+        
+        [package setStatus:NSLocalizedString(@"Removed locally", @"")];
+        [package setCurrentlyInstalled:NO];
+        [package setName:[outputLine stringByReplacingOccurrencesOfString:@"skipping forcibly removed package " withString:@""]];
+    }
     else {
         // This may happen with some packages in an intermediate version of tlmgr.  Not worth dealing with, since we'll typically be updating infrastructure immediately and never really use that output.
         [package setName:NSLocalizedString(@"Error parsing package string", @"")];
