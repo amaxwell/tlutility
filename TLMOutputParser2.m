@@ -64,7 +64,7 @@
 
 + (TLMPackage *)packageWithOutputLine:(NSString *)outputLine;
 {
-    TLMPackage *package = [[TLMPackage new] autorelease];
+    TLMPackage *package = [TLMPackage package];
 
     NSArray *components = [outputLine componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     
@@ -96,6 +96,13 @@
     
     if (NO == [[components objectAtIndex:3] isEqualToString:@"-"])
         [package setRemoteVersion:[components objectAtIndex:3]];
+    
+    // no placeholder for this one, so check count
+    if ([components count] > 4) {
+        NSInteger s = [[components objectAtIndex:4] integerValue];
+        if (s > 0) 
+            [package setSize:[NSNumber numberWithUnsignedInteger:s]];
+    }
     
     return package;
 }
