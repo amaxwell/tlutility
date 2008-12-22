@@ -55,6 +55,21 @@
     return [[self new] autorelease];
 }
 
+- (BOOL)matchesSearchString:(NSString *)searchTerm
+{
+    NSMutableString *string = [NSMutableString new];
+    [string appendString:_name];
+    [string appendString:_status];
+    // not guaranteed to have these
+    if (_remoteVersion) [string appendString:_remoteVersion];
+    if (_localVersion) [string appendString:_localVersion];
+    if (_size)[string appendString:[_size description]];
+    
+    BOOL matches = [string rangeOfString:searchTerm options:NSCaseInsensitiveSearch].length > 0;
+    [string release];
+    return matches;
+}
+
 - (void)dealloc
 {
     [_status release];
