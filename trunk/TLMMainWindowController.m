@@ -46,6 +46,7 @@
 #import "TLMAuthorizedOperation.h"
 
 #import "TLMSplitView.h"
+#import "TLMStatusView.h"
 #import "TLMInfoController.h"
 #import "TLMPreferenceController.h"
 #import "TLMLogServer.h"
@@ -62,6 +63,7 @@ static char _TLMOperationQueueOperationContext;
 @synthesize _splitView;
 @synthesize _logDataSource;
 @synthesize lastUpdateURL = _lastUpdateURL;
+@synthesize _statusView;
 
 - (id)init
 {
@@ -100,6 +102,7 @@ static char _TLMOperationQueueOperationContext;
     
     [_splitView setDelegate:nil];
     [_splitView release];
+    [_statusView release];
     
     [_packages release];
     [_progressIndicator release];
@@ -220,6 +223,13 @@ static char _TLMOperationQueueOperationContext;
     }
 }
 
+- (void)_removeStatusView
+{
+    NSParameterAssert([_statusView alphaValue] > 0.9);
+    [_statusView removeFromSuperview];
+    [_splitView setNeedsDisplay:YES];
+}
+
 - (void)_handleListUpdatesFinishedNotification:(NSNotification *)aNote
 {
     NSParameterAssert([NSThread isMainThread]);
@@ -255,6 +265,27 @@ static char _TLMOperationQueueOperationContext;
     [_tableView reloadData];
     
     [self setLastUpdateURL:[op updateURL]];
+    
+    NSString *statusString = nil;
+    
+    if ([op isCancelled])
+        statusString = NSLocalizedString(@"Listing Cancelled", @"");
+    else if ([op failed])
+        statusString = NSLocalizedString(@"Listing Failed", @"");
+    else if ([_packages count] == 0)
+        statusString = NSLocalizedString(@"No Updates Available", @"");
+
+    if (statusString) {
+        [_statusView setStatusString:statusString];
+        [_statusView setFrame:[_tableView bounds]];
+        [_tableView addSubview:_statusView];
+        [_statusView setAlphaValue:1.0];
+        [[_statusView animator] setAlphaValue:0.0];
+    }
+    else {
+        [[_statusView animator] setAlphaValue:1.0];
+        [self performSelector:@selector(_removeStatusView) withObject:nil afterDelay:1.0];
+    }
 }
 
 - (void)installFailureAlertDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)context
@@ -419,6 +450,9 @@ static char _TLMOperationQueueOperationContext;
 
 - (IBAction)listUpdates:(id)sender;
 {
+    [[_statusView animator] setAlphaValue:1.0];
+    [self performSelector:@selector(_removeStatusView) withObject:nil afterDelay:1.0];
+    
     if ([self _checkCommandPathAndWarn:YES]) {
         TLMListUpdatesOperation *op = [TLMListUpdatesOperation new];
         if (op) {
