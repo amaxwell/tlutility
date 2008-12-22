@@ -55,6 +55,9 @@
         case 'a':
             status = NSLocalizedString(@"Not installed", @"");
             break;
+        case 'f':
+            status = NSLocalizedString(@"Removed locally", @"");
+            break;
         default:
             TLMLog(@"TLMOutputParser2", @"Unknown status code \"%C\"", ch);
             break;
@@ -90,6 +93,9 @@
     
     if ('u' == ch)
         [package setNeedsUpdate:YES];
+    
+    if ('f' == ch)
+        [package setCurrentlyInstalled:NO];
     
     if (NO == [[components objectAtIndex:2] isEqualToString:@"-"])
         [package setLocalVersion:[components objectAtIndex:2]];
