@@ -48,6 +48,7 @@
 @synthesize currentlyInstalled = _currentlyInstalled;
 @synthesize needsUpdate = _needsUpdate;
 @synthesize failedToParse = _failedToParse;
+@synthesize size = _size;
 
 + (TLMPackage *)package;
 {
@@ -60,6 +61,7 @@
     [_name release];
     [_remoteVersion release];
     [_localVersion release];
+    [_size release];
     [super dealloc];
 }
 
