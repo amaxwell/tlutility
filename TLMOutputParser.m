@@ -117,7 +117,7 @@
     }
     else if ([outputLine hasPrefix:@"skipping forcibly removed package "]) {
         
-        [package setStatus:NSLocalizedString(@"Removed locally", @"")];
+        [package setStatus:NSLocalizedString(@"Forcibly removed", @"")];
         [package setCurrentlyInstalled:NO];
         [package setName:[outputLine stringByReplacingOccurrencesOfString:@"skipping forcibly removed package " withString:@""]];
     }

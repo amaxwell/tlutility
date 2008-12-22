@@ -56,7 +56,7 @@
             status = NSLocalizedString(@"Not installed", @"");
             break;
         case 'f':
-            status = NSLocalizedString(@"Removed locally", @"");
+            status = NSLocalizedString(@"Forcibly removed", @"");
             break;
         default:
             TLMLog(@"TLMOutputParser2", @"Unknown status code \"%C\"", ch);
