@@ -50,8 +50,11 @@
     NSTextField         *_hostnameField;
     TLMSplitView        *_splitView;
     TLMStatusView       *_statusView;
+    NSSearchField       *_searchField;
     
     NSMutableArray      *_packages;
+    NSArray             *_allPackages;
+    NSMutableArray      *_sortDescriptors;
     BOOL                 _sortAscending;
     NSOperationQueue    *_queue;
     CGFloat              _lastTextViewHeight;
@@ -67,12 +70,13 @@
 @property (nonatomic, retain) IBOutlet TLMSplitView *_splitView;
 @property (nonatomic, retain) IBOutlet TLMStatusView *_statusView;
 @property (nonatomic, retain) IBOutlet TLMLogDataSource *_logDataSource;
+@property (nonatomic, retain) IBOutlet NSSearchField *_searchField;
 @property (nonatomic, copy) NSURL *lastUpdateURL;
 
 - (IBAction)listUpdates:(id)sender;
 - (IBAction)updateAll:(id)sender;
 - (IBAction)changePapersize:(id)sender;
-
+- (IBAction)search:(id)sender;
 - (IBAction)cancelAllOperations:(id)sender;
 
 - (IBAction)installSelectedRow:(id)sender;

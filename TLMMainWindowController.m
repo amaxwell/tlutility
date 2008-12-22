@@ -64,6 +64,7 @@ static char _TLMOperationQueueOperationContext;
 @synthesize _logDataSource;
 @synthesize lastUpdateURL = _lastUpdateURL;
 @synthesize _statusView;
+@synthesize _searchField;
 
 - (id)init
 {
@@ -80,6 +81,7 @@ static char _TLMOperationQueueOperationContext;
         [_queue addObserver:self forKeyPath:@"operations" options:0 context:&_TLMOperationQueueOperationContext];
         _lastTextViewHeight = 0.0;
         _updateInfrastructure = NO;
+        _sortDescriptors = [NSMutableArray new];
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(_handleApplicationTerminate:) 
                                                      name:NSApplicationWillTerminateNotification
@@ -103,8 +105,11 @@ static char _TLMOperationQueueOperationContext;
     [_splitView setDelegate:nil];
     [_splitView release];
     [_statusView release];
+    [_searchField release];
     
     [_packages release];
+    [_allPackages release];
+    [_sortDescriptors release];
     [_progressIndicator release];
     [_lastUpdateURL release];
     [_logDataSource release];
@@ -261,9 +266,11 @@ static char _TLMOperationQueueOperationContext;
         packages = allPackages;
     }
     
-    [_packages setArray:packages];
-    [_tableView reloadData];
+    [_allPackages release];
+    _allPackages = [packages copy];
     
+    // update _packages and tableview
+    [self search:nil];
     [self setLastUpdateURL:[op updateURL]];
     
     NSString *statusString = nil;
@@ -370,7 +377,7 @@ static char _TLMOperationQueueOperationContext;
 {
     SEL action = [anItem action];
     if (@selector(cancelAllOperations:) == action)
-        return [[_queue operations] count] && [self _installIsRunning] == NO; // cancel doesn't work with install operations
+        return [[_queue operations] count];
     else if (@selector(showInfo:) == action)
         return [[[TLMInfoController sharedInstance] window] isVisible] == NO;
     else if (@selector(removeSelectedRow:) == action)
@@ -430,6 +437,24 @@ static char _TLMOperationQueueOperationContext;
         modalDelegate:self 
        didEndSelector:@selector(papersizeSheetDidEnd:returnCode:contextInfo:) 
           contextInfo:psc];
+}
+
+- (IBAction)search:(id)sender;
+{
+    NSString *searchString = [_searchField stringValue];
+    
+    if (nil == searchString || [searchString isEqualToString:@""]) {
+        [_packages setArray:_allPackages];
+    }
+    else {
+        [_packages removeAllObjects];
+        for (TLMPackage *pkg in _allPackages) {
+            if ([pkg matchesSearchString:searchString])
+                [_packages addObject:pkg];
+        }
+    }
+    [_packages sortUsingDescriptors:_sortDescriptors];
+    [_tableView reloadData];
 }
 
 // TODO: should this be a toggle to show/hide?
@@ -577,42 +602,43 @@ static char _TLMOperationQueueOperationContext;
     return dataCell;
 }
 
-static NSComparisonResult __TLMCompareAction(id a, id b, void *context)
-{
-    // two possible choices: installed and will be removed, or already installed and will be updated
-    if ([a willBeRemoved] == [b willBeRemoved])
-        return NSOrderedSame;
-    if ([a needsUpdate] == [b needsUpdate])
-        return NSOrderedSame;
-    BOOL ascending = *(BOOL *)context;
-    return ascending ? NSOrderedAscending : NSOrderedDescending;
-}
-
 - (void)tableView:(NSTableView *)tableView didClickTableColumn:(NSTableColumn *)tableColumn
 {
     _sortAscending = !_sortAscending;
+    
     for (NSTableColumn *col in [_tableView tableColumns])
         [_tableView setIndicatorImage:nil inTableColumn:col];
     NSImage *image = _sortAscending ? [NSImage imageNamed:@"NSAscendingSortIndicator"] : [NSImage imageNamed:@"NSDescendingSortIndicator"];
     [_tableView setIndicatorImage:image inTableColumn:tableColumn];
-    NSString *identifier = [tableColumn identifier];
+    
+    NSString *key = [tableColumn identifier];
     NSSortDescriptor *sort = nil;
-    if ([identifier isEqualToString:@"action"]) {
-        [_packages sortUsingFunction:__TLMCompareAction context:&_sortAscending];
+    if ([key isEqualToString:@"remoteVersion"] || [key isEqualToString:@"localVersion"]) {
+        sort = [[NSSortDescriptor alloc] initWithKey:key ascending:_sortAscending];
     }
-    else if ([identifier isEqualToString:@"remoteVersion"]) {
-        sort = [[[NSSortDescriptor alloc] initWithKey:@"remoteVersion" ascending:_sortAscending] autorelease];
+    else if ([key isEqualToString:@"name"] || [key isEqualToString:@"status"]) {
+        sort = [[NSSortDescriptor alloc] initWithKey:key ascending:_sortAscending selector:@selector(localizedCaseInsensitiveCompare:)];
     }
-    else if ([identifier isEqualToString:@"localVersion"]) {
-        sort = [[[NSSortDescriptor alloc] initWithKey:@"localVersion" ascending:_sortAscending] autorelease];
+    else {
+        TLMLog(nil, @"Unhandled sort key %@", key);
     }
-    else if ([identifier isEqualToString:@"name"]) {
-        sort = [[[NSSortDescriptor alloc] initWithKey:@"name" ascending:_sortAscending selector:@selector(localizedCaseInsensitiveCompare:)] autorelease];
+    [sort autorelease];
+    
+    // make sure we're not duplicating any descriptors (possibly with reversed order)
+    NSUInteger cnt = [_sortDescriptors count];
+    while (cnt--) {
+        if ([[[_sortDescriptors objectAtIndex:cnt] key] isEqualToString:key])
+            [_sortDescriptors removeObjectAtIndex:cnt];
     }
-    else if ([identifier isEqualToString:@"status"]) {
-        sort = [[[NSSortDescriptor alloc] initWithKey:@"status" ascending:_sortAscending selector:@selector(localizedCaseInsensitiveCompare:)] autorelease];
-    }
-    if (sort) [_packages sortUsingDescriptors:[NSArray arrayWithObject:sort]];
+    
+    // push the new sort descriptor, which is correctly ascending/descending
+    if (sort) [_sortDescriptors insertObject:sort atIndex:0];
+    
+    // pop the last sort descriptor, if we have more sort descriptors than table columns
+    while ([_sortDescriptors count] > [tableView numberOfColumns])
+        [_sortDescriptors removeLastObject];
+    
+    [_packages sortUsingDescriptors:_sortDescriptors];
     [_tableView reloadData];
 }
 

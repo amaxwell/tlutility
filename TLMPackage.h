@@ -55,6 +55,7 @@
 }
 
 + (TLMPackage *)package;
+- (BOOL)matchesSearchString:(NSString *)searchTerm;
 
 @property(copy, readwrite) NSString *name;
 @property(copy, readwrite) NSString *status;
