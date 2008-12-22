@@ -1,8 +1,8 @@
 //
-//  TLMMainWindowController.h
+//  TLMStatusView.h
 //  TeX Live Manager
 //
-//  Created by Adam Maxwell on 12/6/08.
+//  Created by Adam Maxwell on 12/21/08.
 /*
  This software is Copyright (c) 2008
  Adam Maxwell. All rights reserved.
@@ -38,45 +38,15 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class TLMSplitView;
-@class TLMLogDataSource;
-@class TLMStatusView;
 
-@interface TLMMainWindowController : NSWindowController 
-{
+@interface TLMStatusView : NSView {
 @private
-    NSTableView         *_tableView;
-    NSProgressIndicator *_progressIndicator;
-    NSTextField         *_hostnameField;
-    TLMSplitView        *_splitView;
-    TLMStatusView       *_statusView;
-    
-    NSMutableArray      *_packages;
-    BOOL                 _sortAscending;
-    NSOperationQueue    *_queue;
-    CGFloat              _lastTextViewHeight;
-    BOOL                 _updateInfrastructure;
-    NSURL               *_lastUpdateURL;
-    
-    TLMLogDataSource    *_logDataSource;
+    NSAttributedString *_statusString;
+    NSRect              _stringRect;
+    NSColor            *_fillColor;
 }
 
-@property (nonatomic, retain) IBOutlet NSTableView *_tableView;
-@property (nonatomic, retain) IBOutlet NSProgressIndicator *_progressIndicator;
-@property (nonatomic, retain) IBOutlet NSTextField *_hostnameField;
-@property (nonatomic, retain) IBOutlet TLMSplitView *_splitView;
-@property (nonatomic, retain) IBOutlet TLMStatusView *_statusView;
-@property (nonatomic, retain) IBOutlet TLMLogDataSource *_logDataSource;
-@property (nonatomic, copy) NSURL *lastUpdateURL;
-
-- (IBAction)listUpdates:(id)sender;
-- (IBAction)updateAll:(id)sender;
-- (IBAction)changePapersize:(id)sender;
-
-- (IBAction)cancelAllOperations:(id)sender;
-
-- (IBAction)installSelectedRow:(id)sender;
-- (IBAction)removeSelectedRow:(id)sender;
-- (IBAction)showInfo:(id)sender;
+@property(readwrite, copy) NSString *statusString;
+@property(readwrite, copy) NSAttributedString *attributedStatusString;
 
 @end
