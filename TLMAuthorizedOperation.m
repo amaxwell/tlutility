@@ -60,7 +60,6 @@
     [super dealloc];
 }
 
-
 - (void)main 
 {
     NSAutoreleasePool *pool = [NSAutoreleasePool new];
@@ -102,23 +101,21 @@
                 args[i++] = (char *)[option fileSystemRepresentation];
             }
             
-            FILE *communicationPipe = NULL;
             authFlags = kAuthorizationFlagDefaults;
-            status = AuthorizationExecuteWithPrivileges(authorization, cmdPath, authFlags, args, &communicationPipe);
+            
+            // passing NULL to AEWP means we return immediately, which may be useful in future
+            // could pass child PID back via IPC, then use kqueue to monitor the process and check -isCancelled
+            FILE *strm = NULL;
+            status = AuthorizationExecuteWithPrivileges(authorization, cmdPath, authFlags, args, &strm);
             
             NSZoneFree([self zone], args);
-            NSMutableData *outputData = [NSMutableData data];
-            char buffer[128];
             
-            if (status == errAuthorizationSuccess) {
-                
-                // communicationsPipe is only valid if the call succeeded, which is a major wtf
-                // note: this should no longer be used, since tlmgr_cwrapper handles logging
-                ssize_t bytesRead;
-                while ((bytesRead = read(fileno(communicationPipe), buffer, sizeof(buffer))) > 0) {
-                    [outputData appendBytes:buffer length:bytesRead];
-                }
+            if (errAuthorizationSuccess == status) {
                 [self setFailed:NO];
+                
+                // block on read() until AEWP returns
+                char ch;
+                read(fileno(strm), &ch, 1);
             }
             else {
                 NSMutableString *errorString = [NSMutableString string];
@@ -127,20 +124,17 @@
                 [errorString appendString:@" "];
                 [errorString appendString:[_options componentsJoinedByString:@" "]];
                 [errorString appendString:@"\n"];
-                [outputData appendData:[errorString dataUsingEncoding:NSUTF8StringEncoding]];
+                [self setErrorData:[errorString dataUsingEncoding:NSUTF8StringEncoding]];
                 [self setFailed:YES];
-            }
-            
-            
-            [self setErrorData:outputData];
+            }            
         }
     }
     
     AuthorizationFree(authorization, kAuthorizationFlagDefaults);
     
-    // tlmgr_cwrapper won't pass anything back up to us
+    // ordinarily tlmgr_cwrapper won't pass anything back up to us
     if ([self errorMessages])
-        TLMLog(@"TLMAuthorizedOperation", @"%@", [self errorMessages]);
+        TLMLog(@"TLMAuthorizedOperation", @"*** ERROR *** %@", [self errorMessages]);
     
     [pool release];
 }
