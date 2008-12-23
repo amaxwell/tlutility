@@ -49,14 +49,50 @@
     if (self) {
         _path = [[[NSBundle mainBundle] pathForAuxiliaryExecutable:@"tlmgr_cwrapper"] copy];
         NSParameterAssert(_path);
+        CFUUIDRef uuid = CFUUIDCreate(NULL);
+        _serverName = (NSString *)CFUUIDCreateString(NULL, uuid);
+        CFRelease(uuid);
+        _connection = [[NSConnection alloc] initWithReceivePort:[NSPort port] sendPort:nil];
+        [_connection setRootObject:[NSProtocolChecker protocolCheckerWithTarget:self protocol:@protocol(TLMAuthOperationProtocol)]];
+        if ([_connection registerName:_serverName] == NO)
+            TLMLog(@"TLMAuthorizedOperation", @"-[TLMAuthorizedOperation init] Failed to register connection named %@", _serverName);
     }
     return self;
+}
+
+- (void)setWrapperPID:(pid_t)pid;
+{
+    _cwrapper_pid = pid;
+    TLMLog(nil, @"tlmgr_cwrapper pid = %d", pid);
+}
+
+- (void)setTlmgrPID:(pid_t)pid;
+{
+    _tlmgr_pid = pid;
+    TLMLog(nil, @"tlmgr pid = %d", pid);
+}
+
+- (void)childFinishedWithStatus:(NSInteger)status;
+{
+    _childFinished = YES;
+    TLMLog(nil, @"tlmgr_cwrapper finished with status %d", status);
+}
+
+- (void)_destroyConnection
+{
+    [[NSPortNameServer systemDefaultPortNameServer] removePortForName:_serverName];
+    [[_connection sendPort] invalidate];
+    [[_connection receivePort] invalidate];
+    [_connection invalidate];
+    [_connection release];
+    _connection = nil;
 }
 
 - (void)dealloc
 {
     [_path release];
     [_options release];
+    [_serverName release];
     [super dealloc];
 }
 
@@ -90,11 +126,14 @@
             [self setFailed:YES];
         }
         else {
+            
             const char *cmdPath = [_path fileSystemRepresentation];
             
             // add an extra arg and use calloc to zero the arg vector
-            char **args = NSZoneCalloc([self zone], ([_options count] + 1), sizeof(char *));
+            char **args = NSZoneCalloc([self zone], ([_options count] + 2), sizeof(char *));
             int i = 0;
+            
+            args[i++] = (char *)[_serverName UTF8String];
             
             // fill with autoreleased C-strings
             for (NSString *option in _options) {
@@ -105,17 +144,32 @@
             
             // passing NULL to AEWP means we return immediately, which may be useful in future
             // could pass child PID back via IPC, then use kqueue to monitor the process and check -isCancelled
-            FILE *strm = NULL;
-            status = AuthorizationExecuteWithPrivileges(authorization, cmdPath, authFlags, args, &strm);
+            status = AuthorizationExecuteWithPrivileges(authorization, cmdPath, authFlags, args, NULL);
             
             NSZoneFree([self zone], args);
-            
+                                        
             if (errAuthorizationSuccess == status) {
                 [self setFailed:NO];
                 
-                // block on read() until AEWP returns
-                char ch;
-                read(fileno(strm), &ch, 1);
+                do {
+                    NSDate *next = [[NSDate alloc] initWithTimeIntervalSinceNow:0.1];
+                    [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:next];
+                    [next release];
+                    
+                    if ([self isCancelled] && _tlmgr_pid && _cwrapper_pid) {
+                        TLMLog(nil, @"killing %d and %d", _tlmgr_pid, _cwrapper_pid);
+                        const char *killPath = "/bin/kill";
+                        char *killargs[4];
+                        killargs[0] = "-KILL";
+                        killargs[1] = (char *)[[NSString stringWithFormat:@"%d", _tlmgr_pid] UTF8String];
+                        killargs[2] = (char *)[[NSString stringWithFormat:@"%d", _cwrapper_pid] UTF8String];
+                        killargs[3] = NULL;
+                        AuthorizationExecuteWithPrivileges(authorization, killPath, authFlags, killargs, NULL);     
+                        _childFinished = YES;
+                    }
+                    
+                } while (NO == _childFinished);                
+
             }
             else {
                 NSMutableString *errorString = [NSMutableString string];
@@ -129,7 +183,7 @@
             }            
         }
     }
-    
+    [self _destroyConnection];
     AuthorizationFree(authorization, kAuthorizationFlagDefaults);
     
     // ordinarily tlmgr_cwrapper won't pass anything back up to us

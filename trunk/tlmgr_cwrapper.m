@@ -50,7 +50,15 @@
 #import "TLMLogMessage.h"
 #include <asl.h>
 
-#define SENDER_NAME @"com.googlecode.mactlmgr.tlmgr_cwrapper"
+#define SENDER_NAME @"tlmgr_cwrapper"
+
+@protocol TLMAuthOperationProtocol
+
+- (void)setWrapperPID:(in pid_t)pid;
+- (void)setTlmgrPID:(in pid_t)pid;
+- (void)childFinishedWithStatus:(NSInteger)status;
+
+@end
 
 extern char **environ;
 
@@ -162,14 +170,18 @@ int main(int argc, char *argv[]) {
      argv[2]: tlmgr
      argv[n]: tlmgr arguments
      */
-    if (argc < 3) {
+    if (argc < 4) {
         log_error(@"insufficient arguments");
         exit(1);
     }
     
+    NSString *parentName = [NSString stringWithUTF8String:argv[1]];
+    id parent = [NSConnection rootProxyForConnectionWithRegisteredName:parentName host:nil];
+    [parent setProtocolForProxy:@protocol(TLMAuthOperationProtocol)];
+    
     /* Require a single character argument 'y' || 'n'.      */
     /* Don't accept 'yes' or 'no' or 'nitwit' as arguments. */
-    char *c = argv[1];
+    char *c = argv[2];
     if (strlen(c) != 1 || ('y' != *c && 'n' != *c)) {
         log_error(@"first argument '%s' was not recognized", c);
         exit(1);
@@ -186,7 +198,7 @@ int main(int argc, char *argv[]) {
     }
     
     /* This is a security issue, since we don't want to trust relative paths. */
-    NSString *nsPath = [NSString stringWithUTF8String:argv[2]];
+    NSString *nsPath = [NSString stringWithUTF8String:argv[3]];
     if ([nsPath isAbsolutePath] == NO) {
         log_error(@"*** ERROR *** rejecting insecure path %@", nsPath);
         exit(1);
@@ -239,7 +251,7 @@ int main(int argc, char *argv[]) {
         close(outpipe[0]);
         close(errpipe[0]);
 
-        i = execve(argv[2], &argv[2], environ);
+        i = execve(argv[3], &argv[3], environ);
         _exit(i);
     }
     else if (-1 == child) {
@@ -247,6 +259,14 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
     else {
+        
+        @try {
+            [parent setWrapperPID:getpid()];
+            [parent setTlmgrPID:child];
+        }
+        @catch (id exception) {
+            log_error(@"failed to send PID to server:\n\t%@", exception);
+        }
                 
         int childStatus;
         
@@ -313,8 +333,8 @@ int main(int argc, char *argv[]) {
             
             // Original tlmgr commits suicide when it updates itself, and waitpid doesn't catch it (or I'm doing something wrong).  Polling the filesystem like this is gross, but it works.
             struct stat sb;
-            if (stat(argv[2], &sb) != 0) {
-                log_error(@"executable no longer exists at %s", argv[2]);
+            if (stat(argv[3], &sb) != 0) {
+                log_error(@"executable no longer exists at %s", argv[3]);
                 kill(child, SIGTERM);
                 exit(EXIT_FAILURE);
             }
@@ -336,6 +356,13 @@ int main(int argc, char *argv[]) {
         ret = waitpid(child, &childStatus, WNOHANG | WUNTRACED);
         ret = (ret != 0 && WIFEXITED(childStatus)) ? WEXITSTATUS(childStatus) : EXIT_FAILURE;
         log_notice(@"exit status of pid = %d was %d", child, ret);
+        
+        @try {
+            [parent childFinishedWithStatus:ret];
+        }
+        @catch (id exception) {
+            log_error(@"failed to send status to server:\n\t%@", exception);
+        }
     }
     
     [pool release];

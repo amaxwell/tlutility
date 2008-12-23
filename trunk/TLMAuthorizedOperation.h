@@ -42,11 +42,24 @@
 @interface TLMAuthorizedOperation : TLMOperation
 {
 @private
-    NSString *_path;
-    NSArray  *_options;
-    
+    NSString     *_path;
+    NSArray      *_options;
+    NSConnection *_connection;
+    NSString     *_serverName;
+    pid_t         _cwrapper_pid;
+    pid_t         _tlmgr_pid;
+    BOOL          _childFinished;
 }
 
 @property(readwrite, copy) NSArray *options;
 
 @end
+
+@protocol TLMAuthOperationProtocol
+
+- (void)setWrapperPID:(in pid_t)pid;
+- (void)setTlmgrPID:(in pid_t)pid;
+- (void)childFinishedWithStatus:(NSInteger)status;
+
+@end
+
