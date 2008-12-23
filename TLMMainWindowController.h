@@ -42,27 +42,29 @@
 @class TLMLogDataSource;
 @class TLMStatusView;
 @class TLMPackageListDataSource;
+@class TLMTabView;
 
 @interface TLMMainWindowController : NSWindowController 
 {
 @private
-    NSTableView         *_tableView;
-    NSProgressIndicator *_progressIndicator;
-    NSTextField         *_hostnameField;
-    TLMSplitView        *_splitView;
-    TLMStatusView       *_statusView;
-    NSSearchField       *_searchField;
+    NSTableView              *_tableView;
+    NSProgressIndicator      *_progressIndicator;
+    NSTextField              *_hostnameField;
+    TLMTabView               *_tabView;
+    TLMSplitView             *_splitView;
+    TLMStatusView            *_statusView;
+    NSSearchField            *_searchField;
     
-    NSMutableArray      *_packages;
-    NSArray             *_allPackages;
-    NSMutableArray      *_sortDescriptors;
-    BOOL                 _sortAscending;
-    NSOperationQueue    *_queue;
-    CGFloat              _lastTextViewHeight;
-    BOOL                 _updateInfrastructure;
-    NSURL               *_lastUpdateURL;
+    NSMutableArray           *_packages;
+    NSArray                  *_allPackages;
+    NSMutableArray           *_sortDescriptors;
+    BOOL                      _sortAscending;
+    NSOperationQueue         *_queue;
+    CGFloat                   _lastTextViewHeight;
+    BOOL                      _updateInfrastructure;
+    NSURL                    *_lastUpdateURL;
     
-    TLMLogDataSource    *_logDataSource;
+    TLMLogDataSource         *_logDataSource;
     TLMPackageListDataSource *_listDataSource;
     BOOL                      _isDisplayingList;
 }
@@ -75,6 +77,7 @@
 @property (nonatomic, retain) IBOutlet TLMLogDataSource *_logDataSource;
 @property (nonatomic, retain) IBOutlet TLMPackageListDataSource *_listDataSource;
 @property (nonatomic, retain) IBOutlet NSSearchField *_searchField;
+@property (nonatomic, retain) IBOutlet TLMTabView *_tabView;
 @property (nonatomic, copy) NSURL *lastUpdateURL;
 
 - (IBAction)listUpdates:(id)sender;
@@ -82,7 +85,6 @@
 - (IBAction)changePapersize:(id)sender;
 - (IBAction)search:(id)sender;
 - (IBAction)cancelAllOperations:(id)sender;
-- (IBAction)changeView:(id)sender;
 
 - (IBAction)installSelectedRow:(id)sender;
 - (IBAction)removeSelectedRow:(id)sender;
