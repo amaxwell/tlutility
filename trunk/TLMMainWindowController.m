@@ -54,6 +54,7 @@
 #import "TLMLogServer.h"
 #import "TLMAppController.h"
 #import "TLMPapersizeController.h"
+#import "TLMTabView.h"
 
 static char _TLMOperationQueueOperationContext;
 
@@ -68,6 +69,7 @@ static char _TLMOperationQueueOperationContext;
 @synthesize _statusView;
 @synthesize _searchField;
 @synthesize _listDataSource;
+@synthesize _tabView;
 
 - (id)init
 {
@@ -117,7 +119,6 @@ static char _TLMOperationQueueOperationContext;
     [_lastUpdateURL release];
     [_logDataSource release];
     [_listDataSource release];
-    [[_tableView enclosingScrollView] release];
     
     [super dealloc];
 }
@@ -126,9 +127,10 @@ static char _TLMOperationQueueOperationContext;
 {
     [[self window] setTitle:[[NSBundle mainBundle] objectForInfoDictionaryKey:(id)kCFBundleNameKey]];
     [self setLastUpdateURL:[[TLMPreferenceController sharedPreferenceController] defaultServerURL]]; 
-    
-    // FIXME: clean this up
-    [[_tableView enclosingScrollView] retain];
+
+    [_tabView addTabNamed:NSLocalizedString(@"Updates", @"") withView:[_tableView enclosingScrollView]];
+    [_tabView addTabNamed:NSLocalizedString(@"All Packages", @"") withView:[[_listDataSource outlineView] enclosingScrollView]];
+    [_tabView setDelegate:self];
 }
 
 - (void)windowDidLoad
@@ -450,16 +452,12 @@ static char _TLMOperationQueueOperationContext;
           contextInfo:psc];
 }
 
-- (IBAction)changeView:(id)sender;
+- (void)tabView:(TLMTabView *)tabView didSelectViewAtIndex:(NSUInteger)anIndex;
 {
-    NSParameterAssert(sender);
-    NSView *currentView = nil, *nextView = nil;
     NSResponder *r;
-    switch ([sender selectedSegment]) {
+    switch (anIndex) {
         case 0:
             _isDisplayingList = NO;
-            currentView = [[_listDataSource outlineView] enclosingScrollView];
-            nextView = [_tableView enclosingScrollView];
             if ([_listDataSource nextResponder])
                 [[self window] setNextResponder:[_listDataSource nextResponder]];
             [_listDataSource setNextResponder:nil];    
@@ -467,8 +465,6 @@ static char _TLMOperationQueueOperationContext;
             break;
         case 1:
             _isDisplayingList = YES;
-            nextView = [[_listDataSource outlineView] enclosingScrollView];
-            currentView = [_tableView enclosingScrollView];
             r = [[self window] nextResponder];
             [[self window] setNextResponder:_listDataSource];
             [_listDataSource setNextResponder:r];   
@@ -480,11 +476,6 @@ static char _TLMOperationQueueOperationContext;
         default:
             break;
     }
-    [nextView setFrame:[currentView frame]];
-    if ([currentView isDescendantOf:_splitView]) {
-        [[_splitView animator] replaceSubview:currentView with:nextView];
-    }
-    [_splitView setNeedsDisplay:YES];
 }
 
 - (IBAction)search:(id)sender;
