@@ -41,6 +41,7 @@
 @class TLMSplitView;
 @class TLMLogDataSource;
 @class TLMStatusView;
+@class TLMPackageListDataSource;
 
 @interface TLMMainWindowController : NSWindowController 
 {
@@ -62,6 +63,8 @@
     NSURL               *_lastUpdateURL;
     
     TLMLogDataSource    *_logDataSource;
+    TLMPackageListDataSource *_listDataSource;
+    BOOL                      _isDisplayingList;
 }
 
 @property (nonatomic, retain) IBOutlet NSTableView *_tableView;
@@ -70,6 +73,7 @@
 @property (nonatomic, retain) IBOutlet TLMSplitView *_splitView;
 @property (nonatomic, retain) IBOutlet TLMStatusView *_statusView;
 @property (nonatomic, retain) IBOutlet TLMLogDataSource *_logDataSource;
+@property (nonatomic, retain) IBOutlet TLMPackageListDataSource *_listDataSource;
 @property (nonatomic, retain) IBOutlet NSSearchField *_searchField;
 @property (nonatomic, copy) NSURL *lastUpdateURL;
 
@@ -78,6 +82,7 @@
 - (IBAction)changePapersize:(id)sender;
 - (IBAction)search:(id)sender;
 - (IBAction)cancelAllOperations:(id)sender;
+- (IBAction)changeView:(id)sender;
 
 - (IBAction)installSelectedRow:(id)sender;
 - (IBAction)removeSelectedRow:(id)sender;

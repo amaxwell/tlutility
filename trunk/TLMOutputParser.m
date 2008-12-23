@@ -37,11 +37,13 @@
  */
 
 #import "TLMOutputParser.h"
-
+#import "TLMPackageNode.h"
 
 @implementation TLMOutputParser
 
-+ (TLMPackage *)packageWithOutputLine:(NSString *)outputLine;
+#pragma mark Update parsing
+
++ (TLMPackage *)packageWithUpdateLine:(NSString *)outputLine;
 {
     NSParameterAssert(nil != outputLine);   
     
@@ -259,6 +261,64 @@ static bool hasKeyPrefix(NSString *line)
     }
     
     return [attrString autorelease];
+}
+
+#pragma mark List parsing
+
++ (TLMPackageNode *)_newPackageNodeWithOutputLine:(NSString *)line
+{
+    NSParameterAssert([line length]);
+    
+    TLMPackageNode *node = [TLMPackageNode new];
+    
+    if ([line characterAtIndex:0] == 'i')
+        [node setInstalled:YES];
+    
+    NSScanner *scanner = [[NSScanner alloc] initWithString:line];
+    if ([node installed])
+        [scanner scanString:@"i" intoString:NULL];
+    
+    NSString *name;
+    if ([scanner scanUpToString:@":" intoString:&name]) {
+        
+        NSRange r = [name rangeOfString:@"."];
+        if (r.length) {
+            [node setName:[name substringFromIndex:NSMaxRange(r)]];
+            [node setHasParent:YES];
+        }
+        else {
+            [node setName:name];
+        }
+        
+        // scan past the colon
+        [scanner scanString:@":" intoString:NULL];
+    }
+    
+    if (NO == [scanner isAtEnd])
+        [node setShortDescription:[line substringFromIndex:[scanner scanLocation]]];
+    [scanner release];
+    
+    return node;
+}
+
++ (NSArray *)nodesWithListLines:(NSArray *)listLines;
+{    
+    NSMutableArray *nodes = [NSMutableArray array];
+    
+    for (NSString *line in listLines) {
+        
+        line = [line stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+        if (NO == [line isEqualToString:@""]) {
+            TLMPackageNode *node = [self _newPackageNodeWithOutputLine:line];
+            if ([node hasParent])
+                [(TLMPackageNode *)[nodes lastObject] addChild:node];
+            else
+                [nodes addObject:node];
+            [node release];
+        }
+    }
+    
+    return nodes;
 }
 
 @end

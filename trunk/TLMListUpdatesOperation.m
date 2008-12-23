@@ -128,7 +128,7 @@
     NSCharacterSet *nonWhitespace = [[NSCharacterSet whitespaceCharacterSet] invertedSet];
     for (NSString *line in lines) {
         if ([line rangeOfCharacterFromSet:nonWhitespace].length)
-            [packages addObject:[parserClass packageWithOutputLine:line]];
+            [packages addObject:[parserClass packageWithUpdateLine:line]];
     }
     _packages = [packages copy];
     [packages release];
