@@ -55,14 +55,26 @@
     return [[self new] autorelease];
 }
 
+static NSString *_separatorString = nil;
+
++ (void)initialize
+{
+    if (nil == _separatorString)
+        _separatorString = [[NSString alloc] initWithFormat:@"%C", 0x271D];
+}
+
 - (BOOL)matchesSearchString:(NSString *)searchTerm
 {
     NSMutableString *string = [NSMutableString new];
     [string appendString:_name];
+    [string appendString:_separatorString];
     [string appendString:_status];
+    [string appendString:_separatorString];
     // not guaranteed to have these
     if (_remoteVersion) [string appendString:_remoteVersion];
+    [string appendString:_separatorString];
     if (_localVersion) [string appendString:_localVersion];
+    [string appendString:_separatorString];
     if (_size)[string appendString:[_size description]];
     
     BOOL matches = [string rangeOfString:searchTerm options:NSCaseInsensitiveSearch].length > 0;
