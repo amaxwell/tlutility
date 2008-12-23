@@ -65,7 +65,7 @@
     return status;
 }
 
-+ (TLMPackage *)packageWithOutputLine:(NSString *)outputLine;
++ (TLMPackage *)packageWithUpdateLine:(NSString *)outputLine;
 {
     TLMPackage *package = [TLMPackage package];
 

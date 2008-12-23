@@ -1,8 +1,8 @@
 //
-//  TLMOutputParser.h
+//  TLMListOperation.h
 //  TeX Live Manager
 //
-//  Created by Adam Maxwell on 12/6/08.
+//  Created by Adam Maxwell on 12/22/08.
 /*
  This software is Copyright (c) 2008
  Adam Maxwell. All rights reserved.
@@ -37,20 +37,19 @@
  */
 
 #import <Cocoa/Cocoa.h>
-#import "TLMPackage.h"
+#import "TLMOperation.h"
 
-@interface TLMOutputParser : NSObject
+@interface TLMListOperation : TLMOperation 
+{
+@private
+    NSArray *_packageNodes;
+    NSURL   *_updateURL;
+}
 
-// result is guaranteed non-nil, but raises if outputLine is nil
-// for output of `tlmgr update --list`
-+ (TLMPackage *)packageWithUpdateLine:(NSString *)outputLine;
+// array of TLMPackageNode objects
+@property (readonly) NSArray *packageNodes;
 
-// returns a plain string if parsing fails, raises if infoString is nil
-// for output of `tlmgr show'
-+ (NSAttributedString *)attributedStringWithInfoString:(NSString *)infoString;
-
-// returns an array of TLMPackageNodes, each of which may have child nodes
-// for output of `tlmgr list`
-+ (NSArray *)nodesWithListLines:(NSArray *)listLines;
+// mirror URL that was used for listing updates
+@property (readonly, copy) NSURL *updateURL;
 
 @end

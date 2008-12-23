@@ -38,12 +38,14 @@
 
 #import "TLMMainWindowController.h"
 #import "TLMPackage.h"
+#import "TLMPackageListDataSource.h"
 
 #import "TLMListUpdatesOperation.h"
 #import "TLMUpdateOperation.h"
 #import "TLMInfraUpdateOperation.h"
 #import "TLMPapersizeOperation.h"
 #import "TLMAuthorizedOperation.h"
+#import "TLMListOperation.h"
 
 #import "TLMSplitView.h"
 #import "TLMStatusView.h"
@@ -65,6 +67,7 @@ static char _TLMOperationQueueOperationContext;
 @synthesize lastUpdateURL = _lastUpdateURL;
 @synthesize _statusView;
 @synthesize _searchField;
+@synthesize _listDataSource;
 
 - (id)init
 {
@@ -113,6 +116,8 @@ static char _TLMOperationQueueOperationContext;
     [_progressIndicator release];
     [_lastUpdateURL release];
     [_logDataSource release];
+    [_listDataSource release];
+    [[_tableView enclosingScrollView] release];
     
     [super dealloc];
 }
@@ -120,7 +125,10 @@ static char _TLMOperationQueueOperationContext;
 - (void)awakeFromNib
 {
     [[self window] setTitle:[[NSBundle mainBundle] objectForInfoDictionaryKey:(id)kCFBundleNameKey]];
-    [self setLastUpdateURL:[[TLMPreferenceController sharedPreferenceController] defaultServerURL]];        
+    [self setLastUpdateURL:[[TLMPreferenceController sharedPreferenceController] defaultServerURL]]; 
+    
+    // FIXME: clean this up
+    [[_tableView enclosingScrollView] retain];
 }
 
 - (void)windowDidLoad
@@ -360,6 +368,9 @@ static char _TLMOperationQueueOperationContext;
     if ([_packages count] == 0)
         return NO;
     
+    if (_isDisplayingList)
+        return NO;
+    
     // pushing multiple operations into the queue could work, but users will get impatient and click the button multiple times
     if ([[_queue operations] count] > 0)
         return NO;
@@ -381,13 +392,13 @@ static char _TLMOperationQueueOperationContext;
     else if (@selector(showInfo:) == action)
         return [[[TLMInfoController sharedInstance] window] isVisible] == NO;
     else if (@selector(removeSelectedRow:) == action)
-        return [[_tableView selectedRowIndexes] count] > 0;
+        return [[_tableView selectedRowIndexes] count] > 0 && NO == _isDisplayingList;
     else if (@selector(listUpdates:) == action)
         return [[_queue operations] count] == 0;
     else if (@selector(installSelectedRow:) == action)
         return [self _validateInstallSelectedRow];
     else if (@selector(updateAll:) == action)
-        return [[_queue operations] count] == 0 && [_packages count];
+        return [[_queue operations] count] == 0 && [_packages count] && NO == _isDisplayingList;
     else
         return YES;
 }
@@ -439,6 +450,40 @@ static char _TLMOperationQueueOperationContext;
           contextInfo:psc];
 }
 
+- (IBAction)changeView:(id)sender;
+{
+    NSParameterAssert(sender);
+    NSView *currentView = nil, *nextView = nil;
+    NSResponder *r;
+    switch ([sender selectedSegment]) {
+        case 0:
+            _isDisplayingList = NO;
+            currentView = [[_listDataSource outlineView] enclosingScrollView];
+            nextView = [_tableView enclosingScrollView];
+            if ([_listDataSource nextResponder])
+                [[self window] setNextResponder:[_listDataSource nextResponder]];
+            [_listDataSource setNextResponder:nil];    
+            [self search:nil];
+            break;
+        case 1:
+            _isDisplayingList = YES;
+            nextView = [[_listDataSource outlineView] enclosingScrollView];
+            currentView = [_tableView enclosingScrollView];
+            r = [[self window] nextResponder];
+            [[self window] setNextResponder:_listDataSource];
+            [_listDataSource setNextResponder:r];   
+            [_listDataSource search:nil];
+            break;
+        default:
+            break;
+    }
+    [nextView setFrame:[currentView frame]];
+    if ([currentView isDescendantOf:_splitView]) {
+        [_splitView replaceSubview:currentView with:nextView];
+    }
+    [_splitView setNeedsDisplay:YES];
+}
+
 - (IBAction)search:(id)sender;
 {
     NSString *searchString = [_searchField stringValue];
@@ -460,7 +505,7 @@ static char _TLMOperationQueueOperationContext;
 // TODO: should this be a toggle to show/hide?
 - (IBAction)showInfo:(id)sender;
 {
-    if ([_tableView selectedRow] != -1 && [_tableView selectedRow] < [_packages count])
+    if ([_tableView selectedRow] != -1)
         [[TLMInfoController sharedInstance] showInfoForPackage:[_packages objectAtIndex:[_tableView selectedRow]]];
     else if ([[[TLMInfoController sharedInstance] window] isVisible] == NO) {
         [[TLMInfoController sharedInstance] showInfoForPackage:nil];
@@ -473,21 +518,44 @@ static char _TLMOperationQueueOperationContext;
     TLMLog(nil, @"removeSelectedRow: is not implemented");
 }
 
+- (void)_handleListFinishedNotification:(NSNotification *)aNote
+{
+    TLMListOperation *op = [aNote object];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:TLMOperationFinishedNotification object:op];
+    [_listDataSource setPackageNodes:[op packageNodes]];
+    [self setLastUpdateURL:[op updateURL]];
+}
+
 - (IBAction)listUpdates:(id)sender;
 {
     [[_statusView animator] setAlphaValue:1.0];
     [self performSelector:@selector(_removeStatusView) withObject:nil afterDelay:1.0];
     
     if ([self _checkCommandPathAndWarn:YES]) {
-        TLMListUpdatesOperation *op = [TLMListUpdatesOperation new];
-        if (op) {
-            TLMLog(nil, @"Updating list of available packages%C", 0x2026);
-            [[NSNotificationCenter defaultCenter] addObserver:self 
-                                                     selector:@selector(_handleListUpdatesFinishedNotification:) 
-                                                         name:TLMOperationFinishedNotification 
-                                                       object:op];
-            [_queue addOperation:op];
-            [op release];
+        
+        if (NO == _isDisplayingList) {
+            TLMListUpdatesOperation *op = [TLMListUpdatesOperation new];
+            if (op) {
+                TLMLog(nil, @"Updating list of updated packages%C", 0x2026);
+                [[NSNotificationCenter defaultCenter] addObserver:self 
+                                                         selector:@selector(_handleListUpdatesFinishedNotification:) 
+                                                             name:TLMOperationFinishedNotification 
+                                                           object:op];
+                [_queue addOperation:op];
+                [op release];
+            }
+        }
+        else {
+            TLMListOperation *op = [TLMListOperation new];
+            if (op) {
+                TLMLog(nil, @"Updating list of all packages%C", 0x2026);
+                [[NSNotificationCenter defaultCenter] addObserver:self 
+                                                         selector:@selector(_handleListFinishedNotification:) 
+                                                             name:TLMOperationFinishedNotification 
+                                                           object:op];
+                [_queue addOperation:op];
+                [op release];
+            }            
         }
     }
 }
@@ -566,40 +634,20 @@ static char _TLMOperationQueueOperationContext;
 
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row;
 {
-    NSString *identifier = [tableColumn identifier];
-    id value = nil;
-
-    if ([identifier isEqualToString:@"action"] == NO)
-        value = [[_packages objectAtIndex:row] valueForKey:identifier];
-    
-    return value;
+    return [[_packages objectAtIndex:row] valueForKey:[tableColumn identifier]];
 }
 
 - (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row;
 {
     TLMPackage *package = [_packages objectAtIndex:row];
-    if ([[tableColumn identifier] isEqualToString:@"action"] == NO) {
-        if ([package failedToParse])
-            [cell setTextColor:[NSColor redColor]];
-        else if ([package willBeRemoved])
-            [cell setTextColor:[NSColor grayColor]];
-        else if ([package currentlyInstalled] == NO)
-            [cell setTextColor:[NSColor blueColor]];
-        else
-            [cell setTextColor:[NSColor blackColor]];
-    }
-}
-
-- (NSCell *)tableView:(NSTableView *)tableView dataCellForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
-{
-    NSCell *dataCell = [tableColumn dataCellForRow:row];
-    NSString *identifier = [tableColumn identifier];
-    if ([identifier isEqualToString:@"action"]) {
-        TLMPackage *package = [_packages objectAtIndex:row];
-        if ([package willBeRemoved])
-            dataCell = [[[[[tableView tableColumns] objectAtIndex:0] dataCellForRow:0] copy] autorelease];
-    }
-    return dataCell;
+    if ([package failedToParse])
+        [cell setTextColor:[NSColor redColor]];
+    else if ([package willBeRemoved])
+        [cell setTextColor:[NSColor grayColor]];
+    else if ([package currentlyInstalled] == NO)
+        [cell setTextColor:[NSColor blueColor]];
+    else
+        [cell setTextColor:[NSColor blackColor]];
 }
 
 - (void)tableView:(NSTableView *)tableView didClickTableColumn:(NSTableColumn *)tableColumn

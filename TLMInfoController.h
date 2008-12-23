@@ -39,6 +39,7 @@
 #import <Cocoa/Cocoa.h>
 
 @class TLMPackage;
+@protocol TLMInfo;
 
 @interface TLMInfoController : NSWindowController {
 @private
@@ -50,7 +51,7 @@
 }
 
 + (id)sharedInstance;
-- (void)showInfoForPackage:(TLMPackage *)package;
+- (void)showInfoForPackage:(id <TLMInfo>)package;
 
 @property (nonatomic, retain) IBOutlet NSTextView *_textView;
 @property (nonatomic, retain) IBOutlet NSProgressIndicator *_spinner;

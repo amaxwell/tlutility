@@ -138,7 +138,7 @@
     }
 }
 
-- (void)showInfoForPackage:(TLMPackage *)package
+- (void)showInfoForPackage:(id <TLMInfo>)package
 {
     // always clear the queue; this will trigger notifications for any cancelled operations
     [_infoQueue cancelAllOperations]; 
@@ -153,7 +153,6 @@
             [_tabView selectLastTabViewItem:nil];
             [self _recenterSpinner];
             [_spinner startAnimation:nil];
-            
             
             [[NSNotificationCenter defaultCenter] addObserver:self 
                                                      selector:@selector(_handleInfoOperationFinishedNotification:) 

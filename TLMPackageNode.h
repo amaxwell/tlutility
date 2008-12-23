@@ -1,8 +1,8 @@
 //
-//  TLMOutputParser.h
-//  TeX Live Manager
+//  TLMPackageNode.h
+//  PackageOutline
 //
-//  Created by Adam Maxwell on 12/6/08.
+//  Created by Adam Maxwell on 12/22/08.
 /*
  This software is Copyright (c) 2008
  Adam Maxwell. All rights reserved.
@@ -39,18 +39,25 @@
 #import <Cocoa/Cocoa.h>
 #import "TLMPackage.h"
 
-@interface TLMOutputParser : NSObject
+@interface TLMPackageNode : NSObject <TLMInfo>
+{
+@private
+    NSString       *_name;
+    NSString       *_description;
+    BOOL            _installed;
+    BOOL            _hasParent;
+    NSMutableArray *_children;
+}
 
-// result is guaranteed non-nil, but raises if outputLine is nil
-// for output of `tlmgr update --list`
-+ (TLMPackage *)packageWithUpdateLine:(NSString *)outputLine;
+- (BOOL)matchesSearchString:(NSString *)searchTerm;
+- (NSUInteger)numberOfChildren;
+- (id)childAtIndex:(NSUInteger)anIndex;
+- (void)addChild:(id)aChild;
 
-// returns a plain string if parsing fails, raises if infoString is nil
-// for output of `tlmgr show'
-+ (NSAttributedString *)attributedStringWithInfoString:(NSString *)infoString;
-
-// returns an array of TLMPackageNodes, each of which may have child nodes
-// for output of `tlmgr list`
-+ (NSArray *)nodesWithListLines:(NSArray *)listLines;
+@property (readwrite, copy) NSString *name;
+@property (readwrite, copy) NSString *shortDescription;
+@property (readwrite) BOOL installed;
+@property (readwrite) BOOL hasParent;
+@property (readonly) NSString *status;
 
 @end

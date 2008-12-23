@@ -1,8 +1,8 @@
 //
-//  TLMOutputParser.h
+//  TLMPackageListDataSource.h
 //  TeX Live Manager
 //
-//  Created by Adam Maxwell on 12/6/08.
+//  Created by Adam Maxwell on 12/22/08.
 /*
  This software is Copyright (c) 2008
  Adam Maxwell. All rights reserved.
@@ -37,20 +37,22 @@
  */
 
 #import <Cocoa/Cocoa.h>
-#import "TLMPackage.h"
 
-@interface TLMOutputParser : NSObject
 
-// result is guaranteed non-nil, but raises if outputLine is nil
-// for output of `tlmgr update --list`
-+ (TLMPackage *)packageWithUpdateLine:(NSString *)outputLine;
+@interface TLMPackageListDataSource : NSResponder 
+{
+@private
+    NSOutlineView  *_outlineView;
+    NSArray        *_packageNodes;    
+    NSMutableArray *_displayedPackageNodes;
+    NSSearchField  *_searchField;
+}
 
-// returns a plain string if parsing fails, raises if infoString is nil
-// for output of `tlmgr show'
-+ (NSAttributedString *)attributedStringWithInfoString:(NSString *)infoString;
+- (IBAction)search:(id)sender;
 
-// returns an array of TLMPackageNodes, each of which may have child nodes
-// for output of `tlmgr list`
-+ (NSArray *)nodesWithListLines:(NSArray *)listLines;
+@property (nonatomic, retain) IBOutlet NSSearchField *_searchField;
+@property (nonatomic, retain) IBOutlet NSOutlineView *outlineView;
+@property (readwrite, copy) NSArray *packageNodes;
+@property (readonly) id selectedItem;
 
 @end
