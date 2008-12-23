@@ -472,14 +472,17 @@ static char _TLMOperationQueueOperationContext;
             r = [[self window] nextResponder];
             [[self window] setNextResponder:_listDataSource];
             [_listDataSource setNextResponder:r];   
-            [_listDataSource search:nil];
+            if ([[_listDataSource packageNodes] count])
+                [_listDataSource search:nil];
+            else if ([[[_queue operations] valueForKey:@"class"] containsObject:[TLMListOperation self]] == NO)
+                [self listUpdates:nil];
             break;
         default:
             break;
     }
     [nextView setFrame:[currentView frame]];
     if ([currentView isDescendantOf:_splitView]) {
-        [_splitView replaceSubview:currentView with:nextView];
+        [[_splitView animator] replaceSubview:currentView with:nextView];
     }
     [_splitView setNeedsDisplay:YES];
 }
