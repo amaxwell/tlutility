@@ -47,6 +47,16 @@ NSString * const TLMLogServerUpdateNotification = @"TLMLogServerUpdateNotificati
 
 @synthesize messages = _messages;
 
+static NSArray *_runLoopModes = nil;
+
++ (void)initialize
+{
+    // kCFRunLoopCommonModes doesn't work with NSNotificationQueue on 10.5.x
+    NSString *rlmodes[] = { NSDefaultRunLoopMode, NSEventTrackingRunLoopMode, NSModalPanelRunLoopMode };
+    if (nil == _runLoopModes)
+        _runLoopModes = [[NSArray alloc] initWithObjects:rlmodes count:(sizeof(rlmodes) / sizeof(NSString *))];
+}
+
 + (id)sharedServer
 {
     static id sharedServer = nil;
@@ -133,7 +143,7 @@ static NSConnection * __TLMLSCreateAndRegisterConnectionForServer(TLMLogServer *
     [[NSNotificationQueue defaultQueue] enqueueNotification:note
                                                postingStyle:NSPostASAP
                                                coalesceMask:NSNotificationCoalescingOnSender
-                                                   forModes:[NSArray arrayWithObject:(id)kCFRunLoopCommonModes]];
+                                                   forModes:_runLoopModes];
 }
     
 - (void)logMessage:(in bycopy TLMLogMessage *)message;
@@ -141,9 +151,7 @@ static NSConnection * __TLMLSCreateAndRegisterConnectionForServer(TLMLogServer *
     @synchronized(_messages) {
         [_messages addObject:message];
     }
-    NSArray *rlmodes = [[NSArray alloc] initWithObjects:(id *)&kCFRunLoopCommonModes count:1];
-    [self performSelectorOnMainThread:@selector(_notifyOnMainThread) withObject:nil waitUntilDone:NO modes:rlmodes];
-    [rlmodes release];
+    [self performSelectorOnMainThread:@selector(_notifyOnMainThread) withObject:nil waitUntilDone:NO modes:_runLoopModes];
     
     // Herb S. requested this so there'd be a record of all messages in one place.
     // If tlmgr_cwrapper fails to connect, it'll start logging to asl, so using this funnel point should be sufficient.
