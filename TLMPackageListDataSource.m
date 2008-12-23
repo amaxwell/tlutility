@@ -51,6 +51,7 @@
     self = [super init];
     if (self) {
         _displayedPackageNodes = [NSMutableArray new];
+        _sortDescriptors = [NSMutableArray new];
     }
     return self;
 }
@@ -63,6 +64,7 @@
     [_packageNodes release];
     [_displayedPackageNodes release];
     [_searchField release];
+    [_sortDescriptors release];
     [super dealloc];
 }
 
@@ -131,13 +133,42 @@
                 [_displayedPackageNodes addObject:node];
         }
     }
-    //[_packages sortUsingDescriptors:_sortDescriptors];    
+    [_displayedPackageNodes sortUsingDescriptors:_sortDescriptors];    
     [_outlineView reloadData];
 }
 
 - (void)outlineView:(NSOutlineView *)outlineView didClickTableColumn:(NSTableColumn *)tableColumn;
 {
-    NSLog(@"sort by %@", [tableColumn identifier]);
+    _sortAscending = !_sortAscending;
+    
+    for (NSTableColumn *col in [outlineView tableColumns])
+        [outlineView setIndicatorImage:nil inTableColumn:col];
+    NSImage *image = _sortAscending ? [NSImage imageNamed:@"NSAscendingSortIndicator"] : [NSImage imageNamed:@"NSDescendingSortIndicator"];
+    [outlineView setIndicatorImage:image inTableColumn:tableColumn];
+    
+    NSString *key = [tableColumn identifier];
+    NSSortDescriptor *sort = nil;
+    
+    // all string keys, so do a simple comparison
+    sort = [[NSSortDescriptor alloc] initWithKey:key ascending:_sortAscending selector:@selector(localizedCaseInsensitiveCompare:)];
+    [sort autorelease];
+    
+    // make sure we're not duplicating any descriptors (possibly with reversed order)
+    NSUInteger cnt = [_sortDescriptors count];
+    while (cnt--) {
+        if ([[[_sortDescriptors objectAtIndex:cnt] key] isEqualToString:key])
+            [_sortDescriptors removeObjectAtIndex:cnt];
+    }
+    
+    // push the new sort descriptor, which is correctly ascending/descending
+    if (sort) [_sortDescriptors insertObject:sort atIndex:0];
+    
+    // pop the last sort descriptor, if we have more sort descriptors than table columns
+    while ([_sortDescriptors count] > [outlineView numberOfColumns])
+        [_sortDescriptors removeLastObject];
+    
+    [_displayedPackageNodes sortUsingDescriptors:_sortDescriptors];
+    [outlineView reloadData];
 }
 
 - (void)outlineViewSelectionDidChange:(NSNotification *)notification;

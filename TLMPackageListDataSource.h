@@ -46,6 +46,8 @@
     NSArray        *_packageNodes;    
     NSMutableArray *_displayedPackageNodes;
     NSSearchField  *_searchField;
+    BOOL            _sortAscending;
+    NSMutableArray *_sortDescriptors;
 }
 
 - (IBAction)search:(id)sender;
