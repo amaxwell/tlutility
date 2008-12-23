@@ -70,6 +70,7 @@ static char _TLMOperationQueueOperationContext;
 @synthesize _searchField;
 @synthesize _listDataSource;
 @synthesize _tabView;
+@synthesize _statusBarView;
 
 - (id)init
 {
@@ -111,6 +112,7 @@ static char _TLMOperationQueueOperationContext;
     [_splitView release];
     [_statusView release];
     [_searchField release];
+    [_statusBarView release];
     
     [_packages release];
     [_allPackages release];

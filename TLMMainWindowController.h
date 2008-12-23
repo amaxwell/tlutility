@@ -43,6 +43,7 @@
 @class TLMStatusView;
 @class TLMPackageListDataSource;
 @class TLMTabView;
+@class TLMGradientView;
 
 @interface TLMMainWindowController : NSWindowController 
 {
@@ -54,6 +55,7 @@
     TLMSplitView             *_splitView;
     TLMStatusView            *_statusView;
     NSSearchField            *_searchField;
+    TLMGradientView          *_statusBarView;
     
     NSMutableArray           *_packages;
     NSArray                  *_allPackages;
@@ -78,6 +80,7 @@
 @property (nonatomic, retain) IBOutlet TLMPackageListDataSource *_listDataSource;
 @property (nonatomic, retain) IBOutlet NSSearchField *_searchField;
 @property (nonatomic, retain) IBOutlet TLMTabView *_tabView;
+@property (nonatomic, retain) IBOutlet TLMGradientView *_statusBarView;
 @property (nonatomic, copy) NSURL *lastUpdateURL;
 
 - (IBAction)listUpdates:(id)sender;
