@@ -39,11 +39,12 @@
 #import <Cocoa/Cocoa.h>
 
 @class TLMMainWindowController;
+@class TLMTableView;
 
 @interface TLMUpdateListDataSource : NSResponder 
 {
 @private
-    NSTableView             *_tableView;
+    TLMTableView            *_tableView;
     NSMutableArray          *_packages;
     NSArray                 *_allPackages;
     NSMutableArray          *_sortDescriptors;
@@ -52,7 +53,7 @@
     TLMMainWindowController *_controller;
 }
 
-@property (nonatomic, retain) IBOutlet NSTableView *tableView;
+@property (nonatomic, retain) IBOutlet TLMTableView *tableView;
 @property (nonatomic, assign) IBOutlet TLMMainWindowController *_controller;
 @property (nonatomic, retain) IBOutlet NSSearchField *_searchField;
 @property (readwrite, copy) NSArray *allPackages;
