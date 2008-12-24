@@ -37,7 +37,7 @@
  */
 
 #import "TLMTabView.h"
-
+#import <QuartzCore/QuartzCore.h>
 
 @implementation TLMTabView
 
@@ -54,6 +54,15 @@
     [_tabControl setAction:@selector(changeView:)];
     [_tabControl setAutoresizingMask:NSViewMinYMargin | NSViewMinXMargin | NSViewMaxXMargin];
     _views = [NSMutableArray new];
+    
+    // only set delegate on alpha animation, since we only need the delegate callback once
+    CABasicAnimation *fadeAnimation = [CABasicAnimation animationWithKeyPath:@"alphaValue"];
+    [fadeAnimation setDelegate:self];
+    
+    NSMutableDictionary *animations = [NSMutableDictionary dictionary];
+    [animations addEntriesFromDictionary:[self animations]];
+    [animations setObject:fadeAnimation forKey:@"alphaValue"];
+    [self setAnimations:animations];
 }
 
 - (id)initWithFrame:(NSRect)frame {
@@ -106,12 +115,11 @@
     return [_views objectAtIndex:anIndex];
 }
 
-- (void)changeCurrentView:(NSView *)aView
+- (void)animationDidStop:(CAPropertyAnimation *)anim finished:(BOOL)flag;
 {
-    if (aView != _currentView) {
-        if ([_currentView isDescendantOf:self])
-            [_currentView removeFromSuperview];
-        _currentView = aView;
+    if (flag && [_previousView isDescendantOf:self]) {
+        [_previousView removeFromSuperview];
+        _previousView = nil;
     }
 }
 
@@ -123,13 +131,15 @@
     NSRect viewFrame = [self bounds];
     viewFrame.size.height -= (NSHeight([_tabControl frame]) - 3 * TAB_CONTROL_MARGIN);
     [nextView setFrame:viewFrame];
-    if (_currentView) {
-        [[_currentView animator] setAlphaValue:1.0];
-        [nextView setAlphaValue:1.0];
-    }
+    // only set transparent if there's actually something to animate
+    if (_currentView)
+        [nextView setAlphaValue:0.0];
     [self addSubview:nextView];
-    [[nextView animator] setAlphaValue:0.0];
-    [self performSelector:@selector(changeCurrentView:) withObject:nextView afterDelay:0.5]; 
+    [[_currentView animator] setAlphaValue:0.0];
+    [[nextView animator] setAlphaValue:1.0];
+    _previousView = _currentView;
+    _currentView = nextView;
+    [self setNeedsDisplay:YES];
     if ([[self delegate] respondsToSelector:@selector(tabView:didSelectViewAtIndex:)])
         [(id <TLMTabViewDelegate>)[self delegate] tabView:self didSelectViewAtIndex:anIndex];
 }
