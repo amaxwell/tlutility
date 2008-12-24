@@ -68,6 +68,7 @@
 
 - (void)dealloc
 {
+    [self _destroyConnection];
     [_path release];
     [_options release];
     [_serverName release];
@@ -173,7 +174,7 @@
             }            
         }
     }
-    [self _destroyConnection];
+
     AuthorizationFree(authorization, kAuthorizationFlagDefaults);
     
     // ordinarily tlmgr_cwrapper won't pass anything back up to us
