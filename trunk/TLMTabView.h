@@ -51,6 +51,7 @@
     NSSegmentedControl *_tabControl;
     NSMutableArray     *_views;
     NSView             *_currentView;
+    NSView             *_previousView;
     id                  _delegate;
 }
 
