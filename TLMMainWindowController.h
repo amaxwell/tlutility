@@ -42,55 +42,49 @@
 @class TLMLogDataSource;
 @class TLMStatusView;
 @class TLMPackageListDataSource;
+@class TLMUpdateListDataSource;
 @class TLMTabView;
 @class TLMGradientView;
 
 @interface TLMMainWindowController : NSWindowController 
 {
 @private
-    NSTableView              *_tableView;
     NSProgressIndicator      *_progressIndicator;
     NSTextField              *_hostnameField;
     TLMTabView               *_tabView;
     TLMSplitView             *_splitView;
     TLMStatusView            *_statusView;
-    NSSearchField            *_searchField;
     TLMGradientView          *_statusBarView;
     
-    NSMutableArray           *_packages;
-    NSArray                  *_allPackages;
-    NSMutableArray           *_sortDescriptors;
-    BOOL                      _sortAscending;
     NSOperationQueue         *_queue;
     CGFloat                   _lastTextViewHeight;
     BOOL                      _updateInfrastructure;
     NSURL                    *_lastUpdateURL;
     
+    TLMUpdateListDataSource  *_updateListDataSource;
     TLMLogDataSource         *_logDataSource;
     TLMPackageListDataSource *_listDataSource;
     BOOL                      _isDisplayingList;
 }
 
-@property (nonatomic, retain) IBOutlet NSTableView *_tableView;
 @property (nonatomic, retain) IBOutlet NSProgressIndicator *_progressIndicator;
 @property (nonatomic, retain) IBOutlet NSTextField *_hostnameField;
 @property (nonatomic, retain) IBOutlet TLMSplitView *_splitView;
 @property (nonatomic, retain) IBOutlet TLMStatusView *_statusView;
 @property (nonatomic, retain) IBOutlet TLMLogDataSource *_logDataSource;
 @property (nonatomic, retain) IBOutlet TLMPackageListDataSource *_listDataSource;
-@property (nonatomic, retain) IBOutlet NSSearchField *_searchField;
+@property (nonatomic, retain) IBOutlet TLMUpdateListDataSource *_updateListDataSource;
 @property (nonatomic, retain) IBOutlet TLMTabView *_tabView;
 @property (nonatomic, retain) IBOutlet TLMGradientView *_statusBarView;
+@property (nonatomic, readonly) BOOL infrastructureNeedsUpdate;
 @property (nonatomic, copy) NSURL *lastUpdateURL;
 
-- (IBAction)listUpdates:(id)sender;
-- (IBAction)updateAll:(id)sender;
 - (IBAction)changePapersize:(id)sender;
-- (IBAction)search:(id)sender;
 - (IBAction)cancelAllOperations:(id)sender;
+- (IBAction)updateAll:(id)sender;
 
-- (IBAction)installSelectedRow:(id)sender;
-- (IBAction)removeSelectedRow:(id)sender;
-- (IBAction)showInfo:(id)sender;
+- (void)installPackagesWithNames:(NSArray *)packageNames;
+- (void)refreshFullPackageList;
+- (void)refreshUpdatedPackageList;
 
 @end
