@@ -37,15 +37,16 @@
  */
 #import <Cocoa/Cocoa.h>
 
+@class TLMTableView;
 
 @interface TLMLogDataSource : NSObject 
 {
 @private
-    NSTableView *_tableView;
-    NSArray     *_messages;
-    BOOL         _updateScheduled;
+    TLMTableView *_tableView;
+    NSArray      *_messages;
+    BOOL          _updateScheduled;
 }
 
-@property (nonatomic, retain) IBOutlet NSTableView *_tableView;
+@property (nonatomic, retain) IBOutlet TLMTableView *_tableView;
 
 @end
