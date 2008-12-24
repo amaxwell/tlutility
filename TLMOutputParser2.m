@@ -68,14 +68,35 @@
     return status;
 }
 
+/*
+ froude:tmp amaxwell$ tlmgr2 --machine-readable update --list 2>/dev/null
+ ...
+ casyl	f	-	-	-
+ pageno	d	-	-	-
+ arsclassica	a	-	11634	297310
+ oberdiek	u	10278	11378	12339256
+ 
+*/
+
+#define MAX_COLUMNS 5
+
+enum {
+    TLMNameIndex          = 0,
+    TLMStatusIndex        = 1,
+    TLMLocalVersionIndex  = 2,
+    TLMRemoteVersionIndex = 3,
+    TLMSizeIndex          = 4
+};
+
 + (TLMPackage *)packageWithUpdateLine:(NSString *)outputLine;
 {
     TLMPackage *package = [TLMPackage package];
 
+    // probably safe to use \t as separator here, but just accept any whitespace
     NSArray *components = [outputLine componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     
     // !!! early return here after a sanity check
-    if ([components count] < 4) {
+    if ([components count] < MAX_COLUMNS) {
         TLMLog(@"TLMOutputParser2", @"Unexpected number of tokens in line \"%@\"", outputLine);
         [package setName:NSLocalizedString(@"Error parsing output line", @"")];
         [package setStatus:outputLine];
@@ -83,9 +104,9 @@
         return package;
     }
     
-    [package setName:[components objectAtIndex:0]];
+    [package setName:[components objectAtIndex:TLMNameIndex]];
     
-    unichar ch = [[components objectAtIndex:1] characterAtIndex:0];
+    unichar ch = [[components objectAtIndex:TLMStatusIndex] characterAtIndex:0];
     [package setStatus:[self _statusStringForCharacter:ch]];
     
     if ('d' == ch)
@@ -100,17 +121,15 @@
     if ('f' == ch)
         [package setCurrentlyInstalled:NO];
         
-    if (NO == [[components objectAtIndex:2] isEqualToString:@"-"])
-        [package setLocalVersion:[components objectAtIndex:2]];
+    if (NO == [[components objectAtIndex:TLMLocalVersionIndex] isEqualToString:@"-"])
+        [package setLocalVersion:[components objectAtIndex:TLMLocalVersionIndex]];
     
-    if (NO == [[components objectAtIndex:3] isEqualToString:@"-"])
-        [package setRemoteVersion:[components objectAtIndex:3]];
+    if (NO == [[components objectAtIndex:TLMRemoteVersionIndex] isEqualToString:@"-"])
+        [package setRemoteVersion:[components objectAtIndex:TLMRemoteVersionIndex]];
     
-    // no placeholder for this one, so check count
-    if ([components count] > 4) {
-        NSInteger s = [[components objectAtIndex:4] integerValue];
-        if (s > 0) 
-            [package setSize:[NSNumber numberWithUnsignedInteger:s]];
+    if (NO == [[components objectAtIndex:TLMSizeIndex] isEqualToString:@"-"]) {
+        NSInteger s = [[components objectAtIndex:TLMSizeIndex] integerValue];
+        if (s > 0) [package setSize:[NSNumber numberWithUnsignedInteger:s]];
     }
     
     return package;
