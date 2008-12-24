@@ -39,12 +39,14 @@
 #import "TLMPackageListDataSource.h"
 #import "TLMPackageNode.h"
 #import "TLMInfoController.h"
+#import "TLMMainWindowController.h"
 
 @implementation TLMPackageListDataSource
 
 @synthesize outlineView = _outlineView;
 @synthesize packageNodes = _packageNodes;
 @synthesize _searchField;
+@synthesize _controller;
 
 - (id)init
 {
@@ -83,6 +85,11 @@
         [[TLMInfoController sharedInstance] showInfoForPackage:nil];
         [[TLMInfoController sharedInstance] showWindow:nil];
     }
+}
+
+- (IBAction)listUpdates:(id)sender;
+{
+    [_controller refreshFullPackageList];
 }
 
 - (BOOL)validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem>)anItem;

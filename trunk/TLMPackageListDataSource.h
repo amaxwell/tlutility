@@ -38,6 +38,7 @@
 
 #import <Cocoa/Cocoa.h>
 
+@class TLMMainWindowController;
 
 @interface TLMPackageListDataSource : NSResponder 
 {
@@ -48,12 +49,15 @@
     NSSearchField  *_searchField;
     BOOL            _sortAscending;
     NSMutableArray *_sortDescriptors;
+    TLMMainWindowController *_controller;
 }
 
 - (IBAction)search:(id)sender;
+- (IBAction)showInfo:(id)sender;
 
 @property (nonatomic, retain) IBOutlet NSSearchField *_searchField;
 @property (nonatomic, retain) IBOutlet NSOutlineView *outlineView;
+@property (nonatomic, assign) IBOutlet TLMMainWindowController *_controller;
 @property (readwrite, copy) NSArray *packageNodes;
 @property (readonly) id selectedItem;
 

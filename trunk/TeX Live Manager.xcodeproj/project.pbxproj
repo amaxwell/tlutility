@@ -45,6 +45,8 @@
 		F9B6B5EB0EF4647400CF767F /* TLMLogMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F56B4B0EF31F8800E934A9 /* TLMLogMessage.m */; };
 		F9B6B5F80EF469A600CF767F /* TLMLogServer.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B6B5F70EF469A600CF767F /* TLMLogServer.m */; };
 		F9D37C9A0F01A80800FB755E /* TLMGradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D37C990F01A80800FB755E /* TLMGradientView.m */; };
+		F9D37D640F01EA8900FB755E /* TLMUpdateListDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D37D630F01EA8900FB755E /* TLMUpdateListDataSource.m */; };
+		F9D37DEC0F021AA900FB755E /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9D37DEB0F021AA900FB755E /* QuartzCore.framework */; };
 		F9E22FD50EFCBD2A00B0BE38 /* TLMPapersizeOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F9E22FD40EFCBD2A00B0BE38 /* TLMPapersizeOperation.m */; };
 		F9F130560EED94D800D9968D /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = F9F130550EED94D800D9968D /* Preferences.xib */; };
 		F9F1305B0EED94F700D9968D /* TLMPreferenceController.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F1305A0EED94F700D9968D /* TLMPreferenceController.m */; };
@@ -141,6 +143,9 @@
 		F9B6B5F70EF469A600CF767F /* TLMLogServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMLogServer.m; sourceTree = "<group>"; };
 		F9D37C980F01A80800FB755E /* TLMGradientView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMGradientView.h; sourceTree = "<group>"; };
 		F9D37C990F01A80800FB755E /* TLMGradientView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMGradientView.m; sourceTree = "<group>"; };
+		F9D37D620F01EA8900FB755E /* TLMUpdateListDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMUpdateListDataSource.h; sourceTree = "<group>"; };
+		F9D37D630F01EA8900FB755E /* TLMUpdateListDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMUpdateListDataSource.m; sourceTree = "<group>"; };
+		F9D37DEB0F021AA900FB755E /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = /System/Library/Frameworks/QuartzCore.framework; sourceTree = "<absolute>"; };
 		F9E22FD30EFCBD2A00B0BE38 /* TLMPapersizeOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMPapersizeOperation.h; sourceTree = "<group>"; };
 		F9E22FD40EFCBD2A00B0BE38 /* TLMPapersizeOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMPapersizeOperation.m; sourceTree = "<group>"; };
 		F9F130530EED94CC00D9968D /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/Preferences.xib; sourceTree = "<group>"; };
@@ -161,6 +166,7 @@
 			files = (
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
 				F9B137330EEC4C6A007C0046 /* Security.framework in Frameworks */,
+				F9D37DEC0F021AA900FB755E /* QuartzCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -194,6 +200,8 @@
 				F99E51970EEE4AD5006E6B39 /* TLMURLFormatter.m */,
 				F9FAA44C0EFCBECD0040EAB2 /* TLMPapersizeController.h */,
 				F9FAA44D0EFCBECD0040EAB2 /* TLMPapersizeController.m */,
+				F9D37D620F01EA8900FB755E /* TLMUpdateListDataSource.h */,
+				F9D37D630F01EA8900FB755E /* TLMUpdateListDataSource.m */,
 				F964A6330F0070E80006868B /* TLMPackageListDataSource.h */,
 				F964A6340F0070E80006868B /* TLMPackageListDataSource.m */,
 			);
@@ -268,6 +276,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F9D37DEB0F021AA900FB755E /* QuartzCore.framework */,
 				F9B137320EEC4C6A007C0046 /* Security.framework */,
 				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
 				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
@@ -455,6 +464,7 @@
 				F964A6660F009B1F0006868B /* TLMListOperation.m in Sources */,
 				F99D9B0B0F01731E00A1DCCB /* TLMTabView.m in Sources */,
 				F9D37C9A0F01A80800FB755E /* TLMGradientView.m in Sources */,
+				F9D37D640F01EA8900FB755E /* TLMUpdateListDataSource.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
