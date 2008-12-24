@@ -41,6 +41,7 @@
 #import "TLMMainWindowController.h"
 #import "TLMInfoController.h"
 #import "TLMLogServer.h"
+#import "TLMTableView.h"
 
 @implementation TLMUpdateListDataSource
 
@@ -71,6 +72,12 @@
     [_sortDescriptors release];
     
     [super dealloc];
+}
+
+- (void)awakeFromNib
+{
+    [_tableView setFontNamePreferenceKey:@"TLMUpdateListTableFontName" 
+                       sizePreferenceKey:@"TLMUpdateListTableFontSize"];
 }
 
 - (void)setAllPackages:(NSArray *)packages

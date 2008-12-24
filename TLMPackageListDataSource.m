@@ -40,6 +40,7 @@
 #import "TLMPackageNode.h"
 #import "TLMInfoController.h"
 #import "TLMMainWindowController.h"
+#import "TLMOutlineView.h"
 
 @implementation TLMPackageListDataSource
 
@@ -68,6 +69,12 @@
     [_searchField release];
     [_sortDescriptors release];
     [super dealloc];
+}
+
+- (void)awakeFromNib
+{
+    [_outlineView setFontNamePreferenceKey:@"TLMPackageListTableFontName" 
+                         sizePreferenceKey:@"TLMPackageListTableFontSize"];
 }
 
 - (void)setPackageNodes:(NSArray *)nodes
