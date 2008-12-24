@@ -196,7 +196,7 @@
     TLMLog(nil, @"tlmgr pid = %d", pid);
 }
 
-// If the server is killed before the child detects a return, it will catch an exception while waiting for the reply.  Therefore, we should only access this variable from the worker thread.
+// If the server is killed before the child detects a return, it will catch an exception while waiting for the reply.  Therefore, we should only access this variable from the worker thread.  Even that apparently isn't enough, so I moved -_destroyConnection from -main to -dealloc.
 - (void)childFinishedWithStatus:(NSInteger)status;
 {
     _childFinished = YES;
