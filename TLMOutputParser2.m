@@ -58,6 +58,9 @@
         case 'f':
             status = NSLocalizedString(@"Forcibly removed", @"");
             break;
+        case 'r':
+            status = NSLocalizedString(@"Local version is newer", @"");
+            break;
         default:
             TLMLog(@"TLMOutputParser2", @"Unknown status code \"%C\"", ch);
             break;
@@ -96,7 +99,7 @@
     
     if ('f' == ch)
         [package setCurrentlyInstalled:NO];
-    
+        
     if (NO == [[components objectAtIndex:2] isEqualToString:@"-"])
         [package setLocalVersion:[components objectAtIndex:2]];
     

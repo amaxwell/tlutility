@@ -117,11 +117,36 @@
         }
         [scanner release];
     }
+    // e.g. "skipping forcibly removed package casyl"
     else if ([outputLine hasPrefix:@"skipping forcibly removed package "]) {
         
         [package setStatus:NSLocalizedString(@"Forcibly removed", @"")];
         [package setCurrentlyInstalled:NO];
         [package setName:[outputLine stringByReplacingOccurrencesOfString:@"skipping forcibly removed package " withString:@""]];
+    }
+    // e.g. "bin-texlive: local revision (11693) is newer than revision in http://foo.bar.mirror/ (11613), not updating"
+    else if ([outputLine rangeOfString:@"is newer than revision in"].length) {
+        
+        // this is quite possibly the most gruesomely ad-hoc of all the version 1 messages...
+        [package setStatus:NSLocalizedString(@"Local version is newer", @"")];
+        [package setCurrentlyInstalled:YES];
+
+        NSScanner *scanner = [[NSScanner alloc] initWithString:outputLine];
+        
+        NSString *name;
+        if ([scanner scanUpToString:@":" intoString:&name])
+            [package setName:name];
+
+        NSString *localVersion;
+        if ([scanner scanString:@": local revision (" intoString:NULL] && [scanner scanUpToString:@")" intoString:&localVersion])
+            [package setLocalVersion:localVersion];
+        
+        NSString *remoteVersion;
+        if ([scanner scanUpToString:@"(" intoString:NULL] && [scanner scanString:@"(" intoString:NULL] && [scanner scanUpToString:@")" intoString:&remoteVersion])
+            [package setRemoteVersion:remoteVersion];
+        
+        [scanner release];
+        
     }
     else {
         // This may happen with some packages in an intermediate version of tlmgr.  Not worth dealing with, since we'll typically be updating infrastructure immediately and never really use that output.
