@@ -1,8 +1,8 @@
 //
-//  TLMTableView.m
+//  TLMOutlineView.m
 //  TeX Live Manager
 //
-//  Created by Adam Maxwell on 12/13/08.
+//  Created by Adam Maxwell on 12/24/08.
 /*
  This software is Copyright (c) 2008
  Adam Maxwell. All rights reserved.
@@ -36,24 +36,23 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "TLMTableView.h"
+#import "TLMOutlineView.h"
 
-@interface TLMTableView ()
+@interface TLMOutlineView ()
 
 @property (readwrite, copy) NSString *fontNamePreferenceKey;
 @property (readwrite, copy) NSString *fontSizePreferenceKey;
 
 @end
 
-
-@implementation TLMTableView
+@implementation TLMOutlineView
 
 @synthesize fontNamePreferenceKey = _fontNamePreferenceKey;
 @synthesize fontSizePreferenceKey = _fontSizePreferenceKey;
 
 - (BOOL)dataSourceAllowsCopying
 {
-    return [[self dataSource] respondsToSelector:@selector(tableView:writeSelectedRowsToPasteboard:)];
+    return [[self dataSource] respondsToSelector:@selector(outlineView:writeSelectedRowsToPasteboard:)];
 }
 
 - (BOOL)validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem>)anItem;
@@ -65,11 +64,11 @@
     else
         return NO;
 }
-        
+
 - (IBAction)copy:(id)sender;
 {
     if ([self dataSourceAllowsCopying])
-        [[self dataSource] tableView:self writeSelectedRowsToPasteboard:[NSPasteboard generalPasteboard]];
+        [[self dataSource] outlineView:self writeSelectedRowsToPasteboard:[NSPasteboard generalPasteboard]];
     else
         NSBeep();
 }
@@ -117,17 +116,17 @@
     }
 }
 
+- (void)viewDidMoveToWindow
+{
+    [super viewDidMoveToWindow];
+    [self changeFont:nil];
+}
+
 - (void)setFontNamePreferenceKey:(NSString *)name sizePreferenceKey:(NSString *)size;
 {
     NSParameterAssert(name && size);
     [self setFontNamePreferenceKey:name];
     [self setFontSizePreferenceKey:size];
-}
-
-- (void)viewDidMoveToWindow
-{
-    [super viewDidMoveToWindow];
-    [self changeFont:nil];
 }
 
 @end

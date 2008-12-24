@@ -40,8 +40,14 @@
 
 // trivial subclass to allow delegate to handle copying
 @interface TLMTableView : NSTableView
+{
+@private
+    NSString *_fontNamePreferenceKey;
+    NSString *_fontSizePreferenceKey;
+}
 
 - (IBAction)copy:(id)sender;
+- (void)setFontNamePreferenceKey:(NSString *)name sizePreferenceKey:(NSString *)size;
 
 @end
 

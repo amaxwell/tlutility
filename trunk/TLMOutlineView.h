@@ -1,8 +1,8 @@
 //
-//  TLMPackageListDataSource.h
+//  TLMOutlineView.h
 //  TeX Live Manager
 //
-//  Created by Adam Maxwell on 12/22/08.
+//  Created by Adam Maxwell on 12/24/08.
 /*
  This software is Copyright (c) 2008
  Adam Maxwell. All rights reserved.
@@ -38,28 +38,20 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class TLMMainWindowController;
-@class TLMOutlineView;
 
-@interface TLMPackageListDataSource : NSResponder 
+// trivial subclass to allow delegate to handle copying
+@interface TLMOutlineView : NSOutlineView
 {
 @private
-    TLMOutlineView *_outlineView;
-    NSArray        *_packageNodes;    
-    NSMutableArray *_displayedPackageNodes;
-    NSSearchField  *_searchField;
-    BOOL            _sortAscending;
-    NSMutableArray *_sortDescriptors;
-    TLMMainWindowController *_controller;
+    NSString *_fontNamePreferenceKey;
+    NSString *_fontSizePreferenceKey;
 }
 
-- (IBAction)search:(id)sender;
-- (IBAction)showInfo:(id)sender;
+- (IBAction)copy:(id)sender;
+- (void)setFontNamePreferenceKey:(NSString *)name sizePreferenceKey:(NSString *)size;
 
-@property (nonatomic, retain) IBOutlet NSSearchField *_searchField;
-@property (nonatomic, retain) IBOutlet NSOutlineView *outlineView;
-@property (nonatomic, assign) IBOutlet TLMMainWindowController *_controller;
-@property (readwrite, copy) NSArray *packageNodes;
-@property (readonly) id selectedItem;
+@end
 
+@interface NSObject (TLMOutlineViewDataSource)
+- (void)outlineView:(TLMOutlineView *)outlineView writeSelectedRowsToPasteboard:(NSPasteboard *)pboard;
 @end
