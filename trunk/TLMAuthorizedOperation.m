@@ -142,8 +142,9 @@
             
             authFlags = kAuthorizationFlagDefaults;
             
-            // passing NULL to AEWP means we return immediately, which may be useful in future
-            // could pass child PID back via IPC, then use kqueue to monitor the process and check -isCancelled
+            /*
+             Passing NULL communicationsPipe to AEWP means we return immediately instead of blocking until the child exits.  Hence, we can pass the child PID back via IPC (DO), then monitor the process and check -isCancelled.
+             */
             status = AuthorizationExecuteWithPrivileges(authorization, cmdPath, authFlags, args, NULL);
             
             NSZoneFree([self zone], args);
@@ -152,10 +153,14 @@
                 [self setFailed:NO];
                 
                 do {
-                    NSDate *next = [[NSDate alloc] initWithTimeIntervalSinceNow:0.1];
+                    /*
+                     A long timeout should be okay here; incoming DO messages will wake up the runloop, and it's okay if canceling isn't instantaneous.  Originally used 0.1s timeout, but Herb S. noted that it was using significant CPU on a single processor system.  It's unlikely that anything tlmgr does will take such a short time, anyway.
+                     */
+                    NSDate *next = [[NSDate alloc] initWithTimeIntervalSinceNow:2.0];
                     [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:next];
                     [next release];
                     
+                    // !!! FIXME: what if authorization expires before we get here?  That's pretty likely...
                     if ([self isCancelled] && _tlmgr_pid && _cwrapper_pid) {
                         TLMLog(nil, @"killing %d and %d", _tlmgr_pid, _cwrapper_pid);
                         const char *killPath = "/bin/kill";
