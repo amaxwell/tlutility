@@ -52,30 +52,8 @@
         CFUUIDRef uuid = CFUUIDCreate(NULL);
         _serverName = (NSString *)CFUUIDCreateString(NULL, uuid);
         CFRelease(uuid);
-        _connection = [[NSConnection alloc] initWithReceivePort:[NSPort port] sendPort:nil];
-        [_connection setRootObject:[NSProtocolChecker protocolCheckerWithTarget:self protocol:@protocol(TLMAuthOperationProtocol)]];
-        if ([_connection registerName:_serverName] == NO)
-            TLMLog(@"TLMAuthorizedOperation", @"-[TLMAuthorizedOperation init] Failed to register connection named %@", _serverName);
     }
     return self;
-}
-
-- (void)setWrapperPID:(pid_t)pid;
-{
-    _cwrapper_pid = pid;
-    TLMLog(nil, @"tlmgr_cwrapper pid = %d", pid);
-}
-
-- (void)setTlmgrPID:(pid_t)pid;
-{
-    _tlmgr_pid = pid;
-    TLMLog(nil, @"tlmgr pid = %d", pid);
-}
-
-- (void)childFinishedWithStatus:(NSInteger)status;
-{
-    _childFinished = YES;
-    TLMLog(nil, @"tlmgr_cwrapper finished with status %d", status);
 }
 
 - (void)_destroyConnection
@@ -127,6 +105,12 @@
         }
         else {
             
+            // set up the connection to listen on our worker thread, so we avoid a race when exiting
+            _connection = [[NSConnection alloc] initWithReceivePort:[NSPort port] sendPort:nil];
+            [_connection setRootObject:[NSProtocolChecker protocolCheckerWithTarget:self protocol:@protocol(TLMAuthOperationProtocol)]];
+            if ([_connection registerName:_serverName] == NO)
+                TLMLog(@"TLMAuthorizedOperation", @"-[TLMAuthorizedOperation init] Failed to register connection named %@", _serverName);            
+            
             const char *cmdPath = [_path fileSystemRepresentation];
             
             // add an extra arg and use calloc to zero the arg vector
@@ -150,6 +134,7 @@
             NSZoneFree([self zone], args);
                                         
             if (errAuthorizationSuccess == status) {
+                
                 [self setFailed:NO];
                 
                 do {
@@ -196,6 +181,25 @@
         TLMLog(@"TLMAuthorizedOperation", @"*** ERROR *** %@", [self errorMessages]);
     
     [pool release];
+}
+
+- (void)setWrapperPID:(pid_t)pid;
+{
+    _cwrapper_pid = pid;
+    TLMLog(nil, @"tlmgr_cwrapper pid = %d", pid);
+}
+
+- (void)setTlmgrPID:(pid_t)pid;
+{
+    _tlmgr_pid = pid;
+    TLMLog(nil, @"tlmgr pid = %d", pid);
+}
+
+// If the server is killed before the child detects a return, it will catch an exception while waiting for the reply.  Therefore, we should only access this variable from the worker thread.
+- (void)childFinishedWithStatus:(NSInteger)status;
+{
+    _childFinished = YES;
+    TLMLog(nil, @"tlmgr_cwrapper finished with status %d", status);
 }
 
 @end
