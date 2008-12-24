@@ -90,6 +90,7 @@
         // package is installed, but needs update
         [package setStatus:NSLocalizedString(@"Updated on server", @"")];
         [package setCurrentlyInstalled:YES];
+        [package setNeedsUpdate:YES];
         
         NSScanner *scanner = [[NSScanner alloc] initWithString:outputLine];
         
