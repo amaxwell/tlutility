@@ -511,9 +511,34 @@ static char _TLMOperationQueueOperationContext;
 {
     if ([self _checkCommandPathAndWarn:YES]) {
         NSAlert *alert = [[NSAlert new] autorelease];
+        NSUInteger size = 0;
+        for (TLMPackage *pkg in [_updateListDataSource allPackages])
+            size += [[pkg size] unsignedIntegerValue];
+        
         [alert setMessageText:NSLocalizedString(@"Update all packages?", @"")];
         // may not be correct for _updateInfrastructure, but tlmgr may remove stuff also...so leave it as-is
-        [alert setInformativeText:NSLocalizedString(@"This will install all available updates and remove packages that no longer exist on the server.", @"")];
+        NSMutableString *informativeText = [NSMutableString string];
+        [informativeText appendString:NSLocalizedString(@"This will install all available updates and remove packages that no longer exist on the server.", @"")];
+        
+        if (size > 0) {
+            
+            CGFloat totalSize = size;
+            NSString *sizeUnits = @"bytes";
+            
+            // check 1024 + 10% so the plural is always correct (at least in English)
+            if (totalSize > 1127) {
+                totalSize /= 1024.0;
+                sizeUnits = @"kilobytes";
+                
+                if (totalSize > 1127) {
+                    totalSize /= 1024.0;
+                    sizeUnits = @"megabytes";
+                }
+            }
+            
+            [informativeText appendFormat:NSLocalizedString(@"  Total download size will be %.1f %@.", @""), totalSize, sizeUnits];
+        }
+        [alert setInformativeText:informativeText];
         [alert addButtonWithTitle:NSLocalizedString(@"Update", @"")];
         [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")];
         [alert beginSheetModalForWindow:[self window] 
