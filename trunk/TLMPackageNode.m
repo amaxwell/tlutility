@@ -45,6 +45,8 @@
 @synthesize shortDescription = _description;
 @synthesize installed = _installed;
 @synthesize hasParent = _hasParent;
+@synthesize fullName = _fullName;
+@synthesize hasMixedStatus = _hasMixedStatus;
 
 static NSString *_separatorString = nil;
 
@@ -52,6 +54,11 @@ static NSString *_separatorString = nil;
 {
     if (nil == _separatorString)
         _separatorString = [[NSString alloc] initWithFormat:@"%C", 0x271D];
+}
+
++ (NSSet *)keyPathsForValuesAffectingStatus
+{
+    return [NSSet setWithObject:@"hasMixedStatus"];
 }
 
 - (BOOL)matchesSearchString:(NSString *)searchTerm
@@ -96,11 +103,20 @@ static NSString *_separatorString = nil;
     NSParameterAssert(aChild);
     if (nil == _children) _children = [NSMutableArray new];
     [_children addObject:aChild];
+    
+    // many of the bin packages have multiple architectures
+    if ([aChild isInstalled] == NO)
+        _hasMixedStatus = YES;
 }
 
 - (NSString *)status
 {
-    return [self installed] ? NSLocalizedString(@"Installed", @"") : NSLocalizedString(@"Not installed", @"");
+    if ([self hasMixedStatus]) 
+        return NSLocalizedString(@"Mixed", @"");
+    else if ([self isInstalled])
+        return NSLocalizedString(@"Installed", @"");
+    else
+        return NSLocalizedString(@"Not installed", @"");
 }
 
 @end
