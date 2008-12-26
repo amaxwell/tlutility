@@ -628,7 +628,7 @@ static char _TLMOperationQueueOperationContext;
 {
     TLMInstallOperation *op = [[TLMInstallOperation alloc] initWithPackageNames:packageNames location:_lastUpdateURL reinstall:reinstall];
     if (op) {
-        TLMLog(nil, @"Beginning update of %@\nfrom %@", packageNames, [_lastUpdateURL absoluteString]);
+        TLMLog(nil, @"Beginning install of %@\nfrom %@", packageNames, [_lastUpdateURL absoluteString]);
         [[NSNotificationCenter defaultCenter] addObserver:self 
                                                  selector:@selector(_handleInstallFinishedNotification:) 
                                                      name:TLMOperationFinishedNotification 
