@@ -63,8 +63,7 @@
     
     TLMUpdateListDataSource  *_updateListDataSource;
     TLMLogDataSource         *_logDataSource;
-    TLMPackageListDataSource *_listDataSource;
-    BOOL                      _isDisplayingList;
+    TLMPackageListDataSource *_packageListDataSource;
 }
 
 @property (nonatomic, retain) IBOutlet NSProgressIndicator *_progressIndicator;
@@ -72,7 +71,7 @@
 @property (nonatomic, retain) IBOutlet TLMSplitView *_splitView;
 @property (nonatomic, retain) IBOutlet TLMStatusView *_statusView;
 @property (nonatomic, retain) IBOutlet TLMLogDataSource *_logDataSource;
-@property (nonatomic, retain) IBOutlet TLMPackageListDataSource *_listDataSource;
+@property (nonatomic, retain) IBOutlet TLMPackageListDataSource *_packageListDataSource;
 @property (nonatomic, retain) IBOutlet TLMUpdateListDataSource *_updateListDataSource;
 @property (nonatomic, retain) IBOutlet TLMTabView *_tabView;
 @property (nonatomic, retain) IBOutlet TLMGradientView *_statusBarView;
