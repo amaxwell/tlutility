@@ -39,8 +39,6 @@
 #import "TLMUpdateOperation.h"
 #import "TLMPreferenceController.h"
 #import "TLMLogServer.h"
-#include <Security/Authorization.h>
-#include <Security/AuthorizationTags.h>
 
 @implementation TLMUpdateOperation
 
