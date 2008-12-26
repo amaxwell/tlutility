@@ -47,6 +47,8 @@
     SEL      _parseSelector;
 }
 
+- (id)initWithLocation:(NSURL *)location;
+
 // array of TLMPackage objects
 @property (readonly) NSArray *packages;
 

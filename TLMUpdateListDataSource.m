@@ -154,6 +154,7 @@
     TLMLog(nil, @"removeSelectedRow: is not implemented");
 }
 
+// both datasources implement this method
 - (IBAction)listUpdates:(id)sender;
 {
     [_controller refreshUpdatedPackageList];
