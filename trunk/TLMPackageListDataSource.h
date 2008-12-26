@@ -55,6 +55,8 @@
 
 - (IBAction)search:(id)sender;
 - (IBAction)showInfo:(id)sender;
+- (IBAction)removeSelectedRow:(id)sender;
+- (IBAction)listUpdates:(id)sender;
 
 @property (nonatomic, retain) IBOutlet NSSearchField *_searchField;
 @property (nonatomic, retain) IBOutlet TLMOutlineView *outlineView;
