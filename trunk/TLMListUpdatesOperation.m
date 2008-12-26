@@ -101,8 +101,14 @@
 
 - (id)init
 {
-    NSString *location = [[[TLMPreferenceController sharedPreferenceController] defaultServerURL] absoluteString];
-    NSMutableArray *options = [NSMutableArray arrayWithObjects:@"--location", location, @"update", @"--list", nil];
+    NSAssert(0, @"Invalid initializer.  Location parameter is required.");
+    return [self initWithLocation:nil];
+}
+
+- (id)initWithLocation:(NSURL *)location
+{
+    NSParameterAssert([location absoluteString]);
+    NSMutableArray *options = [NSMutableArray arrayWithObjects:@"--location", [location absoluteString], @"update", @"--list", nil];
     _parseSelector = @selector(_parseLines:);
     if ([[self class] _useMachineReadableParser]) {
         [options insertObject:@"--machine-readable" atIndex:0];
@@ -200,8 +206,8 @@ static NSDictionary *__TLMHeaderDictionaryWithLines(NSArray *headerLines)
     */
     NSString *installPrefix = @"tlmgr: installation location ";
     if ([packageLines count] && [[packageLines objectAtIndex:0] hasPrefix:installPrefix]) {
-        TLMLog(@"TLMListUpdatesOperation", @"%@", [packageLines objectAtIndex:0]);
         NSString *urlString = [[packageLines objectAtIndex:0] stringByReplacingOccurrencesOfString:installPrefix withString:@""];
+        TLMLog(@"TLMListUpdatesOperation", @"Using mirror at %@", urlString);
         [self setUpdateURL:[NSURL URLWithString:urlString]];
         [packageLines removeObjectAtIndex:0];
     }

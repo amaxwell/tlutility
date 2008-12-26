@@ -297,6 +297,24 @@ static char _TLMOperationQueueOperationContext;
     }
 }
 
+- (void)_refreshUpdatedPackageListFromLocation:(NSURL *)location
+{
+    [[_statusView animator] setAlphaValue:0.0];
+    [self performSelector:@selector(_removeStatusView) withObject:nil afterDelay:1.0];
+    if ([self _checkCommandPathAndWarn:YES]) {
+        TLMListUpdatesOperation *op = [[TLMListUpdatesOperation alloc] initWithLocation:location];
+        if (op) {
+            TLMLog(nil, @"Refreshing list of updated packages%C", 0x2026);
+            [[NSNotificationCenter defaultCenter] addObserver:self 
+                                                     selector:@selector(_handleListUpdatesFinishedNotification:) 
+                                                         name:TLMOperationFinishedNotification 
+                                                       object:op];
+            [_queue addOperation:op];
+            [op release];
+        }
+    }    
+}
+
 - (void)installFailureAlertDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)context
 {
     if (NSAlertFirstButtonReturn == returnCode)
@@ -335,9 +353,8 @@ static char _TLMOperationQueueOperationContext;
                                 contextInfo:NULL];            
         }
         else {
-            // This is slow, but if infrastructure was updated or a package installed other dependencies, we have no way of manually removing from the list.
-            // FIXME: need to ensure the same mirror is used for this!
-            [_updateListDataSource listUpdates:nil];
+            // This is slow, but if infrastructure was updated or a package installed other dependencies, we have no way of manually removing from the list.  We also need to ensure that the same mirror is used, so results are consistent.
+            [self _refreshUpdatedPackageListFromLocation:[self lastUpdateURL]];
         }
     }
 }
@@ -473,20 +490,7 @@ static char _TLMOperationQueueOperationContext;
 
 - (void)refreshUpdatedPackageList
 {
-    [[_statusView animator] setAlphaValue:0.0];
-    [self performSelector:@selector(_removeStatusView) withObject:nil afterDelay:1.0];
-    if ([self _checkCommandPathAndWarn:YES]) {
-        TLMListUpdatesOperation *op = [TLMListUpdatesOperation new];
-        if (op) {
-            TLMLog(nil, @"Refreshing list of updated packages%C", 0x2026);
-            [[NSNotificationCenter defaultCenter] addObserver:self 
-                                                     selector:@selector(_handleListUpdatesFinishedNotification:) 
-                                                         name:TLMOperationFinishedNotification 
-                                                       object:op];
-            [_queue addOperation:op];
-            [op release];
-        }
-    }    
+    [self _refreshUpdatedPackageListFromLocation:[[TLMPreferenceController sharedPreferenceController] defaultServerURL]];
 }
 
 - (void)updateAllAlertDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo;

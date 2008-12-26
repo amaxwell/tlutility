@@ -77,8 +77,8 @@
      */
     NSString *installPrefix = @"tlmgr: installation location ";
     if ([packageLines count] && [[packageLines objectAtIndex:0] hasPrefix:installPrefix]) {
-        TLMLog(@"TLMListOperation", @"%@", [packageLines objectAtIndex:0]);
         NSString *urlString = [[packageLines objectAtIndex:0] stringByReplacingOccurrencesOfString:installPrefix withString:@""];
+        TLMLog(@"TLMListOperation", @"Using mirror at %@", urlString);
         [self setUpdateURL:[NSURL URLWithString:urlString]];
         [packageLines removeObjectAtIndex:0];
     }
