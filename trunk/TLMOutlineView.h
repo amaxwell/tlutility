@@ -50,6 +50,8 @@
 - (IBAction)copy:(id)sender;
 - (void)setFontNamePreferenceKey:(NSString *)name sizePreferenceKey:(NSString *)size;
 
+@property (readonly, copy) NSArray *selectedItems;
+
 @end
 
 @interface NSObject (TLMOutlineViewDataSource)

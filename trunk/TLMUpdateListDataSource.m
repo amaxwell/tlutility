@@ -152,11 +152,6 @@
     }
 }
 
-- (IBAction)removeSelectedRow:(id)sender;
-{
-    TLMLog(nil, @"removeSelectedRow: is not implemented");
-}
-
 // both datasources implement this method
 - (IBAction)listUpdates:(id)sender;
 {
@@ -165,13 +160,12 @@
 
 - (IBAction)installSelectedRow:(id)sender;
 {
-    
     if ([[_tableView selectedRowIndexes] count] == [_packages count]) {
         [_controller updateAll:nil];
     }
     else {
-        NSArray *packageNames = [[_packages valueForKey:@"name"] objectsAtIndexes:[_tableView selectedRowIndexes]];
-        [_controller installPackagesWithNames:packageNames];
+        NSArray *packageNames = [[_packages objectsAtIndexes:[_tableView selectedRowIndexes]] valueForKey:@"name"];
+        [_controller updatePackagesWithNames:packageNames];
     }
 }
 

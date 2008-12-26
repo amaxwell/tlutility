@@ -51,8 +51,14 @@
 
 - (id)init
 {
-    NSString *location = [[[TLMPreferenceController sharedPreferenceController] defaultServerURL] absoluteString];
-    NSMutableArray *options = [NSMutableArray arrayWithObjects:@"--location", location, @"list", nil];
+    NSAssert(0, @"Invalid initializer.  Location parameter is required.");
+    return [self initWithLocation:nil];
+}
+
+- (id)initWithLocation:(NSURL *)location
+{
+    NSParameterAssert([location absoluteString]);
+    NSMutableArray *options = [NSMutableArray arrayWithObjects:@"--location", [location absoluteString], @"list", nil];
     NSString *cmd = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath];
     return [self initWithCommand:cmd options:options];
 }

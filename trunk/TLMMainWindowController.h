@@ -82,11 +82,12 @@
 - (IBAction)changePapersize:(id)sender;
 - (IBAction)cancelAllOperations:(id)sender;
 
-// will use -lastUpdateURL
+// install/update actions will use -lastUpdateURL
 - (IBAction)updateAll:(id)sender;
-
-// will use -lastUpdateURL
 - (void)installPackagesWithNames:(NSArray *)packageNames;
+- (void)updatePackagesWithNames:(NSArray *)packageNames;
+
+- (void)removePackagesWithNames:(NSArray *)packageNames;
 
 // both of these will use the default server URL
 - (void)refreshFullPackageList;

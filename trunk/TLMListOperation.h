@@ -46,6 +46,9 @@
     NSURL   *_updateURL;
 }
 
+// location must be non-nil
+- (id)initWithLocation:(NSURL *)location;
+
 // array of TLMPackageNode objects
 @property (readonly) NSArray *packageNodes;
 

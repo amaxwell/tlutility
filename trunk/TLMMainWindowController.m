@@ -47,6 +47,7 @@
 #import "TLMPapersizeOperation.h"
 #import "TLMAuthorizedOperation.h"
 #import "TLMListOperation.h"
+#import "TLMRemoveOperation.h"
 
 #import "TLMSplitView.h"
 #import "TLMStatusView.h"
@@ -218,7 +219,7 @@ static char _TLMOperationQueueOperationContext;
     
     if (op) {
         [[NSNotificationCenter defaultCenter] addObserver:self 
-                                                 selector:@selector(_handleInstallFinishedNotification:) 
+                                                 selector:@selector(_handleUpdateFinishedNotification:) 
                                                      name:TLMOperationFinishedNotification 
                                                    object:op];
         [_queue addOperation:op];
@@ -311,7 +312,7 @@ static char _TLMOperationQueueOperationContext;
     }    
 }
 
-- (void)installFailureAlertDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)context
+- (void)disasterAlertDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)context
 {
     if (NSAlertFirstButtonReturn == returnCode)
         [[NSApp delegate] openDisasterRecoveryPage:nil];
@@ -319,7 +320,7 @@ static char _TLMOperationQueueOperationContext;
         TLMLog(nil, @"User chose not to open %@ after failure", @"http://tug.org/texlive/tlmgr.html");
 }
 
-- (void)_handleInstallFinishedNotification:(NSNotification *)aNote
+- (void)_handleUpdateFinishedNotification:(NSNotification *)aNote
 {
     NSParameterAssert([NSThread isMainThread]);
     TLMUpdateOperation *op = [aNote object];
@@ -345,7 +346,7 @@ static char _TLMOperationQueueOperationContext;
             [alert addButtonWithTitle:NSLocalizedString(@"Later", @"")];
             [alert beginSheetModalForWindow:[self window] 
                               modalDelegate:self 
-                             didEndSelector:@selector(installFailureAlertDidEnd:returnCode:contextInfo:) 
+                             didEndSelector:@selector(disasterAlertDidEnd:returnCode:contextInfo:) 
                                 contextInfo:NULL];            
         }
         else {
@@ -478,11 +479,11 @@ static char _TLMOperationQueueOperationContext;
     [self setLastUpdateURL:[op updateURL]];
 }
 
-- (void)refreshFullPackageList
+- (void)_refreshFullPackageListFromLocation:(NSURL *)location
 {
     [self _displayStatusString:nil];
     if ([self _checkCommandPathAndWarn:YES]) {
-        TLMListOperation *op = [TLMListOperation new];
+        TLMListOperation *op = [[TLMListOperation alloc] initWithLocation:location];
         if (op) {
             TLMLog(nil, @"Refreshing list of all packages%C", 0x2026);
             [[NSNotificationCenter defaultCenter] addObserver:self 
@@ -492,7 +493,12 @@ static char _TLMOperationQueueOperationContext;
             [_queue addOperation:op];
             [op release];
         }            
-    }     
+    }         
+}
+
+- (void)refreshFullPackageList
+{
+    [self _refreshFullPackageListFromLocation:[[TLMPreferenceController sharedPreferenceController] defaultServerURL]];
 }
 
 - (void)refreshUpdatedPackageList
@@ -566,7 +572,7 @@ static char _TLMOperationQueueOperationContext;
     return shouldClose;
 }
 
-- (void)installPackagesWithNames:(NSArray *)packageNames
+- (void)updatePackagesWithNames:(NSArray *)packageNames;
 {
     // !!! early return here if tlmgr doesn't exist
     if (NO == [self _checkCommandPathAndWarn:YES])
@@ -576,11 +582,77 @@ static char _TLMOperationQueueOperationContext;
     if (op) {
         TLMLog(nil, @"Beginning update of %@\nfrom %@", packageNames, [_lastUpdateURL absoluteString]);
         [[NSNotificationCenter defaultCenter] addObserver:self 
-                                                 selector:@selector(_handleInstallFinishedNotification:) 
+                                                 selector:@selector(_handleUpdateFinishedNotification:) 
                                                      name:TLMOperationFinishedNotification 
                                                    object:op];
         [_queue addOperation:op];
         [op release];   
+    }
+}
+
+- (void)installPackagesWithNames:(NSArray *)packageNames
+{
+    // !!! early return here if tlmgr doesn't exist
+    if (NO == [self _checkCommandPathAndWarn:YES])
+        return;
+    
+    // UI action takes place on the full package list
+    [self _refreshFullPackageListFromLocation:[self lastUpdateURL]];
+    
+    // this is always displayed, so should always be updated as well
+    [self _refreshUpdatedPackageListFromLocation:[self lastUpdateURL]];
+}
+
+- (void)_handleRemoveFinishedNotification:(NSNotification *)aNote
+{
+    TLMUpdateOperation *op = [aNote object];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:TLMOperationFinishedNotification object:op];
+    
+    // ignore operations that failed or were explicitly cancelled
+    if ([op failed]) {
+        NSAlert *alert = [[NSAlert new] autorelease];
+        [alert setMessageText:NSLocalizedString(@"Removal failed.", @"")];
+        [alert setInformativeText:NSLocalizedString(@"The removal process appears to have failed.  Please check the log display below for details.", @"")];
+        [alert beginSheetModalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];                    
+    }
+    else if ([op isCancelled] == NO) {
+        
+        // This is slow, but if a package installed other dependencies, we have no way of manually removing from the list.  We also need to ensure that the same mirror is used, so results are consistent.
+        [self _refreshFullPackageListFromLocation:[self lastUpdateURL]];
+        
+        // this is always displayed, so should always be updated as well
+        [self _refreshUpdatedPackageListFromLocation:[self lastUpdateURL]];
+    }    
+}
+
+- (void)removePackagesWithNames:(NSArray *)packageNames
+{     
+    // some idiot could try to wipe out tlmgr itself, so let's try to prevent that...
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF IN { 'bin-texlive', 'texlive.infra' }"];
+    NSArray *packages = [packageNames filteredArrayUsingPredicate:predicate];
+    
+    if (NO == [self _checkCommandPathAndWarn:YES] || [packages count]) {
+        // log for debugging, then display an alert so the user has some idea of what's going on...
+        TLMLog(nil, @"Tried to remove infrastructure packages: %@", [packages valueForKey:@"name"]);
+        NSAlert *alert = [[NSAlert new] autorelease];
+        [alert setMessageText:NSLocalizedString(@"Some of these packages cannot be removed.", @"")];
+        [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"You are attempting to remove critical parts of the underlying TeX Live infrastructure, and I won't help you with that.", @"")]];
+        [alert beginSheetModalForWindow:[self window]
+                          modalDelegate:nil 
+                         didEndSelector:NULL
+                            contextInfo:NULL];
+    }
+    else {
+        TLMRemoveOperation *op = [[TLMRemoveOperation alloc] initWithPackageNames:packageNames];
+        if (op) {
+            TLMLog(nil, @"Beginning removal of\n%@", packageNames);
+            [[NSNotificationCenter defaultCenter] addObserver:self 
+                                                     selector:@selector(_handleRemoveFinishedNotification:) 
+                                                         name:TLMOperationFinishedNotification 
+                                                       object:op];
+            [_queue addOperation:op];
+            [op release];   
+        }   
     }
 }
 

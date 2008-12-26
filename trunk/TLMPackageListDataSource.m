@@ -100,11 +100,25 @@
     [_controller refreshFullPackageList];
 }
 
+- (IBAction)installSelectedRow:(id)sender;
+{
+    NSArray *packageNames = [[_outlineView selectedItems] valueForKey:@"name"];
+    [_controller installPackagesWithNames:packageNames];
+}
+
+- (IBAction)removeSelectedRow:(id)sender;
+{
+    NSArray *packageNames = [[_outlineView selectedItems] valueForKey:@"name"];
+    [_controller removePackagesWithNames:packageNames];
+}
+
 - (BOOL)validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem>)anItem;
 {
     SEL action = [anItem action];
     if (@selector(showInfo:) == action)
         return [[[TLMInfoController sharedInstance] window] isVisible] == NO;
+    else if (@selector(removeSelectedRow:) == action)
+        return [[_outlineView selectedRowIndexes] count] > 0;
     else
         return YES;
 }

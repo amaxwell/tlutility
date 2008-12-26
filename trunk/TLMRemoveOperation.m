@@ -1,8 +1,8 @@
 //
-//  TLMUpdateListDataSource.h
+//  TLMRemoveOperation.m
 //  TeX Live Manager
 //
-//  Created by Adam Maxwell on 12/23/08.
+//  Created by Adam Maxwell on 12/25/08.
 /*
  This software is Copyright (c) 2008
  Adam Maxwell. All rights reserved.
@@ -36,32 +36,45 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import <Cocoa/Cocoa.h>
+#import "TLMRemoveOperation.h"
+#import "TLMPreferenceController.h"
 
-@class TLMMainWindowController;
-@class TLMTableView;
+@implementation TLMRemoveOperation
 
-@interface TLMUpdateListDataSource : NSResponder 
+@synthesize packageNames = _packageNames;
+
+- (id)init
 {
-@private
-    TLMTableView            *_tableView;
-    NSMutableArray          *_packages;
-    NSArray                 *_allPackages;
-    NSMutableArray          *_sortDescriptors;
-    BOOL                     _sortAscending;
-    NSSearchField           *_searchField;
-    TLMMainWindowController *_controller;
+    NSAssert(0, @"Invalid initializer.  Package names parameter is required.");
+    return [self initWithPackageNames:nil];
 }
 
-@property (nonatomic, retain) IBOutlet TLMTableView *tableView;
-@property (nonatomic, assign) IBOutlet TLMMainWindowController *_controller;
-@property (nonatomic, retain) IBOutlet NSSearchField *_searchField;
-@property (readwrite, copy) NSArray *allPackages;
+- (id)initWithPackageNames:(NSArray *)packageNames;
+{
+    NSParameterAssert(packageNames);
+    NSString *cmd = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath]; 
+    NSFileManager *fm = [NSFileManager new];
+    BOOL exists = [fm isExecutableFileAtPath:cmd];
+    [fm release];
+    
+    if (NO == exists) {
+        [self release];
+        self = nil;
+    } else if ((self = [super init])) {
+        _packageNames = [packageNames copy];
+        
+        NSString *useRoot = ([[NSUserDefaults standardUserDefaults] boolForKey:TLMUseRootHomePreferenceKey]) ? @"y" : @"n";
+        NSMutableArray *options = [NSMutableArray arrayWithObjects:useRoot, cmd, @"remove", nil];
+        [options addObjectsFromArray:packageNames];
+        [self setOptions:options];
+    }
+    return self;
+}
 
-- (IBAction)listUpdates:(id)sender;
-- (IBAction)installSelectedRow:(id)sender;
-- (IBAction)showInfo:(id)sender;
-
-- (IBAction)search:(id)sender;
+- (void)dealloc
+{
+    [_packageNames release];
+    [super dealloc];
+}
 
 @end

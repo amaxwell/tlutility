@@ -1,8 +1,8 @@
 //
-//  TLMUpdateListDataSource.h
+//  TLMRemoveOperation.h
 //  TeX Live Manager
 //
-//  Created by Adam Maxwell on 12/23/08.
+//  Created by Adam Maxwell on 12/25/08.
 /*
  This software is Copyright (c) 2008
  Adam Maxwell. All rights reserved.
@@ -37,31 +37,17 @@
  */
 
 #import <Cocoa/Cocoa.h>
+#import "TLMAuthorizedOperation.h"
 
-@class TLMMainWindowController;
-@class TLMTableView;
-
-@interface TLMUpdateListDataSource : NSResponder 
+@interface TLMRemoveOperation : TLMAuthorizedOperation
 {
 @private
-    TLMTableView            *_tableView;
-    NSMutableArray          *_packages;
-    NSArray                 *_allPackages;
-    NSMutableArray          *_sortDescriptors;
-    BOOL                     _sortAscending;
-    NSSearchField           *_searchField;
-    TLMMainWindowController *_controller;
+    NSArray  *_packageNames;
 }
 
-@property (nonatomic, retain) IBOutlet TLMTableView *tableView;
-@property (nonatomic, assign) IBOutlet TLMMainWindowController *_controller;
-@property (nonatomic, retain) IBOutlet NSSearchField *_searchField;
-@property (readwrite, copy) NSArray *allPackages;
+// designated initializer; packageNames must be non-nil
+- (id)initWithPackageNames:(NSArray *)packageNames;
 
-- (IBAction)listUpdates:(id)sender;
-- (IBAction)installSelectedRow:(id)sender;
-- (IBAction)showInfo:(id)sender;
-
-- (IBAction)search:(id)sender;
+@property(readonly, copy) NSArray *packageNames;
 
 @end
