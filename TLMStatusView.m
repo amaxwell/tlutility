@@ -37,11 +37,40 @@
  */
 
 #import "TLMStatusView.h"
-
+#import <QuartzCore/QuartzCore.h>
 
 @implementation TLMStatusView
 
 @synthesize attributedStatusString = _statusString;
+
+- (void)_commonInit
+{
+    // only set delegate on alpha animation, since we only need the delegate callback once
+    CABasicAnimation *fadeAnimation = [CABasicAnimation animationWithKeyPath:@"alphaValue"];
+    [fadeAnimation setDelegate:self];
+    
+    NSMutableDictionary *animations = [NSMutableDictionary dictionary];
+    [animations addEntriesFromDictionary:[self animations]];
+    [animations setObject:fadeAnimation forKey:@"alphaValue"];
+    [self setAnimations:animations];    
+}
+
+- (id)initWithFrame:(NSRect)frame {
+    self = [super initWithFrame:frame];
+    if (self) {
+        [self _commonInit];
+    }
+    return self;
+}
+
+- (id)initWithCoder:(NSCoder *)decoder
+{
+    self = [super initWithCoder:decoder];
+    if (self) {
+        [self _commonInit];
+    }
+    return self;
+}
 
 - (void)dealloc
 {
@@ -77,7 +106,9 @@ static void CenterRectInRect(NSRect *toCenter, NSRect enclosingRect)
 - (void)viewDidMoveToSuperview
 {
     [super viewDidMoveToSuperview];
+    [self setWantsLayer:YES];
     [self _resetStringRect];
+    [self setNeedsDisplay:YES];
 }
 
 - (void)setAttributedStatusString:(NSAttributedString *)attrString
@@ -101,6 +132,23 @@ static void CenterRectInRect(NSRect *toCenter, NSRect enclosingRect)
 }
 
 - (BOOL)isOpaque { return NO; }
+
+- (void)animationDidStop:(CAPropertyAnimation *)anim finished:(BOOL)flag;
+{
+    // remove from superview for fade out
+    if (flag && [self alphaValue] < 0.1) 
+        [self removeFromSuperview];
+}
+
+- (void)fadeOut;
+{
+    [[self animator] setAlphaValue:0.0];
+}
+
+- (void)fadeIn;
+{
+    [[self animator] setAlphaValue:1.0];
+}
 
 - (void)drawRect:(NSRect)dirtyRect 
 {

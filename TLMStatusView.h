@@ -46,6 +46,9 @@
     NSColor            *_fillColor;
 }
 
+- (void)fadeIn;
+- (void)fadeOut;
+
 @property(readwrite, copy) NSString *statusString;
 @property(readwrite, copy) NSAttributedString *attributedStatusString;
 

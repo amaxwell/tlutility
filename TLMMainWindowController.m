@@ -233,12 +233,19 @@ static char _TLMOperationQueueOperationContext;
     }
 }
 
-- (void)_removeStatusView
+// pass nil for status to clear the view and remove it
+- (void)_displayStatusString:(NSString *)statusString
 {
-    NSParameterAssert([_statusView alphaValue] < 0.1);
-    [_statusView removeFromSuperview];
-    [_tabView setNeedsDisplay:YES];
-}
+    if (statusString) {
+        [_statusView setStatusString:statusString];
+        [_statusView setFrame:[_tabView bounds]];
+        [_tabView addSubview:_statusView];
+        [_statusView fadeIn];
+    }
+    else if ([_statusView isDescendantOf:_tabView]) {
+        [_statusView fadeOut];
+    }
+}    
 
 - (void)_handleListUpdatesFinishedNotification:(NSNotification *)aNote
 {
@@ -283,24 +290,13 @@ static char _TLMOperationQueueOperationContext;
         statusString = NSLocalizedString(@"Listing Failed", @"");
     else if ([packages count] == 0)
         statusString = NSLocalizedString(@"No Updates Available", @"");
-
-    if (statusString) {
-        [_statusView setStatusString:statusString];
-        [_statusView setFrame:[_tabView bounds]];
-        [_tabView addSubview:_statusView];
-        [_statusView setAlphaValue:0.0];
-        [[_statusView animator] setAlphaValue:1.0];
-    }
-    else {
-        [[_statusView animator] setAlphaValue:0.0];
-        [self performSelector:@selector(_removeStatusView) withObject:nil afterDelay:1.0];
-    }
+    
+    [self _displayStatusString:statusString];
 }
 
 - (void)_refreshUpdatedPackageListFromLocation:(NSURL *)location
 {
-    [[_statusView animator] setAlphaValue:0.0];
-    [self performSelector:@selector(_removeStatusView) withObject:nil afterDelay:1.0];
+    [self _displayStatusString:nil];
     if ([self _checkCommandPathAndWarn:YES]) {
         TLMListUpdatesOperation *op = [[TLMListUpdatesOperation alloc] initWithLocation:location];
         if (op) {
@@ -431,6 +427,9 @@ static char _TLMOperationQueueOperationContext;
 
 - (void)tabView:(TLMTabView *)tabView didSelectViewAtIndex:(NSUInteger)anIndex;
 {
+    // clear the status overlay
+    [self _displayStatusString:nil];
+
     NSResponder *r;
     switch (anIndex) {
         case 0:
@@ -467,13 +466,21 @@ static char _TLMOperationQueueOperationContext;
     TLMListOperation *op = [aNote object];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:TLMOperationFinishedNotification object:op];
     [_listDataSource setPackageNodes:[op packageNodes]];
+    
+    NSString *statusString = nil;
+    
+    if ([op isCancelled])
+        statusString = NSLocalizedString(@"Listing Cancelled", @"");
+    else if ([op failed])
+        statusString = NSLocalizedString(@"Listing Failed", @"");
+    
+    [self _displayStatusString:statusString];
     [self setLastUpdateURL:[op updateURL]];
 }
 
 - (void)refreshFullPackageList
 {
-    [[_statusView animator] setAlphaValue:0.0];
-    [self performSelector:@selector(_removeStatusView) withObject:nil afterDelay:1.0];
+    [self _displayStatusString:nil];
     if ([self _checkCommandPathAndWarn:YES]) {
         TLMListOperation *op = [TLMListOperation new];
         if (op) {

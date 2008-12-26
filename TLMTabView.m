@@ -62,7 +62,7 @@
     NSMutableDictionary *animations = [NSMutableDictionary dictionary];
     [animations addEntriesFromDictionary:[self animations]];
     [animations setObject:fadeAnimation forKey:@"alphaValue"];
-    [self setAnimations:animations];
+    [self setAnimations:animations];    
 }
 
 - (id)initWithFrame:(NSRect)frame {
@@ -103,7 +103,7 @@
     NSRect frame = [_tabControl bounds];
     frame.origin.y = NSMaxY([self bounds]) - NSHeight(frame) + TAB_CONTROL_MARGIN;
     frame.origin.x = 0.5 * (NSWidth([self bounds]) - NSWidth(frame));
-    [_tabControl setFrame:frame];
+    [_tabControl setFrame:[self centerScanRect:frame]];
     [_views addObject:aView];
     
     if ([_tabControl selectedSegment] == -1)
@@ -132,14 +132,15 @@
     viewFrame.size.height -= (NSHeight([_tabControl frame]) - 3 * TAB_CONTROL_MARGIN);
     [nextView setFrame:viewFrame];
     // only set transparent if there's actually something to animate
-    if (_currentView)
+    if (_currentView) {
         [nextView setAlphaValue:0.0];
+    }
+    [self setWantsLayer:YES];
     [self addSubview:nextView];
     [[_currentView animator] setAlphaValue:0.0];
     [[nextView animator] setAlphaValue:1.0];
     _previousView = _currentView;
     _currentView = nextView;
-    [self setNeedsDisplay:YES];
     if ([[self delegate] respondsToSelector:@selector(tabView:didSelectViewAtIndex:)])
         [(id <TLMTabViewDelegate>)[self delegate] tabView:self didSelectViewAtIndex:anIndex];
 }
@@ -148,6 +149,12 @@
 {
     NSParameterAssert([_tabControl segmentCount]);
     [self selectViewAtIndex:[_tabControl selectedSegment]];
+}
+
+- (void)viewDidMoveToSuperview
+{
+    [super viewDidMoveToSuperview];
+    [self setWantsLayer:YES];
 }
 
 - (void)drawRect:(NSRect)dirtyRect {
