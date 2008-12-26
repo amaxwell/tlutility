@@ -52,7 +52,7 @@
     NSNumber   *_size;
     
     BOOL        _willBeRemoved;
-    BOOL        _currentlyInstalled;
+    BOOL        _installed;
     BOOL        _needsUpdate;
     BOOL        _failedToParse;
 }
@@ -70,7 +70,7 @@
 @property(readwrite) BOOL willBeRemoved;
 
 // true if currently installed on the local system
-@property(readwrite) BOOL currentlyInstalled;
+@property(readwrite, getter = isInstalled) BOOL installed;
 
 // true if currently installed and has an update available
 @property(readwrite) BOOL needsUpdate;
