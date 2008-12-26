@@ -155,7 +155,7 @@ static char _TLMOperationQueueOperationContext;
         if (displayWarning) {
             NSAlert *alert = [[NSAlert new] autorelease];
             [alert setMessageText:NSLocalizedString(@"TeX installation not found.", @"")];
-            [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"The tlmgr tool does not exist at %@.  Please fix this in the preferences or install TeX Live.", @""), cmdPath]];
+            [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"The tlmgr tool does not exist at %@.  Please set the correct location in preferences or install TeX Live.", @""), cmdPath]];
             [alert beginSheetModalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
         }
     }
