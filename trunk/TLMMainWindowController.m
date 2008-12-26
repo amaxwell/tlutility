@@ -48,6 +48,7 @@
 #import "TLMAuthorizedOperation.h"
 #import "TLMListOperation.h"
 #import "TLMRemoveOperation.h"
+#import "TLMInstallOperation.h"
 
 #import "TLMSplitView.h"
 #import "TLMStatusView.h"
@@ -601,17 +602,69 @@ static char _TLMOperationQueueOperationContext;
     }
 }
 
-- (void)installPackagesWithNames:(NSArray *)packageNames
+- (void)_handleInstallFinishedNotification:(NSNotification *)aNote
+{
+    TLMUpdateOperation *op = [aNote object];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:TLMOperationFinishedNotification object:op];
+    
+    // ignore operations that failed or were explicitly cancelled
+    if ([op failed]) {
+        NSAlert *alert = [[NSAlert new] autorelease];
+        [alert setMessageText:NSLocalizedString(@"Install failed.", @"")];
+        [alert setInformativeText:NSLocalizedString(@"The install process appears to have failed.  Please check the log display below for details.", @"")];
+        [alert beginSheetModalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];                    
+    }
+    else if ([op isCancelled] == NO) {
+        
+        // This is slow, but if a package installed other dependencies, we have no way of manually removing from the list.  We also need to ensure that the same mirror is used, so results are consistent.
+        [self _refreshFullPackageListFromLocation:[self lastUpdateURL]];
+        
+        // this is always displayed, so should always be updated as well
+        [self _refreshUpdatedPackageListFromLocation:[self lastUpdateURL]];
+    }    
+}
+
+- (void)_installPackagesWithNames:(NSArray *)packageNames reinstall:(BOOL)reinstall
+{
+    TLMInstallOperation *op = [[TLMInstallOperation alloc] initWithPackageNames:packageNames location:_lastUpdateURL reinstall:reinstall];
+    if (op) {
+        TLMLog(nil, @"Beginning update of %@\nfrom %@", packageNames, [_lastUpdateURL absoluteString]);
+        [[NSNotificationCenter defaultCenter] addObserver:self 
+                                                 selector:@selector(_handleInstallFinishedNotification:) 
+                                                     name:TLMOperationFinishedNotification 
+                                                   object:op];
+        [_queue addOperation:op];
+        [op release];   
+    }    
+}
+
+- (void)reinstallAlertDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
+{
+    if (NSAlertDefaultReturn == returnCode)
+        [self _installPackagesWithNames:[(NSArray *)contextInfo autorelease] reinstall:YES];
+}
+
+// reinstall requires additional option to tlmgr
+- (void)installPackagesWithNames:(NSArray *)packageNames reinstall:(BOOL)reinstall
 {
     // !!! early return here if tlmgr doesn't exist
     if (NO == [self _checkCommandPathAndWarn:YES])
         return;
     
-    // UI action takes place on the full package list
-    [self _refreshFullPackageListFromLocation:[self lastUpdateURL]];
-    
-    // this is always displayed, so should always be updated as well
-    [self _refreshUpdatedPackageListFromLocation:[self lastUpdateURL]];
+    if (reinstall) {
+        NSAlert *alert = [[NSAlert new] autorelease];
+        [alert setMessageText:NSLocalizedString(@"Reinstall packages?", @"")];
+        [alert setInformativeText:NSLocalizedString(@"Some of the packages you have selected are already installed.  Would you like to reinstall them?", @"")];
+        [alert addButtonWithTitle:NSLocalizedString(@"Reinstall", @"")];
+        [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")];
+        [alert beginSheetModalForWindow:[self window]
+                          modalDelegate:self
+                         didEndSelector:@selector(reinstallAlertDidEnd:returnCode:contextInfo:)
+                            contextInfo:[packageNames copy]];
+    }
+    else {
+        [self _installPackagesWithNames:packageNames reinstall:NO]; 
+    }    
 }
 
 - (void)_handleRemoveFinishedNotification:(NSNotification *)aNote
@@ -648,10 +701,7 @@ static char _TLMOperationQueueOperationContext;
         NSAlert *alert = [[NSAlert new] autorelease];
         [alert setMessageText:NSLocalizedString(@"Some of these packages cannot be removed.", @"")];
         [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"You are attempting to remove critical parts of the underlying TeX Live infrastructure, and I won't help you with that.", @"")]];
-        [alert beginSheetModalForWindow:[self window]
-                          modalDelegate:nil 
-                         didEndSelector:NULL
-                            contextInfo:NULL];
+        [alert beginSheetModalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
     }
     else {
         TLMRemoveOperation *op = [[TLMRemoveOperation alloc] initWithPackageNames:packageNames];
