@@ -12,9 +12,9 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="174"/>
+			<integer value="10"/>
 			<integer value="2"/>
-			<integer value="120"/>
+			<integer value="123"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -248,7 +248,7 @@
 											<int key="NSColorSpace">6</int>
 											<string key="NSCatalogName">System</string>
 											<string key="NSColorName">controlTextColor</string>
-											<object class="NSColor" key="NSColor" id="275849018">
+											<object class="NSColor" key="NSColor" id="582550320">
 												<int key="NSColorSpace">3</int>
 												<bytes key="NSWhite">MAA</bytes>
 											</object>
@@ -1263,7 +1263,6 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</bytes>
 										</object>
 										<int key="NSResizingMask">3</int>
 										<bool key="NSIsResizeable">YES</bool>
-										<bool key="NSIsEditable">YES</bool>
 										<reference key="NSTableView" ref="907719207"/>
 									</object>
 									<object class="NSTableColumn" id="903424242">
@@ -1290,7 +1289,6 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</bytes>
 										</object>
 										<int key="NSResizingMask">3</int>
 										<bool key="NSIsResizeable">YES</bool>
-										<bool key="NSIsEditable">YES</bool>
 										<reference key="NSTableView" ref="907719207"/>
 									</object>
 									<object class="NSTableColumn" id="1043449801">
@@ -1317,7 +1315,6 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</bytes>
 										</object>
 										<int key="NSResizingMask">3</int>
 										<bool key="NSIsResizeable">YES</bool>
-										<bool key="NSIsEditable">YES</bool>
 										<reference key="NSTableView" ref="907719207"/>
 									</object>
 								</object>
@@ -1435,18 +1432,18 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</bytes>
 												<int key="NSColorSpace">3</int>
 												<bytes key="NSWhite">MC4zMzMzMzI5OQA</bytes>
 											</object>
-											<object class="NSColor" key="NSTextColor" id="926999853">
+											<object class="NSColor" key="NSTextColor" id="369207177">
 												<int key="NSColorSpace">6</int>
 												<string key="NSCatalogName">System</string>
 												<string key="NSColorName">headerTextColor</string>
-												<reference key="NSColor" ref="275849018"/>
+												<reference key="NSColor" ref="582550320"/>
 											</object>
 										</object>
 										<object class="NSTextFieldCell" key="NSDataCell" id="752097696">
 											<int key="NSCellFlags">337772096</int>
 											<int key="NSCellFlags2">2048</int>
 											<string key="NSContents">Text Cell</string>
-											<object class="NSFont" key="NSSupport" id="407090229">
+											<object class="NSFont" key="NSSupport" id="309613494">
 												<string key="NSName">Monaco</string>
 												<double key="NSSize">10</double>
 												<int key="NSfFlags">16</int>
@@ -1470,13 +1467,13 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</bytes>
 											<string key="NSContents">Status</string>
 											<reference key="NSSupport" ref="26"/>
 											<reference key="NSBackgroundColor" ref="436197005"/>
-											<reference key="NSTextColor" ref="926999853"/>
+											<reference key="NSTextColor" ref="369207177"/>
 										</object>
 										<object class="NSTextFieldCell" key="NSDataCell" id="100875252">
 											<int key="NSCellFlags">337772096</int>
 											<int key="NSCellFlags2">2048</int>
 											<string key="NSContents">Text Cell</string>
-											<reference key="NSSupport" ref="407090229"/>
+											<reference key="NSSupport" ref="309613494"/>
 											<reference key="NSControlView" ref="650437859"/>
 											<reference key="NSBackgroundColor" ref="739807809"/>
 											<reference key="NSTextColor" ref="651245384"/>
@@ -1496,13 +1493,13 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</bytes>
 											<string key="NSContents">Installed</string>
 											<reference key="NSSupport" ref="26"/>
 											<reference key="NSBackgroundColor" ref="256625896"/>
-											<reference key="NSTextColor" ref="926999853"/>
+											<reference key="NSTextColor" ref="369207177"/>
 										</object>
 										<object class="NSTextFieldCell" key="NSDataCell" id="240817806">
 											<int key="NSCellFlags">337772096</int>
 											<int key="NSCellFlags2">2048</int>
 											<string key="NSContents">Text Cell</string>
-											<reference key="NSSupport" ref="407090229"/>
+											<reference key="NSSupport" ref="309613494"/>
 											<reference key="NSControlView" ref="650437859"/>
 											<reference key="NSBackgroundColor" ref="739807809"/>
 											<reference key="NSTextColor" ref="651245384"/>
@@ -1522,13 +1519,13 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</bytes>
 											<string key="NSContents">Remote</string>
 											<reference key="NSSupport" ref="26"/>
 											<reference key="NSBackgroundColor" ref="256625896"/>
-											<reference key="NSTextColor" ref="926999853"/>
+											<reference key="NSTextColor" ref="369207177"/>
 										</object>
 										<object class="NSTextFieldCell" key="NSDataCell" id="339419577">
 											<int key="NSCellFlags">337772096</int>
 											<int key="NSCellFlags2">2048</int>
 											<string key="NSContents">Text Cell</string>
-											<reference key="NSSupport" ref="407090229"/>
+											<reference key="NSSupport" ref="309613494"/>
 											<reference key="NSControlView" ref="650437859"/>
 											<reference key="NSBackgroundColor" ref="739807809"/>
 											<reference key="NSTextColor" ref="651245384"/>
@@ -1537,7 +1534,7 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</bytes>
 										<bool key="NSIsResizeable">YES</bool>
 										<reference key="NSTableView" ref="650437859"/>
 									</object>
-									<object class="NSTableColumn" id="215666663">
+									<object class="NSTableColumn" id="270577066">
 										<string key="NSIdentifier">size</string>
 										<double key="NSWidth">156</double>
 										<double key="NSMinWidth">10</double>
@@ -1548,20 +1545,19 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</bytes>
 											<string key="NSContents">Size</string>
 											<reference key="NSSupport" ref="26"/>
 											<reference key="NSBackgroundColor" ref="256625896"/>
-											<reference key="NSTextColor" ref="926999853"/>
+											<reference key="NSTextColor" ref="369207177"/>
 										</object>
-										<object class="NSTextFieldCell" key="NSDataCell" id="1054943357">
+										<object class="NSTextFieldCell" key="NSDataCell" id="439592241">
 											<int key="NSCellFlags">337772096</int>
 											<int key="NSCellFlags2">2048</int>
 											<string key="NSContents">Text Cell</string>
-											<reference key="NSSupport" ref="407090229"/>
+											<reference key="NSSupport" ref="309613494"/>
 											<reference key="NSControlView" ref="650437859"/>
 											<reference key="NSBackgroundColor" ref="739807809"/>
 											<reference key="NSTextColor" ref="651245384"/>
 										</object>
 										<int key="NSResizingMask">3</int>
 										<bool key="NSIsResizeable">YES</bool>
-										<bool key="NSIsEditable">YES</bool>
 										<reference key="NSTableView" ref="650437859"/>
 									</object>
 								</object>
@@ -2182,7 +2178,7 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</bytes>
 							<reference ref="42294234"/>
 							<reference ref="892734273"/>
 							<reference ref="83554158"/>
-							<reference ref="215666663"/>
+							<reference ref="270577066"/>
 						</object>
 						<reference key="parent" ref="859533344"/>
 					</object>
@@ -2387,17 +2383,17 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</bytes>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">174</int>
-						<reference key="object" ref="215666663"/>
+						<reference key="object" ref="270577066"/>
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<reference ref="1054943357"/>
+							<reference ref="439592241"/>
 						</object>
 						<reference key="parent" ref="650437859"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">175</int>
-						<reference key="object" ref="1054943357"/>
-						<reference key="parent" ref="215666663"/>
+						<reference key="object" ref="439592241"/>
+						<reference key="parent" ref="270577066"/>
 					</object>
 				</object>
 			</object>
@@ -2671,11 +2667,15 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</bytes>
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>listUpdates:</string>
+							<string>removeSelectedRow:</string>
 							<string>search:</string>
 							<string>showInfo:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 						</object>
@@ -2746,13 +2746,11 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</bytes>
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>installSelectedRow:</string>
 							<string>listUpdates:</string>
-							<string>removeSelectedRow:</string>
 							<string>search:</string>
 							<string>showInfo:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
