@@ -356,7 +356,6 @@ static char _TLMOperationQueueOperationContext;
     }
 }
 
-// FIXME: add a property to operations instead of checking class
 - (BOOL)_installIsRunning
 {
     NSArray *ops = [[[_queue operations] copy] autorelease];
