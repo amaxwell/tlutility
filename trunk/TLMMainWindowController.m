@@ -697,7 +697,7 @@ static char _TLMOperationQueueOperationContext;
     
     if (NO == [self _checkCommandPathAndWarn:YES] || [packages count]) {
         // log for debugging, then display an alert so the user has some idea of what's going on...
-        TLMLog(nil, @"Tried to remove infrastructure packages: %@", [packages valueForKey:@"name"]);
+        TLMLog(nil, @"Tried to remove infrastructure packages: %@", packages);
         NSAlert *alert = [[NSAlert new] autorelease];
         [alert setMessageText:NSLocalizedString(@"Some of these packages cannot be removed.", @"")];
         [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"You are attempting to remove critical parts of the underlying TeX Live infrastructure, and I won't help you with that.", @"")]];
