@@ -129,4 +129,17 @@
     [self setFontSizePreferenceKey:size];
 }
 
+- (NSArray *)selectedItems
+{
+    NSIndexSet *selIndexes = [self selectedRowIndexes];
+    NSMutableArray *items = [NSMutableArray arrayWithCapacity:[selIndexes count]];
+    NSUInteger idx = [selIndexes firstIndex];
+    while (NSNotFound != idx) {
+        id item = [self itemAtRow:idx];
+        if (item) [items addObject:item];
+        idx = [selIndexes indexGreaterThanIndex:idx];
+    }
+    return items;
+}
+
 @end
