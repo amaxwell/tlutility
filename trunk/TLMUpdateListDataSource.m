@@ -78,6 +78,9 @@
 {
     [_tableView setFontNamePreferenceKey:@"TLMUpdateListTableFontName" 
                        sizePreferenceKey:@"TLMUpdateListTableFontSize"];
+    
+    // force this column to be displayed (only used with tlmgr2)
+    [[_tableView tableColumnWithIdentifier:@"size"] setHidden:NO];
 }
 
 - (void)setAllPackages:(NSArray *)packages
@@ -208,7 +211,7 @@
     
     NSString *key = [tableColumn identifier];
     NSSortDescriptor *sort = nil;
-    if ([key isEqualToString:@"remoteVersion"] || [key isEqualToString:@"localVersion"]) {
+    if ([key isEqualToString:@"remoteVersion"] || [key isEqualToString:@"localVersion"] || [key isEqualToString:@"size"]) {
         sort = [[NSSortDescriptor alloc] initWithKey:key ascending:_sortAscending];
     }
     else if ([key isEqualToString:@"name"] || [key isEqualToString:@"status"]) {
