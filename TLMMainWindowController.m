@@ -68,7 +68,7 @@ static char _TLMOperationQueueOperationContext;
 @synthesize _logDataSource;
 @synthesize lastUpdateURL = _lastUpdateURL;
 @synthesize _statusView;
-@synthesize _listDataSource;
+@synthesize _packageListDataSource;
 @synthesize _tabView;
 @synthesize _statusBarView;
 @synthesize _updateListDataSource;
@@ -112,7 +112,7 @@ static char _TLMOperationQueueOperationContext;
     [_progressIndicator release];
     [_lastUpdateURL release];
     [_logDataSource release];
-    [_listDataSource release];
+    [_packageListDataSource release];
     [_updateListDataSource release];
     
     [super dealloc];
@@ -126,7 +126,7 @@ static char _TLMOperationQueueOperationContext;
     // set delegate before adding tabs, so the datasource gets inserted properly in the responder chain
     [_tabView setDelegate:self];
     [_tabView addTabNamed:NSLocalizedString(@"Updates", @"") withView:[[_updateListDataSource tableView]  enclosingScrollView]];
-    [_tabView addTabNamed:NSLocalizedString(@"All Packages", @"") withView:[[_listDataSource outlineView] enclosingScrollView]];
+    [_tabView addTabNamed:NSLocalizedString(@"All Packages", @"") withView:[[_packageListDataSource outlineView] enclosingScrollView]];
 }
 
 - (void)windowDidLoad
@@ -429,7 +429,7 @@ static char _TLMOperationQueueOperationContext;
 - (void)_removeDataSourceFromResponderChain:(id)dataSource
 {
     NSResponder *next = [self nextResponder];
-    if ([next isEqual:_updateListDataSource] || [next isEqual:_listDataSource]) {
+    if ([next isEqual:_updateListDataSource] || [next isEqual:_packageListDataSource]) {
         [self setNextResponder:[next nextResponder]];
         [next setNextResponder:nil];
     }
@@ -439,7 +439,7 @@ static char _TLMOperationQueueOperationContext;
 {
     NSResponder *next = [self nextResponder];
     NSParameterAssert([next isEqual:_updateListDataSource] == NO);
-    NSParameterAssert([next isEqual:_listDataSource] == NO);
+    NSParameterAssert([next isEqual:_packageListDataSource] == NO);
     
     [self setNextResponder:dataSource];
     [dataSource setNextResponder:next];
@@ -452,22 +452,20 @@ static char _TLMOperationQueueOperationContext;
 
     switch (anIndex) {
         case 0:
-            _isDisplayingList = NO;
             
-            [self _removeDataSourceFromResponderChain:_listDataSource];
+            [self _removeDataSourceFromResponderChain:_packageListDataSource];
             [self _insertDataSourceInResponderChain:_updateListDataSource];   
             
             if ([[_updateListDataSource allPackages] count])
                 [_updateListDataSource search:nil];
             break;
         case 1:
-            _isDisplayingList = YES;
             
             [self _removeDataSourceFromResponderChain:_updateListDataSource];
-            [self _insertDataSourceInResponderChain:_listDataSource];            
+            [self _insertDataSourceInResponderChain:_packageListDataSource];            
 
-            if ([[_listDataSource packageNodes] count])
-                [_listDataSource search:nil];
+            if ([[_packageListDataSource packageNodes] count])
+                [_packageListDataSource search:nil];
             else if ([[[_queue operations] valueForKey:@"class"] containsObject:[TLMListOperation self]] == NO)
                 [self refreshFullPackageList];
             break;
@@ -480,7 +478,7 @@ static char _TLMOperationQueueOperationContext;
 {
     TLMListOperation *op = [aNote object];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:TLMOperationFinishedNotification object:op];
-    [_listDataSource setPackageNodes:[op packageNodes]];
+    [_packageListDataSource setPackageNodes:[op packageNodes]];
     
     NSString *statusString = nil;
     
