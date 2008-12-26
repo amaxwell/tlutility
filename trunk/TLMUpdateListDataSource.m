@@ -116,7 +116,7 @@
     else if (@selector(removeSelectedRow:) == action)
         return [[_tableView selectedRowIndexes] count] > 0;
     else if (@selector(listUpdates:) == action)
-        return YES;// FIXME: [[_queue operations] count] == 0;
+        return YES;
     else if (@selector(installSelectedRow:) == action)
         return [self _validateInstallSelectedRow];
     else
