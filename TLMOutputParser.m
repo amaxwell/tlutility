@@ -63,7 +63,7 @@
             [package setName:[mstatus substringToIndex:r.location]];
             [package setStatus:NSLocalizedString(@"Deleted on server", @"")];
             [package setWillBeRemoved:YES];
-            [package setCurrentlyInstalled:YES];
+            [package setInstalled:YES];
         }
     }
     // e.g. "answers cannot be found in http://mirror.ctan.org/systems/texlive/tlnet/2008"
@@ -74,7 +74,7 @@
         [package setName:[outputLine substringToIndex:r.location]];
         [package setStatus:NSLocalizedString(@"Deleted on server", @"")];
         [package setWillBeRemoved:YES];
-        [package setCurrentlyInstalled:YES];
+        [package setInstalled:YES];
     }
     // e.g. "auto-install: pstool"
     else if ([outputLine hasPrefix:@"auto-install:"]) {
@@ -89,7 +89,7 @@
         
         // package is installed, but needs update
         [package setStatus:NSLocalizedString(@"Updated on server", @"")];
-        [package setCurrentlyInstalled:YES];
+        [package setInstalled:YES];
         [package setNeedsUpdate:YES];
         
         NSScanner *scanner = [[NSScanner alloc] initWithString:outputLine];
@@ -122,7 +122,7 @@
     else if ([outputLine hasPrefix:@"skipping forcibly removed package "]) {
         
         [package setStatus:NSLocalizedString(@"Forcibly removed", @"")];
-        [package setCurrentlyInstalled:NO];
+        [package setInstalled:NO];
         [package setName:[outputLine stringByReplacingOccurrencesOfString:@"skipping forcibly removed package " withString:@""]];
     }
     // e.g. "bin-texlive: local revision (11693) is newer than revision in http://foo.bar.mirror/ (11613), not updating"
@@ -130,7 +130,7 @@
         
         // this is quite possibly the most gruesomely ad-hoc of all the version 1 messages...
         [package setStatus:NSLocalizedString(@"Local version is newer", @"")];
-        [package setCurrentlyInstalled:YES];
+        [package setInstalled:YES];
 
         NSScanner *scanner = [[NSScanner alloc] initWithString:outputLine];
         
@@ -301,7 +301,7 @@ static bool hasKeyPrefix(NSString *line)
         [node setInstalled:YES];
     
     NSScanner *scanner = [[NSScanner alloc] initWithString:line];
-    if ([node installed])
+    if ([node isInstalled])
         [scanner scanString:@"i" intoString:NULL];
     
     NSString *name;

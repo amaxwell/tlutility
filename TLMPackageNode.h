@@ -56,7 +56,7 @@
 
 @property (readwrite, copy) NSString *name;
 @property (readwrite, copy) NSString *shortDescription;
-@property (readwrite) BOOL installed;
+@property (readwrite, getter = isInstalled) BOOL installed;
 @property (readwrite) BOOL hasParent;
 @property (readonly) NSString *status;
 

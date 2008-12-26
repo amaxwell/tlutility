@@ -113,13 +113,13 @@ enum {
         [package setWillBeRemoved:YES];
     
     if ('a' != ch)
-        [package setCurrentlyInstalled:YES];
+        [package setInstalled:YES];
     
     if ('u' == ch)
         [package setNeedsUpdate:YES];
     
     if ('f' == ch)
-        [package setCurrentlyInstalled:NO];
+        [package setInstalled:NO];
         
     if (NO == [[components objectAtIndex:TLMLocalVersionIndex] isEqualToString:@"-"])
         [package setLocalVersion:[components objectAtIndex:TLMLocalVersionIndex]];
