@@ -62,7 +62,7 @@
     else if ([anItem action] == @selector(changeFont:))
         return ([self fontNamePreferenceKey] && [self fontSizePreferenceKey]);
     else
-        return NO;
+        return YES;
 }
 
 - (IBAction)copy:(id)sender;
