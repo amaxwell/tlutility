@@ -99,12 +99,16 @@
     if ([_packages count] == 0)
         return NO;
     
-    // tlmgr does nothing in this case, so it's less clear what to do in case of multiple selection
-    if ([[_tableView selectedRowIndexes] count] == 1 && [[_packages objectAtIndex:[_tableView selectedRow]] willBeRemoved])
+    if ([[_tableView selectedRowIndexes] count] == 0)
         return NO;
     
-    // for multiple selection, just install and let tlmgr deal with any willBeRemoved packages
-    return [[_tableView selectedRowIndexes] count] > 0;
+    // be strict about this; only valid, installed packages that need to be updated can be selected for update
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(isInstalled == NO) OR (willBeRemoved == YES) OR (failedToParse == YES)"];
+    NSArray *packages = [[_packages objectsAtIndexes:[_tableView selectedRowIndexes]] filteredArrayUsingPredicate:predicate];
+    if ([packages count])
+        return NO;
+    
+    return YES;
 }
 
 // tried validating toolbar items using bindings to queue.operations.@count but the queue sends KVO notifications on its own thread
@@ -188,7 +192,7 @@
         [cell setTextColor:[NSColor redColor]];
     else if ([package willBeRemoved])
         [cell setTextColor:[NSColor grayColor]];
-    else if ([package currentlyInstalled] == NO)
+    else if ([package isInstalled] == NO)
         [cell setTextColor:[NSColor blueColor]];
     else
         [cell setTextColor:[NSColor blackColor]];

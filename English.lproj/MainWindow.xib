@@ -12,9 +12,9 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
+			<integer value="120"/>
+			<integer value="5"/>
 			<integer value="2"/>
-			<integer value="123"/>
-			<integer value="10"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -965,7 +965,7 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</bytes>
 																<int key="NSCellFlags">337772096</int>
 																<int key="NSCellFlags2">-2147481600</int>
 																<string key="NSContents">Text Cell</string>
-																<object class="NSFont" key="NSSupport" id="377879497">
+																<object class="NSFont" key="NSSupport" id="350031159">
 																	<string key="NSName">Monaco</string>
 																	<double key="NSSize">10</double>
 																	<int key="NSfFlags">16</int>
@@ -1023,7 +1023,7 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</bytes>
 																<int key="NSCellFlags">337772096</int>
 																<int key="NSCellFlags2">2048</int>
 																<string key="NSContents">Text Cell</string>
-																<reference key="NSSupport" ref="377879497"/>
+																<reference key="NSSupport" ref="350031159"/>
 																<reference key="NSControlView" ref="366318307"/>
 																<reference key="NSBackgroundColor" ref="739807809"/>
 																<reference key="NSTextColor" ref="651245384"/>
@@ -1055,7 +1055,7 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</bytes>
 																<int key="NSCellFlags">337772096</int>
 																<int key="NSCellFlags2">2048</int>
 																<string key="NSContents">Text Cell</string>
-																<reference key="NSSupport" ref="377879497"/>
+																<reference key="NSSupport" ref="350031159"/>
 																<reference key="NSControlView" ref="366318307"/>
 																<reference key="NSBackgroundColor" ref="739807809"/>
 																<reference key="NSTextColor" ref="651245384"/>
@@ -1256,7 +1256,7 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</bytes>
 											<int key="NSCellFlags">337772096</int>
 											<int key="NSCellFlags2">2048</int>
 											<string key="NSContents">Text Cell</string>
-											<reference key="NSSupport" ref="377879497"/>
+											<reference key="NSSupport" ref="350031159"/>
 											<reference key="NSControlView" ref="907719207"/>
 											<reference key="NSBackgroundColor" ref="739807809"/>
 											<reference key="NSTextColor" ref="651245384"/>
@@ -1282,7 +1282,7 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</bytes>
 											<int key="NSCellFlags">337772096</int>
 											<int key="NSCellFlags2">2048</int>
 											<string key="NSContents">Text Cell</string>
-											<reference key="NSSupport" ref="377879497"/>
+											<reference key="NSSupport" ref="350031159"/>
 											<reference key="NSControlView" ref="907719207"/>
 											<reference key="NSBackgroundColor" ref="739807809"/>
 											<reference key="NSTextColor" ref="651245384"/>
@@ -1308,7 +1308,7 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</bytes>
 											<int key="NSCellFlags">337772096</int>
 											<int key="NSCellFlags2">2048</int>
 											<string key="NSContents">Text Cell</string>
-											<reference key="NSSupport" ref="377879497"/>
+											<reference key="NSSupport" ref="350031159"/>
 											<reference key="NSControlView" ref="907719207"/>
 											<reference key="NSBackgroundColor" ref="739807809"/>
 											<reference key="NSTextColor" ref="651245384"/>
@@ -1323,7 +1323,7 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</bytes>
 								<reference key="NSBackgroundColor" ref="839407202"/>
 								<reference key="NSGridColor" ref="951091772"/>
 								<double key="NSRowHeight">17</double>
-								<int key="NSTvFlags">-750780416</int>
+								<int key="NSTvFlags">-616562688</int>
 								<reference key="NSDelegate"/>
 								<reference key="NSDataSource"/>
 								<string key="NSAutosaveName">Package list outline view</string>
@@ -1379,7 +1379,7 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</bytes>
 				<string key="NSFrameSize">{601, 151}</string>
 				<reference key="NSSuperview"/>
 				<reference key="NSNextKeyView" ref="595916662"/>
-				<int key="NSsFlags">530</int>
+				<int key="NSsFlags">562</int>
 				<reference key="NSVScroller" ref="314316527"/>
 				<reference key="NSHScroller" ref="238174542"/>
 				<reference key="NSContentView" ref="595916662"/>
@@ -1438,11 +1438,7 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</bytes>
 											<int key="NSCellFlags">337772096</int>
 											<int key="NSCellFlags2">2048</int>
 											<string key="NSContents">Text Cell</string>
-											<object class="NSFont" key="NSSupport" id="350031159">
-												<string key="NSName">Monaco</string>
-												<double key="NSSize">10</double>
-												<int key="NSfFlags">16</int>
-											</object>
+											<reference key="NSSupport" ref="350031159"/>
 											<reference key="NSControlView" ref="650437859"/>
 											<reference key="NSBackgroundColor" ref="739807809"/>
 											<reference key="NSTextColor" ref="651245384"/>

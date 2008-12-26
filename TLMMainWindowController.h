@@ -83,7 +83,7 @@
 
 // install/update actions will use -lastUpdateURL
 - (IBAction)updateAll:(id)sender;
-- (void)installPackagesWithNames:(NSArray *)packageNames;
+- (void)installPackagesWithNames:(NSArray *)packageNames reinstall:(BOOL)reinstall;
 - (void)updatePackagesWithNames:(NSArray *)packageNames;
 
 - (void)removePackagesWithNames:(NSArray *)packageNames;

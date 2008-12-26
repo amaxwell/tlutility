@@ -102,8 +102,13 @@
 
 - (IBAction)installSelectedRow:(id)sender;
 {
-    NSArray *packageNames = [[_outlineView selectedItems] valueForKey:@"name"];
-    [_controller installPackagesWithNames:packageNames];
+    NSArray *selItems = [_outlineView selectedItems];
+    
+    // see if we need to do a reinstall
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(isInstalled == YES)"];
+    NSArray *packages = [selItems filteredArrayUsingPredicate:predicate];
+
+    [_controller installPackagesWithNames:[selItems valueForKey:@"name"] reinstall:([packages count] > 0)];
 }
 
 - (IBAction)removeSelectedRow:(id)sender;
@@ -112,12 +117,30 @@
     [_controller removePackagesWithNames:packageNames];
 }
 
+- (BOOL)_validateRemoveSelectedRow
+{
+    if ([_packageNodes count] == 0)
+        return NO;
+    
+    if ([[_outlineView selectedRowIndexes] count] == 0)
+        return NO;
+    
+    // be strict about this; only installed packages can be removed
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"isInstalled == NO"];
+    if ([[[_outlineView selectedItems] filteredArrayUsingPredicate:predicate] count])
+        return NO;
+    
+    return YES;
+}
+
 - (BOOL)validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem>)anItem;
 {
     SEL action = [anItem action];
     if (@selector(showInfo:) == action)
         return [[[TLMInfoController sharedInstance] window] isVisible] == NO;
     else if (@selector(removeSelectedRow:) == action)
+        return [self _validateRemoveSelectedRow];
+    else if (@selector(installSelectedRow:) == action)
         return [[_outlineView selectedRowIndexes] count] > 0;
     else
         return YES;
