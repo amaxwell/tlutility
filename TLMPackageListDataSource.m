@@ -108,12 +108,12 @@
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(isInstalled == YES)"];
     NSArray *packages = [selItems filteredArrayUsingPredicate:predicate];
 
-    [_controller installPackagesWithNames:[selItems valueForKey:@"name"] reinstall:([packages count] > 0)];
+    [_controller installPackagesWithNames:[selItems valueForKey:@"fullName"] reinstall:([packages count] > 0)];
 }
 
 - (IBAction)removeSelectedRow:(id)sender;
 {
-    NSArray *packageNames = [[_outlineView selectedItems] valueForKey:@"name"];
+    NSArray *packageNames = [[_outlineView selectedItems] valueForKey:@"fullName"];
     [_controller removePackagesWithNames:packageNames];
 }
 
@@ -146,26 +146,6 @@
         return YES;
 }
 
-- (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)anIndex ofItem:(TLMPackageNode *)item;
-{
-    return (nil == item) ? [_displayedPackageNodes objectAtIndex:anIndex] : [item childAtIndex:anIndex];
-}
-
-- (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(TLMPackageNode *)item;
-{
-    return (nil == item) ? YES : [item numberOfChildren];
-}
-
-- (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(TLMPackageNode *)item;
-{
-    return (nil == item) ? [_displayedPackageNodes count] : [item numberOfChildren];
-}
-
-- (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item;
-{
-    return [item valueForKey:[tableColumn identifier]];
-}
-
 - (id)selectedItem
 {
     return [_outlineView selectedRow] != -1 ? [_outlineView itemAtRow:[_outlineView selectedRow]] : nil;
@@ -187,6 +167,41 @@
     }
     [_displayedPackageNodes sortUsingDescriptors:_sortDescriptors];    
     [_outlineView reloadData];
+}
+
+#pragma mark NSOutlineView datasource
+
+- (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)anIndex ofItem:(TLMPackageNode *)item;
+{
+    return (nil == item) ? [_displayedPackageNodes objectAtIndex:anIndex] : [item childAtIndex:anIndex];
+}
+
+- (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(TLMPackageNode *)item;
+{
+    return (nil == item) ? YES : [item numberOfChildren];
+}
+
+- (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(TLMPackageNode *)item;
+{
+    return (nil == item) ? [_displayedPackageNodes count] : [item numberOfChildren];
+}
+
+- (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item;
+{
+    return [item valueForKey:[tableColumn identifier]];
+}
+
+#pragma mark NSOutlineView delegate
+
+- (void)outlineView:(NSOutlineView *)outlineView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item;
+{
+    TLMPackageNode *node = item;
+    if ([node hasMixedStatus])
+        [cell setTextColor:[NSColor purpleColor]];
+    else if ([node isInstalled] == NO)
+        [cell setTextColor:[NSColor blueColor]];
+    else
+        [cell setTextColor:[NSColor blackColor]];
 }
 
 - (void)outlineView:(NSOutlineView *)outlineView didClickTableColumn:(NSTableColumn *)tableColumn;
