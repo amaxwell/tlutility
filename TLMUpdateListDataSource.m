@@ -62,7 +62,7 @@
 
 - (void)dealloc
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    _controller = nil;
     [_tableView setDelegate:nil];
     [_tableView setDataSource:nil];
     [_tableView release];
