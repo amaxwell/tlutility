@@ -61,6 +61,7 @@
 
 - (void)dealloc
 {
+    _controller = nil;
     [_outlineView setDelegate:nil];
     [_outlineView setDataSource:nil];
     [_outlineView release];
