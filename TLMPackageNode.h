@@ -43,9 +43,11 @@
 {
 @private
     NSString       *_name;
+    NSString       *_fullName;
     NSString       *_description;
     BOOL            _installed;
     BOOL            _hasParent;
+    BOOL            _hasMixedStatus;
     NSMutableArray *_children;
 }
 
@@ -55,9 +57,13 @@
 - (void)addChild:(id)aChild;
 
 @property (readwrite, copy) NSString *name;
+@property (readwrite, copy) NSString *fullName;
 @property (readwrite, copy) NSString *shortDescription;
-@property (readwrite, getter = isInstalled) BOOL installed;
 @property (readwrite) BOOL hasParent;
 @property (readonly) NSString *status;
+
+// returns YES if children have mixed installed/uninstalled status
+@property (readonly) BOOL hasMixedStatus;
+@property (readwrite, getter = isInstalled) BOOL installed;
 
 @end

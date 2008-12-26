@@ -38,6 +38,7 @@
 
 #import "TLMOutputParser.h"
 #import "TLMPackageNode.h"
+#import "TLMLogServer.h"
 
 @implementation TLMOutputParser
 
@@ -291,6 +292,33 @@ static bool hasKeyPrefix(NSString *line)
 
 #pragma mark List parsing
 
+/*
+ i Tabbing: (shortdesc missing)
+ i Type1fonts: (shortdesc missing)
+ i a0poster: Support for designing posters on large paper. 
+   [...]
+ i bin-amstex: American Mathematical Society plain TeX macros.
+   bin-amstex.alpha-linux: binary files of bin-amstex for alpha-linux
+   bin-amstex.amd64-freebsd: binary files of bin-amstex for amd64-freebsd
+   bin-amstex.hppa-hpux: binary files of bin-amstex for hppa-hpux
+   bin-amstex.i386-freebsd: binary files of bin-amstex for i386-freebsd
+   bin-amstex.i386-linux: binary files of bin-amstex for i386-linux
+   bin-amstex.i386-openbsd: binary files of bin-amstex for i386-openbsd
+   bin-amstex.i386-solaris: binary files of bin-amstex for i386-solaris
+   bin-amstex.mips-irix: binary files of bin-amstex for mips-irix
+   bin-amstex.powerpc-aix: binary files of bin-amstex for powerpc-aix
+   bin-amstex.powerpc-linux: binary files of bin-amstex for powerpc-linux
+   bin-amstex.sparc-linux: binary files of bin-amstex for sparc-linux
+   bin-amstex.sparc-solaris: binary files of bin-amstex for sparc-solaris
+ i bin-amstex.universal-darwin: binary files of bin-amstex for universal-darwin
+   bin-amstex.win32: binary files of bin-amstex for win32
+   bin-amstex.x86_64-linux: binary files of bin-amstex for x86_64-linux
+ i bin-bibtex: Process bibliographies for LaTeX, etc.
+   bin-bibtex.alpha-linux: binary files of bin-bibtex for alpha-linux
+   bin-bibtex.amd64-freebsd: binary files of bin-bibtex for amd64-freebsd
+   [...]
+*/ 
+
 + (TLMPackageNode *)_newPackageNodeWithOutputLine:(NSString *)line
 {
     NSParameterAssert([line length]);
@@ -307,12 +335,17 @@ static bool hasKeyPrefix(NSString *line)
     NSString *name;
     if ([scanner scanUpToString:@":" intoString:&name]) {
         
+        // e.g. bin-amstex.universal.darwin
+        [node setFullName:name];
+        
         NSRange r = [name rangeOfString:@"."];
         if (r.length) {
+            // universal.darwin
             [node setName:[name substringFromIndex:NSMaxRange(r)]];
             [node setHasParent:YES];
         }
         else {
+            // not a child node, so name and fullName are equivalent
             [node setName:name];
         }
         
@@ -336,10 +369,16 @@ static bool hasKeyPrefix(NSString *line)
         line = [line stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
         if (NO == [line isEqualToString:@""]) {
             TLMPackageNode *node = [self _newPackageNodeWithOutputLine:line];
-            if ([node hasParent])
-                [(TLMPackageNode *)[nodes lastObject] addChild:node];
-            else
+            if ([node hasParent]) {
+                TLMPackageNode *last = [nodes lastObject];
+                if ([[node fullName] hasPrefix:[node fullName]])
+                    [last addChild:node];
+                else
+                    TLMLog(@"TLMOutputParser", @"Child node named \"%@\" follows node named \"%@\"", [node fullName], [node fullName]);
+            }
+            else {
                 [nodes addObject:node];
+            }
             [node release];
         }
     }
