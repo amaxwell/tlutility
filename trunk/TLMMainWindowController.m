@@ -426,20 +426,36 @@ static char _TLMOperationQueueOperationContext;
           contextInfo:psc];
 }
 
+- (void)_removeDataSourceFromResponderChain:(id)dataSource
+{
+    NSResponder *next = [self nextResponder];
+    if ([next isEqual:_updateListDataSource] || [next isEqual:_listDataSource]) {
+        [self setNextResponder:[next nextResponder]];
+        [next setNextResponder:nil];
+    }
+}
+
+- (void)_insertDataSourceInResponderChain:(id)dataSource
+{
+    NSResponder *next = [self nextResponder];
+    NSParameterAssert([next isEqual:_updateListDataSource] == NO);
+    NSParameterAssert([next isEqual:_listDataSource] == NO);
+    
+    [self setNextResponder:dataSource];
+    [dataSource setNextResponder:next];
+}
+
 - (void)tabView:(TLMTabView *)tabView didSelectViewAtIndex:(NSUInteger)anIndex;
 {
     // clear the status overlay
     [self _displayStatusString:nil];
 
-    NSResponder *r;
     switch (anIndex) {
         case 0:
             _isDisplayingList = NO;
             
-            r = [self nextResponder];
-            [self setNextResponder:_updateListDataSource];
-            [_updateListDataSource setNextResponder:r];   
-            [_listDataSource setNextResponder:nil];    
+            [self _removeDataSourceFromResponderChain:_listDataSource];
+            [self _insertDataSourceInResponderChain:_updateListDataSource];   
             
             if ([[_updateListDataSource allPackages] count])
                 [_updateListDataSource search:nil];
@@ -447,10 +463,8 @@ static char _TLMOperationQueueOperationContext;
         case 1:
             _isDisplayingList = YES;
             
-            r = [self nextResponder];
-            [self setNextResponder:_listDataSource];
-            [_listDataSource setNextResponder:r];   
-            [_updateListDataSource setNextResponder:nil];
+            [self _removeDataSourceFromResponderChain:_updateListDataSource];
+            [self _insertDataSourceInResponderChain:_listDataSource];            
 
             if ([[_listDataSource packageNodes] count])
                 [_listDataSource search:nil];
