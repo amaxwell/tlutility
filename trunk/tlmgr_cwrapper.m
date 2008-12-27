@@ -56,7 +56,6 @@
 
 - (void)setWrapperPID:(in pid_t)pid;
 - (void)setTlmgrPID:(in pid_t)pid;
-- (void)childFinishedWithStatus:(NSInteger)status;
 
 @end
 
@@ -331,13 +330,7 @@ int main(int argc, char *argv[]) {
                 log_error(@"unhandled kevent with filter = %d", event.filter);
             }
             
-            // Original tlmgr commits suicide when it updates itself, and waitpid doesn't catch it (or I'm doing something wrong).  Polling the filesystem like this is gross, but it works.
-            struct stat sb;
-            if (stat(argv[3], &sb) != 0) {
-                log_error(@"executable no longer exists at %s", argv[3]);
-                kill(child, SIGTERM);
-                exit(EXIT_FAILURE);
-            }
+            // originally checked here to see if tlmgr removed itself, but the dedicated update makes that unnecessary
         }    
         
         // log any leftovers
@@ -356,13 +349,7 @@ int main(int argc, char *argv[]) {
         ret = waitpid(child, &childStatus, WNOHANG | WUNTRACED);
         ret = (ret != 0 && WIFEXITED(childStatus)) ? WEXITSTATUS(childStatus) : EXIT_FAILURE;
         log_notice(@"exit status of pid = %d was %d", child, ret);
-        
-        @try {
-            [parent childFinishedWithStatus:ret];
-        }
-        @catch (id exception) {
-            log_error(@"failed to send status to server:\n\t%@", exception);
-        }
+
     }
     
     [pool release];
