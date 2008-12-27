@@ -19,3 +19,17 @@ Packages can be installed using the "Manage Packages" tab:
 http://mactlmgr.googlecode.com/svn/wiki/images/PackageTab.png
 
 Note that some packages have multiple architectures, and you generally only want to install the darwin version for Mac OS X.
+
+= Paper Size =
+
+Use the Actions menu to change paper size.  The current paper size is given by pdftex, but changing paper size will change it for _all_ TeX programs.  If you want to change paper size for a single program, e.g. dvips, use the tlmgr command-line tool.
+
+= Show Info =
+
+You can display detailed information for a specific package in an inspector panel:
+
+http://mactlmgr.googlecode.com/svn/wiki/images/Info.png
+
+= Settings =
+
+See the PreferencesPage for details.
