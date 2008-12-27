@@ -95,7 +95,7 @@
     }
 }
 
-- (IBAction)listUpdates:(id)sender;
+- (IBAction)refreshList:(id)sender;
 {
     [_controller refreshFullPackageList];
 }
@@ -247,6 +247,9 @@
         else
             [self showInfo:nil];
     }
+    
+    // toolbar updating is somewhat erratic, so force it to validate here
+    [[[_controller window] toolbar] validateVisibleItems];
 }
 
 @end

@@ -117,8 +117,6 @@
     SEL action = [anItem action];
     if (@selector(showInfo:) == action)
         return [[[TLMInfoController sharedInstance] window] isVisible] == NO;
-    else if (@selector(listUpdates:) == action)
-        return YES;
     else if (@selector(updateSelectedRows:) == action)
         return [self _validateUpdateSelectedRows];
     else if (@selector(updateAll:) == action)
@@ -157,7 +155,7 @@
 }
 
 // both datasources implement this method
-- (IBAction)listUpdates:(id)sender;
+- (IBAction)refreshList:(id)sender;
 {
     [_controller refreshUpdatedPackageList];
 }
@@ -252,6 +250,9 @@
         else
             [self showInfo:nil];
     }
+    
+    // toolbar updating is somewhat erratic, so force it to validate here
+    [[[_controller window] toolbar] validateVisibleItems];
 }
     
 @end

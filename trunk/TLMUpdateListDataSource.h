@@ -58,7 +58,7 @@
 @property (nonatomic, retain) IBOutlet NSSearchField *_searchField;
 @property (readwrite, copy) NSArray *allPackages;
 
-- (IBAction)listUpdates:(id)sender;
+- (IBAction)refreshList:(id)sender;
 - (IBAction)updateAll:(id)sender;
 - (IBAction)updateSelectedRows:(id)sender;
 - (IBAction)showInfo:(id)sender;
