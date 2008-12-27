@@ -1,0 +1,23 @@
+#summary TeX Live Utility Preferences.
+
+= Settings =
+
+TeX Live Utility is designed to have as few settings as possible.  These are available via the Preferences window:
+
+http://mactlmgr.googlecode.com/svn/wiki/images/Prefs.png
+
+== Server URL ==
+
+This is the [http://ctan.org CTAN] mirror that will be used for update and installation.
+
+== TeX programs ==
+
+For a standard MacTeX installation, this will be /usr/texbin.  You can choose an alternate location, but the tlmgr command-line should exist at this location.
+
+== Install updates for all users ==
+
+This is equivalent to using {{{sudo -H tlmgr}}}, and avoids conflicts with packages installed in your home directory.  See the [http://mactex-wiki.tug.org/wiki/index.php?title=TeX_Live_Manager MacTeX wiki] for discussion.
+
+== Show progress in system log ==
+
+Copies the output from TeX Live Utility's console pane to the system log, so it can be read with Console.app.
