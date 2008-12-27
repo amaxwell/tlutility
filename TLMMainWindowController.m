@@ -373,8 +373,6 @@ static char _TLMOperationQueueOperationContext;
     SEL action = [anItem action];
     if (@selector(cancelAllOperations:) == action)
         return [[_queue operations] count];
-    else if (@selector(updateAll:) == action)
-        return [[_queue operations] count] == 0 && [[_updateListDataSource allPackages] count];
     else
         return YES;
 }
@@ -525,7 +523,7 @@ static char _TLMOperationQueueOperationContext;
     }    
 }
 
-- (IBAction)updateAll:(id)sender;
+- (void)updateAllPackages;
 {
     if ([self _checkCommandPathAndWarn:YES]) {
         NSAlert *alert = [[NSAlert new] autorelease];

@@ -90,7 +90,7 @@
     [self search:nil];
 }
    
-- (BOOL)_validateInstallSelectedRow
+- (BOOL)_validateUpdateSelectedRows
 {
     // require update all, for consistency with the dialog
     if ([_controller infrastructureNeedsUpdate])
@@ -117,12 +117,12 @@
     SEL action = [anItem action];
     if (@selector(showInfo:) == action)
         return [[[TLMInfoController sharedInstance] window] isVisible] == NO;
-    else if (@selector(removeSelectedRow:) == action)
-        return [[_tableView selectedRowIndexes] count] > 0;
     else if (@selector(listUpdates:) == action)
         return YES;
-    else if (@selector(installSelectedRow:) == action)
-        return [self _validateInstallSelectedRow];
+    else if (@selector(updateSelectedRows:) == action)
+        return [self _validateUpdateSelectedRows];
+    else if (@selector(updateAll:) == action)
+        return [_allPackages count] > 0;
     else
         return YES;
 }
@@ -162,15 +162,20 @@
     [_controller refreshUpdatedPackageList];
 }
 
-- (IBAction)installSelectedRow:(id)sender;
+- (IBAction)updateSelectedRows:(id)sender;
 {
     if ([[_tableView selectedRowIndexes] count] == [_packages count]) {
-        [_controller updateAll:nil];
+        [_controller updateAllPackages];
     }
     else {
         NSArray *packageNames = [[_packages objectsAtIndexes:[_tableView selectedRowIndexes]] valueForKey:@"name"];
         [_controller updatePackagesWithNames:packageNames];
     }
+}
+
+- (IBAction)updateAll:(id)sender
+{
+    [_controller updateAllPackages];
 }
 
 # pragma mark table datasource
@@ -231,7 +236,7 @@
     if (sort) [_sortDescriptors insertObject:sort atIndex:0];
     
     // pop the last sort descriptor, if we have more sort descriptors than table columns
-    while ([_sortDescriptors count] > [tableView numberOfColumns])
+    while ((NSInteger)[_sortDescriptors count] > [tableView numberOfColumns])
         [_sortDescriptors removeLastObject];
     
     [_packages sortUsingDescriptors:_sortDescriptors];

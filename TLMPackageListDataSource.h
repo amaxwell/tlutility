@@ -55,7 +55,8 @@
 
 - (IBAction)search:(id)sender;
 - (IBAction)showInfo:(id)sender;
-- (IBAction)removeSelectedRow:(id)sender;
+- (IBAction)installSelectedRows:(id)sender;
+- (IBAction)removeSelectedRows:(id)sender;
 - (IBAction)listUpdates:(id)sender;
 
 @property (nonatomic, retain) IBOutlet NSSearchField *_searchField;

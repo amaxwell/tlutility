@@ -59,7 +59,8 @@
 @property (readwrite, copy) NSArray *allPackages;
 
 - (IBAction)listUpdates:(id)sender;
-- (IBAction)installSelectedRow:(id)sender;
+- (IBAction)updateAll:(id)sender;
+- (IBAction)updateSelectedRows:(id)sender;
 - (IBAction)showInfo:(id)sender;
 
 - (IBAction)search:(id)sender;
