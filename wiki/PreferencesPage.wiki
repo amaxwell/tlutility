@@ -12,7 +12,7 @@ This is the [http://ctan.org CTAN] mirror that will be used for update and insta
 
 == TeX programs ==
 
-For a standard MacTeX installation, this will be /usr/texbin.  You can choose an alternate location, but the tlmgr command-line should exist at this location.
+For a standard MacTeX installation, this will be /usr/texbin.  You can choose an alternate location, as long as the tlmgr command-line tool exists at this location.
 
 == Install updates for all users ==
 
