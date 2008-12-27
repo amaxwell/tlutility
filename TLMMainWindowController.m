@@ -126,8 +126,8 @@ static char _TLMOperationQueueOperationContext;
 
     // set delegate before adding tabs, so the datasource gets inserted properly in the responder chain
     [_tabView setDelegate:self];
-    [_tabView addTabNamed:NSLocalizedString(@"Updates", @"") withView:[[_updateListDataSource tableView]  enclosingScrollView]];
-    [_tabView addTabNamed:NSLocalizedString(@"All Packages", @"") withView:[[_packageListDataSource outlineView] enclosingScrollView]];
+    [_tabView addTabNamed:NSLocalizedString(@"Manage Updates", @"") withView:[[_updateListDataSource tableView]  enclosingScrollView]];
+    [_tabView addTabNamed:NSLocalizedString(@"Manage Packages", @"") withView:[[_packageListDataSource outlineView] enclosingScrollView]];
 }
 
 - (void)windowDidLoad
