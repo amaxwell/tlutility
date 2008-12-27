@@ -179,7 +179,7 @@
     
     // ordinarily tlmgr_cwrapper won't pass anything back up to us
     if ([self errorMessages])
-        TLMLog(@"TLMAuthorizedOperation", @"*** ERROR *** %@", [self errorMessages]);
+        TLMLog(@"TLMAuthorizedOperation", @"%@", [self errorMessages]);
     
     [pool release];
 }
