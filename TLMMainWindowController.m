@@ -377,9 +377,37 @@ static char _TLMOperationQueueOperationContext;
         return YES;
 }
 
+- (void)_cancelAllOperations
+{
+    TLMLog(nil, @"User cancelling %@", [_queue operations]);
+    [_queue cancelAllOperations];
+}
+
+- (void)cancelWarningSheetDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
+{
+    if (NSAlertSecondButtonReturn == returnCode)
+        [self _cancelAllOperations];
+    else
+        TLMLog(nil, @"User decided not to cancel %@", [_queue operations]);
+}
+
 - (IBAction)cancelAllOperations:(id)sender;
 {
-    [_queue cancelAllOperations];
+    if ([self _installIsRunning]) {
+        NSAlert *alert = [[NSAlert new] autorelease];
+        [alert setMessageText:NSLocalizedString(@"An installation is running!", @"")];
+        [alert setAlertStyle:NSCriticalAlertStyle];
+        [alert setInformativeText:NSLocalizedString(@"If you close the window, the installation process may leave your TeX installation in an unknown state.  You can ignore this warning and cancel the process anyway, or keep waiting until the installation finishes.", @"")];
+        [alert addButtonWithTitle:NSLocalizedString(@"Keep Waiting", @"")];
+        [alert addButtonWithTitle:NSLocalizedString(@"Cancel Anyway", @"")];
+        [alert beginSheetModalForWindow:[self window]
+                          modalDelegate:self
+                         didEndSelector:@selector(cancelWarningSheetDidEnd:returnCode:contextInfo:)
+                            contextInfo:NULL];
+    }
+    else {
+        [self _cancelAllOperations];
+    }
 }
 
 - (void)_handlePapersizeFinishedNotification:(NSNotification *)aNote
@@ -638,7 +666,7 @@ static char _TLMOperationQueueOperationContext;
 
 - (void)reinstallAlertDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
 {
-    if (NSAlertDefaultReturn == returnCode)
+    if (NSAlertFirstButtonReturn == returnCode)
         [self _installPackagesWithNames:[(NSArray *)contextInfo autorelease] reinstall:YES];
 }
 
