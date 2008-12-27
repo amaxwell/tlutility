@@ -691,8 +691,9 @@ static char _TLMOperationQueueOperationContext;
 
 - (void)removePackagesWithNames:(NSArray *)packageNames
 {     
-    // some idiot could try to wipe out tlmgr itself, so let's try to prevent that...
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF IN { 'bin-texlive', 'texlive.infra' }"];
+    // Some idiot could try to wipe out tlmgr itself, so let's try to prevent that...
+    // NB: we can have the architecture appended to the package name, so use beginswith.
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(SELF beginswith 'bin-texlive') OR (SELF beginswith 'texlive.infra')"];
     NSArray *packages = [packageNames filteredArrayUsingPredicate:predicate];
     
     if (NO == [self _checkCommandPathAndWarn:YES] || [packages count]) {
@@ -700,7 +701,7 @@ static char _TLMOperationQueueOperationContext;
         TLMLog(nil, @"Tried to remove infrastructure packages: %@", packages);
         NSAlert *alert = [[NSAlert new] autorelease];
         [alert setMessageText:NSLocalizedString(@"Some of these packages cannot be removed.", @"")];
-        [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"You are attempting to remove critical parts of the underlying TeX Live infrastructure, and I won't help you with that.", @"")]];
+        [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"You are attempting to remove critical parts of the underlying TeX Live infrastructure, and I won't help you do that.", @"")]];
         [alert beginSheetModalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
     }
     else {
