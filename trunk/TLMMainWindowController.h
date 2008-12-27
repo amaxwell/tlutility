@@ -82,7 +82,7 @@
 - (IBAction)cancelAllOperations:(id)sender;
 
 // install/update actions will use -lastUpdateURL
-- (IBAction)updateAll:(id)sender;
+- (void)updateAllPackages;
 - (void)installPackagesWithNames:(NSArray *)packageNames reinstall:(BOOL)reinstall;
 - (void)updatePackagesWithNames:(NSArray *)packageNames;
 

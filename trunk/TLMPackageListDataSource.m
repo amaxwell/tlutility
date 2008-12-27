@@ -100,7 +100,7 @@
     [_controller refreshFullPackageList];
 }
 
-- (IBAction)installSelectedRow:(id)sender;
+- (IBAction)installSelectedRows:(id)sender;
 {
     NSArray *selItems = [_outlineView selectedItems];
     
@@ -111,7 +111,7 @@
     [_controller installPackagesWithNames:[selItems valueForKey:@"fullName"] reinstall:([packages count] > 0)];
 }
 
-- (IBAction)removeSelectedRow:(id)sender;
+- (IBAction)removeSelectedRows:(id)sender;
 {
     NSArray *packageNames = [[_outlineView selectedItems] valueForKey:@"fullName"];
     [_controller removePackagesWithNames:packageNames];
@@ -138,9 +138,9 @@
     SEL action = [anItem action];
     if (@selector(showInfo:) == action)
         return [[[TLMInfoController sharedInstance] window] isVisible] == NO;
-    else if (@selector(removeSelectedRow:) == action)
+    else if (@selector(removeSelectedRows:) == action)
         return [self _validateRemoveSelectedRow];
-    else if (@selector(installSelectedRow:) == action)
+    else if (@selector(installSelectedRows:) == action)
         return [[_outlineView selectedRowIndexes] count] > 0;
     else
         return YES;
@@ -231,7 +231,7 @@
     if (sort) [_sortDescriptors insertObject:sort atIndex:0];
     
     // pop the last sort descriptor, if we have more sort descriptors than table columns
-    while ([_sortDescriptors count] > [outlineView numberOfColumns])
+    while ((NSInteger)[_sortDescriptors count] > [outlineView numberOfColumns])
         [_sortDescriptors removeLastObject];
     
     [_displayedPackageNodes sortUsingDescriptors:_sortDescriptors];
