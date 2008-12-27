@@ -2,12 +2,20 @@
 
 = Introduction =
 
-Add your content here.
+The primary feature of TeX Live Utility is updating a MacTeX installation.  When first launching the program, this is the screen that will be visible:
 
+http://mactlmgr.googlecode.com/svn/wiki/images/UpdateTab.png
 
-= Details =
+= Updating =
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+To update all packages, use the "Update All" toolbar button or menu item.  Individual packages can also be updated by selecting them in the list and using the "Update" toolbar button or menu item.
+
+The "Update All" action will also remove and install packages to match the TeX Live database on the remote server. 
+
+= Installing =
+
+Packages can be installed using the "Manage Packages" tab:
+
+http://mactlmgr.googlecode.com/svn/wiki/images/PackageTab.png
+
+Note that some packages have multiple architectures, and you generally only want to install the darwin version for Mac OS X.
