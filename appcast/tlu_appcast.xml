@@ -6,16 +6,11 @@
       <description>Most recent changes with links to updates.</description>
       <language>en</language>
          <item>
-            <title>Version 0.2 Initial Beta Release</title>
-            <!--
-						<sparkle:releaseNotesLink>
-							http://mactlmgr.googlecode.com/svn/trunk/appcast/relnotes-0.2.rtf
-						</sparkle:releaseNotesLink>
-					-->
+            <title>Version 0.2</title>
 			<description>
-			    <h3>Changes</h3>
+			    <h3>Changes Since 0.1</h3>
 			    <li>Added update checking via Sparkle</li>
-			    <li>Rewrote authorized operations to use a kqueue and wait for tlmgr_cwrapper to finish executing</li>
+			    <li>Rewrote authorized operation to use a kqueue</li>
 			    <li>Exit status of tlmgr_cwrapper is now used</li>
 			    <li>Added a warning when canceling an update/install operation</li>
 			    <li>Use correct button check for reinstall warning</li>
