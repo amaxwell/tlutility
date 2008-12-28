@@ -144,9 +144,12 @@ struct TLMAOInternal {
     
     // !!! FIXME: what if authorization expires before we get here?  That's pretty likely...
     AuthorizationRef authorization = [self _authorization];
-    OSStatus status;
+    
+    // initialize to a generic error value
+    OSStatus status = coreFoundationUnknownErr;
+    
     if (authorization)
-        status = AuthorizationExecuteWithPrivileges(authorization, killPath, kAuthorizationFlagDefaults, killargs, NULL);   
+        status = AuthorizationExecuteWithPrivileges(authorization, killPath, kAuthorizationFlagDefaults, killargs, NULL); 
     
     if (status) {
         NSString *errStr;
