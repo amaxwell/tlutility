@@ -123,7 +123,7 @@
     else if ([outputLine hasPrefix:@"skipping forcibly removed package "]) {
         
         [package setStatus:NSLocalizedString(@"Forcibly removed", @"")];
-        [package setInstalled:NO];
+        [package setWasForciblyRemoved:YES];
         [package setName:[outputLine stringByReplacingOccurrencesOfString:@"skipping forcibly removed package " withString:@""]];
     }
     // e.g. "bin-texlive: local revision (11693) is newer than revision in http://foo.bar.mirror/ (11613), not updating"

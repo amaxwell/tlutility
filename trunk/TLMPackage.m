@@ -49,6 +49,7 @@
 @synthesize needsUpdate = _needsUpdate;
 @synthesize failedToParse = _failedToParse;
 @synthesize size = _size;
+@synthesize wasForciblyRemoved = _wasForciblyRemoved;
 
 + (TLMPackage *)package;
 {

@@ -55,25 +55,29 @@
     BOOL        _installed;
     BOOL        _needsUpdate;
     BOOL        _failedToParse;
+    BOOL        _wasForciblyRemoved;
 }
 
 + (TLMPackage *)package;
 - (BOOL)matchesSearchString:(NSString *)searchTerm;
 
-@property(copy, readwrite) NSString *name;
-@property(copy, readwrite) NSString *status;
-@property(copy, readwrite) NSString *remoteVersion;
-@property(copy, readwrite) NSString *localVersion;
-@property(copy, readwrite) NSNumber *size;
+@property (copy, readwrite) NSString *name;
+@property (copy, readwrite) NSString *status;
+@property (copy, readwrite) NSString *remoteVersion;
+@property (copy, readwrite) NSString *localVersion;
+@property (copy, readwrite) NSNumber *size;
 
 // true if no longer present on the server
-@property(readwrite) BOOL willBeRemoved;
+@property (readwrite) BOOL willBeRemoved;
 
 // true if currently installed on the local system
-@property(readwrite, getter = isInstalled) BOOL installed;
+@property (readwrite, getter = isInstalled) BOOL installed;
 
 // true if currently installed and has an update available
-@property(readwrite) BOOL needsUpdate;
+@property (readwrite) BOOL needsUpdate;
+
+// true if tlmgr remove was used, or update was cancelled (failed)
+@property (readwrite) BOOL wasForciblyRemoved;
 
 // true if the tlmgr output was not recognizable
 @property(readwrite) BOOL failedToParse;
