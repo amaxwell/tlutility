@@ -90,8 +90,9 @@
     
     [_tableView reloadData];
     
+    // remember to call -numberOfRows again since it just changed...
     if (shouldScroll)
-        [_tableView scrollRowToVisible:(rowCount - 1)];
+        [_tableView scrollRowToVisible:([_tableView numberOfRows] - 1)];
 }
 
 - (void)_scheduleUpdate
