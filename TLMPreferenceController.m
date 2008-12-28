@@ -39,6 +39,7 @@
 #import "TLMPreferenceController.h"
 #import "TLMURLFormatter.h"
 #import "TLMAppController.h"
+#import "TLMLogServer.h"
 
 NSString * const TLMServerURLPreferenceKey = @"TLMServerURLPreferenceKey";     /* http://mirror.ctan.org      */
 NSString * const TLMTexBinPathPreferenceKey = @"TLMTexBinPathPreferenceKey";   /* /usr/texbin                 */
@@ -150,10 +151,51 @@ NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";     /
                        didEndSelector:@selector(openPanelDidEnd:returnCode:contextInfo:) contextInfo:NULL];
 }
 
+- (BOOL)_canConnectToDefaultServer
+{
+    // see if we have a network connection
+    CFNetDiagnosticRef diagnostic = CFNetDiagnosticCreateWithURL(NULL, (CFURLRef)[self defaultServerURL]);
+    [(id)diagnostic autorelease];
+    if (kCFNetDiagnosticConnectionDown == CFNetDiagnosticCopyNetworkStatusPassively(diagnostic, NULL)) {
+        TLMLog(@"TLMPreferenceController", @"net diagnostic reports the connection is down");
+        return NO;
+    }
+    
+    NSURLRequest *request = [NSURLRequest requestWithURL:[self defaultServerURL] 
+                                             cachePolicy:NSURLRequestReloadIgnoringCacheData 
+                                         timeoutInterval:30.0];
+    NSHTTPURLResponse *response;
+    NSError *error = nil;
+    NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
+    
+    // response will not be an NSHTTPURLResponse for ftp: hosts, but data is empty
+    if ([response respondsToSelector:@selector(statusCode)] && [response statusCode] != 200) {
+        TLMLog(@"TLMPreferenceController", @"http response from %@ was %d", [self defaultServerURL], [response statusCode]);
+        data = nil;
+    }
+    else if ([data length] == 0) {
+        TLMLog(@"TLMPreferenceController", @"no data from %@", [self defaultServerURL]);
+    }
+    
+    return ([data length] != 0);
+}
+
 - (IBAction)changeServerURL:(id)sender
 {
+    NSString *oldValue = [[[[NSUserDefaults standardUserDefaults] objectForKey:TLMServerURLPreferenceKey] copy] autorelease];
+    
     NSString *serverURLString = [[sender cell] stringValue];
     [[NSUserDefaults standardUserDefaults] setObject:serverURLString forKey:TLMServerURLPreferenceKey];
+    if ([self _canConnectToDefaultServer] == NO) {
+        
+        NSAlert *alert = [[NSAlert new] autorelease];
+        [alert setMessageText:NSLocalizedString(@"Unable to connect to server.", @"alert title")];
+        [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"Either a network connection was not availble, or the directory \"%@\" does not exist at the specified CTAN root URL.  The previous value will be restored.", @"alert message text"), [[NSUserDefaults standardUserDefaults] objectForKey:TLMServerPathPreferenceKey]]];
+        [alert beginSheetModalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
+        
+        [[NSUserDefaults standardUserDefaults] setObject:oldValue forKey:TLMServerURLPreferenceKey];
+        [[sender cell] setStringValue:oldValue];
+    }
 }
 
 - (NSString *)windowNibName { return @"Preferences"; }
