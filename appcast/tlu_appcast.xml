@@ -13,7 +13,7 @@
 						</sparkle:releaseNotesLink>
 					-->
 			<description>
-			    <h2>Changes</h2>
+			    <h3>Changes</h3>
 			    <li>Added update checking via Sparkle</li>
 			    <li>Rewrote authorized operations to use a kqueue and wait for tlmgr_cwrapper to finish executing</li>
 			    <li>Exit status of tlmgr_cwrapper is now used</li>
