@@ -29,6 +29,10 @@ All Rights Reserved.</string>
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>SUPublicDSAKeyFile</key>
+	<string>dsa_pub.pem</string>
+	<key>SUFeedURL</key>
+	<string>http://mactlmgr.googlecode.com/svn/trunk/appcast/tlu_appcast.xml</string>
 	<key>UTImportedTypeDeclarations</key>
 	<array>
 		<dict>
