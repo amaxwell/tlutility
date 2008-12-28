@@ -177,6 +177,9 @@ NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";     /
         TLMLog(@"TLMPreferenceController", @"no data from %@", [self defaultServerURL]);
     }
     
+    // this gets screwed up by "http://mirror.ctan.orgs/" getting redirected to opendns.com, but
+    // even if we can check for a 302, that's the same response that mirror.ctan.org gives...
+    
     return ([data length] != 0);
 }
 
