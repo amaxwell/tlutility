@@ -62,7 +62,7 @@
         NSRange r = [mstatus rangeOfCharacterFromSet:[NSCharacterSet whitespaceCharacterSet]];
         if (r.length) {
             [package setName:[mstatus substringToIndex:r.location]];
-            [package setStatus:NSLocalizedString(@"Deleted on server", @"")];
+            [package setStatus:NSLocalizedString(@"Deleted on server", @"status for package")];
             [package setWillBeRemoved:YES];
             [package setInstalled:YES];
         }
@@ -73,7 +73,7 @@
         // this is the old version of "removed on server"
         NSRange r = [outputLine rangeOfCharacterFromSet:[NSCharacterSet whitespaceCharacterSet]];
         [package setName:[outputLine substringToIndex:r.location]];
-        [package setStatus:NSLocalizedString(@"Deleted on server", @"")];
+        [package setStatus:NSLocalizedString(@"Deleted on server", @"status for package")];
         [package setWillBeRemoved:YES];
         [package setInstalled:YES];
     }
@@ -83,13 +83,13 @@
         // package that will be installed automatically when running `tlmgr update --all`
         NSRange r = [outputLine rangeOfString:@"auto-install:"];
         [package setName:[[outputLine substringFromIndex:NSMaxRange(r)] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
-        [package setStatus:NSLocalizedString(@"Not installed", @"")];
+        [package setStatus:NSLocalizedString(@"Not installed", @"status for package")];
     }
     // e.g. "ifxetex: local: 9906, source: 10831"
     else if ([outputLine rangeOfString:@"local:"].length) {
         
         // package is installed, but needs update
-        [package setStatus:NSLocalizedString(@"Updated on server", @"")];
+        [package setStatus:NSLocalizedString(@"Updated on server", @"status for package")];
         [package setInstalled:YES];
         [package setNeedsUpdate:YES];
         
@@ -122,7 +122,7 @@
     // e.g. "skipping forcibly removed package casyl"
     else if ([outputLine hasPrefix:@"skipping forcibly removed package "]) {
         
-        [package setStatus:NSLocalizedString(@"Forcibly removed", @"")];
+        [package setStatus:NSLocalizedString(@"Forcibly removed", @"status for package")];
         [package setWasForciblyRemoved:YES];
         [package setName:[outputLine stringByReplacingOccurrencesOfString:@"skipping forcibly removed package " withString:@""]];
     }
@@ -130,7 +130,7 @@
     else if ([outputLine rangeOfString:@"is newer than revision in"].length) {
         
         // this is quite possibly the most gruesomely ad-hoc of all the version 1 messages...
-        [package setStatus:NSLocalizedString(@"Local version is newer", @"")];
+        [package setStatus:NSLocalizedString(@"Local version is newer", @"status for package")];
         [package setInstalled:YES];
 
         NSScanner *scanner = [[NSScanner alloc] initWithString:outputLine];
@@ -152,7 +152,7 @@
     }
     else {
         // This may happen with some packages in an intermediate version of tlmgr.  Not worth dealing with, since we'll typically be updating infrastructure immediately and never really use that output.
-        [package setName:NSLocalizedString(@"Error parsing package string", @"")];
+        [package setName:NSLocalizedString(@"Error parsing output line", @"error message for unreadable package")];
         [package setStatus:outputLine];
         [package setFailedToParse:YES];
     }
@@ -216,7 +216,7 @@ static bool hasKeyPrefix(NSString *line)
     value = [info objectForKey:@"Package"];
     if (value) {
         previousLength = [attrString length];
-        [[attrString mutableString] appendString:NSLocalizedString(@"Package:", @"")];
+        [[attrString mutableString] appendString:NSLocalizedString(@"Package:", @"heading in info panel")];
         [attrString addAttribute:NSFontAttributeName value:boldFont range:NSMakeRange(previousLength, [attrString length] - previousLength)];
         
         previousLength = [attrString length];
@@ -227,7 +227,7 @@ static bool hasKeyPrefix(NSString *line)
     value = [info objectForKey:@"ShortDesc"];
     if (value) {
         previousLength = [attrString length];
-        [[attrString mutableString] appendString:NSLocalizedString(@"Summary:", @"")];
+        [[attrString mutableString] appendString:NSLocalizedString(@"Summary:", @"heading in info panel")];
         [attrString addAttribute:NSFontAttributeName value:boldFont range:NSMakeRange(previousLength, [attrString length] - previousLength)];
         
         previousLength = [attrString length];
@@ -238,13 +238,13 @@ static bool hasKeyPrefix(NSString *line)
     value = [info objectForKey:@"Installed"];
     if (value) {
         previousLength = [attrString length];
-        [[attrString mutableString] appendString:NSLocalizedString(@"Status:", @"")];
+        [[attrString mutableString] appendString:NSLocalizedString(@"Status:", @"heading in info panel")];
         [attrString addAttribute:NSFontAttributeName value:boldFont range:NSMakeRange(previousLength, [attrString length] - previousLength)];
         if ([value caseInsensitiveCompare:@"yes"] == NSOrderedSame) {
-            value = NSLocalizedString(@"Installed", @"");
+            value = NSLocalizedString(@"Installed", @"status for package");
         }
         else {
-            value = NSLocalizedString(@"Not installed", @"");
+            value = NSLocalizedString(@"Not installed", @"status for package");
         }
         previousLength = [attrString length];
         [[attrString mutableString] appendFormat:@" %@\n\n", value];
@@ -262,7 +262,7 @@ static bool hasKeyPrefix(NSString *line)
         
         if (linkURL) {
             previousLength = [attrString length];
-            [[attrString mutableString] appendString:NSLocalizedString(@"Link: ", @"")];
+            [[attrString mutableString] appendString:NSLocalizedString(@"Link: ", @"heading in info panel")];
             [attrString addAttribute:NSFontAttributeName value:boldFont range:NSMakeRange(previousLength, [attrString length] - previousLength)];
         
             previousLength = [attrString length];
@@ -279,7 +279,7 @@ static bool hasKeyPrefix(NSString *line)
     value = [info objectForKey:@"LongDesc"];
     if (value) {
         previousLength = [attrString length];
-        [[attrString mutableString] appendString:NSLocalizedString(@"Description:\n", @"")];
+        [[attrString mutableString] appendString:NSLocalizedString(@"Description:\n", @"heading in info panel")];
         [attrString addAttribute:NSFontAttributeName value:boldFont range:NSMakeRange(previousLength, [attrString length] - previousLength)];
         
         previousLength = [attrString length];

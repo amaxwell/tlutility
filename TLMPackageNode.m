@@ -112,11 +112,11 @@ static NSString *_separatorString = nil;
 - (NSString *)status
 {
     if ([self hasMixedStatus]) 
-        return NSLocalizedString(@"Mixed", @"");
+        return NSLocalizedString(@"Mixed", @"status for expandable outline row with installed and uninstalled packages");
     else if ([self isInstalled])
-        return NSLocalizedString(@"Installed", @"");
+        return NSLocalizedString(@"Installed", @"status for package");
     else
-        return NSLocalizedString(@"Not installed", @"");
+        return NSLocalizedString(@"Not installed", @"status for package");
 }
 
 @end

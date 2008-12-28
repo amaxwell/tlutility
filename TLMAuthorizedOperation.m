@@ -114,12 +114,12 @@ struct TLMAOInternal {
             _internal->_authorization = authorization;
         }
         else if (errAuthorizationCanceled == status) {
-            [self setErrorData:[NSLocalizedString(@"User cancelled operation", @"") dataUsingEncoding:NSUTF8StringEncoding]];
+            [self setErrorData:[NSLocalizedString(@"User cancelled operation", @"alert message") dataUsingEncoding:NSUTF8StringEncoding]];
             // this isn't a failure, so the owner may need to check -isCancelled
             [self setFailed:NO];
             [self cancel];
         } else if (errAuthorizationSuccess != status) {
-            [self setErrorData:[NSLocalizedString(@"Failed to authorize operation", @"") dataUsingEncoding:NSUTF8StringEncoding]];
+            [self setErrorData:[NSLocalizedString(@"Failed to authorize operation", @"alert message") dataUsingEncoding:NSUTF8StringEncoding]];
             [self setFailed:YES];
         }
     }        

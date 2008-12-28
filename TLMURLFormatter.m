@@ -53,12 +53,12 @@
     NSURL *aURL = string ? [NSURL URLWithString:string] : nil;
     if (nil == aURL) {
         success = NO;
-        if (error) *error = NSLocalizedString(@"This URL was not valid.", @"");
+        if (error) *error = NSLocalizedString(@"This URL was not valid.", @"error message");
         *obj = nil;
     }
     else if ([aURL scheme] == nil) {
         success = NO;
-        if (error) *error = NSLocalizedString(@"This URL is missing a scheme, such as http.", @"");
+        if (error) *error = NSLocalizedString(@"This URL is missing a scheme, such as http.", @"error message");
         *obj = nil;        
     }
     return success;

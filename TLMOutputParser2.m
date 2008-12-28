@@ -47,19 +47,19 @@
     NSString *status = nil;
     switch (ch) {
         case 'd':
-            status = NSLocalizedString(@"Deleted on server", @"");
+            status = NSLocalizedString(@"Deleted on server", @"status for package");
             break;
         case 'u':
-            status = NSLocalizedString(@"Updated on server", @"");
+            status = NSLocalizedString(@"Updated on server", @"status for package");
             break;
         case 'a':
-            status = NSLocalizedString(@"Not installed", @"");
+            status = NSLocalizedString(@"Not installed", @"status for package");
             break;
         case 'f':
-            status = NSLocalizedString(@"Forcibly removed", @"");
+            status = NSLocalizedString(@"Forcibly removed", @"status for package");
             break;
         case 'r':
-            status = NSLocalizedString(@"Local version is newer", @"");
+            status = NSLocalizedString(@"Local version is newer", @"status for package");
             break;
         default:
             TLMLog(@"TLMOutputParser2", @"Unknown status code \"%C\"", ch);
@@ -98,7 +98,7 @@ enum {
     // !!! early return here after a sanity check
     if ([components count] < MAX_COLUMNS) {
         TLMLog(@"TLMOutputParser2", @"Unexpected number of tokens in line \"%@\"", outputLine);
-        [package setName:NSLocalizedString(@"Error parsing output line", @"")];
+        [package setName:NSLocalizedString(@"Error parsing output line", @"error message for unreadable package")];
         [package setStatus:outputLine];
         [package setFailedToParse:YES];
         return package;
