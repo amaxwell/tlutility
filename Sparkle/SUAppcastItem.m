@@ -138,7 +138,11 @@
             [self setDate:[dict objectForKey:@"pubDate"]];
             [self setItemDescription:[dict objectForKey:@"description"]];
             
-            [self setFileURL:[NSURL URLWithString:[[enclosure objectForKey:@"url"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
+            NSString *URLString = [enclosure objectForKey:@"url"];
+            // if the string already has percent escapes, convert them to e.g. avoid changing %20 to %2520
+            URLString = [URLString stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            URLString = [URLString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            [self setFileURL:[NSURL URLWithString:URLString]];
             [self setDSASignature:[enclosure objectForKey:@"sparkle:dsaSignature"]];		
             
             [self setVersionString:newVersion];
