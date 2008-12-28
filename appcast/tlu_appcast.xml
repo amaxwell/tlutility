@@ -7,9 +7,12 @@
       <language>en</language>
          <item>
             <title>Version 0.2 Initial beta release</title>
+            <!--
 						<sparkle:releaseNotesLink>
 							http://mactlmgr.googlecode.com/svn/trunk/appcast/relnotes-0.2.rtf
 						</sparkle:releaseNotesLink>
+					-->
+			<description>Release notes go here</description>
             <pubDate>Sat, 28 Dec 2008 00:14:55 +0000</pubDate>
             <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20081226.zip" sparkle:version="0.2" length="748932" type="application/octet-stream" sparkle:dsaSignature="MC0CFC2AfV5/xSYrMe5I/RuKf3mOjZ7zAhUAh3vHYShZGKjVQg+/5pU7kCqvYCk=" />
          </item>
