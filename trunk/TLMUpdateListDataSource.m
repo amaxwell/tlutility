@@ -111,7 +111,20 @@
     return YES;
 }
 
-// tried validating toolbar items using bindings to queue.operations.@count but the queue sends KVO notifications on its own thread
+- (BOOL)_validateInstallSelectedRows
+{
+    if ([[_tableView selectedRowIndexes] count] == 0)
+        return NO;
+    
+    // only allow install action for forcibly removed packages; this is a special case to aid recovery from a failed update
+    NSArray *selItems = [_packages objectsAtIndexes:[_tableView selectedRowIndexes]];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(wasForciblyRemoved == NO)"];
+    if ([[selItems filteredArrayUsingPredicate:predicate] count])
+        return NO;
+    
+    return YES;
+}
+
 - (BOOL)validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem>)anItem;
 {
     SEL action = [anItem action];
@@ -121,8 +134,18 @@
         return [self _validateUpdateSelectedRows];
     else if (@selector(updateAll:) == action)
         return [_allPackages count] > 0;
+    else if (@selector(installSelectedRows:) == action)
+        return [self _validateInstallSelectedRows];
     else
         return YES;
+}
+
+- (IBAction)installSelectedRows:(id)sender;
+{
+    NSArray *selItems = [_packages objectsAtIndexes:[_tableView selectedRowIndexes]];
+ 
+    // never a reinstall here (see validation)
+    [_controller installPackagesWithNames:[selItems valueForKey:@"name"] reinstall:NO];
 }
 
 - (IBAction)search:(id)sender;

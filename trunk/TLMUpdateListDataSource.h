@@ -63,6 +63,9 @@
 - (IBAction)updateSelectedRows:(id)sender;
 - (IBAction)showInfo:(id)sender;
 
+// for easier recovery from a botched update that resulted in forcibly removed packages
+- (IBAction)installSelectedRows:(id)sender;
+
 - (IBAction)search:(id)sender;
 
 @end
