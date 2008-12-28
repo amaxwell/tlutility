@@ -119,7 +119,7 @@ enum {
         [package setNeedsUpdate:YES];
     
     if ('f' == ch)
-        [package setInstalled:NO];
+        [package setWasForciblyRemoved:YES];
         
     if (NO == [[components objectAtIndex:TLMLocalVersionIndex] isEqualToString:@"-"])
         [package setLocalVersion:[components objectAtIndex:TLMLocalVersionIndex]];
