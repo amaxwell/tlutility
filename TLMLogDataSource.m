@@ -81,9 +81,17 @@
     _updateScheduled = NO;
     
     [self setMessages:[[TLMLogServer sharedServer] messages]];
+    
+    BOOL shouldScroll = NO;
+    NSUInteger rowCount = [_tableView numberOfRows];
+    // scroll to the last row, unless the user has manually scrolled up (check before reloading!)
+    if (rowCount && NSIntersectsRect([_tableView visibleRect], [_tableView rectOfRow:(rowCount - 1)]))
+        shouldScroll = YES; 
+    
     [_tableView reloadData];
-    if ([_tableView numberOfRows])
-        [_tableView scrollRowToVisible:([_tableView numberOfRows] - 1)];    
+    
+    if (shouldScroll)
+        [_tableView scrollRowToVisible:(rowCount - 1)];
 }
 
 - (void)_scheduleUpdate
