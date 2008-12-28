@@ -172,7 +172,7 @@
 	[self extractUpdate];
 }
 
-- (void)download:(NSURLDownload *)download didFailWithError:(NSError *)error
+- (void)download:(NSURLDownload *)d didFailWithError:(NSError *)error
 {
 	// Get rid of what we've downloaded so far, if anything.
 	if (downloadPath != nil)
@@ -180,7 +180,7 @@
 	[self abortUpdateWithError:[NSError errorWithDomain:SUSparkleErrorDomain code:SURelaunchError userInfo:[NSDictionary dictionaryWithObjectsAndKeys:SULocalizedString(@"An error occurred while downloading the update. Please try again later.", nil), NSLocalizedDescriptionKey, [error localizedDescription], NSLocalizedFailureReasonErrorKey, nil]]];
 }
 
-- (BOOL)download:(NSURLDownload *)download shouldDecodeSourceDataOfMIMEType:(NSString *)encodingType
+- (BOOL)download:(NSURLDownload *)d shouldDecodeSourceDataOfMIMEType:(NSString *)encodingType
 {
 	// We don't want the download system to extract our gzips.
 	// Note that we use a substring matching here instead of direct comparison because the docs say "application/gzip" but the system *uses* "application/x-gzip". This is a documentation bug.
