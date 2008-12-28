@@ -2,16 +2,16 @@
 <rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle"  xmlns:dc="http://purl.org/dc/elements/1.1/">
    <channel>
       <title>TeX Live Utility Changelog</title>
-      <link>http://mactlmgr.googlecode.com/svn/trunk/tlu_appcast.xml</link>
+      <link>http://mactlmgr.googlecode.com/svn/trunk/appcast/tlu_appcast.xml</link>
       <description>Most recent changes with links to updates.</description>
       <language>en</language>
          <item>
-            <title>Version 0.6 (2 bugs fixed; 3 new features)</title>
+            <title>Version 0.2 Initial beta release</title>
 						<sparkle:releaseNotesLink>
-							http://you.com/app/2.0.html
+							http://mactlmgr.googlecode.com/svn/trunk/appcast/relnotes-0.2.rtf
 						</sparkle:releaseNotesLink>
-            <pubDate>Wed, 09 Jan 2006 19:20:11 +0000</pubDate>
-            <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20081226.zip" sparkle:version="0.6" length="748932" type="application/octet-stream" sparkle:dsaSignature="MC0CFC2AfV5/xSYrMe5I/RuKf3mOjZ7zAhUAh3vHYShZGKjVQg+/5pU7kCqvYCk=" />
+            <pubDate>Sat, 28 Dec 2008 00:14:55 +0000</pubDate>
+            <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20081226.zip" sparkle:version="0.2" length="748932" type="application/octet-stream" sparkle:dsaSignature="MC0CFC2AfV5/xSYrMe5I/RuKf3mOjZ7zAhUAh3vHYShZGKjVQg+/5pU7kCqvYCk=" />
          </item>
    </channel>
 </rss>
