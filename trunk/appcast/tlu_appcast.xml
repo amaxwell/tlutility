@@ -7,9 +7,18 @@
       <language>en</language>
          <item>
             <title>Version 0.2 Initial beta release</title>
+            <!--
 						<sparkle:releaseNotesLink>
-							http://mactlmgr.googlecode.com/svn/trunk/appcast/relnotes-0.2.html
+							http://mactlmgr.googlecode.com/svn/trunk/appcast/relnotes-0.2.rtf
 						</sparkle:releaseNotesLink>
+					-->
+			<description>
+			    <li>Added update checking via Sparkle</li>
+			    <li>Rewrote authorized operations to use a kqueue and wait for tlmgr_cwrapper to finish executing</li>
+			    <li>Exit status of tlmgr_cwrapper is now used</li>
+			    <li>Added a warning when canceling an update/install operation</li>
+			    <li>Use correct button check for reinstall warning</li>
+            </description>
             <pubDate>Sat, 28 Dec 2008 00:14:55 +0000</pubDate>
             <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20081226.zip" sparkle:version="0.2" length="748932" type="application/octet-stream" sparkle:dsaSignature="MC0CFC2AfV5/xSYrMe5I/RuKf3mOjZ7zAhUAh3vHYShZGKjVQg+/5pU7kCqvYCk=" />
          </item>
