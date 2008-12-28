@@ -33,6 +33,8 @@ All Rights Reserved.</string>
 	<string>dsa_pub.pem</string>
 	<key>SUFeedURL</key>
 	<string>http://mactlmgr.googlecode.com/svn/trunk/appcast/tlu_appcast.xml</string>
+	<key>SUAllowsAutomaticUpdates</key>
+	<false/>
 	<key>UTImportedTypeDeclarations</key>
 	<array>
 		<dict>
