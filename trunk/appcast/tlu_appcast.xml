@@ -15,8 +15,8 @@
 			    <li>Added a warning when canceling an update/install operation</li>
 			    <li>Use correct button check for reinstall warning</li>
             </description>
-            <pubDate>Sat, 28 Dec 2008 00:14:55 +0000</pubDate>
-            <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20081226.zip" sparkle:version="0.2" length="748932" type="application/octet-stream" sparkle:dsaSignature="MC0CFC2AfV5/xSYrMe5I/RuKf3mOjZ7zAhUAh3vHYShZGKjVQg+/5pU7kCqvYCk=" />
+            <pubDate>Sun, 28 Dec 2008 02:10:48 +0000</pubDate>
+            <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20081227.zip" sparkle:version="0.2" length="1178579" type="application/octet-stream" sparkle:dsaSignature="MCwCFDThD5RwgE0jruAUdYbJduHJ1dYEAhRrZXdjKtXdmSih8aKbWNIXivhi8Q==" />
          </item>
    </channel>
 </rss>
