@@ -128,7 +128,7 @@
             [[_textView textStorage] setAttributedString:[TLMOutputParser attributedStringWithInfoString:result]];
         }
         else {
-            [_textView setString:[NSString stringWithFormat:NSLocalizedString(@"Unable to find info for %@", @""), [op packageName]]];
+            [_textView setString:[NSString stringWithFormat:NSLocalizedString(@"Unable to find info for %@", @"error message for info panel"), [op packageName]]];
         }
         // only change tabs if we have something to show
         [_tabView selectFirstTabViewItem:nil];
@@ -148,7 +148,7 @@
         TLMInfoOperation *op = [[TLMInfoOperation alloc] initWithPackageName:[package name]];
         if (op) {
             
-            [[self window] setTitle:[NSString stringWithFormat:NSLocalizedString(@"Searching%C", @""), 0x2026]];
+            [[self window] setTitle:[NSString stringWithFormat:NSLocalizedString(@"Searching%C", @"info panel title"), 0x2026]];
             
             [_tabView selectLastTabViewItem:nil];
             [self _recenterSpinner];
@@ -166,7 +166,7 @@
         }
     }
     else {
-        [[self window] setTitle:NSLocalizedString(@"Nothing Selected", @"")];
+        [[self window] setTitle:NSLocalizedString(@"Nothing Selected", @"info panel title")];
         [_textView setString:@""];
         [_spinner stopAnimation:nil];
         [_tabView selectFirstTabViewItem:nil];

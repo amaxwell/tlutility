@@ -126,8 +126,8 @@ static char _TLMOperationQueueOperationContext;
 
     // set delegate before adding tabs, so the datasource gets inserted properly in the responder chain
     [_tabView setDelegate:self];
-    [_tabView addTabNamed:NSLocalizedString(@"Manage Updates", @"") withView:[[_updateListDataSource tableView]  enclosingScrollView]];
-    [_tabView addTabNamed:NSLocalizedString(@"Manage Packages", @"") withView:[[_packageListDataSource outlineView] enclosingScrollView]];
+    [_tabView addTabNamed:NSLocalizedString(@"Manage Updates", @"tab title") withView:[[_updateListDataSource tableView]  enclosingScrollView]];
+    [_tabView addTabNamed:NSLocalizedString(@"Manage Packages", @"tab title") withView:[[_packageListDataSource outlineView] enclosingScrollView]];
 }
 
 - (void)windowDidLoad
@@ -156,8 +156,8 @@ static char _TLMOperationQueueOperationContext;
         TLMLog(nil, @"tlmgr not found at \"%@\"", cmdPath);
         if (displayWarning) {
             NSAlert *alert = [[NSAlert new] autorelease];
-            [alert setMessageText:NSLocalizedString(@"TeX installation not found.", @"")];
-            [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"The tlmgr tool does not exist at %@.  Please set the correct location in preferences or install TeX Live.", @""), cmdPath]];
+            [alert setMessageText:NSLocalizedString(@"TeX installation not found.", @"alert sheet title")];
+            [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"The tlmgr tool does not exist at %@.  Please set the correct location in preferences or install TeX Live.", @"alert message text"), cmdPath]];
             [alert beginSheetModalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
         }
     }
@@ -267,10 +267,10 @@ static char _TLMOperationQueueOperationContext;
         // log for debugging, then display an alert so the user has some idea of what's going on...
         TLMLog(nil, @"Critical updates detected: %@", [packages valueForKey:@"name"]);
         NSAlert *alert = [[NSAlert new] autorelease];
-        [alert setMessageText:NSLocalizedString(@"Critical updates available.", @"")];
-        [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"%d packages are available for update, but the TeX Live installer packages listed here must be updated first.  Update now?", @""), [[op packages] count]]];
-        [alert addButtonWithTitle:NSLocalizedString(@"Update", @"")];
-        [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")];
+        [alert setMessageText:NSLocalizedString(@"Critical updates available.", @"alert title")];
+        [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"%d packages are available for update, but the TeX Live installer packages listed here must be updated first.  Update now?", @"alert message text"), [[op packages] count]]];
+        [alert addButtonWithTitle:NSLocalizedString(@"Update", @"button title")];
+        [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"button title")];
         [alert beginSheetModalForWindow:[self window]
                           modalDelegate:self 
                          didEndSelector:@selector(infrastructureAlertDidEnd:returnCode:contextInfo:) 
@@ -287,11 +287,11 @@ static char _TLMOperationQueueOperationContext;
     NSString *statusString = nil;
     
     if ([op isCancelled])
-        statusString = NSLocalizedString(@"Listing Cancelled", @"");
+        statusString = NSLocalizedString(@"Listing Cancelled", @"main window status string");
     else if ([op failed])
-        statusString = NSLocalizedString(@"Listing Failed", @"");
+        statusString = NSLocalizedString(@"Listing Failed", @"main window status string");
     else if ([packages count] == 0)
-        statusString = NSLocalizedString(@"No Updates Available", @"");
+        statusString = NSLocalizedString(@"No Updates Available", @"main window status string");
     
     [self _displayStatusString:statusString];
 }
@@ -330,8 +330,8 @@ static char _TLMOperationQueueOperationContext;
     // ignore operations that failed or were explicitly cancelled
     if ([op failed]) {
         NSAlert *alert = [[NSAlert new] autorelease];
-        [alert setMessageText:NSLocalizedString(@"The installation failed.", @"")];
-        [alert setInformativeText:NSLocalizedString(@"The installation process appears to have failed.  Please check the log display below for details.", @"")];
+        [alert setMessageText:NSLocalizedString(@"The installation failed.", @"alert title")];
+        [alert setInformativeText:NSLocalizedString(@"The installation process appears to have failed.  Please check the log display below for details.", @"alert message text")];
         [alert beginSheetModalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];                    
     }
     else if ([op isCancelled] == NO) {
@@ -341,10 +341,10 @@ static char _TLMOperationQueueOperationContext;
         if (_updateInfrastructure && NO == [self _checkCommandPathAndWarn:NO]) {
             NSAlert *alert = [[NSAlert new] autorelease];
             [alert setAlertStyle:NSCriticalAlertStyle];
-            [alert setMessageText:NSLocalizedString(@"The tlmgr tool no longer exists, possibly due to an update failure.", @"")];
-            [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"Follow the instructions for Unix disaster recovery on the TeX Live web site at %@.  Would you like to go to that page now?  You can also open it later from the Help menu.", @""), @"http://tug.org/texlive/tlmgr.html"]];
-            [alert addButtonWithTitle:NSLocalizedString(@"Open Now", @"")];
-            [alert addButtonWithTitle:NSLocalizedString(@"Later", @"")];
+            [alert setMessageText:NSLocalizedString(@"The tlmgr tool no longer exists, possibly due to an update failure.", @"alert title")];
+            [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"Follow the instructions for Unix disaster recovery on the TeX Live web site at %@.  Would you like to go to that page now?  You can also open it later from the Help menu.", @"alert message text"), @"http://tug.org/texlive/tlmgr.html"]];
+            [alert addButtonWithTitle:NSLocalizedString(@"Open Now", @"button title")];
+            [alert addButtonWithTitle:NSLocalizedString(@"Later", @"button title")];
             [alert beginSheetModalForWindow:[self window] 
                               modalDelegate:self 
                              didEndSelector:@selector(disasterAlertDidEnd:returnCode:contextInfo:) 
@@ -395,11 +395,11 @@ static char _TLMOperationQueueOperationContext;
 {
     if ([self _installIsRunning]) {
         NSAlert *alert = [[NSAlert new] autorelease];
-        [alert setMessageText:NSLocalizedString(@"An installation is running!", @"")];
+        [alert setMessageText:NSLocalizedString(@"An installation is running!", @"alert title")];
         [alert setAlertStyle:NSCriticalAlertStyle];
-        [alert setInformativeText:NSLocalizedString(@"If you close the window, the installation process may leave your TeX installation in an unknown state.  You can ignore this warning and cancel the process anyway, or keep waiting until the installation finishes.", @"")];
-        [alert addButtonWithTitle:NSLocalizedString(@"Keep Waiting", @"")];
-        [alert addButtonWithTitle:NSLocalizedString(@"Cancel Anyway", @"")];
+        [alert setInformativeText:NSLocalizedString(@"If you close the window, the installation process may leave your TeX installation in an unknown state.  You can ignore this warning and cancel the process anyway, or keep waiting until the installation finishes.", @"alert message text")];
+        [alert addButtonWithTitle:NSLocalizedString(@"Keep Waiting", @"button title")];
+        [alert addButtonWithTitle:NSLocalizedString(@"Cancel Anyway", @"button title")];
         [alert beginSheetModalForWindow:[self window]
                           modalDelegate:self
                          didEndSelector:@selector(cancelWarningSheetDidEnd:returnCode:contextInfo:)
@@ -509,9 +509,9 @@ static char _TLMOperationQueueOperationContext;
     NSString *statusString = nil;
     
     if ([op isCancelled])
-        statusString = NSLocalizedString(@"Listing Cancelled", @"");
+        statusString = NSLocalizedString(@"Listing Cancelled", @"main window status string");
     else if ([op failed])
-        statusString = NSLocalizedString(@"Listing Failed", @"");
+        statusString = NSLocalizedString(@"Listing Failed", @"main window status string");
     
     [self _displayStatusString:statusString];
     [self setLastUpdateURL:[op updateURL]];
@@ -559,10 +559,10 @@ static char _TLMOperationQueueOperationContext;
         for (TLMPackage *pkg in [_updateListDataSource allPackages])
             size += [[pkg size] unsignedIntegerValue];
         
-        [alert setMessageText:NSLocalizedString(@"Update all packages?", @"")];
+        [alert setMessageText:NSLocalizedString(@"Update all packages?", @"alert title")];
         // may not be correct for _updateInfrastructure, but tlmgr may remove stuff also...so leave it as-is
         NSMutableString *informativeText = [NSMutableString string];
-        [informativeText appendString:NSLocalizedString(@"This will install all available updates and remove packages that no longer exist on the server.", @"")];
+        [informativeText appendString:NSLocalizedString(@"This will install all available updates and remove packages that no longer exist on the server.", @"alert message text")];
         
         if (size > 0) {
             
@@ -580,11 +580,11 @@ static char _TLMOperationQueueOperationContext;
                 }
             }
             
-            [informativeText appendFormat:NSLocalizedString(@"  Total download size will be %.1f %@.", @""), totalSize, sizeUnits];
+            [informativeText appendFormat:NSLocalizedString(@"  Total download size will be %.1f %@.", @"partial alert text, with double space in front, only used with tlmgr2"), totalSize, sizeUnits];
         }
         [alert setInformativeText:informativeText];
-        [alert addButtonWithTitle:NSLocalizedString(@"Update", @"")];
-        [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")];
+        [alert addButtonWithTitle:NSLocalizedString(@"Update", @"button title")];
+        [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"button title")];
         [alert beginSheetModalForWindow:[self window] 
                           modalDelegate:self 
                          didEndSelector:@selector(updateAllAlertDidEnd:returnCode:contextInfo:) 
@@ -597,11 +597,11 @@ static char _TLMOperationQueueOperationContext;
     BOOL shouldClose = YES;
     if ([self _installIsRunning]) {
         NSAlert *alert = [[NSAlert new] autorelease];
-        [alert setMessageText:NSLocalizedString(@"Installation in progress!", @"")];
+        [alert setMessageText:NSLocalizedString(@"Installation in progress!", @"alert title")];
         [alert setAlertStyle:NSCriticalAlertStyle];
-        [alert setInformativeText:NSLocalizedString(@"If you close the window, the installation process may leave your TeX installation in an unknown state.  You can ignore this warning and close the window, or wait until the installation finishes.", @"")];
-        [alert addButtonWithTitle:NSLocalizedString(@"Wait", @"")];
-        [alert addButtonWithTitle:NSLocalizedString(@"Ignore", @"")];
+        [alert setInformativeText:NSLocalizedString(@"If you close the window, the installation process may leave your TeX installation in an unknown state.  You can ignore this warning and close the window, or wait until the installation finishes.", @"alert message text")];
+        [alert addButtonWithTitle:NSLocalizedString(@"Wait", @"button title")];
+        [alert addButtonWithTitle:NSLocalizedString(@"Ignore", @"button title")];
         
         NSInteger rv = [alert runModal];
         if (NSAlertFirstButtonReturn == rv)
@@ -636,8 +636,8 @@ static char _TLMOperationQueueOperationContext;
     // ignore operations that failed or were explicitly cancelled
     if ([op failed]) {
         NSAlert *alert = [[NSAlert new] autorelease];
-        [alert setMessageText:NSLocalizedString(@"Install failed.", @"")];
-        [alert setInformativeText:NSLocalizedString(@"The install process appears to have failed.  Please check the log display below for details.", @"")];
+        [alert setMessageText:NSLocalizedString(@"Install failed.", @"alert title")];
+        [alert setInformativeText:NSLocalizedString(@"The install process appears to have failed.  Please check the log display below for details.", @"alert message text")];
         [alert beginSheetModalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];                    
     }
     else if ([op isCancelled] == NO) {
@@ -679,10 +679,10 @@ static char _TLMOperationQueueOperationContext;
     
     if (reinstall) {
         NSAlert *alert = [[NSAlert new] autorelease];
-        [alert setMessageText:NSLocalizedString(@"Reinstall packages?", @"")];
-        [alert setInformativeText:NSLocalizedString(@"Some of the packages you have selected are already installed.  Would you like to reinstall them?", @"")];
-        [alert addButtonWithTitle:NSLocalizedString(@"Reinstall", @"")];
-        [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")];
+        [alert setMessageText:NSLocalizedString(@"Reinstall packages?", @"alert title")];
+        [alert setInformativeText:NSLocalizedString(@"Some of the packages you have selected are already installed.  Would you like to reinstall them?", @"alert message text")];
+        [alert addButtonWithTitle:NSLocalizedString(@"Reinstall", @"button title")];
+        [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"button title")];
         [alert beginSheetModalForWindow:[self window]
                           modalDelegate:self
                          didEndSelector:@selector(reinstallAlertDidEnd:returnCode:contextInfo:)
@@ -701,8 +701,8 @@ static char _TLMOperationQueueOperationContext;
     // ignore operations that failed or were explicitly cancelled
     if ([op failed]) {
         NSAlert *alert = [[NSAlert new] autorelease];
-        [alert setMessageText:NSLocalizedString(@"Removal failed.", @"")];
-        [alert setInformativeText:NSLocalizedString(@"The removal process appears to have failed.  Please check the log display below for details.", @"")];
+        [alert setMessageText:NSLocalizedString(@"Removal failed.", @"alert title")];
+        [alert setInformativeText:NSLocalizedString(@"The removal process appears to have failed.  Please check the log display below for details.", @"alert message text")];
         [alert beginSheetModalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];                    
     }
     else if ([op isCancelled] == NO) {
@@ -726,8 +726,8 @@ static char _TLMOperationQueueOperationContext;
         // log for debugging, then display an alert so the user has some idea of what's going on...
         TLMLog(nil, @"Tried to remove infrastructure packages: %@", packages);
         NSAlert *alert = [[NSAlert new] autorelease];
-        [alert setMessageText:NSLocalizedString(@"Some of these packages cannot be removed.", @"")];
-        [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"You are attempting to remove critical parts of the underlying TeX Live infrastructure, and I won't help you do that.", @"")]];
+        [alert setMessageText:NSLocalizedString(@"Some of these packages cannot be removed.", @"alert title")];
+        [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"You are attempting to remove critical parts of the underlying TeX Live infrastructure, and I won't help you do that.", @"alert message text")]];
         [alert beginSheetModalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
     }
     else {

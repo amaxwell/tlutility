@@ -144,7 +144,7 @@ NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";     /
     [openPanel setResolvesAliases:NO];
     [openPanel setCanChooseFiles:NO];
     [openPanel setAllowsMultipleSelection:NO];
-    [openPanel setPrompt:NSLocalizedString(@"Choose", @"")];
+    [openPanel setPrompt:NSLocalizedString(@"Choose", @"button title in open panel (must be short)")];
     [openPanel beginSheetForDirectory:@"/usr" file:nil 
                        modalForWindow:[self window] modalDelegate:self 
                        didEndSelector:@selector(openPanelDidEnd:returnCode:contextInfo:) contextInfo:NULL];
@@ -201,10 +201,11 @@ NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";     /
 
 - (BOOL)control:(NSControl *)control didFailToFormatString:(NSString *)string errorDescription:(NSString *)error
 {
-    NSAlert *alert = [NSAlert alertWithMessageText:error defaultButton:NSLocalizedString(@"Edit", @"") 
-                                   alternateButton:NSLocalizedString(@"Ignore", @"") 
+    NSAlert *alert = [NSAlert alertWithMessageText:error 
+                                     defaultButton:NSLocalizedString(@"Edit", @"button title") 
+                                   alternateButton:NSLocalizedString(@"Ignore", @"button title") 
                                        otherButton:nil 
-                         informativeTextWithFormat:NSLocalizedString(@"Choose \"Edit\" to fix the value, or \"Ignore\" to use the invalid URL.", @"")];
+                         informativeTextWithFormat:NSLocalizedString(@"Choose \"Edit\" to fix the value, or \"Ignore\" to use the invalid URL.", @"alert message text, Edit and Ignore are button titles")];
     NSInteger rv = [alert runModal];
     
     // return YES to accept as-is, NO to edit again
