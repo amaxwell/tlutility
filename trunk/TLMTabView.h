@@ -52,6 +52,7 @@
     NSMutableArray     *_views;
     NSView             *_currentView;
     NSView             *_previousView;
+    NSInteger           _selectedIndex;
     id                  _delegate;
 }
 
