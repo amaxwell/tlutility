@@ -101,7 +101,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = F9DCD3590F06F08C00600DD2 /* Sparkle.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* Sparkle */;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
 			remoteInfo = Sparkle;
 		};
 /* End PBXContainerItemProxy section */

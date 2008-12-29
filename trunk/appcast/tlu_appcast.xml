@@ -1,22 +1,36 @@
-<?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle"  xmlns:dc="http://purl.org/dc/elements/1.1/">
-   <channel>
-      <title>TeX Live Utility Changelog</title>
-      <link>http://mactlmgr.googlecode.com/svn/trunk/appcast/tlu_appcast.xml</link>
-      <description>Most recent changes with links to updates.</description>
-      <language>en</language>
-         <item>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">
+    <channel>
+        <title>TeX Live Utility Changelog</title>
+        <link>http://mactlmgr.googlecode.com/svn/trunk/appcast/tlu_appcast.xml</link>
+        <description>Most recent changes with links to updates.</description>
+        <language>en</language>
+        <item>
             <title>Version 0.2</title>
-			<description>
-			    <h3>Changes Since 0.1</h3>
-			    <li>Added update checking via Sparkle</li>
-			    <li>Rewrote authorized operation to use a kqueue</li>
-			    <li>Exit status of tlmgr_cwrapper is now used</li>
-			    <li>Added a warning when canceling an update/install operation</li>
-			    <li>Use correct button check for reinstall warning</li>
+            <description>
+                <h3>Changes Since 0.1</h3>
+                <li>Added update checking via Sparkle</li>
+                <li>Rewrote authorized operation to use a kqueue</li>
+                <li>Exit status of tlmgr_cwrapper is now used</li>
+                <li>Added a warning when canceling an update/install operation</li>
+                <li>Use correct button check for reinstall warning</li>
             </description>
             <pubDate>Sun, 28 Dec 2008 02:10:48 +0000</pubDate>
-            <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20081227.zip" sparkle:version="0.2" length="1178579" type="application/octet-stream" sparkle:dsaSignature="MCwCFDThD5RwgE0jruAUdYbJduHJ1dYEAhRrZXdjKtXdmSih8aKbWNIXivhi8Q==" />
-         </item>
-   </channel>
+            <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20081227.zip" sparkle:version="0.2" length="1178579" type="application/octet-stream" sparkle:dsaSignature="MCwCFDThD5RwgE0jruAUdYbJduHJ1dYEAhRrZXdjKtXdmSih8aKbWNIXivhi8Q=="></enclosure>
+        </item>
+        <item>
+            <title>Version 0.3</title>
+            <description>
+                <h3>Changes Since 0.3</h3>
+                <li>Added a flag for forcibly removed packages</li>
+                <li>Forcibly removed packages can be installed from Update tab</li>
+                <li>Only scroll the log table if it's already at the end</li>
+                <li>Disable automatic updates via Sparkle</li>
+                <li>Attempt to validate mirror URLs entered in preferences</li>
+                <li>Added Localizable.strings file</li>
+            </description>
+            <pubDate>Sun, 28 Dec 2008 19:13:41 -0800</pubDate>
+            <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20081228.tgz" sparkle:version="0.3" length="1062540" type="application/octet-stream" sparkle:dsaSignature="MC0CFCxb8ITgBhhBkWSVUyDrSHepad83AhUAiBGwmbzK87e0BR9kxciXl3ce54Q="></enclosure>
+        </item>
+    </channel>
 </rss>
