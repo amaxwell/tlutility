@@ -88,6 +88,9 @@ assert oldVersion is not None, "unable to read old version from Info.plist"
 infoPlist["CFBundleVersion"] = newVersion
 plistlib.writePlist(infoPlist, PLIST_PATH)
 
+# sanity check to avoid screwing up the appcast
+assert oldVersion != newVersion, "CFBundleVersion is already at " + newVersion
+
 # clean and rebuild the Xcode project
 buildCmd = ["/usr/bin/xcodebuild", "-configuration", "Release", "-target", "TeX Live Utility", "clean", "build"]
 nullDevice = open("/dev/null", "r")
