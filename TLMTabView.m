@@ -49,13 +49,19 @@
 - (void)_commonInit
 {
     _tabControl = [[NSSegmentedControl allocWithZone:[self zone]] initWithFrame:NSZeroRect];
+    
+    // margin value is based on this segment style, unfortunately
+#define TAB_CONTROL_MARGIN 1.0
     [_tabControl setSegmentStyle:NSSegmentStyleSmallSquare];
+    
     [self addSubview:_tabControl];
     [_tabControl setSegmentCount:0];
     [_tabControl setTarget:self];
     [_tabControl setAction:@selector(changeView:)];
     [_tabControl setAutoresizingMask:NSViewMinYMargin | NSViewMinXMargin | NSViewMaxXMargin];
     _views = [NSMutableArray new];    
+    
+    _selectedIndex = -1;
 }
 
 - (id)initWithFrame:(NSRect)frame {
@@ -84,8 +90,6 @@
     [super dealloc];
 }
 
-#define TAB_CONTROL_MARGIN 1.0
-
 - (void)addTabNamed:(NSString *)tabName withView:(NSView *)aView;
 {
     NSParameterAssert(tabName);
@@ -99,7 +103,7 @@
     [_tabControl setFrame:[self centerScanRect:frame]];
     [_views addObject:aView];
     
-    if ([_tabControl selectedSegment] == -1)
+    if (-1 == _selectedIndex)
         [self selectViewAtIndex:0];
 }
 
@@ -123,8 +127,14 @@
 - (void)selectViewAtIndex:(NSUInteger)anIndex;
 {
     NSParameterAssert(anIndex < [_views count]);
+
+    // !!! early return if this view is already selected, or else it gets faded out of existence...
+    if ((NSInteger)anIndex == _selectedIndex)
+        return;
+    
+    _selectedIndex = anIndex;
     [_tabControl setSelectedSegment:anIndex];
-    NSView *nextView = [_views objectAtIndex:anIndex];
+    NSView *nextView = [self viewAtIndex:anIndex];
     NSRect viewFrame = [self bounds];
     viewFrame.size.height -= (NSHeight([_tabControl frame]) - 3 * TAB_CONTROL_MARGIN);
     [nextView setFrame:viewFrame];
@@ -151,7 +161,8 @@
 - (IBAction)changeView:(id)sender
 {
     NSParameterAssert([_tabControl segmentCount]);
-    [self selectViewAtIndex:[_tabControl selectedSegment]];
+    if ([_tabControl selectedSegment] != _selectedIndex)
+        [self selectViewAtIndex:[_tabControl selectedSegment]];
 }
 
 - (void)drawRect:(NSRect)dirtyRect {
