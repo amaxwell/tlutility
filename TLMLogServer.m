@@ -60,8 +60,11 @@ static NSArray *_runLoopModes = nil;
 + (id)sharedServer
 {
     static id sharedServer = nil;
-    if (nil == sharedServer)
+    if (nil == sharedServer) {
+        // raise on any accidental calls during -init, since this is not reentrant
+        sharedServer = [NSNull null];
         sharedServer = [self new];
+    }
     return sharedServer;
 }
 
@@ -72,7 +75,7 @@ static NSConnection * __TLMLSCreateAndRegisterConnectionForServer(TLMLogServer *
     [connection addRequestMode:NSEventTrackingRunLoopMode];
     [connection setRootObject:[NSProtocolChecker protocolCheckerWithTarget:server protocol:@protocol(TLMLogServerProtocol)]];
     if ([connection registerName:SERVER_NAME] == NO)
-        TLMLog(@"TLMLogServer", @"-[TLMLogServer init] Failed to register connection named %@", SERVER_NAME);
+        NSLog(@"-[TLMLogServer init] Failed to register connection named %@", SERVER_NAME);
     [[NSNotificationCenter defaultCenter] addObserver:server
                                              selector:@selector(_handleConnectionDied:) 
                                                  name:NSConnectionDidDieNotification
