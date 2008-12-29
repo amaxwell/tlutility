@@ -39,6 +39,8 @@
 #import "TLMTabView.h"
 #import <QuartzCore/QuartzCore.h>
 
+#define USE_LAYERS 0
+
 @implementation TLMTabView
 
 @synthesize tabControl = _tabControl;
@@ -53,16 +55,7 @@
     [_tabControl setTarget:self];
     [_tabControl setAction:@selector(changeView:)];
     [_tabControl setAutoresizingMask:NSViewMinYMargin | NSViewMinXMargin | NSViewMaxXMargin];
-    _views = [NSMutableArray new];
-    
-    // only set delegate on alpha animation, since we only need the delegate callback once
-    CABasicAnimation *fadeAnimation = [CABasicAnimation animationWithKeyPath:@"alphaValue"];
-    [fadeAnimation setDelegate:self];
-    
-    NSMutableDictionary *animations = [NSMutableDictionary dictionary];
-    [animations addEntriesFromDictionary:[self animations]];
-    [animations setObject:fadeAnimation forKey:@"alphaValue"];
-    [self setAnimations:animations];    
+    _views = [NSMutableArray new];    
 }
 
 - (id)initWithFrame:(NSRect)frame {
@@ -117,9 +110,13 @@
 
 - (void)animationDidStop:(CAPropertyAnimation *)anim finished:(BOOL)flag;
 {
-    if (flag && [_previousView isDescendantOf:self]) {
+    [[_previousView animationForKey:@"alphaValue"] setDelegate:nil];
+    if (flag && [_previousView isDescendantOf:self])
         [_previousView removeFromSuperview];
-        _previousView = nil;
+    _previousView = nil;
+    if (flag) {
+        [self setWantsLayer:NO];
+        [self setNeedsDisplay:YES];
     }
 }
 
@@ -135,10 +132,16 @@
     if (_currentView) {
         [nextView setAlphaValue:0.0];
     }
-    [self setWantsLayer:YES];
     [self addSubview:nextView];
+#if USE_LAYERS
+    [self setWantsLayer:YES];
+#endif
+    [NSAnimationContext beginGrouping];
+    // only set delegate on alpha animation, since we only need the delegate callback once
+    [[_currentView animationForKey:@"alphaValue"] setDelegate:self];
     [[_currentView animator] setAlphaValue:0.0];
     [[nextView animator] setAlphaValue:1.0];
+    [NSAnimationContext endGrouping];
     _previousView = _currentView;
     _currentView = nextView;
     if ([[self delegate] respondsToSelector:@selector(tabView:didSelectViewAtIndex:)])
@@ -149,12 +152,6 @@
 {
     NSParameterAssert([_tabControl segmentCount]);
     [self selectViewAtIndex:[_tabControl selectedSegment]];
-}
-
-- (void)viewDidMoveToSuperview
-{
-    [super viewDidMoveToSuperview];
-    [self setWantsLayer:YES];
 }
 
 - (void)drawRect:(NSRect)dirtyRect {
