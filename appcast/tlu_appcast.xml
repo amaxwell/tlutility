@@ -21,7 +21,7 @@
         <item>
             <title>Version 0.3</title>
             <description>
-                <h3>Changes Since 0.3</h3>
+                <h3>Changes Since 0.2</h3>
                 <li>Added a flag for forcibly removed packages</li>
                 <li>Forcibly removed packages can be installed from Update tab</li>
                 <li>Only scroll the log table if it's already at the end</li>
