@@ -66,8 +66,8 @@ def GetSymRoot():
     return xcprefs["PBXApplicationwideBuildSettings"]["SYMROOT"].stringByStandardizingPath()
 
 # fixed paths
-SOURCE_DIR = "/Volumes/Local/Users/amaxwell/build/mactlmgr"
-CERT_PATH = "/Volumes/Local/Users/amaxwell/Documents/dsa_priv.pem"
+SOURCE_DIR = os.path.expanduser("~/build/mactlmgr")
+CERT_PATH = os.path.expanduser("~/Documents/dsa_priv.pem")
 
 # derived paths
 BUILD_DIR = os.path.join(GetSymRoot(), "Release")
