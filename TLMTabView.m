@@ -114,10 +114,10 @@
     if (flag && [_previousView isDescendantOf:self])
         [_previousView removeFromSuperview];
     _previousView = nil;
-    if (flag) {
+#if USE_LAYERS
+    if (flag && [self wantsLayer])
         [self setWantsLayer:NO];
-        [self setNeedsDisplay:YES];
-    }
+#endif
 }
 
 - (void)selectViewAtIndex:(NSUInteger)anIndex;
