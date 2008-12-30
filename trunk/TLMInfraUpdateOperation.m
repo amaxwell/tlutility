@@ -3,8 +3,38 @@
 //  TeX Live Manager
 //
 //  Created by Adam Maxwell on 12/16/08.
-//  Copyright 2008 __MyCompanyName__. All rights reserved.
-//
+/*
+ This software is Copyright (c) 2008
+ Adam Maxwell. All rights reserved.
+ 
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
+ 
+ - Redistributions of source code must retain the above copyright
+ notice, this list of conditions and the following disclaimer.
+ 
+ - Redistributions in binary form must reproduce the above copyright
+ notice, this list of conditions and the following disclaimer in
+ the documentation and/or other materials provided with the
+ distribution.
+ 
+ - Neither the name of Adam Maxwell nor the names of any
+ contributors may be used to endorse or promote products derived
+ from this software without specific prior written permission.
+ 
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 
 #import "TLMInfraUpdateOperation.h"
 #import "TLMLogServer.h"
@@ -14,7 +44,6 @@
 #import <sys/stat.h>
 
 @implementation TLMInfraUpdateOperation
-
 
 - (id)initWithLocation:(NSURL *)location;
 {
@@ -50,16 +79,50 @@
         // note that --nox11 is required to avoid spawning an xterm on some systems
         NSMutableArray *options = [NSMutableArray arrayWithObjects:useRoot, _scriptPath, @"--nox11", nil];
         [self setOptions:options];
+        
     }
     return self;
 }
 
 - (void)dealloc
 {
+    [_download release];
     [_updateDirectory release];
     [_scriptPath release];
     [_location release];
     [super dealloc];
+}
+
+- (void)download:(NSURLDownload *)download didReceiveResponse:(NSURLResponse *)response;
+{
+    _expectedLength = [response expectedContentLength];
+}
+
+- (void)download:(NSURLDownload *)download didReceiveDataOfLength:(NSUInteger)length
+{
+    _receivedLength += length;
+    if (NSURLResponseUnknownLength != _expectedLength) {
+        
+        if ((CGFloat)(_receivedLength - _lastLoggedLength) / _expectedLength >= 0.20) {
+            CGFloat pct = (CGFloat)_receivedLength / _expectedLength * 100;
+            _lastLoggedLength = _receivedLength;
+            TLMLog(@"TLMInfraUpdateOperation", @"Received %.0f%% of %lld bytes...", pct, _expectedLength);
+        }
+    }
+}
+
+- (void)download:(NSURLDownload *)download didFailWithError:(NSError *)error
+{
+    [self setFailed:YES];
+    // should already be NO, but make sure...
+    _downloadComplete = NO;
+    TLMLog(@"TLMInfraUpdateOperation", @"Download failed: %@", error);
+}
+
+- (void)downloadDidFinish:(NSURLDownload *)download
+{
+    _downloadComplete = YES;
+    TLMLog(@"TLMInfraUpdateOperation", @"Download of %lld bytes complete", _receivedLength);
 }
 
 - (BOOL)_downloadUpdateScript
@@ -69,30 +132,43 @@
     CFURLRef fullURL = CFURLCreateCopyAppendingPathComponent(CFGetAllocator(base), (CFURLRef)base, (CFStringRef)path, FALSE);
     NSURL *scriptURL = [(id)fullURL autorelease];
     
-    NSURLResponse *response;
-    NSURLRequest *request = [NSURLRequest requestWithURL:scriptURL];
-    NSError *error;
+    NSURLRequest *request = [NSURLRequest requestWithURL:scriptURL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:60.0];
+    
+    NSParameterAssert(nil == _download);
+    _download = [[NSURLDownload alloc] initWithRequest:request delegate:self];
+    [_download setDestination:_scriptPath allowOverwrite:YES];
+    
     TLMLog(@"TLMInfraUpdateOperation", @"Downloading URL: %@", scriptURL);
-    
-    // FIXME: use async download to allow cancelling, since some of the mirrors are really slow
-    NSData *scriptData = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
-    BOOL success = NO;
-    if (nil != scriptData) {
-        TLMLog(@"TLMInfraUpdateOperation", @"Downloaded %lu bytes", (unsigned long)[scriptData length]);
-        if (NO == [scriptData writeToFile:_scriptPath options:0 error:&error])
-            TLMLog(@"TLMInfraUpdateOperation", @"%@", error);
-        else
-            success = YES;
-    }
-    else {
-        TLMLog(@"TLMInfraUpdateOperation", @"%@", error);
-    }
-    
+
+    bool keepGoing = true;
+
+    // functionally the same as +[NSURLConnection sendSynchronousRequest:returningResponse:error:], but allows user cancellation
+    do {
+        
+        CFRunLoopRunInMode(kCFRunLoopDefaultMode, 1.0, TRUE);
+        
+        // check user cancellation
+        if ([self isCancelled]) {
+            [_download cancel];
+            keepGoing = false;
+        }
+        // download failure
+        else if ([self failed]) {
+            keepGoing = false;
+        }
+        else if (_downloadComplete) {
+            keepGoing = false;
+        }
+        
+    } while (keepGoing);
+
     // set rwxr-xr-x
-    if (chmod([_scriptPath fileSystemRepresentation], S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH))
-        TLMLog(@"TLMInfraUpdateOperation", @"Failed to set script permissions: %s", strerror(errno));
+    if (_downloadComplete && chmod([_scriptPath fileSystemRepresentation], S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH)) {
+        const char *s = strerror(errno);
+        TLMLog(@"TLMInfraUpdateOperation", @"Failed to set script permissions: %s", s);
+    }
     
-    return success;
+    return _downloadComplete;
 }
 
 - (void)main
