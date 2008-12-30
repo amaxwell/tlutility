@@ -47,7 +47,8 @@ NSString * const TLMLogServerUpdateNotification = @"TLMLogServerUpdateNotificati
 
 @synthesize messages = _messages;
 
-static NSArray *_runLoopModes = nil;
+static NSArray  *_runLoopModes = nil;
+static NSNumber *_processID = nil;
 
 + (void)initialize
 {
@@ -55,6 +56,9 @@ static NSArray *_runLoopModes = nil;
     NSString *rlmodes[] = { NSDefaultRunLoopMode, NSEventTrackingRunLoopMode, NSModalPanelRunLoopMode };
     if (nil == _runLoopModes)
         _runLoopModes = [[NSArray alloc] initWithObjects:rlmodes count:(sizeof(rlmodes) / sizeof(NSString *))];
+    
+    if (nil == _processID)
+        _processID = [[NSNumber alloc] initWithInteger:getpid()];
 }
 
 + (id)sharedServer
@@ -160,7 +164,7 @@ static NSConnection * __TLMLSCreateAndRegisterConnectionForServer(TLMLogServer *
     // If tlmgr_cwrapper fails to connect, it'll start logging to asl, so using this funnel point should be sufficient.
     // Added a pref since setting paper size causes syslog to crap itself.
     if ([[NSUserDefaults standardUserDefaults] boolForKey:TLMUseSyslogPreferenceKey])
-        asl_log(NULL, NULL, ASL_LEVEL_ERR, "%s", [[message message] UTF8String]);
+        asl_log(NULL, NULL, ASL_LEVEL_NOTICE, "%s", [[message message] UTF8String]);
 }
 
 @end
@@ -176,11 +180,17 @@ void TLMLog(NSString *sender, NSString *format, ...)
         sender = @"com.googlecode.mactlmgr";
     
     TLMLogMessage *msg = [[TLMLogMessage alloc] init];
-    [msg setDate:[NSDate date]];
+    
+    NSDate *date = [NSDate new];
+    [msg setDate:date];
+    [date release];
+    
     [msg setMessage:message];
     [msg setSender:sender];
-    [msg setLevel:@ASL_STRING_ERR];
-    [msg setPid:[NSNumber numberWithInteger:getpid()]];
+    
+    // default to notice, since most of the stuff we log is informational
+    [msg setLevel:@ASL_STRING_NOTICE];
+    [msg setPid:_processID];
     [[TLMLogServer sharedServer] logMessage:msg];
     [msg release];
     
