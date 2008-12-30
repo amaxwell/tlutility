@@ -73,6 +73,8 @@
     NSURLRequest *request = [NSURLRequest requestWithURL:scriptURL];
     NSError *error;
     TLMLog(@"TLMInfraUpdateOperation", @"Downloading URL: %@", scriptURL);
+    
+    // FIXME: use async download to allow cancelling, since some of the mirrors are really slow
     NSData *scriptData = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
     BOOL success = NO;
     if (nil != scriptData) {
@@ -97,12 +99,16 @@
 {
     NSAutoreleasePool *pool = [NSAutoreleasePool new];
     
-    if ([self _downloadUpdateScript])
+    // don't run if the user cancelled during download
+    if ([self _downloadUpdateScript] && NO == [self isCancelled])
         [super main];
    
     NSFileManager *fm = [NSFileManager new];
-    if (NO == [fm removeItemAtPath:_updateDirectory error:NULL])
-        TLMLog(@"TLMInfraUpdateOperation", @"Failed to delete directory \"%@\"", _updateDirectory);
+    NSError *error;
+    if ([fm removeItemAtPath:_updateDirectory error:&error])
+        TLMLog(@"TLMInfraUpdateOperation", @"Removed temp directory \"%@\"", _updateDirectory);
+    else
+        TLMLog(@"TLMInfraUpdateOperation", @"Failed to remove temp directory \"%@\": %@", _updateDirectory, error);
     [fm release];
     
     [pool release];
