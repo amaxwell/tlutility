@@ -49,9 +49,9 @@ struct TLMAOInternal {
     int              _kqueue;
     pid_t            _cwrapper_pid;
     struct kevent    _cwrapper_event;
-    pid_t            _tlmgr_pid;
-    struct kevent    _tlmgr_event;
-    BOOL             _childFinished;
+    pid_t            _underlying_pid;   /* tlmgr or update script  */
+    struct kevent    _underlying_event; /* tlmgr or update script  */
+    BOOL             _childFinished;    /* tlmgr_cwrapper finished */
     AuthorizationRef _authorization;
 };    
 
@@ -75,7 +75,7 @@ struct TLMAOInternal {
         
         // zero the kevent structures
         memset(&_internal->_cwrapper_event, 0, sizeof(struct kevent));
-        memset(&_internal->_tlmgr_event, 0, sizeof(struct kevent));
+        memset(&_internal->_underlying_event, 0, sizeof(struct kevent));
         
         _internal->_kqueue = kqueue();
     }
@@ -128,7 +128,7 @@ struct TLMAOInternal {
 
 - (void)_killChildProcesses
 {
-    TLMLog(nil, @"killing %d and %d", _internal->_tlmgr_pid, _internal->_cwrapper_pid);
+    TLMLog(nil, @"killing %d and %d", _internal->_underlying_pid, _internal->_cwrapper_pid);
     const char *killPath = "/bin/kill";
     char *killargs[] = { NULL, NULL, NULL, NULL };
     killargs[0] = "-KILL";
@@ -139,8 +139,8 @@ struct TLMAOInternal {
     killargs[2] = (char *)[[NSString stringWithFormat:@"%d", _internal->_cwrapper_pid] fileSystemRepresentation];
     
     // in case tlmgr has exited and tlmgr_cwrapper is hanging
-    if (_internal->_tlmgr_pid)
-        killargs[1] = (char *)[[NSString stringWithFormat:@"%d", _internal->_tlmgr_pid] fileSystemRepresentation];
+    if (_internal->_underlying_pid)
+        killargs[1] = (char *)[[NSString stringWithFormat:@"%d", _internal->_underlying_pid] fileSystemRepresentation];
     
     // !!! FIXME: what if authorization expires before we get here?  That's pretty likely...
     AuthorizationRef authorization = [self _authorization];
@@ -177,14 +177,27 @@ struct TLMAOInternal {
         kevent(_internal->_kqueue, &_internal->_cwrapper_event, 1, NULL, 0, NULL);
         
         // remove the tlmgr kevent from the queue
-        _internal->_tlmgr_event.flags = EV_DELETE;
-        kevent(_internal->_kqueue, &_internal->_tlmgr_event, 1, NULL, 0, NULL);
+        _internal->_underlying_event.flags = EV_DELETE;
+        kevent(_internal->_kqueue, &_internal->_underlying_event, 1, NULL, 0, NULL);
         
         // close the queue itself
         close(_internal->_kqueue);
         _internal->_kqueue = -1;
     }
-}    
+}   
+
+// process executed by tlmgr_cwrapper: either tlmgr or the update script
+- (NSString *)_underlyingProcessName
+{
+    NSArray *options = [self options];
+    
+    // first argument is y/n for tlmgr_cwrapper
+    if ([options count] < 2)
+        return @"*** ERROR ***: unknown process";
+    
+    // print the full path and all arguments
+    return [[options subarrayWithRange:NSMakeRange(1, [options count] - 1)] componentsJoinedByString:@" "];
+}
 
 - (void)_runUntilChildExit
 {
@@ -220,13 +233,13 @@ struct TLMAOInternal {
                 [self setFailed:(EXIT_SUCCESS != ret)];
                 TLMLog(@"TLMAuthorizedOperation", @"kqueue noted that tlmgr_cwrapper (pid = %d) exited with status %d", event.ident, ret);
             }
-            else if ((pid_t)event.ident == _internal->_tlmgr_pid) {
+            else if ((pid_t)event.ident == _internal->_underlying_pid) {
                 
                 // we only log the tlmgr PID for diagnostic purposes, since we can't get its exit status directly
-                TLMLog(@"TLMAuthorizedOperation", @"kqueue noted that tlmgr (pid = %d) exited", event.ident);
+                TLMLog(@"TLMAuthorizedOperation", @"kqueue noted that pid %d exited (%@)", event.ident, [self _underlyingProcessName]);
                 
                 // can no longer kill this process
-                _internal->_tlmgr_pid = 0;
+                _internal->_underlying_pid = 0;
             }
         }
         
@@ -261,6 +274,7 @@ struct TLMAOInternal {
         char **args = NSZoneCalloc([self zone], ([_options count] + 2), sizeof(char *));
         int i = 0;
         
+        // first argument is the DO server name for IPC
         args[i++] = (char *)[_serverName fileSystemRepresentation];
         
         // fill argv with autoreleased C-strings
@@ -308,12 +322,12 @@ struct TLMAOInternal {
     kevent(_internal->_kqueue, &_internal->_cwrapper_event, 1, NULL, 0, NULL);      
 }
 
-- (void)setTlmgrPID:(pid_t)pid;
+- (void)setUnderlyingPID:(pid_t)pid;
 {
-    _internal->_tlmgr_pid = pid;
-    TLMLog(@"TLMAuthorizedOperation", @"tlmgr_cwrapper checking in:  tlmgr pid = %d", pid);
-    EV_SET(&_internal->_tlmgr_event, pid, EVFILT_PROC, EV_ADD, NOTE_EXIT, 0, NULL);
-    kevent(_internal->_kqueue, &_internal->_tlmgr_event, 1, NULL, 0, NULL);      
+    _internal->_underlying_pid = pid;
+    TLMLog(@"TLMAuthorizedOperation", @"tlmgr_cwrapper checking in: pid = %d (%@)", pid, [self _underlyingProcessName]);
+    EV_SET(&_internal->_underlying_event, pid, EVFILT_PROC, EV_ADD, NOTE_EXIT, 0, NULL);
+    kevent(_internal->_kqueue, &_internal->_underlying_event, 1, NULL, 0, NULL);      
 }
 
 @end
