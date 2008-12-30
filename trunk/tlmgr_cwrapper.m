@@ -55,7 +55,7 @@
 @protocol TLMAuthOperationProtocol
 
 - (void)setWrapperPID:(in pid_t)pid;
-- (void)setTlmgrPID:(in pid_t)pid;
+- (void)setUnderlyingPID:(in pid_t)pid;
 
 @end
 
@@ -261,7 +261,7 @@ int main(int argc, char *argv[]) {
         
         @try {
             [parent setWrapperPID:getpid()];
-            [parent setTlmgrPID:child];
+            [parent setUnderlyingPID:child];
         }
         @catch (id exception) {
             log_error(@"failed to send PID to server:\n\t%@", exception);

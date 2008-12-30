@@ -56,7 +56,7 @@
 @protocol TLMAuthOperationProtocol
 
 - (void)setWrapperPID:(in pid_t)pid;
-- (void)setTlmgrPID:(in pid_t)pid;
+- (void)setUnderlyingPID:(in pid_t)pid;
 
 @end
 
