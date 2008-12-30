@@ -39,6 +39,32 @@
 #import "TLMTabView.h"
 #import <QuartzCore/QuartzCore.h>
 
+@interface _TLMImageView : NSView
+{
+    NSImage *_image;
+    CGFloat  _imageAlphaValue;
+}
+@property (readwrite) CGFloat imageAlphaValue;
+@property (readwrite, retain) NSImage *image;
+@end
+
+@implementation _TLMImageView
+
+@synthesize imageAlphaValue = _imageAlphaValue;
+@synthesize image = _image;
+
+- (BOOL)isOpaque { return NO; }
+
+- (void)drawRect:(NSRect)aRect
+{
+    aRect = [self bounds];
+    [[NSColor clearColor] setFill];
+    NSRectFillUsingOperation(aRect, NSCompositeSourceOver);
+    [[self image] drawInRect:aRect fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:[self imageAlphaValue]];
+}
+
+@end
+
 @implementation TLMTabView
 
 @synthesize delegate = _delegate;
@@ -58,16 +84,12 @@
     [_tabControl setAutoresizingMask:NSViewMinYMargin | NSViewMinXMargin | NSViewMaxXMargin];
     _views = [NSMutableArray new];    
     
-    NSImageView *imageViews[2];
-    imageViews[0] = [[NSImageView allocWithZone:[self zone]] initWithFrame:[self frame]];
-    imageViews[1] = [[NSImageView allocWithZone:[self zone]] initWithFrame:[self frame]];
+    _TLMImageView *imageViews[2];
+    imageViews[0] = [[_TLMImageView allocWithZone:[self zone]] initWithFrame:[self frame]];
+    imageViews[1] = [[_TLMImageView allocWithZone:[self zone]] initWithFrame:[self frame]];
     _transitionViews = [[NSArray allocWithZone:[self zone]] initWithObjects:imageViews count:2];
-    for (NSImageView *imageView in _transitionViews) {
-        [imageView setWantsLayer:YES];
-        [imageView setImageScaling:NSImageScaleProportionallyUpOrDown];
-        [imageView setImageFrameStyle:NSImageFrameNone];
-        [imageView setImageAlignment:NSImageAlignCenter];        
-    }
+    [imageViews[0] setImageAlphaValue:1.0];
+    [imageViews[1] setImageAlphaValue:1.0];
     
     _selectedIndex = -1;
 }
@@ -121,24 +143,79 @@
     return [_views objectAtIndex:anIndex];
 }
 
-- (void)animationDidStop:(CAPropertyAnimation *)anim finished:(BOOL)flag;
+- (void)animationFired:(NSTimer *)timer
 {
-    if (flag) {
-        [[[_transitionViews objectAtIndex:0] animationForKey:@"alphaValue"] setDelegate:nil];
-        [[[_transitionViews objectAtIndex:1] animationForKey:@"alphaValue"] setDelegate:nil];
+    NSAnimation *animation = [timer userInfo];
+    CGFloat value = [animation currentValue];
+    if (value > 0.99) {
+        [animation stopAnimation];
+        [timer invalidate];
         [_transitionViews makeObjectsPerformSelector:@selector(removeFromSuperview)];     
-        [self setWantsLayer:NO];
-        
         NSParameterAssert([_currentView isDescendantOf:self]);
-        if ([_currentView isHidden]) {
-            [_currentView setHidden:NO];
-            [self setNeedsDisplay:YES];
-        }
+        [_currentView setHidden:NO];
+        [self setNeedsDisplay:YES];
+    }
+    else {
+        [[_transitionViews objectAtIndex:0] setImageAlphaValue:(1 - value)];
+        [[_transitionViews objectAtIndex:1] setImageAlphaValue:value];    
+        [self displayRectIgnoringOpacity:[[_transitionViews objectAtIndex:0] frame]];
     }
 }
 
-#define TRANSPARENT 0.0
-#define OPAQUE 1.0
+- (void)_transitionToView:(NSView *)nextView
+{
+    // will unhide when animation finishes
+    [nextView setHidden:YES];
+    
+    // use the same frame; no autoresizing needed for these
+    [[_transitionViews objectAtIndex:0] setFrame:[nextView frame]];
+    [[_transitionViews objectAtIndex:1] setFrame:[nextView frame]];
+    
+    NSBitmapImageRep *imageRep;
+    NSImage *image;
+    
+    // cache the currently displayed view to a bitmap and set it initially opaque
+    imageRep = [_currentView bitmapImageRepForCachingDisplayInRect:[_currentView bounds]];
+    [_currentView cacheDisplayInRect:[_currentView bounds] toBitmapImageRep:imageRep];
+    image = [[NSImage alloc] initWithSize:[_currentView bounds].size];
+    [image addRepresentation:imageRep];
+    [[_transitionViews objectAtIndex:0] setImage:image];
+    [[_transitionViews objectAtIndex:1] setImageAlphaValue:1.0];
+    [image release];
+    
+    // only remove after caching to bitmap
+    [_currentView removeFromSuperviewWithoutNeedingDisplay];
+    
+    // now cache the next view to a bitmap and set it initially transparent
+    imageRep = [nextView bitmapImageRepForCachingDisplayInRect:[nextView bounds]];
+    [nextView cacheDisplayInRect:[nextView bounds] toBitmapImageRep:imageRep];
+    image = [[NSImage alloc] initWithSize:[nextView bounds].size];
+    [image addRepresentation:imageRep];
+    [[_transitionViews objectAtIndex:1] setImage:image];
+    [[_transitionViews objectAtIndex:1] setImageAlphaValue:0.0];
+    [image release];
+    
+    // add both image views as subviews
+    [self addSubview:[_transitionViews objectAtIndex:0]];
+    [self addSubview:[_transitionViews objectAtIndex:1]];  
+    
+    // in case they were hidden by the animator (not at present)
+    [[_transitionViews objectAtIndex:0] setHidden:NO];
+    [[_transitionViews objectAtIndex:1] setHidden:NO];
+    
+    // avoid an initial flash before the timer fires, since _currentView was removed
+    [self displayRectIgnoringOpacity:[[_transitionViews objectAtIndex:0] frame]];
+    
+    // set now, since the timer callback needs it
+    _currentView = nextView;
+    
+    // animate ~30 fps for 0.3 seconds, using NSAnimation to get the alpha curve
+    NSAnimation *animation = [[NSAnimation alloc] initWithDuration:0.3 animationCurve:NSAnimationEaseInOut]; 
+    [animation setAnimationBlockingMode:NSAnimationNonblockingThreaded];
+    [NSTimer scheduledTimerWithTimeInterval:0.03 target:self selector:@selector(animationFired:) userInfo:animation repeats:YES];
+    [animation startAnimation];
+    [animation release];    
+}
 
 - (void)selectViewAtIndex:(NSUInteger)anIndex;
 {
@@ -150,6 +227,7 @@
     
     _selectedIndex = anIndex;
     [_tabControl setSelectedSegment:anIndex];
+    
     NSView *nextView = [self viewAtIndex:anIndex];
     NSRect viewFrame = [self bounds];
     viewFrame.size.height -= (NSHeight([_tabControl frame]) - 3 * TAB_CONTROL_MARGIN);
@@ -159,56 +237,13 @@
     [self addSubview:nextView];
     [self setNeedsDisplay:YES];
 
+    // if this is the initial display, we don't want to animate anything
     if ([_currentView isDescendantOf:self]) {
-        
-        // will unhide when animation finishes
-        [nextView setHidden:YES];
-        [self setWantsLayer:YES];
-
-        [[_transitionViews objectAtIndex:0] setFrame:viewFrame];
-        [[_transitionViews objectAtIndex:1] setFrame:viewFrame];
-        
-        NSBitmapImageRep *imageRep;
-        NSImage *image;
-        
-        // cache the currently displayed view to a bitmap
-        imageRep = [_currentView bitmapImageRepForCachingDisplayInRect:[_currentView bounds]];
-        [_currentView cacheDisplayInRect:[_currentView bounds] toBitmapImageRep:imageRep];
-        image = [[NSImage alloc] initWithSize:[_currentView bounds].size];
-        [image addRepresentation:imageRep];
-        [[_transitionViews objectAtIndex:0] setImage:image];
-        [[_transitionViews objectAtIndex:0] setAlphaValue:OPAQUE];
-        [image release];
-        
-        // only remove after caching to bitmap
-        [_currentView removeFromSuperviewWithoutNeedingDisplay];
-        
-        // now cache the final view to a bitmap
-        imageRep = [nextView bitmapImageRepForCachingDisplayInRect:[nextView bounds]];
-        [nextView cacheDisplayInRect:[nextView bounds] toBitmapImageRep:imageRep];
-        image = [[NSImage alloc] initWithSize:[nextView bounds].size];
-        [image addRepresentation:imageRep];
-        [[_transitionViews objectAtIndex:1] setImage:image];
-        [[_transitionViews objectAtIndex:1] setAlphaValue:TRANSPARENT];
-        [image release];
-        
-        // add both image views as subviews
-        [self addSubview:[_transitionViews objectAtIndex:0]];
-        [self addSubview:[_transitionViews objectAtIndex:1]];      
-        [self setNeedsDisplay:YES];
-        
-        // use the delegate method to find out when the animation is complete
-        [[[_transitionViews objectAtIndex:0] animationForKey:@"alphaValue"] setDelegate:self];
-        [[[_transitionViews objectAtIndex:1] animationForKey:@"alphaValue"] setDelegate:self];        
-                
-        [NSAnimationContext beginGrouping];
-        // ??? why does [[NSAnimationContext currentContext] setDuration:] have no effect here?
-        [[[_transitionViews objectAtIndex:0] animator] setAlphaValue:TRANSPARENT];
-        [[[_transitionViews objectAtIndex:1] animator] setAlphaValue:OPAQUE];
-        [NSAnimationContext endGrouping];        
+        [self _transitionToView:nextView];
     }
-
-    _currentView = nextView;
+    else {
+        _currentView = nextView;
+    }
     
     if ([[self delegate] respondsToSelector:@selector(tabView:didSelectViewAtIndex:)])
         [(id <TLMTabViewDelegate>)[self delegate] tabView:self didSelectViewAtIndex:anIndex];
