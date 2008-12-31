@@ -397,7 +397,7 @@ static char _TLMOperationQueueOperationContext;
         NSAlert *alert = [[NSAlert new] autorelease];
         [alert setMessageText:NSLocalizedString(@"An installation is running!", @"alert title")];
         [alert setAlertStyle:NSCriticalAlertStyle];
-        [alert setInformativeText:NSLocalizedString(@"If you close the window, the installation process may leave your TeX installation in an unknown state.  You can ignore this warning and cancel the process anyway, or keep waiting until the installation finishes.", @"alert message text")];
+        [alert setInformativeText:NSLocalizedString(@"If you cancel the installation process, it may leave your TeX installation in an unknown state.  You can ignore this warning and cancel anyway, or keep waiting until the installation finishes.", @"alert message text")];
         [alert addButtonWithTitle:NSLocalizedString(@"Keep Waiting", @"button title")];
         [alert addButtonWithTitle:NSLocalizedString(@"Cancel Anyway", @"button title")];
         [alert beginSheetModalForWindow:[self window]
