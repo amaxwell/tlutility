@@ -45,26 +45,28 @@
  
  */
 
+@protocol TLMTabViewDelegate;
+
 @interface TLMTabView : NSView 
 {
 @private
-    NSSegmentedControl *_tabControl;
-    NSMutableArray     *_views;
-    NSView             *_currentView;
-    NSInteger           _selectedIndex;
-    id                  _delegate;
-    NSArray            *_transitionViews;
+    NSSegmentedControl      *_tabControl;
+    NSMutableArray          *_views;
+    NSView                  *_currentView;
+    NSInteger                _selectedIndex;
+    id <TLMTabViewDelegate>  _delegate;
+    NSArray                 *_transitionViews;
 }
 
 - (void)addTabNamed:(NSString *)tabName withView:(NSView *)aView;
 - (NSView *)viewAtIndex:(NSUInteger)anIndex;
 - (void)selectViewAtIndex:(NSUInteger)anIndex;
 
-@property (nonatomic, assign) id delegate;
+@property (nonatomic, assign) id <TLMTabViewDelegate> delegate;
 
 @end
 
-@protocol TLMTabViewDelegate
+@protocol TLMTabViewDelegate <NSObject>
 @optional
 - (void)tabView:(TLMTabView *)tabView didSelectViewAtIndex:(NSUInteger)anIndex;
 @end

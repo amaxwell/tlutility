@@ -246,7 +246,7 @@
     }
     
     if ([[self delegate] respondsToSelector:@selector(tabView:didSelectViewAtIndex:)])
-        [(id <TLMTabViewDelegate>)[self delegate] tabView:self didSelectViewAtIndex:anIndex];
+        [[self delegate] tabView:self didSelectViewAtIndex:anIndex];
 }
 
 - (IBAction)changeView:(id)sender
