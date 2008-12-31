@@ -37,16 +37,16 @@
  */
 
 #import <Cocoa/Cocoa.h>
+#import "TLMTabView.h"
 
 @class TLMSplitView;
 @class TLMLogDataSource;
 @class TLMStatusView;
 @class TLMPackageListDataSource;
 @class TLMUpdateListDataSource;
-@class TLMTabView;
 @class TLMGradientView;
 
-@interface TLMMainWindowController : NSWindowController 
+@interface TLMMainWindowController : NSWindowController <TLMTabViewDelegate>
 {
 @private
     NSProgressIndicator      *_progressIndicator;

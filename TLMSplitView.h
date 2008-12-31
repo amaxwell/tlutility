@@ -41,7 +41,7 @@
 @interface TLMSplitView : NSSplitView
 @end
 
-@protocol TLMSplitViewDelegate
+@protocol TLMSplitViewDelegate <NSObject>
 @optional
 - (void)splitView:(TLMSplitView *)splitView doubleClickedDividerAt:(NSUInteger)subviewIndex;
 @end
