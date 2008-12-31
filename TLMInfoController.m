@@ -108,6 +108,8 @@
                                              selector:@selector(handleContentViewBoundsChanged:) 
                                                  name:NSViewBoundsDidChangeNotification 
                                                object:[[self window] contentView]];
+    
+    [_spinner setUsesThreadedAnimation:YES];
 }
 
 - (NSString *)windowNibName { return @"InfoPanel"; }
