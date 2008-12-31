@@ -93,16 +93,30 @@
     [super dealloc];
 }
 
+- (NSURLRequest *)download:(NSURLDownload *)download willSendRequest:(NSURLRequest *)request redirectResponse:(NSURLResponse *)response;
+{
+    /*
+     !!! Why is http://ctan.binkerton.com/systems/texlive/tlnet/2008/update-tlmgr-latest.sh redirecting to this stupid window that displays the script in a frame?
+     http://ctan.binkerton.com/ctan.readme.php?filename=systems/texlive/tlnet/2008/update-tlmgr-latest.sh
+     
+     The Purdue mirror also redirects, but it allows downloading the script...so canceling here isn't correct.
+     
+    */
+    long long len = [response expectedContentLength];
+    TLMLog(@"TLMInfraUpdateOperation", @"Download redirected to %@, expecting %lld bytes.", [request URL], len);
+    return request;
+}
+
 - (void)download:(NSURLDownload *)download didReceiveResponse:(NSURLResponse *)response;
 {
     _expectedLength = [response expectedContentLength];
+    TLMLog(@"TLMInfraUpdateOperation", @"Will download %lld bytes...", _expectedLength);
 }
 
 - (void)download:(NSURLDownload *)download didReceiveDataOfLength:(NSUInteger)length
 {
     _receivedLength += length;
     if (NSURLResponseUnknownLength != _expectedLength) {
-        
         if ((CGFloat)(_receivedLength - _lastLoggedLength) / _expectedLength >= 0.20) {
             CGFloat pct = (CGFloat)_receivedLength / _expectedLength * 100;
             _lastLoggedLength = _receivedLength;
