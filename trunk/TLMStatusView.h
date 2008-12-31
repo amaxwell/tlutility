@@ -43,7 +43,6 @@
 @private
     NSAttributedString *_statusString;
     NSRect              _stringRect;
-    NSColor            *_fillColor;
 }
 
 - (void)fadeIn;
