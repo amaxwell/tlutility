@@ -128,6 +128,9 @@ static char _TLMOperationQueueOperationContext;
     [_tabView setDelegate:self];
     [_tabView addTabNamed:NSLocalizedString(@"Manage Updates", @"tab title") withView:[[_updateListDataSource tableView]  enclosingScrollView]];
     [_tabView addTabNamed:NSLocalizedString(@"Manage Packages", @"tab title") withView:[[_packageListDataSource outlineView] enclosingScrollView]];
+    
+    // 10.5 release notes say this is enabled by default, but they're wrong
+    [_progressIndicator setUsesThreadedAnimation:YES];
 }
 
 - (void)windowDidLoad
