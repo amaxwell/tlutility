@@ -41,8 +41,6 @@
 
 @implementation TLMGradientView
 
-@synthesize gradient = _gradient;
-
 - (id)initWithFrame:(NSRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
@@ -58,12 +56,16 @@
     [super dealloc];
 }
 
+// assumes solid colors
 - (BOOL)isOpaque { return YES; }
 
 - (void)drawRect:(NSRect)dirtyRect 
 {
     [super drawRect:dirtyRect];
-    [_gradient drawInRect:[self bounds] angle:90.0];
+    
+    // we have a vertically-varying gradient, so fill the entire height
+    dirtyRect.size.height = NSHeight([self bounds]);
+    [_gradient drawInRect:dirtyRect angle:90.0];
 }
 
 @end

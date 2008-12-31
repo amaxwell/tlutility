@@ -45,6 +45,4 @@
     NSGradient *_gradient;
 }
 
-@property (readwrite, copy) NSGradient *gradient;
-
 @end
