@@ -84,6 +84,12 @@
     }    
 }
 
+- (void)dealloc
+{
+    [_mainWindowController release];
+    [super dealloc];
+}
+
 - (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender
 {
     return ([_mainWindowController windowShouldClose:sender]) ? NSTerminateNow : NSTerminateCancel;

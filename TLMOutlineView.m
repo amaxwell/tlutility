@@ -50,6 +50,13 @@
 @synthesize fontNamePreferenceKey = _fontNamePreferenceKey;
 @synthesize fontSizePreferenceKey = _fontSizePreferenceKey;
 
+- (void)dealloc
+{
+    [_fontNamePreferenceKey release];
+    [_fontSizePreferenceKey release];
+    [super dealloc];
+}
+
 - (BOOL)dataSourceAllowsCopying
 {
     return [[self dataSource] respondsToSelector:@selector(outlineView:writeSelectedRowsToPasteboard:)];

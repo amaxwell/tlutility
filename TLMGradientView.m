@@ -52,6 +52,12 @@
     return self;
 }
 
+- (void)dealloc
+{
+    [_gradient release];
+    [super dealloc];
+}
+
 - (BOOL)isOpaque { return YES; }
 
 - (void)drawRect:(NSRect)dirtyRect 

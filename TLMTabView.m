@@ -53,6 +53,12 @@
 @synthesize imageAlphaValue = _imageAlphaValue;
 @synthesize image = _image;
 
+- (void)dealloc
+{
+    [_image release];
+    [super dealloc];
+}
+
 - (BOOL)isOpaque { return NO; }
 
 - (void)drawRect:(NSRect)aRect
@@ -84,12 +90,13 @@
     [_tabControl setAutoresizingMask:NSViewMinYMargin | NSViewMinXMargin | NSViewMaxXMargin];
     _views = [NSMutableArray new];    
     
-    _TLMImageView *imageViews[2];
-    imageViews[0] = [[_TLMImageView allocWithZone:[self zone]] initWithFrame:[self frame]];
-    imageViews[1] = [[_TLMImageView allocWithZone:[self zone]] initWithFrame:[self frame]];
-    _transitionViews = [[NSArray allocWithZone:[self zone]] initWithObjects:imageViews count:2];
-    [imageViews[0] setImageAlphaValue:1.0];
-    [imageViews[1] setImageAlphaValue:1.0];
+    NSMutableArray *transitionViews = [NSMutableArray array];
+    for (int i = 0; i < 2; i++) {
+        _TLMImageView *imageView = [[_TLMImageView allocWithZone:[self zone]] initWithFrame:[self frame]];
+        [transitionViews addObject:imageView];
+        [imageView release];
+    }
+    _transitionViews = [transitionViews copy];
     
     _selectedIndex = -1;
 }
