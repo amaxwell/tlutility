@@ -110,7 +110,18 @@
 - (void)download:(NSURLDownload *)download didReceiveResponse:(NSURLResponse *)response;
 {
     _expectedLength = [response expectedContentLength];
-    TLMLog(@"TLMInfraUpdateOperation", @"Will download %lld bytes...", _expectedLength);
+    
+    // running random crap as root is really not a good idea...
+    if (NSURLResponseUnknownLength != _expectedLength && _expectedLength < 1024 * 1024) {
+        TLMLog(@"TLMInfraUpdateOperation", @"Unexpected download size %lld bytes", _expectedLength);
+        TLMLog(@"TLMInfraUpdateOperation", @"*** Cancelling download due to a potential security problem. ***\nDownload should be at least 1 megabyte, so this may be a defective mirror.\nTry another mirror and notify the developer.");
+        _downloadComplete = NO;
+        [download cancel];
+        [self setFailed:YES];
+    }
+    else {
+        TLMLog(@"TLMInfraUpdateOperation", @"Will download %lld bytes...", _expectedLength);
+    }
 }
 
 - (void)download:(NSURLDownload *)download didReceiveDataOfLength:(NSUInteger)length
@@ -177,10 +188,36 @@
     } while (keepGoing);
 
     // set rwxr-xr-x
-    if (_downloadComplete && chmod([_scriptPath fileSystemRepresentation], S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH)) {
-        const char *s = strerror(errno);
-        TLMLog(@"TLMInfraUpdateOperation", @"Failed to set script permissions: %s", s);
-    }
+    if (_downloadComplete) {
+        
+        const char *fs_path = [_scriptPath fileSystemRepresentation];
+        if (chmod(fs_path, S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH)) {
+            const char *s = strerror(errno);
+            TLMLog(@"TLMInfraUpdateOperation", @"Failed to set script permissions: %s", s);
+            [self setFailed:YES];
+        }
+        else {
+            
+            // another check to make sure we don't end up running random crap as root
+            
+            // if we get here, we're guaranteed that the file exists, is readable, and has length > 1024 * 1024
+            FILE *strm = fopen(fs_path, "r");
+            size_t len;
+            char *firstLine = fgetln(strm, &len);
+            if (firstLine) firstLine[(len - 1)] = '\0';
+
+            if (firstLine && strncmp(firstLine, "#!", 2) != 0) {
+                TLMLog(@"TLMInfraUpdateOperation", @"*** ERROR *** Downloaded file does not start with #!");
+                TLMLog(@"TLMInfraUpdateOperation", @"*** ERROR *** First line is: \"%s\"", firstLine);
+                [self setFailed:YES];
+            }      
+            else if (firstLine) {
+                TLMLog(@"TLMInfraUpdateOperation", @"First line of downloaded file is: \"%s\"...good!", firstLine);
+            }
+            
+            fclose(strm);
+        }
+    }    
     
     return _downloadComplete;
 }
@@ -189,8 +226,8 @@
 {
     NSAutoreleasePool *pool = [NSAutoreleasePool new];
     
-    // don't run if the user cancelled during download
-    if ([self _downloadUpdateScript] && NO == [self isCancelled])
+    // don't run if the user cancelled during download or something failed
+    if ([self _downloadUpdateScript] && NO == [self isCancelled] && NO == [self failed])
         [super main];
    
     NSFileManager *fm = [NSFileManager new];
