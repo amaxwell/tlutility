@@ -2,7 +2,13 @@
 
 = Settings =
 
-TeX Live Utility is designed to have as few settings as possible.  These are available via the Preferences window:
+TeX Live Utility is designed to have as few settings as possible.  Window setup such as table column widths should be preserved, along with the split view bar location.
+
+== Font ==
+
+If you don't like Monaco 10 for a table font, you can easily change it to the font of your choice.  Select a row in the table, and use the standard Edit->Font->Show Fonts menu item to change it.  Your changes will be persistent.
+
+The remaining user-settable preferences are available via the Preferences window:
 
 http://mactlmgr.googlecode.com/svn/wiki/images/Prefs.png
 
