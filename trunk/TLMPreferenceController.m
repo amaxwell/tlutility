@@ -194,7 +194,9 @@ NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";     /
         NSAlert *alert = [[NSAlert new] autorelease];
         [alert setMessageText:NSLocalizedString(@"Unable to connect to server.", @"alert title")];
         [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"Either a network connection was not availble, or the directory \"%@\" does not exist at the specified CTAN root URL.  The previous value will be restored.", @"alert message text"), [[NSUserDefaults standardUserDefaults] objectForKey:TLMServerPathPreferenceKey]]];
-        [alert beginSheetModalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
+        
+        // don't run as a sheet, since this may need to block a window close
+        [alert runModal];
         
         [[NSUserDefaults standardUserDefaults] setObject:oldValue forKey:TLMServerURLPreferenceKey];
         [[sender cell] setStringValue:oldValue];
