@@ -32,5 +32,25 @@
             <pubDate>Sun, 28 Dec 2008 19:13:41 -0800</pubDate>
             <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20081228.tgz" sparkle:version="0.3" length="1062540" type="application/octet-stream" sparkle:dsaSignature="MC0CFCxb8ITgBhhBkWSVUyDrSHepad83AhUAiBGwmbzK87e0BR9kxciXl3ce54Q="></enclosure>
         </item>
+        <item>
+            <title>Version 0.4</title>
+            <description>
+                <h3>Changes Since 0.3</h3>
+                <li>Avoid recursive callout to TLMLog during log server setup</li>
+                <li>Removed Core Animation transition between tabs since it killed scrolling performance</li>
+                <li>Use NSAnimation for transition between tabs</li>
+                <li>Pass --nox11 in infrastructure update script to keep from launching an xterm</li>
+                <li>Don't build ppc64 version of the app</li>
+                <li>Allow cancellation of update script download</li>
+                <li>Non-error log messages should no longer say "Error" when copied from the table</li>
+                <li>Fixed some inconsequential memory leaks reported by clang</li>
+                <li>Run the mirror check alert as a modal panel instead of a sheet</li>
+                <li>Do some additional sanity checking when downloading the infrastructure update</li>
+                <li>Fixed message in install cancellation alert</li>
+                <li>Disable editing in the log tableview</li>
+            </description>
+            <pubDate>Tue, 30 Dec 2008 20:50:22 -0800</pubDate>
+            <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20081230.tgz" sparkle:version="0.4" length="1073918" type="application/octet-stream" sparkle:dsaSignature="MCwCFA02ItvyIaNVQnuKsVFaaoolGWeyAhQZK0Z/v/db2sc4BXnEm9/YL4+HHg=="></enclosure>
+        </item>
     </channel>
 </rss>
