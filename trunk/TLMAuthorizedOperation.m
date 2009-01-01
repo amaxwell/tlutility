@@ -63,6 +63,7 @@ struct TLMAOInternal {
 {
     self = [super init];
     if (self) {
+        
         _path = [[[NSBundle mainBundle] pathForAuxiliaryExecutable:@"tlmgr_cwrapper"] copy];
         NSParameterAssert(_path);
         
@@ -78,6 +79,12 @@ struct TLMAOInternal {
         memset(&_internal->_underlying_event, 0, sizeof(struct kevent));
         
         _internal->_kqueue = kqueue();
+        if (-1 == _internal->_kqueue) {
+            int e = errno;
+            TLMLog(__func__, @"Failed to create kqueue with error %s", strerror(e));
+            [self release];
+            self = nil;
+        }
     }
     return self;
 }
@@ -94,67 +101,70 @@ struct TLMAOInternal {
     [super dealloc];
 }
 
+- (void)_appendStringToErrorData:(NSString *)str
+{
+    NSMutableData *d = [[self errorData] mutableCopy];
+    [d appendData:[str dataUsingEncoding:NSUTF8StringEncoding]];
+    [self setErrorData:d];
+    [d release];
+}
+
 - (AuthorizationRef)_authorization
 {
+    AuthorizationFlags authFlags = kAuthorizationFlagDefaults;
+
+    // create a single authorization for the lifetime of this instance
     if (NULL == _internal->_authorization) {
-        
-        OSStatus status;
-        AuthorizationFlags authFlags = kAuthorizationFlagDefaults;
-        AuthorizationRef authorization;
-        status = AuthorizationCreate(NULL, kAuthorizationEmptyEnvironment, authFlags, &authorization);
-        
-        AuthorizationItem authItems = { kAuthorizationRightExecute, 0, NULL, 0 };
-        AuthorizationRights authRights = { 1, &authItems };
-        
-        authFlags = kAuthorizationFlagDefaults | kAuthorizationFlagInteractionAllowed | kAuthorizationFlagPreAuthorize | kAuthorizationFlagExtendRights;
-        if (noErr == status)
-            status = AuthorizationCopyRights(authorization, &authRights, NULL, authFlags, NULL);        
-        
-        if (noErr == status) {
-            _internal->_authorization = authorization;
-        }
-        else if (errAuthorizationCanceled == status) {
-            [self setErrorData:[NSLocalizedString(@"User cancelled operation", @"alert message") dataUsingEncoding:NSUTF8StringEncoding]];
-            // this isn't a failure, so the owner may need to check -isCancelled
-            [self setFailed:NO];
-            [self cancel];
-        } else if (errAuthorizationSuccess != status) {
-            [self setErrorData:[NSLocalizedString(@"Failed to authorize operation", @"alert message") dataUsingEncoding:NSUTF8StringEncoding]];
-            [self setFailed:YES];
-        }
-    }        
-    return _internal->_authorization;
+        // docs say that this should never return an error
+        (void) AuthorizationCreate(NULL, kAuthorizationEmptyEnvironment, authFlags, &_internal->_authorization);
+    }     
+    
+    AuthorizationItem authItems = { kAuthorizationRightExecute, 0, NULL, 0 };
+    AuthorizationRights authRights = { 1, &authItems };
+    authFlags = kAuthorizationFlagDefaults | kAuthorizationFlagInteractionAllowed | kAuthorizationFlagPreAuthorize | kAuthorizationFlagExtendRights;
+    
+    // see if we can get appropriate rights...
+    OSStatus status = AuthorizationCopyRights(_internal->_authorization, &authRights, NULL, authFlags, NULL);        
+    
+    if (errAuthorizationCanceled == status) {
+        [self _appendStringToErrorData:NSLocalizedString(@"User cancelled operation", @"alert message")];
+        // this isn't a failure, so the owner may need to check -isCancelled
+        [self setFailed:NO];
+        [self cancel];
+    } else if (errAuthorizationSuccess != status) {
+        [self _appendStringToErrorData:NSLocalizedString(@"Failed to authorize operation", @"alert message")];
+        [self setFailed:YES];
+    }
+    
+    return noErr == status ? _internal->_authorization : NULL;
 }
 
 - (void)_killChildProcesses
 {
-    TLMLog(nil, @"killing %d and %d", _internal->_underlying_pid, _internal->_cwrapper_pid);
-    const char *killPath = "/bin/kill";
+    TLMLog(__func__, @"killing %d and %d", _internal->_underlying_pid, _internal->_cwrapper_pid);
     char *killargs[] = { NULL, NULL, NULL, NULL };
     killargs[0] = "-KILL";
     
     /*
      Tlmgr_cwrapper should still be running here, since childFinished is NO.  However, note that there is a short window for a race between the kevent() call and kill; in practice, that should be a non-issue since PID values are 32 bits, and spawning enough processes to wrap around between these calls should not happen.
      */
-    killargs[2] = (char *)[[NSString stringWithFormat:@"%d", _internal->_cwrapper_pid] fileSystemRepresentation];
+    killargs[1] = (char *)[[NSString stringWithFormat:@"%d", _internal->_cwrapper_pid] fileSystemRepresentation];
     
-    // in case tlmgr has exited and tlmgr_cwrapper is hanging
+    // possible that tlmgr has exited and tlmgr_cwrapper is hanging, so we only have one process to kill
     if (_internal->_underlying_pid)
-        killargs[1] = (char *)[[NSString stringWithFormat:@"%d", _internal->_underlying_pid] fileSystemRepresentation];
+        killargs[2] = (char *)[[NSString stringWithFormat:@"%d", _internal->_underlying_pid] fileSystemRepresentation];
     
-    // !!! FIXME: what if authorization expires before we get here?  That's pretty likely...
+    // logs a message and returns NULL if authorization failed
     AuthorizationRef authorization = [self _authorization];
-    
-    // initialize to a generic error value
-    OSStatus status = coreFoundationUnknownErr;
-    
+     
+    OSStatus status = noErr;
     if (authorization)
-        status = AuthorizationExecuteWithPrivileges(authorization, killPath, kAuthorizationFlagDefaults, killargs, NULL); 
+        status = AuthorizationExecuteWithPrivileges(authorization, "/bin/kill", kAuthorizationFlagDefaults, killargs, NULL); 
     
-    if (status) {
+    if (noErr != status) {
         NSString *errStr;
         errStr = [NSString stringWithFormat:@"AuthorizationExecuteWithPrivileges error: %d (%s)", status, GetMacOSStatusErrorString(status)];
-        [self setErrorData:[errStr dataUsingEncoding:NSUTF8StringEncoding]];
+        [self _appendStringToErrorData:errStr];
     }
 }    
 
@@ -231,12 +241,12 @@ struct TLMAOInternal {
                                     
                 // set failure flag if cwrapper failed
                 [self setFailed:(EXIT_SUCCESS != ret)];
-                TLMLog(@"TLMAuthorizedOperation", @"kqueue noted that tlmgr_cwrapper (pid = %d) exited with status %d", event.ident, ret);
+                TLMLog(__func__, @"kqueue noted that tlmgr_cwrapper (pid = %d) exited with status %d", event.ident, ret);
             }
             else if ((pid_t)event.ident == _internal->_underlying_pid) {
                 
                 // we only log the tlmgr PID for diagnostic purposes, since we can't get its exit status directly
-                TLMLog(@"TLMAuthorizedOperation", @"kqueue noted that pid %d exited (%@)", event.ident, [self _underlyingProcessName]);
+                TLMLog(__func__, @"kqueue noted that pid %d exited (%@)", event.ident, [self _underlyingProcessName]);
                 
                 // can no longer kill this process
                 _internal->_underlying_pid = 0;
@@ -266,7 +276,7 @@ struct TLMAOInternal {
         _connection = [[NSConnection alloc] initWithReceivePort:[NSPort port] sendPort:nil];
         [_connection setRootObject:[NSProtocolChecker protocolCheckerWithTarget:self protocol:@protocol(TLMAuthOperationProtocol)]];
         if ([_connection registerName:_serverName] == NO)
-            TLMLog(@"TLMAuthorizedOperation", @"-[TLMAuthorizedOperation init] Failed to register connection named %@", _serverName);            
+            TLMLog(__func__, @"-[TLMAuthorizedOperation init] Failed to register connection named %@", _serverName);            
         
         const char *cmdPath = [_path fileSystemRepresentation];
         
@@ -283,7 +293,8 @@ struct TLMAOInternal {
         }
                 
         /*
-         Passing a NULL communicationsPipe to AEWP means we return immediately instead of blocking until the child exits.  Hence, we can pass the child PID back via IPC (DO), then monitor the process and check -isCancelled.
+         Passing a NULL communicationsPipe to AEWP means we return immediately instead of blocking until the child exits.  
+         This allows us to pass the child PID back via IPC (DO at present), then monitor the process and check -isCancelled.
          */
         OSStatus status = AuthorizationExecuteWithPrivileges(authorization, cmdPath, kAuthorizationFlagDefaults, args, NULL);
         
@@ -298,14 +309,14 @@ struct TLMAOInternal {
         else {
             NSString *errStr;
             errStr = [NSString stringWithFormat:@"AuthorizationExecuteWithPrivileges error: %d (%s)", status, GetMacOSStatusErrorString(status)];
-            [self setErrorData:[errStr dataUsingEncoding:NSUTF8StringEncoding]];
+            [self _appendStringToErrorData:errStr];
             [self setFailed:YES];
         }  
     }
     
     // ordinarily tlmgr_cwrapper won't pass anything back up to us
     if ([self errorMessages])
-        TLMLog(@"TLMAuthorizedOperation", @"%@", [self errorMessages]);
+        TLMLog(__func__, @"%@", [self errorMessages]);
     
     // clean up all scarce resources as soon as possible
     [self _closeQueue];
@@ -317,7 +328,7 @@ struct TLMAOInternal {
 - (void)setWrapperPID:(pid_t)pid;
 {
     _internal->_cwrapper_pid = pid;
-    TLMLog(@"TLMAuthorizedOperation", @"tlmgr_cwrapper checking in:  tlmgr_cwrapper pid = %d", pid);
+    TLMLog(__func__, @"tlmgr_cwrapper checking in:  tlmgr_cwrapper pid = %d", pid);
     EV_SET(&_internal->_cwrapper_event, pid, EVFILT_PROC, EV_ADD, NOTE_EXIT, 0, NULL);
     kevent(_internal->_kqueue, &_internal->_cwrapper_event, 1, NULL, 0, NULL);      
 }
@@ -325,7 +336,7 @@ struct TLMAOInternal {
 - (void)setUnderlyingPID:(pid_t)pid;
 {
     _internal->_underlying_pid = pid;
-    TLMLog(@"TLMAuthorizedOperation", @"tlmgr_cwrapper checking in: pid = %d (%@)", pid, [self _underlyingProcessName]);
+    TLMLog(__func__, @"tlmgr_cwrapper checking in: pid = %d (%@)", pid, [self _underlyingProcessName]);
     EV_SET(&_internal->_underlying_event, pid, EVFILT_PROC, EV_ADD, NOTE_EXIT, 0, NULL);
     kevent(_internal->_kqueue, &_internal->_underlying_event, 1, NULL, 0, NULL);      
 }
