@@ -242,7 +242,7 @@
         sort = [[NSSortDescriptor alloc] initWithKey:key ascending:_sortAscending selector:@selector(localizedCaseInsensitiveCompare:)];
     }
     else {
-        TLMLog(nil, @"Unhandled sort key %@", key);
+        TLMLog(__func__, @"Unhandled sort key %@", key);
     }
     [sort autorelease];
     

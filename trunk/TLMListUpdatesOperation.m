@@ -75,7 +75,7 @@
     [task waitUntilExit];
     
     NSInteger ret = [task terminationStatus];
-    if (0 == ret) TLMLog(@"TLMListUpdatesOperation", @"Unexpected successful termination from test for tlmgr2");
+    if (0 == ret) TLMLog(__func__, @"Unexpected successful termination from test for tlmgr2");
     
     NSFileHandle *fh = [[task standardError] fileHandleForReading];
     NSData *outputData = [fh readDataToEndOfFile];
@@ -90,11 +90,11 @@
         hasMachineReadable = NO;
     else if (nil == outputString || [outputString rangeOfString:@"unknown action"].length == 0) {
         // allow upstream to change this, but warn of any such changes
-        TLMLog(@"TLMListUpdatesOperation", @"Unexpected output from test for tlmgr2: \"%@\"", outputString);
+        TLMLog(__func__, @"Unexpected output from test for tlmgr2: \"%@\"", outputString);
     }
     
     if (NO == hasMachineReadable)
-        TLMLog(@"TLMListUpdatesOperation", @"tlmgr does not support --machine-readable; ad-hoc parsing will be used");
+        TLMLog(__func__, @"tlmgr does not support --machine-readable; ad-hoc parsing will be used");
     
     return hasMachineReadable;
 }
@@ -179,11 +179,11 @@ static NSDictionary *__TLMHeaderDictionaryWithLines(NSArray *headerLines)
     if (NSNotFound != headerStopIndex) {
         header = __TLMHeaderDictionaryWithLines([packageLines subarrayWithRange:NSMakeRange(0, headerStopIndex)]);
         [packageLines removeObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, headerStopIndex + 1)]];
-        TLMLog(@"TLMListUpdatesOperation", @"header = %@", header);
+        TLMLog(__func__, @"header = %@", header);
     }
     else {
         // saw this happen once (tlmgr returned an error)
-        TLMLog(@"TLMListUpdatesOperation", @"*** ERROR *** header not found in output:\n%@", lines);
+        TLMLog(__func__, @"*** ERROR *** header not found in output:\n%@", lines);
         packageLines = nil;
     }
 
@@ -207,12 +207,12 @@ static NSDictionary *__TLMHeaderDictionaryWithLines(NSArray *headerLines)
     NSString *installPrefix = @"tlmgr: installation location ";
     if ([packageLines count] && [[packageLines objectAtIndex:0] hasPrefix:installPrefix]) {
         NSString *urlString = [[packageLines objectAtIndex:0] stringByReplacingOccurrencesOfString:installPrefix withString:@""];
-        TLMLog(@"TLMListUpdatesOperation", @"Using mirror at %@", urlString);
+        TLMLog(__func__, @"Using mirror at %@", urlString);
         [self setUpdateURL:[NSURL URLWithString:urlString]];
         [packageLines removeObjectAtIndex:0];
     }
     else if ([packageLines count]) {
-        TLMLog(@"TLMListUpdatesOperation", @"Expected prefix \"%@\" but actual line was:\n%@", installPrefix, [packageLines objectAtIndex:0]);
+        TLMLog(__func__, @"Expected prefix \"%@\" but actual line was:\n%@", installPrefix, [packageLines objectAtIndex:0]);
     }
         
     [self _parsePackageLines:packageLines withClass:[TLMOutputParser self]];
@@ -229,7 +229,7 @@ static NSDictionary *__TLMHeaderDictionaryWithLines(NSArray *headerLines)
             [self performSelector:_parseSelector withObject:lines];
         }   
         else {
-            TLMLog(@"TLMListUpdatesOperation", @"No data read from standard output stream.");
+            TLMLog(__func__, @"No data read from standard output stream.");
         }
     }
     return _packages;

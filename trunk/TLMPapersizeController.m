@@ -78,7 +78,7 @@
     NSString *currentSize = nil;
     NSInteger ret = [task terminationStatus];
     if (0 != ret) {
-        TLMLog(@"TLMPapersizeController", @"Unable to determine current paper size for pdftex");
+        TLMLog(__func__, @"Unable to determine current paper size for pdftex");
     }
     else {
         NSFileHandle *fh = [[task standardOutput] fileHandleForReading];
@@ -104,7 +104,7 @@
     else {        
         // set to allow this in the nib
         [_sizeMatrix deselectAllCells];
-        TLMLog(@"TLMPapersizeController", @"Unknown paper size \"%@\"", currentSize);
+        TLMLog(__func__, @"Unknown paper size \"%@\"", currentSize);
     }
 }
 

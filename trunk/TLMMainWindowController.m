@@ -156,7 +156,7 @@ static char _TLMOperationQueueOperationContext;
     BOOL exists = [[NSFileManager defaultManager] isExecutableFileAtPath:cmdPath];
     
     if (NO == exists) {
-        TLMLog(nil, @"tlmgr not found at \"%@\"", cmdPath);
+        TLMLog(__func__, @"tlmgr not found at \"%@\"", cmdPath);
         if (displayWarning) {
             NSAlert *alert = [[NSAlert new] autorelease];
             [alert setMessageText:NSLocalizedString(@"TeX installation not found.", @"alert sheet title")];
@@ -199,7 +199,7 @@ static char _TLMOperationQueueOperationContext;
 {
     if (nil == aURL) {
         NSURL *defaultURL = [[TLMPreferenceController sharedPreferenceController] defaultServerURL];
-        TLMLog(nil, @"A nil URL was passed to %@; using default %@ instead", NSStringFromSelector(_cmd), defaultURL);
+        TLMLog(__func__, @"A nil URL was passed to %@; using default %@ instead", NSStringFromSelector(_cmd), defaultURL);
         aURL = defaultURL;
     }
     NSParameterAssert(aURL);
@@ -214,11 +214,11 @@ static char _TLMOperationQueueOperationContext;
     TLMUpdateOperation *op = nil;
     if (_updateInfrastructure) {
         op = [[TLMInfraUpdateOperation alloc] initWithLocation:_lastUpdateURL];
-        TLMLog(nil, @"Beginning infrastructure update from %@", [_lastUpdateURL absoluteString]);
+        TLMLog(__func__, @"Beginning infrastructure update from %@", [_lastUpdateURL absoluteString]);
     }
     else {
         op = [[TLMUpdateOperation alloc] initWithPackageNames:nil location:_lastUpdateURL];
-        TLMLog(nil, @"Beginning update of all packages from %@", [_lastUpdateURL absoluteString]);
+        TLMLog(__func__, @"Beginning update of all packages from %@", [_lastUpdateURL absoluteString]);
     }
     
     if (op) {
@@ -268,7 +268,7 @@ static char _TLMOperationQueueOperationContext;
     if ([packages count]) {
         _updateInfrastructure = YES;
         // log for debugging, then display an alert so the user has some idea of what's going on...
-        TLMLog(nil, @"Critical updates detected: %@", [packages valueForKey:@"name"]);
+        TLMLog(__func__, @"Critical updates detected: %@", [packages valueForKey:@"name"]);
         NSAlert *alert = [[NSAlert new] autorelease];
         [alert setMessageText:NSLocalizedString(@"Critical updates available.", @"alert title")];
         [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"%d packages are available for update, but the TeX Live installer packages listed here must be updated first.  Update now?", @"alert message text"), [[op packages] count]]];
@@ -305,7 +305,7 @@ static char _TLMOperationQueueOperationContext;
     if ([self _checkCommandPathAndWarn:YES]) {
         TLMListUpdatesOperation *op = [[TLMListUpdatesOperation alloc] initWithLocation:location];
         if (op) {
-            TLMLog(nil, @"Refreshing list of updated packages%C", 0x2026);
+            TLMLog(__func__, @"Refreshing list of updated packages%C", 0x2026);
             [[NSNotificationCenter defaultCenter] addObserver:self 
                                                      selector:@selector(_handleListUpdatesFinishedNotification:) 
                                                          name:TLMOperationFinishedNotification 
@@ -321,7 +321,7 @@ static char _TLMOperationQueueOperationContext;
     if (NSAlertFirstButtonReturn == returnCode)
         [[NSApp delegate] openDisasterRecoveryPage:nil];
     else
-        TLMLog(nil, @"User chose not to open %@ after failure", @"http://tug.org/texlive/tlmgr.html");
+        TLMLog(__func__, @"User chose not to open %@ after failure", @"http://tug.org/texlive/tlmgr.html");
 }
 
 - (void)_handleUpdateFinishedNotification:(NSNotification *)aNote
@@ -382,7 +382,7 @@ static char _TLMOperationQueueOperationContext;
 
 - (void)_cancelAllOperations
 {
-    TLMLog(nil, @"User cancelling %@", [_queue operations]);
+    TLMLog(__func__, @"User cancelling %@", [_queue operations]);
     [_queue cancelAllOperations];
 }
 
@@ -391,7 +391,7 @@ static char _TLMOperationQueueOperationContext;
     if (NSAlertSecondButtonReturn == returnCode)
         [self _cancelAllOperations];
     else
-        TLMLog(nil, @"User decided not to cancel %@", [_queue operations]);
+        TLMLog(__func__, @"User decided not to cancel %@", [_queue operations]);
 }
 
 - (IBAction)cancelAllOperations:(id)sender;
@@ -418,7 +418,7 @@ static char _TLMOperationQueueOperationContext;
     TLMPapersizeOperation *op = [aNote object];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:TLMOperationFinishedNotification object:op];
     if ([op failed]) {
-        TLMLog(nil, @"Failed to change paper size.  Error was: %@", [op errorMessages]);
+        TLMLog(__func__, @"Failed to change paper size.  Error was: %@", [op errorMessages]);
     }
 }
 
@@ -432,9 +432,9 @@ static char _TLMOperationQueueOperationContext;
         if ([psc paperSize])
             op = [[TLMPapersizeOperation alloc] initWithPapersize:[psc paperSize]];
         else
-            TLMLog(nil, @"No paper size from %@", psc);
+            TLMLog(__func__, @"No paper size from %@", psc);
         if (op) {
-            TLMLog(nil, @"Setting paper size to %@", [psc paperSize]);
+            TLMLog(__func__, @"Setting paper size to %@", [psc paperSize]);
             [[NSNotificationCenter defaultCenter] addObserver:self 
                                                      selector:@selector(_handlePapersizeFinishedNotification:) 
                                                          name:TLMOperationFinishedNotification 
@@ -526,7 +526,7 @@ static char _TLMOperationQueueOperationContext;
     if ([self _checkCommandPathAndWarn:YES]) {
         TLMListOperation *op = [[TLMListOperation alloc] initWithLocation:location];
         if (op) {
-            TLMLog(nil, @"Refreshing list of all packages%C", 0x2026);
+            TLMLog(__func__, @"Refreshing list of all packages%C", 0x2026);
             [[NSNotificationCenter defaultCenter] addObserver:self 
                                                      selector:@selector(_handleListFinishedNotification:) 
                                                          name:TLMOperationFinishedNotification 
@@ -621,7 +621,7 @@ static char _TLMOperationQueueOperationContext;
     
     TLMUpdateOperation *op = [[TLMUpdateOperation alloc] initWithPackageNames:packageNames location:_lastUpdateURL];
     if (op) {
-        TLMLog(nil, @"Beginning update of %@\nfrom %@", packageNames, [_lastUpdateURL absoluteString]);
+        TLMLog(__func__, @"Beginning update of %@\nfrom %@", packageNames, [_lastUpdateURL absoluteString]);
         [[NSNotificationCenter defaultCenter] addObserver:self 
                                                  selector:@selector(_handleUpdateFinishedNotification:) 
                                                      name:TLMOperationFinishedNotification 
@@ -657,7 +657,7 @@ static char _TLMOperationQueueOperationContext;
 {
     TLMInstallOperation *op = [[TLMInstallOperation alloc] initWithPackageNames:packageNames location:_lastUpdateURL reinstall:reinstall];
     if (op) {
-        TLMLog(nil, @"Beginning install of %@\nfrom %@", packageNames, [_lastUpdateURL absoluteString]);
+        TLMLog(__func__, @"Beginning install of %@\nfrom %@", packageNames, [_lastUpdateURL absoluteString]);
         [[NSNotificationCenter defaultCenter] addObserver:self 
                                                  selector:@selector(_handleInstallFinishedNotification:) 
                                                      name:TLMOperationFinishedNotification 
@@ -727,7 +727,7 @@ static char _TLMOperationQueueOperationContext;
     
     if (NO == [self _checkCommandPathAndWarn:YES] || [packages count]) {
         // log for debugging, then display an alert so the user has some idea of what's going on...
-        TLMLog(nil, @"Tried to remove infrastructure packages: %@", packages);
+        TLMLog(__func__, @"Tried to remove infrastructure packages: %@", packages);
         NSAlert *alert = [[NSAlert new] autorelease];
         [alert setMessageText:NSLocalizedString(@"Some of these packages cannot be removed.", @"alert title")];
         [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"You are attempting to remove critical parts of the underlying TeX Live infrastructure, and I won't help you do that.", @"alert message text")]];
@@ -736,7 +736,7 @@ static char _TLMOperationQueueOperationContext;
     else {
         TLMRemoveOperation *op = [[TLMRemoveOperation alloc] initWithPackageNames:packageNames];
         if (op) {
-            TLMLog(nil, @"Beginning removal of\n%@", packageNames);
+            TLMLog(__func__, @"Beginning removal of\n%@", packageNames);
             [[NSNotificationCenter defaultCenter] addObserver:self 
                                                      selector:@selector(_handleRemoveFinishedNotification:) 
                                                          name:TLMOperationFinishedNotification 

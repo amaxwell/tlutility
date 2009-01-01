@@ -115,7 +115,7 @@ static NSConnection * __TLMLSCreateAndRegisterConnectionForServer(TLMLogServer *
 
 - (void)_handleConnectionDied:(NSNotification *)aNote
 {
-    TLMLog(@"TLMLogServer", @"Log server connection died, trying to recreate");
+    TLMLog(__func__, @"Log server connection died, trying to recreate");
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSConnectionDidDieNotification object:_connection];
     [self _destroyConnection];
     _connection = __TLMLSCreateAndRegisterConnectionForServer(self);
@@ -169,7 +169,7 @@ static NSConnection * __TLMLSCreateAndRegisterConnectionForServer(TLMLogServer *
 
 @end
 
-void TLMLog(NSString *sender, NSString *format, ...)
+void TLMLog(const char *sender, NSString *format, ...)
 {
     va_list list;
     va_start(list, format);
@@ -177,7 +177,7 @@ void TLMLog(NSString *sender, NSString *format, ...)
     va_end(list);
     
     if (nil == sender) 
-        sender = @"com.googlecode.mactlmgr";
+        sender = "com.googlecode.mactlmgr";
     
     TLMLogMessage *msg = [[TLMLogMessage alloc] init];
     
@@ -186,7 +186,9 @@ void TLMLog(NSString *sender, NSString *format, ...)
     [date release];
     
     [msg setMessage:message];
-    [msg setSender:sender];
+    NSString *nsSender = [[NSString alloc] initWithUTF8String:sender];
+    [msg setSender:nsSender];
+    [nsSender release];
     
     // default to notice, since most of the stuff we log is informational
     [msg setLevel:@ASL_STRING_NOTICE];

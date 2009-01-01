@@ -157,7 +157,7 @@ NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";     /
     CFNetDiagnosticRef diagnostic = CFNetDiagnosticCreateWithURL(NULL, (CFURLRef)[self defaultServerURL]);
     [(id)diagnostic autorelease];
     if (kCFNetDiagnosticConnectionDown == CFNetDiagnosticCopyNetworkStatusPassively(diagnostic, NULL)) {
-        TLMLog(@"TLMPreferenceController", @"net diagnostic reports the connection is down");
+        TLMLog(__func__, @"net diagnostic reports the connection is down");
         return NO;
     }
     
@@ -170,11 +170,11 @@ NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";     /
     
     // response will not be an NSHTTPURLResponse for ftp: hosts, but data is empty
     if ([response respondsToSelector:@selector(statusCode)] && [response statusCode] != 200) {
-        TLMLog(@"TLMPreferenceController", @"http response from %@ was %d", [self defaultServerURL], [response statusCode]);
+        TLMLog(__func__, @"http response from %@ was %d", [self defaultServerURL], [response statusCode]);
         data = nil;
     }
     else if ([data length] == 0) {
-        TLMLog(@"TLMPreferenceController", @"no data from %@", [self defaultServerURL]);
+        TLMLog(__func__, @"no data from %@", [self defaultServerURL]);
     }
     
     // this gets screwed up by "http://mirror.ctan.orgs/" getting redirected to opendns.com, but
