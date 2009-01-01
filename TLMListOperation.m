@@ -84,12 +84,12 @@
     NSString *installPrefix = @"tlmgr: installation location ";
     if ([packageLines count] && [[packageLines objectAtIndex:0] hasPrefix:installPrefix]) {
         NSString *urlString = [[packageLines objectAtIndex:0] stringByReplacingOccurrencesOfString:installPrefix withString:@""];
-        TLMLog(@"TLMListOperation", @"Using mirror at %@", urlString);
+        TLMLog(__func__, @"Using mirror at %@", urlString);
         [self setUpdateURL:[NSURL URLWithString:urlString]];
         [packageLines removeObjectAtIndex:0];
     }
     else if ([packageLines count]) {
-        TLMLog(@"TLMListOperation", @"Expected prefix \"%@\" but actual line was:\n%@", installPrefix, [packageLines objectAtIndex:0]);
+        TLMLog(__func__, @"Expected prefix \"%@\" but actual line was:\n%@", installPrefix, [packageLines objectAtIndex:0]);
     }
     
     _packageNodes = [[TLMOutputParser nodesWithListLines:packageLines] copy];
@@ -106,7 +106,7 @@
             [self _parseLines:lines];
         }   
         else {
-            TLMLog(@"TLMListOperation", @"No data read from standard output stream.");
+            TLMLog(__func__, @"No data read from standard output stream.");
         }
     }
     return _packageNodes;

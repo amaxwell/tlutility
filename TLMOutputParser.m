@@ -374,7 +374,7 @@ static bool hasKeyPrefix(NSString *line)
                 if ([[node fullName] hasPrefix:[node fullName]])
                     [last addChild:node];
                 else
-                    TLMLog(@"TLMOutputParser", @"Child node named \"%@\" follows node named \"%@\"", [node fullName], [node fullName]);
+                    TLMLog(__func__, @"Child node named \"%@\" follows node named \"%@\"", [node fullName], [node fullName]);
             }
             else {
                 [nodes addObject:node];

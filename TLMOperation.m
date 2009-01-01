@@ -71,7 +71,7 @@ static char _TLMOperationFinishedContext;
     [fm release];
 
     if (NO == exists) {
-        TLMLog(@"TLMOperation", @"No executable file at %@", absolutePath);
+        TLMLog(__func__, @"No executable file at %@", absolutePath);
         [self release];
         self = nil;
     }
@@ -191,7 +191,7 @@ static char _TLMOperationFinishedContext;
         [self setOutputData:nil];
         [self setErrorData:nil];
     } else if (0 != status) {
-        TLMLog(@"TLMOperation", @"termination status of task %@ was %d", [_task launchPath], status);
+        TLMLog(__func__, @"termination status of task %@ was %d", [_task launchPath], status);
         [self setFailed:YES];
     }
     

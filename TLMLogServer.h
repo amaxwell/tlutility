@@ -54,6 +54,6 @@ extern NSString * const TLMLogServerUpdateNotification;
 @end
 
 __BEGIN_DECLS
-extern void TLMLog(NSString *sender, NSString *format, ...);
+extern void TLMLog(const char *sender, NSString *format, ...);
 __END_DECLS
 

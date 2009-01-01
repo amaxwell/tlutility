@@ -62,7 +62,7 @@
             status = NSLocalizedString(@"Local version is newer", @"status for package");
             break;
         default:
-            TLMLog(@"TLMOutputParser2", @"Unknown status code \"%C\"", ch);
+            TLMLog(__func__, @"Unknown status code \"%C\"", ch);
             break;
     }
     return status;
@@ -97,7 +97,7 @@ enum {
     
     // !!! early return here after a sanity check
     if ([components count] < MAX_COLUMNS) {
-        TLMLog(@"TLMOutputParser2", @"Unexpected number of tokens in line \"%@\"", outputLine);
+        TLMLog(__func__, @"Unexpected number of tokens in line \"%@\"", outputLine);
         [package setName:NSLocalizedString(@"Error parsing output line", @"error message for unreadable package")];
         [package setStatus:outputLine];
         [package setFailedToParse:YES];

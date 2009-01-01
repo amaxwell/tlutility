@@ -63,7 +63,7 @@
         // use mkdtemp to avoid race conditions
         tempName = mkdtemp(tempName);
         if (NULL == tempName) {
-            TLMLog(@"TLMInfraUpdateOperation", @"Failed to create temp directory %s", tempName);
+            TLMLog(__func__, @"Failed to create temp directory %s", tempName);
             [self release];
             return nil;
         }
@@ -103,7 +103,7 @@
      
     */
     long long len = [response expectedContentLength];
-    TLMLog(@"TLMInfraUpdateOperation", @"Download redirected to %@, expecting %lld bytes.", [request URL], len);
+    TLMLog(__func__, @"Download redirected to %@, expecting %lld bytes.", [request URL], len);
     return request;
 }
 
@@ -113,14 +113,14 @@
     
     // running random crap as root is really not a good idea...
     if (NSURLResponseUnknownLength != _expectedLength && _expectedLength < 1024 * 1024) {
-        TLMLog(@"TLMInfraUpdateOperation", @"Unexpected download size %lld bytes", _expectedLength);
-        TLMLog(@"TLMInfraUpdateOperation", @"*** Cancelling download due to a potential security problem. ***\nDownload should be at least 1 megabyte, so this may be a defective mirror.\nTry another mirror and notify the developer.");
+        TLMLog(__func__, @"Unexpected download size %lld bytes", _expectedLength);
+        TLMLog(__func__, @"*** Cancelling download due to a potential security problem. ***\nDownload should be at least 1 megabyte, so this may be a defective mirror.\nTry another mirror and notify the developer.");
         _downloadComplete = NO;
         [download cancel];
         [self setFailed:YES];
     }
     else {
-        TLMLog(@"TLMInfraUpdateOperation", @"Will download %lld bytes...", _expectedLength);
+        TLMLog(__func__, @"Will download %lld bytes...", _expectedLength);
     }
 }
 
@@ -131,7 +131,7 @@
         if ((CGFloat)(_receivedLength - _lastLoggedLength) / _expectedLength >= 0.20) {
             CGFloat pct = (CGFloat)_receivedLength / _expectedLength * 100;
             _lastLoggedLength = _receivedLength;
-            TLMLog(@"TLMInfraUpdateOperation", @"Received %.0f%% of %lld bytes...", pct, _expectedLength);
+            TLMLog(__func__, @"Received %.0f%% of %lld bytes...", pct, _expectedLength);
         }
     }
 }
@@ -141,13 +141,13 @@
     [self setFailed:YES];
     // should already be NO, but make sure...
     _downloadComplete = NO;
-    TLMLog(@"TLMInfraUpdateOperation", @"Download failed: %@", error);
+    TLMLog(__func__, @"Download failed: %@", error);
 }
 
 - (void)downloadDidFinish:(NSURLDownload *)download
 {
     _downloadComplete = YES;
-    TLMLog(@"TLMInfraUpdateOperation", @"Download of %lld bytes complete", _receivedLength);
+    TLMLog(__func__, @"Download of %lld bytes complete", _receivedLength);
 }
 
 - (BOOL)_downloadUpdateScript
@@ -163,7 +163,7 @@
     _download = [[NSURLDownload alloc] initWithRequest:request delegate:self];
     [_download setDestination:_scriptPath allowOverwrite:YES];
     
-    TLMLog(@"TLMInfraUpdateOperation", @"Downloading URL: %@", scriptURL);
+    TLMLog(__func__, @"Downloading URL: %@", scriptURL);
 
     bool keepGoing = true;
 
@@ -193,7 +193,7 @@
         const char *fs_path = [_scriptPath fileSystemRepresentation];
         if (chmod(fs_path, S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH)) {
             const char *s = strerror(errno);
-            TLMLog(@"TLMInfraUpdateOperation", @"Failed to set script permissions: %s", s);
+            TLMLog(__func__, @"Failed to set script permissions: %s", s);
             [self setFailed:YES];
         }
         else {
@@ -207,12 +207,12 @@
             if (firstLine) firstLine[(len - 1)] = '\0';
 
             if (firstLine && strncmp(firstLine, "#!", 2) != 0) {
-                TLMLog(@"TLMInfraUpdateOperation", @"*** ERROR *** Downloaded file does not start with #!");
-                TLMLog(@"TLMInfraUpdateOperation", @"*** ERROR *** First line is: \"%s\"", firstLine);
+                TLMLog(__func__, @"*** ERROR *** Downloaded file does not start with #!");
+                TLMLog(__func__, @"*** ERROR *** First line is: \"%s\"", firstLine);
                 [self setFailed:YES];
             }      
             else if (firstLine) {
-                TLMLog(@"TLMInfraUpdateOperation", @"First line of downloaded file is: \"%s\"...good!", firstLine);
+                TLMLog(__func__, @"First line of downloaded file is: \"%s\"...good!", firstLine);
             }
             
             fclose(strm);
@@ -233,9 +233,9 @@
     NSFileManager *fm = [NSFileManager new];
     NSError *error;
     if ([fm removeItemAtPath:_updateDirectory error:&error])
-        TLMLog(@"TLMInfraUpdateOperation", @"Removed temp directory \"%@\"", _updateDirectory);
+        TLMLog(__func__, @"Removed temp directory \"%@\"", _updateDirectory);
     else
-        TLMLog(@"TLMInfraUpdateOperation", @"Failed to remove temp directory \"%@\": %@", _updateDirectory, error);
+        TLMLog(__func__, @"Failed to remove temp directory \"%@\": %@", _updateDirectory, error);
     [fm release];
     
     [pool release];
