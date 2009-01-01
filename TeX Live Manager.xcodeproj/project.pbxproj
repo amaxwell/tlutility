@@ -203,6 +203,7 @@
 		F9D37DEB0F021AA900FB755E /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = /System/Library/Frameworks/QuartzCore.framework; sourceTree = "<absolute>"; };
 		F9D37E790F02B5F700FB755E /* TLMOutlineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMOutlineView.h; sourceTree = "<group>"; };
 		F9D37E7A0F02B5F700FB755E /* TLMOutlineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMOutlineView.m; sourceTree = "<group>"; };
+		F9D9AEB60F0D7EED00CB1A2F /* tlmgr_cwrapper-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "tlmgr_cwrapper-Info.plist"; sourceTree = "<group>"; };
 		F9DCD3590F06F08C00600DD2 /* Sparkle.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Sparkle.xcodeproj; path = Sparkle/Sparkle.xcodeproj; sourceTree = "<group>"; };
 		F9DCD43E0F06F76F00600DD2 /* dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dsa_pub.pem; sourceTree = "<group>"; };
 		F9DCD4A10F07126F00600DD2 /* tlu_appcast.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = tlu_appcast.xml; path = appcast/tlu_appcast.xml; sourceTree = "<group>"; };
@@ -305,6 +306,7 @@
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
 				F9DCD3590F06F08C00600DD2 /* Sparkle.xcodeproj */,
+				F9D9AEB60F0D7EED00CB1A2F /* tlmgr_cwrapper-Info.plist */,
 			);
 			name = "TeX Live Manager";
 			sourceTree = "<group>";
@@ -448,6 +450,7 @@
 				8D11072E0486CEB800E47090 /* Frameworks */,
 				F9B139DD0EECBEEB007C0046 /* CopyFiles */,
 				F9DCD37C0F06F11300600DD2 /* CopyFiles */,
+				F9D9AD660F0D790600CB1A2F /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -467,6 +470,7 @@
 			buildPhases = (
 				F9B139C80EECBDFE007C0046 /* Sources */,
 				F9B139C90EECBDFE007C0046 /* Frameworks */,
+				F9D9ADEF0F0D7B5300CB1A2F /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -553,6 +557,32 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		F9D9AD660F0D790600CB1A2F /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "codesign -f -v -s \"TeX Live Utility Signing Certificate\" \\\n\"${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}\"\n";
+		};
+		F9D9ADEF0F0D7B5300CB1A2F /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "codesign -f -v -s \"TeX Live Utility Signing Certificate\" \\\n-i \"com.googlecode.mactlmgr.tlmgr_cwrapper\" \\\n\"${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}\"\n";
+		};
 		F9DCD5650F07EFF100600DD2 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -717,6 +747,12 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-sectcreate",
+					__TEXT,
+					__info_plist,
+					"\"$(SRCROOT)/$(INFOPLIST_FILE)\"",
+				);
 				PREBINDING = NO;
 				SDKROOT = macosx10.5;
 			};
@@ -734,6 +770,12 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				OTHER_LDFLAGS = (
+					"-sectcreate",
+					__TEXT,
+					__info_plist,
+					"\"$(SRCROOT)/$(INFOPLIST_FILE)\"",
+				);
 				PREBINDING = NO;
 				SDKROOT = macosx10.5;
 			};
@@ -748,6 +790,7 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
+				INFOPLIST_FILE = "tlmgr_cwrapper-Info.plist";
 				INSTALL_PATH = /usr/local/bin;
 				PREBINDING = NO;
 				PRODUCT_NAME = tlmgr_cwrapper;
@@ -762,6 +805,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_MODEL_TUNING = G5;
+				INFOPLIST_FILE = "tlmgr_cwrapper-Info.plist";
 				INSTALL_PATH = /usr/local/bin;
 				PREBINDING = NO;
 				PRODUCT_NAME = tlmgr_cwrapper;
