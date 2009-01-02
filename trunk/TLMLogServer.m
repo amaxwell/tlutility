@@ -102,12 +102,10 @@ static NSConnection * __TLMLSCreateAndRegisterConnectionForServer(TLMLogServer *
 }
 
 - (void)_destroyConnection
-{
+{    
     // remove self as observer so we don't get _handleConnectionDied: while terminating
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSConnectionDidDieNotification object:_connection];
     [_connection registerName:nil];
-    [[_connection sendPort] invalidate];
-    [[_connection receivePort] invalidate];
     [_connection invalidate];
     [_connection release];
     _connection = nil;
@@ -118,7 +116,12 @@ static NSConnection * __TLMLSCreateAndRegisterConnectionForServer(TLMLogServer *
     @synchronized(self) {
         TLMLog(__func__, @"Log server connection died, trying to recreate");
         [[NSNotificationCenter defaultCenter] removeObserver:self name:NSConnectionDidDieNotification object:_connection];
+        
+        // pool to force port invalidation/deallocation now, which allows immediate registration with the same name
+        NSAutoreleasePool *pool = [NSAutoreleasePool new];
         [self _destroyConnection];
+        [pool release];
+
         _connection = __TLMLSCreateAndRegisterConnectionForServer(self);
     }
 }    
