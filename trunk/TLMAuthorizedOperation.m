@@ -182,7 +182,7 @@ struct TLMAOInternal {
 
 - (void)_destroyConnection
 {
-    [[NSPortNameServer systemDefaultPortNameServer] removePortForName:_serverName];
+    [_connection registerName:nil];
     [[_connection sendPort] invalidate];
     [[_connection receivePort] invalidate];
     [_connection invalidate];
