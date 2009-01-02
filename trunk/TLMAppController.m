@@ -71,14 +71,36 @@
     [self updatePathEnvironment];
 }
 
++ (NSMutableArray *)_systemPaths
+{
+    NSString *str = [NSString stringWithContentsOfFile:@"/etc/paths" encoding:NSUTF8StringEncoding error:NULL];
+    NSMutableArray *paths = [NSMutableArray array];
+    for (NSString *path in [str componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]]) {
+        path = [path stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        if ([path isEqualToString:@""] == NO)
+            [paths addObject:path];
+    }
+    return paths;
+}
+
 + (void)updatePathEnvironment;
 {
-    const char *path = getenv("PATH");
+    NSString *originalPath = [NSString stringWithUTF8String:getenv("PATH")];
+    
+    // ??? maybe _systemPaths should be the default, and getenv() as a fallback
+    if (nil == originalPath) originalPath = [[self _systemPaths] componentsJoinedByString:@":"];
+    
     bool badEnvironment = false;
     
     // if the user has a teTeX install in PATH prior to TeX Live, kpsewhich is going to be broken
-    if (strcasestr(path, "teTeX")) {
-        TLMLog(__func__, @"*** WARNING *** teTeX found in path\n%s", getenv("PATH"));
+    if ([originalPath rangeOfString:@"tetex" options:NSCaseInsensitiveSearch].length) {
+        TLMLog(__func__, @"*** WARNING *** teTeX found in path\n%@", originalPath);
+        badEnvironment = true;
+    }
+    
+    // if pointing directly to a texlive install, we need to remove any prior version
+    if ([originalPath rangeOfString:@"texlive" options:NSCaseInsensitiveSearch].length) {
+        TLMLog(__func__, @"*** WARNING *** TeX Live found in path\n%@", originalPath);
         badEnvironment = true;
     }
     
@@ -94,7 +116,7 @@
             NSMutableDictionary *d = [NSMutableDictionary dictionary];
             for (NSString *key in keys)
                 [d setObject:[env objectForKey:key] forKey:key];
-            TLMLog(__func__, @"*** WARNING *** ~/.MacOSX/environment.plist detected, may be trouble ahead:\n%@", d);
+            TLMLog(__func__, @"*** WARNING *** ~/.MacOSX/environment.plist detected, trouble ahead:\n%@", d);
             badEnvironment = true;
         }
         else {
@@ -104,23 +126,31 @@
     }
     
     // if we don't add this to the path, tlmgr falls all over itself when it tries to run kpsewhich etc.
-    if (path) {
-        NSString *texbinPath = [[NSUserDefaults standardUserDefaults] objectForKey:TLMTexBinPathPreferenceKey];
-        NSString *newPath;
+    NSString *texbinPath = [[NSUserDefaults standardUserDefaults] objectForKey:TLMTexBinPathPreferenceKey];
+    NSString *newPath = nil;
+    
+    if (badEnvironment) {
+        NSMutableArray *sysPaths = [self _systemPaths];
         
+        // try to use a minimal default path from /etc/paths
+        if ([sysPaths count]) {
+            [sysPaths addObject:texbinPath];
+            newPath = [sysPaths componentsJoinedByString:@":"];
+            TLMLog(__func__, @"*** WARNING *** Reset path to system default first:\nPATH = %@", newPath);
+        }
         // ??? prepending to path is a bad idea in general; maybe better to just die here
-        if (badEnvironment) {
-            TLMLog(__func__, @"*** WARNING *** Possible bad environment.  Prepending \"%@\" to path for tlmgr support.", texbinPath);
-            newPath = [texbinPath stringByAppendingFormat:@":%@", [NSString stringWithUTF8String:path]];
-        }
         else {
-            TLMLog(__func__, @"Appending \"%@\" to path for tlmgr support.", texbinPath);
-            newPath = [[NSString stringWithUTF8String:path] stringByAppendingFormat:@":%@", texbinPath];
+            TLMLog(__func__, @"*** WARNING *** Bad environment.  Prepending \"%@\" to path for tlmgr support.", texbinPath);
+            newPath = [texbinPath stringByAppendingFormat:@":%@", originalPath];
         }
-        
-        // set the path globally for convenience, since the app is basically useless without tlmgr
-        setenv("PATH", [newPath fileSystemRepresentation], 1);
-    }        
+    }
+    else {
+        TLMLog(__func__, @"Appending \"%@\" to path for tlmgr support.", texbinPath);
+        newPath = [originalPath stringByAppendingFormat:@":%@", texbinPath];
+    }
+    
+    // set the path globally for convenience, since the app is basically useless without tlmgr
+    if (newPath) setenv("PATH", [newPath fileSystemRepresentation], 1);
 }
 
 - (void)dealloc
