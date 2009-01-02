@@ -38,6 +38,7 @@
 
 #import "TLMAuthorizedOperation.h"
 #import "TLMLogServer.h"
+#import "BDSKTask.h"
 
 #import <Security/Authorization.h>
 
@@ -104,6 +105,8 @@ struct TLMAOInternal {
 - (void)_appendStringToErrorData:(NSString *)str
 {
     NSMutableData *d = [[self errorData] mutableCopy];
+    if (nil == d)
+        d = [NSMutableData new];
     [d appendData:[str dataUsingEncoding:NSUTF8StringEncoding]];
     [self setErrorData:d];
     [d release];
@@ -141,6 +144,15 @@ struct TLMAOInternal {
 
 - (void)_killChildProcesses
 {
+    // !!! early return here; sending `kill -KILL 0` as root is not what we want to do...
+    
+    // currently this can happen if the signed binary was tampered with, since AEWP returns 0 but the program fails to launch (so never checks in)
+    if (0 == _internal->_cwrapper_pid) {
+        TLMLog(__func__, @"tlmgr_cwrapper was not running");
+        return;
+    }
+    
+    // underlying_pid may be zero...
     TLMLog(__func__, @"killing %d and %d", _internal->_underlying_pid, _internal->_cwrapper_pid);
     char *killargs[] = { NULL, NULL, NULL, NULL };
     killargs[0] = "-KILL";
@@ -264,17 +276,60 @@ struct TLMAOInternal {
     } while (NO == _internal->_childFinished);                
 }    
 
+- (BOOL)_checkSignature
+{
+    NSFileManager *fm = [[NSFileManager new] autorelease];
+    
+    // even if codesign has been tampered with, the kill option in the signature will still prevent launch
+    NSString *cmd = @"/usr/bin/codesign";
+    if ([fm isExecutableFileAtPath:cmd] == NO)
+        return NO;
+    
+    BDSKTask *task = [[BDSKTask new] autorelease];
+    [task setLaunchPath:cmd];
+    [task setArguments:[NSArray arrayWithObjects:@"-vv", _path, nil]];
+    [task setStandardError:[NSPipe pipe]];
+    [task launch];
+    [task waitUntilExit];
+    
+    NSFileHandle *fh = [[task standardError] fileHandleForReading];
+    NSData *outputData = [fh readDataToEndOfFile];
+    NSString *outputString = nil;
+    if ([outputData length])
+        outputString = [[[NSString alloc] initWithData:outputData encoding:NSUTF8StringEncoding] autorelease];
+    
+    if (outputString) {
+        TLMLog([cmd UTF8String], @"%@", [outputString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]);
+    }
+    
+    return ([task terminationStatus] == 0);
+}
+
 - (void)main 
 {
     NSAutoreleasePool *pool = [NSAutoreleasePool new];
-    
-    AuthorizationRef authorization = [self _authorization];
-    
-    if (authorization) {
+        
+    TLMLog(__func__, @"Checking code signature before running tool as root%C", 0x2026);
+    if ([self _checkSignature] == NO) {
+        TLMLog(__func__, @"*** ERROR *** The tlmgr_cwrapper has been modified after signing!\nRefusing to run child process with invalid signature.");
+        [self _appendStringToErrorData:NSLocalizedString(@"The tlmgr_cwrapper helper application may have been tampered with.", @"")];
+        [self setFailed:YES];
+        [self cancel];
+    }
+    else {
+        TLMLog(__func__, @"Signature was valid, okay to proceed.");
+    }
+        
+    AuthorizationRef authorization = NULL;
+
+    // codesign failure sets -failed bit
+    if (NO == [self failed] && (authorization = [self _authorization]) != NULL) {
         
         // set up the connection to listen on our worker thread, so we avoid a race when exiting
         _connection = [[NSConnection alloc] initWithReceivePort:[NSPort port] sendPort:nil];
         [_connection setRootObject:[NSProtocolChecker protocolCheckerWithTarget:self protocol:@protocol(TLMAuthOperationProtocol)]];
+        
+        // failure here isn't critical
         if ([_connection registerName:_serverName] == NO)
             TLMLog(__func__, @"-[TLMAuthorizedOperation init] Failed to register connection named %@", _serverName);            
         
@@ -299,6 +354,7 @@ struct TLMAOInternal {
         OSStatus status = AuthorizationExecuteWithPrivileges(authorization, cmdPath, kAuthorizationFlagDefaults, args, NULL);
         
         NSZoneFree([self zone], args);
+        args = NULL;
         
         if (errAuthorizationSuccess == status) {
             [self setFailed:NO];
