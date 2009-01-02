@@ -113,6 +113,7 @@ static char _TLMOperationFinishedContext;
 
 - (void)_stdoutDataAvailable:(NSNotification *)aNote
 {
+    NSLog(@"%s", __func__);
     NSData *outputData = [[aNote userInfo] objectForKey:NSFileHandleNotificationDataItem];
     if ([outputData length])
          [self setOutputData:outputData];    
@@ -120,6 +121,7 @@ static char _TLMOperationFinishedContext;
 
 - (void)_stderrDataAvailable:(NSNotification *)aNote
 {
+    NSLog(@"%s", __func__);
     NSData *outputData = [[aNote userInfo] objectForKey:NSFileHandleNotificationDataItem];
     if ([outputData length]) {
         [self setErrorData:outputData];    
@@ -174,11 +176,19 @@ static char _TLMOperationFinishedContext;
         status = [_task terminationStatus];
     }
     
-    // now that the task is finished, run the runloop to pick up the read notification from both channels (two passes)
-    BOOL didRun;
+    // now that the task is finished, run the special runloop mode (only two sources in this mode)
+    SInt32 ret;
     do {
-        didRun = [[NSRunLoop currentRunLoop] runMode:rlmode beforeDate:[NSDate distantPast]];
-    } while (didRun);
+        
+        // pass #1: handle both sources in this mode immediately (ret = kCFRunLoopRunTimedOut)
+        ret = CFRunLoopRunInMode((CFStringRef)rlmode, 0, FALSE);
+        
+        // pass #2: ret = kCFRunLoopFinished
+        if (kCFRunLoopRunFinished == ret || kCFRunLoopRunStopped == ret) {
+            break;
+        }
+        
+    } while (kCFRunLoopRunHandledSource == ret || kCFRunLoopRunTimedOut == ret);
         
     signal(SIGPIPE, previousSignalMask);
 
