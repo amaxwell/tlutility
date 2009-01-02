@@ -106,6 +106,8 @@ static NSConnection * __TLMLSCreateAndRegisterConnectionForServer(TLMLogServer *
     // remove self as observer so we don't get _handleConnectionDied: while terminating
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSConnectionDidDieNotification object:_connection];
     [_connection registerName:nil];
+    [[_connection sendPort] invalidate];
+    [[_connection receivePort] invalidate];
     [_connection invalidate];
     [_connection release];
     _connection = nil;
