@@ -50,5 +50,8 @@
 + (void)updatePathEnvironment;
 - (IBAction)showPreferences:(id)sender;
 - (IBAction)openDisasterRecoveryPage:(id)sender;
+- (IBAction)openTLUWiki:(id)sender;
+- (IBAction)openMacTeXWiki:(id)sender;
+- (IBAction)openTracker:(id)sender;
 
 @end
