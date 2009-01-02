@@ -292,6 +292,7 @@ struct TLMAOInternal {
     [task launch];
     [task waitUntilExit];
     
+    // we get two short lines of output, so the pipe shouldn't fill up...
     NSFileHandle *fh = [[task standardError] fileHandleForReading];
     NSData *outputData = [fh readDataToEndOfFile];
     NSString *outputString = nil;
@@ -309,7 +310,7 @@ struct TLMAOInternal {
 {
     NSAutoreleasePool *pool = [NSAutoreleasePool new];
         
-    TLMLog(__func__, @"Checking code signature before running tool as root%C", 0x2026);
+    TLMLog(__func__, @"Checking code signature before running %@ as root%C", [_path lastPathComponent], 0x2026);
     if ([self _checkSignature] == NO) {
         TLMLog(__func__, @"*** ERROR *** The tlmgr_cwrapper has been modified after signing!\nRefusing to run child process with invalid signature.");
         [self _appendStringToErrorData:NSLocalizedString(@"The tlmgr_cwrapper helper application may have been tampered with.", @"")];
@@ -317,7 +318,7 @@ struct TLMAOInternal {
         [self cancel];
     }
     else {
-        TLMLog(__func__, @"Signature was valid, okay to proceed.");
+        TLMLog(__func__, @"Signature was valid, okay to run %@", [_path lastPathComponent]);
     }
         
     AuthorizationRef authorization = NULL;
