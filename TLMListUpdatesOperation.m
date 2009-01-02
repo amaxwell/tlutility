@@ -110,13 +110,17 @@
 {
     NSParameterAssert([location absoluteString]);
     NSMutableArray *options = [NSMutableArray arrayWithObjects:@"--location", [location absoluteString], @"update", @"--list", nil];
-    _parseSelector = @selector(_parseLines:);
+    NSString *cmd = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath];
+    SEL parseSelector = @selector(_parseLines:);
     if ([[self class] _useMachineReadableParser]) {
         [options insertObject:@"--machine-readable" atIndex:0];
-        _parseSelector = @selector(_parseLines2:);
+        parseSelector = @selector(_parseLines2:);
+    }  
+    self = [self initWithCommand:cmd options:options];
+    if (self) {
+        _parseSelector = parseSelector;
     }
-    NSString *cmd = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath];
-    return [self initWithCommand:cmd options:options];
+    return self;
 }
 
 - (void)dealloc
