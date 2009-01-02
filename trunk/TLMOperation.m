@@ -160,13 +160,9 @@ static char _TLMOperationFinishedContext;
     int status = -1;
     [_task launch];
     
-        
     // Reimplement -[NSTask waitUntilExit] so we can handle -[NSOperation cancel].
     while ([_task isRunning] && [self isCancelled] == NO) {
-        // using +dateWithTimeIntervalSinceNow: can cause the autorelease pool to blow up
-        NSDate *expireDate = [[NSDate alloc] initWithTimeIntervalSinceNow:0.2];
-        [[NSRunLoop currentRunLoop] runMode:rlmode beforeDate:expireDate];
-        [expireDate release];
+        CFRunLoopRunInMode(kCFRunLoopDefaultMode, 1.0, TRUE);
     }
         
     if ([self isCancelled]) {
@@ -176,11 +172,14 @@ static char _TLMOperationFinishedContext;
         // not cancelled, but make sure it's really done before calling -terminationStatus
         [_task waitUntilExit];
         status = [_task terminationStatus];
-        
-        // run the runloop again, since we have a race between -[NSTask isRunning] and actually getting data from the pipe
-        [[NSRunLoop currentRunLoop] runMode:rlmode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
     }
     
+    // now that the task is finished, run the runloop to pick up the read notification from both channels (two passes)
+    BOOL didRun;
+    do {
+        didRun = [[NSRunLoop currentRunLoop] runMode:rlmode beforeDate:[NSDate distantPast]];
+    } while (didRun);
+        
     signal(SIGPIPE, previousSignalMask);
 
     [nc removeObserver:self name:NSFileHandleReadToEndOfFileCompletionNotification object:outfh];
