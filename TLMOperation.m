@@ -113,15 +113,13 @@ static char _TLMOperationFinishedContext;
 
 - (void)_stdoutDataAvailable:(NSNotification *)aNote
 {
-    NSLog(@"%s", __func__);
     NSData *outputData = [[aNote userInfo] objectForKey:NSFileHandleNotificationDataItem];
     if ([outputData length])
-         [self setOutputData:outputData];    
+        [self setOutputData:outputData];    
 }
 
 - (void)_stderrDataAvailable:(NSNotification *)aNote
 {
-    NSLog(@"%s", __func__);
     NSData *outputData = [[aNote userInfo] objectForKey:NSFileHandleNotificationDataItem];
     if ([outputData length]) {
         [self setErrorData:outputData];    
