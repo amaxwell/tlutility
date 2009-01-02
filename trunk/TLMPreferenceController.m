@@ -91,6 +91,7 @@ NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";     /
     [_texbinPathControl release];
     [_serverComboBox release];
     [_rootHomeCheckBox release];
+    [_useSyslogCheckBox release];
     [_servers release];
     [super dealloc];
 }
