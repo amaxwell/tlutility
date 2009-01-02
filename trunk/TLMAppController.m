@@ -74,14 +74,53 @@
 + (void)updatePathEnvironment;
 {
     const char *path = getenv("PATH");
+    bool badEnvironment = false;
     
-    // if we don't add this to the path, tlmgr falls all over itself when it tries to run kpsewhich
-    // set the path globally, since the app is basically useless without tlmgr
+    // if the user has a teTeX install in PATH prior to TeX Live, kpsewhich is going to be broken
+    if (strcasestr(path, "teTeX")) {
+        TLMLog(__func__, @"*** WARNING *** teTeX found in path\n%s", getenv("PATH"));
+        badEnvironment = true;
+    }
+    
+    // check for environment.plist and see if we need a LART...
+    NSDictionary *env = [NSDictionary dictionaryWithContentsOfFile:[@"~/.MacOSX/environment.plist" stringByStandardizingPath]];
+    if (env) {
+        // look for path, something possibly TeX related, or TEXINPUTS/BIBINPUTS
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(SELF contains[cd] 'PATH') OR "
+                                                                  @"(SELF contains[cd] 'TEX') OR "
+                                                                  @"(SELF contains 'INPUTS')"];
+        NSArray *keys = [[env allKeys] filteredArrayUsingPredicate:predicate];
+        if ([keys count]) {
+            NSMutableDictionary *d = [NSMutableDictionary dictionary];
+            for (NSString *key in keys)
+                [d setObject:[env objectForKey:key] forKey:key];
+            TLMLog(__func__, @"*** WARNING *** ~/.MacOSX/environment.plist detected, may be trouble ahead:\n%@", d);
+            badEnvironment = true;
+        }
+        else {
+            // log anyway, since it's a huge PITA to diagnose a screwed up environment
+            TLMLog(__func__, @"Found ~/.MacOSX/environment.plist%Clooked okay.", 0x2026);
+        }
+    }
+    
+    // if we don't add this to the path, tlmgr falls all over itself when it tries to run kpsewhich etc.
     if (path) {
         NSString *texbinPath = [[NSUserDefaults standardUserDefaults] objectForKey:TLMTexBinPathPreferenceKey];
-        NSString *newPath = [[NSString stringWithUTF8String:path] stringByAppendingFormat:@":%@", texbinPath];
+        NSString *newPath;
+        
+        // ??? prepending to path is a bad idea in general; maybe better to just die here
+        if (badEnvironment) {
+            TLMLog(__func__, @"*** WARNING *** Possible bad environment.  Prepending \"%@\" to path for tlmgr support.", texbinPath);
+            newPath = [texbinPath stringByAppendingFormat:@":%@", [NSString stringWithUTF8String:path]];
+        }
+        else {
+            TLMLog(__func__, @"Appending \"%@\" to path for tlmgr support.", texbinPath);
+            newPath = [[NSString stringWithUTF8String:path] stringByAppendingFormat:@":%@", texbinPath];
+        }
+        
+        // set the path globally for convenience, since the app is basically useless without tlmgr
         setenv("PATH", [newPath fileSystemRepresentation], 1);
-    }    
+    }        
 }
 
 - (void)dealloc
