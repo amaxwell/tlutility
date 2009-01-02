@@ -103,9 +103,9 @@ static NSConnection * __TLMLSCreateAndRegisterConnectionForServer(TLMLogServer *
 
 - (void)_destroyConnection
 {
-    // remove self as delegate so we don't get _handleConnectionDied: while terminating
+    // remove self as observer so we don't get _handleConnectionDied: while terminating
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSConnectionDidDieNotification object:_connection];
-    [[NSPortNameServer systemDefaultPortNameServer] removePortForName:SERVER_NAME];
+    [_connection registerName:nil];
     [[_connection sendPort] invalidate];
     [[_connection receivePort] invalidate];
     [_connection invalidate];
@@ -115,15 +115,19 @@ static NSConnection * __TLMLSCreateAndRegisterConnectionForServer(TLMLogServer *
 
 - (void)_handleConnectionDied:(NSNotification *)aNote
 {
-    TLMLog(__func__, @"Log server connection died, trying to recreate");
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSConnectionDidDieNotification object:_connection];
-    [self _destroyConnection];
-    _connection = __TLMLSCreateAndRegisterConnectionForServer(self);
+    @synchronized(self) {
+        TLMLog(__func__, @"Log server connection died, trying to recreate");
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:NSConnectionDidDieNotification object:_connection];
+        [self _destroyConnection];
+        _connection = __TLMLSCreateAndRegisterConnectionForServer(self);
+    }
 }    
 
 - (void)_handleApplicationTerminate:(NSNotification *)aNote
 {
-    [self _destroyConnection];
+    @synchronized(self) {
+        [self _destroyConnection];
+    }
 }
 
 - (void)dealloc
@@ -158,7 +162,13 @@ static NSConnection * __TLMLSCreateAndRegisterConnectionForServer(TLMLogServer *
     @synchronized(_messages) {
         [_messages addObject:message];
     }
-    [self performSelectorOnMainThread:@selector(_notifyOnMainThread) withObject:nil waitUntilDone:NO modes:_runLoopModes];
+    
+    if ([NSThread isMainThread]) {
+        [self _notifyOnMainThread];
+    }
+    else {
+        [self performSelectorOnMainThread:@selector(_notifyOnMainThread) withObject:nil waitUntilDone:NO modes:_runLoopModes];
+    }
     
     // Herb S. requested this so there'd be a record of all messages in one place.
     // If tlmgr_cwrapper fails to connect, it'll start logging to asl, so using this funnel point should be sufficient.
