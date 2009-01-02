@@ -568,7 +568,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "codesign -f -v -s \"TeX Live Utility Signing Certificate\" \\\n\"${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}\"\n";
+			shellScript = "codesign -f -v -s \"TeX Live Utility Signing Certificate\" \\\n-o kill \\\n\"${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}\"\n";
 		};
 		F9D9ADEF0F0D7B5300CB1A2F /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -581,7 +581,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "codesign -f -v -s \"TeX Live Utility Signing Certificate\" \\\n-i \"com.googlecode.mactlmgr.tlmgr_cwrapper\" \\\n\"${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}\"\n";
+			shellScript = "codesign -f -v -s \"TeX Live Utility Signing Certificate\" \\\n-i \"com.googlecode.mactlmgr.tlmgr_cwrapper\" \\\n-o kill \\\n\"${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}\"\n";
 		};
 		F9DCD5650F07EFF100600DD2 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -766,6 +766,7 @@
 					i386,
 					x86_64,
 				);
+				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
