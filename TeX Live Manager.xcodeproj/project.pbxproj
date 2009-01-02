@@ -22,6 +22,7 @@
 		F97E860C0EFA3BFD00862882 /* TeXDistDocument.icns in Resources */ = {isa = PBXBuildFile; fileRef = F97E860B0EFA3BFD00862882 /* TeXDistDocument.icns */; };
 		F9963EC50F0490E9005F0174 /* TLMRemoveOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F9963EC40F0490E9005F0174 /* TLMRemoveOperation.m */; };
 		F9963FEF0F054999005F0174 /* TLMInstallOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F9963FEE0F054999005F0174 /* TLMInstallOperation.m */; };
+		F99CCDE70F0EB56E00D67ED0 /* DefaultMirrors.plist in Resources */ = {isa = PBXBuildFile; fileRef = F99CCDDA0F0EAFB300D67ED0 /* DefaultMirrors.plist */; };
 		F99D9B0B0F01731E00A1DCCB /* TLMTabView.m in Sources */ = {isa = PBXBuildFile; fileRef = F99D9B0A0F01731E00A1DCCB /* TLMTabView.m */; };
 		F99E51980EEE4AD5006E6B39 /* TLMURLFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = F99E51970EEE4AD5006E6B39 /* TLMURLFormatter.m */; };
 		F9A8BA380EF75C3B00E35DC9 /* TLMOutputParser2.m in Sources */ = {isa = PBXBuildFile; fileRef = F9A8BA370EF75C3B00E35DC9 /* TLMOutputParser2.m */; };
@@ -158,6 +159,7 @@
 		F9963EC40F0490E9005F0174 /* TLMRemoveOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMRemoveOperation.m; sourceTree = "<group>"; };
 		F9963FED0F054999005F0174 /* TLMInstallOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMInstallOperation.h; sourceTree = "<group>"; };
 		F9963FEE0F054999005F0174 /* TLMInstallOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMInstallOperation.m; sourceTree = "<group>"; };
+		F99CCDDA0F0EAFB300D67ED0 /* DefaultMirrors.plist */ = {isa = PBXFileReference; explicitFileType = text.plist.strings; fileEncoding = 4; path = DefaultMirrors.plist; sourceTree = "<group>"; };
 		F99D9B090F01731E00A1DCCB /* TLMTabView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMTabView.h; sourceTree = "<group>"; };
 		F99D9B0A0F01731E00A1DCCB /* TLMTabView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMTabView.m; sourceTree = "<group>"; };
 		F99E51960EEE4AD5006E6B39 /* TLMURLFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMURLFormatter.h; sourceTree = "<group>"; };
@@ -335,6 +337,7 @@
 				F9B13B2A0EECEB05007C0046 /* InfoPanel.xib */,
 				F9F130550EED94D800D9968D /* Preferences.xib */,
 				F905217E0EFEA98600B489FE /* PapersizeSheet.xib */,
+				F99CCDDA0F0EAFB300D67ED0 /* DefaultMirrors.plist */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -541,6 +544,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F99CCDE70F0EB56E00D67ED0 /* DefaultMirrors.plist in Resources */,
 				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
 				1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */,
 				F9B134710EEB1B13007C0046 /* MainWindow.xib in Resources */,

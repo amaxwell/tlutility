@@ -76,11 +76,9 @@ NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";     /
     if (self) {
         NSMutableArray *servers = [NSMutableArray array];
         // current server from prefs seems to be added automatically when setting stringValue
-        [servers addObject:@"http://mirror.ctan.org"];
-        [servers addObject:@"http://ctan.math.utah.edu/tex-archive"];
-        [servers addObject:@"http://gentoo.chem.wisc.edu/tex-archive"];
-        [servers addObject:@"ftp://ftp.heanet.ie/pub/CTAN/tex"];
-        [servers addObject:@"http://mirrors.ircam.fr/pub/CTAN"];
+        NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"DefaultMirrors" ofType:@"plist"];
+        if (plistPath)
+            [servers addObjectsFromArray:[NSArray arrayWithContentsOfFile:plistPath]];
         _servers = [servers copy];
     }
     return self;
