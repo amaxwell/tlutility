@@ -83,6 +83,7 @@ static NSString *_separatorString = nil;
 - (void)dealloc
 {
     [_name release];
+    [_fullName release];
     [_description release];
     [_children release];
     [super dealloc];

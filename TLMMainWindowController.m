@@ -105,10 +105,15 @@ static char _TLMOperationQueueOperationContext;
     [_queue waitUntilAllOperationsAreFinished];
     [_queue release];
     
+    [_tabView setDelegate:nil];
+    [_tabView release];
+    
     [_splitView setDelegate:nil];
     [_splitView release];
+    
     [_statusView release];
     [_statusBarView release];
+    [_hostnameField release];
     
     [_progressIndicator release];
     [_lastUpdateURL release];
