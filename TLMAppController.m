@@ -118,6 +118,25 @@
     [[NSWorkspace sharedWorkspace] openURL:aURL];
 }
 
+- (IBAction)openTLUWiki:(id)sender;
+{
+    NSURL *aURL = [NSURL URLWithString:@"http://code.google.com/p/mactlmgr/w/list"];
+    [[NSWorkspace sharedWorkspace] openURL:aURL];    
+}
+
+- (IBAction)openMacTeXWiki:(id)sender;
+{
+    NSURL *aURL = [NSURL URLWithString:@"http://mactex-wiki.tug.org"];
+    [[NSWorkspace sharedWorkspace] openURL:aURL];
+}
+
+- (IBAction)openTracker:(id)sender;
+{
+    NSURL *aURL = [NSURL URLWithString:@"http://code.google.com/p/mactlmgr/issues/list"];
+    [[NSWorkspace sharedWorkspace] openURL:aURL];
+}
+
+
 #if 0
 
 - (BOOL)application:(NSApplication *)sender openFile:(NSString *)filename;
