@@ -91,10 +91,11 @@
     else if (nil == outputString || [outputString rangeOfString:@"unknown action"].length == 0) {
         // allow upstream to change this, but warn of any such changes
         TLMLog(__func__, @"Unexpected output from test for tlmgr2: \"%@\"", outputString);
+        TLMLog(__func__, @"Assuming tlmgr2 and proceeding, but please report failures to the developer");
     }
     
     if (NO == hasMachineReadable)
-        TLMLog(__func__, @"tlmgr does not support --machine-readable; ad-hoc parsing will be used");
+        TLMLog(__func__, @"tlmgr does not support --machine-readable yet; ad-hoc parsing will be used");
     
     return hasMachineReadable;
 }
