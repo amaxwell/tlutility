@@ -183,6 +183,8 @@ struct TLMAOInternal {
 - (void)_destroyConnection
 {
     [_connection registerName:nil];
+    [[_connection sendPort] invalidate];
+    [[_connection receivePort] invalidate];
     [_connection invalidate];
     [_connection release];
     _connection = nil;
