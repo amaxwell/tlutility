@@ -323,7 +323,7 @@ static void __BDSKTaskNotify(void *info)
         _internal->_rl = (CFRunLoopRef)CFRetain(CFRunLoopGetCurrent());
         CFRunLoopSourceContext rlcontext = { 0, self, CFRetain, CFRelease, CFCopyDescription, CFEqual, CFHash, NULL, NULL, __BDSKTaskNotify };
         _internal->_rlsource = CFRunLoopSourceCreate(CFAllocatorGetDefault(), 0, &rlcontext);
-        CFRunLoopAddSource(_internal->_rl, _internal->_rlsource, kCFRunLoopDefaultMode);
+        CFRunLoopAddSource(_internal->_rl, _internal->_rlsource, kCFRunLoopCommonModes);
         CFRelease(_internal->_rlsource);
     }
     [handlesToClose release];
@@ -448,7 +448,6 @@ static void __BDSKTaskNotify(void *info)
     // runloop source is still retaining us
     CFRunLoopSourceSignal(_internal->_rlsource);
     CFRunLoopWakeUp(_internal->_rl);
-
 }
 
 @end
