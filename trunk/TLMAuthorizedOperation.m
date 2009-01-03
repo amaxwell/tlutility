@@ -57,6 +57,7 @@
 
 // security-through-obscurity really is pointless for open source...but this groups some of the guts in a separate object
 struct TLMAOInternal {
+    NSArray         *_options;
     int              _kqueue;
     pid_t            _cwrapper_pid;
     struct kevent    _cwrapper_event;
@@ -68,37 +69,39 @@ struct TLMAOInternal {
 
 @implementation TLMAuthorizedOperation
 
-@synthesize options = _options;
-
-- (id)init
+- (id)initWithCommand:(NSString *)absolutePath options:(NSArray *)options;
 {
+    NSParameterAssert(absolutePath);
+    NSParameterAssert(options);
+    
+    // we override -main and don't need an NSTask, so use -init
     self = [super init];
     if (self) {
         
         _internal = NSZoneCalloc([self zone], 1, sizeof(struct TLMAOInternal));
+        NSParameterAssert(_internal);
         
         // zero the kevent structures
         memset(&_internal->_cwrapper_event, 0, sizeof(struct kevent));
         memset(&_internal->_underlying_event, 0, sizeof(struct kevent));
         
         _internal->_kqueue = kqueue();
-        if (-1 == _internal->_kqueue) {
-            int e = errno;
-            TLMLog(__func__, @"Failed to create kqueue with error %s", strerror(e));
-            [self release];
-            self = nil;
-        }
+        NSParameterAssert(_internal->_kqueue);
+        
+        NSMutableArray *fullOptions = [options mutableCopy];
+        [fullOptions insertObject:absolutePath atIndex:0];
+        _internal->_options = [fullOptions copy];
+        [fullOptions release];
     }
     return self;
 }
 
 - (void)dealloc
 {
+    [_internal->_options release];
     if (_internal->_authorization) AuthorizationFree(_internal->_authorization, kAuthorizationFlagDestroyRights);
     NSZoneFree([self zone], _internal);
-    _internal = NULL;
-    
-    [_options release];
+    _internal = NULL;    
     [super dealloc];
 }
 
@@ -211,7 +214,7 @@ struct TLMAOInternal {
 - (NSString *)_underlyingCommand
 {
     // print the full path and all arguments
-    return [[self options] componentsJoinedByString:@" "];
+    return [_internal->_options componentsJoinedByString:@" "];
 }
 
 - (void)_runUntilChildExit
@@ -318,15 +321,6 @@ static BOOL __TLMCheckSignature()
     return ([task terminationStatus] == 0);
 }
 
-- (void)setOptions:(NSArray *)options
-{
-    // shouldn't happen unless someone injects code and tries to change options
-    if ([self options] != nil)
-        [NSException raise:NSInternalInconsistencyException format:@"Attempt to reset options %@ to %@", [self options], options];
-    [_options autorelease];
-    _options = [options copy];
-}
-
 - (BOOL)_useRootHome
 {
     return [[NSUserDefaults standardUserDefaults] boolForKey:TLMUseRootHomePreferenceKey];
@@ -373,7 +367,7 @@ static BOOL __TLMCheckSignature()
          Use calloc to zero the arg vector, then add the two required options for tlmgr_cwrapper
          before adding the subprocess path and options.  A terminating 0 is required.
          */
-        char **args = NSZoneCalloc([self zone], ([_options count] + 3), sizeof(char *));
+        char **args = NSZoneCalloc([self zone], ([_internal->_options count] + 3), sizeof(char *));
         int i = 0;
         
         // first argument is the DO server name for IPC
@@ -383,7 +377,7 @@ static BOOL __TLMCheckSignature()
         args[i++] = [self _useRootHome] ? "y" : "n";
         
         // remaining options are the command to execute and its options
-        for (NSString *option in _options) {
+        for (NSString *option in _internal->_options) {
             args[i++] = (char *)[option fileSystemRepresentation];
         }
                 

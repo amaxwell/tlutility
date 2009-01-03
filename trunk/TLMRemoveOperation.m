@@ -53,18 +53,12 @@
 {
     NSParameterAssert(packageNames);
     NSString *cmd = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath]; 
-    NSFileManager *fm = [NSFileManager new];
-    BOOL exists = [fm isExecutableFileAtPath:cmd];
-    [fm release];
-    
-    if (NO == exists) {
-        [self release];
-        self = nil;
-    } else if ((self = [super init])) {
+    NSMutableArray *options = [NSMutableArray arrayWithObjects:@"remove", nil];
+    [options addObjectsFromArray:packageNames];
+
+    self = [self initWithCommand:cmd options:options];
+    if (self) {
         _packageNames = [packageNames copy];        
-        NSMutableArray *options = [NSMutableArray arrayWithObjects:cmd, @"remove", nil];
-        [options addObjectsFromArray:packageNames];
-        [self setOptions:options];
     }
     return self;
 }
