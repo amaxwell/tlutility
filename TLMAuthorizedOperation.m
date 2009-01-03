@@ -39,6 +39,7 @@
 #import "TLMAuthorizedOperation.h"
 #import "TLMLogServer.h"
 #import "BDSKTask.h"
+#import "TLMPreferenceController.h"
 
 #import <Security/Authorization.h>
 
@@ -46,6 +47,15 @@
 #import <sys/event.h>
 #import <sys/time.h>
 
+// for Distributed Objects (used by tlmgr_cwrapper)
+@protocol TLMAuthOperationProtocol
+
+- (void)setWrapperPID:(in pid_t)pid;
+- (void)setUnderlyingPID:(in pid_t)pid;
+
+@end
+
+// security-through-obscurity really is pointless for open source...but this groups some of the guts in a separate object
 struct TLMAOInternal {
     int              _kqueue;
     pid_t            _cwrapper_pid;
@@ -65,14 +75,6 @@ struct TLMAOInternal {
     self = [super init];
     if (self) {
         
-        _path = [[[NSBundle mainBundle] pathForAuxiliaryExecutable:@"tlmgr_cwrapper"] copy];
-        NSParameterAssert(_path);
-        
-        // NSConnection name will be a UUID
-        CFUUIDRef uuid = CFUUIDCreate(NULL);
-        _serverName = (NSString *)CFUUIDCreateString(NULL, uuid);
-        CFRelease(uuid);
-
         _internal = NSZoneCalloc([self zone], 1, sizeof(struct TLMAOInternal));
         
         // zero the kevent structures
@@ -96,9 +98,7 @@ struct TLMAOInternal {
     NSZoneFree([self zone], _internal);
     _internal = NULL;
     
-    [_path release];
     [_options release];
-    [_serverName release];
     [super dealloc];
 }
 
@@ -155,10 +155,14 @@ struct TLMAOInternal {
     // underlying_pid may be zero...
     TLMLog(__func__, @"killing %d and %d", _internal->_underlying_pid, _internal->_cwrapper_pid);
     char *killargs[] = { NULL, NULL, NULL, NULL };
+    
+    // use SIGKILL since tlmgr doesn't respond to SIGTERM
     killargs[0] = "-KILL";
     
     /*
-     Tlmgr_cwrapper should still be running here, since childFinished is NO.  However, note that there is a short window for a race between the kevent() call and kill; in practice, that should be a non-issue since PID values are 32 bits, and spawning enough processes to wrap around between these calls should not happen.
+     Tlmgr_cwrapper should still be running here, since childFinished is NO.  However, note that there is a 
+     short window for a race between the kevent() call and kill; in practice, that should be a non-issue 
+     since PID values are 32 bits, and spawning enough processes to wrap around between these calls should not happen.
      */
     killargs[1] = (char *)[[NSString stringWithFormat:@"%d", _internal->_cwrapper_pid] fileSystemRepresentation];
     
@@ -170,6 +174,11 @@ struct TLMAOInternal {
     AuthorizationRef authorization = [self _authorization];
      
     OSStatus status = noErr;
+    /*
+     In general, you're supposed to write your own helper tool for AEWP.  However, /bin/kill is guaranteed to do exactly what
+     we need, and it's used all the time with sudo.  Hence, I'm taking the easy way out (again) and avoiding a possibly buggy
+     rewrite of kill(1).
+     */
     if (authorization)
         status = AuthorizationExecuteWithPrivileges(authorization, "/bin/kill", kAuthorizationFlagDefaults, killargs, NULL); 
     
@@ -179,16 +188,6 @@ struct TLMAOInternal {
         [self _appendStringToErrorData:errStr];
     }
 }    
-
-- (void)_destroyConnection
-{
-    [_connection registerName:nil];
-    [[_connection sendPort] invalidate];
-    [[_connection receivePort] invalidate];
-    [_connection invalidate];
-    [_connection release];
-    _connection = nil;
-}
 
 - (void)_closeQueue
 {
@@ -209,16 +208,10 @@ struct TLMAOInternal {
 }   
 
 // process executed by tlmgr_cwrapper: either tlmgr or the update script
-- (NSString *)_underlyingProcessName
+- (NSString *)_underlyingCommand
 {
-    NSArray *options = [self options];
-    
-    // first argument is y/n for tlmgr_cwrapper
-    if ([options count] < 2)
-        return @"*** ERROR ***: unknown process";
-    
     // print the full path and all arguments
-    return [[options subarrayWithRange:NSMakeRange(1, [options count] - 1)] componentsJoinedByString:@" "];
+    return [[self options] componentsJoinedByString:@" "];
 }
 
 - (void)_runUntilChildExit
@@ -258,7 +251,7 @@ struct TLMAOInternal {
             else if ((pid_t)event.ident == _internal->_underlying_pid) {
                 
                 // we only log the tlmgr PID for diagnostic purposes, since we can't get its exit status directly
-                TLMLog(__func__, @"kqueue noted that pid %d exited (%@)", event.ident, [self _underlyingProcessName]);
+                TLMLog(__func__, @"kqueue noted that pid %d exited (%@)", event.ident, [self _underlyingCommand]);
                 
                 // can no longer kill this process
                 _internal->_underlying_pid = 0;
@@ -276,18 +269,37 @@ struct TLMAOInternal {
     } while (NO == _internal->_childFinished);                
 }    
 
-- (BOOL)_checkSignature
+/*
+ Convenience function.  Always returns the path using NSBundle so there's no ivar to replace or 
+ method to override (although someone can replace the executable itself, of course).
+ */
+static NSString *__TLMCwrapperPath()
 {
-    NSFileManager *fm = [[NSFileManager new] autorelease];
-    
-    // even if codesign has been tampered with, the kill option in the signature will still prevent launch
+    NSString *path = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"tlmgr_cwrapper"];
+    NSCParameterAssert(path);
+    return path;
+}
+
+/*
+ Even if codesign has been tampered with, the kill option in the signature should still prevent launch.  
+ Unfortunately, we get no output and no PID checkin when the file has been modified; it's killed too early.  
+ This function is a preflight check to give some useful diagnostics before trying to execute tlmgr_cwrapper,
+ but it's not critical to security.
+ */
+static BOOL __TLMCheckSignature()
+{    
     NSString *cmd = @"/usr/bin/codesign";
-    if ([fm isExecutableFileAtPath:cmd] == NO)
+    
+    // see if codesign exists before trying to run it (which would raise an exception)
+    NSFileManager *fm = [[NSFileManager new] autorelease];
+    if ([fm isExecutableFileAtPath:cmd] == NO) {
+        TLMLog(__func__, @"*** ERROR *** %@ does not exist; this is a serious security hole.", cmd);
         return NO;
+    }
     
     BDSKTask *task = [[BDSKTask new] autorelease];
     [task setLaunchPath:cmd];
-    [task setArguments:[NSArray arrayWithObjects:@"-vv", _path, nil]];
+    [task setArguments:[NSArray arrayWithObjects:@"-vv", __TLMCwrapperPath(), nil]];
     [task setStandardError:[NSPipe pipe]];
     [task launch];
     [task waitUntilExit];
@@ -306,19 +318,33 @@ struct TLMAOInternal {
     return ([task terminationStatus] == 0);
 }
 
+- (void)setOptions:(NSArray *)options
+{
+    // shouldn't happen unless someone injects code and tries to change options
+    if ([self options] != nil)
+        [NSException raise:NSInternalInconsistencyException format:@"Attempt to reset options %@ to %@", [self options], options];
+    [_options autorelease];
+    _options = [options copy];
+}
+
+- (BOOL)_useRootHome
+{
+    return [[NSUserDefaults standardUserDefaults] boolForKey:TLMUseRootHomePreferenceKey];
+}
+
 - (void)main 
 {
     NSAutoreleasePool *pool = [NSAutoreleasePool new];
         
-    TLMLog(__func__, @"Checking code signature before running %@ as root%C", [_path lastPathComponent], 0x2026);
-    if ([self _checkSignature] == NO) {
+    TLMLog(__func__, @"Checking code signature before running %@ as root%C", [__TLMCwrapperPath() lastPathComponent], 0x2026);
+    if (__TLMCheckSignature() == NO) {
         TLMLog(__func__, @"*** ERROR *** The tlmgr_cwrapper has been modified after signing!\nRefusing to run child process with invalid signature.");
         [self _appendStringToErrorData:NSLocalizedString(@"The tlmgr_cwrapper helper application may have been tampered with.", @"")];
         [self setFailed:YES];
         [self cancel];
     }
     else {
-        TLMLog(__func__, @"Signature was valid, okay to run %@", [_path lastPathComponent]);
+        TLMLog(__func__, @"Signature was valid, okay to run %@", [__TLMCwrapperPath() lastPathComponent]);
     }
         
     AuthorizationRef authorization = NULL;
@@ -327,27 +353,53 @@ struct TLMAOInternal {
     if (NO == [self failed] && (authorization = [self _authorization]) != NULL) {
         
         // set up the connection to listen on our worker thread, so we avoid a race when exiting
-        _connection = [[NSConnection alloc] initWithReceivePort:[NSPort port] sendPort:nil];
-        [_connection setRootObject:[NSProtocolChecker protocolCheckerWithTarget:self protocol:@protocol(TLMAuthOperationProtocol)]];
+        NSConnection *connection = [NSConnection connectionWithReceivePort:[NSPort port] sendPort:nil];
+        [connection setRootObject:[NSProtocolChecker protocolCheckerWithTarget:self protocol:@protocol(TLMAuthOperationProtocol)]];
+        
+        // NSConnection name will be a UUID
+        CFUUIDRef uuid = CFUUIDCreate(NULL);
+        NSString *serverName = [(id)CFUUIDCreateString(NULL, uuid) autorelease];
+        CFRelease(uuid);
         
         // failure here isn't critical
-        if ([_connection registerName:_serverName] == NO)
-            TLMLog(__func__, @"-[TLMAuthorizedOperation init] Failed to register connection named %@", _serverName);            
+        if ([connection registerName:serverName] == NO)
+            TLMLog(__func__, @"-[TLMAuthorizedOperation init] Failed to register connection named %@", serverName);            
         
-        const char *cmdPath = [_path fileSystemRepresentation];
+        const char *cmdPath = [__TLMCwrapperPath() fileSystemRepresentation];
         
-        // add an extra arg and use calloc to zero the arg vector
-        char **args = NSZoneCalloc([self zone], ([_options count] + 2), sizeof(char *));
+        /*
+         *** IMPORTANT: change the arg count offset if tlmgr_cwrapper options change. ***
+         
+         Use calloc to zero the arg vector, then add the two required options for tlmgr_cwrapper
+         before adding the subprocess path and options.  A terminating 0 is required.
+         */
+        char **args = NSZoneCalloc([self zone], ([_options count] + 3), sizeof(char *));
         int i = 0;
         
         // first argument is the DO server name for IPC
-        args[i++] = (char *)[_serverName fileSystemRepresentation];
+        args[i++] = (char *)[serverName fileSystemRepresentation];
         
-        // fill argv with autoreleased C-strings
+        // second argument is option for root home
+        args[i++] = [self _useRootHome] ? "y" : "n";
+        
+        // remaining options are the command to execute and its options
         for (NSString *option in _options) {
             args[i++] = (char *)[option fileSystemRepresentation];
         }
                 
+        /*
+         Apple's current documentation [1] says to use launchd to run processes as root and they provide a sample [2] to do
+         this.  However, using AEWP is still suggested as viable for an "installer" process, and I'm interpreting that loosely.
+         Wedging IPC into the launchd process would be non-trivial, unless Apple improves the performance of asl_search to
+         become usable; my tests showed that it took ~10 seconds per query, so it's worthless for progress updates to a tableview.
+         In any case, I suspect that tlmgr itself is a more significant security hole, just because of the complexity of its
+         job and the multiple subprocesses involved; the actual act of running it with root privileges is trivial by comparison.
+         
+         [1] http://developer.apple.com/documentation/Security/Conceptual/authorization_concepts/01introduction/chapter_1_section_1.html
+         [2] http://developer.apple.com/samplecode/BetterAuthorizationSample/listing4.html
+         
+         */
+        
         /*
          Passing a NULL communicationsPipe to AEWP means we return immediately instead of blocking until the child exits.  
          This allows us to pass the child PID back via IPC (DO at present), then monitor the process and check -isCancelled.
@@ -369,6 +421,14 @@ struct TLMAOInternal {
             [self _appendStringToErrorData:errStr];
             [self setFailed:YES];
         }  
+        
+        // child has exited at this point
+        if (connection) {
+            [connection registerName:nil];
+            [[connection sendPort] invalidate];
+            [[connection receivePort] invalidate];
+            [connection invalidate];
+        }
     }
     
     // ordinarily tlmgr_cwrapper won't pass anything back up to us
@@ -377,7 +437,6 @@ struct TLMAOInternal {
     
     // clean up all scarce resources as soon as possible
     [self _closeQueue];
-    [self _destroyConnection];
 
     [pool release];
 }
@@ -393,7 +452,7 @@ struct TLMAOInternal {
 - (void)setUnderlyingPID:(pid_t)pid;
 {
     _internal->_underlying_pid = pid;
-    TLMLog(__func__, @"tlmgr_cwrapper checking in: pid = %d (%@)", pid, [self _underlyingProcessName]);
+    TLMLog(__func__, @"tlmgr_cwrapper checking in: pid = %d (%@)", pid, [self _underlyingCommand]);
     EV_SET(&_internal->_underlying_event, pid, EVFILT_PROC, EV_ADD, NOTE_EXIT, 0, NULL);
     kevent(_internal->_kqueue, &_internal->_underlying_event, 1, NULL, 0, NULL);      
 }
