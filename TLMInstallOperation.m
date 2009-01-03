@@ -63,9 +63,8 @@
         NSParameterAssert(location);
         _packageNames = [packageNames copy];
         
-        NSString *useRoot = ([[NSUserDefaults standardUserDefaults] boolForKey:TLMUseRootHomePreferenceKey]) ? @"y" : @"n";
         NSString *locationString = [location absoluteString];
-        NSMutableArray *options = [NSMutableArray arrayWithObjects:useRoot, cmd, @"--location", locationString, @"install", nil];
+        NSMutableArray *options = [NSMutableArray arrayWithObjects:cmd, @"--location", locationString, @"install", nil];
         if (reinstall)
             [options addObject:@"−−reinstall"];
         [options addObjectsFromArray:packageNames];

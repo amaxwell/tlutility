@@ -61,9 +61,7 @@
         self = nil;
     }
     else if ((self = [super init])) {
-        NSString *useRoot = ([[NSUserDefaults standardUserDefaults] boolForKey:TLMUseRootHomePreferenceKey]) ? @"y" : @"n";
-        NSArray *options = [NSArray arrayWithObjects:useRoot, cmd, @"paper", paperSize, nil];
-        [self setOptions:options];
+        [self setOptions:[NSArray arrayWithObjects:cmd, @"paper", paperSize, nil]];
     }
     return self;
 }
