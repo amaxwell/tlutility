@@ -85,7 +85,7 @@
     BOOL shouldScroll = NO;
     NSUInteger rowCount = [_tableView numberOfRows];
     // scroll to the last row, unless the user has manually scrolled up (check before reloading!)
-    if (rowCount && NSIntersectsRect([_tableView visibleRect], [_tableView rectOfRow:(rowCount - 1)]))
+    if (0 == rowCount || (rowCount > 0 && NSIntersectsRect([_tableView visibleRect], [_tableView rectOfRow:(rowCount - 1)])))
         shouldScroll = YES; 
     
     [_tableView reloadData];
