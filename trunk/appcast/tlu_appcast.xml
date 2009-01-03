@@ -52,5 +52,28 @@
             <pubDate>Tue, 30 Dec 2008 20:50:22 -0800</pubDate>
             <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20081230.tgz" sparkle:version="0.4" length="1073918" type="application/octet-stream" sparkle:dsaSignature="MCwCFA02ItvyIaNVQnuKsVFaaoolGWeyAhQZK0Z/v/db2sc4BXnEm9/YL4+HHg=="></enclosure>
         </item>
+        <item>
+            <title>Version 0.5</title>
+            <description>
+                <h3>Changes Since 0.4</h3>
+                <li>Set threaded animation explicitly on spinning progress indicators.</li>
+                <li>Minor performance improvement in drawing bottom gradient view.</li>
+                <li>Log more useful information in Sender column.</li>
+                <li>Avoid wiping out prior error messages for authorized operations.</li>
+                <li>Sign binaries using codesign.  Don't run if modified.</li>
+                <li>Avoid sending kill to PID 0 when tlmgr_cwrapper hasn't launched.</li>
+                <li>Use NSConnection instead of NSPortNameServer to deregister.</li>
+                <li>Fixed minor memory leaks reported by clang static analysis.</li>
+                <li>Fixed a out-of-order initializer.</li>
+                <li>Fixed a leak of task objects by revising runloop usage.</li>
+                <li>Added some useful URLs to the Help menu.</li>
+                <li>Added a property list with more mirrors.</li>
+                <li>Scroll log view when the first batch of messages come in.</li>
+                <li>Log when environment.plist is detected.</li>
+                <li>Reset PATH to system default before adding to it from prefs.</li>
+            </description>
+            <pubDate>Fri, 02 Jan 2009 17:55:31 -0800</pubDate>
+            <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20090102.tgz" sparkle:version="0.5" length="1104522" type="application/octet-stream" sparkle:dsaSignature="MCwCFAL5k5+afqJqncC3yc0eBefgIA9zAhRsBRrlh3xoCgX6eCx74GcD1YBp5w=="></enclosure>
+        </item>
     </channel>
 </rss>
