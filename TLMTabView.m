@@ -218,8 +218,17 @@
     
     // animate ~30 fps for 0.3 seconds, using NSAnimation to get the alpha curve
     NSAnimation *animation = [[NSAnimation alloc] initWithDuration:0.3 animationCurve:NSAnimationEaseInOut]; 
+    // runloop mode is irrelevant for non-blocking threaded
     [animation setAnimationBlockingMode:NSAnimationNonblockingThreaded];
-    [NSTimer scheduledTimerWithTimeInterval:0.03 target:self selector:@selector(animationFired:) userInfo:animation repeats:YES];
+    // explicitly alloc/init so it can be added to all the common modes instead of the default mode
+    NSTimer *timer = [[NSTimer alloc] initWithFireDate:[NSDate date]
+                                              interval:0.03
+                                                target:self 
+                                              selector:@selector(animationFired:)
+                                              userInfo:animation
+                                               repeats:YES];
+    [[NSRunLoop currentRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
+    [timer release];
     [animation startAnimation];
     [animation release];    
 }
