@@ -75,9 +75,8 @@
         _location = [location copy];
         NSString *scriptPath = [[NSUserDefaults standardUserDefaults] objectForKey:TLMInfraPathPreferenceKey];
         _scriptPath = [[_updateDirectory stringByAppendingPathComponent:scriptPath] copy];
-        NSString *useRoot = ([[NSUserDefaults standardUserDefaults] boolForKey:TLMUseRootHomePreferenceKey]) ? @"y" : @"n";
         // note that --nox11 is required to avoid spawning an xterm on some systems
-        NSMutableArray *options = [NSMutableArray arrayWithObjects:useRoot, _scriptPath, @"--nox11", nil];
+        NSMutableArray *options = [NSMutableArray arrayWithObjects:_scriptPath, @"--nox11", nil];
         [self setOptions:options];
         
     }

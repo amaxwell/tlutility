@@ -38,7 +38,6 @@
 
 #import "TLMUpdateOperation.h"
 #import "TLMPreferenceController.h"
-#import "TLMLogServer.h"
 
 @implementation TLMUpdateOperation
 
@@ -64,9 +63,8 @@
         NSParameterAssert(location);
         _packageNames = [packageNames copy];
         
-        NSString *useRoot = ([[NSUserDefaults standardUserDefaults] boolForKey:TLMUseRootHomePreferenceKey]) ? @"y" : @"n";
         NSString *locationString = [location absoluteString];
-        NSMutableArray *options = [NSMutableArray arrayWithObjects:useRoot, cmd, @"--location", locationString, @"update", nil];
+        NSMutableArray *options = [NSMutableArray arrayWithObjects:cmd, @"--location", locationString, @"update", nil];
         
         if (nil == packageNames) {
             [options addObject:@"--all"];

@@ -61,10 +61,8 @@
         [self release];
         self = nil;
     } else if ((self = [super init])) {
-        _packageNames = [packageNames copy];
-        
-        NSString *useRoot = ([[NSUserDefaults standardUserDefaults] boolForKey:TLMUseRootHomePreferenceKey]) ? @"y" : @"n";
-        NSMutableArray *options = [NSMutableArray arrayWithObjects:useRoot, cmd, @"remove", nil];
+        _packageNames = [packageNames copy];        
+        NSMutableArray *options = [NSMutableArray arrayWithObjects:cmd, @"remove", nil];
         [options addObjectsFromArray:packageNames];
         [self setOptions:options];
     }
