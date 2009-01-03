@@ -40,7 +40,6 @@
 #import "TLMLogServer.h"
 #import "TLMPreferenceController.h"
 
-#import <sys/types.h>
 #import <sys/stat.h>
 
 @implementation TLMInfraUpdateOperation
