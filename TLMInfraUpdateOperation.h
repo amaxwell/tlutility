@@ -37,9 +37,9 @@
  */
 
 #import <Cocoa/Cocoa.h>
-#import "TLMUpdateOperation.h"
+#import "TLMAuthorizedOperation.h"
 
-@interface TLMInfraUpdateOperation : TLMUpdateOperation
+@interface TLMInfraUpdateOperation : TLMAuthorizedOperation
 {
 @private
     NSString      *_updateDirectory;

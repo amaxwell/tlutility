@@ -48,7 +48,7 @@
     NSString *location = [[[TLMPreferenceController sharedPreferenceController] defaultServerURL] absoluteString];
     NSArray *options = [NSArray arrayWithObjects:@"--location", location, @"show", packageName, nil];
     NSString *cmd = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath];
-    self = [super initWithCommand:cmd options:options];
+    self = [self initWithCommand:cmd options:options];
     if (self) {
         _packageName = [packageName copy];
     }

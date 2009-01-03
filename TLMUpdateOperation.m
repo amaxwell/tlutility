@@ -51,28 +51,21 @@
 
 - (id)initWithPackageNames:(NSArray *)packageNames location:(NSURL *)location;
 {
+    NSParameterAssert(location);
     NSString *cmd = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath]; 
-    NSFileManager *fm = [NSFileManager new];
-    BOOL exists = [fm isExecutableFileAtPath:cmd];
-    [fm release];
+    NSString *locationString = [location absoluteString];
+    NSMutableArray *options = [NSMutableArray arrayWithObjects:@"--location", locationString, @"update", nil];
     
-    if (NO == exists) {
-        [self release];
-        self = nil;
-    } else if ((self = [super init])) {
-        NSParameterAssert(location);
+    if (nil == packageNames) {
+        [options addObject:@"--all"];
+    }
+    else {
+        [options addObjectsFromArray:packageNames];
+    }
+    
+    self = [self initWithCommand:cmd options:options];
+    if (self) {
         _packageNames = [packageNames copy];
-        
-        NSString *locationString = [location absoluteString];
-        NSMutableArray *options = [NSMutableArray arrayWithObjects:cmd, @"--location", locationString, @"update", nil];
-        
-        if (nil == packageNames) {
-            [options addObject:@"--all"];
-        }
-        else {
-            [options addObjectsFromArray:packageNames];
-        }
-        [self setOptions:options];
     }
     return self;
 }

@@ -45,40 +45,44 @@
 
 @implementation TLMInfraUpdateOperation
 
+static NSString *__TLMGetTemporaryDirectory()
+{
+    NSString *tempDir = NSTemporaryDirectory();
+    if (nil == tempDir)
+        tempDir = @"/tmp";
+    
+    const char *tmpPath = [[tempDir stringByAppendingPathComponent:@"TLMInfraUpdateOperation.XXXXXX"] fileSystemRepresentation];
+    
+    // mkstemp needs a writable string
+    char *tempName = strdup(tmpPath);
+    
+    // use mkdtemp to avoid race conditions
+    tempName = mkdtemp(tempName);
+    assert(tempName);
+    
+    // create a subdirectory that we can remove entirely
+    NSString *updateDirectory = (NSString *)CFStringCreateWithFileSystemRepresentation(CFAllocatorGetDefault(), tempName);
+    free(tempName);
+    
+    return [updateDirectory autorelease];
+}
+
 - (id)initWithLocation:(NSURL *)location;
 {
-    self = [super initWithPackageNames:nil location:location];
-    if (self) {
-        
-        NSString *tempDir = NSTemporaryDirectory();
-        if (nil == tempDir)
-            tempDir = @"/tmp";
-        
-        const char *tmpPath;
-        tmpPath = [[tempDir stringByAppendingPathComponent:@"TLMInfraUpdateOperation.XXXXXX"] fileSystemRepresentation];
-        
-        // mkstemp needs a writable string
-        char *tempName = strdup(tmpPath);
-        
-        // use mkdtemp to avoid race conditions
-        tempName = mkdtemp(tempName);
-        if (NULL == tempName) {
-            TLMLog(__func__, @"Failed to create temp directory %s", tempName);
-            [self release];
-            return nil;
-        }
-        
-        // create a subdirectory that we can remove entirely
-        _updateDirectory = (NSString *)CFStringCreateWithFileSystemRepresentation(CFAllocatorGetDefault(), tempName);
-        free(tempName);
-        
+    NSParameterAssert(location);
+
+    NSString *updateDirectory = __TLMGetTemporaryDirectory();
+    NSParameterAssert(updateDirectory);
+    
+    NSString *scriptPath = [[NSUserDefaults standardUserDefaults] objectForKey:TLMInfraPathPreferenceKey];
+    scriptPath = [updateDirectory stringByAppendingPathComponent:scriptPath];
+    
+    // note that --nox11 is required to avoid spawning an xterm on some systems
+    self = [self initWithCommand:scriptPath options:[NSArray arrayWithObject:@"--nox11"]];
+    if (self) {        
         _location = [location copy];
-        NSString *scriptPath = [[NSUserDefaults standardUserDefaults] objectForKey:TLMInfraPathPreferenceKey];
-        _scriptPath = [[_updateDirectory stringByAppendingPathComponent:scriptPath] copy];
-        // note that --nox11 is required to avoid spawning an xterm on some systems
-        NSMutableArray *options = [NSMutableArray arrayWithObjects:_scriptPath, @"--nox11", nil];
-        [self setOptions:options];
-        
+        _scriptPath = [scriptPath copy];        
+        _updateDirectory = [updateDirectory copy];
     }
     return self;
 }

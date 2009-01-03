@@ -51,19 +51,8 @@
 {
     NSParameterAssert(paperSize);
     
-    NSString *cmd = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath]; 
-    NSFileManager *fm = [NSFileManager new];
-    BOOL exists = [fm isExecutableFileAtPath:cmd];
-    [fm release];
-    
-    if (NO == exists) {
-        [self release];
-        self = nil;
-    }
-    else if ((self = [super init])) {
-        [self setOptions:[NSArray arrayWithObjects:cmd, @"paper", paperSize, nil]];
-    }
-    return self;
+    NSString *cmd = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath];
+    return [self initWithCommand:cmd options:[NSArray arrayWithObjects:@"paper", paperSize, nil]];
 }
 
 @end
