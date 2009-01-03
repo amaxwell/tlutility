@@ -42,21 +42,14 @@
 @interface TLMAuthorizedOperation : TLMOperation
 {
 @private
-    NSString             *_path;
     NSArray              *_options;
-    NSConnection         *_connection;
-    NSString             *_serverName;
     struct TLMAOInternal *_internal;
 }
 
+/*
+ May only be set once; subsequent attempts will raise an exception.
+ The first option is the command to execute (e.g. /usr/texbin/tlmgr).
+ */
 @property(readwrite, copy) NSArray *options;
 
 @end
-
-@protocol TLMAuthOperationProtocol
-
-- (void)setWrapperPID:(in pid_t)pid;
-- (void)setUnderlyingPID:(in pid_t)pid;
-
-@end
-
