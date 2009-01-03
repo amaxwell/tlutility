@@ -28,6 +28,7 @@
 		F9A8BA380EF75C3B00E35DC9 /* TLMOutputParser2.m in Sources */ = {isa = PBXBuildFile; fileRef = F9A8BA370EF75C3B00E35DC9 /* TLMOutputParser2.m */; };
 		F9A8BB370EF8B11200E35DC9 /* TLMInfraUpdateOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F9A8BB360EF8B11200E35DC9 /* TLMInfraUpdateOperation.m */; };
 		F9ABAA5E0EF198D500497E0F /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = F9ABAA5D0EF198D500497E0F /* Credits.rtf */; };
+		F9B062000F0F388500BB03D3 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = F9B061FF0F0F388500BB03D3 /* Localizable.strings */; };
 		F9B134610EEB1894007C0046 /* TLMAppController.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B134600EEB1894007C0046 /* TLMAppController.m */; };
 		F9B134680EEB19CB007C0046 /* TLMMainWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B134670EEB19CB007C0046 /* TLMMainWindowController.m */; };
 		F9B134710EEB1B13007C0046 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = F9B134700EEB1B13007C0046 /* MainWindow.xib */; };
@@ -39,7 +40,7 @@
 		F9B137200EEC4A92007C0046 /* TLMUpdateOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B1371F0EEC4A92007C0046 /* TLMUpdateOperation.m */; };
 		F9B137330EEC4C6A007C0046 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9B137320EEC4C6A007C0046 /* Security.framework */; };
 		F9B139D40EECBE23007C0046 /* tlmgr_cwrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B139D30EECBE23007C0046 /* tlmgr_cwrapper.m */; };
-		F9B139DA0EECBECD007C0046 /* tlmgr_cwrapper in CopyFiles */ = {isa = PBXBuildFile; fileRef = F9B139CB0EECBDFE007C0046 /* tlmgr_cwrapper */; };
+		F9B139DA0EECBECD007C0046 /* tlmgr_cwrapper in copy tlmgr_cwrapper */ = {isa = PBXBuildFile; fileRef = F9B139CB0EECBDFE007C0046 /* tlmgr_cwrapper */; };
 		F9B13ADE0EECDAC8007C0046 /* TLMSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B13ADB0EECD9DA007C0046 /* TLMSplitView.m */; };
 		F9B13B1D0EECE7F3007C0046 /* TLMInfoOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B13B1C0EECE7F3007C0046 /* TLMInfoOperation.m */; };
 		F9B13B240EECEA73007C0046 /* TLMInfoController.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B13B170EECE5AE007C0046 /* TLMInfoController.m */; };
@@ -52,7 +53,7 @@
 		F9D37DEC0F021AA900FB755E /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9D37DEB0F021AA900FB755E /* QuartzCore.framework */; };
 		F9D37E7B0F02B5F700FB755E /* TLMOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D37E7A0F02B5F700FB755E /* TLMOutlineView.m */; };
 		F9DCD36C0F06F0A200600DD2 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9DCD3650F06F08C00600DD2 /* Sparkle.framework */; };
-		F9DCD3700F06F0F400600DD2 /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F9DCD3650F06F08C00600DD2 /* Sparkle.framework */; };
+		F9DCD3700F06F0F400600DD2 /* Sparkle.framework in copy Sparkle */ = {isa = PBXBuildFile; fileRef = F9DCD3650F06F08C00600DD2 /* Sparkle.framework */; };
 		F9DCD43F0F06F76F00600DD2 /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = F9DCD43E0F06F76F00600DD2 /* dsa_pub.pem */; };
 		F9E22FD50EFCBD2A00B0BE38 /* TLMPapersizeOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F9E22FD40EFCBD2A00B0BE38 /* TLMPapersizeOperation.m */; };
 		F9F130560EED94D800D9968D /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = F9F130550EED94D800D9968D /* Preferences.xib */; };
@@ -108,24 +109,26 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		F9B139DD0EECBEEB007C0046 /* CopyFiles */ = {
+		F9B139DD0EECBEEB007C0046 /* copy tlmgr_cwrapper */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 6;
 			files = (
-				F9B139DA0EECBECD007C0046 /* tlmgr_cwrapper in CopyFiles */,
+				F9B139DA0EECBECD007C0046 /* tlmgr_cwrapper in copy tlmgr_cwrapper */,
 			);
+			name = "copy tlmgr_cwrapper";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		F9DCD37C0F06F11300600DD2 /* CopyFiles */ = {
+		F9DCD37C0F06F11300600DD2 /* copy Sparkle */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				F9DCD3700F06F0F400600DD2 /* Sparkle.framework in CopyFiles */,
+				F9DCD3700F06F0F400600DD2 /* Sparkle.framework in copy Sparkle */,
 			);
+			name = "copy Sparkle";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -169,6 +172,7 @@
 		F9A8BB350EF8B11200E35DC9 /* TLMInfraUpdateOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMInfraUpdateOperation.h; sourceTree = "<group>"; };
 		F9A8BB360EF8B11200E35DC9 /* TLMInfraUpdateOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMInfraUpdateOperation.m; sourceTree = "<group>"; };
 		F9ABAA5D0EF198D500497E0F /* Credits.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = Credits.rtf; sourceTree = "<group>"; };
+		F9B061FD0F0F387700BB03D3 /* English */ = {isa = PBXFileReference; fileEncoding = 2483028224; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/Localizable.strings; sourceTree = "<group>"; };
 		F9B1345F0EEB1894007C0046 /* TLMAppController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMAppController.h; sourceTree = "<group>"; };
 		F9B134600EEB1894007C0046 /* TLMAppController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMAppController.m; sourceTree = "<group>"; };
 		F9B134660EEB19CB007C0046 /* TLMMainWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMMainWindowController.h; sourceTree = "<group>"; };
@@ -326,6 +330,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				F9B061FF0F0F388500BB03D3 /* Localizable.strings */,
 				F9DCD43E0F06F76F00600DD2 /* dsa_pub.pem */,
 				F97E860B0EFA3BFD00862882 /* TeXDistDocument.icns */,
 				F97E85730EFA18F400862882 /* TeXDistTool.icns */,
@@ -451,9 +456,9 @@
 				8D1107290486CEB800E47090 /* Resources */,
 				8D11072C0486CEB800E47090 /* Sources */,
 				8D11072E0486CEB800E47090 /* Frameworks */,
-				F9B139DD0EECBEEB007C0046 /* CopyFiles */,
-				F9DCD37C0F06F11300600DD2 /* CopyFiles */,
-				F9D9AD660F0D790600CB1A2F /* ShellScript */,
+				F9B139DD0EECBEEB007C0046 /* copy tlmgr_cwrapper */,
+				F9DCD37C0F06F11300600DD2 /* copy Sparkle */,
+				F9D9AD660F0D790600CB1A2F /* codesign */,
 			);
 			buildRules = (
 			);
@@ -555,19 +560,21 @@
 				F97E860C0EFA3BFD00862882 /* TeXDistDocument.icns in Resources */,
 				F905217F0EFEA98600B489FE /* PapersizeSheet.xib in Resources */,
 				F9DCD43F0F06F76F00600DD2 /* dsa_pub.pem in Resources */,
+				F9B062000F0F388500BB03D3 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		F9D9AD660F0D790600CB1A2F /* ShellScript */ = {
+		F9D9AD660F0D790600CB1A2F /* codesign */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
+			name = codesign;
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -598,7 +605,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd ${SOURCE_ROOT}\n/usr/bin/genstrings -o \"${SOURCE_ROOT}/English.lproj\" *.m";
+			shellScript = "cd ${SOURCE_ROOT}\n\n/usr/bin/genstrings -o \"${SOURCE_ROOT}/English.lproj\" *.m";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -682,6 +689,14 @@
 				1DDD58150DA1D0A300B32029 /* English */,
 			);
 			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+		F9B061FF0F0F388500BB03D3 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F9B061FD0F0F387700BB03D3 /* English */,
+			);
+			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 		F9B134700EEB1B13007C0046 /* MainWindow.xib */ = {
