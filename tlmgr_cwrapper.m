@@ -305,9 +305,9 @@ int main(int argc, char *argv[]) {
                 stillRunning = false;
                 log_notice(@"child process pid = %d exited", child);
             }
-            else if (event.filter == EVFILT_READ && event.ident == outpipe[0]) {
+            else if (event.filter == EVFILT_READ && event.ident == (unsigned)outpipe[0]) {
                 
-                ssize_t len = event.data;
+                size_t len = event.data;
                 char sbuf[2048];
                 char *buf = (len > sizeof(sbuf)) ? buf = malloc(len) : sbuf;
                 len = read(event.ident, buf, len);
@@ -315,9 +315,9 @@ int main(int argc, char *argv[]) {
                 if (buf != sbuf) free(buf);
                 log_lines_and_clear(outBuffer, false);
             }
-            else if (event.filter == EVFILT_READ && event.ident == errpipe[0]) {
+            else if (event.filter == EVFILT_READ && event.ident == (unsigned)errpipe[0]) {
                 
-                ssize_t len = event.data;
+                size_t len = event.data;
                 char sbuf[2048];
                 char *buf = (len > sizeof(sbuf)) ? buf = malloc(len) : sbuf;
                 len = read(event.ident, buf, len);
