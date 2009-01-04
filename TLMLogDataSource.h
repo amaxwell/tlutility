@@ -42,9 +42,9 @@
 @interface TLMLogDataSource : NSObject 
 {
 @private
-    TLMTableView *_tableView;
-    NSArray      *_messages;
-    BOOL          _updateScheduled;
+    TLMTableView   *_tableView;
+    NSMutableArray *_messages;
+    BOOL            _updateScheduled;
 }
 
 @property (nonatomic, retain) IBOutlet TLMTableView *_tableView;

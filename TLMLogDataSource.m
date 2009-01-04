@@ -40,15 +40,9 @@
 #import "TLMLogServer.h"
 #import "TLMTableView.h"
 
-@interface TLMLogDataSource()
-@property (readwrite, copy) NSArray *messages;
-@end
-
-
 @implementation TLMLogDataSource
 
 @synthesize _tableView;
-@synthesize messages = _messages;
 
 - (id)init
 {
@@ -57,7 +51,8 @@
         [[NSNotificationCenter defaultCenter] addObserver:self 
                                                  selector:@selector(_handleLogServerUpdateNotification:) 
                                                      name:TLMLogServerUpdateNotification 
-                                                   object:[TLMLogServer sharedServer]];        
+                                                   object:[TLMLogServer sharedServer]];       
+        _messages = [NSMutableArray new];
     }
     return self;
 }
@@ -80,7 +75,7 @@
     // timer does not repeat
     _updateScheduled = NO;
     
-    [self setMessages:[[TLMLogServer sharedServer] messages]];
+    [_messages addObjectsFromArray:[[TLMLogServer sharedServer] messagesFromIndex:[_messages count]]];
     
     BOOL shouldScroll = NO;
     NSUInteger rowCount = [_tableView numberOfRows];
