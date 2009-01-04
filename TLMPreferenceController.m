@@ -150,8 +150,12 @@ NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";     /
                        didEndSelector:@selector(openPanelDidEnd:returnCode:contextInfo:) contextInfo:NULL];
 }
 
+#define URL_CONNECTION_TIMEOUT 30
+
 - (BOOL)_canConnectToDefaultServer
 {
+    TLMLog(__func__, @"Checking for a connection to %@%C", [[self defaultServerURL] absoluteString], 0x2026);
+    
     // see if we have a network connection
     CFNetDiagnosticRef diagnostic = CFNetDiagnosticCreateWithURL(NULL, (CFURLRef)[self defaultServerURL]);
     [(id)diagnostic autorelease];
@@ -162,7 +166,7 @@ NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";     /
     
     NSURLRequest *request = [NSURLRequest requestWithURL:[self defaultServerURL] 
                                              cachePolicy:NSURLRequestReloadIgnoringCacheData 
-                                         timeoutInterval:30.0];
+                                         timeoutInterval:URL_CONNECTION_TIMEOUT];
     NSHTTPURLResponse *response;
     NSError *error = nil;
     NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
@@ -184,21 +188,30 @@ NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";     /
 
 - (IBAction)changeServerURL:(id)sender
 {
+    // save the old value, then set new value in prefs, so -defaultServerURL can be used in _canConnectToDefaultServer
     NSString *oldValue = [[[[NSUserDefaults standardUserDefaults] objectForKey:TLMServerURLPreferenceKey] copy] autorelease];
-    
     NSString *serverURLString = [[sender cell] stringValue];
     [[NSUserDefaults standardUserDefaults] setObject:serverURLString forKey:TLMServerURLPreferenceKey];
-    if ([self _canConnectToDefaultServer] == NO) {
+    
+    /*
+     It's not immediately obvious how to compose the URL, since each mirror has a different path.
+     Do a quick check if this isn't one of the URLs from the bundled plist.
+     */
+    if ([_servers containsObject:serverURLString] == NO && [self _canConnectToDefaultServer] == NO) {
         
         NSAlert *alert = [[NSAlert new] autorelease];
-        [alert setMessageText:NSLocalizedString(@"Unable to connect to server.", @"alert title")];
-        [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"Either a network connection was not availble, or the directory \"%@\" does not exist at the specified CTAN root URL.  The previous value will be restored.", @"alert message text"), [[NSUserDefaults standardUserDefaults] objectForKey:TLMServerPathPreferenceKey]]];
+        [alert setMessageText:[NSString stringWithFormat:NSLocalizedString(@"Unable to connect to server after %d seconds.", @"alert title"), (int)URL_CONNECTION_TIMEOUT]];
+        [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"Either a network connection could not be established, or the directory \"%@\" does not exist at the specified CTAN root URL.  Would you like to keep this URL, or revert to the previous one?", @"alert message text"), [[NSUserDefaults standardUserDefaults] objectForKey:TLMServerPathPreferenceKey]]];
+        [alert addButtonWithTitle:NSLocalizedString(@"Revert", @"")];
+        [alert addButtonWithTitle:NSLocalizedString(@"Keep", @"")];
         
         // don't run as a sheet, since this may need to block a window close
-        [alert runModal];
+        NSInteger rv = [alert runModal];
         
-        [[NSUserDefaults standardUserDefaults] setObject:oldValue forKey:TLMServerURLPreferenceKey];
-        [[sender cell] setStringValue:oldValue];
+        if (NSAlertFirstButtonReturn == rv) {
+            [[NSUserDefaults standardUserDefaults] setObject:oldValue forKey:TLMServerURLPreferenceKey];
+            [[sender cell] setStringValue:oldValue];
+        }
     }
 }
 
