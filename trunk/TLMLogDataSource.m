@@ -93,7 +93,9 @@
 - (void)_scheduleUpdate
 {
     _updateScheduled = YES;
-    [self performSelector:@selector(_update) withObject:nil afterDelay:0.3];
+    
+    // update the log in all common modes
+    [self performSelector:@selector(_update) withObject:nil afterDelay:0.3 inModes:[NSArray arrayWithObject:NSRunLoopCommonModes]];
 }    
 
 - (void)_handleLogServerUpdateNotification:(NSNotification *)aNote
