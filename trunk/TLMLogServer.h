@@ -49,6 +49,11 @@ extern NSString * const TLMLogServerUpdateNotification;
 }
 
 + (id)sharedServer;
+
+// returns messages in range (anIndex, end) or nil if anIndex is out of range
+- (NSArray *)messagesFromIndex:(NSUInteger)anIndex;
+
+// returns a snapshot of all messages
 @property(readonly, retain) NSArray *messages;
 
 @end

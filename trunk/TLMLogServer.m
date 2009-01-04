@@ -152,6 +152,17 @@ static NSConnection * __TLMLSCreateAndRegisterConnectionForServer(TLMLogServer *
     return messages;
 }
 
+- (NSArray *)messagesFromIndex:(NSUInteger)anIndex;
+{
+    NSArray *messages = nil;
+    @synchronized(_messages) {
+        NSUInteger count = [_messages count];
+        if (anIndex < count)
+            messages = [_messages subarrayWithRange:NSMakeRange(anIndex, count - anIndex)];
+    }
+    return messages;
+}
+
 - (void)_notifyOnMainThread
 {
     NSParameterAssert([NSThread isMainThread]);
