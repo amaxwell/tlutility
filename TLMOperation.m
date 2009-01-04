@@ -176,17 +176,24 @@ static char _TLMOperationFinishedContext;
     
     // now that the task is finished, run the special runloop mode (only two sources in this mode)
     SInt32 ret;
+    
     do {
+
+        // handle both sources in this mode immediately
+        // any nonzero timeout should be sufficient, since the task has completed and flushed the pipe
+        ret = CFRunLoopRunInMode((CFStringRef)rlmode, 0.1, FALSE);
         
-        // pass #1: handle both sources in this mode immediately (ret = kCFRunLoopRunTimedOut)
-        ret = CFRunLoopRunInMode((CFStringRef)rlmode, 0, FALSE);
-        
-        // pass #2: ret = kCFRunLoopFinished
+        // should get this immediately
         if (kCFRunLoopRunFinished == ret || kCFRunLoopRunStopped == ret) {
             break;
         }
         
-    } while (kCFRunLoopRunHandledSource == ret || kCFRunLoopRunTimedOut == ret);
+        // hard timeout, since all I get when a task is terminated is kCFRunLoopRunTimedOut
+        if (kCFRunLoopRunTimedOut == ret) {
+            break;
+        }
+        
+    } while (kCFRunLoopRunHandledSource == ret);
         
     signal(SIGPIPE, previousSignalMask);
 
