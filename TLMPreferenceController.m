@@ -150,11 +150,11 @@ NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";     /
                        didEndSelector:@selector(openPanelDidEnd:returnCode:contextInfo:) contextInfo:NULL];
 }
 
-#define URL_CONNECTION_TIMEOUT 30
-
 - (BOOL)_canConnectToDefaultServer
 {
-    TLMLog(__func__, @"Checking for a connection to %@%C", [[self defaultServerURL] absoluteString], 0x2026);
+    NSString *URLString = [[self defaultServerURL] absoluteString];
+    
+    TLMLog(__func__, @"Checking for a connection to %@%C", URLString, 0x2026);
     
     // see if we have a network connection
     CFNetDiagnosticRef diagnostic = CFNetDiagnosticCreateWithURL(NULL, (CFURLRef)[self defaultServerURL]);
@@ -166,18 +166,23 @@ NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";     /
     
     NSURLRequest *request = [NSURLRequest requestWithURL:[self defaultServerURL] 
                                              cachePolicy:NSURLRequestReloadIgnoringCacheData 
-                                         timeoutInterval:URL_CONNECTION_TIMEOUT];
+                                         timeoutInterval:30.0];
     NSHTTPURLResponse *response;
     NSError *error = nil;
     NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
     
     // response will not be an NSHTTPURLResponse for ftp: hosts, but data is empty
     if ([response respondsToSelector:@selector(statusCode)] && [response statusCode] != 200) {
-        TLMLog(__func__, @"http response from %@ was %d", [self defaultServerURL], [response statusCode]);
+        TLMLog(__func__, @"http response from %@ was %d", URLString, [response statusCode]);
         data = nil;
     }
     else if ([data length] == 0) {
-        TLMLog(__func__, @"no data from %@", [self defaultServerURL]);
+        TLMLog(__func__, @"no data from %@\nresponse = %@", URLString, response);
+    }
+    
+    // doc for +[NSConnection sendSynchronousRequest:returningResponse:error] sez this will be nil if no error
+    if (error) {
+        TLMLog(__func__, @"error from loading %@: %@", URLString, error);
     }
     
     // this gets screwed up by "http://mirror.ctan.orgs/" getting redirected to opendns.com, but
@@ -200,7 +205,7 @@ NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";     /
     if ([_servers containsObject:serverURLString] == NO && [self _canConnectToDefaultServer] == NO) {
         
         NSAlert *alert = [[NSAlert new] autorelease];
-        [alert setMessageText:[NSString stringWithFormat:NSLocalizedString(@"Unable to connect to server after %d seconds.", @"alert title"), (int)URL_CONNECTION_TIMEOUT]];
+        [alert setMessageText:NSLocalizedString(@"Unable to connect to server.", @"alert title")];
         [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"Either a network connection could not be established, or the directory \"%@\" does not exist at the specified CTAN root URL.  Would you like to keep this URL, or revert to the previous one?", @"alert message text"), [[NSUserDefaults standardUserDefaults] objectForKey:TLMServerPathPreferenceKey]]];
         [alert addButtonWithTitle:NSLocalizedString(@"Revert", @"")];
         [alert addButtonWithTitle:NSLocalizedString(@"Keep", @"")];
