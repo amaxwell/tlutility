@@ -122,7 +122,7 @@
                                                                   @"(SELF contains 'INPUTS')"];
         NSArray *keys = [[env allKeys] filteredArrayUsingPredicate:predicate];
         if ([keys count]) {
-            TLMLog(__func__, @"*** WARNING *** ~/.MacOSX/environment.plist alters critical variables; ignoring PATH.");
+            TLMLog(__func__, @"*** WARNING *** ~/.MacOSX/environment.plist alters critical variables; ignoring PATH if present in %@", keys);
         }
         else {
             // log anyway, since it's a huge PITA to diagnose a screwed up environment
