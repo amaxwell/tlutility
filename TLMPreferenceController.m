@@ -49,6 +49,7 @@ NSString * const TLMInfraPathPreferenceKey = @"TLMInfraPathPreferenceKey";     /
 NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";     /* NO                          */
 
 #define TLMGR_CMD @"tlmgr"
+#define TEXDOC_CMD @"texdoc"
 
 @implementation TLMPreferenceController
 
@@ -318,6 +319,11 @@ NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";     /
     return [[texbinPath stringByAppendingPathComponent:TLMGR_CMD] stringByStandardizingPath];
 }
 
+- (NSString *)texdocAbsolutePath
+{
+    NSString *texbinPath = [[NSUserDefaults standardUserDefaults] objectForKey:TLMTexBinPathPreferenceKey];
+    return [[texbinPath stringByAppendingPathComponent:TEXDOC_CMD] stringByStandardizingPath];
+}
 
 #pragma mark Server combo box datasource
 

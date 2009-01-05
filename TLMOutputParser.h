@@ -47,7 +47,7 @@
 
 // returns a plain string if parsing fails, raises if infoString is nil
 // for output of `tlmgr show'
-+ (NSAttributedString *)attributedStringWithInfoString:(NSString *)infoString;
++ (NSAttributedString *)attributedStringWithInfoString:(NSString *)infoString docURLs:(NSArray *)docURLs;
 
 // returns an array of TLMPackageNodes, each of which may have child nodes
 // for output of `tlmgr list`

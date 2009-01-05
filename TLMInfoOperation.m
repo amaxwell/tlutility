@@ -38,13 +38,21 @@
 
 #import "TLMInfoOperation.h"
 #import "TLMPreferenceController.h"
+#import "TLMLogServer.h"
+#import "BDSKTask.h"
+
+@interface TLMInfoOperation()
+@property (readwrite, copy) NSArray *documentationURLs;
+@end
 
 @implementation TLMInfoOperation
 
 @synthesize packageName = _packageName;
+@synthesize documentationURLs = _documentationURLs;
 
 - (id)initWithPackageName:(NSString *)packageName
 {
+    NSParameterAssert(packageName);
     NSString *location = [[[TLMPreferenceController sharedPreferenceController] defaultServerURL] absoluteString];
     NSArray *options = [NSArray arrayWithObjects:@"--location", location, @"show", packageName, nil];
     NSString *cmd = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath];
@@ -58,6 +66,7 @@
 - (void)dealloc
 {
     [_packageName release];
+    [_documentationURLs release];
     [super dealloc];
 }
 
@@ -71,6 +80,66 @@
             infoString = [[NSString alloc] initWithData:output encoding:NSMacOSRomanStringEncoding];
     }
     return [infoString autorelease];
+}
+
+- (void)main
+{
+    [super main];
+    
+    NSAutoreleasePool *pool = [NSAutoreleasePool new];
+    
+    NSString *cmd = [[TLMPreferenceController sharedPreferenceController] texdocAbsolutePath];
+    
+    // !!! bail out early if the file doesn't exist
+    if ([[NSFileManager defaultManager] isExecutableFileAtPath:cmd] == NO) {
+        TLMLog(__func__, @"%@ does not exist or is not executable", cmd);
+        [pool release];
+        return;
+    }
+    
+    BDSKTask *task = [[BDSKTask new] autorelease];
+    [task setLaunchPath:cmd];
+    [task setArguments:[NSArray arrayWithObjects:@"-l", @"-I", [self packageName], nil]];
+    
+    // output won't fill the pipe's buffer
+    [task setStandardOutput:[NSPipe pipe]];
+    [task setStandardError:[NSPipe pipe]];
+    [task launch];
+    [task waitUntilExit];
+        
+    if ([task terminationStatus] == 0) {
+        NSFileHandle *fh = [[task standardOutput] fileHandleForReading];
+        NSData *outputData = [fh readDataToEndOfFile];
+        NSString *outputString = nil;
+        if ([outputData length])
+            outputString = [[[NSString alloc] initWithData:outputData encoding:NSUTF8StringEncoding] autorelease];
+        if (outputString) {
+            NSArray *docPaths = [outputString componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+            NSMutableArray *docURLs = [NSMutableArray array];
+            for (NSString *docPath in docPaths) {
+                // avoid empty lines...
+                docPath = [docPath stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+                NSURL *docURL = [docPath isEqualToString:@""] ? nil : [NSURL fileURLWithPath:docPath];
+                if (docURL) [docURLs addObject:docURL];
+            }
+            if ([docURLs count])
+                [self setDocumentationURLs:docURLs];
+        }
+    }
+    
+    // read stderr
+    NSFileHandle *fh = [[task standardError] fileHandleForReading];
+    NSData *errorData = [fh readDataToEndOfFile];
+    NSString *errorString = nil;
+    if ([errorData length])
+        errorString = [[[NSString alloc] initWithData:errorData encoding:NSUTF8StringEncoding] autorelease];
+    if (errorString)
+        TLMLog(__func__, @"%@", [errorString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]);
+    
+    if ([[self documentationURLs] count] == 0)
+        TLMLog(__func__, @"Unable to find documentation for %@", [self packageName]);
+
+    [pool release];
 }
 
 @end
