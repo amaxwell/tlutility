@@ -126,8 +126,12 @@
     if ([op isCancelled] == NO) {
         NSString *result = [op infoString];
         if (result) {
+            NSArray *docURLs = [op documentationURLs];
+            // let texdoc handle the sort order (if any)
+            if ([docURLs count]) [[self window] setRepresentedURL:[docURLs objectAtIndex:0]];
             [[self window] setTitle:[op packageName]];
-            [[_textView textStorage] setAttributedString:[TLMOutputParser attributedStringWithInfoString:result]];
+            [_textView setSelectedRange:NSMakeRange(0, 0)];
+            [[_textView textStorage] setAttributedString:[TLMOutputParser attributedStringWithInfoString:result docURLs:docURLs]];
         }
         else {
             [_textView setString:[NSString stringWithFormat:NSLocalizedString(@"Unable to find info for %@", @"error message for info panel"), [op packageName]]];
@@ -150,7 +154,9 @@
         TLMInfoOperation *op = [[TLMInfoOperation alloc] initWithPackageName:[package name]];
         if (op) {
             
+            // clear previous title and file proxy icon
             [[self window] setTitle:[NSString stringWithFormat:NSLocalizedString(@"Searching%C", @"info panel title"), 0x2026]];
+            [[self window] setRepresentedURL:nil];
             
             [_tabView selectLastTabViewItem:nil];
             [self _recenterSpinner];
@@ -169,10 +175,22 @@
     }
     else {
         [[self window] setTitle:NSLocalizedString(@"Nothing Selected", @"info panel title")];
+        [[self window] setRepresentedURL:nil];
+        [_textView setSelectedRange:NSMakeRange(0, 0)];
         [_textView setString:@""];
         [_spinner stopAnimation:nil];
         [_tabView selectFirstTabViewItem:nil];
     }        
 }
+
+- (BOOL)textView:(NSTextView *)aTextView clickedOnLink:(id)link atIndex:(NSUInteger)charIndex
+{
+    if ([link isKindOfClass:[NSURL class]])
+        return [[NSWorkspace sharedWorkspace] openURL:link];
+    else if ([link isKindOfClass:[NSString class]] && (link = [NSURL URLWithString:link]) != nil)
+        return [[NSWorkspace sharedWorkspace] openURL:link];
+    return NO;
+}
+
 
 @end

@@ -43,10 +43,13 @@
 {
 @private
     NSString *_packageName;
+    NSArray  *_documentationURLs;
 }
 
 - (id)initWithPackageName:(NSString *)packageName;
-@property(readonly, copy) NSString *infoString;
-@property(readonly, copy) NSString *packageName;
+
+@property (readonly, copy) NSString *infoString;
+@property (readonly, copy) NSString *packageName;
+@property (readonly, copy) NSArray *documentationURLs;
 
 @end

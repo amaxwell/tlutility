@@ -72,4 +72,7 @@ extern NSString * const TLMUseSyslogPreferenceKey;
 // adds tlmgr to TLMTexBinPathPreferenceKey, standardizes path
 @property (readonly) NSString *tlmgrAbsolutePath;
 
+// adds texdoc to TLMTexBinPathPreferenceKey, standardizes path
+@property (readonly) NSString *texdocAbsolutePath;
+
 @end

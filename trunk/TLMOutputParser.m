@@ -198,7 +198,7 @@ static bool hasKeyPrefix(NSString *line)
     return dict;
 }
 
-+ (NSAttributedString *)attributedStringWithInfoString:(NSString *)infoString;
++ (NSAttributedString *)attributedStringWithInfoString:(NSString *)infoString docURLs:(NSArray *)docURLs;
 {
     NSDictionary *info = [self _infoDictionaryWithString:infoString];
     
@@ -287,6 +287,24 @@ static bool hasKeyPrefix(NSString *line)
         [attrString addAttribute:NSFontAttributeName value:userFont range:NSMakeRange(previousLength, [attrString length] - previousLength)];
     }
     
+    if ([docURLs count]) {
+        previousLength = [attrString length];
+        [[attrString mutableString] appendString:NSLocalizedString(@"\nDocumentation:\n", @"heading in info panel")];
+        [attrString addAttribute:NSFontAttributeName value:boldFont range:NSMakeRange(previousLength, [attrString length] - previousLength)];
+        
+        for (NSURL *docURL in docURLs) {
+            previousLength = [attrString length];
+            [[attrString mutableString] appendString:[[docURL path] lastPathComponent]];
+            [attrString addAttribute:NSFontAttributeName value:userFont range:NSMakeRange(previousLength, [attrString length] - previousLength)];
+            [attrString addAttribute:NSLinkAttributeName value:docURL range:NSMakeRange(previousLength, [attrString length] - previousLength)];
+            [attrString addAttribute:NSCursorAttributeName value:[NSCursor pointingHandCursor] range:NSMakeRange(previousLength, [attrString length] - previousLength)];
+            
+            previousLength = [attrString length];
+            [[attrString mutableString] appendString:@"\n"];
+            [attrString removeAttribute:NSLinkAttributeName range:NSMakeRange(previousLength, [attrString length] - previousLength)];
+        }        
+    }
+        
     return [attrString autorelease];
 }
 
