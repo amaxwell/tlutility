@@ -150,6 +150,83 @@ NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";     /
                        didEndSelector:@selector(openPanelDidEnd:returnCode:contextInfo:) contextInfo:NULL];
 }
 
+- (BOOL)_canConnectToDefaultFTPServer
+{
+    CFReadStreamRef stream = CFReadStreamCreateWithFTPURL(NULL, (CFURLRef)[self defaultServerURL]);
+    if (NULL == stream)
+        return NO;
+    
+    if (CFReadStreamOpen(stream) == FALSE) {
+        CFRelease(stream);
+        return NO;
+    }
+    
+    CFStreamStatus status;
+    const CFAbsoluteTime start = CFAbsoluteTimeGetCurrent();
+    bool keepWaiting;
+    do {
+        
+        status = CFReadStreamGetStatus(stream);
+        
+        if (kCFStreamStatusOpen != status && kCFStreamStatusError != status) {
+            keepWaiting = false;
+        }
+        // absolute timeout check; set error to bail out after this loop
+        else if (CFAbsoluteTimeGetCurrent() > start + 30.0) {
+            TLMLog(__func__, @"Unable to connect to %@ after 30.0 seconds", [[self defaultServerURL] absoluteString]);
+            status = kCFStreamStatusError;
+            keepWaiting = false;
+        }
+        else {
+            // block in a private runloop mode so we get a beachball
+            CFRunLoopRunInMode(CFSTR("TLMFTPRunLoopMode"), 1.0, TRUE);
+            keepWaiting = true;
+        }
+        
+    } while (keepWaiting);
+    
+    // if unable to read anything, close the stream and return NO
+    if (kCFStreamStatusError == status) {
+        CFReadStreamClose(stream);
+        CFRelease(stream);
+        return NO;
+    }
+    
+    // read all data from the directory listing into a mutable data
+    uint8_t buffer[4096];
+    NSMutableData *data = [NSMutableData data];
+    CFIndex len;
+    while ((len = CFReadStreamRead(stream, buffer, sizeof(buffer))) > 0) {
+        [data appendBytes:buffer length:len];
+    }
+    
+    CFReadStreamClose(stream);
+    CFRelease(stream);
+    stream = NULL;
+    
+    // now parse the stream and see if we have something that makes sense...
+    NSMutableArray *files = [NSMutableArray array];
+    ssize_t offset = 0, remainingLength = [data length];
+    const uint8_t *listingPtr = [data bytes];
+    do {
+        
+        // each call parses one line
+        CFDictionaryRef listing;
+        len = CFFTPCreateParsedResourceListing(NULL, listingPtr + offset, remainingLength, &listing);
+        if (len > 0) {
+            NSString *name = (id)CFDictionaryGetValue(listing, kCFFTPResourceName);
+            if (name) [files addObject:name];
+            CFRelease(listing);
+        }
+        offset += len;
+        remainingLength -= len;
+        
+    } while (remainingLength > 0);
+    
+    TLMLog(__func__, @"%@ has %d files", [[self defaultServerURL] absoluteString], [files count]);
+    return ([files count] > 0);
+}
+
 - (BOOL)_canConnectToDefaultServer
 {
     NSString *URLString = [[self defaultServerURL] absoluteString];
@@ -163,6 +240,10 @@ NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";     /
         TLMLog(__func__, @"net diagnostic reports the connection is down");
         return NO;
     }
+    
+    // NSURLConnection is supposed to work with ftp; wth is wrong here?
+    if ([[[self defaultServerURL] scheme] isEqualToString:@"ftp"])
+        return [self _canConnectToDefaultFTPServer];
     
     NSURLRequest *request = [NSURLRequest requestWithURL:[self defaultServerURL] 
                                              cachePolicy:NSURLRequestReloadIgnoringCacheData 
@@ -180,7 +261,7 @@ NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";     /
         TLMLog(__func__, @"no data from %@\nresponse = %@", URLString, response);
     }
     
-    // doc for +[NSConnection sendSynchronousRequest:returningResponse:error] sez this will be nil if no error
+    // doc for +[NSURLConnection sendSynchronousRequest:returningResponse:error] sez this will be nil if no error
     if (error) {
         TLMLog(__func__, @"error from loading %@: %@", URLString, error);
     }
