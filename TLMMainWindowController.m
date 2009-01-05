@@ -86,9 +86,10 @@ static char _TLMOperationQueueOperationContext;
     if (self) {
         _queue = [NSOperationQueue new];
         [_queue setMaxConcurrentOperationCount:1];
-        [_queue addObserver:self forKeyPath:@"operations" options:0 context:&_TLMOperationQueueOperationContext];
+        [_queue addObserver:self forKeyPath:@"operations" options:NSKeyValueObservingOptionNew context:&_TLMOperationQueueOperationContext];
         _lastTextViewHeight = 0.0;
         _updateInfrastructure = NO;
+        _operationCount = 0;
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(_handleApplicationTerminate:) 
                                                      name:NSApplicationWillTerminateNotification
@@ -175,25 +176,49 @@ static char _TLMOperationQueueOperationContext;
 
 - (NSString *)windowNibName { return @"MainWindow"; }
 
-- (void)_operationCountChanged
+- (void)_operationCountChanged:(NSNumber *)count
 {
     NSParameterAssert([NSThread isMainThread]);
-    if ([[_queue operations] count]) {
-        [_progressIndicator startAnimation:nil];
-    }
-    else {
-        [_progressIndicator stopAnimation:nil];
-    }
     
-    // can either do this or post a custom event...
-    [[[self window] toolbar] validateVisibleItems];
+    NSUInteger newCount = [count unsignedIntegerValue];
+    if (_operationCount != newCount) {
+        
+        // spinner is currently stopped...
+        if (0 == _operationCount) {
+            TLMLog(__func__, @"starting animation: %d", newCount);
+            [_progressIndicator startAnimation:self];
+        }
+        // spinner is currently spinning if _operationCount != 0...
+        else if (0 == newCount) {
+            TLMLog(__func__, @"stopping animation: %d", newCount);
+            [_progressIndicator stopAnimation:self];
+        }
+        
+        // validation depends on this value
+        _operationCount = newCount;
+        
+        // can either do this or post a custom event...
+        [[[self window] toolbar] validateVisibleItems];
+    }
 }
 
 // NB: this will arrive on the queue's thread, at least under some conditions!
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
     if (context == &_TLMOperationQueueOperationContext) {
-        [self performSelectorOnMainThread:@selector(_operationCountChanged) withObject:nil waitUntilDone:NO];
+
+        TLMLog(__func__, @"change = %@", change);
+        /*
+         NSOperationQueue + KVO sucks: calling performSelectorOnMainThread:withObject:waitUntilDone: 
+         with waitUntilDone:YES will cause a deadlock if the main thread is currently in a callout to -[NSOperationQueue operations].
+         What good is KVO on a non-main thread anyway?  That makes it useless for bindings, and KVO is a pain in the ass to use
+         vs. something like NSNotification.  Grrr.
+         */
+        NSArray *newOperations = [change objectForKey:NSKeyValueChangeNewKey];
+        if (newOperations) {
+            NSNumber *count = [NSNumber numberWithUnsignedInteger:[newOperations count]];
+            [self performSelectorOnMainThread:@selector(_operationCountChanged:) withObject:count waitUntilDone:NO];
+        }
     }
     else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
@@ -380,7 +405,7 @@ static char _TLMOperationQueueOperationContext;
 {
     SEL action = [anItem action];
     if (@selector(cancelAllOperations:) == action)
-        return [[_queue operations] count];
+        return _operationCount > 0;
     else
         return YES;
 }
