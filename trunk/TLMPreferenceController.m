@@ -241,7 +241,7 @@ NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";     /
         return NO;
     }
     
-    // NSURLConnection is supposed to work with ftp; wth is wrong here?
+    // An ftp server doesn't return data for a directory listing via NSURLConnection, so use CFFTP
     if ([[[self defaultServerURL] scheme] isEqualToString:@"ftp"])
         return [self _canConnectToDefaultFTPServer];
     
