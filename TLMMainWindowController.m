@@ -185,12 +185,10 @@ static char _TLMOperationQueueOperationContext;
         
         // previous count was zero, so spinner is currently stopped
         if (0 == _operationCount) {
-            TLMLog(__func__, @"starting spinner: %d", newCount);
             [_progressIndicator startAnimation:self];
         }
         // previous count != 0, so spinner is currently animating
         else if (0 == newCount) {
-            TLMLog(__func__, @"stopping spinner");
             [_progressIndicator stopAnimation:self];
         }
         
@@ -206,8 +204,6 @@ static char _TLMOperationQueueOperationContext;
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
     if (context == &_TLMOperationQueueOperationContext) {
-
-        TLMLog(__func__, @"%s", __func__);
         /*
          NSOperationQueue + KVO sucks: calling performSelectorOnMainThread:withObject:waitUntilDone: 
          with waitUntilDone:YES will cause a deadlock if the main thread is currently in a callout to -[NSOperationQueue operations].
@@ -215,7 +211,7 @@ static char _TLMOperationQueueOperationContext;
          vs. something like NSNotification.  Grrr.
          */
         NSNumber *count = [NSNumber numberWithUnsignedInteger:[[_queue operations] count]];
-        [self performSelectorOnMainThread:@selector(_operationCountChanged:) withObject:count waitUntilDone:YES];
+        [self performSelectorOnMainThread:@selector(_operationCountChanged:) withObject:count waitUntilDone:NO];
     }
     else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
