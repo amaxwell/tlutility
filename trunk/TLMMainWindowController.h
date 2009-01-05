@@ -57,6 +57,7 @@
     TLMGradientView          *_statusBarView;
     
     NSOperationQueue         *_queue;
+    NSUInteger                _operationCount;
     CGFloat                   _lastTextViewHeight;
     BOOL                      _updateInfrastructure;
     NSURL                    *_lastUpdateURL;
