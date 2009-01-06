@@ -38,7 +38,7 @@
 
 #import "TLMPapersizeController.h"
 #import "TLMLogServer.h"
-#import "BDSKTask.h"
+#import "TLMTask.h"
 #import "TLMPreferenceController.h"
 
 @implementation TLMPapersizeController
@@ -66,12 +66,11 @@
     // owner's responsiblity to validate this before showing the sheet
     NSParameterAssert([[NSFileManager defaultManager] isExecutableFileAtPath:cmd]);
 
-    BDSKTask *task = [[BDSKTask new] autorelease];
+    TLMTask *task = [[TLMTask new] autorelease];
     [task setLaunchPath:cmd];
     [task setArguments:[NSArray arrayWithObjects:@"pdftex", @"paper", @"--list", nil]];
 
     // output won't fill the pipe's buffer
-    [task setStandardOutput:[NSPipe pipe]];
     [task launch];
     [task waitUntilExit];
 
@@ -80,17 +79,10 @@
     if (0 != ret) {
         TLMLog(__func__, @"Unable to determine current paper size for pdftex");
     }
-    else {
-        NSFileHandle *fh = [[task standardOutput] fileHandleForReading];
-        NSData *outputData = [fh readDataToEndOfFile];
-        NSString *outputString = nil;
-        if ([outputData length])
-            outputString = [[[NSString alloc] initWithData:outputData encoding:NSUTF8StringEncoding] autorelease];
-        if (outputString) {
-            NSArray *sizes = [outputString componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
-            if ([sizes count])
-                currentSize = [sizes objectAtIndex:0];
-        }
+    else if ([task outputString]) {
+        NSArray *sizes = [[task outputString] componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+        if ([sizes count])
+            currentSize = [sizes objectAtIndex:0];
     }
     
     [self setPaperSize:currentSize];

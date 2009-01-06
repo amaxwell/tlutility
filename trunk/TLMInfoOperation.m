@@ -39,7 +39,7 @@
 #import "TLMInfoOperation.h"
 #import "TLMPreferenceController.h"
 #import "TLMLogServer.h"
-#import "BDSKTask.h"
+#import "TLMTask.h"
 
 @interface TLMInfoOperation()
 @property (readwrite, copy) NSArray *documentationURLs;
@@ -98,45 +98,69 @@
     }
     
     /*
-     Minor hack to avoid duplicating all the task and pipe code here; this task doesn't depend on network
-     operations, so it's not going to block for a long time.  The main oddity is that it's not possible 
-     to use the standard NSOperation accessors (e.g. isCancelled/isFinished).
+     The full package name for tlmgr contains names like "bin-dvips.universal-darwin", where
+     the relevant bit as far as texdoc is concerned is "dvips".
      */
     NSString *packageName = [self packageName];
-#warning fixme
+    
+    // see if we have a "bin-" prefix
     NSRange r = [packageName rangeOfString:@"bin-"];
+    
+    // not clear if collection names are meaningful to texdoc but try anyway...
     if (0 == r.length)
         r = [packageName rangeOfString:@"collection-"];
+    
+    // remove the prefix
     if (r.length)
         packageName = [packageName substringFromIndex:NSMaxRange(r)];
-    
-    TLMOperation *op = [[TLMOperation alloc] initWithCommand:cmd options:[NSArray arrayWithObjects:@"-l", @"-I", packageName, nil]];
-    [op main];
-    [op autorelease];
+
+    // now look for architecture and remove e.g. ".universal-darwin"
+    r = [packageName rangeOfString:@"." options:NSBackwardsSearch];
+    if (r.length)
+        packageName = [packageName substringToIndex:r.location];
     
     TLMLog(__func__, @"Finding documentation for %@%C", packageName, 0x2026);
+
+    sig_t previousSignalMask = signal(SIGPIPE, SIG_IGN);
     
-    if ([self isCancelled] == NO && [op failed] == NO) {
-        NSData *outputData = [op outputData];
-        NSString *outputString = nil;
-        if ([outputData length])
-            outputString = [[[NSString alloc] initWithData:outputData encoding:NSUTF8StringEncoding] autorelease];
-        if (outputString) {
-            NSArray *docPaths = [outputString componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
-            NSMutableArray *docURLs = [NSMutableArray array];
-            for (NSString *docPath in docPaths) {
-                // avoid empty lines...
-                docPath = [docPath stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-                NSURL *docURL = [docPath isEqualToString:@""] ? nil : [NSURL fileURLWithPath:docPath];
-                if (docURL) [docURLs addObject:docURL];
-            }
-            if ([docURLs count])
-                [self setDocumentationURLs:docURLs];
-        }
+    TLMTask *task = [[TLMTask new] autorelease];
+    [task setLaunchPath:cmd];
+    [task setArguments:[NSArray arrayWithObjects:@"-l", @"-I", packageName, nil]];
+    [task launch];
+    
+    // Reimplement -[NSTask waitUntilExit] so we can handle -[NSOperation cancel].
+    while ([task isRunning] && [self isCancelled] == NO) {
+        CFRunLoopRunInMode(kCFRunLoopDefaultMode, 1.0, TRUE);
     }
     
-    if ([op errorMessages])
-        TLMLog(__func__, @"%@", [[op errorMessages] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]);
+    if ([self isCancelled]) {
+        [task terminate];
+    }
+    else {
+        // not cancelled, but make sure it's really done before calling -terminationStatus
+        [task waitUntilExit];
+    }
+    
+    NSString *errorString = [task terminationStatus] ? nil : [task errorString];
+    NSString *outputString = [task terminationStatus] ? nil : [task outputString];
+    
+    signal(SIGPIPE, previousSignalMask);
+    
+    if ([self isCancelled] == NO && outputString) {
+        NSArray *docPaths = [outputString componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+        NSMutableArray *docURLs = [NSMutableArray array];
+        for (NSString *docPath in docPaths) {
+            // avoid empty lines...
+            docPath = [docPath stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+            NSURL *docURL = [docPath isEqualToString:@""] ? nil : [NSURL fileURLWithPath:docPath];
+            if (docURL) [docURLs addObject:docURL];
+        }
+        if ([docURLs count])
+            [self setDocumentationURLs:docURLs];
+    }
+    
+    if (errorString)
+        TLMLog(__func__, @"%@", [errorString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]);
     
     if ([[self documentationURLs] count] == 0)
         TLMLog(__func__, @"Unable to find documentation for %@", packageName);
