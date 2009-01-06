@@ -93,6 +93,7 @@ static void __TLMTaskNotify(void *info);
 
 - (void)setStandardOutput:(id)output;
 {
+    NSParameterAssert([output isKindOfClass:[NSPipe class]]);
     if ([self standardOutput])
         [NSException raise:NSInternalInconsistencyException format:@"%@ manages its own stdio channels", [self class]];
     [super setStandardOutput:output];
@@ -100,6 +101,7 @@ static void __TLMTaskNotify(void *info);
 
 - (void)setStandardError:(id)error;
 {
+    NSParameterAssert([error isKindOfClass:[NSPipe class]]);
     if ([self standardError])
         [NSException raise:NSInternalInconsistencyException format:@"%@ manages its own stdio channels", [self class]];
     [super setStandardError:error];
