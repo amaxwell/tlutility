@@ -52,6 +52,7 @@
 
 + (id)sharedInstance;
 - (void)showInfoForPackage:(id <TLMInfo>)package;
+- (void)cancel;
 
 @property (nonatomic, retain) IBOutlet NSTextView *_textView;
 @property (nonatomic, retain) IBOutlet NSProgressIndicator *_spinner;

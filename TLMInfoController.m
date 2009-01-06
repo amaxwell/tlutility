@@ -112,6 +112,8 @@
     [_spinner setUsesThreadedAnimation:YES];
 }
 
+- (void)cancel { [_infoQueue cancelAllOperations]; } 
+
 - (NSString *)windowNibName { return @"InfoPanel"; }
 
 // why is setting this in IB ignored for panels?
