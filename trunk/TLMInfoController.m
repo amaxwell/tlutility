@@ -153,7 +153,7 @@
     
     if (nil != package) {
         
-        TLMInfoOperation *op = [[TLMInfoOperation alloc] initWithPackageName:[package name]];
+        TLMInfoOperation *op = [[TLMInfoOperation alloc] initWithPackageName:[package infoName]];
         if (op) {
             
             // clear previous title and file proxy icon

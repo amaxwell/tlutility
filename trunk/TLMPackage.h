@@ -39,7 +39,7 @@
 #import <Cocoa/Cocoa.h>
 
 @protocol TLMInfo <NSObject>
-@property (readonly, copy) NSString *name;
+@property (readonly, copy) NSString *infoName;
 @end
 
 @interface TLMPackage : NSObject <TLMInfo>

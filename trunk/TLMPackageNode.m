@@ -89,6 +89,11 @@ static NSString *_separatorString = nil;
     [super dealloc];
 }
 
+- (NSString *)infoName
+{
+    return [self fullName];
+}
+
 - (NSUInteger)numberOfChildren;
 {
     return [_children count];
