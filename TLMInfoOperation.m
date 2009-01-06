@@ -97,19 +97,27 @@
         return;
     }
     
-    BDSKTask *task = [[BDSKTask new] autorelease];
-    [task setLaunchPath:cmd];
-    [task setArguments:[NSArray arrayWithObjects:@"-l", @"-I", [self packageName], nil]];
+    /*
+     Minor hack to avoid duplicating all the task and pipe code here; this task doesn't depend on network
+     operations, so it's not going to block for a long time.  The main oddity is that it's not possible 
+     to use the standard NSOperation accessors (e.g. isCancelled/isFinished).
+     */
+    NSString *packageName = [self packageName];
+#warning fixme
+    NSRange r = [packageName rangeOfString:@"bin-"];
+    if (0 == r.length)
+        r = [packageName rangeOfString:@"collection-"];
+    if (r.length)
+        packageName = [packageName substringFromIndex:NSMaxRange(r)];
     
-    // output won't fill the pipe's buffer
-    [task setStandardOutput:[NSPipe pipe]];
-    [task setStandardError:[NSPipe pipe]];
-    [task launch];
-    [task waitUntilExit];
-        
-    if ([task terminationStatus] == 0) {
-        NSFileHandle *fh = [[task standardOutput] fileHandleForReading];
-        NSData *outputData = [fh readDataToEndOfFile];
+    TLMOperation *op = [[TLMOperation alloc] initWithCommand:cmd options:[NSArray arrayWithObjects:@"-l", @"-I", packageName, nil]];
+    [op main];
+    [op autorelease];
+    
+    TLMLog(__func__, @"Finding documentation for %@%C", packageName, 0x2026);
+    
+    if ([self isCancelled] == NO && [op failed] == NO) {
+        NSData *outputData = [op outputData];
         NSString *outputString = nil;
         if ([outputData length])
             outputString = [[[NSString alloc] initWithData:outputData encoding:NSUTF8StringEncoding] autorelease];
@@ -127,17 +135,11 @@
         }
     }
     
-    // read stderr
-    NSFileHandle *fh = [[task standardError] fileHandleForReading];
-    NSData *errorData = [fh readDataToEndOfFile];
-    NSString *errorString = nil;
-    if ([errorData length])
-        errorString = [[[NSString alloc] initWithData:errorData encoding:NSUTF8StringEncoding] autorelease];
-    if (errorString)
-        TLMLog(__func__, @"%@", [errorString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]);
+    if ([op errorMessages])
+        TLMLog(__func__, @"%@", [[op errorMessages] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]);
     
     if ([[self documentationURLs] count] == 0)
-        TLMLog(__func__, @"Unable to find documentation for %@", [self packageName]);
+        TLMLog(__func__, @"Unable to find documentation for %@", packageName);
 
     [pool release];
 }
