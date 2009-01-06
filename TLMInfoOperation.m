@@ -141,12 +141,12 @@
         [task waitUntilExit];
     }
     
-    NSString *errorString = [task terminationStatus] ? nil : [task errorString];
-    NSString *outputString = [task terminationStatus] ? nil : [task outputString];
+    NSString *errorString = ([task terminationStatus] || [self isCancelled]) ? nil : [task errorString];
+    NSString *outputString = ([task terminationStatus] || [self isCancelled]) ? nil : [task outputString];
     
     signal(SIGPIPE, previousSignalMask);
     
-    if ([self isCancelled] == NO && outputString) {
+    if (outputString) {
         NSArray *docPaths = [outputString componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
         NSMutableArray *docURLs = [NSMutableArray array];
         for (NSString *docPath in docPaths) {
