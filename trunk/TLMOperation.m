@@ -145,21 +145,22 @@ static char _TLMOperationFinishedContext;
         [_task waitUntilExit];
         status = [_task terminationStatus];
     }
-    
-    // force an immediate read of the pipes
-    [self setErrorData:[_task errorData]];
-    [self setOutputData:[_task outputData]];
-    
-    signal(SIGPIPE, previousSignalMask);
-    
+            
     // don't try dealing with partial text data
     if ([self isCancelled]) {
         [self setOutputData:nil];
         [self setErrorData:nil];
+    // force an immediate read of the pipes
+    } else if (0 == status) {
+        [self setErrorData:[_task errorData]];
+        [self setOutputData:[_task outputData]];
     } else if (0 != status) {
         TLMLog(__func__, @"termination status of task %@ was %d", [_task launchPath], status);
+        [self setErrorData:[_task errorData]];
         [self setFailed:YES];
     }
+    
+    signal(SIGPIPE, previousSignalMask);
     
     [pool release];
 }
