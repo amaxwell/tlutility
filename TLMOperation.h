@@ -41,10 +41,12 @@
 // delivered on the main thread when -isFinished returns YES
 extern NSString * const TLMOperationFinishedNotification;
 
+@class TLMTask;
+
 @interface TLMOperation : NSOperation
 {
 @private
-    NSTask   *_task;
+    TLMTask  *_task;
     NSData   *_outputData;
     NSData   *_errorData;
     NSString *_errorMessages;

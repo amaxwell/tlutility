@@ -38,7 +38,7 @@
 
 #import "TLMAuthorizedOperation.h"
 #import "TLMLogServer.h"
-#import "BDSKTask.h"
+#import "TLMTask.h"
 #import "TLMPreferenceController.h"
 
 #import <Security/Authorization.h>
@@ -300,22 +300,14 @@ static BOOL __TLMCheckSignature()
         return NO;
     }
     
-    BDSKTask *task = [[BDSKTask new] autorelease];
+    TLMTask *task = [[TLMTask new] autorelease];
     [task setLaunchPath:cmd];
     [task setArguments:[NSArray arrayWithObjects:@"-vv", __TLMCwrapperPath(), nil]];
-    [task setStandardError:[NSPipe pipe]];
     [task launch];
     [task waitUntilExit];
-    
-    // we get two short lines of output, so the pipe shouldn't fill up...
-    NSFileHandle *fh = [[task standardError] fileHandleForReading];
-    NSData *outputData = [fh readDataToEndOfFile];
-    NSString *outputString = nil;
-    if ([outputData length])
-        outputString = [[[NSString alloc] initWithData:outputData encoding:NSUTF8StringEncoding] autorelease];
-    
-    if (outputString) {
-        TLMLog([cmd UTF8String], @"%@", [outputString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]);
+
+    if ([task errorString]) {
+        TLMLog([cmd UTF8String], @"%@", [[task errorString] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]);
     }
     
     return ([task terminationStatus] == 0);

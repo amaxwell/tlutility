@@ -37,7 +37,7 @@
  */
 
 #import "TLMOperation.h"
-#import "BDSKTask.h"
+#import "TLMTask.h"
 #import "TLMPreferenceController.h"
 #import "TLMLogServer.h"
 
@@ -76,7 +76,7 @@ static char _TLMOperationFinishedContext;
         self = nil;
     }
     else if ((self = [super init])) {
-        _task = [BDSKTask new];
+        _task = [TLMTask new];
         [_task setLaunchPath:absolutePath];
         [_task setArguments:options];
         [self setFailed:NO];
@@ -111,26 +111,11 @@ static char _TLMOperationFinishedContext;
     }
 }
 
-- (void)_stdoutDataAvailable:(NSNotification *)aNote
-{
-    NSData *outputData = [[aNote userInfo] objectForKey:NSFileHandleNotificationDataItem];
-    if ([outputData length])
-        [self setOutputData:outputData];    
-}
-
-- (void)_stderrDataAvailable:(NSNotification *)aNote
-{
-    NSData *outputData = [[aNote userInfo] objectForKey:NSFileHandleNotificationDataItem];
-    if ([outputData length]) {
-        [self setErrorData:outputData];    
-    }
-}
-
 - (NSString *)errorMessages
 {
     @synchronized(self) {
-        if (nil == _errorMessages && [_errorData length]) {
-            _errorMessages = [[NSString alloc] initWithData:_errorData encoding:NSUTF8StringEncoding];
+        if (nil == _errorMessages && [[self errorData] length]) {
+            _errorMessages = [[NSString alloc] initWithData:[self errorData] encoding:NSUTF8StringEncoding];
         }
     }
     return _errorMessages;
@@ -143,19 +128,6 @@ static char _TLMOperationFinishedContext;
     NSParameterAssert(nil != _task);
     
     sig_t previousSignalMask = signal(SIGPIPE, SIG_IGN);
-    
-    [_task setStandardOutput:[NSPipe pipe]];
-    [_task setStandardError:[NSPipe pipe]];
-    NSFileHandle *outfh = [[_task standardOutput] fileHandleForReading];
-    NSFileHandle *errfh = [[_task standardError] fileHandleForReading];
-    
-    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-    [nc addObserver:self selector:@selector(_stdoutDataAvailable:) name:NSFileHandleReadToEndOfFileCompletionNotification object:outfh];
-    [nc addObserver:self selector:@selector(_stderrDataAvailable:) name:NSFileHandleReadToEndOfFileCompletionNotification object:errfh];
-
-    NSString *rlmode = @"TLMOperationRunLoopMode";
-    [outfh readToEndOfFileInBackgroundAndNotifyForModes:[NSArray arrayWithObject:rlmode]];
-    [errfh readToEndOfFileInBackgroundAndNotifyForModes:[NSArray arrayWithObject:rlmode]];
     
     int status = -1;
     [_task launch];
@@ -174,31 +146,11 @@ static char _TLMOperationFinishedContext;
         status = [_task terminationStatus];
     }
     
-    // now that the task is finished, run the special runloop mode (only two sources in this mode)
-    SInt32 ret;
+    // force an immediate read of the pipes
+    [self setErrorData:[_task errorData]];
+    [self setOutputData:[_task outputData]];
     
-    do {
-
-        // handle both sources in this mode immediately
-        // any nonzero timeout should be sufficient, since the task has completed and flushed the pipe
-        ret = CFRunLoopRunInMode((CFStringRef)rlmode, 0.1, FALSE);
-        
-        // should get this immediately
-        if (kCFRunLoopRunFinished == ret || kCFRunLoopRunStopped == ret) {
-            break;
-        }
-        
-        // hard timeout, since all I get when a task is terminated is kCFRunLoopRunTimedOut
-        if (kCFRunLoopRunTimedOut == ret) {
-            break;
-        }
-        
-    } while (kCFRunLoopRunHandledSource == ret);
-        
     signal(SIGPIPE, previousSignalMask);
-
-    [nc removeObserver:self name:NSFileHandleReadToEndOfFileCompletionNotification object:outfh];
-    [nc removeObserver:self name:NSFileHandleReadToEndOfFileCompletionNotification object:errfh];
     
     // don't try dealing with partial text data
     if ([self isCancelled]) {

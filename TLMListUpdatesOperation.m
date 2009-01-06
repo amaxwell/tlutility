@@ -40,7 +40,7 @@
 #import "TLMOutputParser2.h"
 #import "TLMPreferenceController.h"
 #import "TLMLogServer.h"
-#import "BDSKTask.h"
+#import "TLMTask.h"
 
 @interface TLMListUpdatesOperation()
 @property (readwrite, copy) NSURL *updateURL;
@@ -65,10 +65,7 @@
      */
     NSArray *options = [NSArray arrayWithObject:@"--machine-readable"];
     NSString *cmd = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath];
-    BDSKTask *task = [[BDSKTask new] autorelease];
-    
-    // in either case, the output won't fill the pipe's buffer (see above)
-    [task setStandardError:[NSPipe pipe]];
+    TLMTask *task = [[TLMTask new] autorelease];
     [task setLaunchPath:cmd];
     [task setArguments:options];
     [task launch];
@@ -76,21 +73,16 @@
     
     NSInteger ret = [task terminationStatus];
     if (0 == ret) TLMLog(__func__, @"Unexpected successful termination from test for tlmgr2");
-    
-    NSFileHandle *fh = [[task standardError] fileHandleForReading];
-    NSData *outputData = [fh readDataToEndOfFile];
-    NSString *outputString = nil;
-    if ([outputData length])
-        outputString = [[[NSString alloc] initWithData:outputData encoding:NSUTF8StringEncoding] autorelease];
-    
+
+    NSString *errorString = [task errorString];
     BOOL hasMachineReadable = YES;
     
     // Karl's suggested test.  Safe to assume this error message won't change for the original tlmgr.
-    if ([outputString hasPrefix:@"Unknown option:"])
+    if ([errorString hasPrefix:@"Unknown option:"])
         hasMachineReadable = NO;
-    else if (nil == outputString || [outputString rangeOfString:@"unknown action"].length == 0) {
+    else if (nil == errorString || [errorString rangeOfString:@"unknown action"].length == 0) {
         // allow upstream to change this, but warn of any such changes
-        TLMLog(__func__, @"Unexpected output from test for tlmgr2: \"%@\"", outputString);
+        TLMLog(__func__, @"Unexpected output from test for tlmgr2: \"%@\"", errorString);
         TLMLog(__func__, @"Assuming tlmgr2 and proceeding, but please report failures to the developer");
     }
     
