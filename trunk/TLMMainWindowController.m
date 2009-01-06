@@ -407,6 +407,9 @@ static char _TLMOperationQueueOperationContext;
 {
     TLMLog(__func__, @"User cancelling %@", [_queue operations]);
     [_queue cancelAllOperations];
+    
+    // cancel info in case it's stuck
+    [[TLMInfoController sharedInstance] cancel];
 }
 
 - (void)cancelWarningSheetDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
