@@ -49,6 +49,13 @@
 		F9B6B5630EF460A400CF767F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 29B97325FDCFA39411CA2CEA /* Foundation.framework */; };
 		F9B6B5EB0EF4647400CF767F /* TLMLogMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F56B4B0EF31F8800E934A9 /* TLMLogMessage.m */; };
 		F9B6B5F80EF469A600CF767F /* TLMLogServer.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B6B5F70EF469A600CF767F /* TLMLogServer.m */; };
+		F9D1B4900F1403DD00E8287D /* FVConcreteOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D1B4870F1403DD00E8287D /* FVConcreteOperation.m */; };
+		F9D1B4910F1403DD00E8287D /* FVConcreteOperationQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D1B4890F1403DD00E8287D /* FVConcreteOperationQueue.m */; };
+		F9D1B4920F1403DD00E8287D /* FVOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D1B48B0F1403DD00E8287D /* FVOperation.m */; };
+		F9D1B4930F1403DD00E8287D /* FVOperationQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D1B48D0F1403DD00E8287D /* FVOperationQueue.m */; };
+		F9D1B4940F1403DD00E8287D /* FVPriorityQueue.mm in Sources */ = {isa = PBXBuildFile; fileRef = F9D1B48F0F1403DD00E8287D /* FVPriorityQueue.mm */; };
+		F9D1B4B60F14083A00E8287D /* FVInvocationOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D1B4B30F14083A00E8287D /* FVInvocationOperation.m */; };
+		F9D1B4B70F14083A00E8287D /* FVMainThreadOperationQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D1B4B50F14083A00E8287D /* FVMainThreadOperationQueue.m */; };
 		F9D37C9A0F01A80800FB755E /* TLMGradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D37C990F01A80800FB755E /* TLMGradientView.m */; };
 		F9D37D640F01EA8900FB755E /* TLMUpdateListDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D37D630F01EA8900FB755E /* TLMUpdateListDataSource.m */; };
 		F9D37DEC0F021AA900FB755E /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9D37DEB0F021AA900FB755E /* QuartzCore.framework */; };
@@ -205,6 +212,20 @@
 		F9B13B2A0EECEB05007C0046 /* InfoPanel.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InfoPanel.xib; sourceTree = "<group>"; };
 		F9B6B5F60EF469A600CF767F /* TLMLogServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMLogServer.h; sourceTree = "<group>"; };
 		F9B6B5F70EF469A600CF767F /* TLMLogServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMLogServer.m; sourceTree = "<group>"; };
+		F9D1B4860F1403DD00E8287D /* FVConcreteOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FVConcreteOperation.h; sourceTree = "<group>"; };
+		F9D1B4870F1403DD00E8287D /* FVConcreteOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FVConcreteOperation.m; sourceTree = "<group>"; };
+		F9D1B4880F1403DD00E8287D /* FVConcreteOperationQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FVConcreteOperationQueue.h; sourceTree = "<group>"; };
+		F9D1B4890F1403DD00E8287D /* FVConcreteOperationQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FVConcreteOperationQueue.m; sourceTree = "<group>"; };
+		F9D1B48A0F1403DD00E8287D /* FVOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FVOperation.h; sourceTree = "<group>"; };
+		F9D1B48B0F1403DD00E8287D /* FVOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FVOperation.m; sourceTree = "<group>"; };
+		F9D1B48C0F1403DD00E8287D /* FVOperationQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FVOperationQueue.h; sourceTree = "<group>"; };
+		F9D1B48D0F1403DD00E8287D /* FVOperationQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FVOperationQueue.m; sourceTree = "<group>"; };
+		F9D1B48E0F1403DD00E8287D /* FVPriorityQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FVPriorityQueue.h; sourceTree = "<group>"; };
+		F9D1B48F0F1403DD00E8287D /* FVPriorityQueue.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FVPriorityQueue.mm; sourceTree = "<group>"; };
+		F9D1B4B20F14083A00E8287D /* FVInvocationOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FVInvocationOperation.h; sourceTree = "<group>"; };
+		F9D1B4B30F14083A00E8287D /* FVInvocationOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FVInvocationOperation.m; sourceTree = "<group>"; };
+		F9D1B4B40F14083A00E8287D /* FVMainThreadOperationQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FVMainThreadOperationQueue.h; sourceTree = "<group>"; };
+		F9D1B4B50F14083A00E8287D /* FVMainThreadOperationQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FVMainThreadOperationQueue.m; sourceTree = "<group>"; };
 		F9D37C980F01A80800FB755E /* TLMGradientView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMGradientView.h; sourceTree = "<group>"; };
 		F9D37C990F01A80800FB755E /* TLMGradientView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMGradientView.m; sourceTree = "<group>"; };
 		F9D37D620F01EA8900FB755E /* TLMUpdateListDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMUpdateListDataSource.h; sourceTree = "<group>"; };
@@ -255,6 +276,7 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				F9D1B4960F1403E800E8287D /* Queuing */,
 				F9A8BA6F0EF7668E00E35DC9 /* Model */,
 				F94E74BA0EF49AE100E0B78F /* Views */,
 				F9C490D70EEEF44200E44FA6 /* Operations */,
@@ -424,6 +446,27 @@
 				F97A7E4F0F13067C008EBCEA /* TLMTask.m */,
 			);
 			name = Operations;
+			sourceTree = "<group>";
+		};
+		F9D1B4960F1403E800E8287D /* Queuing */ = {
+			isa = PBXGroup;
+			children = (
+				F9D1B4B20F14083A00E8287D /* FVInvocationOperation.h */,
+				F9D1B4B30F14083A00E8287D /* FVInvocationOperation.m */,
+				F9D1B4B40F14083A00E8287D /* FVMainThreadOperationQueue.h */,
+				F9D1B4B50F14083A00E8287D /* FVMainThreadOperationQueue.m */,
+				F9D1B4860F1403DD00E8287D /* FVConcreteOperation.h */,
+				F9D1B4870F1403DD00E8287D /* FVConcreteOperation.m */,
+				F9D1B4880F1403DD00E8287D /* FVConcreteOperationQueue.h */,
+				F9D1B4890F1403DD00E8287D /* FVConcreteOperationQueue.m */,
+				F9D1B48A0F1403DD00E8287D /* FVOperation.h */,
+				F9D1B48B0F1403DD00E8287D /* FVOperation.m */,
+				F9D1B48C0F1403DD00E8287D /* FVOperationQueue.h */,
+				F9D1B48D0F1403DD00E8287D /* FVOperationQueue.m */,
+				F9D1B48E0F1403DD00E8287D /* FVPriorityQueue.h */,
+				F9D1B48F0F1403DD00E8287D /* FVPriorityQueue.mm */,
+			);
+			name = Queuing;
 			sourceTree = "<group>";
 		};
 		F9DCD35A0F06F08C00600DD2 /* Products */ = {
@@ -653,6 +696,13 @@
 				F9963EC50F0490E9005F0174 /* TLMRemoveOperation.m in Sources */,
 				F9963FEF0F054999005F0174 /* TLMInstallOperation.m in Sources */,
 				F97A7E500F13067C008EBCEA /* TLMTask.m in Sources */,
+				F9D1B4900F1403DD00E8287D /* FVConcreteOperation.m in Sources */,
+				F9D1B4910F1403DD00E8287D /* FVConcreteOperationQueue.m in Sources */,
+				F9D1B4920F1403DD00E8287D /* FVOperation.m in Sources */,
+				F9D1B4930F1403DD00E8287D /* FVOperationQueue.m in Sources */,
+				F9D1B4940F1403DD00E8287D /* FVPriorityQueue.mm in Sources */,
+				F9D1B4B60F14083A00E8287D /* FVInvocationOperation.m in Sources */,
+				F9D1B4B70F14083A00E8287D /* FVMainThreadOperationQueue.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

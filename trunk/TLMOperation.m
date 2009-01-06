@@ -57,6 +57,7 @@ static char _TLMOperationFinishedContext;
     if (self) {
         [self setFailed:NO];
         [self addObserver:self forKeyPath:@"isFinished" options:0 context:&_TLMOperationFinishedContext];
+        [self setConcurrent:NO];
     }
     return self;
 }
@@ -81,6 +82,7 @@ static char _TLMOperationFinishedContext;
         [_task setArguments:options];
         [self setFailed:NO];
         [self addObserver:self forKeyPath:@"isFinished" options:0 context:&_TLMOperationFinishedContext];
+        [self setConcurrent:NO];
     }
     return self;
 }
@@ -162,7 +164,8 @@ static char _TLMOperationFinishedContext;
     
     signal(SIGPIPE, previousSignalMask);
     
-    [pool release];
+    [self finished];
+    [pool release];    
 }
 
 @end

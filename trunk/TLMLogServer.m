@@ -52,13 +52,12 @@ static NSNumber *_processID = nil;
 
 + (void)initialize
 {
+    TLMINITIALIZE(TLMLogServer);
+    
     // kCFRunLoopCommonModes doesn't work with NSNotificationQueue on 10.5.x
     NSString *rlmodes[] = { NSDefaultRunLoopMode, NSEventTrackingRunLoopMode, NSModalPanelRunLoopMode };
-    if (nil == _runLoopModes)
-        _runLoopModes = [[NSArray alloc] initWithObjects:rlmodes count:(sizeof(rlmodes) / sizeof(NSString *))];
-    
-    if (nil == _processID)
-        _processID = [[NSNumber alloc] initWithInteger:getpid()];
+    _runLoopModes = [[NSArray alloc] initWithObjects:rlmodes count:(sizeof(rlmodes) / sizeof(NSString *))];
+    _processID = [[NSNumber alloc] initWithInteger:getpid()];
 }
 
 + (id)sharedServer

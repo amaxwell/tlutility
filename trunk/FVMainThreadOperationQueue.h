@@ -1,8 +1,8 @@
 //
-//  TLMOperations.h
-//  TeX Live Manager
+//  FVMainThreadOperationQueue.h
+//  FileView
 //
-//  Created by Adam Maxwell on 12/6/08.
+//  Created by Adam Maxwell on 2/23/08.
 /*
  This software is Copyright (c) 2008-2009
  Adam Maxwell. All rights reserved.
@@ -37,34 +37,22 @@
  */
 
 #import <Cocoa/Cocoa.h>
-#import "FVConcreteOperation.h"
+#import "FVOperationQueue.h"
+#import <libkern/OSAtomic.h>
 
-// delivered on the main thread when -isFinished returns YES
-extern NSString * const TLMOperationFinishedNotification;
+@class FVOperation, FVPriorityQueue;
 
-@class TLMTask;
-
-@interface TLMOperation : FVConcreteOperation
+/** @internal @brief Implementation of FVOperationQueue.
+ 
+ @warning FVMainThreadOperationQueue must never be instantiated directly.  It is only used and instantiated by the FVOperationQueue abstract class.  
+ 
+ The following notes may be of interest to FVOperationQueue subclass implementors:  FVMainThreadOperationQueue attaches a CFRunLoopObserver to the main thread for processing queue entries.  Operations are processed while the main thread's runloop is running in the @a FVMainQueueRunLoopMode or any of the modes associated with @a kCFRunLoopCommonModes, and are processed in the @a kCFRunLoopEntry and @a kCFRunLoopBeforeWaiting runloop entry points.  FVMainThreadOperationQueue is thread-safe. */
+@interface FVMainThreadOperationQueue : FVOperationQueue
 {
 @private
-    TLMTask  *_task;
-    NSData   *_outputData;
-    NSData   *_errorData;
-    NSString *_errorMessages;
-    BOOL      _failed;
+    CFRunLoopObserverRef _observer;
+    OSSpinLock           _queueLock;
+    FVPriorityQueue     *_pendingOperations;
+    NSMutableSet        *_activeOperations;  
 }
-
-// call -init to just get notification setup if creating a subclass that overrides -main
-- (id)init;
-
-// call to set up NSTask to be executed by -main
-- (id)initWithCommand:(NSString *)absolutePath options:(NSArray *)options;
-
-@property (readwrite, copy) NSData *outputData;
-@property (readwrite, copy) NSData *errorData;
-@property (readonly, copy) NSString *errorMessages;
-
-// set if underlying task fails; check isCancelled for cancel condition
-@property (readwrite) BOOL failed;
-
 @end

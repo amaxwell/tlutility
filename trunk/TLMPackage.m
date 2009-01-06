@@ -60,8 +60,8 @@ static NSString *_separatorString = nil;
 
 + (void)initialize
 {
-    if (nil == _separatorString)
-        _separatorString = [[NSString alloc] initWithFormat:@"%C", 0x271D];
+    TLMINITIALIZE(TLMPackage);
+    _separatorString = [[NSString alloc] initWithFormat:@"%C", 0x271D];
 }
 
 - (BOOL)matchesSearchString:(NSString *)searchTerm
