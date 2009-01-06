@@ -93,4 +93,9 @@ static NSString *_separatorString = nil;
     [super dealloc];
 }
 
+- (NSString *)infoName
+{
+    return [self name];
+}
+
 @end
