@@ -424,7 +424,8 @@ static BOOL __TLMCheckSignature()
     // clean up all scarce resources as soon as possible
     [self _closeQueue];
 
-    [pool release];
+    [self finished];
+    [pool release];    
 }
 
 - (void)setWrapperPID:(pid_t)pid;

@@ -1,8 +1,8 @@
 //
-//  TLMOperations.h
-//  TeX Live Manager
+//  FVConcreteOperation.h
+//  FileView
 //
-//  Created by Adam Maxwell on 12/6/08.
+//  Created by Adam Maxwell on 2/23/08.
 /*
  This software is Copyright (c) 2008-2009
  Adam Maxwell. All rights reserved.
@@ -37,34 +37,18 @@
  */
 
 #import <Cocoa/Cocoa.h>
-#import "FVConcreteOperation.h"
+#import "FVOperation.h"
 
-// delivered on the main thread when -isFinished returns YES
-extern NSString * const TLMOperationFinishedNotification;
-
-@class TLMTask;
-
-@interface TLMOperation : FVConcreteOperation
+/** Semi-concrete implementation of FVOperation.
+ 
+ FVConcreteOperation provides storage for ivars and a default implementation of all required FVOperation methods except FVOperation::main, so it's a good starting point for subclasses.  FVConcreteOperation is thread safe.  
+ 
+ @warning  The NSThread detached in a concurrent operation retains the operation as well as the queue, so the operation could hypothetically outlive the queue.  Hence the operation retains all ivars in order to avoid messaging a garbage pointer, so you have to cancel or wait until the operation completes in order for the queue itself to be deallocated.  The queue itself handles this in FVOperationQueue::terminate. */
+@interface FVConcreteOperation : FVOperation
 {
-@private
-    TLMTask  *_task;
-    NSData   *_outputData;
-    NSData   *_errorData;
-    NSString *_errorMessages;
-    BOOL      _failed;
+@private;
+    id                _queue;
+    struct FVOpFlags *_flags;
 }
-
-// call -init to just get notification setup if creating a subclass that overrides -main
-- (id)init;
-
-// call to set up NSTask to be executed by -main
-- (id)initWithCommand:(NSString *)absolutePath options:(NSArray *)options;
-
-@property (readwrite, copy) NSData *outputData;
-@property (readwrite, copy) NSData *errorData;
-@property (readonly, copy) NSString *errorMessages;
-
-// set if underlying task fails; check isCancelled for cancel condition
-@property (readwrite) BOOL failed;
 
 @end
