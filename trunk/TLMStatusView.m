@@ -39,6 +39,8 @@
 #import "TLMStatusView.h"
 #import <QuartzCore/QuartzCore.h>
 
+#define USE_LAYER 0
+
 @implementation TLMStatusView
 
 @synthesize attributedStatusString = _statusString;
@@ -106,7 +108,9 @@ static void CenterRectInRect(NSRect *toCenter, NSRect enclosingRect)
 - (void)viewDidMoveToSuperview
 {
     [super viewDidMoveToSuperview];
+#if USE_LAYER
     [self setWantsLayer:YES];
+#endif
     [self _resetStringRect];
     [self setNeedsDisplay:YES];
 }
@@ -133,21 +137,31 @@ static void CenterRectInRect(NSRect *toCenter, NSRect enclosingRect)
 
 - (BOOL)isOpaque { return NO; }
 
+#if USE_LAYER
 - (void)animationDidStop:(CAPropertyAnimation *)anim finished:(BOOL)flag;
 {
     // remove from superview for fade out
     if (flag && [self alphaValue] < 0.1) 
         [self removeFromSuperview];
 }
+#endif
 
 - (void)fadeOut;
 {
+#if USE_LAYER
     [[self animator] setAlphaValue:0.0];
+#else
+    [self removeFromSuperview];
+#endif
 }
 
 - (void)fadeIn;
 {
+#if USE_LAYER
     [[self animator] setAlphaValue:1.0];
+#else
+    [self setNeedsDisplay:YES];
+#endif
 }
 
 - (void)drawRect:(NSRect)dirtyRect 
