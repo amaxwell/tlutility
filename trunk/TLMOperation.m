@@ -43,8 +43,6 @@
 
 NSString * const TLMOperationFinishedNotification = @"TLMOperationFinishedNotification";
 
-static char _TLMOperationFinishedContext;
-
 @implementation TLMOperation
 
 @synthesize outputData = _outputData;
@@ -56,7 +54,6 @@ static char _TLMOperationFinishedContext;
     self = [super init];
     if (self) {
         [self setFailed:NO];
-        [self addObserver:self forKeyPath:@"isFinished" options:0 context:&_TLMOperationFinishedContext];
         [self setConcurrent:NO];
     }
     return self;
@@ -81,7 +78,6 @@ static char _TLMOperationFinishedContext;
         [_task setLaunchPath:absolutePath];
         [_task setArguments:options];
         [self setFailed:NO];
-        [self addObserver:self forKeyPath:@"isFinished" options:0 context:&_TLMOperationFinishedContext];
         [self setConcurrent:NO];
     }
     return self;
@@ -89,7 +85,6 @@ static char _TLMOperationFinishedContext;
 
 - (void)dealloc
 {
-    [self removeObserver:self forKeyPath:@"isFinished"];
     [_task release];
     [_outputData release];
     [_errorData release];
@@ -103,14 +98,10 @@ static char _TLMOperationFinishedContext;
     [[NSNotificationCenter defaultCenter] postNotificationName:TLMOperationFinishedNotification object:self];
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+- (void)finished
 {
-    if (context == &_TLMOperationFinishedContext) {
-        [self performSelectorOnMainThread:@selector(_postFinishedNotification) withObject:nil waitUntilDone:NO];
-    }
-    else {
-        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
-    }
+    [super finished];
+    [self performSelectorOnMainThread:@selector(_postFinishedNotification) withObject:nil waitUntilDone:NO];
 }
 
 - (NSString *)errorMessages

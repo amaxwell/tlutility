@@ -110,9 +110,7 @@ struct FVOpFlags {
 - (void)finished
 {
     [super finished];
-    [self willChangeValueForKey:@"isFinished"];
     OSAtomicIncrement32Barrier(&(_flags->_finished));
-    [self didChangeValueForKey:@"isFinished"];
 }
 
 - (void)cancel;
