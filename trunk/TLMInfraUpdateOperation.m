@@ -240,7 +240,6 @@ static NSString *__TLMGetTemporaryDirectory()
         TLMLog(__func__, @"Failed to remove temp directory \"%@\": %@", _updateDirectory, error);
     [fm release];
     
-    [self finished];
     [pool release];
 }
 

@@ -52,8 +52,8 @@ static NSString *_separatorString = nil;
 
 + (void)initialize
 {
-    TLMINITIALIZE(TLMPackageNode);
-    _separatorString = [[NSString alloc] initWithFormat:@"%C", 0x271D];
+    if (nil == _separatorString)
+        _separatorString = [[NSString alloc] initWithFormat:@"%C", 0x271D];
 }
 
 + (NSSet *)keyPathsForValuesAffectingStatus
