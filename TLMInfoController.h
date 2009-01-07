@@ -39,7 +39,6 @@
 #import <Cocoa/Cocoa.h>
 
 @class TLMPackage;
-@class FVOperationQueue;
 @protocol TLMInfo;
 
 @interface TLMInfoController : NSWindowController {
@@ -48,7 +47,7 @@
     NSProgressIndicator *_spinner;
     NSTabView           *_tabView;
     
-    FVOperationQueue    *_infoQueue;
+    NSOperationQueue    *_infoQueue;
 }
 
 + (id)sharedInstance;

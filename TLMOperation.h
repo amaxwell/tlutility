@@ -37,14 +37,13 @@
  */
 
 #import <Cocoa/Cocoa.h>
-#import "FVConcreteOperation.h"
 
 // delivered on the main thread when -isFinished returns YES
 extern NSString * const TLMOperationFinishedNotification;
 
 @class TLMTask;
 
-@interface TLMOperation : FVConcreteOperation
+@interface TLMOperation : NSOperation
 {
 @private
     TLMTask  *_task;

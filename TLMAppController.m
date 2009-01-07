@@ -45,7 +45,9 @@
 
 + (void)initialize
 {
-    TLMINITIALIZE(TLMAppController);
+    static bool didInit = false;
+    if (true == didInit) return;
+    didInit = true;
     
     // force setup of the log server
     [TLMLogServer sharedServer];

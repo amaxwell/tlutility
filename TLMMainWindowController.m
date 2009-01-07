@@ -59,9 +59,7 @@
 #import "TLMPapersizeController.h"
 #import "TLMTabView.h"
 
-#import "FVOperationQueue.h"
-
-static char _TLMOperationQueueCountContext;
+static char _TLMOperationQueueOperationContext;
 
 @implementation TLMMainWindowController
 
@@ -86,9 +84,9 @@ static char _TLMOperationQueueCountContext;
 {
     self = [super initWithWindowNibName:windowNibName];
     if (self) {
-        _queue = [FVOperationQueue new];
+        _queue = [NSOperationQueue new];
         [_queue setMaxConcurrentOperationCount:1];
-        [_queue addObserver:self forKeyPath:@"operationCount" options:0 context:&_TLMOperationQueueCountContext];
+        [_queue addObserver:self forKeyPath:@"operations" options:0 context:&_TLMOperationQueueOperationContext];
         _lastTextViewHeight = 0.0;
         _updateInfrastructure = NO;
         _operationCount = 0;
@@ -103,8 +101,9 @@ static char _TLMOperationQueueCountContext;
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [_queue removeObserver:self forKeyPath:@"operationCount"];
+    [_queue removeObserver:self forKeyPath:@"operations"];
     [_queue cancelAllOperations];
+    [_queue waitUntilAllOperationsAreFinished];
     [_queue release];
     
     [_tabView setDelegate:nil];
@@ -204,14 +203,14 @@ static char _TLMOperationQueueCountContext;
 // NB: this will arrive on the queue's thread, at least under some conditions!
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-    if (context == &_TLMOperationQueueCountContext) {
+    if (context == &_TLMOperationQueueOperationContext) {
         /*
          NSOperationQueue + KVO sucks: calling performSelectorOnMainThread:withObject:waitUntilDone: 
          with waitUntilDone:YES will cause a deadlock if the main thread is currently in a callout to -[NSOperationQueue operations].
          What good is KVO on a non-main thread anyway?  That makes it useless for bindings, and KVO is a pain in the ass to use
          vs. something like NSNotification.  Grrr.
          */
-        NSNumber *count = [NSNumber numberWithUnsignedInteger:[_queue operationCount]];
+        NSNumber *count = [NSNumber numberWithUnsignedInteger:[[_queue operations] count]];
         [self performSelectorOnMainThread:@selector(_operationCountChanged:) withObject:count waitUntilDone:NO];
     }
     else {

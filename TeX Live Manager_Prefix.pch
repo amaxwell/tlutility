@@ -4,23 +4,4 @@
 
 #ifdef __OBJC__
     #import <Cocoa/Cocoa.h>
-
-    // docs say not to send [super initialize]
-    #if !defined(TLMINITIALIZE)
-    #define TLMINITIALIZE(aClass) \
-    do { if ([aClass self] != self) return; } while(0)
-    #endif /* TLMINITIALIZE */
-
-#endif /* __OBJC__ */
-
-#if defined(__ppc__) || defined(__ppc64__)
-    #define HALT __asm__ __volatile__("trap")
-#elif defined(__i386__) || defined(__x86_64__)
-    #if defined(__GNUC__)
-        #define HALT __asm__ __volatile__("int3")
-    #elif defined(_MSC_VER)
-        #define HALT __asm int 3;
-    #else
-        #error Compiler not supported
-    #endif
 #endif

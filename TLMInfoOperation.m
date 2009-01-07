@@ -82,13 +82,18 @@
     return [infoString autorelease];
 }
 
-- (void)_findDocumentation
+- (void)main
 {
+    [super main];
+    
+    NSAutoreleasePool *pool = [NSAutoreleasePool new];
+    
     NSString *cmd = [[TLMPreferenceController sharedPreferenceController] texdocAbsolutePath];
     
     // !!! bail out early if the file doesn't exist
     if ([[NSFileManager defaultManager] isExecutableFileAtPath:cmd] == NO) {
         TLMLog(__func__, @"%@ does not exist or is not executable", cmd);
+        [pool release];
         return;
     }
     
@@ -108,14 +113,14 @@
     // remove the prefix
     if (r.length)
         packageName = [packageName substringFromIndex:NSMaxRange(r)];
-    
+
     // now look for architecture and remove e.g. ".universal-darwin"
     r = [packageName rangeOfString:@"." options:NSBackwardsSearch];
     if (r.length)
         packageName = [packageName substringToIndex:r.location];
     
     TLMLog(__func__, @"Finding documentation for %@%C", packageName, 0x2026);
-    
+
     sig_t previousSignalMask = signal(SIGPIPE, SIG_IGN);
     
     TLMTask *task = [[TLMTask new] autorelease];
@@ -158,18 +163,9 @@
         TLMLog(__func__, @"%@", [errorString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]);
     
     if ([[self documentationURLs] count] == 0)
-        TLMLog(__func__, @"Unable to find documentation for %@", packageName);    
-}
+        TLMLog(__func__, @"Unable to find documentation for %@", packageName);
 
-- (void)main
-{    
-    // find docs first
-    NSAutoreleasePool *pool = [NSAutoreleasePool new];
-    [self _findDocumentation];
-    [pool release];    
-    
-    // call super last, so finishing works correctly
-    [super main];
+    [pool release];
 }
 
 @end

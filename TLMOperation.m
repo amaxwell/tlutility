@@ -43,6 +43,8 @@
 
 NSString * const TLMOperationFinishedNotification = @"TLMOperationFinishedNotification";
 
+static char _TLMOperationFinishedContext;
+
 @implementation TLMOperation
 
 @synthesize outputData = _outputData;
@@ -54,7 +56,7 @@ NSString * const TLMOperationFinishedNotification = @"TLMOperationFinishedNotifi
     self = [super init];
     if (self) {
         [self setFailed:NO];
-        [self setConcurrent:NO];
+        [self addObserver:self forKeyPath:@"isFinished" options:0 context:&_TLMOperationFinishedContext];
     }
     return self;
 }
@@ -78,13 +80,14 @@ NSString * const TLMOperationFinishedNotification = @"TLMOperationFinishedNotifi
         [_task setLaunchPath:absolutePath];
         [_task setArguments:options];
         [self setFailed:NO];
-        [self setConcurrent:NO];
+        [self addObserver:self forKeyPath:@"isFinished" options:0 context:&_TLMOperationFinishedContext];
     }
     return self;
 }
 
 - (void)dealloc
 {
+    [self removeObserver:self forKeyPath:@"isFinished"];
     [_task release];
     [_outputData release];
     [_errorData release];
@@ -98,10 +101,14 @@ NSString * const TLMOperationFinishedNotification = @"TLMOperationFinishedNotifi
     [[NSNotificationCenter defaultCenter] postNotificationName:TLMOperationFinishedNotification object:self];
 }
 
-- (void)finished
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-    [super finished];
-    [self performSelectorOnMainThread:@selector(_postFinishedNotification) withObject:nil waitUntilDone:NO];
+    if (context == &_TLMOperationFinishedContext) {
+        [self performSelectorOnMainThread:@selector(_postFinishedNotification) withObject:nil waitUntilDone:NO];
+    }
+    else {
+        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+    }
 }
 
 - (NSString *)errorMessages
@@ -155,8 +162,7 @@ NSString * const TLMOperationFinishedNotification = @"TLMOperationFinishedNotifi
     
     signal(SIGPIPE, previousSignalMask);
     
-    [self finished];
-    [pool release];    
+    [pool release];
 }
 
 @end

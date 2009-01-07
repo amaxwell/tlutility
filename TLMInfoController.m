@@ -41,7 +41,6 @@
 #import "TLMPackage.h"
 #import "TLMOutputParser.h"
 #import "TLMLogServer.h"
-#import "FVOperationQueue.h"
 
 @implementation TLMInfoController
 
@@ -61,7 +60,7 @@
 {
     self = [super initWithWindowNibName:[self windowNibName]];
     if (self) {
-        _infoQueue = [FVOperationQueue new];
+        _infoQueue = [NSOperationQueue new];
         [_infoQueue setMaxConcurrentOperationCount:1];
     }
     return self;
