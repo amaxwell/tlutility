@@ -234,6 +234,10 @@ static char _TLMOperationQueueOperationContext;
 
 - (void)_updateAll
 {
+    // !!! early return
+    if ([self _checkCommandPathAndWarn:YES] == NO)
+        return;
+    
     TLMUpdateOperation *op = nil;
     if (_updateInfrastructure) {
         op = [[TLMInfraUpdateOperation alloc] initWithLocation:_lastUpdateURL];
@@ -450,6 +454,8 @@ static char _TLMOperationQueueOperationContext;
 
 - (IBAction)papersizeSheetDidEnd:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)context
 {
+    // _checkCommandPathAndWarn: is called before the sheet is displayed
+    
     [sheet orderOut:self];
     TLMPapersizeController *psc = context;
     [psc autorelease];
@@ -473,12 +479,14 @@ static char _TLMOperationQueueOperationContext;
 
 - (IBAction)changePapersize:(id)sender;
 {
-    TLMPapersizeController *psc = [TLMPapersizeController new];
-    [NSApp beginSheet:[psc window] 
-       modalForWindow:[self window] 
-        modalDelegate:self 
-       didEndSelector:@selector(papersizeSheetDidEnd:returnCode:contextInfo:) 
-          contextInfo:psc];
+    if ([self _checkCommandPathAndWarn:YES]) {
+        TLMPapersizeController *psc = [TLMPapersizeController new];
+        [NSApp beginSheet:[psc window] 
+           modalForWindow:[self window] 
+            modalDelegate:self 
+           didEndSelector:@selector(papersizeSheetDidEnd:returnCode:contextInfo:) 
+              contextInfo:psc];
+    }
 }
 
 - (void)_removeDataSourceFromResponderChain:(id)dataSource
@@ -582,43 +590,41 @@ static char _TLMOperationQueueOperationContext;
 
 - (void)updateAllPackages;
 {
-    if ([self _checkCommandPathAndWarn:YES]) {
-        NSAlert *alert = [[NSAlert new] autorelease];
-        NSUInteger size = 0;
-        for (TLMPackage *pkg in [_updateListDataSource allPackages])
-            size += [[pkg size] unsignedIntegerValue];
+    NSAlert *alert = [[NSAlert new] autorelease];
+    NSUInteger size = 0;
+    for (TLMPackage *pkg in [_updateListDataSource allPackages])
+        size += [[pkg size] unsignedIntegerValue];
+    
+    [alert setMessageText:NSLocalizedString(@"Update all packages?", @"alert title")];
+    // may not be correct for _updateInfrastructure, but tlmgr may remove stuff also...so leave it as-is
+    NSMutableString *informativeText = [NSMutableString string];
+    [informativeText appendString:NSLocalizedString(@"This will install all available updates and remove packages that no longer exist on the server.", @"alert message text")];
+    
+    if (size > 0) {
         
-        [alert setMessageText:NSLocalizedString(@"Update all packages?", @"alert title")];
-        // may not be correct for _updateInfrastructure, but tlmgr may remove stuff also...so leave it as-is
-        NSMutableString *informativeText = [NSMutableString string];
-        [informativeText appendString:NSLocalizedString(@"This will install all available updates and remove packages that no longer exist on the server.", @"alert message text")];
+        CGFloat totalSize = size;
+        NSString *sizeUnits = @"bytes";
         
-        if (size > 0) {
+        // check 1024 + 10% so the plural is always correct (at least in English)
+        if (totalSize > 1127) {
+            totalSize /= 1024.0;
+            sizeUnits = @"kilobytes";
             
-            CGFloat totalSize = size;
-            NSString *sizeUnits = @"bytes";
-            
-            // check 1024 + 10% so the plural is always correct (at least in English)
             if (totalSize > 1127) {
                 totalSize /= 1024.0;
-                sizeUnits = @"kilobytes";
-                
-                if (totalSize > 1127) {
-                    totalSize /= 1024.0;
-                    sizeUnits = @"megabytes";
-                }
+                sizeUnits = @"megabytes";
             }
-            
-            [informativeText appendFormat:NSLocalizedString(@"  Total download size will be %.1f %@.", @"partial alert text, with double space in front, only used with tlmgr2"), totalSize, sizeUnits];
         }
-        [alert setInformativeText:informativeText];
-        [alert addButtonWithTitle:NSLocalizedString(@"Update", @"button title")];
-        [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"button title")];
-        [alert beginSheetModalForWindow:[self window] 
-                          modalDelegate:self 
-                         didEndSelector:@selector(updateAllAlertDidEnd:returnCode:contextInfo:) 
-                            contextInfo:NULL]; 
+        
+        [informativeText appendFormat:NSLocalizedString(@"  Total download size will be %.1f %@.", @"partial alert text, with double space in front, only used with tlmgr2"), totalSize, sizeUnits];
     }
+    [alert setInformativeText:informativeText];
+    [alert addButtonWithTitle:NSLocalizedString(@"Update", @"button title")];
+    [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"button title")];
+    [alert beginSheetModalForWindow:[self window] 
+                      modalDelegate:self 
+                     didEndSelector:@selector(updateAllAlertDidEnd:returnCode:contextInfo:) 
+                        contextInfo:NULL]; 
 }    
 
 - (BOOL)windowShouldClose:(id)sender;
@@ -681,6 +687,10 @@ static char _TLMOperationQueueOperationContext;
 
 - (void)_installPackagesWithNames:(NSArray *)packageNames reinstall:(BOOL)reinstall
 {
+    // !!! early return here if tlmgr doesn't exist
+    if (NO == [self _checkCommandPathAndWarn:YES])
+        return;
+    
     TLMInstallOperation *op = [[TLMInstallOperation alloc] initWithPackageNames:packageNames location:_lastUpdateURL reinstall:reinstall];
     if (op) {
         TLMLog(__func__, @"Beginning install of %@\nfrom %@", packageNames, [_lastUpdateURL absoluteString]);
@@ -701,11 +711,7 @@ static char _TLMOperationQueueOperationContext;
 
 // reinstall requires additional option to tlmgr
 - (void)installPackagesWithNames:(NSArray *)packageNames reinstall:(BOOL)reinstall
-{
-    // !!! early return here if tlmgr doesn't exist
-    if (NO == [self _checkCommandPathAndWarn:YES])
-        return;
-    
+{    
     if (reinstall) {
         NSAlert *alert = [[NSAlert new] autorelease];
         [alert setMessageText:NSLocalizedString(@"Reinstall packages?", @"alert title")];
@@ -745,13 +751,17 @@ static char _TLMOperationQueueOperationContext;
 }
 
 - (void)removePackagesWithNames:(NSArray *)packageNames
-{     
+{   
+    // !!! early return
+    if ([self _checkCommandPathAndWarn:YES] == NO)
+        return;
+    
     // Some idiot could try to wipe out tlmgr itself, so let's try to prevent that...
     // NB: we can have the architecture appended to the package name, so use beginswith.
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(SELF beginswith 'bin-texlive') OR (SELF beginswith 'texlive.infra')"];
     NSArray *packages = [packageNames filteredArrayUsingPredicate:predicate];
     
-    if (NO == [self _checkCommandPathAndWarn:YES] || [packages count]) {
+    if ([packages count]) {
         // log for debugging, then display an alert so the user has some idea of what's going on...
         TLMLog(__func__, @"Tried to remove infrastructure packages: %@", packages);
         NSAlert *alert = [[NSAlert new] autorelease];
