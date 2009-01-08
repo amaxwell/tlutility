@@ -66,21 +66,11 @@ static char _TLMOperationFinishedContext;
     NSParameterAssert(absolutePath);
     NSParameterAssert(options);
     
-    NSFileManager *fm = [NSFileManager new];
-    BOOL exists = [fm isExecutableFileAtPath:absolutePath];
-    [fm release];
-
-    if (NO == exists) {
-        TLMLog(__func__, @"No executable file at %@", absolutePath);
-        [self release];
-        self = nil;
-    }
-    else if ((self = [super init])) {
+    self = [self init];
+    if (self) {
         _task = [TLMTask new];
         [_task setLaunchPath:absolutePath];
         [_task setArguments:options];
-        [self setFailed:NO];
-        [self addObserver:self forKeyPath:@"isFinished" options:0 context:&_TLMOperationFinishedContext];
     }
     return self;
 }
@@ -125,7 +115,7 @@ static char _TLMOperationFinishedContext;
 {
     NSAutoreleasePool *pool = [NSAutoreleasePool new];
    
-    NSParameterAssert(nil != _task);
+    NSAssert(nil != _task, @"No task, probably due to using incorrect initializer");
     
     sig_t previousSignalMask = signal(SIGPIPE, SIG_IGN);
     
