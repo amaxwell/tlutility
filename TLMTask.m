@@ -53,33 +53,6 @@ static void __TLMTaskNotify(void *info);
 @synthesize errorData = _errorData;
 
 
-- (id)init
-{
-    self = [super init];
-    if (self) {       
-        [self setStandardOutput:[NSPipe pipe]];
-        [self setStandardError:[NSPipe pipe]];
-        NSFileHandle *outfh = [[self standardOutput] fileHandleForReading];
-        NSFileHandle *errfh = [[self standardError] fileHandleForReading];
-        
-        NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-        [nc addObserver:self selector:@selector(_stdoutDataAvailable:) name:NSFileHandleReadToEndOfFileCompletionNotification object:outfh];
-        [nc addObserver:self selector:@selector(_stderrDataAvailable:) name:NSFileHandleReadToEndOfFileCompletionNotification object:errfh];
-        
-        [outfh readToEndOfFileInBackgroundAndNotifyForModes:[NSArray arrayWithObject:_TLMTaskRunLoopMode]];
-        [errfh readToEndOfFileInBackgroundAndNotifyForModes:[NSArray arrayWithObject:_TLMTaskRunLoopMode]];  
-        
-        /*
-         Need to run this thread's runloop to pick up the pipe notifications, but keep in mind that
-         -init and reading output/error may take place on entirely different threads.  We keep track
-         of the thread that registered for notifications, thus keeping NSTask's asynchronous execution
-         semantics while removing the tedious pipe handling.
-         */
-        _readThread = [[NSThread currentThread] retain];
-    }
-    return self;
-}
-
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -117,8 +90,36 @@ static void __TLMTaskNotify(void *info);
     [self setErrorData:[[aNote userInfo] objectForKey:NSFileHandleNotificationDataItem]];    
 }
 
+- (void)launch
+{
+    // The point here is to keep NSTask's asynchronous execution semantics while removing the tedious pipe handling.
+
+    [self setStandardOutput:[NSPipe pipe]];
+    [self setStandardError:[NSPipe pipe]];
+    NSFileHandle *outfh = [[self standardOutput] fileHandleForReading];
+    NSFileHandle *errfh = [[self standardError] fileHandleForReading];
+    
+    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+    [nc addObserver:self selector:@selector(_stdoutDataAvailable:) name:NSFileHandleReadToEndOfFileCompletionNotification object:outfh];
+    [nc addObserver:self selector:@selector(_stderrDataAvailable:) name:NSFileHandleReadToEndOfFileCompletionNotification object:errfh];
+    
+    [outfh readToEndOfFileInBackgroundAndNotifyForModes:[NSArray arrayWithObject:_TLMTaskRunLoopMode]];
+    [errfh readToEndOfFileInBackgroundAndNotifyForModes:[NSArray arrayWithObject:_TLMTaskRunLoopMode]];  
+    
+    /*
+     Need to run this thread's runloop to pick up the pipe notifications, so we keep track
+     of the thread that registered.  Doing this in -launch allows you to -init on one thread, then
+     call -launch on another thread.     
+     */
+    _readThread = [[NSThread currentThread] retain];
+    
+    [super launch];
+}
+
 - (void)_readDataFromPipes
 {
+    NSParameterAssert([[NSThread currentThread] isEqual:_readThread]);
+    
     // now that the task is finished, run the special runloop mode (only two sources in this mode)
     SInt32 ret;
     
