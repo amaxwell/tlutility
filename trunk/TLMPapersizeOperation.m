@@ -41,12 +41,6 @@
 
 @implementation TLMPapersizeOperation
 
-- (id)init
-{
-    NSAssert(0, @"Invalid initializer.  Location parameter is required.");
-    return [self initWithPapersize:nil];
-}
-
 - (id)initWithPapersize:(NSString *)paperSize;
 {
     NSParameterAssert(paperSize);

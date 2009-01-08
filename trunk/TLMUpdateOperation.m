@@ -43,12 +43,6 @@
 
 @synthesize packageNames = _packageNames;
 
-- (id)init
-{
-    NSAssert(0, @"Invalid initializer.  Location parameter is required.");
-    return [self initWithPackageNames:nil location:nil];
-}
-
 - (id)initWithPackageNames:(NSArray *)packageNames location:(NSURL *)location;
 {
     NSParameterAssert(location);

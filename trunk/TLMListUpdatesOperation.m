@@ -92,12 +92,6 @@
     return hasMachineReadable;
 }
 
-- (id)init
-{
-    NSAssert(0, @"Invalid initializer.  Location parameter is required.");
-    return [self initWithLocation:nil];
-}
-
 - (id)initWithLocation:(NSURL *)location
 {
     NSParameterAssert([location absoluteString]);
