@@ -51,7 +51,6 @@
 		F9B6B5F80EF469A600CF767F /* TLMLogServer.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B6B5F70EF469A600CF767F /* TLMLogServer.m */; };
 		F9D37C9A0F01A80800FB755E /* TLMGradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D37C990F01A80800FB755E /* TLMGradientView.m */; };
 		F9D37D640F01EA8900FB755E /* TLMUpdateListDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D37D630F01EA8900FB755E /* TLMUpdateListDataSource.m */; };
-		F9D37DEC0F021AA900FB755E /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9D37DEB0F021AA900FB755E /* QuartzCore.framework */; };
 		F9D37E7B0F02B5F700FB755E /* TLMOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D37E7A0F02B5F700FB755E /* TLMOutlineView.m */; };
 		F9DCD36C0F06F0A200600DD2 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9DCD3650F06F08C00600DD2 /* Sparkle.framework */; };
 		F9DCD3700F06F0F400600DD2 /* Sparkle.framework in copy Sparkle */ = {isa = PBXBuildFile; fileRef = F9DCD3650F06F08C00600DD2 /* Sparkle.framework */; };
@@ -209,7 +208,6 @@
 		F9D37C990F01A80800FB755E /* TLMGradientView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMGradientView.m; sourceTree = "<group>"; };
 		F9D37D620F01EA8900FB755E /* TLMUpdateListDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMUpdateListDataSource.h; sourceTree = "<group>"; };
 		F9D37D630F01EA8900FB755E /* TLMUpdateListDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMUpdateListDataSource.m; sourceTree = "<group>"; };
-		F9D37DEB0F021AA900FB755E /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = /System/Library/Frameworks/QuartzCore.framework; sourceTree = "<absolute>"; };
 		F9D37E790F02B5F700FB755E /* TLMOutlineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMOutlineView.h; sourceTree = "<group>"; };
 		F9D37E7A0F02B5F700FB755E /* TLMOutlineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMOutlineView.m; sourceTree = "<group>"; };
 		F9D9AEB60F0D7EED00CB1A2F /* tlmgr_cwrapper-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "tlmgr_cwrapper-Info.plist"; sourceTree = "<group>"; };
@@ -237,7 +235,6 @@
 				F9DCD36C0F06F0A200600DD2 /* Sparkle.framework in Frameworks */,
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
 				F9B137330EEC4C6A007C0046 /* Security.framework in Frameworks */,
-				F9D37DEC0F021AA900FB755E /* QuartzCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -353,7 +350,6 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				F9D37DEB0F021AA900FB755E /* QuartzCore.framework */,
 				F9B137320EEC4C6A007C0046 /* Security.framework */,
 				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
 				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
