@@ -37,30 +37,16 @@
  */
 
 #import "TLMStatusView.h"
-#import <QuartzCore/QuartzCore.h>
-
-#define USE_LAYER 0
 
 @implementation TLMStatusView
 
 @synthesize attributedStatusString = _statusString;
 
-- (void)_commonInit
-{
-    // only set delegate on alpha animation, since we only need the delegate callback once
-    CABasicAnimation *fadeAnimation = [CABasicAnimation animationWithKeyPath:@"alphaValue"];
-    [fadeAnimation setDelegate:self];
-    
-    NSMutableDictionary *animations = [NSMutableDictionary dictionary];
-    [animations addEntriesFromDictionary:[self animations]];
-    [animations setObject:fadeAnimation forKey:@"alphaValue"];
-    [self setAnimations:animations];    
-}
-
 - (id)initWithFrame:(NSRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        [self _commonInit];
+        // start out as transparent
+        _contextAlphaValue = 0.0;
     }
     return self;
 }
@@ -69,7 +55,8 @@
 {
     self = [super initWithCoder:decoder];
     if (self) {
-        [self _commonInit];
+        // start out as transparent
+        _contextAlphaValue = 0.0;
     }
     return self;
 }
@@ -108,9 +95,6 @@ static void CenterRectInRect(NSRect *toCenter, NSRect enclosingRect)
 - (void)viewDidMoveToSuperview
 {
     [super viewDidMoveToSuperview];
-#if USE_LAYER
-    [self setWantsLayer:YES];
-#endif
     [self _resetStringRect];
     [self setNeedsDisplay:YES];
 }
@@ -137,37 +121,57 @@ static void CenterRectInRect(NSRect *toCenter, NSRect enclosingRect)
 
 - (BOOL)isOpaque { return NO; }
 
-#if USE_LAYER
-- (void)animationDidStop:(CAPropertyAnimation *)anim finished:(BOOL)flag;
+- (void)animationFired:(NSTimer *)timer
 {
-    // remove from superview for fade out
-    if (flag && [self alphaValue] < 0.1) 
-        [self removeFromSuperview];
+    NSAnimation *animation = [timer userInfo];
+    CGFloat value = [animation currentValue];
+    if (value > 0.99) {
+        [animation stopAnimation];
+        [timer invalidate];
+        if (_fadeOut)
+            [self removeFromSuperview];     
+    }
+    else {
+        _contextAlphaValue = _fadeOut ? (1 - value) : value;
+        [self displayRectIgnoringOpacity:[self bounds]];
+    }
 }
-#endif
+
+- (void)startAnimation
+{
+    // animate ~30 fps for 0.3 seconds, using NSAnimation to get the alpha curve
+    NSAnimation *animation = [[NSAnimation alloc] initWithDuration:0.3 animationCurve:NSAnimationEaseInOut]; 
+    // runloop mode is irrelevant for non-blocking threaded
+    [animation setAnimationBlockingMode:NSAnimationNonblockingThreaded];
+    // explicitly alloc/init so it can be added to all the common modes instead of the default mode
+    NSTimer *timer = [[NSTimer alloc] initWithFireDate:[NSDate date]
+                                              interval:0.03
+                                                target:self 
+                                              selector:@selector(animationFired:)
+                                              userInfo:animation
+                                               repeats:YES];
+    [[NSRunLoop currentRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
+    [timer release];
+    [animation startAnimation];
+    [animation release];  
+}
 
 - (void)fadeOut;
 {
-#if USE_LAYER
-    [[self animator] setAlphaValue:0.0];
-#else
-    [self removeFromSuperview];
-#endif
+    _fadeOut = YES;
+    [self startAnimation];
 }
 
 - (void)fadeIn;
 {
-#if USE_LAYER
-    [[self animator] setAlphaValue:1.0];
-#else
-    [self setNeedsDisplay:YES];
-#endif
+    _fadeOut = NO;
+    [self startAnimation];
 }
 
 - (void)drawRect:(NSRect)dirtyRect 
 {
     dirtyRect = [self bounds];
-    
+    CGContextSetAlpha([[NSGraphicsContext currentContext] graphicsPort], _contextAlphaValue);
     [NSGraphicsContext saveGraphicsState];
     [[NSColor clearColor] setFill];
     NSRectFillUsingOperation(dirtyRect, NSCompositeSourceOver);
@@ -182,7 +186,7 @@ static void CenterRectInRect(NSRect *toCenter, NSRect enclosingRect)
     [fillPath stroke];
     
     [NSGraphicsContext restoreGraphicsState];
-
+    
     [_statusString drawWithRect:_stringRect options:DRAW_OPTS];
 }
 

@@ -43,8 +43,11 @@
 @private
     NSAttributedString *_statusString;
     NSRect              _stringRect;
+    CGFloat             _contextAlphaValue;
+    BOOL                _fadeOut;
 }
 
+// at initialization time, view is transparent and requires initial fadeIn to display
 - (void)fadeIn;
 - (void)fadeOut;
 
