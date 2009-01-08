@@ -43,12 +43,6 @@
 
 @synthesize packageNames = _packageNames;
 
-- (id)init
-{
-    NSAssert(0, @"Invalid initializer.  Package names parameter is required.");
-    return [self initWithPackageNames:nil];
-}
-
 - (id)initWithPackageNames:(NSArray *)packageNames;
 {
     NSParameterAssert(packageNames);
