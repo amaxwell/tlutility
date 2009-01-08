@@ -275,7 +275,7 @@ static char _TLMOperationQueueOperationContext;
         [_statusView fadeIn];
     }
     else if ([_statusView isDescendantOf:_tabView]) {
-        [_statusView fadeOut];
+        [_statusView fadeOutWithBackground:[[_updateListDataSource tableView] backgroundColor]];
     }
 }    
 

@@ -41,6 +41,7 @@
 @implementation TLMStatusView
 
 @synthesize attributedStatusString = _statusString;
+@synthesize backgroundColor = _backgroundColor;
 
 - (id)initWithFrame:(NSRect)frame {
     self = [super initWithFrame:frame];
@@ -64,6 +65,7 @@
 - (void)dealloc
 {
     [_statusString release];
+    [_backgroundColor release];
     [super dealloc];
 }
 
@@ -130,6 +132,9 @@ static void CenterRectInRect(NSRect *toCenter, NSRect enclosingRect)
         [timer invalidate];
         if (_fadeOut)
             [self removeFromSuperview];     
+        
+        // avoid wiping the view in drawRect:
+        _fadeOut = NO;
     }
     else {
         _contextAlphaValue = _fadeOut ? (1 - value) : value;
@@ -156,8 +161,10 @@ static void CenterRectInRect(NSRect *toCenter, NSRect enclosingRect)
     [animation release];  
 }
 
-- (void)fadeOut;
+- (void)fadeOutWithBackground:(NSColor *)backgroundColor;
 {
+    NSParameterAssert(backgroundColor);
+    [self setBackgroundColor:backgroundColor];
     _fadeOut = YES;
     [self startAnimation];
 }
@@ -171,18 +178,30 @@ static void CenterRectInRect(NSRect *toCenter, NSRect enclosingRect)
 - (void)drawRect:(NSRect)dirtyRect 
 {
     dirtyRect = [self bounds];
-    CGContextSetAlpha([[NSGraphicsContext currentContext] graphicsPort], _contextAlphaValue);
-    [NSGraphicsContext saveGraphicsState];
-    [[NSColor clearColor] setFill];
-    NSRectFillUsingOperation(dirtyRect, NSCompositeSourceOver);
-    
-    [[NSColor lightGrayColor] setFill];
+
     CGFloat padding = NSHeight(_stringRect) / 3.0;
     NSRect fillRect = [self centerScanRect:NSInsetRect(_stringRect, -padding, -padding)];
     NSBezierPath *fillPath = [NSBezierPath bezierPathWithRoundedRect:fillRect xRadius:10.0 yRadius:10.0];
+    
+    // wipe to the desired background color
+    if (_fadeOut) {
+        [_backgroundColor setFill];
+        [fillPath fill];
+        
+        [fillPath setLineWidth:4.0];
+        [_backgroundColor setStroke];
+        [fillPath stroke];
+    }
+
+    CGContextSetAlpha([[NSGraphicsContext currentContext] graphicsPort], _contextAlphaValue);
+    
+    [NSGraphicsContext saveGraphicsState];    
+    
+    [[NSColor lightGrayColor] setFill];
     [fillPath fill];
     
     [[NSColor grayColor] setStroke];
+    [fillPath setLineWidth:1.0];
     [fillPath stroke];
     
     [NSGraphicsContext restoreGraphicsState];
