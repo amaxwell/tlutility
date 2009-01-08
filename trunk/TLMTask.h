@@ -54,8 +54,16 @@
 - (void)setStandardOutput:(id)output;
 - (void)setStandardError:(id)error;
 
-// stdio channels are read lazily when either is requested
-// lock around access to any of these if multithreaded
+// 
+/*
+ Implemntation note: stdio channels are read lazily when either is requested.
+ These calls execute on the thread that called -launch, and and will block 
+ the calling thread if necessary.  
+ 
+ If that is problematic, call errorData and outputData after calling -launch
+ and waiting until the task exits (use -waitUntilExit).  Subsequent access 
+ from other threads will use the cached values without blocking.
+ */
 @property (readonly) NSString *outputString;
 @property (readonly) NSString *errorString;
 @property (readonly, copy) NSData *errorData;
