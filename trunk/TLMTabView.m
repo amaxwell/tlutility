@@ -128,6 +128,29 @@
     [super dealloc];
 }
 
+// subview frame in receiver's coordinates
+- (NSRect)contentRect
+{
+    NSRect viewFrame = [self bounds];
+    viewFrame.size.height -= (NSHeight([_tabControl frame]) - 3 * TAB_CONTROL_MARGIN);
+    return viewFrame;
+}
+
+- (void)_adjustTabs
+{
+    NSRect tabBounds = [_tabControl bounds];
+    tabBounds.origin.y = NSMaxY([self bounds]) - NSHeight(tabBounds) + TAB_CONTROL_MARGIN;
+    tabBounds.origin.x = 0.5 * (NSWidth([self bounds]) - NSWidth(tabBounds));
+    [_tabControl setFrame:[self centerScanRect:tabBounds]];  
+}
+
+- (void)resizeSubviewsWithOldSize:(NSSize)oldSize;
+{
+    [super resizeSubviewsWithOldSize:oldSize];
+    [self _adjustTabs];
+    [_currentView setFrame:[self contentRect]];
+}
+
 - (void)addTabNamed:(NSString *)tabName withView:(NSView *)aView;
 {
     NSParameterAssert(tabName);
@@ -135,12 +158,9 @@
     [_tabControl setSegmentCount:([_tabControl segmentCount] + 1)];
     [_tabControl setLabel:tabName forSegment:([_tabControl segmentCount] - 1)];
     [_tabControl sizeToFit];
-    NSRect frame = [_tabControl bounds];
-    frame.origin.y = NSMaxY([self bounds]) - NSHeight(frame) + TAB_CONTROL_MARGIN;
-    frame.origin.x = 0.5 * (NSWidth([self bounds]) - NSWidth(frame));
-    [_tabControl setFrame:[self centerScanRect:frame]];
+    [self _adjustTabs];
     [_views addObject:aView];
-    
+            
     if (-1 == _selectedIndex)
         [self selectViewAtIndex:0];
 }
@@ -245,9 +265,7 @@
     [_tabControl setSelectedSegment:anIndex];
     
     NSView *nextView = [self viewAtIndex:anIndex];
-    NSRect viewFrame = [self bounds];
-    viewFrame.size.height -= (NSHeight([_tabControl frame]) - 3 * TAB_CONTROL_MARGIN);
-    [nextView setFrame:viewFrame];
+    [nextView setFrame:[self contentRect]];
     
     NSParameterAssert([nextView isDescendantOf:self] == NO);
     [self addSubview:nextView];
