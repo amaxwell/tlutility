@@ -80,7 +80,7 @@
     // Karl's suggested test.  Safe to assume this error message won't change for the original tlmgr.
     if ([errorString hasPrefix:@"Unknown option:"])
         hasMachineReadable = NO;
-    else if (nil == errorString || [errorString rangeOfString:@"unknown action"].length == 0) {
+    else if (nil == errorString || [errorString rangeOfString:@"missing action"].length == 0) {
         // allow upstream to change this, but warn of any such changes
         TLMLog(__func__, @"Unexpected output from test for tlmgr2: \"%@\"", errorString);
         TLMLog(__func__, @"Assuming tlmgr2 and proceeding, but please report failures to the developer");
