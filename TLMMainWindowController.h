@@ -50,7 +50,7 @@
 {
 @private
     NSProgressIndicator      *_progressIndicator;
-    NSTextField              *_hostnameField;
+    NSTextView               *_hostnameView;
     TLMTabView               *_tabView;
     TLMSplitView             *_splitView;
     TLMStatusView            *_statusView;
@@ -68,7 +68,7 @@
 }
 
 @property (nonatomic, retain) IBOutlet NSProgressIndicator *_progressIndicator;
-@property (nonatomic, retain) IBOutlet NSTextField *_hostnameField;
+@property (nonatomic, retain) IBOutlet NSTextView *_hostnameView;
 @property (nonatomic, retain) IBOutlet TLMSplitView *_splitView;
 @property (nonatomic, retain) IBOutlet TLMStatusView *_statusView;
 @property (nonatomic, retain) IBOutlet TLMLogDataSource *_logDataSource;
