@@ -41,7 +41,6 @@
 @implementation TLMStatusView
 
 @synthesize attributedStatusString = _statusString;
-@synthesize backgroundColor = _backgroundColor;
 
 - (id)initWithFrame:(NSRect)frame {
     self = [super initWithFrame:frame];
@@ -65,7 +64,7 @@
 - (void)dealloc
 {
     [_statusString release];
-    [_backgroundColor release];
+    [_background release];
     [super dealloc];
 }
 
@@ -124,17 +123,17 @@ static void CenterRectInRect(NSRect *toCenter, NSRect enclosingRect)
 - (BOOL)isOpaque { return NO; }
 
 - (void)animationFired:(NSTimer *)timer
-{
+{    
     NSAnimation *animation = [timer userInfo];
     CGFloat value = [animation currentValue];
     if (value > 0.99) {
         [animation stopAnimation];
         [timer invalidate];
+        _isFading = NO;
+        
+        // only remove when fading out
         if (_fadeOut)
             [self removeFromSuperview];     
-        
-        // avoid wiping the view in drawRect:
-        _fadeOut = NO;
     }
     else {
         _contextAlphaValue = _fadeOut ? (1 - value) : value;
@@ -143,7 +142,9 @@ static void CenterRectInRect(NSRect *toCenter, NSRect enclosingRect)
 }
 
 - (void)startAnimation
-{
+{    
+    _isFading = YES;
+    
     // animate ~30 fps for 0.3 seconds, using NSAnimation to get the alpha curve
     NSAnimation *animation = [[NSAnimation alloc] initWithDuration:0.3 animationCurve:NSAnimationEaseInOut]; 
     // runloop mode is irrelevant for non-blocking threaded
@@ -161,52 +162,72 @@ static void CenterRectInRect(NSRect *toCenter, NSRect enclosingRect)
     [animation release];  
 }
 
-- (void)fadeOutWithBackground:(NSColor *)backgroundColor;
+- (void)_setBackground:(NSImage *)anImage
 {
-    NSParameterAssert(backgroundColor);
-    [self setBackgroundColor:backgroundColor];
+    if (anImage != _background) {
+        [_background release];
+        _background = [anImage retain];
+    }
+}
+
+- (void)_prepareBackgroundImage
+{
+    // since we can't use layers to handle compositing, use a snapshot of the current view content
+    NSBitmapImageRep *imageRep = [[self superview] bitmapImageRepForCachingDisplayInRect:[self frame]];
+    
+    // set a flag so drawRect: does nothing when this is called
+    _preparingBackground = YES;
+    [[self superview] cacheDisplayInRect:[self frame] toBitmapImageRep:imageRep];
+    _preparingBackground = NO;
+    
+    NSImage *image = [[NSImage alloc] initWithSize:[self frame].size];
+    [image addRepresentation:imageRep];
+    [self _setBackground:image];        
+}
+
+- (void)fadeOut;
+{
     _fadeOut = YES;
+    [self _prepareBackgroundImage];
     [self startAnimation];
 }
 
 - (void)fadeIn;
 {
     _fadeOut = NO;
+    [self _prepareBackgroundImage];
     [self startAnimation];
 }
 
 - (void)drawRect:(NSRect)dirtyRect 
 {
-    dirtyRect = [self bounds];
-
-    CGFloat padding = NSHeight(_stringRect) / 3.0;
-    NSRect fillRect = [self centerScanRect:NSInsetRect(_stringRect, -padding, -padding)];
-    NSBezierPath *fillPath = [NSBezierPath bezierPathWithRoundedRect:fillRect xRadius:10.0 yRadius:10.0];
-    
-    // wipe to the desired background color
-    if (_fadeOut) {
-        [_backgroundColor setFill];
+    if (NO == _preparingBackground) {
+                
+        // draw the superview and its descendants, and composite our content of top of it
+        if (_isFading) {
+            [_background drawInRect:[self bounds] fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
+            CGContextSetAlpha([[NSGraphicsContext currentContext] graphicsPort], _contextAlphaValue);
+        }
+        
+        // fill and stroke the path
+        [NSGraphicsContext saveGraphicsState];    
+        
+        CGFloat padding = NSHeight(_stringRect) / 3.0;
+        NSRect fillRect = [self centerScanRect:NSInsetRect(_stringRect, -padding, -padding)];
+        NSBezierPath *fillPath = [NSBezierPath bezierPathWithRoundedRect:fillRect xRadius:10.0 yRadius:10.0];        
+        
+        [[NSColor lightGrayColor] setFill];
         [fillPath fill];
         
-        [fillPath setLineWidth:4.0];
-        [_backgroundColor setStroke];
+        [[NSColor grayColor] setStroke];
+        [fillPath setLineWidth:1.0];
         [fillPath stroke];
+        
+        [NSGraphicsContext restoreGraphicsState];
+        
+        // draw text on top of the path
+        [_statusString drawWithRect:_stringRect options:DRAW_OPTS];
     }
-
-    CGContextSetAlpha([[NSGraphicsContext currentContext] graphicsPort], _contextAlphaValue);
-    
-    [NSGraphicsContext saveGraphicsState];    
-    
-    [[NSColor lightGrayColor] setFill];
-    [fillPath fill];
-    
-    [[NSColor grayColor] setStroke];
-    [fillPath setLineWidth:1.0];
-    [fillPath stroke];
-    
-    [NSGraphicsContext restoreGraphicsState];
-    
-    [_statusString drawWithRect:_stringRect options:DRAW_OPTS];
 }
 
 @end

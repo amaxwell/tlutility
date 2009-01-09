@@ -39,21 +39,23 @@
 #import <Cocoa/Cocoa.h>
 
 
-@interface TLMStatusView : NSView {
+@interface TLMStatusView : NSView 
+{
 @private
     NSAttributedString *_statusString;
     NSRect              _stringRect;
     CGFloat             _contextAlphaValue;
-    NSColor            *_backgroundColor;
+    NSImage            *_background;
+    BOOL                _preparingBackground;
     BOOL                _fadeOut;
+    BOOL                _isFading;
 }
 
 // at initialization time, view is transparent and requires initial fadeIn to display
 - (void)fadeIn;
-- (void)fadeOutWithBackground:(NSColor *)backgroundColor;
+- (void)fadeOut;
 
 @property(readwrite, copy) NSString *statusString;
-@property(readwrite, copy) NSColor *backgroundColor;
 @property(readwrite, copy) NSAttributedString *attributedStatusString;
 
 @end
