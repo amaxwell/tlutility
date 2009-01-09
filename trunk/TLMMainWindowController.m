@@ -64,7 +64,7 @@ static char _TLMOperationQueueOperationContext;
 @implementation TLMMainWindowController
 
 @synthesize _progressIndicator;
-@synthesize _hostnameField;
+@synthesize _hostnameView;
 @synthesize _splitView;
 @synthesize _logDataSource;
 @synthesize lastUpdateURL = _lastUpdateURL;
@@ -114,7 +114,7 @@ static char _TLMOperationQueueOperationContext;
     
     [_statusView release];
     [_statusBarView release];
-    [_hostnameField release];
+    [_hostnameView release];
     
     [_progressIndicator release];
     [_lastUpdateURL release];
@@ -137,6 +137,11 @@ static char _TLMOperationQueueOperationContext;
     
     // 10.5 release notes say this is enabled by default, but they're wrong
     [_progressIndicator setUsesThreadedAnimation:YES];
+    
+    [_hostnameView setDrawsBackground:NO];
+    [_hostnameView setAutomaticLinkDetectionEnabled:YES];
+    [_hostnameView setEditable:NO];
+    [_hostnameView setFieldEditor:YES];
 }
 
 - (void)windowDidLoad
@@ -226,7 +231,14 @@ static char _TLMOperationQueueOperationContext;
         aURL = defaultURL;
     }
     NSParameterAssert(aURL);
-    [_hostnameField setStringValue:[aURL absoluteString]];
+    NSTextStorage *ts = [_hostnameView textStorage];
+    [[ts mutableString] setString:[aURL absoluteString]];
+    [ts addAttribute:NSFontAttributeName value:[NSFont labelFontOfSize:0] range:NSMakeRange(0, [ts length])];
+    [ts addAttribute:NSLinkAttributeName value:aURL range:NSMakeRange(0, [ts length])];
+    [ts addAttributes:[_hostnameView linkTextAttributes] range:NSMakeRange(0, [ts length])];
+    
+    // ??? textview seems to draw a darker gray
+    [_statusBarView setNeedsDisplay:YES];
     
     [_lastUpdateURL autorelease];
     _lastUpdateURL = [aURL copy];
