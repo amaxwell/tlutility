@@ -135,13 +135,8 @@ static char _TLMOperationQueueOperationContext;
     [_tabView addTabNamed:NSLocalizedString(@"Manage Updates", @"tab title") withView:[[_updateListDataSource tableView]  enclosingScrollView]];
     [_tabView addTabNamed:NSLocalizedString(@"Manage Packages", @"tab title") withView:[[_packageListDataSource outlineView] enclosingScrollView]];
     
-    // 10.5 release notes say this is enabled by default, but they're wrong
+    // 10.5 release notes say this is enabled by default, but it returns NO
     [_progressIndicator setUsesThreadedAnimation:YES];
-    
-    [_hostnameView setDrawsBackground:NO];
-    [_hostnameView setAutomaticLinkDetectionEnabled:YES];
-    [_hostnameView setEditable:NO];
-    [_hostnameView setFieldEditor:YES];
 }
 
 - (void)windowDidLoad
@@ -236,9 +231,6 @@ static char _TLMOperationQueueOperationContext;
     [ts addAttribute:NSFontAttributeName value:[NSFont labelFontOfSize:0] range:NSMakeRange(0, [ts length])];
     [ts addAttribute:NSLinkAttributeName value:aURL range:NSMakeRange(0, [ts length])];
     [ts addAttributes:[_hostnameView linkTextAttributes] range:NSMakeRange(0, [ts length])];
-    
-    // ??? textview seems to draw a darker gray
-    [_statusBarView setNeedsDisplay:YES];
     
     [_lastUpdateURL autorelease];
     _lastUpdateURL = [aURL copy];
