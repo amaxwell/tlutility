@@ -46,6 +46,11 @@
 @class TLMUpdateListDataSource;
 @class TLMGradientView;
 
+@protocol TLMListDataSource
+@property (nonatomic, copy) NSURL *lastUpdateURL;
+@end
+
+
 @interface TLMMainWindowController : NSWindowController <TLMTabViewDelegate>
 {
 @private
@@ -59,11 +64,11 @@
     NSUInteger                _operationCount;
     CGFloat                   _lastTextViewHeight;
     BOOL                      _updateInfrastructure;
-    NSURL                    *_lastUpdateURL;
-    
-    TLMUpdateListDataSource  *_updateListDataSource;
+
     TLMLogDataSource         *_logDataSource;
+    TLMUpdateListDataSource  *_updateListDataSource;
     TLMPackageListDataSource *_packageListDataSource;
+    id <TLMListDataSource>    _currentListDataSource;
 }
 
 @property (nonatomic, retain) IBOutlet NSProgressIndicator *_progressIndicator;
@@ -76,12 +81,11 @@
 @property (nonatomic, retain) IBOutlet TLMTabView *_tabView;
 @property (nonatomic, retain) IBOutlet TLMGradientView *_statusBarView;
 @property (nonatomic, readonly) BOOL infrastructureNeedsUpdate;
-@property (nonatomic, copy) NSURL *lastUpdateURL;
 
 - (IBAction)changePapersize:(id)sender;
 - (IBAction)cancelAllOperations:(id)sender;
 
-// install/update actions will use -lastUpdateURL
+// install/update actions will use lastUpdateURL
 - (void)updateAllPackages;
 - (void)installPackagesWithNames:(NSArray *)packageNames reinstall:(BOOL)reinstall;
 - (void)updatePackagesWithNames:(NSArray *)packageNames;

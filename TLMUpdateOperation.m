@@ -42,6 +42,7 @@
 @implementation TLMUpdateOperation
 
 @synthesize packageNames = _packageNames;
+@synthesize updateURL = _updateURL;
 
 - (id)initWithPackageNames:(NSArray *)packageNames location:(NSURL *)location;
 {
@@ -60,6 +61,7 @@
     self = [self initWithCommand:cmd options:options];
     if (self) {
         _packageNames = [packageNames copy];
+        _updateURL = [location copy];
     }
     return self;
 }
@@ -67,6 +69,7 @@
 - (void)dealloc
 {
     [_packageNames release];
+    [_updateURL release];
     [super dealloc];
 }
 

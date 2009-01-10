@@ -39,7 +39,6 @@
 #import "TLMPackageListDataSource.h"
 #import "TLMPackageNode.h"
 #import "TLMInfoController.h"
-#import "TLMMainWindowController.h"
 #import "TLMOutlineView.h"
 
 @implementation TLMPackageListDataSource
@@ -48,6 +47,7 @@
 @synthesize packageNodes = _packageNodes;
 @synthesize _searchField;
 @synthesize _controller;
+@synthesize lastUpdateURL = _lastUpdateURL;
 
 - (id)init
 {
@@ -69,6 +69,7 @@
     [_displayedPackageNodes release];
     [_searchField release];
     [_sortDescriptors release];
+    [_lastUpdateURL release];
     [super dealloc];
 }
 

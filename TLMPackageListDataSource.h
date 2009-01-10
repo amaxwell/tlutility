@@ -37,20 +37,21 @@
  */
 
 #import <Cocoa/Cocoa.h>
+#import "TLMMainWindowController.h"
 
-@class TLMMainWindowController;
 @class TLMOutlineView;
 
-@interface TLMPackageListDataSource : NSResponder 
+@interface TLMPackageListDataSource : NSResponder <TLMListDataSource>
 {
 @private
-    TLMOutlineView *_outlineView;
-    NSArray        *_packageNodes;    
-    NSMutableArray *_displayedPackageNodes;
-    NSSearchField  *_searchField;
-    BOOL            _sortAscending;
-    NSMutableArray *_sortDescriptors;
+    TLMOutlineView          *_outlineView;
+    NSArray                 *_packageNodes;    
+    NSMutableArray          *_displayedPackageNodes;
+    NSSearchField           *_searchField;
+    BOOL                     _sortAscending;
+    NSMutableArray          *_sortDescriptors;
     TLMMainWindowController *_controller;
+    NSURL                   *_lastUpdateURL;
 }
 
 - (IBAction)search:(id)sender;
@@ -62,7 +63,8 @@
 @property (nonatomic, retain) IBOutlet NSSearchField *_searchField;
 @property (nonatomic, retain) IBOutlet TLMOutlineView *outlineView;
 @property (nonatomic, assign) IBOutlet TLMMainWindowController *_controller;
-@property (readwrite, copy) NSArray *packageNodes;
+@property (nonatomic, copy) NSArray *packageNodes;
 @property (readonly) id selectedItem;
+@property (nonatomic, copy) NSURL *lastUpdateURL;
 
 @end
