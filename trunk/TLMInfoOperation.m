@@ -133,16 +133,18 @@
         CFRunLoopRunInMode(kCFRunLoopDefaultMode, 1.0, TRUE);
     }
     
+    int status = -1;
     if ([self isCancelled]) {
         [task terminate];
     }
     else {
         // not cancelled, but make sure it's really done before calling -terminationStatus
         [task waitUntilExit];
+        status = [task terminationStatus];
     }
     
-    NSString *errorString = ([task terminationStatus] || [self isCancelled]) ? nil : [task errorString];
-    NSString *outputString = ([task terminationStatus] || [self isCancelled]) ? nil : [task outputString];
+    NSString *errorString = 0 != status ? nil : [task errorString];
+    NSString *outputString = 0 != status ? nil : [task outputString];
     
     signal(SIGPIPE, previousSignalMask);
     
