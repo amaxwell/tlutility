@@ -96,7 +96,7 @@ static char _TLMOperationQueueOperationContext;
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [[TLMReadWriteOperationQueue defaultQueue] removeObserver:self forKeyPath:@"operations"];
+    [[TLMReadWriteOperationQueue defaultQueue] removeObserver:self forKeyPath:@"operationCount"];
     
     [_tabView setDelegate:nil];
     [_tabView release];
@@ -124,7 +124,8 @@ static char _TLMOperationQueueOperationContext;
     _currentListDataSource = _updateListDataSource;
     [_tabView setDelegate:self];
     [_tabView addTabNamed:NSLocalizedString(@"Manage Updates", @"tab title") withView:[[_updateListDataSource tableView]  enclosingScrollView]];
-    [_tabView addTabNamed:NSLocalizedString(@"Manage Packages", @"tab title") withView:[[_packageListDataSource outlineView] enclosingScrollView]];    
+    [_tabView addTabNamed:NSLocalizedString(@"Manage Packages", @"tab title") withView:[[_packageListDataSource outlineView] enclosingScrollView]];
+    
     // 10.5 release notes say this is enabled by default, but it returns NO
     [_progressIndicator setUsesThreadedAnimation:YES];
 }
@@ -140,27 +141,9 @@ static char _TLMOperationQueueOperationContext;
     [[[self window] toolbar] setAutosavesConfiguration:YES];
 }
 
-- (BOOL)_checkCommandPathAndWarn:(BOOL)displayWarning
-{
-    NSString *cmdPath = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath];
-    BOOL exists = [[NSFileManager defaultManager] isExecutableFileAtPath:cmdPath];
-    
-    if (NO == exists) {
-        TLMLog(__func__, @"tlmgr not found at \"%@\"", cmdPath);
-        if (displayWarning) {
-            NSAlert *alert = [[NSAlert new] autorelease];
-            [alert setMessageText:NSLocalizedString(@"TeX installation not found.", @"alert sheet title")];
-            [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"The tlmgr tool does not exist at %@.  Please set the correct location in preferences or install TeX Live.", @"alert message text"), cmdPath]];
-            [alert beginSheetModalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
-        }
-    }
-    
-    return exists;
-}
-
 - (NSString *)windowNibName { return @"MainWindow"; }
 
-- (void)_operationCountChanged:(NSNumber *)count
+- (void)_setOperationCountAsNumber:(NSNumber *)count
 {
     NSParameterAssert([NSThread isMainThread]);
     
@@ -195,12 +178,42 @@ static char _TLMOperationQueueOperationContext;
          vs. something like NSNotification.  Grrr.
          */
         NSNumber *count = [NSNumber numberWithUnsignedInteger:[[TLMReadWriteOperationQueue defaultQueue] operationCount]];
-        [self performSelectorOnMainThread:@selector(_operationCountChanged:) withObject:count waitUntilDone:NO];
+        [self performSelectorOnMainThread:@selector(_setOperationCountAsNumber:) withObject:count waitUntilDone:NO];
     }
     else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
 }
+
+// tried validating toolbar items using bindings to queue.operations.@count but the queue sends KVO notifications on its own thread
+- (BOOL)validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem>)anItem;
+{
+    SEL action = [anItem action];
+    if (@selector(cancelAllOperations:) == action)
+        return _operationCount > 0;
+    else
+        return YES;
+}
+
+- (BOOL)windowShouldClose:(id)sender;
+{
+    BOOL shouldClose = YES;
+    if ([[TLMReadWriteOperationQueue defaultQueue] isWriting]) {
+        NSAlert *alert = [[NSAlert new] autorelease];
+        [alert setMessageText:NSLocalizedString(@"Installation in progress!", @"alert title")];
+        [alert setAlertStyle:NSCriticalAlertStyle];
+        [alert setInformativeText:NSLocalizedString(@"If you close the window, the installation process may leave your TeX installation in an unknown state.  You can ignore this warning and close the window, or wait until the installation finishes.", @"alert message text")];
+        [alert addButtonWithTitle:NSLocalizedString(@"Wait", @"button title")];
+        [alert addButtonWithTitle:NSLocalizedString(@"Ignore", @"button title")];
+        
+        NSInteger rv = [alert runModal];
+        if (NSAlertFirstButtonReturn == rv)
+            shouldClose = NO;
+    }
+    return shouldClose;
+}
+
+#pragma mark Interface updates
 
 - (void)_updateURLView
 {
@@ -216,40 +229,6 @@ static char _TLMOperationQueueOperationContext;
     [ts addAttributes:[_hostnameView linkTextAttributes] range:NSMakeRange(0, [ts length])];
 }
 
-- (void)_updateAll
-{
-    // !!! early return
-    if ([self _checkCommandPathAndWarn:YES] == NO)
-        return;
-    
-    TLMUpdateOperation *op = nil;
-    NSURL *currentURL = [_currentListDataSource lastUpdateURL];
-    if (_updateInfrastructure) {
-        op = [[TLMInfraUpdateOperation alloc] initWithLocation:currentURL];
-        TLMLog(__func__, @"Beginning infrastructure update from %@", [currentURL absoluteString]);
-    }
-    else {
-        op = [[TLMUpdateOperation alloc] initWithPackageNames:nil location:currentURL];
-        TLMLog(__func__, @"Beginning update of all packages from %@", [currentURL absoluteString]);
-    }
-    
-    if (op) {
-        [[NSNotificationCenter defaultCenter] addObserver:self 
-                                                 selector:@selector(_handleUpdateFinishedNotification:) 
-                                                     name:TLMOperationFinishedNotification 
-                                                   object:op];
-        [[TLMReadWriteOperationQueue defaultQueue] addOperation:op];
-        [op release];   
-    }
-}
-
-- (void)infrastructureAlertDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo;
-{
-    if (NSAlertFirstButtonReturn == returnCode) {
-        [self _updateAll];
-    }
-}
-
 // pass nil for status to clear the view and remove it
 - (void)_displayStatusString:(NSString *)statusString
 {
@@ -263,6 +242,140 @@ static char _TLMOperationQueueOperationContext;
         [_statusView fadeOut];
     }
 }    
+
+- (void)_removeDataSourceFromResponderChain:(id)dataSource
+{
+    NSResponder *next = [self nextResponder];
+    if ([next isEqual:_updateListDataSource] || [next isEqual:_packageListDataSource]) {
+        [self setNextResponder:[next nextResponder]];
+        [next setNextResponder:nil];
+    }
+}
+
+- (void)_insertDataSourceInResponderChain:(id)dataSource
+{
+    NSResponder *next = [self nextResponder];
+    NSParameterAssert([next isEqual:_updateListDataSource] == NO);
+    NSParameterAssert([next isEqual:_packageListDataSource] == NO);
+    
+    [self setNextResponder:dataSource];
+    [dataSource setNextResponder:next];
+}
+
+- (void)tabView:(TLMTabView *)tabView didSelectViewAtIndex:(NSUInteger)anIndex;
+{
+    // clear the status overlay, but don't animate since it interferes with the tabview animation
+    if ([_statusView isDescendantOf:_tabView]) {
+        [_statusView removeFromSuperview];
+        // set it back to transparent
+        [_statusView fadeOut];
+    }
+    
+    switch (anIndex) {
+        case 0:
+            
+            [self _removeDataSourceFromResponderChain:_packageListDataSource];
+            [self _insertDataSourceInResponderChain:_updateListDataSource];   
+            _currentListDataSource = _updateListDataSource;
+            [self _updateURLView];
+            
+            if ([[_updateListDataSource allPackages] count])
+                [_updateListDataSource search:nil];
+            break;
+        case 1:
+            
+            [self _removeDataSourceFromResponderChain:_updateListDataSource];
+            [self _insertDataSourceInResponderChain:_packageListDataSource];   
+            _currentListDataSource = _packageListDataSource;
+            [self _updateURLView];
+            
+            if ([[_packageListDataSource packageNodes] count])
+                [_packageListDataSource search:nil];
+            else
+                [self refreshFullPackageList];
+            break;
+        default:
+            break;
+    }
+}
+
+// implementation from BibDesk's BDSKEditor
+- (void)splitView:(TLMSplitView *)splitView doubleClickedDividerAt:(NSUInteger)subviewIndex;
+{
+    NSView *tableView = [[splitView subviews] objectAtIndex:0];
+    NSView *textView = [[splitView subviews] objectAtIndex:1];
+    NSRect tableFrame = [tableView frame];
+    NSRect textViewFrame = [textView frame];
+    
+    // not sure what the criteria for isSubviewCollapsed, but it doesn't work
+    if(NSHeight(textViewFrame) > 0.0){ 
+        // save the current height
+        _lastTextViewHeight = NSHeight(textViewFrame);
+        tableFrame.size.height += _lastTextViewHeight;
+        textViewFrame.size.height = 0.0;
+    } else {
+        // previously collapsed, so pick a reasonable value to start
+        if(_lastTextViewHeight <= 0.0)
+            _lastTextViewHeight = 150.0; 
+        textViewFrame.size.height = _lastTextViewHeight;
+        tableFrame.size.height = NSHeight([splitView frame]) - _lastTextViewHeight - [splitView dividerThickness];
+        if (NSHeight(tableFrame) < 0.0) {
+            tableFrame.size.height = 0.0;
+            textViewFrame.size.height = NSHeight([splitView frame]) - [splitView dividerThickness];
+            _lastTextViewHeight = NSHeight(textViewFrame);
+        }
+    }
+    [tableView setFrame:tableFrame];
+    [textView setFrame:textViewFrame];
+    [splitView adjustSubviews];
+    // fix for NSSplitView bug, which doesn't send this in adjustSubviews
+    [[NSNotificationCenter defaultCenter] postNotificationName:NSSplitViewDidResizeSubviewsNotification object:splitView];
+}
+
+#pragma mark -
+#pragma mark Operations
+
+- (BOOL)_checkCommandPathAndWarn:(BOOL)displayWarning
+{
+    NSString *cmdPath = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath];
+    BOOL exists = [[NSFileManager defaultManager] isExecutableFileAtPath:cmdPath];
+    
+    if (NO == exists) {
+        TLMLog(__func__, @"tlmgr not found at \"%@\"", cmdPath);
+        if (displayWarning) {
+            NSAlert *alert = [[NSAlert new] autorelease];
+            [alert setMessageText:NSLocalizedString(@"TeX installation not found.", @"alert sheet title")];
+            [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"The tlmgr tool does not exist at %@.  Please set the correct location in preferences or install TeX Live.", @"alert message text"), cmdPath]];
+            [alert beginSheetModalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
+        }
+    }
+    
+    return exists;
+}
+
+- (void)_addOperation:(TLMOperation *)op selector:(SEL)sel
+{
+    if (op && [self _checkCommandPathAndWarn:YES]) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:sel name:TLMOperationFinishedNotification object:op];
+        [[TLMReadWriteOperationQueue defaultQueue] addOperation:op];
+    }
+}
+
+- (void)_updateAllPackages
+{
+    TLMUpdateOperation *op = nil;
+    NSURL *currentURL = [_currentListDataSource lastUpdateURL];
+    if (_updateInfrastructure) {
+        op = [[TLMInfraUpdateOperation alloc] initWithLocation:currentURL];
+        TLMLog(__func__, @"Beginning infrastructure update from %@", [currentURL absoluteString]);
+    }
+    else {
+        op = [[TLMUpdateOperation alloc] initWithPackageNames:nil location:currentURL];
+        TLMLog(__func__, @"Beginning update of all packages from %@", [currentURL absoluteString]);
+    }
+    [self _addOperation:op selector:@selector(_handleUpdateFinishedNotification:)];
+    [op release];
+}
 
 - (void)_handleListUpdatesFinishedNotification:(NSNotification *)aNote
 {
@@ -315,26 +428,10 @@ static char _TLMOperationQueueOperationContext;
 - (void)_refreshUpdatedPackageListFromLocation:(NSURL *)location
 {
     [self _displayStatusString:nil];
-    if ([self _checkCommandPathAndWarn:YES]) {
-        TLMListUpdatesOperation *op = [[TLMListUpdatesOperation alloc] initWithLocation:location];
-        if (op) {
-            TLMLog(__func__, @"Refreshing list of updated packages%C", 0x2026);
-            [[NSNotificationCenter defaultCenter] addObserver:self 
-                                                     selector:@selector(_handleListUpdatesFinishedNotification:) 
-                                                         name:TLMOperationFinishedNotification 
-                                                       object:op];
-            [[TLMReadWriteOperationQueue defaultQueue] addOperation:op];
-            [op release];
-        }
-    }    
-}
-
-- (void)disasterAlertDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)context
-{
-    if (NSAlertFirstButtonReturn == returnCode)
-        [[NSApp delegate] openDisasterRecoveryPage:nil];
-    else
-        TLMLog(__func__, @"User chose not to open %@ after failure", @"http://tug.org/texlive/tlmgr.html");
+    TLMListUpdatesOperation *op = [[TLMListUpdatesOperation alloc] initWithLocation:location];
+    [self _addOperation:op selector:@selector(_handleListUpdatesFinishedNotification:)];
+    [op release];
+    TLMLog(__func__, @"Refreshing list of updated packages%C", 0x2026);
 }
 
 - (void)_handleUpdateFinishedNotification:(NSNotification *)aNote
@@ -373,21 +470,6 @@ static char _TLMOperationQueueOperationContext;
     }
 }
 
-- (BOOL)_installIsRunning
-{
-    return [[TLMReadWriteOperationQueue defaultQueue] isWriting];
-}
-
-// tried validating toolbar items using bindings to queue.operations.@count but the queue sends KVO notifications on its own thread
-- (BOOL)validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem>)anItem;
-{
-    SEL action = [anItem action];
-    if (@selector(cancelAllOperations:) == action)
-        return _operationCount > 0;
-    else
-        return YES;
-}
-
 - (void)_cancelAllOperations
 {
     TLMLog(__func__, @"User cancelling %@", [TLMReadWriteOperationQueue defaultQueue]);
@@ -395,33 +477,6 @@ static char _TLMOperationQueueOperationContext;
     
     // cancel info in case it's stuck
     [[TLMInfoController sharedInstance] cancel];
-}
-
-- (void)cancelWarningSheetDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
-{
-    if (NSAlertSecondButtonReturn == returnCode)
-        [self _cancelAllOperations];
-    else
-        TLMLog(__func__, @"User decided not to cancel %@", [TLMReadWriteOperationQueue defaultQueue]);
-}
-
-- (IBAction)cancelAllOperations:(id)sender;
-{
-    if ([self _installIsRunning]) {
-        NSAlert *alert = [[NSAlert new] autorelease];
-        [alert setMessageText:NSLocalizedString(@"An installation is running!", @"alert title")];
-        [alert setAlertStyle:NSCriticalAlertStyle];
-        [alert setInformativeText:NSLocalizedString(@"If you cancel the installation process, it may leave your TeX installation in an unknown state.  You can ignore this warning and cancel anyway, or keep waiting until the installation finishes.", @"alert message text")];
-        [alert addButtonWithTitle:NSLocalizedString(@"Keep Waiting", @"button title")];
-        [alert addButtonWithTitle:NSLocalizedString(@"Cancel Anyway", @"button title")];
-        [alert beginSheetModalForWindow:[self window]
-                          modalDelegate:self
-                         didEndSelector:@selector(cancelWarningSheetDidEnd:returnCode:contextInfo:)
-                            contextInfo:NULL];
-    }
-    else {
-        [self _cancelAllOperations];
-    }
 }
 
 - (void)_handlePapersizeFinishedNotification:(NSNotification *)aNote
@@ -433,97 +488,21 @@ static char _TLMOperationQueueOperationContext;
     }
 }
 
-- (IBAction)papersizeSheetDidEnd:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)context
-{
-    // _checkCommandPathAndWarn: is called before the sheet is displayed
-    
+- (void)papersizeSheetDidEnd:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)context
+{    
     [sheet orderOut:self];
     TLMPapersizeController *psc = context;
     [psc autorelease];
-    if (TLMPapersizeChanged == returnCode) {
-        TLMPapersizeOperation *op = nil;
-        if ([psc paperSize])
-            op = [[TLMPapersizeOperation alloc] initWithPapersize:[psc paperSize]];
-        else
-            TLMLog(__func__, @"No paper size from %@", psc);
-        if (op) {
-            TLMLog(__func__, @"Setting paper size to %@", [psc paperSize]);
-            [[NSNotificationCenter defaultCenter] addObserver:self 
-                                                     selector:@selector(_handlePapersizeFinishedNotification:) 
-                                                         name:TLMOperationFinishedNotification 
-                                                       object:op];
-            [[TLMReadWriteOperationQueue defaultQueue] addOperation:op];
-            [op release];               
-        }
+    if (TLMPapersizeChanged == returnCode && [psc paperSize]) {
+        TLMPapersizeOperation *op = [[TLMPapersizeOperation alloc] initWithPapersize:[psc paperSize]];
+        [self _addOperation:op selector:@selector(_handlePapersizeFinishedNotification:)];
+        [op release];             
+        TLMLog(__func__, @"Setting paper size to %@", [psc paperSize]);
     }
-}
-
-- (IBAction)changePapersize:(id)sender;
-{
-    if ([self _checkCommandPathAndWarn:YES]) {
-        TLMPapersizeController *psc = [TLMPapersizeController new];
-        [NSApp beginSheet:[psc window] 
-           modalForWindow:[self window] 
-            modalDelegate:self 
-           didEndSelector:@selector(papersizeSheetDidEnd:returnCode:contextInfo:) 
-              contextInfo:psc];
-    }
-}
-
-- (void)_removeDataSourceFromResponderChain:(id)dataSource
-{
-    NSResponder *next = [self nextResponder];
-    if ([next isEqual:_updateListDataSource] || [next isEqual:_packageListDataSource]) {
-        [self setNextResponder:[next nextResponder]];
-        [next setNextResponder:nil];
-    }
-}
-
-- (void)_insertDataSourceInResponderChain:(id)dataSource
-{
-    NSResponder *next = [self nextResponder];
-    NSParameterAssert([next isEqual:_updateListDataSource] == NO);
-    NSParameterAssert([next isEqual:_packageListDataSource] == NO);
-    
-    [self setNextResponder:dataSource];
-    [dataSource setNextResponder:next];
-}
-
-- (void)tabView:(TLMTabView *)tabView didSelectViewAtIndex:(NSUInteger)anIndex;
-{
-    // clear the status overlay, but don't animate since it interferes with the tabview animation
-    if ([_statusView isDescendantOf:_tabView]) {
-        [_statusView removeFromSuperview];
-        // set it back to transparent
-        [_statusView fadeOut];
+    else if (nil == [psc paperSize]) {
+        TLMLog(__func__, @"No paper size from %@", psc);
     }
 
-    switch (anIndex) {
-        case 0:
-            
-            [self _removeDataSourceFromResponderChain:_packageListDataSource];
-            [self _insertDataSourceInResponderChain:_updateListDataSource];   
-            _currentListDataSource = _updateListDataSource;
-            [self _updateURLView];
-            
-            if ([[_updateListDataSource allPackages] count])
-                [_updateListDataSource search:nil];
-            break;
-        case 1:
-            
-            [self _removeDataSourceFromResponderChain:_updateListDataSource];
-            [self _insertDataSourceInResponderChain:_packageListDataSource];   
-            _currentListDataSource = _packageListDataSource;
-            [self _updateURLView];
-
-            if ([[_packageListDataSource packageNodes] count])
-                [_packageListDataSource search:nil];
-            else
-                [self refreshFullPackageList];
-            break;
-        default:
-            break;
-    }
 }
 
 - (void)_handleListFinishedNotification:(NSNotification *)aNote
@@ -547,19 +526,137 @@ static char _TLMOperationQueueOperationContext;
 - (void)_refreshFullPackageListFromLocation:(NSURL *)location
 {
     [self _displayStatusString:nil];
-    if ([self _checkCommandPathAndWarn:YES]) {
-        TLMListOperation *op = [[TLMListOperation alloc] initWithLocation:location];
-        if (op) {
-            TLMLog(__func__, @"Refreshing list of all packages%C", 0x2026);
-            [[NSNotificationCenter defaultCenter] addObserver:self 
-                                                     selector:@selector(_handleListFinishedNotification:) 
-                                                         name:TLMOperationFinishedNotification 
-                                                       object:op];
-            [[TLMReadWriteOperationQueue defaultQueue] addOperation:op];
-            [op release];
-        }            
-    }         
+    TLMListOperation *op = [[TLMListOperation alloc] initWithLocation:location];
+    [self _addOperation:op selector:@selector(_handleListFinishedNotification:)];
+    [op release];
+    TLMLog(__func__, @"Refreshing list of all packages%C", 0x2026);           
 }
+
+- (void)_handleInstallFinishedNotification:(NSNotification *)aNote
+{
+    TLMUpdateOperation *op = [aNote object];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:TLMOperationFinishedNotification object:op];
+    
+    // ignore operations that failed or were explicitly cancelled
+    if ([op failed]) {
+        NSAlert *alert = [[NSAlert new] autorelease];
+        [alert setMessageText:NSLocalizedString(@"Install failed.", @"alert title")];
+        [alert setInformativeText:NSLocalizedString(@"The install process appears to have failed.  Please check the log display below for details.", @"alert message text")];
+        [alert beginSheetModalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];                    
+    }
+    else if ([op isCancelled] == NO) {
+        
+        // This is slow, but if a package installed other dependencies, we have no way of manually removing from the list.  We also need to ensure that the same mirror is used, so results are consistent.
+        [self _refreshFullPackageListFromLocation:[op updateURL]];
+        
+        // this is always displayed, so should always be updated as well
+        [self _refreshUpdatedPackageListFromLocation:[op updateURL]];
+    }    
+}
+
+- (void)_installPackagesWithNames:(NSArray *)packageNames reinstall:(BOOL)reinstall
+{
+    NSURL *currentURL = [_currentListDataSource lastUpdateURL];
+    TLMInstallOperation *op = [[TLMInstallOperation alloc] initWithPackageNames:packageNames location:currentURL reinstall:reinstall];
+    [self _addOperation:op selector:@selector(_handleInstallFinishedNotification:)];
+    TLMLog(__func__, @"Beginning install of %@\nfrom %@", packageNames, [currentURL absoluteString]);   
+}
+
+- (void)_handleRemoveFinishedNotification:(NSNotification *)aNote
+{
+    TLMUpdateOperation *op = [aNote object];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:TLMOperationFinishedNotification object:op];
+    
+    // ignore operations that failed or were explicitly cancelled
+    if ([op failed]) {
+        NSAlert *alert = [[NSAlert new] autorelease];
+        [alert setMessageText:NSLocalizedString(@"Removal failed.", @"alert title")];
+        [alert setInformativeText:NSLocalizedString(@"The removal process appears to have failed.  Please check the log display below for details.", @"alert message text")];
+        [alert beginSheetModalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];                    
+    }
+    else if ([op isCancelled] == NO) {
+        
+        // This is slow, but if a package installed other dependencies, we have no way of manually removing from the list.  We also need to ensure that the same mirror is used, so results are consistent.
+        [self _refreshFullPackageListFromLocation:[op updateURL]];
+        
+        // this is always displayed, so should always be updated as well
+        [self _refreshUpdatedPackageListFromLocation:[op updateURL]];
+    }    
+}
+
+#pragma mark Alert callbacks
+
+- (void)infrastructureAlertDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo;
+{
+    if (NSAlertFirstButtonReturn == returnCode) {
+        [self _updateAllPackages];
+    }
+}
+
+- (void)disasterAlertDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)context
+{
+    if (NSAlertFirstButtonReturn == returnCode)
+        [[NSApp delegate] openDisasterRecoveryPage:nil];
+    else
+        TLMLog(__func__, @"User chose not to open %@ after failure", @"http://tug.org/texlive/tlmgr.html");
+}
+
+- (void)cancelWarningSheetDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
+{
+    if (NSAlertSecondButtonReturn == returnCode)
+        [self _cancelAllOperations];
+    else
+        TLMLog(__func__, @"User decided not to cancel %@", [TLMReadWriteOperationQueue defaultQueue]);
+}
+
+- (void)updateAllAlertDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo;
+{
+    if (NSAlertFirstButtonReturn == returnCode) {
+        [self _updateAllPackages];
+    }    
+}
+
+- (void)reinstallAlertDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
+{
+    if (NSAlertFirstButtonReturn == returnCode)
+        [self _installPackagesWithNames:[(NSArray *)contextInfo autorelease] reinstall:YES];
+}
+
+#pragma mark Actions
+
+- (IBAction)changePapersize:(id)sender;
+{
+    // sheet asserts and runs tlmgr, so make sure it exists
+    if ([self _checkCommandPathAndWarn:YES]) {
+        TLMPapersizeController *psc = [TLMPapersizeController new];
+        [NSApp beginSheet:[psc window] 
+           modalForWindow:[self window] 
+            modalDelegate:self 
+           didEndSelector:@selector(papersizeSheetDidEnd:returnCode:contextInfo:) 
+              contextInfo:psc];
+    }
+}
+
+- (IBAction)cancelAllOperations:(id)sender;
+{
+    if ([[TLMReadWriteOperationQueue defaultQueue] isWriting]) {
+        NSAlert *alert = [[NSAlert new] autorelease];
+        [alert setMessageText:NSLocalizedString(@"An installation is running!", @"alert title")];
+        [alert setAlertStyle:NSCriticalAlertStyle];
+        [alert setInformativeText:NSLocalizedString(@"If you cancel the installation process, it may leave your TeX installation in an unknown state.  You can ignore this warning and cancel anyway, or keep waiting until the installation finishes.", @"alert message text")];
+        [alert addButtonWithTitle:NSLocalizedString(@"Keep Waiting", @"button title")];
+        [alert addButtonWithTitle:NSLocalizedString(@"Cancel Anyway", @"button title")];
+        [alert beginSheetModalForWindow:[self window]
+                          modalDelegate:self
+                         didEndSelector:@selector(cancelWarningSheetDidEnd:returnCode:contextInfo:)
+                            contextInfo:NULL];
+    }
+    else {
+        [self _cancelAllOperations];
+    }
+}
+
+#pragma mark API
 
 - (void)refreshFullPackageList
 {
@@ -569,13 +666,6 @@ static char _TLMOperationQueueOperationContext;
 - (void)refreshUpdatedPackageList
 {
     [self _refreshUpdatedPackageListFromLocation:[[TLMPreferenceController sharedPreferenceController] defaultServerURL]];
-}
-
-- (void)updateAllAlertDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo;
-{
-    if (NSAlertFirstButtonReturn == returnCode) {
-        [self _updateAll];
-    }    
 }
 
 - (void)updateAllPackages;
@@ -617,88 +707,13 @@ static char _TLMOperationQueueOperationContext;
                         contextInfo:NULL]; 
 }    
 
-- (BOOL)windowShouldClose:(id)sender;
-{
-    BOOL shouldClose = YES;
-    if ([self _installIsRunning]) {
-        NSAlert *alert = [[NSAlert new] autorelease];
-        [alert setMessageText:NSLocalizedString(@"Installation in progress!", @"alert title")];
-        [alert setAlertStyle:NSCriticalAlertStyle];
-        [alert setInformativeText:NSLocalizedString(@"If you close the window, the installation process may leave your TeX installation in an unknown state.  You can ignore this warning and close the window, or wait until the installation finishes.", @"alert message text")];
-        [alert addButtonWithTitle:NSLocalizedString(@"Wait", @"button title")];
-        [alert addButtonWithTitle:NSLocalizedString(@"Ignore", @"button title")];
-        
-        NSInteger rv = [alert runModal];
-        if (NSAlertFirstButtonReturn == rv)
-            shouldClose = NO;
-    }
-    return shouldClose;
-}
-
 - (void)updatePackagesWithNames:(NSArray *)packageNames;
 {
-    // !!! early return here if tlmgr doesn't exist
-    if (NO == [self _checkCommandPathAndWarn:YES])
-        return;
-    
     NSURL *currentURL = [_currentListDataSource lastUpdateURL];
     TLMUpdateOperation *op = [[TLMUpdateOperation alloc] initWithPackageNames:packageNames location:currentURL];
-    if (op) {
-        TLMLog(__func__, @"Beginning update of %@\nfrom %@", packageNames, [currentURL absoluteString]);
-        [[NSNotificationCenter defaultCenter] addObserver:self 
-                                                 selector:@selector(_handleUpdateFinishedNotification:) 
-                                                     name:TLMOperationFinishedNotification 
-                                                   object:op];
-        [[TLMReadWriteOperationQueue defaultQueue] addOperation:op];
-        [op release];   
-    }
-}
-
-- (void)_handleInstallFinishedNotification:(NSNotification *)aNote
-{
-    TLMUpdateOperation *op = [aNote object];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:TLMOperationFinishedNotification object:op];
-    
-    // ignore operations that failed or were explicitly cancelled
-    if ([op failed]) {
-        NSAlert *alert = [[NSAlert new] autorelease];
-        [alert setMessageText:NSLocalizedString(@"Install failed.", @"alert title")];
-        [alert setInformativeText:NSLocalizedString(@"The install process appears to have failed.  Please check the log display below for details.", @"alert message text")];
-        [alert beginSheetModalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];                    
-    }
-    else if ([op isCancelled] == NO) {
-        
-        // This is slow, but if a package installed other dependencies, we have no way of manually removing from the list.  We also need to ensure that the same mirror is used, so results are consistent.
-        [self _refreshFullPackageListFromLocation:[op updateURL]];
-        
-        // this is always displayed, so should always be updated as well
-        [self _refreshUpdatedPackageListFromLocation:[op updateURL]];
-    }    
-}
-
-- (void)_installPackagesWithNames:(NSArray *)packageNames reinstall:(BOOL)reinstall
-{
-    // !!! early return here if tlmgr doesn't exist
-    if (NO == [self _checkCommandPathAndWarn:YES])
-        return;
-    
-    NSURL *currentURL = [_currentListDataSource lastUpdateURL];
-    TLMInstallOperation *op = [[TLMInstallOperation alloc] initWithPackageNames:packageNames location:currentURL reinstall:reinstall];
-    if (op) {
-        TLMLog(__func__, @"Beginning install of %@\nfrom %@", packageNames, [currentURL absoluteString]);
-        [[NSNotificationCenter defaultCenter] addObserver:self 
-                                                 selector:@selector(_handleInstallFinishedNotification:) 
-                                                     name:TLMOperationFinishedNotification 
-                                                   object:op];
-        [[TLMReadWriteOperationQueue defaultQueue] addOperation:op];
-        [op release];   
-    }    
-}
-
-- (void)reinstallAlertDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
-{
-    if (NSAlertFirstButtonReturn == returnCode)
-        [self _installPackagesWithNames:[(NSArray *)contextInfo autorelease] reinstall:YES];
+    [self _addOperation:op selector:@selector(_handleUpdateFinishedNotification:)];
+    [op release];
+    TLMLog(__func__, @"Beginning update of %@\nfrom %@", packageNames, [currentURL absoluteString]);
 }
 
 // reinstall requires additional option to tlmgr
@@ -720,34 +735,8 @@ static char _TLMOperationQueueOperationContext;
     }    
 }
 
-- (void)_handleRemoveFinishedNotification:(NSNotification *)aNote
-{
-    TLMUpdateOperation *op = [aNote object];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:TLMOperationFinishedNotification object:op];
-    
-    // ignore operations that failed or were explicitly cancelled
-    if ([op failed]) {
-        NSAlert *alert = [[NSAlert new] autorelease];
-        [alert setMessageText:NSLocalizedString(@"Removal failed.", @"alert title")];
-        [alert setInformativeText:NSLocalizedString(@"The removal process appears to have failed.  Please check the log display below for details.", @"alert message text")];
-        [alert beginSheetModalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];                    
-    }
-    else if ([op isCancelled] == NO) {
-        
-        // This is slow, but if a package installed other dependencies, we have no way of manually removing from the list.  We also need to ensure that the same mirror is used, so results are consistent.
-        [self _refreshFullPackageListFromLocation:[op updateURL]];
-        
-        // this is always displayed, so should always be updated as well
-        [self _refreshUpdatedPackageListFromLocation:[op updateURL]];
-    }    
-}
-
 - (void)removePackagesWithNames:(NSArray *)packageNames
 {   
-    // !!! early return
-    if ([self _checkCommandPathAndWarn:YES] == NO)
-        return;
-    
     // Some idiot could try to wipe out tlmgr itself, so let's try to prevent that...
     // NB: we can have the architecture appended to the package name, so use beginswith.
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(SELF beginswith 'bin-texlive') OR (SELF beginswith 'texlive.infra')"];
@@ -763,51 +752,10 @@ static char _TLMOperationQueueOperationContext;
     }
     else {
         TLMRemoveOperation *op = [[TLMRemoveOperation alloc] initWithPackageNames:packageNames];
-        if (op) {
-            TLMLog(__func__, @"Beginning removal of\n%@", packageNames);
-            [[NSNotificationCenter defaultCenter] addObserver:self 
-                                                     selector:@selector(_handleRemoveFinishedNotification:) 
-                                                         name:TLMOperationFinishedNotification 
-                                                       object:op];
-            [[TLMReadWriteOperationQueue defaultQueue] addOperation:op];
-            [op release];   
-        }   
+        [self _addOperation:op selector:@selector(_handleRemoveFinishedNotification:)];
+        [op release];
+        TLMLog(__func__, @"Beginning removal of\n%@", packageNames); 
     }
-}
-
-#pragma mark Splitview delegate
-
-// implementation from BibDesk's BDSKEditor
-- (void)splitView:(TLMSplitView *)splitView doubleClickedDividerAt:(NSUInteger)subviewIndex;
-{
-    NSView *tableView = [[splitView subviews] objectAtIndex:0];
-    NSView *textView = [[splitView subviews] objectAtIndex:1];
-    NSRect tableFrame = [tableView frame];
-    NSRect textViewFrame = [textView frame];
-    
-    // not sure what the criteria for isSubviewCollapsed, but it doesn't work
-    if(NSHeight(textViewFrame) > 0.0){ 
-        // save the current height
-        _lastTextViewHeight = NSHeight(textViewFrame);
-        tableFrame.size.height += _lastTextViewHeight;
-        textViewFrame.size.height = 0.0;
-    } else {
-        // previously collapsed, so pick a reasonable value to start
-        if(_lastTextViewHeight <= 0.0)
-            _lastTextViewHeight = 150.0; 
-        textViewFrame.size.height = _lastTextViewHeight;
-        tableFrame.size.height = NSHeight([splitView frame]) - _lastTextViewHeight - [splitView dividerThickness];
-        if (NSHeight(tableFrame) < 0.0) {
-            tableFrame.size.height = 0.0;
-            textViewFrame.size.height = NSHeight([splitView frame]) - [splitView dividerThickness];
-            _lastTextViewHeight = NSHeight(textViewFrame);
-        }
-    }
-    [tableView setFrame:tableFrame];
-    [textView setFrame:textViewFrame];
-    [splitView adjustSubviews];
-    // fix for NSSplitView bug, which doesn't send this in adjustSubviews
-    [[NSNotificationCenter defaultCenter] postNotificationName:NSSplitViewDidResizeSubviewsNotification object:splitView];
 }
 
 @end
