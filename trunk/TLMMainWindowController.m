@@ -85,8 +85,8 @@ static char _TLMOperationQueueOperationContext;
 {
     self = [super initWithWindowNibName:windowNibName];
     if (self) {
-        _queue = [TLMReadWriteOperationQueue new];
-        [_queue addObserver:self forKeyPath:@"operationCount" options:0 context:&_TLMOperationQueueOperationContext];
+        TLMReadWriteOperationQueue *queue = [TLMReadWriteOperationQueue defaultQueue];
+        [queue addObserver:self forKeyPath:@"operationCount" options:0 context:&_TLMOperationQueueOperationContext];
         _lastTextViewHeight = 0.0;
         _updateInfrastructure = NO;
         _operationCount = 0;
@@ -97,8 +97,7 @@ static char _TLMOperationQueueOperationContext;
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [_queue removeObserver:self forKeyPath:@"operations"];
-    [_queue release];
+    [[TLMReadWriteOperationQueue defaultQueue] removeObserver:self forKeyPath:@"operations"];
     
     [_tabView setDelegate:nil];
     [_tabView release];
@@ -198,7 +197,7 @@ static char _TLMOperationQueueOperationContext;
          What good is KVO on a non-main thread anyway?  That makes it useless for bindings, and KVO is a pain in the ass to use
          vs. something like NSNotification.  Grrr.
          */
-        NSNumber *count = [NSNumber numberWithUnsignedInteger:[_queue operationCount]];
+        NSNumber *count = [NSNumber numberWithUnsignedInteger:[[TLMReadWriteOperationQueue defaultQueue] operationCount]];
         [self performSelectorOnMainThread:@selector(_operationCountChanged:) withObject:count waitUntilDone:NO];
     }
     else {
@@ -245,7 +244,7 @@ static char _TLMOperationQueueOperationContext;
                                                  selector:@selector(_handleUpdateFinishedNotification:) 
                                                      name:TLMOperationFinishedNotification 
                                                    object:op];
-        [_queue addOperation:op];
+        [[TLMReadWriteOperationQueue defaultQueue] addOperation:op];
         [op release];   
     }
 }
@@ -329,7 +328,7 @@ static char _TLMOperationQueueOperationContext;
                                                      selector:@selector(_handleListUpdatesFinishedNotification:) 
                                                          name:TLMOperationFinishedNotification 
                                                        object:op];
-            [_queue addOperation:op];
+            [[TLMReadWriteOperationQueue defaultQueue] addOperation:op];
             [op release];
         }
     }    
@@ -381,7 +380,7 @@ static char _TLMOperationQueueOperationContext;
 
 - (BOOL)_installIsRunning
 {
-    return [_queue isWriting];
+    return [[TLMReadWriteOperationQueue defaultQueue] isWriting];
 }
 
 // tried validating toolbar items using bindings to queue.operations.@count but the queue sends KVO notifications on its own thread
@@ -396,8 +395,8 @@ static char _TLMOperationQueueOperationContext;
 
 - (void)_cancelAllOperations
 {
-    TLMLog(__func__, @"User cancelling %@", _queue);
-    [_queue cancelAllOperations];
+    TLMLog(__func__, @"User cancelling %@", [TLMReadWriteOperationQueue defaultQueue]);
+    [[TLMReadWriteOperationQueue defaultQueue] cancelAllOperations];
     
     // cancel info in case it's stuck
     [[TLMInfoController sharedInstance] cancel];
@@ -408,7 +407,7 @@ static char _TLMOperationQueueOperationContext;
     if (NSAlertSecondButtonReturn == returnCode)
         [self _cancelAllOperations];
     else
-        TLMLog(__func__, @"User decided not to cancel %@", _queue);
+        TLMLog(__func__, @"User decided not to cancel %@", [TLMReadWriteOperationQueue defaultQueue]);
 }
 
 - (IBAction)cancelAllOperations:(id)sender;
@@ -458,7 +457,7 @@ static char _TLMOperationQueueOperationContext;
                                                      selector:@selector(_handlePapersizeFinishedNotification:) 
                                                          name:TLMOperationFinishedNotification 
                                                        object:op];
-            [_queue addOperation:op];
+            [[TLMReadWriteOperationQueue defaultQueue] addOperation:op];
             [op release];               
         }
     }
@@ -552,7 +551,7 @@ static char _TLMOperationQueueOperationContext;
                                                      selector:@selector(_handleListFinishedNotification:) 
                                                          name:TLMOperationFinishedNotification 
                                                        object:op];
-            [_queue addOperation:op];
+            [[TLMReadWriteOperationQueue defaultQueue] addOperation:op];
             [op release];
         }            
     }         
@@ -645,7 +644,7 @@ static char _TLMOperationQueueOperationContext;
                                                  selector:@selector(_handleUpdateFinishedNotification:) 
                                                      name:TLMOperationFinishedNotification 
                                                    object:op];
-        [_queue addOperation:op];
+        [[TLMReadWriteOperationQueue defaultQueue] addOperation:op];
         [op release];   
     }
 }
@@ -685,7 +684,7 @@ static char _TLMOperationQueueOperationContext;
                                                  selector:@selector(_handleInstallFinishedNotification:) 
                                                      name:TLMOperationFinishedNotification 
                                                    object:op];
-        [_queue addOperation:op];
+        [[TLMReadWriteOperationQueue defaultQueue] addOperation:op];
         [op release];   
     }    
 }
@@ -764,7 +763,7 @@ static char _TLMOperationQueueOperationContext;
                                                      selector:@selector(_handleRemoveFinishedNotification:) 
                                                          name:TLMOperationFinishedNotification 
                                                        object:op];
-            [_queue addOperation:op];
+            [[TLMReadWriteOperationQueue defaultQueue] addOperation:op];
             [op release];   
         }   
     }
