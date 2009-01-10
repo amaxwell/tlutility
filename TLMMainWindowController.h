@@ -45,7 +45,6 @@
 @class TLMPackageListDataSource;
 @class TLMUpdateListDataSource;
 @class TLMGradientView;
-@class TLMReadWriteOperationQueue;
 
 @interface TLMMainWindowController : NSWindowController <TLMTabViewDelegate>
 {
@@ -57,7 +56,6 @@
     TLMStatusView            *_statusView;
     TLMGradientView          *_statusBarView;
     
-    TLMReadWriteOperationQueue *_queue;
     NSUInteger                _operationCount;
     CGFloat                   _lastTextViewHeight;
     BOOL                      _updateInfrastructure;

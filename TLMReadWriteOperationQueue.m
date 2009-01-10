@@ -53,6 +53,23 @@
 
 static char _TLMOperationQueueOperationContext;
 
++ (void)initialize
+{
+    static bool didInit = false;
+    if (true == didInit) return;
+    didInit = true;
+
+    [self defaultQueue];
+}
+
++ (id)defaultQueue;
+{
+    static id sharedInstance = nil;
+    if (nil == sharedInstance)
+        sharedInstance = [self new];
+    return sharedInstance;
+}
+
 - (id)init
 {
     self = [super init];
