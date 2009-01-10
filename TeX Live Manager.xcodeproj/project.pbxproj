@@ -56,6 +56,7 @@
 		F9DCD3700F06F0F400600DD2 /* Sparkle.framework in copy Sparkle */ = {isa = PBXBuildFile; fileRef = F9DCD3650F06F08C00600DD2 /* Sparkle.framework */; };
 		F9DCD43F0F06F76F00600DD2 /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = F9DCD43E0F06F76F00600DD2 /* dsa_pub.pem */; };
 		F9E22FD50EFCBD2A00B0BE38 /* TLMPapersizeOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F9E22FD40EFCBD2A00B0BE38 /* TLMPapersizeOperation.m */; };
+		F9F043030F180031008DFE8C /* TLMReadWriteOperationQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F043020F180031008DFE8C /* TLMReadWriteOperationQueue.m */; };
 		F9F130560EED94D800D9968D /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = F9F130550EED94D800D9968D /* Preferences.xib */; };
 		F9F1305B0EED94F700D9968D /* TLMPreferenceController.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F1305A0EED94F700D9968D /* TLMPreferenceController.m */; };
 		F9F56B4C0EF31F8800E934A9 /* TLMLogMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F56B4B0EF31F8800E934A9 /* TLMLogMessage.m */; };
@@ -216,6 +217,8 @@
 		F9DCD4A10F07126F00600DD2 /* tlu_appcast.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = tlu_appcast.xml; path = appcast/tlu_appcast.xml; sourceTree = "<group>"; };
 		F9E22FD30EFCBD2A00B0BE38 /* TLMPapersizeOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMPapersizeOperation.h; sourceTree = "<group>"; };
 		F9E22FD40EFCBD2A00B0BE38 /* TLMPapersizeOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMPapersizeOperation.m; sourceTree = "<group>"; };
+		F9F043010F180031008DFE8C /* TLMReadWriteOperationQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMReadWriteOperationQueue.h; sourceTree = "<group>"; };
+		F9F043020F180031008DFE8C /* TLMReadWriteOperationQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMReadWriteOperationQueue.m; sourceTree = "<group>"; };
 		F9F130530EED94CC00D9968D /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/Preferences.xib; sourceTree = "<group>"; };
 		F9F130590EED94F700D9968D /* TLMPreferenceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMPreferenceController.h; sourceTree = "<group>"; };
 		F9F1305A0EED94F700D9968D /* TLMPreferenceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMPreferenceController.m; sourceTree = "<group>"; };
@@ -418,6 +421,8 @@
 				F9963FEE0F054999005F0174 /* TLMInstallOperation.m */,
 				F97A7E4E0F13067C008EBCEA /* TLMTask.h */,
 				F97A7E4F0F13067C008EBCEA /* TLMTask.m */,
+				F9F043010F180031008DFE8C /* TLMReadWriteOperationQueue.h */,
+				F9F043020F180031008DFE8C /* TLMReadWriteOperationQueue.m */,
 			);
 			name = Operations;
 			sourceTree = "<group>";
@@ -649,6 +654,7 @@
 				F9963EC50F0490E9005F0174 /* TLMRemoveOperation.m in Sources */,
 				F9963FEF0F054999005F0174 /* TLMInstallOperation.m in Sources */,
 				F97A7E500F13067C008EBCEA /* TLMTask.m in Sources */,
+				F9F043030F180031008DFE8C /* TLMReadWriteOperationQueue.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -58,6 +58,7 @@
 #import "TLMAppController.h"
 #import "TLMPapersizeController.h"
 #import "TLMTabView.h"
+#import "TLMReadWriteOperationQueue.h"
 
 static char _TLMOperationQueueOperationContext;
 
@@ -84,16 +85,11 @@ static char _TLMOperationQueueOperationContext;
 {
     self = [super initWithWindowNibName:windowNibName];
     if (self) {
-        _queue = [NSOperationQueue new];
-        [_queue setMaxConcurrentOperationCount:1];
-        [_queue addObserver:self forKeyPath:@"operations" options:0 context:&_TLMOperationQueueOperationContext];
+        _queue = [TLMReadWriteOperationQueue new];
+        [_queue addObserver:self forKeyPath:@"operationCount" options:0 context:&_TLMOperationQueueOperationContext];
         _lastTextViewHeight = 0.0;
         _updateInfrastructure = NO;
         _operationCount = 0;
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(_handleApplicationTerminate:) 
-                                                     name:NSApplicationWillTerminateNotification
-                                                   object:NSApp];
     }
     return self;
 }
@@ -102,8 +98,6 @@ static char _TLMOperationQueueOperationContext;
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [_queue removeObserver:self forKeyPath:@"operations"];
-    [_queue cancelAllOperations];
-    [_queue waitUntilAllOperationsAreFinished];
     [_queue release];
     
     [_tabView setDelegate:nil];
@@ -148,12 +142,6 @@ static char _TLMOperationQueueOperationContext;
     
     // checkbox in IB doesn't work?
     [[[self window] toolbar] setAutosavesConfiguration:YES];
-}
-
-- (void)_handleApplicationTerminate:(NSNotification *)aNote
-{
-    [_queue cancelAllOperations];
-    // probably don't want to waitUntilAllOperationsAreFinished here, since we can't force an install operation to quit
 }
 
 - (BOOL)_checkCommandPathAndWarn:(BOOL)displayWarning
@@ -210,7 +198,7 @@ static char _TLMOperationQueueOperationContext;
          What good is KVO on a non-main thread anyway?  That makes it useless for bindings, and KVO is a pain in the ass to use
          vs. something like NSNotification.  Grrr.
          */
-        NSNumber *count = [NSNumber numberWithUnsignedInteger:[[_queue operations] count]];
+        NSNumber *count = [NSNumber numberWithUnsignedInteger:[_queue operationCount]];
         [self performSelectorOnMainThread:@selector(_operationCountChanged:) withObject:count waitUntilDone:NO];
     }
     else {
@@ -393,12 +381,7 @@ static char _TLMOperationQueueOperationContext;
 
 - (BOOL)_installIsRunning
 {
-    NSArray *ops = [[[_queue operations] copy] autorelease];
-    for (id op in ops) {
-        if ([op isKindOfClass:[TLMAuthorizedOperation class]])
-            return YES;
-    }
-    return NO;
+    return [_queue isWriting];
 }
 
 // tried validating toolbar items using bindings to queue.operations.@count but the queue sends KVO notifications on its own thread
@@ -413,7 +396,7 @@ static char _TLMOperationQueueOperationContext;
 
 - (void)_cancelAllOperations
 {
-    TLMLog(__func__, @"User cancelling %@", [_queue operations]);
+    TLMLog(__func__, @"User cancelling %@", _queue);
     [_queue cancelAllOperations];
     
     // cancel info in case it's stuck
@@ -425,7 +408,7 @@ static char _TLMOperationQueueOperationContext;
     if (NSAlertSecondButtonReturn == returnCode)
         [self _cancelAllOperations];
     else
-        TLMLog(__func__, @"User decided not to cancel %@", [_queue operations]);
+        TLMLog(__func__, @"User decided not to cancel %@", _queue);
 }
 
 - (IBAction)cancelAllOperations:(id)sender;
@@ -533,7 +516,7 @@ static char _TLMOperationQueueOperationContext;
 
             if ([[_packageListDataSource packageNodes] count])
                 [_packageListDataSource search:nil];
-            else if ([[[_queue operations] valueForKey:@"class"] containsObject:[TLMListOperation self]] == NO)
+            else
                 [self refreshFullPackageList];
             break;
         default:

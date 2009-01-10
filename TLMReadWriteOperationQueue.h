@@ -1,10 +1,10 @@
 //
-//  TLMOperations.h
+//  TLMReadWriteOperationQueue.h
 //  TeX Live Manager
 //
-//  Created by Adam Maxwell on 12/6/08.
+//  Created by Adam Maxwell on 01/09/09.
 /*
- This software is Copyright (c) 2008-2009
+ This software is Copyright (c) 2009
  Adam Maxwell. All rights reserved.
  
  Redistribution and use in source and binary forms, with or without
@@ -38,34 +38,23 @@
 
 #import <Cocoa/Cocoa.h>
 
-// delivered on the main thread when -isFinished returns YES
-extern NSString * const TLMOperationFinishedNotification;
+@class TLMOperation;
 
-@class TLMTask;
-
-@interface TLMOperation : NSOperation
+@interface TLMReadWriteOperationQueue : NSObject 
 {
 @private
-    TLMTask  *_task;
-    NSData   *_outputData;
-    NSData   *_errorData;
-    NSString *_errorMessages;
-    BOOL      _failed;
+    NSOperationQueue *_operationQueue;
+    NSMutableArray   *_pendingOperations;
+    BOOL              _isWriting;
+    NSLock           *_queueLock;
+    NSUInteger        _operationCount;
 }
 
-// call -init to just get notification setup if creating a subclass that overrides -main
-- (id)init;
+// operations must implement -isWriter
+- (void)addOperation:(TLMOperation *)op;
+- (void)cancelAllOperations;
 
-// call to set up NSTask to be executed by -main
-- (id)initWithCommand:(NSString *)absolutePath options:(NSArray *)options;
-
-@property (readwrite, copy) NSData *outputData;
-@property (readwrite, copy) NSData *errorData;
-@property (readonly, copy) NSString *errorMessages;
-
-@property (readonly) BOOL isWriter;
-
-// set if underlying task fails; check isCancelled for cancel condition
-@property (readwrite) BOOL failed;
+@property (readonly) NSUInteger operationCount;
+@property (readonly, getter = isWriting) BOOL writing;
 
 @end

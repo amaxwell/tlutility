@@ -85,6 +85,8 @@ static char _TLMOperationFinishedContext;
     [super dealloc];
 }
 
+- (BOOL)isWriter { return NO; }
+
 - (void)_postFinishedNotification
 {
     NSParameterAssert([NSThread isMainThread]);

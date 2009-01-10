@@ -48,4 +48,7 @@
 // prepares to execute command as root with given option
 - (id)initWithCommand:(NSString *)absolutePath options:(NSArray *)options;
 
+// authorized operations only exist to write
+@property (readonly) BOOL isWriter;
+
 @end

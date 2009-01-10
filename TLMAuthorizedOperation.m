@@ -105,6 +105,8 @@ struct TLMAOInternal {
     [super dealloc];
 }
 
+- (BOOL)isWriter { return YES; }
+
 - (void)_appendStringToErrorData:(NSString *)str
 {
     NSMutableData *d = [[self errorData] mutableCopy];
