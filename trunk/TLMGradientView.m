@@ -60,11 +60,10 @@
 - (BOOL)isOpaque { return YES; }
 
 - (void)drawRect:(NSRect)dirtyRect 
-{
-    [super drawRect:dirtyRect];
-    
-    // we have a vertically-varying gradient, so fill the entire height
+{    
+    // we have a vertically-varying gradient, so fill the entire height, starting from zero
     dirtyRect.size.height = NSHeight([self bounds]);
+    dirtyRect.origin.y = 0;
     [_gradient drawInRect:dirtyRect angle:90.0];
 }
 
