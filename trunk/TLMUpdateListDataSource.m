@@ -38,7 +38,6 @@
 
 #import "TLMUpdateListDataSource.h"
 #import "TLMPackage.h"
-#import "TLMMainWindowController.h"
 #import "TLMInfoController.h"
 #import "TLMLogServer.h"
 #import "TLMTableView.h"
@@ -49,6 +48,7 @@
 @synthesize _searchField;
 @synthesize allPackages = _allPackages;
 @synthesize _controller;
+@synthesize lastUpdateURL = _lastUpdateURL;
 
 - (id)init
 {
@@ -70,6 +70,7 @@
     [_packages release];
     [_allPackages release];
     [_sortDescriptors release];
+    [_lastUpdateURL release];
     
     [super dealloc];
 }

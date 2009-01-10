@@ -68,7 +68,6 @@ static char _TLMOperationQueueOperationContext;
 @synthesize _hostnameView;
 @synthesize _splitView;
 @synthesize _logDataSource;
-@synthesize lastUpdateURL = _lastUpdateURL;
 @synthesize _statusView;
 @synthesize _packageListDataSource;
 @synthesize _tabView;
@@ -110,7 +109,6 @@ static char _TLMOperationQueueOperationContext;
     [_hostnameView release];
     
     [_progressIndicator release];
-    [_lastUpdateURL release];
     [_logDataSource release];
     [_packageListDataSource release];
     [_updateListDataSource release];
@@ -121,13 +119,12 @@ static char _TLMOperationQueueOperationContext;
 - (void)awakeFromNib
 {
     [[self window] setTitle:[[NSBundle mainBundle] objectForInfoDictionaryKey:(id)kCFBundleNameKey]];
-    [self setLastUpdateURL:[[TLMPreferenceController sharedPreferenceController] defaultServerURL]]; 
 
     // set delegate before adding tabs, so the datasource gets inserted properly in the responder chain
+    _currentListDataSource = _updateListDataSource;
     [_tabView setDelegate:self];
     [_tabView addTabNamed:NSLocalizedString(@"Manage Updates", @"tab title") withView:[[_updateListDataSource tableView]  enclosingScrollView]];
-    [_tabView addTabNamed:NSLocalizedString(@"Manage Packages", @"tab title") withView:[[_packageListDataSource outlineView] enclosingScrollView]];
-    
+    [_tabView addTabNamed:NSLocalizedString(@"Manage Packages", @"tab title") withView:[[_packageListDataSource outlineView] enclosingScrollView]];    
     // 10.5 release notes say this is enabled by default, but it returns NO
     [_progressIndicator setUsesThreadedAnimation:YES];
 }
@@ -205,22 +202,18 @@ static char _TLMOperationQueueOperationContext;
     }
 }
 
-- (void)setLastUpdateURL:(NSURL *)aURL
+- (void)_updateURLView
 {
-    if (nil == aURL) {
-        NSURL *defaultURL = [[TLMPreferenceController sharedPreferenceController] defaultServerURL];
-        TLMLog(__func__, @"A nil URL was passed to %@; using default %@ instead", NSStringFromSelector(_cmd), defaultURL);
-        aURL = defaultURL;
-    }
+    NSURL *aURL = [_currentListDataSource lastUpdateURL];
+    if (nil == aURL)
+        aURL = [[TLMPreferenceController sharedPreferenceController] defaultServerURL];
+    
     NSParameterAssert(aURL);
     NSTextStorage *ts = [_hostnameView textStorage];
     [[ts mutableString] setString:[aURL absoluteString]];
     [ts addAttribute:NSFontAttributeName value:[NSFont labelFontOfSize:0] range:NSMakeRange(0, [ts length])];
     [ts addAttribute:NSLinkAttributeName value:aURL range:NSMakeRange(0, [ts length])];
     [ts addAttributes:[_hostnameView linkTextAttributes] range:NSMakeRange(0, [ts length])];
-    
-    [_lastUpdateURL autorelease];
-    _lastUpdateURL = [aURL copy];
 }
 
 - (void)_updateAll
@@ -230,13 +223,14 @@ static char _TLMOperationQueueOperationContext;
         return;
     
     TLMUpdateOperation *op = nil;
+    NSURL *currentURL = [_currentListDataSource lastUpdateURL];
     if (_updateInfrastructure) {
-        op = [[TLMInfraUpdateOperation alloc] initWithLocation:_lastUpdateURL];
-        TLMLog(__func__, @"Beginning infrastructure update from %@", [_lastUpdateURL absoluteString]);
+        op = [[TLMInfraUpdateOperation alloc] initWithLocation:currentURL];
+        TLMLog(__func__, @"Beginning infrastructure update from %@", [currentURL absoluteString]);
     }
     else {
-        op = [[TLMUpdateOperation alloc] initWithPackageNames:nil location:_lastUpdateURL];
-        TLMLog(__func__, @"Beginning update of all packages from %@", [_lastUpdateURL absoluteString]);
+        op = [[TLMUpdateOperation alloc] initWithPackageNames:nil location:currentURL];
+        TLMLog(__func__, @"Beginning update of all packages from %@", [currentURL absoluteString]);
     }
     
     if (op) {
@@ -303,7 +297,8 @@ static char _TLMOperationQueueOperationContext;
     }
     
     [_updateListDataSource setAllPackages:packages];
-    [self setLastUpdateURL:[op updateURL]];
+    [_updateListDataSource setLastUpdateURL:[op updateURL]];
+    [self _updateURLView];
     
     NSString *statusString = nil;
     
@@ -373,7 +368,7 @@ static char _TLMOperationQueueOperationContext;
         }
         else {
             // This is slow, but if infrastructure was updated or a package installed other dependencies, we have no way of manually removing from the list.  We also need to ensure that the same mirror is used, so results are consistent.
-            [self _refreshUpdatedPackageListFromLocation:[self lastUpdateURL]];
+            [self _refreshUpdatedPackageListFromLocation:[_currentListDataSource lastUpdateURL]];
         }
     }
 }
@@ -496,14 +491,20 @@ static char _TLMOperationQueueOperationContext;
 
 - (void)tabView:(TLMTabView *)tabView didSelectViewAtIndex:(NSUInteger)anIndex;
 {
-    // clear the status overlay
-    [self _displayStatusString:nil];
+    // clear the status overlay, but don't animate since it interferes with the tabview animation
+    if ([_statusView isDescendantOf:_tabView]) {
+        [_statusView removeFromSuperview];
+        // set it back to transparent
+        [_statusView fadeOut];
+    }
 
     switch (anIndex) {
         case 0:
             
             [self _removeDataSourceFromResponderChain:_packageListDataSource];
             [self _insertDataSourceInResponderChain:_updateListDataSource];   
+            _currentListDataSource = _updateListDataSource;
+            [self _updateURLView];
             
             if ([[_updateListDataSource allPackages] count])
                 [_updateListDataSource search:nil];
@@ -511,7 +512,9 @@ static char _TLMOperationQueueOperationContext;
         case 1:
             
             [self _removeDataSourceFromResponderChain:_updateListDataSource];
-            [self _insertDataSourceInResponderChain:_packageListDataSource];            
+            [self _insertDataSourceInResponderChain:_packageListDataSource];   
+            _currentListDataSource = _packageListDataSource;
+            [self _updateURLView];
 
             if ([[_packageListDataSource packageNodes] count])
                 [_packageListDataSource search:nil];
@@ -537,7 +540,8 @@ static char _TLMOperationQueueOperationContext;
         statusString = NSLocalizedString(@"Listing Failed", @"main window status string");
     
     [self _displayStatusString:statusString];
-    [self setLastUpdateURL:[op updateURL]];
+    [_packageListDataSource setLastUpdateURL:[op updateURL]];
+    [self _updateURLView];
 }
 
 - (void)_refreshFullPackageListFromLocation:(NSURL *)location
@@ -637,9 +641,10 @@ static char _TLMOperationQueueOperationContext;
     if (NO == [self _checkCommandPathAndWarn:YES])
         return;
     
-    TLMUpdateOperation *op = [[TLMUpdateOperation alloc] initWithPackageNames:packageNames location:_lastUpdateURL];
+    NSURL *currentURL = [_currentListDataSource lastUpdateURL];
+    TLMUpdateOperation *op = [[TLMUpdateOperation alloc] initWithPackageNames:packageNames location:currentURL];
     if (op) {
-        TLMLog(__func__, @"Beginning update of %@\nfrom %@", packageNames, [_lastUpdateURL absoluteString]);
+        TLMLog(__func__, @"Beginning update of %@\nfrom %@", packageNames, [currentURL absoluteString]);
         [[NSNotificationCenter defaultCenter] addObserver:self 
                                                  selector:@selector(_handleUpdateFinishedNotification:) 
                                                      name:TLMOperationFinishedNotification 
@@ -664,10 +669,10 @@ static char _TLMOperationQueueOperationContext;
     else if ([op isCancelled] == NO) {
         
         // This is slow, but if a package installed other dependencies, we have no way of manually removing from the list.  We also need to ensure that the same mirror is used, so results are consistent.
-        [self _refreshFullPackageListFromLocation:[self lastUpdateURL]];
+        [self _refreshFullPackageListFromLocation:[op updateURL]];
         
         // this is always displayed, so should always be updated as well
-        [self _refreshUpdatedPackageListFromLocation:[self lastUpdateURL]];
+        [self _refreshUpdatedPackageListFromLocation:[op updateURL]];
     }    
 }
 
@@ -677,9 +682,10 @@ static char _TLMOperationQueueOperationContext;
     if (NO == [self _checkCommandPathAndWarn:YES])
         return;
     
-    TLMInstallOperation *op = [[TLMInstallOperation alloc] initWithPackageNames:packageNames location:_lastUpdateURL reinstall:reinstall];
+    NSURL *currentURL = [_currentListDataSource lastUpdateURL];
+    TLMInstallOperation *op = [[TLMInstallOperation alloc] initWithPackageNames:packageNames location:currentURL reinstall:reinstall];
     if (op) {
-        TLMLog(__func__, @"Beginning install of %@\nfrom %@", packageNames, [_lastUpdateURL absoluteString]);
+        TLMLog(__func__, @"Beginning install of %@\nfrom %@", packageNames, [currentURL absoluteString]);
         [[NSNotificationCenter defaultCenter] addObserver:self 
                                                  selector:@selector(_handleInstallFinishedNotification:) 
                                                      name:TLMOperationFinishedNotification 
@@ -729,10 +735,10 @@ static char _TLMOperationQueueOperationContext;
     else if ([op isCancelled] == NO) {
         
         // This is slow, but if a package installed other dependencies, we have no way of manually removing from the list.  We also need to ensure that the same mirror is used, so results are consistent.
-        [self _refreshFullPackageListFromLocation:[self lastUpdateURL]];
+        [self _refreshFullPackageListFromLocation:[op updateURL]];
         
         // this is always displayed, so should always be updated as well
-        [self _refreshUpdatedPackageListFromLocation:[self lastUpdateURL]];
+        [self _refreshUpdatedPackageListFromLocation:[op updateURL]];
     }    
 }
 

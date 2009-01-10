@@ -37,11 +37,11 @@
  */
 
 #import <Cocoa/Cocoa.h>
+#import "TLMMainWindowController.h"
 
-@class TLMMainWindowController;
 @class TLMTableView;
 
-@interface TLMUpdateListDataSource : NSResponder 
+@interface TLMUpdateListDataSource : NSResponder <TLMListDataSource>
 {
 @private
     TLMTableView            *_tableView;
@@ -51,12 +51,14 @@
     BOOL                     _sortAscending;
     NSSearchField           *_searchField;
     TLMMainWindowController *_controller;
+    NSURL                   *_lastUpdateURL;
 }
 
 @property (nonatomic, retain) IBOutlet TLMTableView *tableView;
 @property (nonatomic, assign) IBOutlet TLMMainWindowController *_controller;
 @property (nonatomic, retain) IBOutlet NSSearchField *_searchField;
-@property (readwrite, copy) NSArray *allPackages;
+@property (nonatomic, copy) NSArray *allPackages;
+@property (nonatomic, copy) NSURL *lastUpdateURL;
 
 - (IBAction)refreshList:(id)sender;
 - (IBAction)updateAll:(id)sender;
