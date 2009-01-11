@@ -40,6 +40,7 @@
 #import "TLMMainWindowController.h"
 
 @class TLMTableView;
+@class TLMStatusWindow;
 
 @interface TLMUpdateListDataSource : NSResponder <TLMListDataSource>
 {
@@ -52,6 +53,7 @@
     NSSearchField           *_searchField;
     TLMMainWindowController *_controller;
     NSURL                   *_lastUpdateURL;
+    TLMStatusWindow         *_statusWindow;
 }
 
 @property (nonatomic, retain) IBOutlet TLMTableView *tableView;
