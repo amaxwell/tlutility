@@ -54,6 +54,7 @@
     TLMMainWindowController *_controller;
     NSURL                   *_lastUpdateURL;
     TLMStatusWindow         *_statusWindow;
+    BOOL                     _refreshing;
 }
 
 @property (nonatomic, retain) IBOutlet TLMTableView *tableView;
@@ -61,6 +62,7 @@
 @property (nonatomic, retain) IBOutlet NSSearchField *_searchField;
 @property (nonatomic, copy) NSArray *allPackages;
 @property (nonatomic, copy) NSURL *lastUpdateURL;
+@property (nonatomic, getter = isRefreshing) BOOL refreshing;
 
 - (IBAction)refreshList:(id)sender;
 - (IBAction)updateAll:(id)sender;

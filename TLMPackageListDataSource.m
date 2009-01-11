@@ -49,6 +49,7 @@
 @synthesize _controller;
 @synthesize lastUpdateURL = _lastUpdateURL;
 @synthesize statusWindow = _statusWindow;
+@synthesize refreshing = _refreshing;
 
 - (id)init
 {
@@ -144,6 +145,8 @@
         return [self _validateRemoveSelectedRow];
     else if (@selector(installSelectedRows:) == action)
         return [[_outlineView selectedRowIndexes] count] > 0;
+    else if (@selector(refreshList:) == action)
+        return NO == _refreshing;
     else
         return YES;
 }
