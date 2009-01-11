@@ -54,6 +54,7 @@
     TLMMainWindowController *_controller;
     NSURL                   *_lastUpdateURL;
     TLMStatusWindow         *_statusWindow;
+    BOOL                     _refreshing;
 }
 
 - (IBAction)search:(id)sender;
@@ -68,5 +69,6 @@
 @property (nonatomic, copy) NSArray *packageNodes;
 @property (readonly) id selectedItem;
 @property (nonatomic, copy) NSURL *lastUpdateURL;
+@property (nonatomic, getter = isRefreshing) BOOL refreshing;
 
 @end

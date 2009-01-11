@@ -290,8 +290,13 @@ static char _TLMOperationQueueOperationContext;
             [self _updateURLView];
             [[_currentListDataSource statusWindow] fadeIn];
 
+            // we load the update list on launch, so load this one on first access of the tab
+
             if ([[_packageListDataSource packageNodes] count])
                 [_packageListDataSource search:nil];
+            else if ([_packageListDataSource isRefreshing] == NO)
+                [self refreshFullPackageList];
+
             break;
         default:
             break;
@@ -409,6 +414,7 @@ static char _TLMOperationQueueOperationContext;
     }
     
     [_updateListDataSource setAllPackages:packages];
+    [_updateListDataSource setRefreshing:NO];
     [_updateListDataSource setLastUpdateURL:[op updateURL]];
     [self _updateURLView];
     
@@ -427,6 +433,8 @@ static char _TLMOperationQueueOperationContext;
 - (void)_refreshUpdatedPackageListFromLocation:(NSURL *)location
 {
     [self _displayStatusString:nil];
+    // disable refresh action for this view
+    [_updateListDataSource setRefreshing:YES];
     TLMListUpdatesOperation *op = [[TLMListUpdatesOperation alloc] initWithLocation:location];
     [self _addOperation:op selector:@selector(_handleListUpdatesFinishedNotification:)];
     [op release];
@@ -509,6 +517,7 @@ static char _TLMOperationQueueOperationContext;
     TLMListOperation *op = [aNote object];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:TLMOperationFinishedNotification object:op];
     [_packageListDataSource setPackageNodes:[op packageNodes]];
+    [_packageListDataSource setRefreshing:NO];
     
     NSString *statusString = nil;
     
@@ -525,6 +534,8 @@ static char _TLMOperationQueueOperationContext;
 - (void)_refreshFullPackageListFromLocation:(NSURL *)location
 {
     [self _displayStatusString:nil];
+    // disable refresh action for this view
+    [_packageListDataSource setRefreshing:YES];
     TLMListOperation *op = [[TLMListOperation alloc] initWithLocation:location];
     [self _addOperation:op selector:@selector(_handleListFinishedNotification:)];
     [op release];
