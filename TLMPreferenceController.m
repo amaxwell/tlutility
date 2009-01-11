@@ -57,6 +57,8 @@ NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";     /
 @synthesize _serverComboBox;
 @synthesize _rootHomeCheckBox;
 @synthesize _useSyslogCheckBox;
+@synthesize _progressPanel;
+@synthesize _progressIndicator;
 
 + (id)sharedPreferenceController;
 {
@@ -92,6 +94,8 @@ NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";     /
     [_rootHomeCheckBox release];
     [_useSyslogCheckBox release];
     [_servers release];
+    [_progressPanel release];
+    [_progressIndicator release];
     [super dealloc];
 }
 
@@ -107,6 +111,8 @@ NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";     /
     
     [_rootHomeCheckBox setState:[defaults boolForKey:TLMUseRootHomePreferenceKey]];
     [_useSyslogCheckBox setState:[defaults boolForKey:TLMUseSyslogPreferenceKey]];
+    
+    [_serverComboBox setDelegate:self];
 }
 
 - (IBAction)toggleUseRootHome:(id)sender;
@@ -163,7 +169,7 @@ NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";     /
     }
     
     CFStreamStatus status;
-    const CFAbsoluteTime start = CFAbsoluteTimeGetCurrent();
+    CFAbsoluteTime start = CFAbsoluteTimeGetCurrent();
     bool keepWaiting;
     do {
         
@@ -179,8 +185,8 @@ NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";     /
             keepWaiting = false;
         }
         else {
-            // block in a private runloop mode so we get a beachball
-            CFRunLoopRunInMode(CFSTR("TLMFTPRunLoopMode"), 1.0, TRUE);
+            // block in default runloop mode (typically never hits this path)
+            CFRunLoopRunInMode(kCFRunLoopDefaultMode, 1.0, TRUE);
             keepWaiting = true;
         }
         
@@ -194,12 +200,31 @@ NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";     /
     }
     
     // read all data from the directory listing into a mutable data
-    uint8_t buffer[4096];
     NSMutableData *data = [NSMutableData data];
-    CFIndex len;
-    while ((len = CFReadStreamRead(stream, buffer, sizeof(buffer))) > 0) {
-        [data appendBytes:buffer length:len];
-    }
+    keepWaiting = true;
+    start = CFAbsoluteTimeGetCurrent();
+    do {
+        
+        if (CFReadStreamHasBytesAvailable(stream)) {
+            CFIndex len;
+            uint8_t buffer[4096];
+            while ((len = CFReadStreamRead(stream, buffer, sizeof(buffer))) > 0) {
+                [data appendBytes:buffer length:len];
+            }
+            if (len <= 0) keepWaiting = false;
+        }
+        // absolute timeout check
+        else if (CFAbsoluteTimeGetCurrent() > start + 30.0) {
+            TLMLog(__func__, @"Unable to read data from %@ after 30.0 seconds", [[self defaultServerURL] absoluteString]);
+            keepWaiting = false;
+        }
+        else {
+            // block in default runloop mode to avoid a beachball, since we have a progress indicator
+            CFRunLoopRunInMode(kCFRunLoopDefaultMode, 1.0, TRUE);
+        }
+        
+    } while (keepWaiting);
+        
     
     CFReadStreamClose(stream);
     CFRelease(stream);
@@ -213,7 +238,7 @@ NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";     /
         
         // each call parses one line
         CFDictionaryRef listing;
-        len = CFFTPCreateParsedResourceListing(NULL, listingPtr + offset, remainingLength, &listing);
+        CFIndex len = CFFTPCreateParsedResourceListing(NULL, listingPtr + offset, remainingLength, &listing);
         if (len > 0) {
             NSString *name = (id)CFDictionaryGetValue(listing, kCFFTPResourceName);
             if (name) [files addObject:name];
@@ -230,9 +255,16 @@ NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";     /
 
 - (BOOL)_canConnectToDefaultServer
 {
+    // this is really a case of formatter failure...
+    if (nil == [self defaultServerURL])
+        return NO;
+    
     NSString *URLString = [[self defaultServerURL] absoluteString];
     
     TLMLog(__func__, @"Checking for a connection to %@%C", URLString, 0x2026);
+    
+    // CFNetDiagnostic crashes with nil URL
+    NSParameterAssert([self defaultServerURL]);
     
     // see if we have a network connection
     CFNetDiagnosticRef diagnostic = CFNetDiagnosticCreateWithURL(NULL, (CFURLRef)[self defaultServerURL]);
@@ -274,32 +306,50 @@ NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";     /
 }
 
 - (IBAction)changeServerURL:(id)sender
-{
+{        
     // save the old value, then set new value in prefs, so -defaultServerURL can be used in _canConnectToDefaultServer
     NSString *oldValue = [[[[NSUserDefaults standardUserDefaults] objectForKey:TLMServerURLPreferenceKey] copy] autorelease];
     NSString *serverURLString = [[sender cell] stringValue];
     [[NSUserDefaults standardUserDefaults] setObject:serverURLString forKey:TLMServerURLPreferenceKey];
     
-    /*
-     It's not immediately obvious how to compose the URL, since each mirror has a different path.
-     Do a quick check if this isn't one of the URLs from the bundled plist.
-     */
-    if ([_servers containsObject:serverURLString] == NO && [self _canConnectToDefaultServer] == NO) {
+    // only display the dialog if the user has manually typed something in the text field
+    if (_hasPendingServerEdit) {
         
-        NSAlert *alert = [[NSAlert new] autorelease];
-        [alert setMessageText:NSLocalizedString(@"Unable to connect to server.", @"alert title")];
-        [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"Either a network connection could not be established, or the directory \"%@\" does not exist at the specified CTAN root URL.  Would you like to keep this URL, or revert to the previous one?", @"alert message text"), [[NSUserDefaults standardUserDefaults] objectForKey:TLMServerPathPreferenceKey]]];
-        [alert addButtonWithTitle:NSLocalizedString(@"Revert", @"")];
-        [alert addButtonWithTitle:NSLocalizedString(@"Keep", @"")];
-        
-        // don't run as a sheet, since this may need to block a window close
-        NSInteger rv = [alert runModal];
-        
-        if (NSAlertFirstButtonReturn == rv) {
-            [[NSUserDefaults standardUserDefaults] setObject:oldValue forKey:TLMServerURLPreferenceKey];
-            [[sender cell] setStringValue:oldValue];
+        [NSApp beginSheet:_progressPanel modalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
+        [_progressIndicator startAnimation:nil];
+
+        /*
+         It's not immediately obvious how to compose the URL, since each mirror has a different path.
+         Do a quick check if this isn't one of the URLs from the bundled plist.
+         */
+        if ([self _canConnectToDefaultServer] == NO) {
+            
+            [NSApp endSheet:_progressPanel];
+            [_progressPanel orderOut:nil];
+            
+            NSAlert *alert = [[NSAlert new] autorelease];
+            [alert setMessageText:NSLocalizedString(@"Unable to connect to server.", @"alert title")];
+            [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"Either a network connection could not be established, or the directory \"%@\" does not exist at the specified CTAN root URL.  Would you like to keep this URL, or revert to the previous one?", @"alert message text"), [[NSUserDefaults standardUserDefaults] objectForKey:TLMServerPathPreferenceKey]]];
+            [alert addButtonWithTitle:NSLocalizedString(@"Revert", @"")];
+            [alert addButtonWithTitle:NSLocalizedString(@"Keep", @"")];
+            
+            // don't run as a sheet, since this may need to block a window close
+            NSInteger rv = [alert runModal];
+            
+            if (NSAlertFirstButtonReturn == rv) {
+                [[NSUserDefaults standardUserDefaults] setObject:oldValue forKey:TLMServerURLPreferenceKey];
+                [[sender cell] setStringValue:oldValue];
+            }
         }
+        else {
+            [NSApp endSheet:_progressPanel];
+            [_progressPanel orderOut:nil];
+        }
+        
+        // reset since it's either accepted or reverted at this point
+        _hasPendingServerEdit = NO;
     }
+    
 }
 
 - (NSString *)windowNibName { return @"Preferences"; }
@@ -363,7 +413,13 @@ NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";     /
     return NSAlertDefaultReturn != rv;
 }
 
-// make sure to end editing on close
+- (BOOL)control:(NSControl *)control textShouldBeginEditing:(NSText *)fieldEditor
+{
+    _hasPendingServerEdit = YES;
+    return YES;
+}
+
+// make sure to end editing on close (should only block if _hasPendingServerEdit is true)
 - (BOOL)windowShouldClose:(id)sender;
 {
     return [[self window] makeFirstResponder:nil];
