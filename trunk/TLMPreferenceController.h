@@ -48,11 +48,14 @@ extern NSString * const TLMUseSyslogPreferenceKey;
 @interface TLMPreferenceController : NSWindowController 
 {
 @private
-    NSPathControl *_texbinPathControl;
-    NSComboBox    *_serverComboBox;
-    NSButton      *_rootHomeCheckBox;
-    NSButton      *_useSyslogCheckBox;
-    NSArray       *_servers;
+    NSPathControl       *_texbinPathControl;
+    NSComboBox          *_serverComboBox;
+    NSButton            *_rootHomeCheckBox;
+    NSButton            *_useSyslogCheckBox;
+    NSArray             *_servers;
+    NSPanel             *_progressPanel;
+    NSProgressIndicator *_progressIndicator;
+    BOOL                 _hasPendingServerEdit;
 }
 
 + (id)sharedPreferenceController;
@@ -65,6 +68,8 @@ extern NSString * const TLMUseSyslogPreferenceKey;
 @property (nonatomic, retain) IBOutlet NSComboBox *_serverComboBox;
 @property (nonatomic, retain) IBOutlet NSButton *_rootHomeCheckBox;
 @property (nonatomic, retain) IBOutlet NSButton *_useSyslogCheckBox;
+@property (nonatomic, retain) IBOutlet NSPanel *_progressPanel;
+@property (nonatomic, retain) IBOutlet NSProgressIndicator *_progressIndicator;
 
 // composes TLMServerURLPreferenceKey and TLMServerPathPreferenceKey
 @property (readonly) NSURL *defaultServerURL;
