@@ -52,6 +52,6 @@
  */
 + (TLMStatusWindow *)windowWithStatusString:(NSString *)statusString frameFromView:(NSView *)aView;
 - (void)fadeIn;
-- (void)fadeOut;
+- (void)fadeOutAndRemove:(BOOL)remove;
 
 @end

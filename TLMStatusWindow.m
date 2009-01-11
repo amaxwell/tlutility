@@ -238,15 +238,19 @@ static void CenterRectInRect(NSRect *toCenter, NSRect enclosingRect)
 
 - (void)fadeIn;
 {
+    [self orderFront:nil];
     [[self animator] setAlphaValue:1.0];
 }
 
-- (void)fadeOut;
+- (void)fadeOutAndRemove:(BOOL)remove;
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [[self parentWindow] removeChildWindow:self];
+    if (remove) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self];
+        [[self parentWindow] removeChildWindow:self];
+        // this will orderOut parent as well if attached
+        [self performSelector:@selector(orderOut:) withObject:nil afterDelay:1.0];
+    }
     [[self animator] setAlphaValue:0.0];
-    [self performSelector:@selector(orderOut:) withObject:nil afterDelay:1.0];
 }
 
 @end

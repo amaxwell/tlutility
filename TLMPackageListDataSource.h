@@ -40,6 +40,7 @@
 #import "TLMMainWindowController.h"
 
 @class TLMOutlineView;
+@class TLMStatusWindow;
 
 @interface TLMPackageListDataSource : NSResponder <TLMListDataSource>
 {
@@ -52,6 +53,7 @@
     NSMutableArray          *_sortDescriptors;
     TLMMainWindowController *_controller;
     NSURL                   *_lastUpdateURL;
+    TLMStatusWindow         *_statusWindow;
 }
 
 - (IBAction)search:(id)sender;

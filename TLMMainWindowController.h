@@ -48,6 +48,7 @@
 
 @protocol TLMListDataSource
 @property (nonatomic, copy) NSURL *lastUpdateURL;
+@property (nonatomic, retain) TLMStatusWindow *statusWindow;
 @end
 
 
@@ -58,7 +59,6 @@
     NSTextView               *_hostnameView;
     TLMTabView               *_tabView;
     TLMSplitView             *_splitView;
-    TLMStatusWindow          *_statusWindow;
     TLMGradientView          *_statusBarView;
     
     NSUInteger                _operationCount;

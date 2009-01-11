@@ -48,6 +48,7 @@
 @synthesize _searchField;
 @synthesize _controller;
 @synthesize lastUpdateURL = _lastUpdateURL;
+@synthesize statusWindow = _statusWindow;
 
 - (id)init
 {

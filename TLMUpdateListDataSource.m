@@ -49,6 +49,7 @@
 @synthesize allPackages = _allPackages;
 @synthesize _controller;
 @synthesize lastUpdateURL = _lastUpdateURL;
+@synthesize statusWindow = _statusWindow;
 
 - (id)init
 {

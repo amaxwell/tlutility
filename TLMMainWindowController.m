@@ -62,11 +62,6 @@
 
 static char _TLMOperationQueueOperationContext;
 
-@interface TLMMainWindowController()
-@property (nonatomic, retain) TLMStatusWindow *statusWindow;
-@end
-
-
 @implementation TLMMainWindowController
 
 @synthesize _progressIndicator;
@@ -78,7 +73,6 @@ static char _TLMOperationQueueOperationContext;
 @synthesize _statusBarView;
 @synthesize _updateListDataSource;
 @synthesize infrastructureNeedsUpdate = _updateInfrastructure;
-@synthesize statusWindow = _statusWindow;
 
 - (id)init
 {
@@ -111,7 +105,6 @@ static char _TLMOperationQueueOperationContext;
     
     [_statusBarView release];
     [_hostnameView release];
-    [_statusWindow release];
     
     [_progressIndicator release];
     [_logDataSource release];
@@ -239,17 +232,17 @@ static char _TLMOperationQueueOperationContext;
 {
     if (statusString) {
         // may currently be a window, so get rid of it
-        [_statusWindow fadeOut];
+        [[_currentListDataSource statusWindow] fadeOutAndRemove:YES];
         
         // child window is one shot
-        [self setStatusWindow:[TLMStatusWindow windowWithStatusString:statusString frameFromView:_tabView]];
-        [[self window] addChildWindow:_statusWindow ordered:NSWindowAbove];
-        [_statusWindow fadeIn];
+        [_currentListDataSource setStatusWindow:[TLMStatusWindow windowWithStatusString:statusString frameFromView:_tabView]];
+        [[self window] addChildWindow:[_currentListDataSource statusWindow] ordered:NSWindowAbove];
+        [[_currentListDataSource statusWindow] fadeIn];
     }
-    else if (_statusWindow) {
-        NSParameterAssert([[[self window] childWindows] containsObject:_statusWindow]);
-        [_statusWindow fadeOut];
-        [self setStatusWindow:nil];
+    else if ([_currentListDataSource statusWindow]) {
+        NSParameterAssert([[[self window] childWindows] containsObject:[_currentListDataSource statusWindow]]);
+        [[_currentListDataSource statusWindow] fadeOutAndRemove:YES];
+        [_currentListDataSource setStatusWindow:nil];
     }
 }    
 
@@ -274,11 +267,8 @@ static char _TLMOperationQueueOperationContext;
 
 - (void)tabView:(TLMTabView *)tabView didSelectViewAtIndex:(NSUInteger)anIndex;
 {
-    // clear the status overlay
-    if (_statusWindow) {
-        [_statusWindow fadeOut];
-        [self setStatusWindow:nil];
-    }
+    // clear the status overlay, if any
+    [[_currentListDataSource statusWindow] fadeOutAndRemove:NO];
     
     switch (anIndex) {
         case 0:
@@ -287,7 +277,8 @@ static char _TLMOperationQueueOperationContext;
             [self _insertDataSourceInResponderChain:_updateListDataSource];   
             _currentListDataSource = _updateListDataSource;
             [self _updateURLView];
-            
+            [[_currentListDataSource statusWindow] fadeIn];
+
             if ([[_updateListDataSource allPackages] count])
                 [_updateListDataSource search:nil];
             break;
@@ -297,7 +288,8 @@ static char _TLMOperationQueueOperationContext;
             [self _insertDataSourceInResponderChain:_packageListDataSource];   
             _currentListDataSource = _packageListDataSource;
             [self _updateURLView];
-            
+            [[_currentListDataSource statusWindow] fadeIn];
+
             if ([[_packageListDataSource packageNodes] count])
                 [_packageListDataSource search:nil];
             break;
