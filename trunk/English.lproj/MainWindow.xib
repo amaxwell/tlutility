@@ -12,10 +12,9 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="120"/>
-			<integer value="108"/>
-			<integer value="5"/>
 			<integer value="1"/>
+			<integer value="5"/>
+			<integer value="120"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -241,11 +240,9 @@
 								<string key="NSToolbarItemPaletteLabel">Search</string>
 								<nil key="NSToolbarItemToolTip"/>
 								<object class="NSSearchField" key="NSToolbarItemView" id="973647257">
-									<reference key="NSNextResponder"/>
+									<nil key="NSNextResponder"/>
 									<int key="NSvFlags">268</int>
 									<string key="NSFrame">{{0, 14}, {96, 22}}</string>
-									<reference key="NSSuperview"/>
-									<reference key="NSWindow"/>
 									<int key="NSTag">-1</int>
 									<bool key="NSEnabled">YES</bool>
 									<object class="NSSearchFieldCell" key="NSCell" id="689517849">
@@ -524,12 +521,12 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</bytes>
 												<object class="NSMutableData" key="NSTIFFRepresentation">
 													<bytes key="NS.bytes">TU0AKgAABAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAD/JgAAAAAAAAAAAAAAAAAAAAAAAAAMbm5uQW9vbzUAAAAFAAAAAAAAAAAAAAAA
-h4eHEaampheqqqoGAAAAAP8AAP8AAAAAAAAAAAAAAABDQ0MTubm5pdra2vq3t7f6bm5ungAAAAgAAAAA
-e3t7bMbGxte3t7fYU1NTIgAAAAD/AAD/AAAAAAAAAABAQEAMv7+/r/Dw8P+UlZX/UVFSrjIyMnoXFxci
-jY2NU7u7u/6tra36goKCZLOzswp7e3s6AAD//wAAAAAAAAACn5+fZbKysv+MjIz/KCIe9hEEAD0AAAAA
-AAAAAampqaHr6+v/aWlp0B8fHxmvr6+dY2NjwgoA//93d3ct3d3dr+vr6/ZmZmb8Hh8hzB8KAOlsLAHM
-g0gUJwAAAACBgYGm7e3t/8DAwOmlpaXc19fX/3d3d7I7AP//ZWVlScHBwf24uLj/OTk5swAAABgXCQNY
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMbm5uQW9vbzUAAAAFAAAAAAAAAAAAAAAA
+h4eHEaampheqqqoGAAAAAAAAAAAAAAAAAAAAAAAAAABDQ0MTubm5pdra2vq3t7f6bm5ungAAAAgAAAAA
+e3t7bMbGxte3t7fYU1NTIgAAAAAAAAAAAAAAAAAAAABAQEAMv7+/r/Dw8P+UlZX/UVFSrjIyMnoXFxci
+jY2NU7u7u/6tra36goKCZLOzswp7e3s6AAAAAQAAAAAAAAACn5+fZbKysv+MjIz/KCIe9hEEAD0AAAAA
+AAAAAampqaHr6+v/aWlp0B8fHxmvr6+dY2NjwgAAAAR3d3ct3d3dr+vr6/ZmZmb8Hh8hzB8KAOlsLAHM
+g0gUJwAAAACBgYGm7e3t/8DAwOmlpaXc19fX/3d3d7IAAAACZWVlScHBwf24uLj/OTk5swAAABgXCQNY
 YygA1KJEAK9MPS9siouM8MrKyv/4+Pj/9PT0/7i4uO5LS0tHAAAAAAAAAABbW1tfQ0ND5BgYGEAAAAAA
 AAAAACYJADxfMA3GlouB+q+xtP90dnfQenp6hnZ2doRSUlI+AAAAAAAAAAAAAAAAAAAAABISEioAAAAC
 AAAAAAAAAABBSEgni4uK1Z6env+Icl7uPx8OSQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
@@ -905,11 +902,14 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</bytes>
 																	<int key="NSColorSpace">3</int>
 																	<bytes key="NSWhite">MC4zMzMzMzI5OQA</bytes>
 																</object>
-																<object class="NSColor" key="NSTextColor" id="107693024">
+																<object class="NSColor" key="NSTextColor" id="558817536">
 																	<int key="NSColorSpace">6</int>
 																	<string key="NSCatalogName">System</string>
-																	<string key="NSColorName">headerTextColor</string>
-																	<reference key="NSColor" ref="423886655"/>
+																	<string key="NSColorName">disabledControlTextColor</string>
+																	<object class="NSColor" key="NSColor">
+																		<int key="NSColorSpace">3</int>
+																		<bytes key="NSWhite">MC4zMzMzMzMzNAA</bytes>
+																	</object>
 																</object>
 															</object>
 															<object class="NSTextFieldCell" key="NSDataCell" id="440524267">
@@ -967,7 +967,7 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</bytes>
 																<string key="NSContents">Sender</string>
 																<reference key="NSSupport" ref="26"/>
 																<reference key="NSBackgroundColor" ref="512574826"/>
-																<reference key="NSTextColor" ref="107693024"/>
+																<reference key="NSTextColor" ref="558817536"/>
 															</object>
 															<object class="NSTextFieldCell" key="NSDataCell" id="472876006">
 																<int key="NSCellFlags">337772096</int>
@@ -998,7 +998,7 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</bytes>
 																	<string key="NSColorName">headerColor</string>
 																	<reference key="NSColor" ref="839407202"/>
 																</object>
-																<reference key="NSTextColor" ref="107693024"/>
+																<reference key="NSTextColor" ref="558817536"/>
 															</object>
 															<object class="NSTextFieldCell" key="NSDataCell" id="982460441">
 																<int key="NSCellFlags">337772096</int>
@@ -1196,8 +1196,8 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</bytes>
 														<nil key="NSDefaultParagraphStyle"/>
 													</object>
 													<int key="NSTVFlags">6</int>
-													<string key="NSMaxSize">{520, 1e+07}</string>
-													<string key="NSMinize">{223, 1}</string>
+													<string key="NSMaxSize">{1040, 1e+07}</string>
+													<string key="NSMinize">{223, 0}</string>
 													<nil key="NSDelegate"/>
 												</object>
 											</object>
@@ -1261,13 +1261,6 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</bytes>
 			<object class="NSCustomObject" id="806278174">
 				<string key="NSClassName">TLMLogDataSource</string>
 			</object>
-			<object class="NSCustomView" id="432869478">
-				<reference key="NSNextResponder"/>
-				<int key="NSvFlags">274</int>
-				<string key="NSFrameSize">{163, 96}</string>
-				<reference key="NSSuperview"/>
-				<string key="NSClassName">TLMStatusView</string>
-			</object>
 			<object class="NSScrollView" id="663681183">
 				<reference key="NSNextResponder"/>
 				<int key="NSvFlags">274</int>
@@ -1313,15 +1306,7 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</bytes>
 												<int key="NSColorSpace">3</int>
 												<bytes key="NSWhite">MC4zMzMzMzI5OQA</bytes>
 											</object>
-											<object class="NSColor" key="NSTextColor" id="558817536">
-												<int key="NSColorSpace">6</int>
-												<string key="NSCatalogName">System</string>
-												<string key="NSColorName">disabledControlTextColor</string>
-												<object class="NSColor" key="NSColor">
-													<int key="NSColorSpace">3</int>
-													<bytes key="NSWhite">MC4zMzMzMzMzNAA</bytes>
-												</object>
-											</object>
+											<reference key="NSTextColor" ref="558817536"/>
 										</object>
 										<object class="NSTextFieldCell" key="NSDataCell" id="352536097">
 											<int key="NSCellFlags">337772096</int>
@@ -1760,14 +1745,6 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</bytes>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
-						<string key="label">_statusView</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="432869478"/>
-					</object>
-					<int key="connectionID">109</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
 						<string key="label">dataSource</string>
 						<reference key="source" ref="907719207"/>
 						<reference key="destination" ref="380200857"/>
@@ -2100,11 +2077,6 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</bytes>
 					<object class="IBObjectRecord">
 						<int key="objectID">102</int>
 						<reference key="object" ref="806278174"/>
-						<reference key="parent" ref="1002"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">108</int>
-						<reference key="object" ref="432869478"/>
 						<reference key="parent" ref="1002"/>
 					</object>
 					<object class="IBObjectRecord">
@@ -2496,8 +2468,6 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</bytes>
 					<string>102.IBPluginDependency</string>
 					<string>107.IBDateFormatterBehaviorMetadataKey</string>
 					<string>107.IBPluginDependency</string>
-					<string>108.IBEditorWindowLastContentRect</string>
-					<string>108.IBPluginDependency</string>
 					<string>11.IBPluginDependency</string>
 					<string>110.IBPluginDependency</string>
 					<string>111.IBPluginDependency</string>
@@ -2568,8 +2538,6 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</bytes>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{38, 528}, {163, 96}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2702,7 +2670,6 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</bytes>
 							<string>_progressIndicator</string>
 							<string>_splitView</string>
 							<string>_statusBarView</string>
-							<string>_statusView</string>
 							<string>_tabView</string>
 							<string>_updateListDataSource</string>
 						</object>
@@ -2714,7 +2681,6 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</bytes>
 							<string>NSProgressIndicator</string>
 							<string>TLMSplitView</string>
 							<string>TLMGradientView</string>
-							<string>TLMStatusView</string>
 							<string>TLMTabView</string>
 							<string>TLMUpdateListDataSource</string>
 						</object>
@@ -2784,14 +2750,6 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</bytes>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">TLMSplitView.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">TLMStatusView</string>
-					<string key="superclassName">NSView</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">TLMStatusView.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">

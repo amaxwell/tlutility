@@ -41,7 +41,7 @@
 
 @class TLMSplitView;
 @class TLMLogDataSource;
-@class TLMStatusView;
+@class TLMStatusWindow;
 @class TLMPackageListDataSource;
 @class TLMUpdateListDataSource;
 @class TLMGradientView;
@@ -58,7 +58,7 @@
     NSTextView               *_hostnameView;
     TLMTabView               *_tabView;
     TLMSplitView             *_splitView;
-    TLMStatusView            *_statusView;
+    TLMStatusWindow          *_statusWindow;
     TLMGradientView          *_statusBarView;
     
     NSUInteger                _operationCount;
@@ -74,7 +74,6 @@
 @property (nonatomic, retain) IBOutlet NSProgressIndicator *_progressIndicator;
 @property (nonatomic, retain) IBOutlet NSTextView *_hostnameView;
 @property (nonatomic, retain) IBOutlet TLMSplitView *_splitView;
-@property (nonatomic, retain) IBOutlet TLMStatusView *_statusView;
 @property (nonatomic, retain) IBOutlet TLMLogDataSource *_logDataSource;
 @property (nonatomic, retain) IBOutlet TLMPackageListDataSource *_packageListDataSource;
 @property (nonatomic, retain) IBOutlet TLMUpdateListDataSource *_updateListDataSource;

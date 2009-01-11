@@ -1,5 +1,5 @@
 //
-//  TLMStatusView.h
+//  TLMStatusWindow.h
 //  TeX Live Manager
 //
 //  Created by Adam Maxwell on 12/21/08.
@@ -38,24 +38,20 @@
 
 #import <Cocoa/Cocoa.h>
 
-
-@interface TLMStatusView : NSView 
+@interface TLMStatusWindow : NSWindow
 {
 @private
-    NSAttributedString *_statusString;
-    NSRect              _stringRect;
-    CGFloat             _contextAlphaValue;
-    NSImage            *_background;
-    BOOL                _preparingBackground;
-    BOOL                _fadeOut;
-    BOOL                _isFading;
+    id      _statusView;
+    NSView *_frameView;
 }
 
-// at initialization time, view is transparent and requires initial fadeIn to display
+/*
+ Designed for single use only.  If you want a new string to be displayed
+ or if the frame view is changed, you need a new window.  If frameFromView is 
+ nil, observes frame of parent window.
+ */
++ (TLMStatusWindow *)windowWithStatusString:(NSString *)statusString frameFromView:(NSView *)aView;
 - (void)fadeIn;
 - (void)fadeOut;
-
-@property(readwrite, copy) NSString *statusString;
-@property(readwrite, copy) NSAttributedString *attributedStatusString;
 
 @end
