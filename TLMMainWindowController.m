@@ -51,7 +51,7 @@
 #import "TLMInstallOperation.h"
 
 #import "TLMSplitView.h"
-#import "TLMStatusView.h"
+#import "TLMStatusWindow.h"
 #import "TLMInfoController.h"
 #import "TLMPreferenceController.h"
 #import "TLMLogServer.h"
@@ -62,18 +62,23 @@
 
 static char _TLMOperationQueueOperationContext;
 
+@interface TLMMainWindowController()
+@property (nonatomic, retain) TLMStatusWindow *statusWindow;
+@end
+
+
 @implementation TLMMainWindowController
 
 @synthesize _progressIndicator;
 @synthesize _hostnameView;
 @synthesize _splitView;
 @synthesize _logDataSource;
-@synthesize _statusView;
 @synthesize _packageListDataSource;
 @synthesize _tabView;
 @synthesize _statusBarView;
 @synthesize _updateListDataSource;
 @synthesize infrastructureNeedsUpdate = _updateInfrastructure;
+@synthesize statusWindow = _statusWindow;
 
 - (id)init
 {
@@ -104,9 +109,9 @@ static char _TLMOperationQueueOperationContext;
     [_splitView setDelegate:nil];
     [_splitView release];
     
-    [_statusView release];
     [_statusBarView release];
     [_hostnameView release];
+    [_statusWindow release];
     
     [_progressIndicator release];
     [_logDataSource release];
@@ -233,13 +238,18 @@ static char _TLMOperationQueueOperationContext;
 - (void)_displayStatusString:(NSString *)statusString
 {
     if (statusString) {
-        [_statusView setStatusString:statusString];
-        [_statusView setFrame:[_tabView bounds]];
-        [_tabView addSubview:_statusView];
-        [_statusView fadeIn];
+        // may currently be a window, so get rid of it
+        [_statusWindow fadeOut];
+        
+        // child window is one shot
+        [self setStatusWindow:[TLMStatusWindow windowWithStatusString:statusString frameFromView:_tabView]];
+        [[self window] addChildWindow:_statusWindow ordered:NSWindowAbove];
+        [_statusWindow fadeIn];
     }
-    else if ([_statusView isDescendantOf:_tabView]) {
-        [_statusView fadeOut];
+    else if (_statusWindow) {
+        NSParameterAssert([[[self window] childWindows] containsObject:_statusWindow]);
+        [_statusWindow fadeOut];
+        [self setStatusWindow:nil];
     }
 }    
 
@@ -264,11 +274,10 @@ static char _TLMOperationQueueOperationContext;
 
 - (void)tabView:(TLMTabView *)tabView didSelectViewAtIndex:(NSUInteger)anIndex;
 {
-    // clear the status overlay, but don't animate since it interferes with the tabview animation
-    if ([_statusView isDescendantOf:_tabView]) {
-        [_statusView removeFromSuperview];
-        // set it back to transparent
-        [_statusView fadeOut];
+    // clear the status overlay
+    if (_statusWindow) {
+        [_statusWindow fadeOut];
+        [self setStatusWindow:nil];
     }
     
     switch (anIndex) {
@@ -291,8 +300,6 @@ static char _TLMOperationQueueOperationContext;
             
             if ([[_packageListDataSource packageNodes] count])
                 [_packageListDataSource search:nil];
-            else
-                [self refreshFullPackageList];
             break;
         default:
             break;

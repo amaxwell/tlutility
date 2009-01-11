@@ -14,7 +14,7 @@
 		F90520DA0EFDCB5400B489FE /* TLMAuthorizedOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F90520D90EFDCB5400B489FE /* TLMAuthorizedOperation.m */; };
 		F905217F0EFEA98600B489FE /* PapersizeSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = F905217E0EFEA98600B489FE /* PapersizeSheet.xib */; };
 		F94E74A20EF4965100E0B78F /* TLMTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = F94E74A10EF4965100E0B78F /* TLMTableView.m */; };
-		F964A3350EFEFBCC0006868B /* TLMStatusView.m in Sources */ = {isa = PBXBuildFile; fileRef = F964A3340EFEFBCC0006868B /* TLMStatusView.m */; };
+		F964A3350EFEFBCC0006868B /* TLMStatusWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = F964A3340EFEFBCC0006868B /* TLMStatusWindow.m */; };
 		F964A6350F0070E80006868B /* TLMPackageListDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = F964A6340F0070E80006868B /* TLMPackageListDataSource.m */; };
 		F964A63B0F0071920006868B /* TLMPackageNode.m in Sources */ = {isa = PBXBuildFile; fileRef = F964A63A0F0071920006868B /* TLMPackageNode.m */; };
 		F964A6660F009B1F0006868B /* TLMListOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F964A6650F009B1F0006868B /* TLMListOperation.m */; };
@@ -149,8 +149,8 @@
 		F905217E0EFEA98600B489FE /* PapersizeSheet.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PapersizeSheet.xib; sourceTree = "<group>"; };
 		F94E74A00EF4965100E0B78F /* TLMTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMTableView.h; sourceTree = "<group>"; };
 		F94E74A10EF4965100E0B78F /* TLMTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMTableView.m; sourceTree = "<group>"; };
-		F964A3330EFEFBCC0006868B /* TLMStatusView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMStatusView.h; sourceTree = "<group>"; };
-		F964A3340EFEFBCC0006868B /* TLMStatusView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMStatusView.m; sourceTree = "<group>"; };
+		F964A3330EFEFBCC0006868B /* TLMStatusWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMStatusWindow.h; sourceTree = "<group>"; };
+		F964A3340EFEFBCC0006868B /* TLMStatusWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMStatusWindow.m; sourceTree = "<group>"; };
 		F964A6330F0070E80006868B /* TLMPackageListDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMPackageListDataSource.h; sourceTree = "<group>"; };
 		F964A6340F0070E80006868B /* TLMPackageListDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMPackageListDataSource.m; sourceTree = "<group>"; };
 		F964A6390F0071920006868B /* TLMPackageNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMPackageNode.h; sourceTree = "<group>"; };
@@ -369,8 +369,8 @@
 				F9B13ADB0EECD9DA007C0046 /* TLMSplitView.m */,
 				F94E74A00EF4965100E0B78F /* TLMTableView.h */,
 				F94E74A10EF4965100E0B78F /* TLMTableView.m */,
-				F964A3330EFEFBCC0006868B /* TLMStatusView.h */,
-				F964A3340EFEFBCC0006868B /* TLMStatusView.m */,
+				F964A3330EFEFBCC0006868B /* TLMStatusWindow.h */,
+				F964A3340EFEFBCC0006868B /* TLMStatusWindow.m */,
 				F9D37C980F01A80800FB755E /* TLMGradientView.h */,
 				F9D37C990F01A80800FB755E /* TLMGradientView.m */,
 				F9D37E790F02B5F700FB755E /* TLMOutlineView.h */,
@@ -643,7 +643,7 @@
 				F9E22FD50EFCBD2A00B0BE38 /* TLMPapersizeOperation.m in Sources */,
 				F9FAA44E0EFCBECD0040EAB2 /* TLMPapersizeController.m in Sources */,
 				F90520DA0EFDCB5400B489FE /* TLMAuthorizedOperation.m in Sources */,
-				F964A3350EFEFBCC0006868B /* TLMStatusView.m in Sources */,
+				F964A3350EFEFBCC0006868B /* TLMStatusWindow.m in Sources */,
 				F964A6350F0070E80006868B /* TLMPackageListDataSource.m in Sources */,
 				F964A63B0F0071920006868B /* TLMPackageNode.m in Sources */,
 				F964A6660F009B1F0006868B /* TLMListOperation.m in Sources */,
