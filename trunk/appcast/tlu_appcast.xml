@@ -75,5 +75,33 @@
             <pubDate>Fri, 02 Jan 2009 17:55:31 -0800</pubDate>
             <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20090102.tgz" sparkle:version="0.5" length="1104522" type="application/octet-stream" sparkle:dsaSignature="MCwCFAL5k5+afqJqncC3yc0eBefgIA9zAhRsBRrlh3xoCgX6eCx74GcD1YBp5w=="></enclosure>
         </item>
+        <item>
+            <title>Version 0.6</title>
+            <description>
+                <h3>Changes Since 0.5</h3>
+                <li>Animation between tabs should be smoother.</li>
+                <li>Substantial rewrite of authorized operation code for improved clarity and robustness.</li>
+                <li>Servers in the internal list are no longer checked for correctness in preferences.</li>
+                <li>Canceling an operation works more reliably again.</li>
+                <li>Log table updates in all common runloop modes, instead of stalling when an alert is up.</li>
+                <li>Logging should be significantly more efficient when tlmgr spews a lot of output.</li>
+                <li>FTP servers are properly validated in preferences when entered manually.</li>
+                <li>Worked around an Apple Core Animation bug that caused the progress indicator to halt.</li>
+                <li>Texdoc is now used to display available documentation links and proxy icon in the Info inspector.</li>
+                <li>Potential problems with filling up pipes are now avoided altogether.</li>
+                <li>Show Info operations are now cancelable, in case of a problem.</li>
+                <li>Show Info works correctly with more packages in the full package list.</li>
+                <li>Tlmgr command availability is checked more consistently.</li>
+                <li>Mirror URL in status bar is now a clickable link.</li>
+                <li>Default toolbar layout includes Remove item.</li>
+                <li>Cmd-R is now a shortcut for Refresh.</li>
+                <li>Collapsing the upper splitview will no longer destroy the tabs.</li>
+                <li>Refreshing lists and certain other operations are now executed in parallel.</li>
+                <li>The mirror URL in the status bar is now properly updated when switching tabs.</li>
+                <li>Refresh button is disabled when a view is currently refreshing.</li>
+            </description>
+            <pubDate>Sat, 10 Jan 2009 21:48:27 -0800</pubDate>
+            <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20090110.tgz" sparkle:version="0.6" length="1133833" type="application/octet-stream" sparkle:dsaSignature="MCwCFCuoSNFeux3JCqUZzHbJvSymKTQ1AhQlx6H6GH0KpGUmXojwaEQaCM2btQ=="></enclosure>
+        </item>
     </channel>
 </rss>
