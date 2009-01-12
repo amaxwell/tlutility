@@ -50,3 +50,6 @@
 @property (nonatomic, retain) IBOutlet TLMTableView *_tableView;
 
 @end
+
+@interface TLMLogMessageCell : NSTextFieldCell
+@end

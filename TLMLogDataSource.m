@@ -122,43 +122,47 @@
     [pboard setString:[messages componentsJoinedByString:@"\n"] forType:NSStringPboardType];
 }
 
-// do a fast literal search for newline characters, since we don't worry about surrogate pairs
-static bool __TLMStringIsSingleLine(CFStringRef aString)
+- (void)tableViewColumnDidResize:(NSNotification *)aNotification
 {
-    CFStringInlineBuffer buffer;
-    CFRange rng = CFRangeMake(0, CFStringGetLength(aString));
-    CFStringInitInlineBuffer(aString, &buffer, rng);
-    UniChar ch;
-    CFIndex i;
-    CFCharacterSetRef cset = CFCharacterSetGetPredefined(kCFCharacterSetNewline);
-    for (i = 0; i < rng.length; i++) {
-        ch = CFStringGetCharacterFromInlineBuffer(&buffer, i);
-        if (CFCharacterSetIsCharacterMember(cset, ch))
-            return false;
-    }
-    return true;
+    // changing width will change height, but tableview doesn't know that
+    [_tableView noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [_messages count])]];
 }
 
 - (CGFloat)tableView:(NSTableView *)tableView heightOfRow:(NSInteger)row;
 {
     NSTableColumn *tc = [tableView tableColumnWithIdentifier:@"message"];
-    static NSTextFieldCell *cell = nil;
-    static CGFloat singleLineCellHeight = 0.0;
-    if (nil == cell) {
-        cell = [[tc dataCell] copy];
-        [cell setStringValue:@"single line test"];
-        singleLineCellHeight = [cell cellSize].height;
-    }
-    id obj = [self tableView:tableView objectValueForTableColumn:tc row:row];
     
-    // !!! early return; take a faster path here for the common case, which reduces CPU usage by ~3x
-    if (CFGetTypeID(obj) == CFStringGetTypeID() && __TLMStringIsSingleLine((CFStringRef)obj))
-        return singleLineCellHeight;
+    // pass an "infinitely" tall rect for cell bounds, and let the cell figure out the string height it needs
+    NSRect cellBounds = NSZeroRect;
+    cellBounds.size = NSMakeSize([tc width], CGFLOAT_MAX);
+    NSTextFieldCell *cell = [tc dataCellForRow:row];
+    // presently NSString, but may be attributed in future...
+    [cell setObjectValue:[self tableView:tableView objectValueForTableColumn:tc row:row]];
+    return [cell cellSizeForBounds:cellBounds].height;
+}
 
-    [cell setObjectValue:obj];
-    
-    // this has to set up a drawing context and use NSStringDrawing to figure out the height
-    return [cell cellSize].height;
+@end
+
+@implementation TLMLogMessageCell
+
+- (id)initTextCell:(NSString *)str
+{
+    self = [super initTextCell:str];
+    [self setWraps:YES];
+    return self;
+}
+
+- (id)initWithCoder:(NSCoder *)coder
+{
+    self = [super initWithCoder:coder];
+    [self setWraps:YES];
+    return self;
+}
+
+// full content is always drawn, since we provide a sufficiently tall row
+- (NSRect)expansionFrameWithFrame:(NSRect)cellFrame inView:(NSView *)view 
+{ 
+    return NSZeroRect;
 }
 
 @end
