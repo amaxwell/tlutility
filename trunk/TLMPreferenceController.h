@@ -55,6 +55,7 @@ extern NSString * const TLMUseSyslogPreferenceKey;
     NSArray             *_servers;
     NSPanel             *_progressPanel;
     NSProgressIndicator *_progressIndicator;
+    NSTextField         *_progressField;
     BOOL                 _hasPendingServerEdit;
 }
 
@@ -70,6 +71,7 @@ extern NSString * const TLMUseSyslogPreferenceKey;
 @property (nonatomic, retain) IBOutlet NSButton *_useSyslogCheckBox;
 @property (nonatomic, retain) IBOutlet NSPanel *_progressPanel;
 @property (nonatomic, retain) IBOutlet NSProgressIndicator *_progressIndicator;
+@property (nonatomic, retain) IBOutlet NSTextField *_progressField;
 
 // composes TLMServerURLPreferenceKey and TLMServerPathPreferenceKey
 @property (readonly) NSURL *defaultServerURL;

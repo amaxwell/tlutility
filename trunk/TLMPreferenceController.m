@@ -50,6 +50,7 @@ NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";     /
 
 #define TLMGR_CMD @"tlmgr"
 #define TEXDOC_CMD @"texdoc"
+#define URL_TIMEOUT 30.0
 
 @implementation TLMPreferenceController
 
@@ -59,6 +60,7 @@ NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";     /
 @synthesize _useSyslogCheckBox;
 @synthesize _progressPanel;
 @synthesize _progressIndicator;
+@synthesize _progressField;
 
 + (id)sharedPreferenceController;
 {
@@ -179,8 +181,8 @@ NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";     /
             keepWaiting = false;
         }
         // absolute timeout check; set error to bail out after this loop
-        else if (CFAbsoluteTimeGetCurrent() > start + 30.0) {
-            TLMLog(__func__, @"Unable to connect to %@ after 30.0 seconds", [[self defaultServerURL] absoluteString]);
+        else if (CFAbsoluteTimeGetCurrent() > start + URL_TIMEOUT) {
+            TLMLog(__func__, @"Unable to connect to %@ after %f.0 seconds", [[self defaultServerURL] absoluteString], URL_TIMEOUT);
             status = kCFStreamStatusError;
             keepWaiting = false;
         }
@@ -214,8 +216,8 @@ NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";     /
             if (len <= 0) keepWaiting = false;
         }
         // absolute timeout check
-        else if (CFAbsoluteTimeGetCurrent() > start + 30.0) {
-            TLMLog(__func__, @"Unable to read data from %@ after 30.0 seconds", [[self defaultServerURL] absoluteString]);
+        else if (CFAbsoluteTimeGetCurrent() > start + URL_TIMEOUT) {
+            TLMLog(__func__, @"Unable to read data from %@ after %f.0 seconds", [[self defaultServerURL] absoluteString], URL_TIMEOUT);
             keepWaiting = false;
         }
         else {
@@ -280,7 +282,7 @@ NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";     /
     
     NSURLRequest *request = [NSURLRequest requestWithURL:[self defaultServerURL] 
                                              cachePolicy:NSURLRequestReloadIgnoringCacheData 
-                                         timeoutInterval:30.0];
+                                         timeoutInterval:URL_TIMEOUT];
     NSHTTPURLResponse *response;
     NSError *error = nil;
     NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
@@ -305,6 +307,14 @@ NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";     /
     return ([data length] != 0);
 }
 
+- (void)_updateProgressField:(NSTimer *)timer
+{
+    NSNumber *start = [timer userInfo];
+    CFTimeInterval delta = CFAbsoluteTimeGetCurrent() - [start doubleValue];
+    delta = MAX(URL_TIMEOUT - delta, 0);
+    [_progressField setStringValue:[NSString stringWithFormat:NSLocalizedString(@"%.0f seconds remaining.", @"keep short"), delta]];
+}
+
 - (IBAction)changeServerURL:(id)sender
 {        
     // save the old value, then set new value in prefs, so -defaultServerURL can be used in _canConnectToDefaultServer
@@ -315,6 +325,13 @@ NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";     /
     // only display the dialog if the user has manually typed something in the text field
     if (_hasPendingServerEdit) {
         
+        NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:0.5 
+                                                          target:self 
+                                                        selector:@selector(_updateProgressField:) 
+                                                        userInfo:[NSNumber numberWithDouble:CFAbsoluteTimeGetCurrent()] 
+                                                         repeats:YES];
+        // fire manually to get the initial status message
+        [timer fire];
         [NSApp beginSheet:_progressPanel modalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
         [_progressIndicator startAnimation:nil];
 
@@ -326,6 +343,7 @@ NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";     /
             
             [NSApp endSheet:_progressPanel];
             [_progressPanel orderOut:nil];
+            [timer invalidate];
             
             NSAlert *alert = [[NSAlert new] autorelease];
             [alert setMessageText:NSLocalizedString(@"Unable to connect to server.", @"alert title")];
@@ -344,6 +362,7 @@ NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";     /
         else {
             [NSApp endSheet:_progressPanel];
             [_progressPanel orderOut:nil];
+            [timer invalidate];
         }
         
         // reset since it's either accepted or reverted at this point
