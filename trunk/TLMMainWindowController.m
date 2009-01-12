@@ -213,13 +213,24 @@ static char _TLMOperationQueueOperationContext;
 
 #pragma mark Interface updates
 
-- (void)_updateURLView
+/*
+ Cover for <TLMListDataSource> lastUpdateURL that ensures the URL is non-nil.  
+ The original tlmgr (August 2008 MacTeX) doesn't print the URL on the first line of output, 
+ and we die with various assertion failures if the URL is nil.  Parsing logs a diagnostic
+ in this case, as well, since this breaks some functionality.
+ */
+- (NSURL *)_lastUpdateURL
 {
     NSURL *aURL = [_currentListDataSource lastUpdateURL];
     if (nil == aURL)
         aURL = [[TLMPreferenceController sharedPreferenceController] defaultServerURL];
-    
     NSParameterAssert(aURL);
+    return aURL;
+}
+
+- (void)_updateURLView
+{
+    NSURL *aURL = [self _lastUpdateURL];
     NSTextStorage *ts = [_hostnameView textStorage];
     [[ts mutableString] setString:[aURL absoluteString]];
     [ts addAttribute:NSFontAttributeName value:[NSFont labelFontOfSize:0] range:NSMakeRange(0, [ts length])];
@@ -368,7 +379,7 @@ static char _TLMOperationQueueOperationContext;
 - (void)_updateAllPackages
 {
     TLMUpdateOperation *op = nil;
-    NSURL *currentURL = [_currentListDataSource lastUpdateURL];
+    NSURL *currentURL = [self _lastUpdateURL];
     if (_updateInfrastructure) {
         op = [[TLMInfraUpdateOperation alloc] initWithLocation:currentURL];
         TLMLog(__func__, @"Beginning infrastructure update from %@", [currentURL absoluteString]);
@@ -472,7 +483,7 @@ static char _TLMOperationQueueOperationContext;
         }
         else {
             // This is slow, but if infrastructure was updated or a package installed other dependencies, we have no way of manually removing from the list.  We also need to ensure that the same mirror is used, so results are consistent.
-            [self _refreshUpdatedPackageListFromLocation:[_currentListDataSource lastUpdateURL]];
+            [self _refreshUpdatedPackageListFromLocation:[self _lastUpdateURL]];
         }
     }
 }
@@ -566,7 +577,7 @@ static char _TLMOperationQueueOperationContext;
 
 - (void)_installPackagesWithNames:(NSArray *)packageNames reinstall:(BOOL)reinstall
 {
-    NSURL *currentURL = [_currentListDataSource lastUpdateURL];
+    NSURL *currentURL = [self _lastUpdateURL];
     TLMInstallOperation *op = [[TLMInstallOperation alloc] initWithPackageNames:packageNames location:currentURL reinstall:reinstall];
     [self _addOperation:op selector:@selector(_handleInstallFinishedNotification:)];
     TLMLog(__func__, @"Beginning install of %@\nfrom %@", packageNames, [currentURL absoluteString]);   
@@ -719,7 +730,7 @@ static char _TLMOperationQueueOperationContext;
 
 - (void)updatePackagesWithNames:(NSArray *)packageNames;
 {
-    NSURL *currentURL = [_currentListDataSource lastUpdateURL];
+    NSURL *currentURL = [self _lastUpdateURL];
     TLMUpdateOperation *op = [[TLMUpdateOperation alloc] initWithPackageNames:packageNames location:currentURL];
     [self _addOperation:op selector:@selector(_handleUpdateFinishedNotification:)];
     [op release];

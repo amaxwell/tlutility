@@ -74,6 +74,8 @@
     /*
      version 1: 
      tlmgr: installation location http://mirror.hmc.edu/ctan/systems/texlive/tlnet/2008
+     
+     NOTE: the version shipped with August 2008 MacTeX does not print this diagnostic.
      */
     NSString *installPrefix = @"tlmgr: installation location ";
     if ([packageLines count] && [[packageLines objectAtIndex:0] hasPrefix:installPrefix]) {
@@ -84,6 +86,7 @@
     }
     else if ([packageLines count]) {
         TLMLog(__func__, @"Expected prefix \"%@\" but actual line was:\n%@", installPrefix, [packageLines objectAtIndex:0]);
+        TLMLog(__func__, @"*** WARNING ***\nUnable to determine URL from previous listing, so the default will be used.  Ignore this warning if you have not previously updated TeX Live");
     }
     
     _packageNodes = [[TLMOutputParser nodesWithListLines:packageLines] copy];
