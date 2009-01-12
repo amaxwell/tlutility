@@ -57,6 +57,7 @@ import tarfile
 from datetime import tzinfo, timedelta, datetime
 import urllib
 import plistlib
+import tempfile
 
 # for NSXMLDocument
 from Foundation import *
@@ -67,7 +68,9 @@ def GetSymRoot():
 
 # fixed paths
 SOURCE_DIR = os.path.expanduser("~/build/mactlmgr")
-CERT_PATH = os.path.expanduser("~/Documents/dsa_priv.pem")
+
+# name of secure note in Keychain
+KEY_NAME = "TeX Live Utility Sparkle Key"
 
 # derived paths
 BUILD_DIR = os.path.join(GetSymRoot(), "Release")
@@ -110,9 +113,36 @@ tarball = tarfile.open(tarballName, "w:gz")
 tarball.add(BUILT_APP, os.path.basename(BUILT_APP))
 tarball.close()
 
+def keyFromSecureNote():
+    
+    # see http://www.entropy.ch/blog/Developer/2008/09/22/Sparkle-Appcast-Automation-in-Xcode.html
+    pwtask = Popen(["/usr/bin/security", "find-generic-password", "-g", "-s", KEY_NAME], stdout=PIPE, stderr=PIPE)
+    [output, error] = pwtask.communicate()
+    pwoutput = output + error
+
+    # notes are evidently stored as archived RTF data, so find start/end markers
+    start = pwoutput.find("-----BEGIN DSA PRIVATE KEY-----")
+    stopString = "-----END DSA PRIVATE KEY-----"
+    stop = pwoutput.find(stopString)
+
+    assert start is not -1 and stop is not -1, "failed to find DSA key in secure note"
+
+    key = pwoutput[start:stop] + stopString
+    
+    # replace RTF end-of-lines
+    key = key.replace("\\134\\012", "\n")
+    
+    return key
+
+# write to a temporary file that's readably only by owner; minor security issue here since
+# we have to use a named temp file, but it's better than storing unencrypted key
+keyFile = tempfile.NamedTemporaryFile()
+keyFile.write(keyFromSecureNote())
+keyFile.flush()
+
 # now run the signature for Sparkle...
 sha_task = Popen(["/usr/bin/openssl", "dgst", "-sha1", "-binary"], stdin = open(tarballName, "rb"), stdout = PIPE)
-dss_task = Popen(["/usr/bin/openssl", "dgst", "-dss1", "-sign", CERT_PATH], stdin = sha_task.stdout, stdout = PIPE)
+dss_task = Popen(["/usr/bin/openssl", "dgst", "-dss1", "-sign", keyFile.name], stdin = sha_task.stdout, stdout = PIPE)
 b64_task = Popen(["/usr/bin/openssl", "enc", "-base64"], stdin = dss_task.stdout, stdout = PIPE)
 
 # now compute the variables we need for writing the new appcast
