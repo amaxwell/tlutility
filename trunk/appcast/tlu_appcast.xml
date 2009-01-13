@@ -103,5 +103,19 @@
             <pubDate>Sat, 10 Jan 2009 21:48:27 -0800</pubDate>
             <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20090110.tgz" sparkle:version="0.6" length="1133833" type="application/octet-stream" sparkle:dsaSignature="MCwCFCuoSNFeux3JCqUZzHbJvSymKTQ1AhQlx6H6GH0KpGUmXojwaEQaCM2btQ=="></enclosure>
         </item>
+        <item>
+            <title>Version 0.61</title>
+            <description>
+                <h3>Changes Since 0.6</h3>
+                <li>Add keyboard shortcuts for updating.</li>
+                <li>Add a progress sheet while validating a mirror connection in preferences.</li>
+                <li>Improved URL validation in preferences.</li>
+                <li>Added a workaround for the original tlmgr, which doesn't echo the URL used for download.</li>
+                <li>Cells in log output table now soft wrap, instead of only wrapping at newlines.</li>
+                <li>Added a first pass at a release notes window (Help menu)</li>
+            </description>
+            <pubDate>Mon, 12 Jan 2009 21:47:03 -0800</pubDate>
+            <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20090112.tgz" sparkle:version="0.61" length="1154616" type="application/octet-stream" sparkle:dsaSignature="MCwCFEQUAVKHKrlMSI21GyoCZhx9/RgOAhQtJ9zY0jYUNEM97VFPapnxkWCFHw=="></enclosure>
+        </item>
     </channel>
 </rss>
