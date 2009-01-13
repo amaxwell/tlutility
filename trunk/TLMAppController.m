@@ -40,6 +40,7 @@
 #import "TLMMainWindowController.h"
 #import "TLMPreferenceController.h"
 #import "TLMLogServer.h"
+#import "TLMReleaseNotesController.h"
 
 @implementation TLMAppController
 
@@ -200,6 +201,10 @@
     [[NSWorkspace sharedWorkspace] openURL:aURL];
 }
 
+- (IBAction)openReleaseNotes:(id)sender;
+{
+    [[TLMReleaseNotesController sharedInstance] showWindow:nil];
+}
 
 #if 0
 
