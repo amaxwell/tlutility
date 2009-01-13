@@ -14,6 +14,8 @@
 		F90520DA0EFDCB5400B489FE /* TLMAuthorizedOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F90520D90EFDCB5400B489FE /* TLMAuthorizedOperation.m */; };
 		F905217F0EFEA98600B489FE /* PapersizeSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = F905217E0EFEA98600B489FE /* PapersizeSheet.xib */; };
 		F94E74A20EF4965100E0B78F /* TLMTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = F94E74A10EF4965100E0B78F /* TLMTableView.m */; };
+		F96249D10F1C453B007F3D70 /* TLMReleaseNotesController.m in Sources */ = {isa = PBXBuildFile; fileRef = F96249D00F1C453B007F3D70 /* TLMReleaseNotesController.m */; };
+		F96249D50F1C516F007F3D70 /* ReleaseNotes.xib in Resources */ = {isa = PBXBuildFile; fileRef = F96249D40F1C516F007F3D70 /* ReleaseNotes.xib */; };
 		F964A3350EFEFBCC0006868B /* TLMStatusWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = F964A3340EFEFBCC0006868B /* TLMStatusWindow.m */; };
 		F964A6350F0070E80006868B /* TLMPackageListDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = F964A6340F0070E80006868B /* TLMPackageListDataSource.m */; };
 		F964A63B0F0071920006868B /* TLMPackageNode.m in Sources */ = {isa = PBXBuildFile; fileRef = F964A63A0F0071920006868B /* TLMPackageNode.m */; };
@@ -149,6 +151,9 @@
 		F905217E0EFEA98600B489FE /* PapersizeSheet.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PapersizeSheet.xib; sourceTree = "<group>"; };
 		F94E74A00EF4965100E0B78F /* TLMTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMTableView.h; sourceTree = "<group>"; };
 		F94E74A10EF4965100E0B78F /* TLMTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMTableView.m; sourceTree = "<group>"; };
+		F96249CF0F1C453B007F3D70 /* TLMReleaseNotesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMReleaseNotesController.h; sourceTree = "<group>"; };
+		F96249D00F1C453B007F3D70 /* TLMReleaseNotesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMReleaseNotesController.m; sourceTree = "<group>"; };
+		F96249D40F1C516F007F3D70 /* ReleaseNotes.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ReleaseNotes.xib; sourceTree = "<group>"; };
 		F964A3330EFEFBCC0006868B /* TLMStatusWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMStatusWindow.h; sourceTree = "<group>"; };
 		F964A3340EFEFBCC0006868B /* TLMStatusWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMStatusWindow.m; sourceTree = "<group>"; };
 		F964A6330F0070E80006868B /* TLMPackageListDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMPackageListDataSource.h; sourceTree = "<group>"; };
@@ -275,6 +280,8 @@
 				F9D37D630F01EA8900FB755E /* TLMUpdateListDataSource.m */,
 				F964A6330F0070E80006868B /* TLMPackageListDataSource.h */,
 				F964A6340F0070E80006868B /* TLMPackageListDataSource.m */,
+				F96249CF0F1C453B007F3D70 /* TLMReleaseNotesController.h */,
+				F96249D00F1C453B007F3D70 /* TLMReleaseNotesController.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -346,6 +353,7 @@
 				F9F130550EED94D800D9968D /* Preferences.xib */,
 				F905217E0EFEA98600B489FE /* PapersizeSheet.xib */,
 				F99CCDDA0F0EAFB300D67ED0 /* DefaultMirrors.plist */,
+				F96249D40F1C516F007F3D70 /* ReleaseNotes.xib */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -567,6 +575,7 @@
 				F905217F0EFEA98600B489FE /* PapersizeSheet.xib in Resources */,
 				F9DCD43F0F06F76F00600DD2 /* dsa_pub.pem in Resources */,
 				F9B062000F0F388500BB03D3 /* Localizable.strings in Resources */,
+				F96249D50F1C516F007F3D70 /* ReleaseNotes.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -655,6 +664,7 @@
 				F9963FEF0F054999005F0174 /* TLMInstallOperation.m in Sources */,
 				F97A7E500F13067C008EBCEA /* TLMTask.m in Sources */,
 				F9F043030F180031008DFE8C /* TLMReadWriteOperationQueue.m in Sources */,
+				F96249D10F1C453B007F3D70 /* TLMReleaseNotesController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

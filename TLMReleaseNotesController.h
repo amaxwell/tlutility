@@ -1,10 +1,10 @@
 //
-//  TLMAppController.h
+//  TLMReleaseNotesController.h
 //  TeX Live Manager
 //
-//  Created by Adam Maxwell on 12/6/08.
+//  Created by Adam Maxwell on 1/12/09.
 /*
- This software is Copyright (c) 2008-2009
+ This software is Copyright (c) 2009
  Adam Maxwell. All rights reserved.
  
  Redistribution and use in source and binary forms, with or without
@@ -38,21 +38,27 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class TLMMainWindowController;
 
-@interface TLMAppController : NSObject 
+@interface TLMReleaseNotesController : NSWindowController
 {
 @private
-    TLMMainWindowController *_mainWindowController;
+    NSArray             *_versions;
+    NSDictionary        *_notes;
+    NSTableView         *_versionsTable;
+    NSTextView          *_notesView;
+    NSProgressIndicator *_progressIndicator;
+    NSString            *_downloadPath;
+    NSTextField         *_statusField;
 }
 
-// update $PATH from NSUserDefaults
-+ (void)updatePathEnvironment;
-- (IBAction)showPreferences:(id)sender;
-- (IBAction)openDisasterRecoveryPage:(id)sender;
-- (IBAction)openTLUWiki:(id)sender;
-- (IBAction)openMacTeXWiki:(id)sender;
-- (IBAction)openTracker:(id)sender;
-- (IBAction)openReleaseNotes:(id)sender;
++ (id)sharedInstance;
+
+@property (nonatomic, retain) IBOutlet NSTableView *_versionsTable;
+@property (nonatomic, retain) IBOutlet NSTextView *_notesView;
+@property (nonatomic, retain) IBOutlet NSProgressIndicator *_progressIndicator;
+@property (nonatomic, retain) IBOutlet NSTextField *_statusField;
+
+@property (nonatomic, copy) NSDictionary *notes;
+@property (nonatomic, copy) NSArray *versions;
 
 @end
