@@ -73,7 +73,7 @@
     [_allPackages release];
     [_sortDescriptors release];
     [_lastUpdateURL release];
-    
+    [_statusWindow release];
     [super dealloc];
 }
 
