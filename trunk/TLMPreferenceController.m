@@ -98,6 +98,7 @@ NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";     /
     [_servers release];
     [_progressPanel release];
     [_progressIndicator release];
+    [_progressField release];
     [super dealloc];
 }
 
