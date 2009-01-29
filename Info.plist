@@ -20,8 +20,12 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>0.61</string>
+	<key>CFBundleShortVersionString</key>
+	<string>0.61</string>
 	<key>LSMinimumSystemVersion</key>
-	<string>10.5.5</string>
+	<string>10.5</string>
+	<key>NSAppleScriptEnabled</key>
+	<string>YES</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2008-2009, Adam R. Maxwell.
 All Rights Reserved.</string>
