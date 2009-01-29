@@ -60,6 +60,7 @@ struct BDSKTaskInternal {
     struct kevent      _event;
     CFRunLoopRef       _rl;
     CFRunLoopSourceRef _rlsource;
+    OSSpinLock         _lock;
 };
 
 @implementation BDSKTask
@@ -194,6 +195,7 @@ static void __BDSKTaskNotify(void *info)
     BDSKTask *task = info;    
     [[NSNotificationCenter defaultCenter] postNotificationName:NSTaskDidTerminateNotification object:task];    
     
+    OSSpinLockLock(&task->_internal->_lock);
     // retained by the runloop; invalidate it and then make sure we no longer have a reference
     CFRunLoopSourceInvalidate(task->_internal->_rlsource);
     task->_internal->_rlsource = NULL;
@@ -204,6 +206,7 @@ static void __BDSKTaskNotify(void *info)
         CFRelease(task->_internal->_rl);
         task->_internal->_rl = NULL;
     }
+    OSSpinLockUnlock(&task->_internal->_lock);
 }
 
 - (void)launch;
@@ -320,6 +323,7 @@ static void __BDSKTaskNotify(void *info)
         kevent(_kqueue, &_internal->_event, 1, NULL, 0, NULL);      
         
         // use a runloop source to ensure that the notification is posted on the correct thread
+        _internal->_lock = OS_SPINLOCK_INIT;
         _internal->_rl = (CFRunLoopRef)CFRetain(CFRunLoopGetCurrent());
         CFRunLoopSourceContext rlcontext = { 0, self, CFRetain, CFRelease, CFCopyDescription, CFEqual, CFHash, NULL, NULL, __BDSKTaskNotify };
         _internal->_rlsource = CFRunLoopSourceCreate(CFAllocatorGetDefault(), 0, &rlcontext);
@@ -445,9 +449,15 @@ static void __BDSKTaskNotify(void *info)
     NSParameterAssert(_internal->_event.udata == self);
     [(BDSKTask *)_internal->_event.udata release];
 
-    // runloop source is still retaining us
+    /* 
+     The runloop source is still retaining us.  Lock runloop source access
+     since the source may be handled before CFRunLoopWakeUp() is called, and it is 
+     never handled in this thread.  Use a spinlock since this is a tiny race window.
+     */
+    OSSpinLockLock(&_internal->_lock);
     CFRunLoopSourceSignal(_internal->_rlsource);
     CFRunLoopWakeUp(_internal->_rl);
+    OSSpinLockUnlock(&_internal->_lock);
 }
 
 @end
