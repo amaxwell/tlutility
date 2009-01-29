@@ -89,6 +89,7 @@ assert infoPlist is not None, "unable to read Info.plist"
 oldVersion = infoPlist["CFBundleVersion"]
 assert oldVersion is not None, "unable to read old version from Info.plist"
 infoPlist["CFBundleVersion"] = newVersion
+infoPlist["CFBundleShortVersionString"] = newVersion
 plistlib.writePlist(infoPlist, PLIST_PATH)
 
 # sanity check to avoid screwing up the appcast
