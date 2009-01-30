@@ -555,7 +555,7 @@ static char _TLMOperationQueueOperationContext;
 
 - (void)_handleInstallFinishedNotification:(NSNotification *)aNote
 {
-    TLMUpdateOperation *op = [aNote object];
+    TLMInstallOperation *op = [aNote object];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:TLMOperationFinishedNotification object:op];
     
     // ignore operations that failed or were explicitly cancelled
