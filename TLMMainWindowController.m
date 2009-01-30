@@ -756,7 +756,7 @@ static char _TLMOperationQueueOperationContext;
     }    
 }
 
-- (void)removePackagesWithNames:(NSArray *)packageNames
+- (void)removePackagesWithNames:(NSArray *)packageNames force:(BOOL)force
 {   
     // Some idiot could try to wipe out tlmgr itself, so let's try to prevent that...
     // NB: we can have the architecture appended to the package name, so use beginswith.
@@ -772,7 +772,7 @@ static char _TLMOperationQueueOperationContext;
         [alert beginSheetModalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
     }
     else {
-        TLMRemoveOperation *op = [[TLMRemoveOperation alloc] initWithPackageNames:packageNames];
+        TLMRemoveOperation *op = [[TLMRemoveOperation alloc] initWithPackageNames:packageNames force:force];
         [self _addOperation:op selector:@selector(_handleRemoveFinishedNotification:)];
         [op release];
         TLMLog(__func__, @"Beginning removal of\n%@", packageNames); 

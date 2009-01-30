@@ -118,8 +118,14 @@
 - (IBAction)removeSelectedRows:(id)sender;
 {
     NSArray *packageNames = [[_outlineView selectedItems] valueForKey:@"fullName"];
-    [_controller removePackagesWithNames:packageNames];
+    [_controller removePackagesWithNames:packageNames force:NO];
 }
+
+- (IBAction)forciblyRemoveSelectedRows:(id)sender;
+{
+    NSArray *packageNames = [[_outlineView selectedItems] valueForKey:@"fullName"];
+    [_controller removePackagesWithNames:packageNames force:YES];
+}  
 
 - (BOOL)_validateRemoveSelectedRow
 {
@@ -142,7 +148,7 @@
     SEL action = [anItem action];
     if (@selector(showInfo:) == action)
         return [[[TLMInfoController sharedInstance] window] isVisible] == NO;
-    else if (@selector(removeSelectedRows:) == action)
+    else if (@selector(removeSelectedRows:) == action || @selector(forciblyRemoveSelectedRows:) == action)
         return [self _validateRemoveSelectedRow];
     else if (@selector(installSelectedRows:) == action)
         return [[_outlineView selectedRowIndexes] count] > 0;

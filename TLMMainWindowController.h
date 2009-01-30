@@ -89,7 +89,7 @@
 - (void)installPackagesWithNames:(NSArray *)packageNames reinstall:(BOOL)reinstall;
 - (void)updatePackagesWithNames:(NSArray *)packageNames;
 
-- (void)removePackagesWithNames:(NSArray *)packageNames;
+- (void)removePackagesWithNames:(NSArray *)packageNames force:(BOOL)force;
 
 // both of these will use the default server URL
 - (void)refreshFullPackageList;

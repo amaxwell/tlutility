@@ -46,7 +46,7 @@
 }
 
 // designated initializer; packageNames must be non-nil
-- (id)initWithPackageNames:(NSArray *)packageNames;
+- (id)initWithPackageNames:(NSArray *)packageNames force:(BOOL)force;
 
 @property(readonly, copy) NSArray *packageNames;
 

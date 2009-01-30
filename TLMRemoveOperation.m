@@ -43,11 +43,12 @@
 
 @synthesize packageNames = _packageNames;
 
-- (id)initWithPackageNames:(NSArray *)packageNames;
+- (id)initWithPackageNames:(NSArray *)packageNames force:(BOOL)force;
 {
     NSParameterAssert(packageNames);
     NSString *cmd = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath]; 
     NSMutableArray *options = [NSMutableArray arrayWithObjects:@"remove", nil];
+    if (force) [options addObject:@"--force"];
     [options addObjectsFromArray:packageNames];
 
     self = [self initWithCommand:cmd options:options];
