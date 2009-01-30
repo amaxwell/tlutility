@@ -585,7 +585,7 @@ static char _TLMOperationQueueOperationContext;
 
 - (void)_handleRemoveFinishedNotification:(NSNotification *)aNote
 {
-    TLMUpdateOperation *op = [aNote object];
+    TLMRemoveOperation *op = [aNote object];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:TLMOperationFinishedNotification object:op];
     
     // ignore operations that failed or were explicitly cancelled
@@ -597,11 +597,11 @@ static char _TLMOperationQueueOperationContext;
     }
     else if ([op isCancelled] == NO) {
         
-        // This is slow, but if a package installed other dependencies, we have no way of manually removing from the list.  We also need to ensure that the same mirror is used, so results are consistent.
-        [self _refreshFullPackageListFromLocation:[op updateURL]];
+        // This is slow, but if a package removed other dependencies, we have no way of manually removing from the list.  We also need to ensure that the same mirror is used, so results are consistent.
+        [self _refreshFullPackageListFromLocation:[_packageListDataSource lastUpdateURL]];
         
         // this is always displayed, so should always be updated as well
-        [self _refreshUpdatedPackageListFromLocation:[op updateURL]];
+        [self _refreshUpdatedPackageListFromLocation:[_packageListDataSource lastUpdateURL]];
     }    
 }
 
