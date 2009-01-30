@@ -43,11 +43,13 @@
 {
 @private
     NSArray  *_packageNames;
+    NSURL    *_updateURL;
 }
 
 // designated initializer; location must be non-nil
 - (id)initWithPackageNames:(NSArray *)packageNames location:(NSURL *)location reinstall:(BOOL)reinstall;
 
-@property(readonly, copy) NSArray *packageNames;
+@property (readonly, copy) NSArray *packageNames;
+@property (readonly, copy) NSURL *updateURL;
 
 @end
