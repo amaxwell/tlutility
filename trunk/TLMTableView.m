@@ -92,34 +92,44 @@
     NSParameterAssert(aFont);
     for (NSTableColumn *tc in [self tableColumns])
         [[tc dataCell] setFont:aFont];
+    
+    NSLayoutManager *lm = [NSLayoutManager new];
+    [self setRowHeight:[lm defaultLineHeightForFont:aFont] + 2.0f];
+    [lm release];
+    
+    [self tile];
+    [self reloadData];     
 }
 
-- (void)changeFont:(id)sender 
+- (NSFont *)font
+{
+    return [[[[self tableColumns] lastObject] dataCell] font];
+}
+
+- (void)updateFontFromPreferences
 {
     if ([self fontNamePreferenceKey] && [self fontSizePreferenceKey]) {
         
         NSString *fontName = [[NSUserDefaults standardUserDefaults] objectForKey:[self fontNamePreferenceKey]];
         float fontSize = [[NSUserDefaults standardUserDefaults] floatForKey:[self fontSizePreferenceKey]];
-        NSFont *font = nil;
         
         // if not set, use the font from the nib
-        if(fontName) {
-            
-            font = [NSFont fontWithName:fontName size:fontSize];
-            if(nil == font)
-                font = [NSFont controlContentFontOfSize:[NSFont systemFontSizeForControlSize:[self cellControlSize]]];
-            font = [[NSFontManager sharedFontManager] convertFont:font];
-            
+        if (fontName) {
+            NSFont *font = [NSFont fontWithName:fontName size:fontSize];
+            if (font) 
+                [self setFont:font];
+        }        
+    }
+}
+
+- (void)changeFont:(id)sender 
+{
+    if ([self fontNamePreferenceKey] && [self fontSizePreferenceKey]) {
+        NSFont *font = [[NSFontManager sharedFontManager] convertFont:[self font]];
+        if (font) {
             [[NSUserDefaults standardUserDefaults] setFloat:[font pointSize] forKey:[self fontSizePreferenceKey]];
             [[NSUserDefaults standardUserDefaults] setObject:[font fontName] forKey:[self fontNamePreferenceKey]];
-            
-            [self setFont:font];
-            NSLayoutManager *lm = [NSLayoutManager new];
-            [self setRowHeight:[lm defaultLineHeightForFont:font] + 2.0f];
-            [lm release];
-            
-            [self tile];
-            [self reloadData]; 
+            [self updateFontFromPreferences];
         }
     }
 }
@@ -134,7 +144,7 @@
 - (void)viewDidMoveToWindow
 {
     [super viewDidMoveToWindow];
-    [self changeFont:nil];
+    [self updateFontFromPreferences];
 }
 
 @end
