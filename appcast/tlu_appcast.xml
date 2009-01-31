@@ -117,5 +117,21 @@
             <pubDate>Mon, 12 Jan 2009 21:47:03 -0800</pubDate>
             <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20090112.tgz" sparkle:version="0.61" length="1154616" type="application/octet-stream" sparkle:dsaSignature="MCwCFEQUAVKHKrlMSI21GyoCZhx9/RgOAhQtJ9zY0jYUNEM97VFPapnxkWCFHw=="></enclosure>
         </item>
+        <item>
+            <title>Version 0.62</title>
+            <description>
+                <h3>Changes Since 0.61</h3>
+                <li>Fixed some inconsequential memory leaks.</li>
+                <li>Fixed a rare race condition and crash when a task exited.</li>
+                <li>Enabled AppleScript, not that it will do much.</li>
+                <li>Added CFBundleShortVersionString so the version shows up in Finder.</li>
+                <li>Fixed an exception when removing a package.</li>
+                <li>Fixed an exception when installing a package.</li>
+                <li>Added a menu item to force removal of a package (use option key).</li>
+                <li>Show thumbnails of documentation in the info inspector.</li>
+            </description>
+            <pubDate>Fri, 30 Jan 2009 21:21:15 -0800</pubDate>
+            <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20090130.tgz" sparkle:version="0.62" length="1549812" type="application/octet-stream" sparkle:dsaSignature="MC0CFQCH6JryZydcFXlri7cPCxy/QeWKYQIUNRki6Uj/4X3h+eYcF5WE2Aojd00="></enclosure>
+        </item>
     </channel>
 </rss>
