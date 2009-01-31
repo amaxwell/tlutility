@@ -69,6 +69,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		F91E07990F341CA2006F4D97 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F9B396090F340A71007F95E9 /* FileView.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = F9F04CE10CE260EB00F28ED2 /* Framework + Plugins */;
+			remoteInfo = "Framework + Plugins";
+		};
 		F9B139D50EECBE8F007C0046 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
@@ -96,13 +103,6 @@
 			proxyType = 2;
 			remoteGlobalIDString = F9F255FE0E14A3430059A21A;
 			remoteInfo = FileViewIBPlugin;
-		};
-		F9B3961A0F340A8A007F95E9 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F9B396090F340A71007F95E9 /* FileView.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
-			remoteInfo = FileView;
 		};
 		F9DCD3640F06F08C00600DD2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -524,7 +524,7 @@
 			dependencies = (
 				F9B139D60EECBE8F007C0046 /* PBXTargetDependency */,
 				F9DCD40E0F06F1D900600DD2 /* PBXTargetDependency */,
-				F9B3961B0F340A8A007F95E9 /* PBXTargetDependency */,
+				F91E079A0F341CA2006F4D97 /* PBXTargetDependency */,
 			);
 			name = "TeX Live Utility";
 			productInstallPath = "$(HOME)/Applications";
@@ -765,15 +765,15 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		F91E079A0F341CA2006F4D97 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "Framework + Plugins";
+			targetProxy = F91E07990F341CA2006F4D97 /* PBXContainerItemProxy */;
+		};
 		F9B139D60EECBE8F007C0046 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = F9B139CA0EECBDFE007C0046 /* tlmgr_cwrapper */;
 			targetProxy = F9B139D50EECBE8F007C0046 /* PBXContainerItemProxy */;
-		};
-		F9B3961B0F340A8A007F95E9 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = FileView;
-			targetProxy = F9B3961A0F340A8A007F95E9 /* PBXContainerItemProxy */;
 		};
 		F9DCD40E0F06F1D900600DD2 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

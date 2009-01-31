@@ -133,5 +133,14 @@
             <pubDate>Fri, 30 Jan 2009 21:21:15 -0800</pubDate>
             <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20090130.tgz" sparkle:version="0.62" length="1549812" type="application/octet-stream" sparkle:dsaSignature="MC0CFQCH6JryZydcFXlri7cPCxy/QeWKYQIUNRki6Uj/4X3h+eYcF5WE2Aojd00="></enclosure>
         </item>
+        <item>
+            <title>Version 0.63</title>
+            <description>
+                <h3>Changes Since 0.62</h3>
+                <li>Fixed build configuration that caused crash on launch.</li>
+            </description>
+            <pubDate>Fri, 30 Jan 2009 22:00:58 -0800</pubDate>
+            <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20090130a.tgz" sparkle:version="0.63" length="1783547" type="application/octet-stream" sparkle:dsaSignature="MCwCFC3Snh2l3negemosa/OTNFoOqYVFAhQV24jBpceK4lCgZvjRxA90jHM/Fg=="></enclosure>
+        </item>
     </channel>
 </rss>
