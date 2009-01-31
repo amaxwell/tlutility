@@ -80,28 +80,28 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = F9B396090F340A71007F95E9 /* FileView.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 8DC2EF5B0486A6940098B216 /* FileView.framework */;
+			remoteGlobalIDString = 8DC2EF5B0486A6940098B216;
 			remoteInfo = FileView;
 		};
 		F9B396160F340A71007F95E9 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F9B396090F340A71007F95E9 /* FileView.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = F94692510CA575F000AC2772 /* FileView Program.app */;
+			remoteGlobalIDString = F94692510CA575F000AC2772;
 			remoteInfo = "FileView Program";
 		};
 		F9B396180F340A71007F95E9 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F9B396090F340A71007F95E9 /* FileView.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = F9F255FE0E14A3430059A21A /* FileViewIBPlugin.ibplugin */;
+			remoteGlobalIDString = F9F255FE0E14A3430059A21A;
 			remoteInfo = FileViewIBPlugin;
 		};
 		F9B3961A0F340A8A007F95E9 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F9B396090F340A71007F95E9 /* FileView.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* FileView */;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
 			remoteInfo = FileView;
 		};
 		F9DCD3640F06F08C00600DD2 /* PBXContainerItemProxy */ = {
