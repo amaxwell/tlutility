@@ -38,7 +38,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class TLMPackage;
+@class TLMPackage, FileView;
 @protocol TLMInfo;
 
 @interface TLMInfoController : NSWindowController {
@@ -46,8 +46,9 @@
     NSTextView          *_textView;
     NSProgressIndicator *_spinner;
     NSTabView           *_tabView;
-    
     NSOperationQueue    *_infoQueue;
+    FileView            *_fileView;
+    NSArray             *_fileObjects;
 }
 
 + (id)sharedInstance;
@@ -57,5 +58,6 @@
 @property (nonatomic, retain) IBOutlet NSTextView *_textView;
 @property (nonatomic, retain) IBOutlet NSProgressIndicator *_spinner;
 @property (nonatomic, retain) IBOutlet NSTabView *_tabView;
+@property (nonatomic, retain) IBOutlet FileView *_fileView;
 
 @end

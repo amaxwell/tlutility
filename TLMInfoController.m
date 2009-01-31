@@ -41,12 +41,47 @@
 #import "TLMPackage.h"
 #import "TLMOutputParser.h"
 #import "TLMLogServer.h"
+#import <FileView/FileView.h>
+
+@interface _TLMFileObject : NSObject
+{
+@private
+    NSURL    *_URL;
+    NSString *_name;
+}
+
+@property (readwrite, copy) NSURL *URL;
+@property (readwrite, copy) NSString *name;
+
+@end
+
+@implementation _TLMFileObject
+
+@synthesize URL = _URL;
+@synthesize name = _name;
+
+- (void)dealloc
+{
+    [_URL release];
+    [_name release];
+    [super dealloc];
+}
+
+@end
+
+
+
+@interface TLMInfoController()
+@property (readwrite, copy) NSArray *fileObjects;
+@end
 
 @implementation TLMInfoController
 
 @synthesize _textView;
 @synthesize _spinner;
 @synthesize _tabView;
+@synthesize _fileView;
+@synthesize fileObjects = _fileObjects;
 
 + (id)sharedInstance
 {
@@ -74,6 +109,8 @@
     [_textView release];
     [_spinner release];
     [_tabView release];
+    [_fileView release];
+    [_fileObjects release];
     [super dealloc];
 }
 
@@ -131,6 +168,16 @@
             NSArray *docURLs = [op documentationURLs];
             // let texdoc handle the sort order (if any)
             if ([docURLs count]) [[self window] setRepresentedURL:[docURLs objectAtIndex:0]];
+            NSMutableArray *fileObjects = [NSMutableArray array];
+            for (NSURL *aURL in docURLs) {
+                _TLMFileObject *obj = [_TLMFileObject new];
+                [obj setURL:aURL];
+                [obj setName:[op packageName]];
+                [fileObjects addObject:obj];
+                [obj release];
+            }
+            [self setFileObjects:fileObjects];
+            [_fileView reloadIcons];
             [[self window] setTitle:[op packageName]];
             [_textView setSelectedRange:NSMakeRange(0, 0)];
             [[_textView textStorage] setAttributedString:[TLMOutputParser attributedStringWithInfoString:result docURLs:docURLs]];
@@ -160,6 +207,9 @@
             [[self window] setTitle:[NSString stringWithFormat:NSLocalizedString(@"Searching%C", @"info panel title"), 0x2026]];
             [[self window] setRepresentedURL:nil];
             
+            [self setFileObjects:nil];
+            [_fileView reloadIcons];
+            
             [_tabView selectLastTabViewItem:nil];
             [self _recenterSpinner];
             [_spinner startAnimation:nil];
@@ -181,6 +231,8 @@
         [_textView setSelectedRange:NSMakeRange(0, 0)];
         [_textView setString:@""];
         [_spinner stopAnimation:nil];
+        [self setFileObjects:nil];
+        [_fileView reloadIcons];
         [_tabView selectFirstTabViewItem:nil];
     }        
 }
@@ -192,6 +244,21 @@
     else if ([link isKindOfClass:[NSString class]] && (link = [NSURL URLWithString:link]) != nil)
         return [[NSWorkspace sharedWorkspace] openURL:link];
     return NO;
+}
+
+- (NSUInteger)numberOfIconsInFileView:(FileView *)aFileView;
+{
+    return [_fileObjects count];
+}
+
+- (NSURL *)fileView:(FileView *)aFileView URLAtIndex:(NSUInteger)anIndex;
+{
+    return [[_fileObjects objectAtIndex:anIndex] URL];
+}
+
+- (NSString *)fileView:(FileView *)aFileView subtitleAtIndex:(NSUInteger)anIndex;
+{
+    return [[_fileObjects objectAtIndex:anIndex] name];
 }
 
 
