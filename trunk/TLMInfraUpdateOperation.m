@@ -40,6 +40,9 @@
 #import "TLMLogServer.h"
 #import "TLMPreferenceController.h"
 
+#import <CommonCrypto/CommonDigest.h>
+#import <unistd.h>
+#import <sys/mman.h>
 #import <sys/stat.h>
 
 @implementation TLMInfraUpdateOperation
@@ -151,6 +154,44 @@ static NSString *__TLMGetTemporaryDirectory()
     _downloadComplete = YES;
     TLMLog(__func__, @"Download of %lld bytes complete", _receivedLength);
 }
+
+#if 0
++ (NSData *)sha1SignatureForFile:(NSString *)absolutePath;
+{
+    const char *path = [absolutePath fileSystemRepresentation];
+    
+    // early out in case we can't open the file
+    int fd = open(path, O_RDONLY);
+    if (fd == -1)
+        return nil;
+    
+    int status;
+    struct stat sb;
+    status = fstat(fd, &sb);
+    if (status) {
+        perror(path);
+        close(fd);
+        return nil;
+    }
+    
+    (void)fcntl(fd, F_NOCACHE, 1);
+    
+    // originally used read() with 4K blocks, but that actually made the system sluggish during intensive hashing
+    char *buffer = mmap(0, sb.st_size, PROT_READ, MAP_SHARED, fd, 0);
+    close(fd);    
+    if (buffer == (void *)-1) {
+        perror("failed to mmap file");
+        return nil;
+    }
+    
+    // digest the entire file at once
+    unsigned char digest[CC_SHA256_DIGEST_LENGTH];
+    (void) CC_SHA256(buffer, sb.st_size, digest);
+    munmap(buffer, sb.st_size);
+        
+    return [NSData dataWithBytes:digest length:CC_SHA256_DIGEST_LENGTH];
+}
+#endif
 
 - (BOOL)_downloadUpdateScript
 {
