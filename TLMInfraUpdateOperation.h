@@ -44,6 +44,7 @@
 @private
     NSString      *_updateDirectory;
     NSString      *_scriptPath;
+    NSString      *_hashPath;
     NSURL         *_location;
     NSURLDownload *_download;
     long long      _receivedLength;
