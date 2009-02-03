@@ -72,7 +72,6 @@ static NSString *__TLMGetTemporaryDirectory()
 - (id)initWithLocation:(NSURL *)location;
 {
     NSParameterAssert(location);
-
     NSString *updateDirectory = __TLMGetTemporaryDirectory();
     NSParameterAssert(updateDirectory);
     
@@ -85,6 +84,11 @@ static NSString *__TLMGetTemporaryDirectory()
         _location = [location copy];
         _scriptPath = [scriptPath copy];        
         _updateDirectory = [updateDirectory copy];
+        
+        // download the sha256 file to this path
+        NSString *hashFilename = [[NSUserDefaults standardUserDefaults] objectForKey:TLMInfraPathPreferenceKey];
+        hashFilename = [hashFilename stringByAppendingPathExtension:@"sha256"];
+        _hashPath = [[updateDirectory stringByAppendingPathComponent:hashFilename] copy];
     }
     return self;
 }
@@ -94,6 +98,7 @@ static NSString *__TLMGetTemporaryDirectory()
     [_download release];
     [_updateDirectory release];
     [_scriptPath release];
+    [_hashPath release];
     [_location release];
     [super dealloc];
 }
@@ -114,19 +119,9 @@ static NSString *__TLMGetTemporaryDirectory()
 
 - (void)download:(NSURLDownload *)download didReceiveResponse:(NSURLResponse *)response;
 {
-    _expectedLength = [response expectedContentLength];
-    
-    // running random crap as root is really not a good idea...
-    if (NSURLResponseUnknownLength != _expectedLength && _expectedLength < 1024 * 1024) {
-        TLMLog(__func__, @"Unexpected download size %lld bytes", _expectedLength);
-        TLMLog(__func__, @"*** Cancelling download due to a potential security problem. ***\nDownload should be at least 1 megabyte, so this may be a defective mirror.\nTry another mirror and notify the developer.");
-        _downloadComplete = NO;
-        [download cancel];
-        [self setFailed:YES];
-    }
-    else {
+    _expectedLength = [response expectedContentLength];    
+    if (NSURLResponseUnknownLength != _expectedLength)
         TLMLog(__func__, @"Will download %lld bytes%C", _expectedLength, 0x2026);
-    }
 }
 
 - (void)download:(NSURLDownload *)download didReceiveDataOfLength:(NSUInteger)length
@@ -139,6 +134,11 @@ static NSString *__TLMGetTemporaryDirectory()
             TLMLog(__func__, @"Received %.0f%% of %lld bytes%C", pct, _expectedLength, 0x2026);
         }
     }
+}
+
+- (BOOL)download:(NSURLDownload *)download shouldDecodeSourceDataOfMIMEType:(NSString *)encodingType;
+{
+    return NO;
 }
 
 - (void)download:(NSURLDownload *)download didFailWithError:(NSError *)error
@@ -155,61 +155,26 @@ static NSString *__TLMGetTemporaryDirectory()
     TLMLog(__func__, @"Download of %lld bytes complete", _receivedLength);
 }
 
-#if 0
-+ (NSData *)sha1SignatureForFile:(NSString *)absolutePath;
+- (void)_synchronouslyDownloadURL:(NSURL *)aURL toPath:(NSString *)absolutePath
 {
-    const char *path = [absolutePath fileSystemRepresentation];
+    NSURLRequest *request = [NSURLRequest requestWithURL:aURL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:60.0];
     
-    // early out in case we can't open the file
-    int fd = open(path, O_RDONLY);
-    if (fd == -1)
-        return nil;
-    
-    int status;
-    struct stat sb;
-    status = fstat(fd, &sb);
-    if (status) {
-        perror(path);
-        close(fd);
-        return nil;
-    }
-    
-    (void)fcntl(fd, F_NOCACHE, 1);
-    
-    // originally used read() with 4K blocks, but that actually made the system sluggish during intensive hashing
-    char *buffer = mmap(0, sb.st_size, PROT_READ, MAP_SHARED, fd, 0);
-    close(fd);    
-    if (buffer == (void *)-1) {
-        perror("failed to mmap file");
-        return nil;
-    }
-    
-    // digest the entire file at once
-    unsigned char digest[CC_SHA256_DIGEST_LENGTH];
-    (void) CC_SHA256(buffer, sb.st_size, digest);
-    munmap(buffer, sb.st_size);
-        
-    return [NSData dataWithBytes:digest length:CC_SHA256_DIGEST_LENGTH];
-}
-#endif
-
-- (BOOL)_downloadUpdateScript
-{
-    NSURL *base = _location;
-    NSString *path = [[NSUserDefaults standardUserDefaults] objectForKey:TLMInfraPathPreferenceKey];
-    CFURLRef fullURL = CFURLCreateCopyAppendingPathComponent(CFGetAllocator(base), (CFURLRef)base, (CFStringRef)path, FALSE);
-    NSURL *scriptURL = [(id)fullURL autorelease];
-    
-    NSURLRequest *request = [NSURLRequest requestWithURL:scriptURL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:60.0];
-    
+    // previous download must be finished
     NSParameterAssert(nil == _download);
-    _download = [[NSURLDownload alloc] initWithRequest:request delegate:self];
-    [_download setDestination:_scriptPath allowOverwrite:YES];
+
+    // reset all state for this download
+    _downloadComplete = NO;
+    _receivedLength = 0;
+    _lastLoggedLength = 0;
+    _expectedLength = 0;
     
-    TLMLog(__func__, @"Downloading URL: %@", scriptURL);
-
+    _download = [[NSURLDownload alloc] initWithRequest:request delegate:self];
+    [_download setDestination:absolutePath allowOverwrite:YES];
+    
+    TLMLog(__func__, @"Downloading URL: %@", aURL);
+    
     bool keepGoing = true;
-
+    
     // functionally the same as +[NSURLConnection sendSynchronousRequest:returningResponse:error:], but allows user cancellation
     do {
         
@@ -229,6 +194,18 @@ static NSString *__TLMGetTemporaryDirectory()
         }
         
     } while (keepGoing);
+    
+    [_download release];
+    _download = nil;
+}
+
+- (BOOL)_downloadUpdateScript
+{
+    NSString *path = [[NSUserDefaults standardUserDefaults] objectForKey:TLMInfraPathPreferenceKey];
+    CFURLRef fullURL = CFURLCreateCopyAppendingPathComponent(CFGetAllocator(_location), (CFURLRef)_location, (CFStringRef)path, FALSE);
+    NSURL *scriptURL = [(id)fullURL autorelease];
+    
+    [self _synchronouslyDownloadURL:scriptURL toPath:_scriptPath];
 
     // set rwxr-xr-x
     if (_downloadComplete) {
@@ -261,8 +238,76 @@ static NSString *__TLMGetTemporaryDirectory()
             fclose(strm);
         }
     }    
-    
+
     return _downloadComplete;
+}
+
+- (BOOL)_downloadAndCheckHash
+{
+    NSParameterAssert([self failed] == NO && [self isCancelled] == NO);
+    
+    // remote URL is the same as the file we just downloaded, but with .sha256 appended
+    NSString *path = [[NSUserDefaults standardUserDefaults] objectForKey:TLMInfraPathPreferenceKey];
+    path = [path stringByAppendingPathExtension:@"sha256"];
+    CFURLRef fullURL = CFURLCreateCopyAppendingPathComponent(CFGetAllocator(_location), (CFURLRef)_location, (CFStringRef)path, FALSE);
+    NSURL *hashURL = [(id)fullURL autorelease];
+    
+    [self _synchronouslyDownloadURL:hashURL toPath:_hashPath];
+    
+    BOOL isOkay = NO;
+    if (_downloadComplete) {
+        
+        const char *path = [_scriptPath fileSystemRepresentation];
+        
+        // guaranteed to be able to open the file here
+        int fd = open(path, O_RDONLY);
+        
+        int status;
+        struct stat sb;
+        status = fstat(fd, &sb);
+        if (status) {
+            perror(path);
+            close(fd);
+            return NO;
+        }
+        
+        (void)fcntl(fd, F_NOCACHE, 1);
+        
+        char *buffer = mmap(0, sb.st_size, PROT_READ, MAP_SHARED, fd, 0);
+        close(fd);    
+        if (buffer == (void *)-1) {
+            perror("failed to mmap file");
+            TLMLog(__func__, @"Failed to memory map %@", _scriptPath);
+            return NO;
+        }
+        
+        // digest the entire file at once
+        unsigned char digest[CC_SHA256_DIGEST_LENGTH] = { '\0' };
+        (void) CC_SHA256(buffer, sb.st_size, digest);
+        munmap(buffer, sb.st_size);
+                
+        // the downloaded digest is a hex string, so convert to hex for comparison
+        NSMutableString *scriptHashHexString = [NSMutableString stringWithCapacity:CC_SHA256_DIGEST_LENGTH];
+        for (unsigned i = 0; i < CC_SHA256_DIGEST_LENGTH; i++)
+            [scriptHashHexString appendFormat:@"%02x", digest[i]];
+        
+        // compare as data so it's clear that we need byte equality
+        NSParameterAssert([scriptHashHexString canBeConvertedToEncoding:NSASCIIStringEncoding]);
+        NSData *scriptHash = [scriptHashHexString dataUsingEncoding:NSASCIIStringEncoding];
+        NSData *checkHash = [NSData dataWithContentsOfFile:_hashPath options:NSUncachedRead error:NULL];
+
+        // downloaded hash has a description string appended
+        if ([checkHash length] >= [scriptHash length])
+            isOkay = [[checkHash subdataWithRange:NSMakeRange(0, [scriptHash length])] isEqualToData:scriptHash];
+        if (isOkay)
+            TLMLog(__func__, @"SHA256 signature looks okay");
+        else
+            TLMLog(__func__, @"*** ERROR *** SHA256 signature does not match");
+    }
+    else {
+        TLMLog(__func__, @"Unable to download SHA256 signature from %@", hashURL);
+    }
+    return isOkay;
 }
 
 - (void)main
@@ -270,7 +315,7 @@ static NSString *__TLMGetTemporaryDirectory()
     NSAutoreleasePool *pool = [NSAutoreleasePool new];
     
     // don't run if the user cancelled during download or something failed
-    if ([self _downloadUpdateScript] && NO == [self isCancelled] && NO == [self failed])
+    if ([self _downloadUpdateScript] && NO == [self isCancelled] && NO == [self failed] && [self _downloadAndCheckHash])
         [super main];
    
     NSFileManager *fm = [NSFileManager new];
