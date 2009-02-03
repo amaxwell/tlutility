@@ -55,25 +55,12 @@
 
 @end
 
-@implementation _TLMFileObject
-
-@synthesize URL = _URL;
-@synthesize name = _name;
-
-- (void)dealloc
-{
-    [_URL release];
-    [_name release];
-    [super dealloc];
-}
-
-@end
-
-
-
 @interface TLMInfoController()
 @property (readwrite, copy) NSArray *fileObjects;
 @end
+
+static char _TLMInfoFileViewScaleObserverationContext;
+static NSString * const TLMInfoFileViewIconScaleKey = @"TLMInfoFileViewIconScaleKey";
 
 @implementation TLMInfoController
 
@@ -104,6 +91,7 @@
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [_fileView removeObserver:self forKeyPath:@"iconScale"];
     [_infoQueue cancelAllOperations];
     [_infoQueue release];
     [_textView release];
@@ -147,7 +135,21 @@
                                                object:[[self window] contentView]];
     
     [_spinner setUsesThreadedAnimation:YES];
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:TLMInfoFileViewIconScaleKey] != nil)
+        [_fileView setIconScale:[[NSUserDefaults standardUserDefaults] doubleForKey:TLMInfoFileViewIconScaleKey]];
+    [_fileView addObserver:self forKeyPath:@"iconScale" options:0 context:&_TLMInfoFileViewScaleObserverationContext];
 }
+
+- (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    if (context == &_TLMInfoFileViewScaleObserverationContext) {
+        [[NSUserDefaults standardUserDefaults] setDouble:[_fileView iconScale] forKey:TLMInfoFileViewIconScaleKey];
+    }
+    else {
+        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+    }
+}
+
 
 - (void)cancel { [_infoQueue cancelAllOperations]; } 
 
@@ -246,6 +248,8 @@
     return NO;
 }
 
+#pragma mark FileView datasource
+
 - (NSUInteger)numberOfIconsInFileView:(FileView *)aFileView;
 {
     return [_fileObjects count];
@@ -261,5 +265,18 @@
     return [[_fileObjects objectAtIndex:anIndex] name];
 }
 
+@end
+
+@implementation _TLMFileObject
+
+@synthesize URL = _URL;
+@synthesize name = _name;
+
+- (void)dealloc
+{
+    [_URL release];
+    [_name release];
+    [super dealloc];
+}
 
 @end
