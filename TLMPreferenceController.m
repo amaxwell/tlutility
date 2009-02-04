@@ -183,7 +183,7 @@ NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";     /
         }
         // absolute timeout check; set error to bail out after this loop
         else if (CFAbsoluteTimeGetCurrent() > start + URL_TIMEOUT) {
-            TLMLog(__func__, @"Unable to connect to %@ after %f.0 seconds", [[self defaultServerURL] absoluteString], URL_TIMEOUT);
+            TLMLog(__func__, @"Unable to connect to %@ after %.0f seconds", [[self defaultServerURL] absoluteString], URL_TIMEOUT);
             status = kCFStreamStatusError;
             keepWaiting = false;
         }
@@ -218,7 +218,7 @@ NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";     /
         }
         // absolute timeout check
         else if (CFAbsoluteTimeGetCurrent() > start + URL_TIMEOUT) {
-            TLMLog(__func__, @"Unable to read data from %@ after %f.0 seconds", [[self defaultServerURL] absoluteString], URL_TIMEOUT);
+            TLMLog(__func__, @"Unable to read data from %@ after %.0f seconds", [[self defaultServerURL] absoluteString], URL_TIMEOUT);
             keepWaiting = false;
         }
         else {
@@ -378,6 +378,9 @@ NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";     /
 {
     // There's a race here if the server path is ever user-settable, but at present it's only for future-proofing.
     NSURL *base = [NSURL URLWithString:[[NSUserDefaults standardUserDefaults] objectForKey:TLMServerURLPreferenceKey]];
+    // !!! Special case for tlcritical
+    if ([base isEqual:[NSURL URLWithString:@"ftp://tug.org/texlive/tlcritical"]])
+        return base;
     NSString *path = [[NSUserDefaults standardUserDefaults] objectForKey:TLMServerPathPreferenceKey];
     CFURLRef fullURL = CFURLCreateCopyAppendingPathComponent(CFGetAllocator(base), (CFURLRef)base, (CFStringRef)path, TRUE);
     return [(id)fullURL autorelease];
