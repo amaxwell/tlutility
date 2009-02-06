@@ -57,37 +57,47 @@ OSStatus GenerateThumbnailForURL(void *thisInterface, QLThumbnailRequestRef thum
     CGPDFDocumentRef pdfDoc = CGPDFDocumentCreateWithProvider(provider);
     CGDataProviderRelease(provider);
     
-    if (CGPDFDocumentGetNumberOfPages(pdfDoc)) {
-                    
-        CGPDFPageRef page = CGPDFDocumentGetPage(pdfDoc, 1);
-        int rotation = CGPDFPageGetRotationAngle(page);
+    // 1-based, returns NULL if no such page exists
+    CGPDFPageRef page = CGPDFDocumentGetPage(pdfDoc, 1);
+
+    if (page) {
+                            
+        /*
+         The page is typically larger than maxSize, so we need to scale it before asking for a 
+         context that's too large for a texture (or whatever Quick Look uses internally).  
+         Failure to do this can result in "CGImageCreate: invalid image size: 0 x 0" log messages.
+         */
         CGRect pageRect = CGPDFPageGetBoxRect(page, kCGPDFMediaBox);
-        
-        // the page is typically larger than maxSize, so we need to scale it before trying to create a context that's too large for a texture
         CGFloat scale = fmin(maxSize.width / pageRect.size.width, maxSize.height / pageRect.size.height);
         CGRect imageRect = CGRectZero;
         imageRect.size.height = pageRect.size.height * scale;
         imageRect.size.width = pageRect.size.width * scale;
         imageRect = CGRectIntegral(imageRect);
-        /*
-        fprintf(stderr, "max size requested was %.0f x %.0f\n", maxSize.width, maxSize.height);
-        fprintf(stderr, "scaled { %.0f, %.0f, %.0f, %.0f } to { %.0f, %.0f, %.0f, %.0f }\n", pageRect.origin.x, pageRect.origin.y, pageRect.size.width, pageRect.size.height, imageRect.origin.x, imageRect.origin.y, imageRect.size.width, imageRect.size.height);
-        */
-        CGAffineTransform transform = CGPDFPageGetDrawingTransform(page, kCGPDFMediaBox, imageRect, rotation, true);
         
         CGContextRef ctxt = QLThumbnailRequestCreateContext(thumbnail, imageRect.size, FALSE, NULL);
         
         if (ctxt) {
+
+            /*
+             Note: CGPDFPageGetDrawingTransform only downscales, but that's all we really need for a thumbnail.
+             Correct handling of rotation was verified using a trivial example with \usepackage[landscape=true]{geometry}.
+             */
+            int rotation = CGPDFPageGetRotationAngle(page);
+            CGAffineTransform transform = CGPDFPageGetDrawingTransform(page, kCGPDFMediaBox, imageRect, rotation, true);
+
             CGContextSaveGState(ctxt);
             CGContextConcatCTM(ctxt, transform);
+            
+            // not clear if we get a page based context, but this call is a no-op if not
             CGContextBeginPage(ctxt, NULL);
             
-            // draw page background
+            // draw page background since it's transparent; something like \pagecolor{green} draws over it
             CGContextSaveGState(ctxt);
             CGContextSetGrayFillColor(ctxt, 1.0, 1.0);
             CGContextFillRect(ctxt, pageRect);
             CGContextRestoreGState(ctxt);
 
+            // draw page content
             if (page) CGContextDrawPDFPage(ctxt, page);
             CGContextEndPage(ctxt);
             CGContextRestoreGState(ctxt);
