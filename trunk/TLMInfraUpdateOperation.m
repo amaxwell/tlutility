@@ -146,7 +146,7 @@ static NSString *__TLMGetTemporaryDirectory()
     [self setFailed:YES];
     // should already be NO, but make sure...
     _downloadComplete = NO;
-    TLMLog(__func__, @"Download failed: %@", error);
+    TLMLog(__func__, @"Download failed: %@\nFailed URL was: %@", error, [[download request] URL]);
 }
 
 - (void)downloadDidFinish:(NSURLDownload *)download
