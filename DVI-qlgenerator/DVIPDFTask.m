@@ -40,7 +40,15 @@
 #import "DVIPDFTask.h"
 #import "BDSKTask.h"
 
-#define DVIPDFMX_PATH @"/usr/texbin/dvipdfmx"
+#define DEFAULT_PATH @"/usr/texbin/dvipdfmx"
+#define PREF_KEY "DvipdfmxPathKey"
+
+static NSString *__CopyDviPDFmxPathForBundleID(CFStringRef bundleIdentifier)
+{
+    NSString *path = (NSString *)CFPreferencesCopyAppValue(CFSTR(PREF_KEY), bundleIdentifier);
+    if (nil == path) path = [DEFAULT_PATH copy];
+    return (NSString *)path;
+}
 
 static NSString *__CreateTemporaryFile()
 {
@@ -62,16 +70,18 @@ static NSString *__CreateTemporaryFile()
     return tempFile;
 }    
 
-CFDataRef DVICreatePDFDataFromFile(CFURLRef fileURL, bool allPages)
+CFDataRef DVICreatePDFDataFromFile(CFURLRef fileURL, bool allPages, CFBundleRef generatorBundle)
 {
     NSAutoreleasePool *pool = [NSAutoreleasePool new];    
     NSFileManager *fm = [NSFileManager new];
     NSData *output = nil;
     
-    if ([fm isExecutableFileAtPath:DVIPDFMX_PATH]) {
+    NSString *dviPDFmxPath = __CopyDviPDFmxPathForBundleID(CFBundleGetIdentifier(generatorBundle));
+    
+    if ([fm isExecutableFileAtPath:dviPDFmxPath]) {
         
         BDSKTask *task = [BDSKTask new];
-        [task setLaunchPath:DVIPDFMX_PATH];
+        [task setLaunchPath:dviPDFmxPath];
         [task setStandardError:[NSFileHandle fileHandleWithNullDevice]];
         [task setStandardOutput:[NSFileHandle fileHandleWithNullDevice]];
         

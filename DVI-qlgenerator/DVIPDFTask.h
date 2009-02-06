@@ -39,4 +39,4 @@
 #import <CoreFoundation/CoreFoundation.h>
 
 
-extern CFDataRef DVICreatePDFDataFromFile(CFURLRef fileURL, bool allPages);
+CFDataRef DVICreatePDFDataFromFile(CFURLRef fileURL, bool allPages, CFBundleRef generatorBundle);

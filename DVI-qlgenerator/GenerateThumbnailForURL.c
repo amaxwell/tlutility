@@ -44,7 +44,7 @@
 
 OSStatus GenerateThumbnailForURL(void *thisInterface, QLThumbnailRequestRef thumbnail, CFURLRef url, CFStringRef contentTypeUTI, CFDictionaryRef options, CGSize maxSize)
 {
-    CFDataRef pdfData = DVICreatePDFDataFromFile(url, false);
+    CFDataRef pdfData = DVICreatePDFDataFromFile(url, false, QLThumbnailRequestGetGeneratorBundle(thumbnail));
     
     // if dvi conversion failed, return immediately
     if (NULL == pdfData) return coreFoundationUnknownErr;

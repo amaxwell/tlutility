@@ -44,7 +44,7 @@
 
 OSStatus GeneratePreviewForURL(void *thisInterface, QLPreviewRequestRef preview, CFURLRef url, CFStringRef contentTypeUTI, CFDictionaryRef options)
 {
-    CFDataRef pdfData = DVICreatePDFDataFromFile(url, true);
+    CFDataRef pdfData = DVICreatePDFDataFromFile(url, true, QLPreviewRequestGetGeneratorBundle(preview));
     OSStatus err = noErr;
     if (pdfData) {
         QLPreviewRequestSetDataRepresentation(preview, pdfData, kUTTypePDF, NULL);
