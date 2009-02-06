@@ -1,0 +1,115 @@
+/*
+ This software is Copyright (c) 2009
+ Adam Maxwell. All rights reserved.
+ 
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
+ 
+ - Redistributions of source code must retain the above copyright
+ notice, this list of conditions and the following disclaimer.
+ 
+ - Redistributions in binary form must reproduce the above copyright
+ notice, this list of conditions and the following disclaimer in
+ the documentation and/or other materials provided with the
+ distribution.
+ 
+ - Neither the name of Adam Maxwell nor the names of any
+ contributors may be used to endorse or promote products derived
+ from this software without specific prior written permission.
+ 
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+#include <CoreFoundation/CoreFoundation.h>
+#include <CoreServices/CoreServices.h>
+#include <QuickLook/QuickLook.h>
+#import "DVIPDFTask.h"
+
+/* -----------------------------------------------------------------------------
+    Generate a thumbnail for file
+
+   This function's job is to create thumbnail for designated file as fast as possible
+   ----------------------------------------------------------------------------- */
+
+OSStatus GenerateThumbnailForURL(void *thisInterface, QLThumbnailRequestRef thumbnail, CFURLRef url, CFStringRef contentTypeUTI, CFDictionaryRef options, CGSize maxSize)
+{
+    CFDataRef pdfData = DVICreatePDFDataFromFile(url, false);
+    
+    // if dvi conversion failed, return immediately
+    if (NULL == pdfData) return coreFoundationUnknownErr;
+    
+    OSStatus err = noErr;
+        
+    CGDataProviderRef provider = CGDataProviderCreateWithCFData(pdfData);
+    CFRelease(pdfData);
+
+    CGPDFDocumentRef pdfDoc = CGPDFDocumentCreateWithProvider(provider);
+    CGDataProviderRelease(provider);
+    
+    if (CGPDFDocumentGetNumberOfPages(pdfDoc)) {
+                    
+        CGPDFPageRef page = CGPDFDocumentGetPage(pdfDoc, 1);
+        int rotation = CGPDFPageGetRotationAngle(page);
+        CGRect pageRect = CGPDFPageGetBoxRect(page, kCGPDFMediaBox);
+        
+        // the page is typically larger than maxSize, so we need to scale it before trying to create a context that's too large for a texture
+        CGFloat scale = fmin(maxSize.width / pageRect.size.width, maxSize.height / pageRect.size.height);
+        CGRect imageRect = CGRectZero;
+        imageRect.size.height = pageRect.size.height * scale;
+        imageRect.size.width = pageRect.size.width * scale;
+        imageRect = CGRectIntegral(imageRect);
+        /*
+        fprintf(stderr, "max size requested was %.0f x %.0f\n", maxSize.width, maxSize.height);
+        fprintf(stderr, "scaled { %.0f, %.0f, %.0f, %.0f } to { %.0f, %.0f, %.0f, %.0f }\n", pageRect.origin.x, pageRect.origin.y, pageRect.size.width, pageRect.size.height, imageRect.origin.x, imageRect.origin.y, imageRect.size.width, imageRect.size.height);
+        */
+        CGAffineTransform transform = CGPDFPageGetDrawingTransform(page, kCGPDFMediaBox, imageRect, rotation, true);
+        
+        CGContextRef ctxt = QLThumbnailRequestCreateContext(thumbnail, imageRect.size, FALSE, NULL);
+        
+        if (ctxt) {
+            CGContextSaveGState(ctxt);
+            CGContextConcatCTM(ctxt, transform);
+            CGContextBeginPage(ctxt, NULL);
+            
+            // draw page background
+            CGContextSaveGState(ctxt);
+            CGContextSetGrayFillColor(ctxt, 1.0, 1.0);
+            CGContextFillRect(ctxt, pageRect);
+            CGContextRestoreGState(ctxt);
+
+            if (page) CGContextDrawPDFPage(ctxt, page);
+            CGContextEndPage(ctxt);
+            CGContextRestoreGState(ctxt);
+            
+            QLThumbnailRequestFlushContext(thumbnail, ctxt);
+            CGContextRelease(ctxt);
+        }
+        else {
+            // no drawing context
+            err = coreFoundationUnknownErr;
+        }
+    }
+    else {
+        // no pages in pdf document
+        err = coreFoundationUnknownErr;
+    }
+    CGPDFDocumentRelease(pdfDoc);
+
+    return err;
+}
+
+void CancelThumbnailGeneration(void* thisInterface, QLThumbnailRequestRef thumbnail)
+{
+    // implement only if supported
+}
