@@ -60,6 +60,7 @@
 		F9DCD3700F06F0F400600DD2 /* Sparkle.framework in copy Sparkle */ = {isa = PBXBuildFile; fileRef = F9DCD3650F06F08C00600DD2 /* Sparkle.framework */; };
 		F9DCD43F0F06F76F00600DD2 /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = F9DCD43E0F06F76F00600DD2 /* dsa_pub.pem */; };
 		F9E22FD50EFCBD2A00B0BE38 /* TLMPapersizeOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F9E22FD40EFCBD2A00B0BE38 /* TLMPapersizeOperation.m */; };
+		F9E2C9BF0F3C00FA00D5EC49 /* DVI.qlgenerator in CopyFiles */ = {isa = PBXBuildFile; fileRef = F9E2C92D0F3C009400D5EC49 /* DVI.qlgenerator */; };
 		F9F043030F180031008DFE8C /* TLMReadWriteOperationQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F043020F180031008DFE8C /* TLMReadWriteOperationQueue.m */; };
 		F9F130560EED94D800D9968D /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = F9F130550EED94D800D9968D /* Preferences.xib */; };
 		F9F1305B0EED94F700D9968D /* TLMPreferenceController.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F1305A0EED94F700D9968D /* TLMPreferenceController.m */; };
@@ -73,7 +74,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = F9B396090F340A71007F95E9 /* FileView.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = F9F04CE10CE260EB00F28ED2 /* Framework + Plugins */;
+			remoteGlobalIDString = F9F04CE10CE260EB00F28ED2;
 			remoteInfo = "Framework + Plugins";
 		};
 		F9B139D50EECBE8F007C0046 /* PBXContainerItemProxy */ = {
@@ -139,6 +140,20 @@
 			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
 			remoteInfo = Sparkle;
 		};
+		F9E2C92C0F3C009400D5EC49 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F9E2C9250F3C009300D5EC49 /* DVI.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8D576316048677EA00EA77CD /* DVI.qlgenerator */;
+			remoteInfo = DVI;
+		};
+		F9E2C9320F3C00AE00D5EC49 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F9E2C9250F3C009300D5EC49 /* DVI.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8D57630D048677EA00EA77CD /* DVI */;
+			remoteInfo = DVI;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -163,6 +178,16 @@
 				F9DCD3700F06F0F400600DD2 /* Sparkle.framework in copy Sparkle */,
 			);
 			name = "copy Sparkle";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F9E2C9BE0F3C00EE00D5EC49 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Contents/Library/QuickLook;
+			dstSubfolderSpec = 1;
+			files = (
+				F9E2C9BF0F3C00FA00D5EC49 /* DVI.qlgenerator in CopyFiles */,
+			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -254,6 +279,7 @@
 		F9DCD4A10F07126F00600DD2 /* tlu_appcast.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = tlu_appcast.xml; path = appcast/tlu_appcast.xml; sourceTree = "<group>"; };
 		F9E22FD30EFCBD2A00B0BE38 /* TLMPapersizeOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMPapersizeOperation.h; sourceTree = "<group>"; };
 		F9E22FD40EFCBD2A00B0BE38 /* TLMPapersizeOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMPapersizeOperation.m; sourceTree = "<group>"; };
+		F9E2C9250F3C009300D5EC49 /* DVI.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = DVI.xcodeproj; path = "DVI-qlgenerator/DVI.xcodeproj"; sourceTree = "<group>"; };
 		F9F043010F180031008DFE8C /* TLMReadWriteOperationQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMReadWriteOperationQueue.h; sourceTree = "<group>"; };
 		F9F043020F180031008DFE8C /* TLMReadWriteOperationQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMReadWriteOperationQueue.m; sourceTree = "<group>"; };
 		F9F130530EED94CC00D9968D /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/Preferences.xib; sourceTree = "<group>"; };
@@ -355,6 +381,7 @@
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
 				F9B396090F340A71007F95E9 /* FileView.xcodeproj */,
+				F9E2C9250F3C009300D5EC49 /* DVI.xcodeproj */,
 				F9DCD3590F06F08C00600DD2 /* Sparkle.xcodeproj */,
 				F9D9AEB60F0D7EED00CB1A2F /* tlmgr_cwrapper-Info.plist */,
 			);
@@ -490,6 +517,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		F9E2C9260F3C009300D5EC49 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F9E2C92D0F3C009400D5EC49 /* DVI.qlgenerator */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		F9F56B7E0EF32F3500E934A9 /* Logging */ = {
 			isa = PBXGroup;
 			children = (
@@ -516,6 +551,7 @@
 				8D11072E0486CEB800E47090 /* Frameworks */,
 				F9B139DD0EECBEEB007C0046 /* copy tlmgr_cwrapper */,
 				F9DCD37C0F06F11300600DD2 /* copy Sparkle */,
+				F9E2C9BE0F3C00EE00D5EC49 /* CopyFiles */,
 				F9B396400F340E45007F95E9 /* FileView install name */,
 				F9D9AD660F0D790600CB1A2F /* codesign */,
 			);
@@ -525,6 +561,7 @@
 				F9B139D60EECBE8F007C0046 /* PBXTargetDependency */,
 				F9DCD40E0F06F1D900600DD2 /* PBXTargetDependency */,
 				F91E079A0F341CA2006F4D97 /* PBXTargetDependency */,
+				F9E2C9330F3C00AE00D5EC49 /* PBXTargetDependency */,
 			);
 			name = "TeX Live Utility";
 			productInstallPath = "$(HOME)/Applications";
@@ -560,6 +597,10 @@
 			mainGroup = 29B97314FDCFA39411CA2CEA /* TeX Live Manager */;
 			projectDirPath = "";
 			projectReferences = (
+				{
+					ProductGroup = F9E2C9260F3C009300D5EC49 /* Products */;
+					ProjectRef = F9E2C9250F3C009300D5EC49 /* DVI.xcodeproj */;
+				},
 				{
 					ProductGroup = F9B3960A0F340A71007F95E9 /* Products */;
 					ProjectRef = F9B396090F340A71007F95E9 /* FileView.xcodeproj */;
@@ -625,6 +666,13 @@
 			fileType = wrapper.cfbundle;
 			path = "Sparkle Unit Tests.octest";
 			remoteRef = F9DCD36A0F06F08C00600DD2 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F9E2C92D0F3C009400D5EC49 /* DVI.qlgenerator */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = DVI.qlgenerator;
+			remoteRef = F9E2C92C0F3C009400D5EC49 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -779,6 +827,11 @@
 			isa = PBXTargetDependency;
 			name = Sparkle;
 			targetProxy = F9DCD40D0F06F1D900600DD2 /* PBXContainerItemProxy */;
+		};
+		F9E2C9330F3C00AE00D5EC49 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = DVI;
+			targetProxy = F9E2C9320F3C00AE00D5EC49 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
