@@ -115,6 +115,8 @@ CFDataRef DVICreatePDFDataFromFile(CFURLRef fileURL, bool allPages, CFBundleRef 
         [outputPath release];
     }
     
+    [dviPDFmxPath release];
+    
     [fm release];
     [pool release];
     
