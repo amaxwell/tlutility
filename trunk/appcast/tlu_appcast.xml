@@ -142,5 +142,20 @@
             <pubDate>Fri, 30 Jan 2009 22:00:58 -0800</pubDate>
             <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20090130a.tgz" sparkle:version="0.63" length="1783547" type="application/octet-stream" sparkle:dsaSignature="MCwCFC3Snh2l3negemosa/OTNFoOqYVFAhQV24jBpceK4lCgZvjRxA90jHM/Fg=="></enclosure>
         </item>
+        <item>
+            <title>Version 0.64</title>
+            <description>
+                <h3>Changes Since 0.63</h3>
+                <li>Fixed a bug that prevented font changes in the table views (bug #18).</li>
+                <li>Downloaded infrastructure updates now have a SHA256 hash check.</li>
+                <li>Icon scale in documentation file thumbnail view is saved.</li>
+                <li>Splitview size in documentation/info panel is saved.</li>
+                <li>The tlcritical repository is now recognized as a valid download location.</li>
+                <li>Fixed some floating point format strings in preferences dialogs.</li>
+                <li>Bundled DVI Quick Look generator plugin.</li>
+            </description>
+            <pubDate>Fri, 06 Feb 2009 18:37:31 -0800</pubDate>
+            <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20090206.tgz" sparkle:version="0.64" length="1458017" type="application/octet-stream" sparkle:dsaSignature="MCwCFGjYVLKcTbHZ3aLL7bOTpCQPmBbUAhQvOYkQRv+aVjvLlq9tfWydGY02Ag=="></enclosure>
+        </item>
     </channel>
 </rss>
