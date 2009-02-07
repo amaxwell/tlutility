@@ -13,6 +13,7 @@
 			<array>
 				<string>org.tug.tex.dvi</string>
 				<string>net.sourceforge.skim-app.dvi</string>
+				<string>com.mac.amaxwell.dvi</string>
 			</array>
 		</dict>
 	</array>
