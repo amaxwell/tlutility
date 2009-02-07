@@ -144,14 +144,14 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = F9E2C9250F3C009300D5EC49 /* DVI.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 8D576316048677EA00EA77CD /* DVI.qlgenerator */;
+			remoteGlobalIDString = 8D576316048677EA00EA77CD;
 			remoteInfo = DVI;
 		};
 		F9E2C9320F3C00AE00D5EC49 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F9E2C9250F3C009300D5EC49 /* DVI.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = 8D57630D048677EA00EA77CD /* DVI */;
+			remoteGlobalIDString = 8D57630D048677EA00EA77CD;
 			remoteInfo = DVI;
 		};
 /* End PBXContainerItemProxy section */
