@@ -65,6 +65,8 @@
 			<array>
 				<string>public.data</string>
 			</array>
+			<key>UTTypeDescription</key>
+			<string>DVI Document</string>
 			<key>UTTypeIdentifier</key>
 			<string>org.tug.tex.dvi</string>
 			<key>UTTypeTagSpecification</key>
