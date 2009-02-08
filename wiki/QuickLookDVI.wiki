@@ -12,4 +12,8 @@ DVI files will now have a thumbnail icon available in Finder, and in TeX Live Ut
 
 = Configuration =
 
-You can change the dvipdfmx path with {{{`defaults write com.googlecode.mactlmgr.qlgenerator.DVI DvipdfmxPathKey /full/path/to/dvipdfmx`}}} in Terminal.  You may need to use `qlmanage -r` to reset Quick Look generators after this.
+You can change the dvipdfmx path with 
+{{{
+`defaults write com.googlecode.mactlmgr.qlgenerator.DVI DvipdfmxPathKey /full/path/to/dvipdfmx`
+}}} 
+in Terminal.  You may need to use `qlmanage -r` to reset Quick Look generators after this.
