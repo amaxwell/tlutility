@@ -681,7 +681,16 @@ static char _TLMOperationQueueOperationContext;
 
 - (void)refreshFullPackageList
 {
-    [self _refreshFullPackageListFromLocation:[[TLMPreferenceController sharedPreferenceController] defaultServerURL]];
+    NSURL *serverURL = [[TLMPreferenceController sharedPreferenceController] defaultServerURL];
+    CFNetDiagnosticRef diagnostic = CFNetDiagnosticCreateWithURL(NULL, (CFURLRef)serverURL);
+    [(id)diagnostic autorelease];
+    CFStringRef desc;
+    if (diagnostic && kCFNetDiagnosticConnectionDown == CFNetDiagnosticCopyNetworkStatusPassively(diagnostic, &desc)) {
+        serverURL = [[TLMPreferenceController sharedPreferenceController] offlineServerURL];
+        TLMLog(__func__, @"Network connection is down (%@).  Trying local install database %@%C", desc, serverURL, 0x2026);
+        [(id)desc autorelease];
+    }
+    [self _refreshFullPackageListFromLocation:serverURL];
 }
 
 - (void)refreshUpdatedPackageList
