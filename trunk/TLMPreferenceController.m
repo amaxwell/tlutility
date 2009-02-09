@@ -40,6 +40,7 @@
 #import "TLMURLFormatter.h"
 #import "TLMAppController.h"
 #import "TLMLogServer.h"
+#import "TLMTask.h"
 
 NSString * const TLMServerURLPreferenceKey = @"TLMServerURLPreferenceKey";     /* http://mirror.ctan.org      */
 NSString * const TLMTexBinPathPreferenceKey = @"TLMTexBinPathPreferenceKey";   /* /usr/texbin                 */
@@ -50,6 +51,7 @@ NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";     /
 
 #define TLMGR_CMD @"tlmgr"
 #define TEXDOC_CMD @"texdoc"
+#define KPSEWHICH_CMD @"kpsewhich"
 #define URL_TIMEOUT 30.0
 
 @implementation TLMPreferenceController
@@ -396,6 +398,38 @@ NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";     /
 {
     NSString *texbinPath = [[NSUserDefaults standardUserDefaults] objectForKey:TLMTexBinPathPreferenceKey];
     return [[texbinPath stringByAppendingPathComponent:TEXDOC_CMD] stringByStandardizingPath];
+}
+
+- (NSString *)kpsewhichAbsolutePath
+{
+    NSString *texbinPath = [[NSUserDefaults standardUserDefaults] objectForKey:TLMTexBinPathPreferenceKey];
+    return [[texbinPath stringByAppendingPathComponent:KPSEWHICH_CMD] stringByStandardizingPath];
+}
+
+- (NSURL *)offlineServerURL
+{
+    // kpsewhich -var-value=SELFAUTOPARENT
+    NSString *kpsewhichPath = [self kpsewhichAbsolutePath];
+    NSURL *serverURL = nil;
+    if ([[NSFileManager defaultManager] isExecutableFileAtPath:kpsewhichPath]) {
+        TLMTask *task = [TLMTask new];
+        [task setLaunchPath:kpsewhichPath];
+        [task setArguments:[NSArray arrayWithObject:@"-var-value=SELFAUTOPARENT"]];
+        [task launch];
+        [task waitUntilExit];
+        if ([task terminationStatus] == 0 && [task outputString]) {
+            NSString *str = [[task outputString] stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+            serverURL = [[[NSURL alloc] initWithScheme:NSURLFileScheme host:@"" path:str] autorelease];
+        }
+        else {
+            TLMLog(__func__, @"kpsewhich returned an error: %@", [task errorString]);
+        }
+        [task release];
+    }
+    else {
+        TLMLog(__func__, @"no kpsewhich executable at %@", kpsewhichPath);
+    }
+    return serverURL;
 }
 
 #pragma mark Server combo box datasource

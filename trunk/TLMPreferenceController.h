@@ -76,6 +76,9 @@ extern NSString * const TLMUseSyslogPreferenceKey;
 // composes TLMServerURLPreferenceKey and TLMServerPathPreferenceKey
 @property (readonly) NSURL *defaultServerURL;
 
+// returns the local tlpdb location, suitable for --location
+@property (readonly) NSURL *offlineServerURL;
+
 // adds tlmgr to TLMTexBinPathPreferenceKey, standardizes path
 @property (readonly) NSString *tlmgrAbsolutePath;
 
