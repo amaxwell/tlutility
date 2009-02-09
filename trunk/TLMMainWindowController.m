@@ -682,9 +682,15 @@ static char _TLMOperationQueueOperationContext;
 - (void)refreshFullPackageList
 {
     NSURL *serverURL = [[TLMPreferenceController sharedPreferenceController] defaultServerURL];
+    
+    /* 
+     If the network is not available, read the local package db so that show info still works.
+     Note that all packages thus shown will be installed, so presumably forced updates will fail
+     and removal may succeed.  Avoid doing special case menu validation until it seems necessary.
+     */
     CFNetDiagnosticRef diagnostic = CFNetDiagnosticCreateWithURL(NULL, (CFURLRef)serverURL);
     [(id)diagnostic autorelease];
-    CFStringRef desc;
+    CFStringRef desc = NULL;
     if (diagnostic && kCFNetDiagnosticConnectionDown == CFNetDiagnosticCopyNetworkStatusPassively(diagnostic, &desc)) {
         serverURL = [[TLMPreferenceController sharedPreferenceController] offlineServerURL];
         TLMLog(__func__, @"Network connection is down (%@).  Trying local install database %@%C", desc, serverURL, 0x2026);
