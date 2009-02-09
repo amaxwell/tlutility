@@ -695,8 +695,12 @@ static char _TLMOperationQueueOperationContext;
         serverURL = [[TLMPreferenceController sharedPreferenceController] offlineServerURL];
         TLMLog(__func__, @"Network connection is down (%@).  Trying local install database %@%C", desc, serverURL, 0x2026);
         [(id)desc autorelease];
+        [self _refreshFullPackageListFromLocation:serverURL];
+        [self _displayStatusString:NSLocalizedString(@"Network is unavailable", @"")];
     }
-    [self _refreshFullPackageListFromLocation:serverURL];
+    else {
+        [self _refreshFullPackageListFromLocation:serverURL];
+    }
 }
 
 - (void)refreshUpdatedPackageList
