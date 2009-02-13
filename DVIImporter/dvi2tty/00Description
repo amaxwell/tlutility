@@ -1,0 +1,10 @@
+Comprehensive TeX Archive Network: package description
+------------------------------------------------------
+Name: dvi2tty
+Last changed in archive: 1993/03/12
+Archive-path: dviware/dvi2tty
+Description: 
+ A filter for converting the device
+ independent output files produced by TeX to files
+ which may be printed on ASCII terminals or line printers.
+

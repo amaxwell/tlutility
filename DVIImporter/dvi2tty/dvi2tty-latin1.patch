@@ -1,0 +1,92 @@
+The following is against the standard dvi2tty distribution. 
+Purpose of this patch is to allow full latin1 charcter-set to be output.
+
+To apply these patches, use:
+
+	patch < dvi2tty-latin1.patch
+
+If you don't have patch on your system, you can obtain it from
+prep.ai.mit.edu (or any mirror) in /pub/gnu; I highly recommend you
+install it.  Alternately, you can just make the below changes by hand
+(there aren't very many).
+
+Simo Nikula
+nikula@lut.fi
+
+*** dvistuff.c	1998/08/04 10:26:41	1.1
+--- dvistuff.c	1998/08/04 11:38:04
+***************
+*** 130,136 ****
+  void            dochar          (char);
+  void            symchar         (char);
+  void            normchar        (char);
+! void            outchar         (char);
+  void            putcharacter    (long);
+  void            setchar         (long);
+  void            fontdef         (int);
+--- 130,136 ----
+  void            dochar          (char);
+  void            symchar         (char);
+  void            normchar        (char);
+! void            outchar         (unsigned char);
+  void            putcharacter    (long);
+  void            setchar         (long);
+  void            fontdef         (int);
+***************
+*** 484,490 ****
+  void printpage()       /* 'end of page', writes lines of page to output file */
+  {
+      register int  i, j;
+!     register char ch;
+  
+      if (sptr != 0)
+          fprintf(stderr, "dvi2tty: warning - stack not empty at eop.\n");
+--- 484,490 ----
+  void printpage()       /* 'end of page', writes lines of page to output file */
+  {
+      register int  i, j;
+!     register unsigned char ch;
+  
+      if (sptr != 0)
+          fprintf(stderr, "dvi2tty: warning - stack not empty at eop.\n");
+***************
+*** 847,857 ****
+  
+  
+  void outchar(ch)                     /* output ch to appropriate line */
+! register char ch;
+  {
+      register int i, j;
+  
+- /*     fprintf(stderr, "hor: %ld, ver: %ld\n", h, v); */
+  #if defined(MSDOS)
+      if (labs(v - currentline->vv) > VERTICALEPSILON / 2L)
+  #else
+--- 847,856 ----
+  
+  
+  void outchar(ch)                     /* output ch to appropriate line */
+! register unsigned char ch;
+  {
+      register int i, j;
+  
+  #if defined(MSDOS)
+      if (labs(v - currentline->vv) > VERTICALEPSILON / 2L)
+  #else
+***************
+*** 960,966 ****
+  {    /* should print characters with character code>127 from current font */
+       /* note that the parameter is a dummy, since ascii-chars are<=127    */
+  
+!     outchar('#');
+  
+  } /* setchar */
+  
+--- 959,965 ----
+  {    /* should print characters with character code>127 from current font */
+       /* note that the parameter is a dummy, since ascii-chars are<=127    */
+  
+!     outchar((unsigned char)(charnr));
+  
+  } /* setchar */
+  
