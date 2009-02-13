@@ -42,7 +42,6 @@
 		F9E3C0AC0F44EDDF00552045 /* dvistuff.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F9E3C0AB0F44EDDF00552045 /* dvistuff.cpp */; };
 		F9F5298F0F42A0CE00C7A5F4 /* dvi2tty.h in Headers */ = {isa = PBXBuildFile; fileRef = F9F5298B0F42A0CE00C7A5F4 /* dvi2tty.h */; };
 		F9F529910F42A0CE00C7A5F4 /* commands.h in Headers */ = {isa = PBXBuildFile; fileRef = F9F5298D0F42A0CE00C7A5F4 /* commands.h */; };
-		F9FCECB3083EDB5E00EEDB09 /* ReadMe.rtf in Resources */ = {isa = PBXBuildFile; fileRef = F9FCECB2083EDB5E00EEDB09 /* ReadMe.rtf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -74,7 +73,6 @@
 		F9F086550825C2A300812F2A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		F9F5298B0F42A0CE00C7A5F4 /* dvi2tty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dvi2tty.h; sourceTree = "<group>"; };
 		F9F5298D0F42A0CE00C7A5F4 /* commands.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = commands.h; sourceTree = "<group>"; };
-		F9FCECB2083EDB5E00EEDB09 /* ReadMe.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = ReadMe.rtf; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,7 +91,6 @@
 		089C166AFE841209C02AAC07 /* DVIImporter */ = {
 			isa = PBXGroup;
 			children = (
-				F9FCECB2083EDB5E00EEDB09 /* ReadMe.rtf */,
 				08FB77AFFE84173DC02AAC07 /* Source */,
 				089C167CFE841241C02AAC07 /* Resources */,
 				089C1671FE841209C02AAC07 /* External Frameworks and Libraries */,
@@ -200,7 +197,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D5B49A804867FD3000E48DA /* InfoPlist.strings in Resources */,
-				F9FCECB3083EDB5E00EEDB09 /* ReadMe.rtf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
