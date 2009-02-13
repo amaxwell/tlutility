@@ -39,10 +39,10 @@
 		8D576314048677EA00EA77CD /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AA1909FFE8422F4C02AAC07 /* CoreFoundation.framework */; };
 		8D5B49A804867FD3000E48DA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8D5B49A704867FD3000E48DA /* InfoPlist.strings */; };
 		C86B05270671AA6E00DD9006 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C86B05260671AA6E00DD9006 /* CoreServices.framework */; };
-		F9F5298E0F42A0CE00C7A5F4 /* dvistuff.c in Sources */ = {isa = PBXBuildFile; fileRef = F9F5298A0F42A0CE00C7A5F4 /* dvistuff.c */; };
+		F9E3C0AC0F44EDDF00552045 /* dvistuff.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F9E3C0AB0F44EDDF00552045 /* dvistuff.cpp */; };
 		F9F5298F0F42A0CE00C7A5F4 /* dvi2tty.h in Headers */ = {isa = PBXBuildFile; fileRef = F9F5298B0F42A0CE00C7A5F4 /* dvi2tty.h */; };
-		F9F529900F42A0CE00C7A5F4 /* dvi2tty.c in Sources */ = {isa = PBXBuildFile; fileRef = F9F5298C0F42A0CE00C7A5F4 /* dvi2tty.c */; };
 		F9F529910F42A0CE00C7A5F4 /* commands.h in Headers */ = {isa = PBXBuildFile; fileRef = F9F5298D0F42A0CE00C7A5F4 /* commands.h */; };
+		F9FCECB3083EDB5E00EEDB09 /* ReadMe.rtf in Resources */ = {isa = PBXBuildFile; fileRef = F9FCECB2083EDB5E00EEDB09 /* ReadMe.rtf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -70,11 +70,11 @@
 		8D576316048677EA00EA77CD /* DVIImporter.mdimporter */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DVIImporter.mdimporter; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D576317048677EA00EA77CD /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		C86B05260671AA6E00DD9006 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = /System/Library/Frameworks/CoreServices.framework; sourceTree = "<absolute>"; };
+		F9E3C0AB0F44EDDF00552045 /* dvistuff.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dvistuff.cpp; sourceTree = "<group>"; };
 		F9F086550825C2A300812F2A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
-		F9F5298A0F42A0CE00C7A5F4 /* dvistuff.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = dvistuff.c; sourceTree = "<group>"; };
 		F9F5298B0F42A0CE00C7A5F4 /* dvi2tty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dvi2tty.h; sourceTree = "<group>"; };
-		F9F5298C0F42A0CE00C7A5F4 /* dvi2tty.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = dvi2tty.c; sourceTree = "<group>"; };
 		F9F5298D0F42A0CE00C7A5F4 /* commands.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = commands.h; sourceTree = "<group>"; };
+		F9FCECB2083EDB5E00EEDB09 /* ReadMe.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = ReadMe.rtf; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,6 +93,7 @@
 		089C166AFE841209C02AAC07 /* DVIImporter */ = {
 			isa = PBXGroup;
 			children = (
+				F9FCECB2083EDB5E00EEDB09 /* ReadMe.rtf */,
 				08FB77AFFE84173DC02AAC07 /* Source */,
 				089C167CFE841241C02AAC07 /* Resources */,
 				089C1671FE841209C02AAC07 /* External Frameworks and Libraries */,
@@ -123,9 +124,8 @@
 		08FB77AFFE84173DC02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				F9F5298A0F42A0CE00C7A5F4 /* dvistuff.c */,
+				F9E3C0AB0F44EDDF00552045 /* dvistuff.cpp */,
 				F9F5298B0F42A0CE00C7A5F4 /* dvi2tty.h */,
-				F9F5298C0F42A0CE00C7A5F4 /* dvi2tty.c */,
 				F9F5298D0F42A0CE00C7A5F4 /* commands.h */,
 				2C05A19B06CAA52B00D84F6F /* GetMetadataForFile.c */,
 				08FB77B6FE84183AC02AAC07 /* main.c */,
@@ -200,6 +200,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D5B49A804867FD3000E48DA /* InfoPlist.strings in Resources */,
+				F9FCECB3083EDB5E00EEDB09 /* ReadMe.rtf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -241,8 +242,7 @@
 			files = (
 				8D576312048677EA00EA77CD /* main.c in Sources */,
 				2C05A19C06CAA52B00D84F6F /* GetMetadataForFile.c in Sources */,
-				F9F5298E0F42A0CE00C7A5F4 /* dvistuff.c in Sources */,
-				F9F529900F42A0CE00C7A5F4 /* dvi2tty.c in Sources */,
+				F9E3C0AC0F44EDDF00552045 /* dvistuff.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -312,6 +312,8 @@
 		F97662020861BEF900829F8B /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1 = "x86_64 i386 ppc";
 				COPY_PHASE_STRIP = YES;
 				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
@@ -490,7 +492,6 @@
 		F976620D0861BEF900829F8B /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 			};
 			name = Development;
@@ -500,7 +501,7 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1)";
 				ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1 = "x86_64 i386 ppc";
-				MACOSX_DEPLOYMENT_TARGET = 10.4;
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 			};
 			name = Deployment;
@@ -508,7 +509,6 @@
 		F976620F0861BEF900829F8B /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 			};
 			name = Default;

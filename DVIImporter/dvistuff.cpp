@@ -4,6 +4,9 @@
 #include <sys/stat.h>
 #include "commands.h"
 
+#include <vector>
+#include <iostream>
+
 #define VERSIONID            2 /* dvi version number that pgm handles      */
 #define VERTICALEPSILON 450000L /* crlf when increasing v more than this   */
 
@@ -11,8 +14,8 @@
 #define leftmargin      -50    /* give some room for negative h-coordinate */
 #define LINELEN         203    /* rightmargin - leftmargin + 1 */
 
-#define MOVE            TRUE   /* if advancing h when outputing a rule     */
-#define STAY            FALSE  /* if not advancing h when outputing a rule */
+#define MOVE            true   /* if advancing h when outputing a rule     */
+#define STAY            false  /* if not advancing h when outputing a rule */
 
 #define absolute        0      /* for seeking in files                     */
 #define relative        1
@@ -22,9 +25,6 @@
 #define DEL             127    /* delete                                   */
 
 #define LASTCHAR        127    /* max dvi character, above are commands    */
-
-#define IMIN(a, b)      (a<b ? a : b)
-#define IMAX(a, b)      (a>b ? a : b)
 
 #define get1()          num(parser, 1)
 #define get2()          num(parser, 2)
@@ -65,9 +65,20 @@ typedef struct _font {
     char  * name;
 } font;
 
-typedef struct _DVIParser {
+class DVIParser {
+public:
+    
+    DVIParser(const char *path);
+    ~DVIParser();
+    
+    void Postamble();
+    void Preamble();
+    void Walkpages();
+    
     FILE       *infile;
-    void       *output;
+    std::vector<uint8_t> output;
+    std::string filename;
+   
     int         opcode;             /* dvi-opcodes                               */
     long        foo;                /* register variable                         */
     
@@ -90,12 +101,42 @@ typedef struct _DVIParser {
     int         sidx;               /* stack pointer                             */
     
     font       *fonts;              /* List of fontnames defined                 */
-    int         symbolfont;         /* true if font is a symbol font             */    
-} DVIParser;
+    bool        symbolfont;         /* true if font is a symbol font             */    
+};
 
-static void            postamble       (DVIParser *);
-static void            preamble        (DVIParser *);
-static void            walkpages       (DVIParser *);
+DVIParser::DVIParser(const char *path)
+{ 
+    infile = fopen(path, "r"); 
+    opcode = foo = h = v = w = x = y = z = 0;
+    pagecounter = backpointer = pagenr = stackmax = charwidth = 0;
+    currentline = firstline = lastline = NULL; 
+    firstcolumn = 0;
+    stack = NULL; 
+    sidx = 0;
+    fonts = NULL; 
+    symbolfont = false;
+    filename = std::string(path);
+}
+
+DVIParser::~DVIParser()
+{
+    fclose(infile);
+    
+    // free the font list
+    font *fnt = fonts;
+    while (fnt != NULL) {
+        font *next = fnt->next;
+        free(fnt->name);
+        free(fnt);
+        fnt = next;
+    }
+    fonts = NULL;
+    
+    // free the dvi stack
+    free(stack);
+    stack = NULL;
+}    
+
 static void            initpage        (DVIParser *);
 static void            dopage          (DVIParser *);
 static void            printpage       (DVIParser *);
@@ -115,105 +156,51 @@ static void            putcharacter    (DVIParser *, int);
 static void            setchar         (DVIParser *, int);
 static void            fontdef         (DVIParser *, int);
 static void            setfont         (DVIParser *, int);
+static void            printerror      (int, long, int);
 
-static void appendCharacterToData(uint8_t c, CFMutableDataRef data)
-{
-    CFDataAppendBytes(data, &c, 1);
-}
-
-static void freefonts(DVIParser *parser)
-{
-    font *fnt = parser->fonts;
-    while (fnt != NULL) {
-        font *next = fnt->next;
-        free(fnt->name);
-        free(fnt);
-        fnt = next;
-    }
-    parser->fonts = NULL;
-}
-
-static void freestack(DVIParser *parser)
-{
-    free(parser->stack);
-    parser->stack = NULL;
-}
 
 /*---------------------------------------------------------------------------*/
 
-CFStringRef CreateStringWithContentsOfDVIFile(CFStringRef absolutePath)
-{    
-    DVIParser parser;
-    memset(&parser, 0, sizeof(DVIParser));
-    size_t pathlen = CFStringGetMaximumSizeOfFileSystemRepresentation(absolutePath);
-    char *pathbuf = malloc(pathlen);
-    if (NULL == pathbuf)
-        return NULL;
-    
-    (void) CFStringGetFileSystemRepresentation(absolutePath, pathbuf, pathlen);
-    
-    parser.infile = fopen(pathbuf, "r");
-    free(pathbuf);
-    pathbuf = NULL;
-    
-    if (NULL == parser.infile)
-        return NULL;
-    
-    parser.output = CFDataCreateMutable(kCFAllocatorDefault, 0);
-    postamble(&parser);                            /* seek and process the postamble */
-    /* note that walkpages *must* immediately follow preamble */
-    preamble(&parser);                             /* process preamble               */
-    walkpages(&parser);                            /* time to do the actual work!    */
-    
-    freefonts(&parser);
-    freestack(&parser);
-    fclose(parser.infile);
-    
-    CFStringRef str = CFStringCreateFromExternalRepresentation(kCFAllocatorDefault, parser.output, kCFStringEncodingISOLatin1);
-    CFRelease(parser.output);
-        
-    return str;
-}
-
-/*---------------------------------------------------------------------------*/
-
-static void postamble(DVIParser *parser)            /* find and process postamble, use random access */
+void DVIParser::Postamble()            /* find and process postamble, use random access */
 {
+    // FIXME: hack for get macros
+    DVIParser *parser = this;
+    
     off_t size;
     int  count;
     struct stat st;
 
-    fstat (fileno(parser->infile), &st);
+    fstat (fileno(infile), &st);
     size = st.st_size;                   /* get size of file          */
     count = -1;
     do {              /* back file up past signature bytes (223), to id-byte */
         if (size == 0)
-            errorexit(nopst, parser->foo, parser->opcode);
+            throw(nopst);
         size--;
-        fseek(parser->infile, size, absolute);
-        parser->opcode = (int) get1();
+        fseek(infile, size, absolute);
+        opcode = (int) get1();
         count++;
-    } while (parser->opcode == TRAILER);
+    } while (opcode == TRAILER);
     if (count < 4) {                            /* must have 4 trailer bytes */
-         parser->foo = count;
-         errorexit(fwsgn, parser->foo, parser->opcode);
+         foo = count;
+         throw(fwsgn);
     }
-    if (parser->opcode != VERSIONID)
-        errorexit(badid, parser->foo, parser->opcode);
-    fseek(parser->infile, size-4, absolute);       /* back up to back-pointer       */
-    fseek(parser->infile, sget4(), absolute);      /* and to start of postamble   */
+    if (opcode != VERSIONID)
+        throw(badid);
+    fseek(infile, size-4, absolute);       /* back up to back-pointer       */
+    fseek(infile, sget4(), absolute);      /* and to start of postamble   */
     if (get1() != POST)
-        errorexit(nopst, parser->foo, parser->opcode);
-    fseek(parser->infile, 20L, relative); /* lastpageoffset, numerator, denominator */
+        throw(nopst);
+    fseek(infile, 20L, relative); /* lastpageoffset, numerator, denominator */
                                    /* magnification, maxpageheight           */
     
     int maxpagewidth = sget4();
     /* hack here: zero charwidth causes SIGFPE on x86 */
-    parser->charwidth = maxpagewidth > 0 ? maxpagewidth / (ttywidth + espace) : 500000; 
+    charwidth = maxpagewidth > 0 ? maxpagewidth / (ttywidth + espace) : 500000; 
     
-    parser->stackmax = (int) get2();
-    if ((parser->stack = (stackitem *) malloc(parser->stackmax * sizeof(stackitem))) == NULL)
-       errorexit(stkrq, parser->foo, parser->opcode);
+    stackmax = (int) get2();
+    if ((stack = (stackitem *) malloc(stackmax * sizeof(stackitem))) == NULL)
+       throw(stkrq);
 
     /* get2() -- totalpages */
     /* fontdefs  do fontdefs in flight ... */
@@ -222,33 +209,38 @@ static void postamble(DVIParser *parser)            /* find and process postambl
 
 /*---------------------------------------------------------------------------*/
 
-static void preamble(DVIParser *parser)                 /* process preamble, use random access       */
+void DVIParser::Preamble()                 /* process preamble, use random access       */
 {
+    // FIXME: hack for get macros
+    DVIParser *parser = this;
 
-    fseek(parser->infile, 0L, absolute);       /* read the parser->infile from the start   */
-    if ((parser->opcode = skipnops(parser)) != PRE)
-        errorexit(nopre, parser->foo, parser->opcode);
-    parser->opcode = (int) get1();        /* check id in preamble, ignore rest of it */
-    if (parser->opcode != VERSIONID)
-        errorexit(badid, parser->foo, parser->opcode);
-    fseek(parser->infile, 12L, relative);  /* numerator, denominator, magnification */
-    fseek(parser->infile, get1(), relative);         /* skip job identification     */
+    fseek(infile, 0L, absolute);       /* read the parser->infile from the start   */
+    if ((opcode = skipnops(parser)) != PRE)
+        throw(nopre);
+    opcode = (int) get1();        /* check id in preamble, ignore rest of it */
+    if (opcode != VERSIONID)
+        throw(badid);
+    fseek(infile, 12L, relative);  /* numerator, denominator, magnification */
+    fseek(infile, get1(), relative);         /* skip job identification     */
 
 } /* preamble */
 
 /*----------------------------------------------------------------------------*/
 
-static void walkpages(DVIParser *parser)                  /* process the pages in the DVI-file */
+void DVIParser::Walkpages()                  /* process the pages in the DVI-file */
 {
-    parser->pagecounter = 0L;
-    while ((parser->opcode = skipnops(parser)) != POST) {
-        if (parser->opcode != BOP)              /* should be at start of page now    */
-            errorexit(nobop, parser->foo, parser->opcode);
+    // FIXME: hack for get macros
+    DVIParser *parser = this;
+
+    pagecounter = 0L;
+    while ((opcode = skipnops(parser)) != POST) {
+        if (opcode != BOP)              /* should be at start of page now    */
+            throw(nobop);
         else {
-            parser->pagecounter++;
-            parser->pagenr = sget4();           /* get TeX page number               */
-            fseek(parser->infile, 36L, relative); /* skip page header */
-            parser->backpointer = sget4();      /* get previous page offset          */
+            pagecounter++;
+            pagenr = sget4();           /* get TeX page number               */
+            fseek(infile, 36L, relative); /* skip page header */
+            backpointer = sget4();      /* get previous page offset          */
 
             initpage(parser);
             dopage(parser);
@@ -272,7 +264,7 @@ static void initpage(DVIParser *parser)
     parser->lastline    = parser->currentline;
     parser->firstcolumn = rightmargin;
     if (parser->backpointer != -1)              /* not FORM at first page   */
-        appendCharacterToData('\n', parser->output);
+        parser->output.push_back('\n');
 
 } /* initpage */
 
@@ -287,7 +279,7 @@ static void dopage(DVIParser *parser)
         else if ((parser->opcode >= FONT_00) && (parser->opcode <= FONT_63)) 
             setfont(parser, parser->opcode - FONT_00);
         else if (parser->opcode > POST_POST)
-            errorexit(illop, parser->foo, parser->opcode);
+            throw(illop);
         else
             switch (parser->opcode) {
                 case SET1     : setchar(parser, get1()); break;
@@ -305,10 +297,10 @@ static void dopage(DVIParser *parser)
                                   rule(parser, STAY, sget4(), height); break;
                                 }
                 case NOP      : break;  /* no-op */
-                case BOP      : errorexit(bdbop, parser->foo, parser->opcode); break;
+                case BOP      : throw(bdbop); break;
 /*              case EOP      : break;  strange place to have EOP */
                 case PUSH     : if (parser->sidx >= parser->stackmax)            /* push */
-                                     errorexit(stkof, parser->foo, parser->opcode);
+                                     throw(stkof);
                                 parser->stack[parser->sidx].hh = parser->h;
                                 parser->stack[parser->sidx].vv = parser->v;
                                 parser->stack[parser->sidx].ww = parser->w;
@@ -318,7 +310,7 @@ static void dopage(DVIParser *parser)
                                 parser->sidx++;
                                 break;
                 case POP      : if (parser->sidx == 0)                   /* pop */
-                                    errorexit(stkuf, parser->foo, parser->opcode);
+                                    throw(stkuf);
                                 parser->sidx--;
                                 parser->h = parser->stack[parser->sidx].hh;
                                 parser->v = parser->stack[parser->sidx].vv;
@@ -369,9 +361,9 @@ static void dopage(DVIParser *parser)
                 case FNT_DEF3 :
                 case FNT_DEF4 : fontdef(parser, parser->opcode - FNT_DEF1 + 1);
                                 break;
-                case PRE      : errorexit(bdpre, parser->foo, parser->opcode); break;
-                case POST     : errorexit(bdpst, parser->foo, parser->opcode); break;
-                case POST_POST: errorexit(bdpp, parser->foo, parser->opcode); break;
+                case PRE      : throw(bdpre); break;
+                case POST     : throw(bdpst); break;
+                case POST_POST: throw(bdpp); break;
             }
     }
 
@@ -393,7 +385,7 @@ static void printpage(DVIParser *parser)       /* 'end of page', writes lines of
             if (parser->foo > 3)
                 parser->foo = 3;        /* linespacings not too large */
             for (i = 1; i <= (int) parser->foo; i++)
-                appendCharacterToData('\n', parser->output);
+                parser->output.push_back('\n');
         }
         if (parser->currentline->charactercount >= leftmargin) {
             parser->foo = ttywidth - 2;
@@ -401,10 +393,10 @@ static void printpage(DVIParser *parser)       /* 'end of page', writes lines of
                    i++, j++) {
                 ch = parser->currentline->text[i - leftmargin];
                 if (ch >= SPACE)
-                    appendCharacterToData(ch, parser->output);
+                    parser->output.push_back(ch);
             } 
         }
-        appendCharacterToData('\n', parser->output);
+        parser->output.push_back('\n');
     } 
 
     parser->currentline = parser->firstline;
@@ -511,7 +503,7 @@ static linetype *getline(DVIParser *parser)             /* returns an initialize
     linetype *temp;
 
     if ((temp = (linetype *) malloc(sizeof(linetype))) == NULL) 
-        errorexit(lnerq, parser->foo, parser->opcode);
+        throw(lnerq);
     temp->charactercount = leftmargin - 1;
     temp->prev = nil;
     temp->next = nil;
@@ -608,7 +600,7 @@ static int snum(DVIParser *parser, int size)
 static void dochar(DVIParser *parser, char ch)
 {
 
-    if (parser->symbolfont == TRUE)
+    if (parser->symbolfont)
         symchar(parser, ch);
     else
         normchar(parser, ch);
@@ -717,8 +709,8 @@ static void outchar(DVIParser *parser, unsigned char ch)                     /* 
     /*-------------------------------------------------------------*/
     if ((ch == 'a') || (ch == 'A') || (ch == 'o') || (ch == 'O') ||
           (ch == 'u') || (ch == 'U')) {
-        for (i = IMAX(leftmargin, j-2);
-             i <= IMIN(rightmargin, j+2);
+        for (i = std::max(leftmargin, j-2);
+             i <= std::min(rightmargin, j+2);
              i++)
             if ((parser->currentline->text[i - leftmargin] == 127) ||
                 (parser->currentline->text[i - leftmargin] == 34) ||
@@ -806,7 +798,7 @@ static void fontdef(DVIParser *parser, int x)
     font * fnt;
     int namelen;
     int fntnum;
-    int new = 0;
+    int isnew = 0;
 
     fntnum = num(parser, x);
     (void) get4();                      /* checksum */
@@ -822,7 +814,7 @@ static void fontdef(DVIParser *parser, int x)
             exit(EXIT_FAILURE);
         }
         fnt->num = fntnum;
-        new = 1;
+        isnew = 1;
     }
     else
         free(fnt->name);    /* free old name */
@@ -835,7 +827,7 @@ static void fontdef(DVIParser *parser, int x)
         name[i] = get1();
     name[namelen] = '\0';
     fnt->name = name;
-    if (new) {
+    if (isnew) {
         fnt->next = parser->fonts;
         parser->fonts = fnt;
     }
@@ -854,21 +846,117 @@ static void setfont(DVIParser *parser, int fntnum)
         fnt = fnt->next;
     if (fnt == NULL) {
         /* error : font not found */
-        parser->symbolfont = FALSE;
+        parser->symbolfont = false;
         return;
     }
 
     s = fnt->name;
     while ((s = strchr(s, 's')) != NULL) {
         if (strncmp("sy", s, 2) == 0) {
-            parser->symbolfont = TRUE;
+            parser->symbolfont = true;
             return;
         }
 	s++;	/* New line to fix bug; font names with 's' would hang */
     }
    
-    parser->symbolfont = FALSE;
+    parser->symbolfont = false;
     return;
 
 } /* setfont */
+
+static void printerror(int errorcode, long foo, int opcode)
+{
+    
+    switch (errorcode) {
+        case  illop : fprintf(stderr, "Illegal op-code found: %d\n", opcode);
+            break;
+        case  stkof : fprintf(stderr, "Stack overflow\n");
+            break;
+        case  stkuf : fprintf(stderr, "Stack underflow\n");
+            break;
+        case  stkrq : fprintf(stderr, "Cannot create dvi stack\n");
+            break;
+        case  lnerq : fprintf(stderr, "Cannot allocate memory\n");
+            break;
+        case  badid : fprintf(stderr, "Id-byte is not correct: %d\n ", opcode);
+            break;
+        case  bdsgn : fprintf(stderr, "Bad signature: %d (not 223)\n",
+                              (int) foo);
+            break;
+        case  fwsgn : fprintf(stderr, "%d signature bytes (min. 4)\n",
+                              (int) foo);
+            break;
+        case  nopre : fprintf(stderr, "Missing preamble\n");
+            break;
+        case  nobop : fprintf(stderr, "Missing beginning-of-page command\n");
+            break;
+        case  nopp  : fprintf(stderr, "Missing post-post command\n");
+            break;
+        case  bdpre : fprintf(stderr, "Preamble occured inside a page\n");
+            break;
+        case  bdbop : fprintf(stderr, "BOP-command occured inside a page\n");
+            break;
+        case  bdpst : fprintf(stderr, "Postamble occured before end-of-page\n");
+            break;
+        case  bdpp  : fprintf(stderr, "Postpost occured before post-command\n");
+            break;
+        case  nopst : fprintf(stderr, "Missing postamble\n");
+            break;
+        case  illch : fprintf(stderr, "Character code out of range, 0..127\n");
+            break;
+        case  filop : fprintf(stderr, "Cannot open dvifile\n");
+            break;
+        case  filcr : fprintf(stderr, "Cannot create outfile\n");
+            break;
+        case  pipcr : fprintf(stderr, "Cannot create pipe to pager\n");
+            break;
+        default     : fprintf(stderr, "Unknown error code\n");
+            break;
+    };
+}  /* printerror */
+
+#pragma mark API
+
+/*---------------------------------------------------------------------------*/
+
+CFStringRef CreateStringWithContentsOfDVIFile(CFStringRef absolutePath)
+{    
+    char onstack[1024];
+    size_t pathlen = CFStringGetMaximumSizeOfFileSystemRepresentation(absolutePath);
+    char *pathbuf = onstack;
+    if (pathlen > sizeof(onstack))
+        pathbuf = (char *)malloc(pathlen);
+    if (NULL == pathbuf) return NULL;
+    
+    (void) CFStringGetFileSystemRepresentation(absolutePath, pathbuf, pathlen);
+    
+    DVIParser parser(pathbuf);
+    if (onstack != pathbuf) free(pathbuf);
+    pathbuf = NULL;
+    
+    if (NULL == parser.infile) return NULL;
+    
+    bool failed = false;
+    
+    try {
+        parser.Postamble();
+        /* note that walkpages *must* immediately follow preamble */
+        parser.Preamble();
+        parser.Walkpages();        
+    }
+    catch (int err) {
+        fprintf(stderr, "%s: ", parser.filename.c_str());
+        printerror(err, parser.foo, parser.opcode);
+        failed = true;
+    }
+    
+    CFStringRef str = NULL;
+    if (false == failed) {
+        const uint8_t *it = &parser.output.front();    
+        str = CFStringCreateWithBytes(kCFAllocatorDefault, it, parser.output.size(), kCFStringEncodingISOLatin1, FALSE);
+    }
+    
+    return str;
+}
+
    

@@ -28,7 +28,9 @@ Copyright (C) 1988 M.J.E. Mol 1989, 1990"
 #define filcr   19              /* cannot creat file                 */
 #define pipcr   20              /* cannot creat pipe                 */
 
-/* dvi2tty.c */
-void errorexit(int, long foo, int opcode);
+
+__BEGIN_DECLS
 
 extern CFStringRef CreateStringWithContentsOfDVIFile(CFStringRef absolutePath);
+
+__END_DECLS
