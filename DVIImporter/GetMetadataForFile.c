@@ -1,10 +1,5 @@
-//
-//  DVIData.h
-//  DVIImporter
-//
-//  Created by Adam Maxwell on 05/01/05.
 /*
- This software is Copyright (c) 2005
+ This software is Copyright (c) 2005-2009
  Adam Maxwell. All rights reserved.
  
  Redistribution and use in source and binary forms, with or without
@@ -36,11 +31,22 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import <Foundation/Foundation.h>
+#include <CoreFoundation/CoreFoundation.h>
+#include <CoreServices/CoreServices.h> 
+#import "dvi2tty.h"
 
+Boolean GetMetadataForFile(void* thisInterface, 
+			   CFMutableDictionaryRef attributes, 
+			   CFStringRef contentTypeUTI,
+			   CFStringRef pathToFile)
+{
 
-@interface DVIData : NSObject{
-    NSMutableData *theData;
+    CFStringRef str = CreateStringWithContentsOfDVIFile(pathToFile);
+    Boolean success = FALSE;
+    if (str) {
+        CFDictionaryAddValue(attributes, kMDItemTextContent, str);
+        success = TRUE;
+        CFRelease(str);
+    }
+    return success;
 }
-- (NSData *)dataFromDVI:(NSString *)dviFilePath;
-@end

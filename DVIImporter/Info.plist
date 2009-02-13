@@ -2,42 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-
-	<!--
-	If your application does not already define a UTI, you may want to declare it
-	here, so that your documents are recognized by systems which do not have your
-	application installed.
-
-	To export this declaration, fill in the fields with your application's 
-	information, and uncomment the block of XML.
-	-->
-	
-	<key>UTExportedTypeDeclarations</key>
-	<array>
-		<dict>
-			<key>UTTypeIdentifier</key>
-			<string>com.mac.amaxwell.dvi</string>
-			<key>UTTypeReferenceURL</key>
-			<string>http://www.mac.com/amaxwell/</string>
-			<key>UTTypeDescription</key>
-			<string>DVI Document</string>
-			<key>UTTypeConformsTo</key>
-			<array>
-				<string>public.data</string>
-				<string>public.content</string>
-			</array>
-			<key>UTTypeTagSpecification</key>
-			<dict>
-				<key>com.apple.ostype</key>
-				<string>DDVI</string>
-				<key>public.filename-extension</key>
-				<array>
-					<string>dvi</string>
-				</array>
-			</dict>
-		</dict>
-	</array>
-
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleDocumentTypes</key>
@@ -47,7 +11,8 @@
 			<string>MDImporter</string>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>com.mac.amaxwell.dvi</string>
+				<string>org.tug.tex.dvi</string>
+				<string>net.sourceforge.skim-app.dvi</string>
 			</array>
 		</dict>
 	</array>
@@ -60,7 +25,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleVersion</key>
-	<string>1.1</string>
+	<string>1.2</string>
 	<key>CFPlugInDynamicRegisterFunction</key>
 	<string></string>
 	<key>CFPlugInDynamicRegistration</key>
@@ -79,5 +44,27 @@
 	</dict>
 	<key>CFPlugInUnloadFunction</key>
 	<string></string>
+    <key>UTImportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>DVI Document</string>
+			<key>UTTypeIdentifier</key>
+			<string>org.tug.tex.dvi</string>
+            <key>com.apple.ostype</key>
+            <string>DDVI</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>dvi</string>
+				</array>
+			</dict>
+		</dict>
+	</array>
 </dict>
 </plist>

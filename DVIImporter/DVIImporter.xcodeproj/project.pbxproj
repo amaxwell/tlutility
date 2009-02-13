@@ -34,20 +34,15 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		2C05A19C06CAA52B00D84F6F /* GetMetadataForFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C05A19B06CAA52B00D84F6F /* GetMetadataForFile.m */; };
+		2C05A19C06CAA52B00D84F6F /* GetMetadataForFile.c in Sources */ = {isa = PBXBuildFile; fileRef = 2C05A19B06CAA52B00D84F6F /* GetMetadataForFile.c */; };
 		8D576312048677EA00EA77CD /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 08FB77B6FE84183AC02AAC07 /* main.c */; settings = {ATTRIBUTES = (); }; };
 		8D576314048677EA00EA77CD /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AA1909FFE8422F4C02AAC07 /* CoreFoundation.framework */; };
 		8D5B49A804867FD3000E48DA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8D5B49A704867FD3000E48DA /* InfoPlist.strings */; };
 		C86B05270671AA6E00DD9006 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C86B05260671AA6E00DD9006 /* CoreServices.framework */; };
-		C88FB7D8067446EC006EBB30 /* schema.xml in Resources */ = {isa = PBXBuildFile; fileRef = C88FB7D7067446EC006EBB30 /* schema.xml */; };
-		C88FB7E40674480E006EBB30 /* schema.strings in Resources */ = {isa = PBXBuildFile; fileRef = C88FB7E30674480E006EBB30 /* schema.strings */; };
-		F9CC5A0D083CFD5F00166975 /* commands.h in Headers */ = {isa = PBXBuildFile; fileRef = F9CC59FE083CFD5F00166975 /* commands.h */; };
-		F9CC5A14083CFD5F00166975 /* dvi2tty.h in Headers */ = {isa = PBXBuildFile; fileRef = F9CC5A05083CFD5F00166975 /* dvi2tty.h */; };
-		F9CC5A27083CFE3300166975 /* dvi2tty in Resources */ = {isa = PBXBuildFile; fileRef = F9CC5A26083CFE3300166975 /* dvi2tty */; };
-		F9F086560825C2A300812F2A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9F086550825C2A300812F2A /* Foundation.framework */; };
-		F9F086A40825C60900812F2A /* DVIData.h in Headers */ = {isa = PBXBuildFile; fileRef = F9F086A20825C60900812F2A /* DVIData.h */; };
-		F9F086A50825C60900812F2A /* DVIData.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F086A30825C60900812F2A /* DVIData.m */; };
-		F9FCECB3083EDB5E00EEDB09 /* ReadMe.rtf in Resources */ = {isa = PBXBuildFile; fileRef = F9FCECB2083EDB5E00EEDB09 /* ReadMe.rtf */; };
+		F9F5298E0F42A0CE00C7A5F4 /* dvistuff.c in Sources */ = {isa = PBXBuildFile; fileRef = F9F5298A0F42A0CE00C7A5F4 /* dvistuff.c */; };
+		F9F5298F0F42A0CE00C7A5F4 /* dvi2tty.h in Headers */ = {isa = PBXBuildFile; fileRef = F9F5298B0F42A0CE00C7A5F4 /* dvi2tty.h */; };
+		F9F529900F42A0CE00C7A5F4 /* dvi2tty.c in Sources */ = {isa = PBXBuildFile; fileRef = F9F5298C0F42A0CE00C7A5F4 /* dvi2tty.c */; };
+		F9F529910F42A0CE00C7A5F4 /* commands.h in Headers */ = {isa = PBXBuildFile; fileRef = F9F5298D0F42A0CE00C7A5F4 /* commands.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -71,32 +66,15 @@
 		089C167EFE841241C02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		08FB77B6FE84183AC02AAC07 /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		0AA1909FFE8422F4C02AAC07 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = /System/Library/Frameworks/CoreFoundation.framework; sourceTree = "<absolute>"; };
-		2C05A19B06CAA52B00D84F6F /* GetMetadataForFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetMetadataForFile.m; sourceTree = "<group>"; };
+		2C05A19B06CAA52B00D84F6F /* GetMetadataForFile.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = GetMetadataForFile.c; sourceTree = "<group>"; };
 		8D576316048677EA00EA77CD /* DVIImporter.mdimporter */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DVIImporter.mdimporter; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D576317048677EA00EA77CD /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		C86B05260671AA6E00DD9006 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = /System/Library/Frameworks/CoreServices.framework; sourceTree = "<absolute>"; };
-		C88FB7D7067446EC006EBB30 /* schema.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = schema.xml; sourceTree = "<group>"; };
-		C88FB7DB0674470F006EBB30 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/schema.strings; sourceTree = "<group>"; };
-		F9CC59FD083CFD5F00166975 /* 00Description */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 00Description; sourceTree = "<group>"; };
-		F9CC59FE083CFD5F00166975 /* commands.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = commands.h; sourceTree = "<group>"; };
-		F9CC59FF083CFD5F00166975 /* disdvi.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = disdvi.c; sourceTree = "<group>"; };
-		F9CC5A00083CFD5F00166975 /* DVI.format */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = DVI.format; sourceTree = "<group>"; };
-		F9CC5A01083CFD5F00166975 /* dvi2tty-german_umlauts.patch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "dvi2tty-german_umlauts.patch"; sourceTree = "<group>"; };
-		F9CC5A02083CFD5F00166975 /* dvi2tty-latin1.patch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "dvi2tty-latin1.patch"; sourceTree = "<group>"; };
-		F9CC5A03083CFD5F00166975 /* dvi2tty.1 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.man; path = dvi2tty.1; sourceTree = "<group>"; };
-		F9CC5A04083CFD5F00166975 /* dvi2tty.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = dvi2tty.c; sourceTree = "<group>"; };
-		F9CC5A05083CFD5F00166975 /* dvi2tty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dvi2tty.h; sourceTree = "<group>"; };
-		F9CC5A06083CFD5F00166975 /* dvi2tty.patch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dvi2tty.patch; sourceTree = "<group>"; };
-		F9CC5A07083CFD5F00166975 /* dvistuff.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = dvistuff.c; sourceTree = "<group>"; };
-		F9CC5A08083CFD5F00166975 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
-		F9CC5A09083CFD5F00166975 /* MANIFEST */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MANIFEST; sourceTree = "<group>"; };
-		F9CC5A0A083CFD5F00166975 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
-		F9CC5A0B083CFD5F00166975 /* README.ORG */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.ORG; sourceTree = "<group>"; };
-		F9CC5A26083CFE3300166975 /* dvi2tty */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; name = dvi2tty; path = dvi2tty/dvi2tty; sourceTree = "<group>"; };
 		F9F086550825C2A300812F2A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
-		F9F086A20825C60900812F2A /* DVIData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVIData.h; sourceTree = "<group>"; };
-		F9F086A30825C60900812F2A /* DVIData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DVIData.m; sourceTree = "<group>"; };
-		F9FCECB2083EDB5E00EEDB09 /* ReadMe.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = ReadMe.rtf; sourceTree = "<group>"; };
+		F9F5298A0F42A0CE00C7A5F4 /* dvistuff.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = dvistuff.c; sourceTree = "<group>"; };
+		F9F5298B0F42A0CE00C7A5F4 /* dvi2tty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dvi2tty.h; sourceTree = "<group>"; };
+		F9F5298C0F42A0CE00C7A5F4 /* dvi2tty.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = dvi2tty.c; sourceTree = "<group>"; };
+		F9F5298D0F42A0CE00C7A5F4 /* commands.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = commands.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,7 +84,6 @@
 			files = (
 				8D576314048677EA00EA77CD /* CoreFoundation.framework in Frameworks */,
 				C86B05270671AA6E00DD9006 /* CoreServices.framework in Frameworks */,
-				F9F086560825C2A300812F2A /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -116,8 +93,6 @@
 		089C166AFE841209C02AAC07 /* DVIImporter */ = {
 			isa = PBXGroup;
 			children = (
-				F9FCECB2083EDB5E00EEDB09 /* ReadMe.rtf */,
-				F9CC59FC083CFD5F00166975 /* dvi2tty */,
 				08FB77AFFE84173DC02AAC07 /* Source */,
 				089C167CFE841241C02AAC07 /* Resources */,
 				089C1671FE841209C02AAC07 /* External Frameworks and Libraries */,
@@ -139,9 +114,6 @@
 		089C167CFE841241C02AAC07 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				F9CC5A26083CFE3300166975 /* dvi2tty */,
-				C88FB7E30674480E006EBB30 /* schema.strings */,
-				C88FB7D7067446EC006EBB30 /* schema.xml */,
 				8D576317048677EA00EA77CD /* Info.plist */,
 				8D5B49A704867FD3000E48DA /* InfoPlist.strings */,
 			);
@@ -151,9 +123,11 @@
 		08FB77AFFE84173DC02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				F9F086A20825C60900812F2A /* DVIData.h */,
-				F9F086A30825C60900812F2A /* DVIData.m */,
-				2C05A19B06CAA52B00D84F6F /* GetMetadataForFile.m */,
+				F9F5298A0F42A0CE00C7A5F4 /* dvistuff.c */,
+				F9F5298B0F42A0CE00C7A5F4 /* dvi2tty.h */,
+				F9F5298C0F42A0CE00C7A5F4 /* dvi2tty.c */,
+				F9F5298D0F42A0CE00C7A5F4 /* commands.h */,
+				2C05A19B06CAA52B00D84F6F /* GetMetadataForFile.c */,
 				08FB77B6FE84183AC02AAC07 /* main.c */,
 			);
 			name = Source;
@@ -167,28 +141,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		F9CC59FC083CFD5F00166975 /* dvi2tty */ = {
-			isa = PBXGroup;
-			children = (
-				F9CC59FD083CFD5F00166975 /* 00Description */,
-				F9CC59FE083CFD5F00166975 /* commands.h */,
-				F9CC59FF083CFD5F00166975 /* disdvi.c */,
-				F9CC5A00083CFD5F00166975 /* DVI.format */,
-				F9CC5A01083CFD5F00166975 /* dvi2tty-german_umlauts.patch */,
-				F9CC5A02083CFD5F00166975 /* dvi2tty-latin1.patch */,
-				F9CC5A03083CFD5F00166975 /* dvi2tty.1 */,
-				F9CC5A04083CFD5F00166975 /* dvi2tty.c */,
-				F9CC5A05083CFD5F00166975 /* dvi2tty.h */,
-				F9CC5A06083CFD5F00166975 /* dvi2tty.patch */,
-				F9CC5A07083CFD5F00166975 /* dvistuff.c */,
-				F9CC5A08083CFD5F00166975 /* Makefile */,
-				F9CC5A09083CFD5F00166975 /* MANIFEST */,
-				F9CC5A0A083CFD5F00166975 /* README */,
-				F9CC5A0B083CFD5F00166975 /* README.ORG */,
-			);
-			path = dvi2tty;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -196,9 +148,8 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F9F086A40825C60900812F2A /* DVIData.h in Headers */,
-				F9CC5A0D083CFD5F00166975 /* commands.h in Headers */,
-				F9CC5A14083CFD5F00166975 /* dvi2tty.h in Headers */,
+				F9F5298F0F42A0CE00C7A5F4 /* dvi2tty.h in Headers */,
+				F9F529910F42A0CE00C7A5F4 /* commands.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -209,12 +160,10 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = F97662000861BEF900829F8B /* Build configuration list for PBXNativeTarget "DVIImporter" */;
 			buildPhases = (
-				F9CC5A1D083CFD6A00166975 /* ShellScript */,
 				8D57630E048677EA00EA77CD /* Headers */,
 				8D57630F048677EA00EA77CD /* Resources */,
 				8D576311048677EA00EA77CD /* Sources */,
 				8D576313048677EA00EA77CD /* Frameworks */,
-				8D576315048677EA00EA77CD /* Rez */,
 			);
 			buildRules = (
 			);
@@ -251,39 +200,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D5B49A804867FD3000E48DA /* InfoPlist.strings in Resources */,
-				C88FB7D8067446EC006EBB30 /* schema.xml in Resources */,
-				C88FB7E40674480E006EBB30 /* schema.strings in Resources */,
-				F9CC5A27083CFE3300166975 /* dvi2tty in Resources */,
-				F9FCECB3083EDB5E00EEDB09 /* ReadMe.rtf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
-/* Begin PBXRezBuildPhase section */
-		8D576315048677EA00EA77CD /* Rez */ = {
-			isa = PBXRezBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXRezBuildPhase section */
-
 /* Begin PBXShellScriptBuildPhase section */
-		F9CC5A1D083CFD6A00166975 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "export MACOSX_DEPLOYMENT_TARGET=10.5\ncd ${SOURCE_ROOT}/dvi2tty && make";
-		};
 		F9CC5A50083D03DC00166975 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -318,8 +240,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D576312048677EA00EA77CD /* main.c in Sources */,
-				2C05A19C06CAA52B00D84F6F /* GetMetadataForFile.m in Sources */,
-				F9F086A50825C60900812F2A /* DVIData.m in Sources */,
+				2C05A19C06CAA52B00D84F6F /* GetMetadataForFile.c in Sources */,
+				F9F5298E0F42A0CE00C7A5F4 /* dvistuff.c in Sources */,
+				F9F529900F42A0CE00C7A5F4 /* dvi2tty.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -347,14 +270,6 @@
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
-		C88FB7E30674480E006EBB30 /* schema.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				C88FB7DB0674470F006EBB30 /* English */,
-			);
-			name = schema.strings;
-			sourceTree = "<group>";
-		};
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
@@ -378,7 +293,6 @@
 				INSTALL_PATH = /Library/Spotlight;
 				LIBRARY_SEARCH_PATHS = "";
 				LIBRARY_STYLE = Bundle;
-				OPTIMIZATION_CFLAGS = "-O0";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -401,7 +315,7 @@
 				COPY_PHASE_STRIP = YES;
 				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
@@ -468,7 +382,6 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				OPTIMIZATION_CFLAGS = "-O0";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -526,7 +439,6 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				OPTIMIZATION_CFLAGS = "-O0";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -578,19 +490,26 @@
 		F976620D0861BEF900829F8B /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.4;
+				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 			};
 			name = Development;
 		};
 		F976620E0861BEF900829F8B /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(NATIVE_ARCH_ACTUAL)";
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1 = "x86_64 i386 ppc";
+				MACOSX_DEPLOYMENT_TARGET = 10.4;
+				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 			};
 			name = Deployment;
 		};
 		F976620F0861BEF900829F8B /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.4;
+				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 			};
 			name = Default;
 		};
