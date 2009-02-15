@@ -189,6 +189,8 @@ static char _TLMOperationQueueOperationContext;
     SEL action = [anItem action];
     if (@selector(cancelAllOperations:) == action)
         return _operationCount > 0;
+    else if (@selector(updateInfrastructure:) == action)
+        return [[TLMReadWriteOperationQueue defaultQueue] isWriting] == NO;
     else
         return YES;
 }
@@ -675,6 +677,13 @@ static char _TLMOperationQueueOperationContext;
     else {
         [self _cancelAllOperations];
     }
+}
+
+- (void)updateInfrastructure:(id)sender;
+{
+    TLMLog(__func__, @"Beginning user-requested infrastructure update%C", 0x2026);
+    _updateInfrastructure = YES;
+    [self _updateAllPackages];
 }
 
 #pragma mark API
