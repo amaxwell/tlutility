@@ -89,6 +89,9 @@
 - (void)installPackagesWithNames:(NSArray *)packageNames reinstall:(BOOL)reinstall;
 - (void)updatePackagesWithNames:(NSArray *)packageNames;
 
+// action to manually reinstall tlmgr itself
+- (void)updateInfrastructure:(id)sender;
+
 - (void)removePackagesWithNames:(NSArray *)packageNames force:(BOOL)force;
 
 // both of these will use the default server URL
