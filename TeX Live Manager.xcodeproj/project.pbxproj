@@ -82,14 +82,14 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = F9A057A80F5075DD008C804E /* DVIImporter.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 8D576316048677EA00EA77CD /* DVIImporter.mdimporter */;
+			remoteGlobalIDString = 8D576316048677EA00EA77CD;
 			remoteInfo = DVIImporter;
 		};
 		F9A057C70F5076A2008C804E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F9A057A80F5075DD008C804E /* DVIImporter.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = 8D57630D048677EA00EA77CD /* DVIImporter */;
+			remoteGlobalIDString = 8D57630D048677EA00EA77CD;
 			remoteInfo = DVIImporter;
 		};
 		F9B139D50EECBE8F007C0046 /* PBXContainerItemProxy */ = {

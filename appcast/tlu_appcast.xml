@@ -157,5 +157,17 @@
             <pubDate>Fri, 06 Feb 2009 18:37:31 -0800</pubDate>
             <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20090206.tgz" sparkle:version="0.64" length="1458017" type="application/octet-stream" sparkle:dsaSignature="MCwCFGjYVLKcTbHZ3aLL7bOTpCQPmBbUAhQvOYkQRv+aVjvLlq9tfWydGY02Ag=="></enclosure>
         </item>
+        <item>
+            <title>Version 0.65</title>
+            <description>
+                <h3>Changes Since 0.64</h3>
+                <li>The local package database is now used when a network connection is not available, so you can always show info on installed packages.</li>
+                <li>Added a menu item to reinstall TeX Live Manager (tlmgr) by downloading and running the disaster recovery script.</li>
+                <li>Fixed a bug that caused update all to be triggered when installing all displayed packages during a search.</li>
+                <li>Bundled the Spotlight DVI importer with TeX Live Utility for easier distribution.</li>
+            </description>
+            <pubDate>Sat, 21 Feb 2009 10:16:08 -0800</pubDate>
+            <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20090221.tgz" sparkle:version="0.65" length="1473594" type="application/octet-stream" sparkle:dsaSignature="MCwCFDXJ6yTWRWKpy5pyLm0pzedOkPo1AhR/fZSFwm/vaSXqeAiQf5oOeaDXhw=="></enclosure>
+        </item>
     </channel>
 </rss>
