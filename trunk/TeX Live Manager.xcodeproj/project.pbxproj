@@ -28,6 +28,7 @@
 		F99CCDE70F0EB56E00D67ED0 /* DefaultMirrors.plist in Resources */ = {isa = PBXBuildFile; fileRef = F99CCDDA0F0EAFB300D67ED0 /* DefaultMirrors.plist */; };
 		F99D9B0B0F01731E00A1DCCB /* TLMTabView.m in Sources */ = {isa = PBXBuildFile; fileRef = F99D9B0A0F01731E00A1DCCB /* TLMTabView.m */; };
 		F99E51980EEE4AD5006E6B39 /* TLMURLFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = F99E51970EEE4AD5006E6B39 /* TLMURLFormatter.m */; };
+		F9A057B60F507624008C804E /* DVIImporter.mdimporter in CopyFiles */ = {isa = PBXBuildFile; fileRef = F9A057B20F5075DD008C804E /* DVIImporter.mdimporter */; };
 		F9A8BA380EF75C3B00E35DC9 /* TLMOutputParser2.m in Sources */ = {isa = PBXBuildFile; fileRef = F9A8BA370EF75C3B00E35DC9 /* TLMOutputParser2.m */; };
 		F9A8BB370EF8B11200E35DC9 /* TLMInfraUpdateOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F9A8BB360EF8B11200E35DC9 /* TLMInfraUpdateOperation.m */; };
 		F9ABAA5E0EF198D500497E0F /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = F9ABAA5D0EF198D500497E0F /* Credits.rtf */; };
@@ -49,7 +50,7 @@
 		F9B13B240EECEA73007C0046 /* TLMInfoController.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B13B170EECE5AE007C0046 /* TLMInfoController.m */; };
 		F9B13B2B0EECEB05007C0046 /* InfoPanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = F9B13B2A0EECEB05007C0046 /* InfoPanel.xib */; };
 		F9B3961C0F340A9C007F95E9 /* FileView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9B396150F340A71007F95E9 /* FileView.framework */; };
-		F9B3961D0F340AAA007F95E9 /* FileView.framework in copy Sparkle */ = {isa = PBXBuildFile; fileRef = F9B396150F340A71007F95E9 /* FileView.framework */; };
+		F9B3961D0F340AAA007F95E9 /* FileView.framework in copy frameworks */ = {isa = PBXBuildFile; fileRef = F9B396150F340A71007F95E9 /* FileView.framework */; };
 		F9B6B5630EF460A400CF767F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 29B97325FDCFA39411CA2CEA /* Foundation.framework */; };
 		F9B6B5EB0EF4647400CF767F /* TLMLogMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F56B4B0EF31F8800E934A9 /* TLMLogMessage.m */; };
 		F9B6B5F80EF469A600CF767F /* TLMLogServer.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B6B5F70EF469A600CF767F /* TLMLogServer.m */; };
@@ -57,7 +58,7 @@
 		F9D37D640F01EA8900FB755E /* TLMUpdateListDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D37D630F01EA8900FB755E /* TLMUpdateListDataSource.m */; };
 		F9D37E7B0F02B5F700FB755E /* TLMOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D37E7A0F02B5F700FB755E /* TLMOutlineView.m */; };
 		F9DCD36C0F06F0A200600DD2 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9DCD3650F06F08C00600DD2 /* Sparkle.framework */; };
-		F9DCD3700F06F0F400600DD2 /* Sparkle.framework in copy Sparkle */ = {isa = PBXBuildFile; fileRef = F9DCD3650F06F08C00600DD2 /* Sparkle.framework */; };
+		F9DCD3700F06F0F400600DD2 /* Sparkle.framework in copy frameworks */ = {isa = PBXBuildFile; fileRef = F9DCD3650F06F08C00600DD2 /* Sparkle.framework */; };
 		F9DCD43F0F06F76F00600DD2 /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = F9DCD43E0F06F76F00600DD2 /* dsa_pub.pem */; };
 		F9E22FD50EFCBD2A00B0BE38 /* TLMPapersizeOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F9E22FD40EFCBD2A00B0BE38 /* TLMPapersizeOperation.m */; };
 		F9E2C9BF0F3C00FA00D5EC49 /* DVI.qlgenerator in CopyFiles */ = {isa = PBXBuildFile; fileRef = F9E2C92D0F3C009400D5EC49 /* DVI.qlgenerator */; };
@@ -76,6 +77,20 @@
 			proxyType = 1;
 			remoteGlobalIDString = F9F04CE10CE260EB00F28ED2;
 			remoteInfo = "Framework + Plugins";
+		};
+		F9A057B10F5075DD008C804E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F9A057A80F5075DD008C804E /* DVIImporter.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8D576316048677EA00EA77CD /* DVIImporter.mdimporter */;
+			remoteInfo = DVIImporter;
+		};
+		F9A057C70F5076A2008C804E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F9A057A80F5075DD008C804E /* DVIImporter.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8D57630D048677EA00EA77CD /* DVIImporter */;
+			remoteInfo = DVIImporter;
 		};
 		F9B139D50EECBE8F007C0046 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -157,6 +172,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		F9A057B70F507642008C804E /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Contents/Library/Spotlight;
+			dstSubfolderSpec = 1;
+			files = (
+				F9A057B60F507624008C804E /* DVIImporter.mdimporter in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F9B139DD0EECBEEB007C0046 /* copy tlmgr_cwrapper */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -168,16 +193,16 @@
 			name = "copy tlmgr_cwrapper";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		F9DCD37C0F06F11300600DD2 /* copy Sparkle */ = {
+		F9DCD37C0F06F11300600DD2 /* copy frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				F9B3961D0F340AAA007F95E9 /* FileView.framework in copy Sparkle */,
-				F9DCD3700F06F0F400600DD2 /* Sparkle.framework in copy Sparkle */,
+				F9B3961D0F340AAA007F95E9 /* FileView.framework in copy frameworks */,
+				F9DCD3700F06F0F400600DD2 /* Sparkle.framework in copy frameworks */,
 			);
-			name = "copy Sparkle";
+			name = "copy frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		F9E2C9BE0F3C00EE00D5EC49 /* CopyFiles */ = {
@@ -231,6 +256,7 @@
 		F99D9B0A0F01731E00A1DCCB /* TLMTabView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMTabView.m; sourceTree = "<group>"; };
 		F99E51960EEE4AD5006E6B39 /* TLMURLFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMURLFormatter.h; sourceTree = "<group>"; };
 		F99E51970EEE4AD5006E6B39 /* TLMURLFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMURLFormatter.m; sourceTree = "<group>"; };
+		F9A057A80F5075DD008C804E /* DVIImporter.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = DVIImporter.xcodeproj; path = DVIImporter/DVIImporter.xcodeproj; sourceTree = "<group>"; };
 		F9A8BA360EF75C3B00E35DC9 /* TLMOutputParser2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMOutputParser2.h; sourceTree = "<group>"; };
 		F9A8BA370EF75C3B00E35DC9 /* TLMOutputParser2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMOutputParser2.m; sourceTree = "<group>"; };
 		F9A8BB350EF8B11200E35DC9 /* TLMInfraUpdateOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMInfraUpdateOperation.h; sourceTree = "<group>"; };
@@ -383,6 +409,7 @@
 				F9B396090F340A71007F95E9 /* FileView.xcodeproj */,
 				F9E2C9250F3C009300D5EC49 /* DVI.xcodeproj */,
 				F9DCD3590F06F08C00600DD2 /* Sparkle.xcodeproj */,
+				F9A057A80F5075DD008C804E /* DVIImporter.xcodeproj */,
 				F9D9AEB60F0D7EED00CB1A2F /* tlmgr_cwrapper-Info.plist */,
 			);
 			name = "TeX Live Manager";
@@ -446,6 +473,14 @@
 				F9D37E7A0F02B5F700FB755E /* TLMOutlineView.m */,
 			);
 			name = Views;
+			sourceTree = "<group>";
+		};
+		F9A057A90F5075DD008C804E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F9A057B20F5075DD008C804E /* DVIImporter.mdimporter */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		F9A8BA6F0EF7668E00E35DC9 /* Model */ = {
@@ -550,8 +585,9 @@
 				8D11072C0486CEB800E47090 /* Sources */,
 				8D11072E0486CEB800E47090 /* Frameworks */,
 				F9B139DD0EECBEEB007C0046 /* copy tlmgr_cwrapper */,
-				F9DCD37C0F06F11300600DD2 /* copy Sparkle */,
+				F9DCD37C0F06F11300600DD2 /* copy frameworks */,
 				F9E2C9BE0F3C00EE00D5EC49 /* CopyFiles */,
+				F9A057B70F507642008C804E /* CopyFiles */,
 				F9B396400F340E45007F95E9 /* FileView install name */,
 				F9D9AD660F0D790600CB1A2F /* codesign */,
 			);
@@ -562,6 +598,7 @@
 				F9DCD40E0F06F1D900600DD2 /* PBXTargetDependency */,
 				F91E079A0F341CA2006F4D97 /* PBXTargetDependency */,
 				F9E2C9330F3C00AE00D5EC49 /* PBXTargetDependency */,
+				F9A057C80F5076A2008C804E /* PBXTargetDependency */,
 			);
 			name = "TeX Live Utility";
 			productInstallPath = "$(HOME)/Applications";
@@ -602,6 +639,10 @@
 					ProjectRef = F9E2C9250F3C009300D5EC49 /* DVI.xcodeproj */;
 				},
 				{
+					ProductGroup = F9A057A90F5075DD008C804E /* Products */;
+					ProjectRef = F9A057A80F5075DD008C804E /* DVIImporter.xcodeproj */;
+				},
+				{
 					ProductGroup = F9B3960A0F340A71007F95E9 /* Products */;
 					ProjectRef = F9B396090F340A71007F95E9 /* FileView.xcodeproj */;
 				},
@@ -619,6 +660,13 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		F9A057B20F5075DD008C804E /* DVIImporter.mdimporter */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = DVIImporter.mdimporter;
+			remoteRef = F9A057B10F5075DD008C804E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		F9B396150F340A71007F95E9 /* FileView.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -817,6 +865,11 @@
 			isa = PBXTargetDependency;
 			name = "Framework + Plugins";
 			targetProxy = F91E07990F341CA2006F4D97 /* PBXContainerItemProxy */;
+		};
+		F9A057C80F5076A2008C804E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = DVIImporter;
+			targetProxy = F9A057C70F5076A2008C804E /* PBXContainerItemProxy */;
 		};
 		F9B139D60EECBE8F007C0046 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
