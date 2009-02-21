@@ -190,7 +190,8 @@
 
 - (IBAction)updateSelectedRows:(id)sender;
 {
-    if ([[_tableView selectedRowIndexes] count] == [_packages count]) {
+    // if all packages are being updated, use the standard mechanism instead of passing each one as an argument
+    if ([[_tableView selectedRowIndexes] count] == [_allPackages count]) {
         [_controller updateAllPackages];
     }
     else {
