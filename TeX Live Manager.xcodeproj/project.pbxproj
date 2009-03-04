@@ -589,7 +589,6 @@
 				F9E2C9BE0F3C00EE00D5EC49 /* CopyFiles */,
 				F9A057B70F507642008C804E /* CopyFiles */,
 				F9B396400F340E45007F95E9 /* FileView install name */,
-				F9D9AD660F0D790600CB1A2F /* codesign */,
 			);
 			buildRules = (
 			);
@@ -612,7 +611,6 @@
 			buildPhases = (
 				F9B139C80EECBDFE007C0046 /* Sources */,
 				F9B139C90EECBDFE007C0046 /* Frameworks */,
-				F9D9ADEF0F0D7B5300CB1A2F /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -763,33 +761,6 @@
 			shellPath = /bin/sh;
 			shellScript = "/usr/bin/install_name_tool -change \\\n'@loader_path/../../../../../../../FileView.framework/Versions/A/FileView' \\\n'@executable_path/../Frameworks/FileView.framework/Versions/A/FileView'   \\\n\"${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}\"";
 		};
-		F9D9AD660F0D790600CB1A2F /* codesign */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = codesign;
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "codesign -f -v -s \"TeX Live Utility Signing Certificate\" \\\n-o kill \\\n\"${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}\"\n";
-		};
-		F9D9ADEF0F0D7B5300CB1A2F /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "codesign -f -v -s \"TeX Live Utility Signing Certificate\" \\\n-i \"com.googlecode.mactlmgr.tlmgr_cwrapper\" \\\n-o kill \\\n\"${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}\"\n";
-		};
 		F9DCD5650F07EFF100600DD2 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -936,6 +907,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_IDENTITY = "TeX Live Utility Signing Certificate";
 				COPY_PHASE_STRIP = NO;
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -945,6 +917,7 @@
 				GCC_PREFIX_HEADER = "TeX Live Manager_Prefix.pch";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
+				OTHER_CODE_SIGN_FLAGS = "-o kill";
 				PRODUCT_NAME = "TeX Live Utility";
 			};
 			name = Debug;
@@ -953,10 +926,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_IDENTITY = "TeX Live Utility Signing Certificate";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TeX Live Manager_Prefix.pch";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
+				OTHER_CODE_SIGN_FLAGS = "-o kill";
 				PRODUCT_NAME = "TeX Live Utility";
 			};
 			name = Release;
@@ -1019,8 +994,10 @@
 		F9B139CD0EECBE00007C0046 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "TeX Live Utility Signing Certificate";
 				INFOPLIST_FILE = "tlmgr_cwrapper-Info.plist";
 				INSTALL_PATH = /usr/local/bin;
+				OTHER_CODE_SIGN_FLAGS = "-i com.googlecode.mactlmgr.tlmgr_cwrapper -o kill";
 				PRODUCT_NAME = tlmgr_cwrapper;
 			};
 			name = Debug;
@@ -1029,8 +1006,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_IDENTITY = "TeX Live Utility Signing Certificate";
 				INFOPLIST_FILE = "tlmgr_cwrapper-Info.plist";
 				INSTALL_PATH = /usr/local/bin;
+				OTHER_CODE_SIGN_FLAGS = "-i com.googlecode.mactlmgr.tlmgr_cwrapper -o kill";
 				PRODUCT_NAME = tlmgr_cwrapper;
 			};
 			name = Release;
