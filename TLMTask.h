@@ -56,7 +56,7 @@
 
 // 
 /*
- Implemntation note: stdio channels are read lazily when either is requested.
+ Implementation note: stdio channels are read lazily when either is requested.
  These calls execute on the thread that called -launch, and and will block 
  the calling thread if necessary.  
  
