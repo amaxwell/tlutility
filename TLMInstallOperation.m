@@ -50,7 +50,7 @@
     NSString *locationString = [location absoluteString];
     NSMutableArray *options = [NSMutableArray arrayWithObjects:@"--location", locationString, @"install", nil];
     if (reinstall)
-        [options addObject:@"−−reinstall"];
+        [options addObject:@"--reinstall"];
     [options addObjectsFromArray:packageNames];
 
     self = [self initWithCommand:cmd options:options];
