@@ -39,7 +39,6 @@
 #import "TLMTask.h"
 
 static NSString * const _TLMTaskRunLoopMode = @"_TLMTaskRunLoopMode";
-static void __TLMTaskNotify(void *info);
 
 @interface TLMTask()
 @property (readwrite, copy) NSData *errorData;
