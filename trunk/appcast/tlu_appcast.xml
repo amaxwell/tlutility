@@ -169,5 +169,15 @@
             <pubDate>Sat, 21 Feb 2009 10:16:08 -0800</pubDate>
             <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20090221.tgz" sparkle:version="0.65" length="1473594" type="application/octet-stream" sparkle:dsaSignature="MCwCFDXJ6yTWRWKpy5pyLm0pzedOkPo1AhR/fZSFwm/vaSXqeAiQf5oOeaDXhw=="></enclosure>
         </item>
+        <item>
+            <title>Version 0.66</title>
+            <description>
+                <h3>Changes Since 0.65</h3>
+                <li>Fixed the reinstall command</li>
+                <li>Parse Texdoc 0.42 output (bug #22)</li>
+            </description>
+            <pubDate>Fri, 17 Apr 2009 17:26:37 -0700</pubDate>
+            <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20090417.tgz" sparkle:version="0.66" length="1476855" type="application/octet-stream" sparkle:dsaSignature="MCwCFCq0yY3a+r/RT+WXwsfpuLQvdr9UAhRRZdSjkrAw5mHFvgjG2RzgceAChw=="></enclosure>
+        </item>
     </channel>
 </rss>
