@@ -55,12 +55,16 @@
         if ([self isVertical]) {
             divRect.origin.x = NSMaxX(divRect);
             divRect.size.width = [self dividerThickness];
+            if (divRect.size.width < 3.0) {
+                divRect.origin.x -= 1.5;
+                divRect.size.width = 3.0;
+            }
         } else {
             divRect.origin.y = NSMaxY(divRect);
             divRect.size.height = [self dividerThickness];
         }
         
-        if (NSPointInRect(mouseLoc, divRect)) {
+        if (NSMouseInRect(mouseLoc, divRect, [self isFlipped])) {
             inDivider = YES;
             break;
         }
@@ -68,7 +72,7 @@
     
     if (inDivider) {
         if ([theEvent clickCount] > 1 && [[self delegate] respondsToSelector:@selector(splitView:doubleClickedDividerAt:)])
-            [(id <TLMSplitViewDelegate>)[self delegate] splitView:self doubleClickedDividerAt:i];
+            [[self delegate] splitView:self doubleClickedDividerAt:i];
         else
             [super mouseDown:theEvent];
     } else {
@@ -77,3 +81,27 @@
 }
 
 @end
+
+@implementation TLMThinSplitView
+
+- (CGFloat)dividerThickness { return 1; }
+
+- (void)drawDividerInRect:(NSRect)aRect
+{
+#if 1
+    [NSGraphicsContext saveGraphicsState];
+    [[NSColor darkGrayColor] set];
+    
+    NSBezierPath *path = [NSBezierPath bezierPath];
+    const CGFloat x = floor(aRect.origin.x) + 0.5;
+    [path moveToPoint:NSMakePoint(x, NSMinY(aRect))];
+    [path lineToPoint:NSMakePoint(x, NSMaxY(aRect))];
+    [path setLineWidth:0.0];
+    [path stroke];
+    [NSGraphicsContext restoreGraphicsState];
+#endif
+}
+
+
+@end
+
