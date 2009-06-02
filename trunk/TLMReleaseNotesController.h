@@ -37,7 +37,7 @@
  */
 
 #import <Cocoa/Cocoa.h>
-
+#import <WebKit/WebKit.h>
 
 @interface TLMReleaseNotesController : NSWindowController
 {
@@ -45,7 +45,7 @@
     NSArray             *_versions;
     NSDictionary        *_notes;
     NSTableView         *_versionsTable;
-    NSTextView          *_notesView;
+    WebView             *_notesView;
     NSProgressIndicator *_progressIndicator;
     NSString            *_downloadPath;
     NSTextField         *_statusField;
@@ -54,7 +54,7 @@
 + (id)sharedInstance;
 
 @property (nonatomic, retain) IBOutlet NSTableView *_versionsTable;
-@property (nonatomic, retain) IBOutlet NSTextView *_notesView;
+@property (nonatomic, retain) IBOutlet WebView *_notesView;
 @property (nonatomic, retain) IBOutlet NSProgressIndicator *_progressIndicator;
 @property (nonatomic, retain) IBOutlet NSTextField *_statusField;
 
