@@ -123,7 +123,11 @@
                 [note setObject:[child stringValue] forKey:@"pubDate"];
             }
             else if ([name isEqualToString:@"description"]) {
-                [note setObject:[child XMLStringWithOptions:NSXMLNodePrettyPrint] forKey:@"description"];
+                NSMutableString *htmlString = [NSMutableString string];
+                // use appendFormat: in case of nil string and to add newlines for logging
+                for (NSXMLNode *htmlNode in [child children])
+                    [htmlString appendFormat:@"%@\n", [htmlNode XMLStringWithOptions:NSXMLNodePrettyPrint]];
+                [note setObject:htmlString forKey:@"description"];
             }
             else if ([name isEqualToString:@"enclosure"]) {
                 NSXMLElement *el = (NSXMLElement *)child;
@@ -142,18 +146,15 @@
     
     NSMutableDictionary *noteStrings = [NSMutableDictionary dictionary];
     for (NSDictionary *note in notes) {
-        NSMutableAttributedString *attrString;
-        NSData *html = [[note objectForKey:@"description"] dataUsingEncoding:NSUTF8StringEncoding];
-        attrString = [[NSMutableAttributedString alloc] initWithHTML:html documentAttributes:NULL];
-        if (attrString && [note objectForKey:@"version"])
-            [noteStrings setObject:attrString forKey:[note objectForKey:@"version"]];
-        [attrString release];
+        if ([note objectForKey:@"description"] && [note objectForKey:@"version"])
+            [noteStrings setObject:[note objectForKey:@"description"] forKey:[note objectForKey:@"version"]];
     }
     [self setNotes:noteStrings];
     [_versionsTable reloadData];
     
     // clean up the downloaded file
     [[NSFileManager defaultManager] removeItemAtPath:_downloadPath error:NULL];
+    [self tableViewSelectionDidChange:nil];
 }
 
 - (void)download:(NSURLDownload *)download didFailWithError:(NSError *)error;
@@ -174,17 +175,22 @@
 
 - (void)tableViewSelectionDidChange:(NSNotification *)notification
 {
-    [_notesView setSelectedRange:NSMakeRange(0, 0)];
+    [_notesView setSelectedDOMRange:nil affinity:NSSelectionAffinityUpstream];
+    NSString *htmlString = nil;
+    
     if ([_versionsTable numberOfSelectedRows]) {
         NSNumber *row = [_versions objectAtIndex:[_versionsTable selectedRow]];
         if ([_notes objectForKey:row])
-            [[_notesView textStorage] setAttributedString:[_notes objectForKey:row]];
+            htmlString = [_notes objectForKey:row];
         else
-            [_notesView setString:NSLocalizedString(@"Error: no release notes for selected version.", @"")];
+            htmlString = [NSString stringWithFormat:@"<h3>%@</h3>", NSLocalizedString(@"Error: no release notes for selected version.", @"")];
     }
     else {
-        [_notesView setString:NSLocalizedString(@"Nothing selected.", @"")];
+        htmlString = [NSString stringWithFormat:@"<h3>%@</h3>", NSLocalizedString(@"Nothing selected.", @"")];
     }
+    
+    NSParameterAssert(htmlString);
+    [[_notesView mainFrame] loadHTMLString:htmlString baseURL:nil];
 }
 
 @end
