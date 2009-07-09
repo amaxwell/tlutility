@@ -44,6 +44,33 @@
 
 @implementation TLMAppController
 
+static void __TLMMigratePreferences()
+{
+    NSString *updateKey = @"TLMDidMigratePreferencesKey";
+    
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:updateKey] == NO) {
+        
+        /*
+         The old bundle identifier was "com.google.mactlmgr.TeX_Live_Utility", which is an incorrect domain and annoying to type.
+         We need to preserve previously-set preferences, though, including all of the window frame/nav services defaults for which 
+         we don't know the keys.  Note that CFPreferencesCopyMultiple() returns an empty dictionary unless you pass the combination
+         kCFPreferencesCurrentUser, kCFPreferencesAnyHost.
+         */
+        NSDictionary *oldPrefs = [(id)CFPreferencesCopyMultiple(NULL, CFSTR("com.google.mactlmgr.TeX_Live_Utility"), kCFPreferencesCurrentUser, kCFPreferencesAnyHost) autorelease];
+        
+        // manually copy each key/value pair, since registerDefaults sets them in a volatile domain
+        for (id key in oldPrefs)
+            [[NSUserDefaults standardUserDefaults] setObject:[oldPrefs objectForKey:key] forKey:key];
+
+        if ([oldPrefs count])
+            TLMLog(__func__, @"Migrated preferences = %@", oldPrefs);
+        
+        // force synchronization to disk, so we never have to do this again
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:updateKey];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+}
+
 + (void)initialize
 {
     static bool didInit = false;
@@ -52,6 +79,8 @@
     
     // force setup of the log server
     [TLMLogServer sharedServer];
+    
+    __TLMMigratePreferences();
     
     NSMutableDictionary *defaults = [NSMutableDictionary dictionary];
     // see /usr/local/texlive/2008/tlpkg/TeXLive/TLConfig.pm
