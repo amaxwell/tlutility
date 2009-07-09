@@ -40,34 +40,5 @@
 
 int main(int argc, char *argv[])
 {
-    NSAutoreleasePool *pool = [NSAutoreleasePool new];
-    
-    /*
-     The old bundle identifier was "com.google.mactlmgr.TeX_Live_Utility", which has an incorrect domain and is annoying to type.
-     We need to preserve previously-set preferences, though, so we'll manually copy the preferences file over.  This has to be done
-     in main(), since +[TLMAppController initialize] is too late.  CFPreferencesCopyMultiple() returns an empty dictionary, so it's
-     useless for getting the old prefs.  Copying them one-by-one with CFPreferencesCopyAppValue() works, but we want the Apple
-     settings also, and don't have an exhaustive list of those.  Hence, moving the file is the only way to do this.
-     */
-    FSRef prefsFolder;
-    NSString *prefsFolderPath = nil;
-    if (noErr == FSFindFolder(kUserDomain, kPreferencesFolderType, TRUE, &prefsFolder))
-        prefsFolderPath = [[(id)CFURLCreateFromFSRef(CFAllocatorGetDefault(), &prefsFolder) autorelease] path];
-    
-    NSString *oldPrefsPath = nil;
-    if (prefsFolderPath)
-        oldPrefsPath = [prefsFolderPath stringByAppendingPathComponent:@"com.google.mactlmgr.TeX_Live_Utility.plist"];
-    NSString *newPrefsPath = [prefsFolderPath stringByAppendingPathComponent:[[NSBundle mainBundle] objectForInfoDictionaryKey:(id)kCFBundleIdentifierKey]];
-    if (newPrefsPath)
-        newPrefsPath = [newPrefsPath stringByAppendingPathExtension:@"plist"];
-    
-    if (oldPrefsPath && newPrefsPath && [[NSFileManager defaultManager] isReadableFileAtPath:oldPrefsPath]) {
-        if ([[NSFileManager defaultManager] isReadableFileAtPath:newPrefsPath] == NO) {
-            [[NSFileManager defaultManager] moveItemAtPath:oldPrefsPath toPath:newPrefsPath error:NULL];
-            NSLog(@"Migrating old preferences%C", 0x2026);
-        }
-    }
-    [pool release];
-    
     return NSApplicationMain(argc,  (const char **) argv);
 }
