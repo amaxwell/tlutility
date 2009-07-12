@@ -745,7 +745,7 @@ static char _TLMOperationQueueOperationContext;
             }
         }
         
-        [informativeText appendFormat:NSLocalizedString(@"  Total download size will be %.1f %@.", @"partial alert text, with double space in front, only used with tlmgr2"), totalSize, sizeUnits];
+        [informativeText appendFormat:NSLocalizedString(@"  Total installed size will be %.1f %@.", @"partial alert text, with double space in front, only used with tlmgr2"), totalSize, sizeUnits];
     }
     [alert setInformativeText:informativeText];
     [alert addButtonWithTitle:NSLocalizedString(@"Update", @"button title")];
