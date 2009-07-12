@@ -55,7 +55,10 @@
 
 - (NSString *)version
 {
-	return [bundle objectForInfoDictionaryKey:@"CFBundleVersion"];
+	NSString *version = [bundle objectForInfoDictionaryKey:@"CFBundleVersion"];
+	if (!version || [version isEqualToString:@""])
+		[NSException raise:@"SUNoVersionException" format:@"This host (%@) has no CFBundleVersion! This attribute is required.", [self bundlePath]];
+	return version;
 }
 
 - (NSString *)displayVersion
@@ -80,7 +83,7 @@
 		iconPath = [bundle pathForResource:[bundle objectForInfoDictionaryKey:@"CFBundleIconFile"] ofType: nil];
 	NSImage *icon = [[[NSImage alloc] initWithContentsOfFile:iconPath] autorelease];
 	// Use a default icon if none is defined.
-	if (!icon) { icon = [[NSWorkspace sharedWorkspace] iconForFileType:NSFileTypeForHFSTypeCode(kGenericApplicationIcon)]; }
+	if (!icon) { icon = [[NSWorkspace sharedWorkspace] iconForFileType:NSFileTypeForHFSTypeCode(bundle == [NSBundle mainBundle] ? kGenericApplicationIcon : UTGetOSTypeFromString(CFSTR("BNDL")))]; }
 	return icon;
 }
 
@@ -138,7 +141,7 @@
 		return [[NSUserDefaults standardUserDefaults] objectForKey:defaultName];
 	
 	CFPropertyListRef obj = CFPreferencesCopyAppValue((CFStringRef)defaultName, (CFStringRef)[bundle bundleIdentifier]);
-#if MAC_OS_X_VERSION_MAX_ALLOWED > 1050
+#if MAC_OS_X_VERSION_MAX_ALLOWED > MAC_OS_X_VERSION_10_4
 	return [NSMakeCollectable(obj) autorelease];
 #else
 	return [(id)obj autorelease];

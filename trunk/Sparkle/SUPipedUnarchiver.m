@@ -47,10 +47,6 @@
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	FILE *fp = NULL, *cmdFP = NULL;
 	
-	// Get the file size.
-	NSNumber *fs = [[[NSFileManager defaultManager] fileAttributesAtPath:archivePath traverseLink:NO] objectForKey:NSFileSize];
-	if (fs == nil) goto reportError;
-	
 	// Thank you, Allan Odgaard!
 	// (who wrote the following extraction alg.)
 	fp = fopen([archivePath fileSystemRepresentation], "r");

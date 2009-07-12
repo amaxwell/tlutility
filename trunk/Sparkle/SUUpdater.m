@@ -18,6 +18,7 @@
 
 @interface SUUpdater (Private)
 - initForBundle:(NSBundle *)bundle;
+- (void)startUpdateCycle;
 - (void)checkForUpdatesWithDriver:(SUUpdateDriver *)updateDriver;
 - (BOOL)automaticallyDownloadsUpdates;
 - (void)scheduleNextUpdateCheck;
@@ -68,6 +69,8 @@ static NSString *SUUpdaterDefaultsObservationContext = @"SUUpdaterDefaultsObserv
         [sharedUpdaters setObject:self forKey:[NSValue valueWithNonretainedObject:bundle]];
         host = [[SUHost alloc] initWithBundle:bundle];
         [self registerAsObserver];
+        // This runs the permission prompt if needed, but never before the app has finished launching because the runloop won't run before that
+        [self performSelector:@selector(startUpdateCycle) withObject:nil afterDelay:0];
 	}
 	return self;
 }
@@ -80,7 +83,7 @@ static NSString *SUUpdaterDefaultsObservationContext = @"SUUpdaterDefaultsObserv
 
 - (NSString *)description { return [NSString stringWithFormat:@"%@ <%@>", [self class], [host bundlePath]]; }
 
-- (void)applicationDidFinishLaunching:(NSNotification *)note
+- (void)startUpdateCycle
 {
     BOOL shouldPrompt = NO;
     
@@ -148,6 +151,7 @@ static NSString *SUUpdaterDefaultsObservationContext = @"SUUpdaterDefaultsObserv
 	if (checkTimer)
 	{
 		[checkTimer invalidate];
+		[checkTimer release];
 		checkTimer = nil;
 	}
 	if (![self automaticallyChecksForUpdates]) return;
@@ -165,7 +169,7 @@ static NSString *SUUpdaterDefaultsObservationContext = @"SUUpdaterDefaultsObserv
 		delayUntilCheck = (updateCheckInterval - intervalSinceCheck); // It hasn't been long enough.
 	else
 		delayUntilCheck = 0; // We're overdue! Run one now.
-	checkTimer = [NSTimer scheduledTimerWithTimeInterval:delayUntilCheck target:self selector:@selector(checkForUpdatesInBackground) userInfo:nil repeats:NO];
+	checkTimer = [[NSTimer scheduledTimerWithTimeInterval:delayUntilCheck target:self selector:@selector(checkForUpdatesInBackground) userInfo:nil repeats:NO] retain];
 }
 
 - (void)checkForUpdatesInBackground
@@ -186,7 +190,12 @@ static NSString *SUUpdaterDefaultsObservationContext = @"SUUpdaterDefaultsObserv
 - (void)checkForUpdatesWithDriver:(SUUpdateDriver *)d
 {
 	if ([self updateInProgress]) { return; }
-	if (checkTimer) { [checkTimer invalidate]; checkTimer = nil; }
+	if (checkTimer)
+	{
+		[checkTimer invalidate];
+		[checkTimer release];
+		checkTimer = nil;
+	}
 		
 	[self willChangeValueForKey:@"lastUpdateCheckDate"];
 	[host setObject:[NSDate date] forUserDefaultsKey:SULastCheckTimeKey];
@@ -198,7 +207,6 @@ static NSString *SUUpdaterDefaultsObservationContext = @"SUUpdaterDefaultsObserv
 
 - (void)registerAsObserver
 {
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidFinishLaunching:) name:NSApplicationDidFinishLaunchingNotification object:NSApp];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDriverDidFinish:) name:SUUpdateDriverFinishedNotification object:nil];
     // No sense observing the shared NSUserDefaultsController when we're not updating the main bundle.
     if ([host bundle] != [NSBundle mainBundle]) return;
@@ -364,7 +372,11 @@ static NSString *SUUpdaterDefaultsObservationContext = @"SUUpdaterDefaultsObserv
 {
 	[self unregisterAsObserver];
 	[host release];
-	if (checkTimer) { [checkTimer invalidate]; }
+	if (checkTimer)
+	{
+		[checkTimer invalidate];
+		[checkTimer release];
+	}
 	[super dealloc];
 }
 

@@ -32,7 +32,7 @@
 	[appcast setDelegate:self];
 	NSString *userAgent = [NSString stringWithFormat: @"%@/%@ Sparkle/%@", [aHost name], [aHost displayVersion], ([SPARKLE_BUNDLE objectForInfoDictionaryKey:@"CFBundleVersion"] ?: nil)];
 	NSData * cleanedAgent = [userAgent dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
-    userAgent = [[[NSString alloc] initWithData:cleanedAgent encoding:NSASCIIStringEncoding] autorelease];
+	userAgent = [[[NSString alloc] initWithData:cleanedAgent encoding:NSASCIIStringEncoding] autorelease];
 	[appcast setUserAgentString:userAgent];
 	[appcast fetchAppcastFromURL:URL];
 }
@@ -142,7 +142,7 @@
 	NSString *prefix = [NSString stringWithFormat:@"%@ %@ Update", [host name], [host version]];
 	NSString *tempDir = [NSTemporaryDirectory() stringByAppendingPathComponent:prefix];
 	int cnt=1;
-	while ([[NSFileManager defaultManager] fileExistsAtPath:tempDir] && cnt <= 999999)
+	while ([[NSFileManager defaultManager] fileExistsAtPath:tempDir] && cnt <= 999)
 		tempDir = [NSTemporaryDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"%@ %d", prefix, cnt++]];
 	BOOL success = [[NSFileManager defaultManager] createDirectoryAtPath:tempDir attributes:nil];
 	if (!success)
@@ -160,7 +160,7 @@
 {
 	// New in Sparkle 1.5: we're now checking signatures on all non-secure downloads, where "secure" is defined as both the appcast and the download being transmitted over SSL.
 	NSURL *downloadURL = [[d request] URL];
-	if (![[downloadURL scheme] isEqualToString:@"https"] || ![[appcastURL scheme] isEqualToString:@"https"] || [host publicDSAKey])
+	if (!([[downloadURL scheme] isEqualToString:@"https"] && [[appcastURL scheme] isEqualToString:@"https"]) || !([downloadURL isFileURL] && [appcastURL isFileURL]) || [host publicDSAKey])
 	{
 		if (![SUDSAVerifier validatePath:downloadPath withEncodedDSASignature:[updateItem DSASignature] withPublicDSAKey:[host publicDSAKey]])
 		{
@@ -172,7 +172,7 @@
 	[self extractUpdate];
 }
 
-- (void)download:(NSURLDownload *)d didFailWithError:(NSError *)error
+- (void)download:(NSURLDownload *)download didFailWithError:(NSError *)error
 {
 	// Get rid of what we've downloaded so far, if anything.
 	if (downloadPath != nil)
@@ -180,7 +180,7 @@
 	[self abortUpdateWithError:[NSError errorWithDomain:SUSparkleErrorDomain code:SURelaunchError userInfo:[NSDictionary dictionaryWithObjectsAndKeys:SULocalizedString(@"An error occurred while downloading the update. Please try again later.", nil), NSLocalizedDescriptionKey, [error localizedDescription], NSLocalizedFailureReasonErrorKey, nil]]];
 }
 
-- (BOOL)download:(NSURLDownload *)d shouldDecodeSourceDataOfMIMEType:(NSString *)encodingType
+- (BOOL)download:(NSURLDownload *)download shouldDecodeSourceDataOfMIMEType:(NSString *)encodingType
 {
 	// We don't want the download system to extract our gzips.
 	// Note that we use a substring matching here instead of direct comparison because the docs say "application/gzip" but the system *uses* "application/x-gzip". This is a documentation bug.

@@ -22,6 +22,8 @@
 
 + (SUUpdater *)sharedUpdater;
 + (SUUpdater *)updaterForBundle:(NSBundle *)bundle;
+- initForBundle:(NSBundle *)bundle;
+
 - (NSBundle *)hostBundle;
 
 - (void)setDelegate:(id)delegate;
@@ -69,14 +71,14 @@
 - (NSArray *)feedParametersForUpdater:(SUUpdater *)updater sendingSystemProfile:(BOOL)sendingProfile;
 
 // Use this to override the default behavior for Sparkle prompting the user about automatic update checks.
-- (BOOL)updaterShouldPromptForPermissionToCheckForUpdates:(SUUpdater *)bundle;
+- (BOOL)updaterShouldPromptForPermissionToCheckForUpdates:(SUUpdater *)updater;
 
 // Implement this if you want to do some special handling with the appcast once it finishes loading.
 - (void)updater:(SUUpdater *)updater didFinishLoadingAppcast:(SUAppcast *)appcast;
 
 // If you're using special logic or extensions in your appcast, implement this to use your own logic for finding
 // a valid update, if any, in the given appcast.
-- (SUAppcastItem *)bestValidUpdateInAppcast:(SUAppcast *)appcast forUpdater:(SUUpdater *)bundle;
+- (SUAppcastItem *)bestValidUpdateInAppcast:(SUAppcast *)appcast forUpdater:(SUUpdater *)updater;
 
 // Sent when a valid update is found by the update driver.
 - (void)updater:(SUUpdater *)updater didFindValidUpdate:(SUAppcastItem *)update;
