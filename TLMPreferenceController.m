@@ -42,12 +42,11 @@
 #import "TLMLogServer.h"
 #import "TLMTask.h"
 
-NSString * const TLMServerURLPreferenceKey = @"TLMServerURLPreferenceKey";     /* http://mirror.ctan.org      */
-NSString * const TLMTexBinPathPreferenceKey = @"TLMTexBinPathPreferenceKey";   /* /usr/texbin                 */
-NSString * const TLMServerPathPreferenceKey = @"TLMServerPathPreferenceKey";   /* systems/texlive/tlnet/2008  */
-NSString * const TLMUseRootHomePreferenceKey = @"TLMUseRootHomePreferenceKey"; /* YES                         */
-NSString * const TLMInfraPathPreferenceKey = @"TLMInfraPathPreferenceKey";     /* update-tlmgr-latest.sh      */
-NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";     /* NO                          */
+NSString * const TLMTexBinPathPreferenceKey = @"TLMTexBinPathPreferenceKey";       /* /usr/texbin                 */
+NSString * const TLMUseRootHomePreferenceKey = @"TLMUseRootHomePreferenceKey";     /* YES                         */
+NSString * const TLMInfraPathPreferenceKey = @"TLMInfraPathPreferenceKey";         /* update-tlmgr-latest.sh      */
+NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";         /* NO                          */
+NSString * const TLMFullServerURLPreferenceKey = @"TLMFullServerURLPreferenceKey"; /* composed URL                */
 
 #define TLMGR_CMD @"tlmgr"
 #define TEXDOC_CMD @"texdoc"
@@ -110,7 +109,7 @@ NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";     /
     NSString *texbinPath = [defaults objectForKey:TLMTexBinPathPreferenceKey];
     [_texbinPathControl setURL:[NSURL fileURLWithPath:texbinPath]];    
     // only display the hostname part
-    [_serverComboBox setStringValue:[defaults objectForKey:TLMServerURLPreferenceKey]];
+    [_serverComboBox setStringValue:[defaults objectForKey:TLMFullServerURLPreferenceKey]];
     [_serverComboBox setFormatter:[[TLMURLFormatter new] autorelease]];
     [_serverComboBox setDelegate:self];
     
@@ -321,9 +320,9 @@ NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";     /
 - (IBAction)changeServerURL:(id)sender
 {        
     // save the old value, then set new value in prefs, so -defaultServerURL can be used in _canConnectToDefaultServer
-    NSString *oldValue = [[[[NSUserDefaults standardUserDefaults] objectForKey:TLMServerURLPreferenceKey] copy] autorelease];
+    NSString *oldValue = [[[[NSUserDefaults standardUserDefaults] objectForKey:TLMFullServerURLPreferenceKey] copy] autorelease];
     NSString *serverURLString = [[sender cell] stringValue];
-    [[NSUserDefaults standardUserDefaults] setObject:serverURLString forKey:TLMServerURLPreferenceKey];
+    [[NSUserDefaults standardUserDefaults] setObject:serverURLString forKey:TLMFullServerURLPreferenceKey];
     
     // only display the dialog if the user has manually typed something in the text field
     if (_hasPendingServerEdit) {
@@ -350,7 +349,7 @@ NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";     /
             
             NSAlert *alert = [[NSAlert new] autorelease];
             [alert setMessageText:NSLocalizedString(@"Unable to connect to server.", @"alert title")];
-            [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"Either a network connection could not be established, or the directory \"%@\" does not exist at the specified CTAN root URL.  Would you like to keep this URL, or revert to the previous one?", @"alert message text"), [[NSUserDefaults standardUserDefaults] objectForKey:TLMServerPathPreferenceKey]]];
+            [alert setInformativeText:NSLocalizedString(@"Either a network connection could not be established, or the specified URL is incorrect.  Would you like to keep this URL, or revert to the previous one?", @"alert message text")];
             [alert addButtonWithTitle:NSLocalizedString(@"Revert", @"")];
             [alert addButtonWithTitle:NSLocalizedString(@"Keep", @"")];
             
@@ -358,7 +357,7 @@ NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";     /
             NSInteger rv = [alert runModal];
             
             if (NSAlertFirstButtonReturn == rv) {
-                [[NSUserDefaults standardUserDefaults] setObject:oldValue forKey:TLMServerURLPreferenceKey];
+                [[NSUserDefaults standardUserDefaults] setObject:oldValue forKey:TLMFullServerURLPreferenceKey];
                 [[sender cell] setStringValue:oldValue];
             }
         }
@@ -378,14 +377,7 @@ NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";     /
 
 - (NSURL *)defaultServerURL
 {
-    // There's a race here if the server path is ever user-settable, but at present it's only for future-proofing.
-    NSURL *base = [NSURL URLWithString:[[NSUserDefaults standardUserDefaults] objectForKey:TLMServerURLPreferenceKey]];
-    // !!! Special case for tlcritical
-    if ([base isEqual:[NSURL URLWithString:@"ftp://tug.org/texlive/tlcritical"]])
-        return base;
-    NSString *path = [[NSUserDefaults standardUserDefaults] objectForKey:TLMServerPathPreferenceKey];
-    CFURLRef fullURL = CFURLCreateCopyAppendingPathComponent(CFGetAllocator(base), (CFURLRef)base, (CFStringRef)path, TRUE);
-    return [(id)fullURL autorelease];
+    return [NSURL URLWithString:[[NSUserDefaults standardUserDefaults] objectForKey:TLMFullServerURLPreferenceKey]];
 }
 
 - (NSString *)tlmgrAbsolutePath

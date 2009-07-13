@@ -38,12 +38,11 @@
 
 #import <Cocoa/Cocoa.h>
 
-extern NSString * const TLMServerURLPreferenceKey;
 extern NSString * const TLMTexBinPathPreferenceKey;
-extern NSString * const TLMServerPathPreferenceKey;
 extern NSString * const TLMUseRootHomePreferenceKey;
 extern NSString * const TLMInfraPathPreferenceKey;
 extern NSString * const TLMUseSyslogPreferenceKey;
+extern NSString * const TLMFullServerURLPreferenceKey;
 
 @interface TLMPreferenceController : NSWindowController 
 {
