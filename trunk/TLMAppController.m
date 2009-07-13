@@ -44,7 +44,7 @@
 
 @implementation TLMAppController
 
-static void __TLMMigratePreferences()
+static void __TLMMigrateBundleIdentifier()
 {
     NSString *updateKey = @"TLMDidMigratePreferencesKey";
     
@@ -80,12 +80,38 @@ static void __TLMMigratePreferences()
     // force setup of the log server
     [TLMLogServer sharedServer];
     
-    __TLMMigratePreferences();
+    __TLMMigrateBundleIdentifier();
+    
+    NSString *tlnetDefault = @"http://mirror.ctan.org/systems/texlive/tlnet/2008";
+    
+    // convert from the old-style composed path to full path, preserving user-specified settings
+    NSString *userURL = [[NSUserDefaults standardUserDefaults] objectForKey:@"TLMServerURLPreferenceKey"];
+    if (userURL && nil == [[NSUserDefaults standardUserDefaults] objectForKey:TLMFullServerURLPreferenceKey]) {
+        
+        // path portion of the old default for TL 2008
+        NSString *serverPath = @"systems/texlive/tlnet/2008";
+        if ([[NSUserDefaults standardUserDefaults] objectForKey:@"TLMServerPathPreferenceKey"])
+            serverPath = [[NSUserDefaults standardUserDefaults] objectForKey:@"TLMServerPathPreferenceKey"];
+        
+        tlnetDefault = [NSString stringWithFormat:@"%@/%@", userURL, serverPath];
+        TLMLog(__func__, @"Converting old-style URL preference to %@", tlnetDefault);
+        
+        // set the new value and sync to disk
+        [[NSUserDefaults standardUserDefaults] setObject:tlnetDefault forKey:TLMFullServerURLPreferenceKey];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        
+        // now remove the old values
+#if 0
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"TLMServerURLPreferenceKey"];
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"TLMServerPathPreferenceKey"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+#else
+#warning FIXME
+#endif
+    }
     
     NSMutableDictionary *defaults = [NSMutableDictionary dictionary];
-    // see /usr/local/texlive/2008/tlpkg/TeXLive/TLConfig.pm
-    [defaults setObject:@"http://mirror.ctan.org/" forKey:TLMServerURLPreferenceKey];
-    [defaults setObject:@"systems/texlive/tlnet/2008" forKey:TLMServerPathPreferenceKey];
+    [defaults setObject:tlnetDefault forKey:TLMFullServerURLPreferenceKey];
     
     [defaults setObject:@"/usr/texbin" forKey:TLMTexBinPathPreferenceKey];
     // typically avoids problems with junk in your home directory

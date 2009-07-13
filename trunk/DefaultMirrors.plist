@@ -9,58 +9,58 @@
     */
     
     /* Multiplexer */
-    "http://mirror.ctan.org",
+    "http://mirror.ctan.org/systems/texlive/tlnet/2008",
 	
     /* United States */
-    "http://ctan.unixbrain.com",
-    "http://mirror.hmc.edu/ctan",
-    "http://carroll.aset.psu.edu/pub/CTAN",
-    "http://ftp.math.purdue.edu/mirrors/ctan.org",
-    "http://mirror.unl.edu/ctan",
-    "http://sunsite.utk.edu/ftp/pub/software/CTAN",
-	"http://ctan.math.utah.edu/tex-archive",
-	"http://gentoo.chem.wisc.edu/tex-archive",
-	"http://mirrors.ibiblio.org/pub/mirrors/CTAN",
+    "http://ctan.unixbrain.com/systems/texlive/tlnet/2008",
+    "http://mirror.hmc.edu/ctan/systems/texlive/tlnet/2008",
+    "http://carroll.aset.psu.edu/pub/CTAN/systems/texlive/tlnet/2008",
+    "http://ftp.math.purdue.edu/mirrors/ctan.org/systems/texlive/tlnet/2008",
+    "http://mirror.unl.edu/ctan/systems/texlive/tlnet/2008",
+    "http://sunsite.utk.edu/ftp/pub/software/CTAN/systems/texlive/tlnet/2008",
+	"http://ctan.math.utah.edu/tex-archive/systems/texlive/tlnet/2008",
+	"http://gentoo.chem.wisc.edu/tex-archive/systems/texlive/tlnet/2008",
+	"http://mirrors.ibiblio.org/pub/mirrors/CTAN/systems/texlive/tlnet/2008",
 	
 	/* Australia */
-	"http://mirror.aarnet.edu.au/pub/CTAN",
-	"http://ctan.unsw.edu.au",
+	"http://mirror.aarnet.edu.au/pub/CTAN/systems/texlive/tlnet/2008",
+	"http://ctan.unsw.edu.au/systems/texlive/tlnet/2008",
 	
 	/* Austria */
-	"http://gd.tuwien.ac.at/publishing/tex/CTAN",
+	"http://gd.tuwien.ac.at/publishing/tex/CTAN/systems/texlive/tlnet/2008",
 	
 	/* Brazil */
-	"http://ctan.tche.br",
+	"http://ctan.tche.br/systems/texlive/tlnet/2008",
 	
 	/* Canada */
-	"ftp://ctan.cms.math.ca",
+	"ftp://ctan.cms.math.ca/systems/texlive/tlnet/2008",
 	
 	/* Chile */
-	"http://ctan.dcc.uchile.cl",
+	"http://ctan.dcc.uchile.cl/systems/texlive/tlnet/2008",
 	
 	/* China */
-	"ftp://ftp.ctex.org/CTAN",
+	"ftp://ftp.ctex.org/CTAN/systems/texlive/tlnet/2008",
 	
 	/* Czech */
-	"http://ftp.cstug.cz/pub/tex/CTAN",
+	"http://ftp.cstug.cz/pub/tex/CTAN/systems/texlive/tlnet/2008",
 	
 	/* Denmark */
-	"http://mirrors.dotsrc.org/ctan",
+	"http://mirrors.dotsrc.org/ctan/systems/texlive/tlnet/2008",
 	
 	/* Ireland */
-	"ftp://ftp.heanet.ie/pub/CTAN/tex",
+	"ftp://ftp.heanet.ie/pub/CTAN/tex/systems/texlive/tlnet/2008",
 	
 	/* France */
-	"ftp://ftp.inria.fr/pub/TeX/CTAN",
-	"http://mirrors.ircam.fr/pub/CTAN",
-	"http://distrib-coffee.ipsl.jussieu.fr/pub/mirrors/ctan",
+	"ftp://ftp.inria.fr/pub/TeX/CTAN/systems/texlive/tlnet/2008",
+	"http://mirrors.ircam.fr/pub/CTAN/systems/texlive/tlnet/2008",
+	"http://distrib-coffee.ipsl.jussieu.fr/pub/mirrors/ctan/systems/texlive/tlnet/2008",
 	
 	/* Germany */
-	"http://ftp.fernuni-hagen.de/ftp-dir/pub/mirrors/www.ctan.org",
-	"ftp://ftp.fu-berlin.de/tex/CTAN",
-	"http://ftp.gwdg.de/pub/ctan",
-	"http://sunsite.informatik.rwth-aachen.de/ftp/pub/mirror/ctan",
+	"http://ftp.fernuni-hagen.de/ftp-dir/pub/mirrors/www.ctan.org/systems/texlive/tlnet/2008",
+	"ftp://ftp.fu-berlin.de/tex/CTAN/systems/texlive/tlnet/2008",
+	"http://ftp.gwdg.de/pub/ctan/systems/texlive/tlnet/2008",
+	"http://sunsite.informatik.rwth-aachen.de/ftp/pub/mirror/ctan/systems/texlive/tlnet/2008",
 	
 	/* Netherlands */
-	"http://archive.cs.uu.nl/mirror/CTAN"
+	"http://archive.cs.uu.nl/mirror/CTAN/systems/texlive/tlnet/2008"
 )
