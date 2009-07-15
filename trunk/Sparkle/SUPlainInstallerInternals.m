@@ -185,6 +185,13 @@ static BOOL AuthorizationExecuteWithPrivilegesAndWait(AuthorizationRef authoriza
 	return res;
 }
 
++ (void)_movePathToTrash:(NSString *)path
+{
+	NSInteger tag = 0;
+	if (![[NSWorkspace sharedWorkspace] performFileOperation:NSWorkspaceRecycleOperation source:[path stringByDeletingLastPathComponent] destination:@"" files:[NSArray arrayWithObject:[path lastPathComponent]] tag:&tag])
+		NSLog(@"Sparkle error: couldn't move %@ to the trash. This is often a sign of a permissions error.", path);
+}
+
 + (BOOL)copyPathWithAuthentication:(NSString *)src overPath:(NSString *)dst temporaryName:(NSString *)tmp error:(NSError **)error
 {
 	FSRef srcRef, dstRef, targetRef, movedRef;
@@ -224,8 +231,14 @@ static BOOL AuthorizationExecuteWithPrivilegesAndWait(AuthorizationRef authoriza
 	}
 	
 	// Trash the old copy of the app.
-	if (noErr != FSMoveObjectToTrashSync(&movedRef, NULL, 0))
+#if MAC_OS_X_VERSION_MAX_ALLOWED > MAC_OS_X_VERSION_10_4
+	if (FSMoveObjectToTrashSync == NULL)
+		[self performSelectorOnMainThread:@selector(_movePathToTrash:) withObject:tmpPath waitUntilDone:YES];
+	else if (noErr != FSMoveObjectToTrashSync(&movedRef, NULL, 0))
 		NSLog(@"Sparkle error: couldn't move %@ to the trash. This is often a sign of a permissions error.", tmpPath);
+#else
+	[self performSelectorOnMainThread:@selector(_movePathToTrash:) withObject:tmpPath waitUntilDone:YES];
+#endif
 	
 	// If the currently-running application is trusted, the new
 	// version should be trusted as well.  Remove it from the
