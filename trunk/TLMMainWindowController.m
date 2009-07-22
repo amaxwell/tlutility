@@ -243,6 +243,8 @@ static char _TLMOperationQueueOperationContext;
 // pass nil for status to clear the view and remove it
 - (void)_displayStatusString:(NSString *)statusString
 {
+#warning may add to wrong view
+    // changed tabs during update; after update completed, "No Updates Available" ended up on the manage packages view, then stuck there
     if (statusString) {
         // may currently be a window, so get rid of it
         [[_currentListDataSource statusWindow] fadeOutAndRemove:YES];
