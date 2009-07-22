@@ -299,13 +299,18 @@ static NSString *__TLMGetTemporaryDirectory()
         // downloaded hash has a description string appended
         if ([checkHash length] >= [scriptHash length])
             isOkay = [[checkHash subdataWithRange:NSMakeRange(0, [scriptHash length])] isEqualToData:scriptHash];
-        if (isOkay)
+        if (isOkay) {
             TLMLog(__func__, @"SHA256 signature looks okay");
-        else
+        }
+        else {
             TLMLog(__func__, @"*** ERROR *** SHA256 signature does not match");
+            TLMLog(__func__, @"script: %@\nsha256: %@", scriptHash, checkHash);
+            [self setFailed:YES];
+        }
     }
     else {
         TLMLog(__func__, @"Unable to download SHA256 signature from %@", hashURL);
+        [self setFailed:YES];
     }
     return isOkay;
 }
