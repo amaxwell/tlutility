@@ -241,23 +241,21 @@ static char _TLMOperationQueueOperationContext;
 }
 
 // pass nil for status to clear the view and remove it
-- (void)_displayStatusString:(NSString *)statusString
+- (void)_displayStatusString:(NSString *)statusString dataSource:(id <TLMListDataSource>)dataSource
 {
-#warning may add to wrong view
-    // changed tabs during update; after update completed, "No Updates Available" ended up on the manage packages view, then stuck there
+    // may currently be a window, so get rid of it
+    [[dataSource statusWindow] fadeOutAndRemove:YES];
+    [dataSource setStatusWindow:nil];
+    
     if (statusString) {
-        // may currently be a window, so get rid of it
-        [[_currentListDataSource statusWindow] fadeOutAndRemove:YES];
+        // status window is one shot
+        [dataSource setStatusWindow:[TLMStatusWindow windowWithStatusString:statusString frameFromView:_tabView]];
         
-        // child window is one shot
-        [_currentListDataSource setStatusWindow:[TLMStatusWindow windowWithStatusString:statusString frameFromView:_tabView]];
-        [[self window] addChildWindow:[_currentListDataSource statusWindow] ordered:NSWindowAbove];
-        [[_currentListDataSource statusWindow] fadeIn];
-    }
-    else if ([_currentListDataSource statusWindow]) {
-        NSParameterAssert([[[self window] childWindows] containsObject:[_currentListDataSource statusWindow]]);
-        [[_currentListDataSource statusWindow] fadeOutAndRemove:YES];
-        [_currentListDataSource setStatusWindow:nil];
+        // only display now if this datasource is current
+        if ([_currentListDataSource isEqual:dataSource]) {
+            [[self window] addChildWindow:[_currentListDataSource statusWindow] ordered:NSWindowAbove];
+            [[dataSource statusWindow] fadeIn];
+        }
     }
 }    
 
@@ -442,12 +440,12 @@ static char _TLMOperationQueueOperationContext;
     else if ([packages count] == 0)
         statusString = NSLocalizedString(@"No Updates Available", @"main window status string");
     
-    [self _displayStatusString:statusString];
+    [self _displayStatusString:statusString dataSource:_updateListDataSource];
 }
 
 - (void)_refreshUpdatedPackageListFromLocation:(NSURL *)location
 {
-    [self _displayStatusString:nil];
+    [self _displayStatusString:nil dataSource:_updateListDataSource];
     // disable refresh action for this view
     [_updateListDataSource setRefreshing:YES];
     TLMListUpdatesOperation *op = [[TLMListUpdatesOperation alloc] initWithLocation:location];
@@ -541,14 +539,14 @@ static char _TLMOperationQueueOperationContext;
     else if ([op failed])
         statusString = NSLocalizedString(@"Listing Failed", @"main window status string");
     
-    [self _displayStatusString:statusString];
+    [self _displayStatusString:statusString dataSource:_packageListDataSource];
     [_packageListDataSource setLastUpdateURL:[op updateURL]];
     [self _updateURLView];
 }
 
 - (void)_refreshFullPackageListFromLocation:(NSURL *)location
 {
-    [self _displayStatusString:nil];
+    [self _displayStatusString:nil dataSource:_packageListDataSource];
     // disable refresh action for this view
     [_packageListDataSource setRefreshing:YES];
     TLMListOperation *op = [[TLMListOperation alloc] initWithLocation:location];
@@ -707,7 +705,7 @@ static char _TLMOperationQueueOperationContext;
         TLMLog(__func__, @"Network connection is down (%@).  Trying local install database %@%C", desc, serverURL, 0x2026);
         [(id)desc autorelease];
         [self _refreshFullPackageListFromLocation:serverURL];
-        [self _displayStatusString:NSLocalizedString(@"Network is unavailable", @"")];
+        [self _displayStatusString:NSLocalizedString(@"Network is unavailable", @"") dataSource:_updateListDataSource];
     }
     else {
         [self _refreshFullPackageListFromLocation:serverURL];

@@ -46,7 +46,7 @@
 @class TLMUpdateListDataSource;
 @class TLMGradientView;
 
-@protocol TLMListDataSource
+@protocol TLMListDataSource <NSObject>
 @property (nonatomic, copy) NSURL *lastUpdateURL;
 @property (nonatomic, retain) TLMStatusWindow *statusWindow;
 @end
