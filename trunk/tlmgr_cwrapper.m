@@ -165,8 +165,9 @@ int main(int argc, char *argv[]) {
     
     /* 
      argv[0]: tlmgr_cwrapper
-     argv[1]: y or n
-     argv[2]: tlmgr
+     argv[1]: DO server name for IPC
+     argv[2]: y or n
+     argv[3]: tlmgr
      argv[n]: tlmgr arguments
      */
     if (argc < 4) {
