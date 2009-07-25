@@ -179,5 +179,21 @@
             <pubDate>Fri, 17 Apr 2009 17:26:37 -0700</pubDate>
             <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20090417.tgz" sparkle:version="0.66" length="1476855" type="application/octet-stream" sparkle:dsaSignature="MCwCFCq0yY3a+r/RT+WXwsfpuLQvdr9UAhRRZdSjkrAw5mHFvgjG2RzgceAChw=="></enclosure>
         </item>
+        <item>
+            <title>Version 0.70</title>
+            <description>
+                <h3>Changes Since 0.66</h3>
+                <li>Cleaned up the release notes display.</li>
+                <li>Changed the bundle identifier to be more correct.</li>
+                <li>Changed wording in download size alert.</li>
+                <li>Updated Sparkle with various bug fixes.</li>
+                <li>Converted preferences to use the full URL for mirrors.</li>
+                <li>Set failure flag when the SHA256 hash for the infrastructure update doesn't match.</li>
+                <li>Fixed a bug that could allow status messages to be displayed in the wrong tab.</li>
+                <li>Underlying tlmgr failure messages are now logged.</li>
+            </description>
+            <pubDate>Fri, 24 Jul 2009 20:15:06 -0700</pubDate>
+            <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20090724.tgz" sparkle:version="0.70" length="1561940" type="application/octet-stream" sparkle:dsaSignature="MCwCFDoDr3eeIwGAZOUe2mgCgkUe7CD/AhQjH/0N8RxvV73UxlKbxTlLjuPBjg=="></enclosure>
+        </item>
     </channel>
 </rss>
