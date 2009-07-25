@@ -16,7 +16,7 @@ http://mactlmgr.googlecode.com/svn/wiki/images/Prefs.png
 
 == Server URL ==
 
-This is the [http://ctan.org CTAN] mirror that will be used for update and installation.  This page must be a valid URL, and should point to the root of a CTAN server.  When you view the URL in a web browser, it will look like this:
+This is the [http://ctan.org CTAN] mirror that will be used for update and installation.  This page must be a valid URL, and should point to a tlnet directory on the server.  When you view the URL in a web browser, it will look like this:
 
 http://mactlmgr.googlecode.com/svn/wiki/images/CTANRoot.png
 
