@@ -18,7 +18,7 @@ Packages can be installed using the "Manage Packages" tab:
 
 http://mactlmgr.googlecode.com/svn/wiki/images/PackageTab.png
 
-Note that some packages have multiple architectures, and you generally only want to install the darwin version for Mac OS X.
+Note that some packages have multiple architectures, and you generally only want to install the darwin version for Mac OS X.  This is not a generic package installer.  Only TeX Live packages that exist on the server will be listed.
 
 = Paper Size =
 
