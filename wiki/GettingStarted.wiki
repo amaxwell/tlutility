@@ -6,6 +6,8 @@ The primary feature of TeX Live Utility is updating a MacTeX installation.  When
 
 http://mactlmgr.googlecode.com/svn/wiki/images/UpdateTab.png
 
+Installed and Remote columns show the TeX Live version number for the package.  Size shows the installed size in bytes.
+
 = Updating =
 
 To update all packages, use the "Update All" toolbar button or menu item.  Individual packages can also be updated by selecting them in the list and using the "Update" toolbar button or menu item.
