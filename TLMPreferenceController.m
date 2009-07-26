@@ -47,6 +47,7 @@ NSString * const TLMUseRootHomePreferenceKey = @"TLMUseRootHomePreferenceKey";  
 NSString * const TLMInfraPathPreferenceKey = @"TLMInfraPathPreferenceKey";         /* update-tlmgr-latest.sh      */
 NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";         /* NO                          */
 NSString * const TLMFullServerURLPreferenceKey = @"TLMFullServerURLPreferenceKey"; /* composed URL                */
+NSString * const TLMDisableVersionMismatchWarningKey = @"TLMDisableVersionMismatchWarningKey"; /* NO              */
 
 #define TLMGR_CMD @"tlmgr"
 #define TEXDOC_CMD @"texdoc"
@@ -136,6 +137,9 @@ NSString * const TLMFullServerURLPreferenceKey = @"TLMFullServerURLPreferenceKey
     
     // update environment, or tlmgr will be non-functional
     [TLMAppController updatePathEnvironment];
+    
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:TLMDisableVersionMismatchWarningKey];
+    [[NSApp delegate] checkVersionConsistency];
 }
 
 - (void)openPanelDidEnd:(NSOpenPanel*)panel returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
@@ -366,11 +370,16 @@ NSString * const TLMFullServerURLPreferenceKey = @"TLMFullServerURLPreferenceKey
             [_progressPanel orderOut:nil];
             [timer invalidate];
         }
-        
+                
         // reset since it's either accepted or reverted at this point
         _hasPendingServerEdit = NO;
     }
     
+    // reset the pref if things have changed
+    if ([oldValue isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:TLMFullServerURLPreferenceKey]] == NO) {
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:TLMDisableVersionMismatchWarningKey];
+        [[NSApp delegate] checkVersionConsistency];    
+    }
 }
 
 - (NSString *)windowNibName { return @"Preferences"; }

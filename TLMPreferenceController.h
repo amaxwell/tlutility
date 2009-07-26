@@ -43,6 +43,7 @@ extern NSString * const TLMUseRootHomePreferenceKey;
 extern NSString * const TLMInfraPathPreferenceKey;
 extern NSString * const TLMUseSyslogPreferenceKey;
 extern NSString * const TLMFullServerURLPreferenceKey;
+extern NSString * const TLMDisableVersionMismatchWarningKey;
 
 @interface TLMPreferenceController : NSWindowController 
 {
