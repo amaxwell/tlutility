@@ -99,12 +99,13 @@ static void __TLMMigrateBundleIdentifier()
         
         // set the new value and sync to disk
         [[NSUserDefaults standardUserDefaults] setObject:tlnetDefault forKey:TLMFullServerURLPreferenceKey];
-        [[NSUserDefaults standardUserDefaults] synchronize];
         
-        // now remove the old values
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"TLMServerURLPreferenceKey"];
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"TLMServerPathPreferenceKey"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
+        if ([[NSUserDefaults standardUserDefaults] synchronize]) {
+            // now remove the old values if we synced successfully
+            [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"TLMServerURLPreferenceKey"];
+            [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"TLMServerPathPreferenceKey"];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+        }
     }
     
     NSMutableDictionary *defaults = [NSMutableDictionary dictionary];
