@@ -137,6 +137,8 @@ static char _TLMOperationQueueOperationContext;
     
     // checkbox in IB doesn't work?
     [[[self window] toolbar] setAutosavesConfiguration:YES];
+    
+    [[NSApp delegate] checkVersionConsistency];
 }
 
 - (NSString *)windowNibName { return @"MainWindow"; }
