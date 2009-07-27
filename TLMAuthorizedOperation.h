@@ -38,6 +38,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import "TLMOperation.h"
+#import "TLMLogMessage.h"
 
 @interface TLMAuthorizedOperation : TLMOperation
 {
@@ -50,5 +51,8 @@
 
 // authorized operations only exist to write
 @property (readonly) BOOL isWriter;
+
+// flags passed through tlmgr_cwrapper
+@property(readonly) TLMLogMessageFlags messageFlags;
 
 @end

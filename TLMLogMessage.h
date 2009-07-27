@@ -38,14 +38,22 @@
 
 #import <Cocoa/Cocoa.h>
 
+enum {
+    TLMLogDefault         = 0,        /* no parsing possible   */
+    TLMLogMachineReadable = (1 << 0), /* message can be parsed */
+    TLMLogUpdateOperation = (1 << 1)  /* operation/output type */
+};
+typedef NSUInteger TLMLogMessageFlags;
+
 @interface TLMLogMessage : NSObject <NSCoding>
 {
 @private
-    NSDate   *_date;
-    NSString *_message;
-    NSString *_sender;
-    NSString *_level;
-    NSNumber *_pid;    
+    NSDate             *_date;
+    NSString           *_message;
+    NSString           *_sender;
+    NSString           *_level;
+    NSNumber           *_pid;  
+    TLMLogMessageFlags  _flags;
 }
 
 @property (readwrite, copy) NSDate *date;
@@ -53,6 +61,7 @@
 @property (readwrite, copy) NSString *sender;
 @property (readwrite, copy) NSString *level;
 @property (readwrite, copy) NSNumber *pid;
+@property (readwrite) TLMLogMessageFlags flags;
 
 @end
 

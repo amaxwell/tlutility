@@ -107,6 +107,8 @@ struct TLMAOInternal {
 
 - (BOOL)isWriter { return YES; }
 
+- (TLMLogMessageFlags)messageFlags { return TLMLogDefault; }
+
 - (void)_appendStringToErrorData:(NSString *)str
 {
     NSMutableData *d = [[self errorData] mutableCopy];
@@ -158,7 +160,7 @@ struct TLMAOInternal {
     }
     
     // underlying_pid may be zero...
-    TLMLog(__func__, @"killing %d and %d", _internal->_underlying_pid, _internal->_cwrapper_pid);
+    TLMLog(__func__, @"killing tlmgr_cwrapper pid = %d", _internal->_cwrapper_pid);
     char *killargs[] = { NULL, NULL, NULL, NULL };
     
     // use SIGKILL since tlmgr doesn't respond to SIGTERM
@@ -172,8 +174,10 @@ struct TLMAOInternal {
     killargs[1] = (char *)[[NSString stringWithFormat:@"%d", _internal->_cwrapper_pid] fileSystemRepresentation];
     
     // possible that tlmgr has exited and tlmgr_cwrapper is hanging, so we only have one process to kill
-    if (_internal->_underlying_pid)
+    if (_internal->_underlying_pid) {
+        TLMLog(__func__, @"killing underlying pid = %d", _internal->_underlying_pid);
         killargs[2] = (char *)[[NSString stringWithFormat:@"%d", _internal->_underlying_pid] fileSystemRepresentation];
+    }
     
     // logs a message and returns NULL if authorization failed
     AuthorizationRef authorization = [self _authorization];
@@ -221,7 +225,7 @@ struct TLMAOInternal {
 
 - (void)_runUntilChildExit
 {
-    
+    int timeoutCount = 0;
     do {
         
         // run the runloop once to service any incoming messages
@@ -262,9 +266,20 @@ struct TLMAOInternal {
                 _internal->_underlying_pid = 0;
             }
         }
+        else if (0 == eventCount) {
+            
+            // handle a failure in the child before setWrapperPID:
+            if (0 == _internal->_underlying_pid || 0 == _internal->_cwrapper_pid)
+                timeoutCount++;
+            
+            if (timeoutCount > 10) {
+                TLMLog(__func__, @"No child process on kqueue after %.1f seconds%Cbailing out.", timeoutCount * 0.5, 0x2026);
+                [self setFailed:YES];
+            }
+        }
         
         // kill child processes if the operation was cancelled
-        if (NO == _internal->_childFinished && [self isCancelled]) {
+        if ((NO == _internal->_childFinished && [self isCancelled]) || [self failed]) {
             [self _killChildProcesses];
                         
             // set to break out of the main loop
@@ -361,13 +376,16 @@ static BOOL __TLMCheckSignature()
          Use calloc to zero the arg vector, then add the two required options for tlmgr_cwrapper
          before adding the subprocess path and options.  A terminating 0 is required.
          */
-        char **args = NSZoneCalloc([self zone], ([_internal->_options count] + 3), sizeof(char *));
+        char **args = NSZoneCalloc([self zone], ([_internal->_options count] + 4), sizeof(char *));
         int i = 0;
         
         // first argument is the DO server name for IPC
         args[i++] = (char *)[serverName fileSystemRepresentation];
         
-        // second argument is option for root home
+        // second argument is log message flags
+        args[i++] = (char *)[[NSString stringWithFormat:@"%lu", (unsigned long)[self messageFlags]] fileSystemRepresentation];
+        
+        // third argument is option for root home
         args[i++] = [self _useRootHome] ? "y" : "n";
         
         // remaining options are the command to execute and its options
