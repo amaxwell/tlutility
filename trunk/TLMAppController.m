@@ -239,6 +239,11 @@ static void __TLMMigrateBundleIdentifier()
     [tlmgrTask waitUntilExit];
     
     NSString *versionString = [tlmgrTask terminationStatus] ? nil : [tlmgrTask outputString];
+    
+    // !!! this happens periodically, and I don't yet know why...
+    if (nil == versionString)
+        TLMLog(__func__, @"Failed to read version string: %@", [tlmgrTask errorString]);
+    
     versionString = [versionString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     TLMLog(__func__, @"Using tlmgr version:\n%@", versionString);
     NSArray *versionLines = [versionString componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
