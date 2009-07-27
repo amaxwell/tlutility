@@ -67,6 +67,7 @@ struct BDSKTaskInternal {
 @implementation BDSKTask
 
 static int _kqueue = -1;
+static NSLock *_forkLock = nil;
 
 + (void)initialize
 {
@@ -74,6 +75,7 @@ static int _kqueue = -1;
     _kqueue = kqueue();
     // persistent thread to watch all tasks
     [NSThread detachNewThreadSelector:@selector(_watchQueue) toTarget:self withObject:nil];
+    _forkLock = [NSLock new];
 }
 
 #define ASSERT_LAUNCH do { if (!_internal->_launched) { [NSException raise:@"BDSKTaskException" format:@"Task has not been launched"]; } } while (0)
@@ -257,10 +259,22 @@ static void __BDSKTaskNotify(void *info)
     }
 
     // avoid a race between exec and setting up our kqueue
-    NSPipe *blockPipe = [NSPipe new];
-    int fd_block_rd = [[blockPipe fileHandleForReading] fileDescriptor];
-    int fd_block_wr = [[blockPipe fileHandleForWriting] fileDescriptor];
-
+    int blockpipe[2] = { -1, -1 };
+    if (pipe(blockpipe))
+        perror("failed to create blockpipe");
+    
+    /*
+     Unfortunately, a side effect of blocking on a pipe is that other processes inherit our blockpipe
+     descriptors as well.  Consequently, if taskB calls fork() while taskA is still setting up its
+     kevent, taskB inherits the pipe for taskA, and taskA will never launch since taskB doesn't close
+     them.  This was a very confusing race to debug, and it resulted in a bunch of orphaned child
+     processes.
+     
+     A more serious problem is that NSTask doesn't use this lock, so it's subject to the same race
+     condition.  Consequently, mixing BDSKTask and NSTask could be problematic.
+     */
+    [_forkLock lock];
+    
     // !!! No CF or Cocoa after this point in the child process!
     _processIdentifier = fork();
     
@@ -277,10 +291,11 @@ static void __BDSKTaskNotify(void *info)
         
         if (workingDir) chdir(workingDir);
         
-        close(fd_block_wr);
+        close(blockpipe[1]);
         char ignored;
         // block until the parent has setup complete
-        read(fd_block_rd, &ignored, 1);
+        read(blockpipe[0], &ignored, 1);
+        close(blockpipe[0]);
 
         int ret = execve(args[0], args, env);
         _exit(ret);
@@ -299,7 +314,7 @@ static void __BDSKTaskNotify(void *info)
         
         // NSTask docs say that these descriptors are closed in the parent task; required to make pipes work properly
         [handlesToClose makeObjectsPerformSelector:@selector(closeFile)];
-        
+
         if (-1 != fd_null) close(fd_null);
 
         /*
@@ -320,11 +335,15 @@ static void __BDSKTaskNotify(void *info)
         CFRelease(_internal->_rlsource);
         
         // all setup is complete, so now widow the pipe and exec in the child
-        [[blockPipe fileHandleForWriting] closeFile];
+        close(blockpipe[0]);   
+        close(blockpipe[1]);
+        
+        // okay to fork again now
+        [_forkLock unlock];
+        
     }
     
     // executed by child and parent
-    [blockPipe release];
     [handlesToClose release];
     NSZoneFree(NSZoneFromPointer(args), args);
     if (*nsEnvironment != env) NSZoneFree(NSZoneFromPointer(env), env);
