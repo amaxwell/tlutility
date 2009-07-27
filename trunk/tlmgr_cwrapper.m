@@ -64,6 +64,7 @@ extern char **environ;
 /* http://www.cocoabuilder.com/archive/message/cocoa/2001/6/15/21704 */
 
 static id _logServer = nil;
+static TLMLogMessageFlags _messageFlags = TLMLogDefault;
 
 static void establish_log_connection()
 {
@@ -91,12 +92,13 @@ static void log_message_with_level(const char *level, NSString *message)
         return;
     }
     
-    TLMLogMessage *msg = [[TLMLogMessage alloc] init];
+    TLMLogMessage *msg = [TLMLogMessage new];
     [msg setDate:[NSDate date]];
     [msg setMessage:message];
     [msg setSender:SENDER_NAME];
     [msg setLevel:[NSString stringWithUTF8String:level]];
     [msg setPid:[NSNumber numberWithInteger:getpid()]];
+    [msg setFlags:_messageFlags];
     
     @try {
         [_logServer logMessage:msg];
@@ -173,11 +175,12 @@ int main(int argc, char *argv[]) {
     /* 
      argv[0]: tlmgr_cwrapper
      argv[1]: DO server name for IPC
-     argv[2]: y or n
-     argv[3]: tlmgr
+     argv[2]: log message flags
+     argv[3]: y or n
+     argv[4]: tlmgr
      argv[n]: tlmgr arguments
      */
-    if (argc < 4) {
+    if (argc < 5) {
         log_error(@"insufficient arguments");
         exit(1);
     }
@@ -186,11 +189,27 @@ int main(int argc, char *argv[]) {
     id parent = [NSConnection rootProxyForConnectionWithRegisteredName:parentName host:nil];
     [parent setProtocolForProxy:@protocol(TLMAuthOperationProtocol)];
     
+    /* do this early so the parent kqueue can monitor the process */
+    @try {
+        [parent setWrapperPID:getpid()];
+    }
+    @catch (id exception) {
+        log_error(@"failed to send PID to server:\n\t%@", exception);
+    }
+    
+    /* single integer, holding flags for the log messages */
+    char *invalid = NULL;
+    _messageFlags = strtoul(argv[2], &invalid, 10);
+    if (invalid && '\0' != *invalid) {
+        log_error(@"second argument '%s' was not an unsigned long value", argv[2]);
+        exit(1);
+    }
+        
     /* Require a single character argument 'y' || 'n'.      */
     /* Don't accept 'yes' or 'no' or 'nitwit' as arguments. */
-    char *c = argv[2];
+    char *c = argv[3];
     if (strlen(c) != 1 || ('y' != *c && 'n' != *c)) {
-        log_error(@"first argument '%s' was not recognized", c);
+        log_error(@"third argument '%s' was not recognized", c);
         exit(1);
     }
     
@@ -205,7 +224,7 @@ int main(int argc, char *argv[]) {
     }
     
     /* This is a security issue, since we don't want to trust relative paths. */
-    NSString *nsPath = [NSString stringWithUTF8String:argv[3]];
+    NSString *nsPath = [NSString stringWithUTF8String:argv[4]];
     if ([nsPath isAbsolutePath] == NO) {
         log_error(@"*** ERROR *** rejecting insecure path %@", nsPath);
         exit(1);
@@ -230,6 +249,8 @@ int main(int argc, char *argv[]) {
 
     int outpipe[2];
     int errpipe[2];
+    
+    // pipe to avoid a race between exec and kevent; problem in BDSKTask isn't relevant here
     int waitpipe[2];
 
     if (pipe(outpipe) < 0 || pipe(errpipe) < 0 || pipe(waitpipe) < 0) {
@@ -265,7 +286,7 @@ int main(int argc, char *argv[]) {
         read(waitpipe[0], &ignored, 1);    
         close(waitpipe[0]);
 
-        i = execve(argv[3], &argv[3], environ);
+        i = execve(argv[4], &argv[4], environ);
         _exit(i);
     }
     else if (-1 == child) {
@@ -275,7 +296,6 @@ int main(int argc, char *argv[]) {
     else {
         
         @try {
-            [parent setWrapperPID:getpid()];
             [parent setUnderlyingPID:child];
         }
         @catch (id exception) {

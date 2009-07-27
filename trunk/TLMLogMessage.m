@@ -45,6 +45,7 @@
 @synthesize sender = _sender;
 @synthesize pid = _pid;
 @synthesize level = _level;
+@synthesize flags = _flags;
 
 - (void)dealloc
 {

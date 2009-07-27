@@ -49,7 +49,7 @@
     NSParameterAssert(location);
     NSString *cmd = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath]; 
     NSString *locationString = [location absoluteString];
-    NSMutableArray *options = [NSMutableArray arrayWithObjects:@"--location", locationString, @"update", nil];
+    NSMutableArray *options = [NSMutableArray arrayWithObjects:@"--location", locationString, @"--machine-readable", @"update", nil];
     
     if (nil == packageNames) {
         [options addObject:@"--all"];
@@ -65,6 +65,8 @@
     }
     return self;
 }
+
+- (TLMLogMessageFlags)messageFlags { return (TLMLogMachineReadable | TLMLogUpdateOperation); }
 
 - (void)dealloc
 {
