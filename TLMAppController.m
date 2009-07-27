@@ -230,6 +230,7 @@ static void __TLMMigrateBundleIdentifier()
 
 - (void)checkVersionConsistency
 {
+    TLMLog(__func__, @"Checking TeX Live version%C", 0x2026);
     // always run the check and log the result
     TLMTask *tlmgrTask = [[TLMTask new] autorelease];
     [tlmgrTask setLaunchPath:[[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath]];
@@ -271,7 +272,7 @@ static void __TLMMigrateBundleIdentifier()
     
     if (texliveYear ) {
         
-        TLMLog(__func__, @"Looks like we're using TeX Live %d%Cgood.", texliveYear, 0x2026);
+        TLMLog(__func__, @"Looks like you're using TeX Live %d%Cgood!", texliveYear, 0x2026);
         
         NSString *URLString = [[[TLMPreferenceController sharedPreferenceController] defaultServerURL] absoluteString];
         
