@@ -144,6 +144,11 @@ static void log_lines_and_clear(NSMutableData *data, bool is_error)
         char ch = ptr[i];
         if (ch == '\n') {
             NSString *str = [[NSString alloc] initWithBytes:&ptr[last] length:(i - last) encoding:NSUTF8StringEncoding];
+            // tlmgr 2008 and 2009 pretest have issues with perl and encoding, so here's a fallback
+            if (nil == str && (i - last) > 0)
+                str = [[NSString alloc] initWithBytes:&ptr[last] length:(i - last) encoding:NSMacOSRomanStringEncoding];
+            
+            // create a single log message per line and post it to the server
             if (is_error)
                 log_error(@"%@", str);
             else
@@ -153,6 +158,8 @@ static void log_lines_and_clear(NSMutableData *data, bool is_error)
         }
         
     }
+    
+    // clear the mutable data
     [data replaceBytesInRange:NSMakeRange(0, last) withBytes:NULL length:0];
 }
     
@@ -223,8 +230,9 @@ int main(int argc, char *argv[]) {
 
     int outpipe[2];
     int errpipe[2];
-    
-    if (pipe(outpipe) < 0 || pipe(errpipe) < 0) {
+    int waitpipe[2];
+
+    if (pipe(outpipe) < 0 || pipe(errpipe) < 0 || pipe(waitpipe) < 0) {
         log_error(@"pipe failed in tlmgr_cwrapper");
         exit(1);
     }
@@ -250,6 +258,12 @@ int main(int argc, char *argv[]) {
         
         close(outpipe[0]);
         close(errpipe[0]);
+        
+        close(waitpipe[1]);
+        char ignored;
+        // block until the parent has setup complete
+        read(waitpipe[0], &ignored, 1);    
+        close(waitpipe[0]);
 
         i = execve(argv[3], &argv[3], environ);
         _exit(i);
@@ -283,6 +297,10 @@ int main(int argc, char *argv[]) {
         EV_SET(&events[2], errpipe[0], EVFILT_READ, EV_ADD, 0, 0, NULL);
         kevent(kq_fd, events, TLM_EVENT_COUNT, NULL, 0, NULL);
         
+        // kqueue setup complete, so widow the pipe to allow exec to proceed
+        close(waitpipe[1]);
+        close(waitpipe[0]);
+        
         struct timespec ts;
         ts.tv_sec = 0;
         ts.tv_nsec = 100000000;
@@ -300,6 +318,8 @@ int main(int argc, char *argv[]) {
             // if this was a timeout, don't try reading from the event
             if (0 == eventCount)
                 continue;
+            
+            NSAutoreleasePool *innerPool = [NSAutoreleasePool new];
             
             if (event.filter == EVFILT_PROC && (event.fflags & NOTE_EXIT) == NOTE_EXIT) {
                 
@@ -330,6 +350,8 @@ int main(int argc, char *argv[]) {
                 
                 log_error(@"unhandled kevent with filter = %d", event.filter);
             }
+            
+            [innerPool release];
             
             // originally checked here to see if tlmgr removed itself, but the dedicated update makes that unnecessary
         }    
