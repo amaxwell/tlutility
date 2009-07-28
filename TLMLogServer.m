@@ -42,8 +42,8 @@
 #import <asl.h>
 
 NSString * const TLMLogServerUpdateNotification = @"TLMLogServerUpdateNotification";
-NSString * const TLMLogTotalBytesNotification = @"TLMLogTotalBytesNotification";
-NSString * const TLMLogProgressNotification = @"TLMLogProgressNotification";
+NSString * const TLMLogTotalProgressNotification = @"TLMLogTotalProgressNotification";
+NSString * const TLMLogIncrementalProgressNotification = @"TLMLogIncrementalProgressNotification";
 NSString * const TLMLogSize = @"TLMLogSize";
 
 @implementation TLMLogServer
@@ -205,7 +205,7 @@ static NSString * __TLMParseMessageAndNotify(TLMLogMessage *logMessage)
             NSInteger bytes = [[comps objectAtIndex:4] integerValue];
             NSDictionary *userInfo = [NSDictionary dictionaryWithObject:[NSNumber numberWithUnsignedInteger:(NSUInteger)bytes] 
                                                                  forKey:TLMLogSize];
-            NSNotification *note = [NSNotification notificationWithName:TLMLogProgressNotification
+            NSNotification *note = [NSNotification notificationWithName:TLMLogIncrementalProgressNotification
                                                                  object:logMessage
                                                                userInfo:userInfo];
             
@@ -219,7 +219,7 @@ static NSString * __TLMParseMessageAndNotify(TLMLogMessage *logMessage)
 
             NSDictionary *userInfo = [NSDictionary dictionaryWithObject:[NSNumber numberWithUnsignedInteger:(NSUInteger)totalBytes] 
                                                                  forKey:TLMLogSize];
-            NSNotification *note = [NSNotification notificationWithName:TLMLogTotalBytesNotification
+            NSNotification *note = [NSNotification notificationWithName:TLMLogTotalProgressNotification
                                                                  object:logMessage
                                                                userInfo:userInfo];
             

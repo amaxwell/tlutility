@@ -132,11 +132,11 @@ static char _TLMOperationQueueOperationContext;
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(_startProgressBar:)
-                                                 name:TLMLogTotalBytesNotification
+                                                 name:TLMLogTotalProgressNotification
                                                object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(_updateProgressBar:)
-                                                 name:TLMLogProgressNotification
+                                                 name:TLMLogIncrementalProgressNotification
                                                object:nil];
 }
 

@@ -41,8 +41,11 @@
 // posted on the main thread
 extern NSString * const TLMLogServerUpdateNotification;
 
-extern NSString * const TLMLogTotalBytesNotification;
-extern NSString * const TLMLogProgressNotification;
+// progress notifications posted on the main thread
+extern NSString * const TLMLogTotalProgressNotification;
+extern NSString * const TLMLogIncrementalProgressNotification;
+
+// userInfo key in progress notifications (size in bytes as NSNumber)
 extern NSString * const TLMLogSize;
 
 @interface TLMLogServer : NSObject 
