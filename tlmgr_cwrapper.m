@@ -78,7 +78,7 @@ static void establish_log_connection()
     }
 }    
 
-static void log_message_with_level(const char *level, NSString *message)
+static void log_message_with_level(const char *level, NSString *message, NSUInteger flags)
 {
     if (nil == _logServer) establish_log_connection();
     
@@ -98,13 +98,13 @@ static void log_message_with_level(const char *level, NSString *message)
     [msg setSender:SENDER_NAME];
     [msg setLevel:[NSString stringWithUTF8String:level]];
     [msg setPid:getpid()];
-    [msg setFlags:_messageFlags];
+    [msg setFlags:flags];
     
     @try {
         [_logServer logMessage:msg];
     }
     @catch (id exception) {
-        asl_log(NULL, NULL, ASL_LEVEL_ERR, "tlmgr_cwrapper: caught exception %s in log_notice", [[exception description] UTF8String]);
+        asl_log(NULL, NULL, ASL_LEVEL_ERR, "tlmgr_cwrapper: caught exception %s in log_message_with_level", [[exception description] UTF8String]);
         // log to asl as a fallback
         asl_log(NULL, NULL, ASL_LEVEL_ERR, "%s", [message UTF8String]);
         [_logServer release];
@@ -121,7 +121,7 @@ static void log_notice(NSString *format, ...)
     va_end(list);
     // fgets preserves newlines, so trim them here instead of messing with the C-string buffer
     CFStringTrimWhitespace((CFMutableStringRef)message);
-    log_message_with_level(ASL_STRING_NOTICE, message);
+    log_message_with_level(ASL_STRING_NOTICE, message, _messageFlags);
     [message release];
 }
 
@@ -133,7 +133,7 @@ static void log_error(NSString *format, ...)
     va_end(list);
     // fgets preserves newlines, so trim them here instead of messing with the C-string buffer
     CFStringTrimWhitespace((CFMutableStringRef)message);
-    log_message_with_level(ASL_STRING_ERR, message);
+    log_message_with_level(ASL_STRING_ERR, message, TLMLogDefault);
     [message release];
 }
 
@@ -197,7 +197,8 @@ int main(int argc, char *argv[]) {
         log_error(@"failed to send PID to server:\n\t%@", exception);
     }
     
-    /* single integer, holding flags for the log messages */
+    /* single integer, holding flags for the log messages       */
+    /* NB: machine-readable output is all on stdout, not stderr */
     char *invalid = NULL;
     _messageFlags = strtoul(argv[2], &invalid, 10);
     if (invalid && '\0' != *invalid) {
@@ -268,7 +269,8 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
     
-    log_notice(@"tlmgr_cwrapper: HOME = '%s'\n", getenv("HOME"));
+    /* log information as error so we get the TLMLogDefault flags */
+    log_error(@"tlmgr_cwrapper: HOME = '%s'\n", getenv("HOME"));
 
     int ret = 0;
     pid_t child = fork();
@@ -344,7 +346,7 @@ int main(int argc, char *argv[]) {
             if (event.filter == EVFILT_PROC && (event.fflags & NOTE_EXIT) == NOTE_EXIT) {
                 
                 stillRunning = false;
-                log_notice(@"child process pid = %d exited", child);
+                log_error(@"child process pid = %d exited", child);
             }
             else if (event.filter == EVFILT_READ && event.ident == (unsigned)outpipe[0]) {
                 
@@ -385,13 +387,13 @@ int main(int argc, char *argv[]) {
         
         if ([errBuffer length]) {
             NSString *str = [[NSString alloc] initWithData:errBuffer encoding:NSUTF8StringEncoding];
-            log_notice(@"%@", str);
+            log_error(@"%@", str);
             [str release];
         }
         
         ret = waitpid(child, &childStatus, WNOHANG | WUNTRACED);
         ret = (ret != 0 && WIFEXITED(childStatus)) ? WEXITSTATUS(childStatus) : EXIT_FAILURE;
-        log_notice(@"exit status of pid = %d was %d", child, ret);
+        log_error(@"exit status of pid = %d was %d", child, ret);
 
     }
     
