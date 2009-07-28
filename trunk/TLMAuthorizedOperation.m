@@ -278,8 +278,8 @@ struct TLMAOInternal {
             }
         }
         
-        // kill child processes if the operation was cancelled
-        if ((NO == _internal->_childFinished && [self isCancelled]) || [self failed]) {
+        // kill child processes if the operation was cancelled or failed
+        if (NO == _internal->_childFinished && ([self isCancelled] || [self failed])) {
             [self _killChildProcesses];
                         
             // set to break out of the main loop
