@@ -237,6 +237,7 @@ static NSString * __TLMParseMessageAndNotify(TLMLogMessage *logMessage)
 
 - (void)logMessage:(in bycopy TLMLogMessage *)message;
 {
+    // if the message is machine readable, parse it and post notifications, then reset the message text for display
     if ([message flags] & TLMLogMachineReadable) {
         NSString *msg = __TLMParseMessageAndNotify(message);
         [message setMessage:msg];
