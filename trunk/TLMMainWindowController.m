@@ -142,16 +142,27 @@ static char _TLMOperationQueueOperationContext;
 
 - (void)_startProgressBar:(NSNotification *)aNote
 {
-    [_progressBar setMinValue:0.0];
-    [_progressBar setDoubleValue:0.0];
-    [_progressBar setMaxValue:[[[aNote userInfo] objectForKey:TLMLogSize] doubleValue]];
-    [_progressBar setHidden:NO];
-    [_progressBar startAnimation:nil];
+    // hack from BibDesk: progress bars may not work correctly after the first time they're used, due to an AppKit bug
+    NSProgressIndicator *pb = [NSKeyedUnarchiver unarchiveObjectWithData:[NSKeyedArchiver archivedDataWithRootObject:[self _progressBar]]];
+    [[[self _progressBar] superview] replaceSubview:[self _progressBar] with:pb];
+    [self set_progressBar:pb];
+    [[self _progressBar] setMinValue:0.0];
+    [[self _progressBar] setDoubleValue:0.0];
+    [[self _progressBar] setMaxValue:[[[aNote userInfo] objectForKey:TLMLogSize] doubleValue]];
+    [[self _progressBar] setHidden:NO];
+}
+
+- (void)_stopProgressBar:(NSNotification *)aNote
+{
+    [[self _progressBar] setHidden:YES];
 }
 
 - (void)_updateProgressBar:(NSNotification *)aNote
 {
-    [_progressBar incrementBy:[[[aNote userInfo] objectForKey:TLMLogSize] doubleValue]];
+    [[self _progressBar] incrementBy:[[[aNote userInfo] objectForKey:TLMLogSize] doubleValue]];
+    // workaround is required for backwards compatibility with TL 2008, which doesn't have end-of-updates marker
+    if (ABS([[self _progressBar] doubleValue] - [[self _progressBar] maxValue]) < 5.0)
+        [self _stopProgressBar:nil];
 }
 
 - (void)windowDidLoad
