@@ -42,6 +42,9 @@
 #import <asl.h>
 
 NSString * const TLMLogServerUpdateNotification = @"TLMLogServerUpdateNotification";
+NSString * const TLMLogTotalBytesNotification = @"TLMLogTotalBytesNotification";
+NSString * const TLMLogProgressNotification = @"TLMLogProgressNotification";
+NSString * const TLMLogSize = @"TLMLogSize";
 
 @implementation TLMLogServer
 
@@ -169,8 +172,76 @@ static NSConnection * __TLMLSCreateAndRegisterConnectionForServer(TLMLogServer *
                                                    forModes:_runLoopModes];
 }
     
+static NSString * __TLMParseMessageAndNotify(TLMLogMessage *logMessage)
+{
+    NSString *msg = [logMessage message];      
+    NSString *parsedMessage = nil;
+    if (([logMessage flags] & TLMLogUpdateOperation) != 0) {
+        
+        NSArray *comps = [msg componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+        
+        if ([comps count] >= 5) {
+            
+            NSString *status = [comps objectAtIndex:1];
+            unichar ch = [status length] ? [status characterAtIndex:0] : 0;
+            switch (ch) {
+                case 'u':
+                    status = NSLocalizedString(@"Updated package: ", @"single trailing space");
+                    break;
+                case 'a':
+                    status = NSLocalizedString(@"Added package: ", @"single trailing space");
+                    break;
+                case 'd':
+                    status = NSLocalizedString(@"Deleted package: ", @"single trailing space");
+                    break;
+                default:
+                    TLMLog(__func__, @"Unhandled status \"%@\"", status);
+                    break;
+            }
+            
+            // append package name
+            parsedMessage = [status stringByAppendingString:[comps objectAtIndex:0]];
+            
+            NSInteger bytes = [[comps objectAtIndex:4] integerValue];
+            NSDictionary *userInfo = [NSDictionary dictionaryWithObject:[NSNumber numberWithUnsignedInteger:(NSUInteger)bytes] 
+                                                                 forKey:TLMLogSize];
+            NSNotification *note = [NSNotification notificationWithName:TLMLogProgressNotification
+                                                                 object:logMessage
+                                                               userInfo:userInfo];
+            
+            // main thread perform is expensive, but these are low frequency events
+            [[NSNotificationCenter defaultCenter] performSelectorOnMainThread:@selector(postNotification:) withObject:note waitUntilDone:NO];
+        }
+        else if ([msg hasPrefix:@"total-bytes"]) {
+            
+            NSInteger totalBytes = [[comps lastObject] integerValue];
+            parsedMessage = [[NSString alloc] initWithFormat:NSLocalizedString(@"Beginning download of %.1f kbytes", @""), totalBytes / 1024.0];
+
+            NSDictionary *userInfo = [NSDictionary dictionaryWithObject:[NSNumber numberWithUnsignedInteger:(NSUInteger)totalBytes] 
+                                                                 forKey:TLMLogSize];
+            NSNotification *note = [NSNotification notificationWithName:TLMLogTotalBytesNotification
+                                                                 object:logMessage
+                                                               userInfo:userInfo];
+            
+            // main thread perform is expensive, but these are very low frequency events
+            [[NSNotificationCenter defaultCenter] performSelectorOnMainThread:@selector(postNotification:) withObject:note waitUntilDone:NO];
+        }
+        else if ([msg hasPrefix:@"end-of-header"]) {
+            parsedMessage = [[msg retain] autorelease];
+            // do nothing at this time
+        }
+    }
+        
+    return parsedMessage;
+}
+
 - (void)logMessage:(in bycopy TLMLogMessage *)message;
 {
+    if ([message flags] & TLMLogMachineReadable) {
+        NSString *msg = __TLMParseMessageAndNotify(message);
+        [message setMessage:msg];
+    }
+    
     @synchronized(_messages) {
         [_messages addObject:message];
     }
