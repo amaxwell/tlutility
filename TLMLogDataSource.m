@@ -53,6 +53,9 @@
                                                      name:TLMLogServerUpdateNotification 
                                                    object:[TLMLogServer sharedServer]];       
         _messages = [NSMutableArray new];
+        
+        // pointer equality dictionary, non-copying (since TLMLogMessage is technically mutable)
+        _rowHeights = CFDictionaryCreateMutable(CFAllocatorGetDefault(), 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
     }
     return self;
 }
@@ -66,6 +69,7 @@
     [_tableView release];
     
     [_messages release];
+    if (_rowHeights) CFRelease(_rowHeights);
     
     [super dealloc];
 }
@@ -125,20 +129,33 @@
 - (void)tableViewColumnDidResize:(NSNotification *)aNotification
 {
     // changing width will change height, but tableview doesn't know that
+    CFDictionaryRemoveAllValues(_rowHeights);
     [_tableView noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [_messages count])]];
 }
 
 - (CGFloat)tableView:(NSTableView *)tableView heightOfRow:(NSInteger)row;
 {
+    // base height on message cell
     NSTableColumn *tc = [tableView tableColumnWithIdentifier:@"message"];
+    id obj = [self tableView:tableView objectValueForTableColumn:tc row:row];
     
-    // pass an "infinitely" tall rect for cell bounds, and let the cell figure out the string height it needs
-    NSRect cellBounds = NSZeroRect;
-    cellBounds.size = NSMakeSize([tc width], CGFLOAT_MAX);
-    NSTextFieldCell *cell = [tc dataCellForRow:row];
-    // presently NSString, but may be attributed in future...
-    [cell setObjectValue:[self tableView:tableView objectValueForTableColumn:tc row:row]];
-    return [cell cellSizeForBounds:cellBounds].height;
+    // calculating on-the-fly really slows down for a large number of rows, so we cache height by message
+    CFNumberRef height = CFDictionaryGetValue(_rowHeights, obj);
+    if (NULL == height) {
+            
+        // pass an "infinitely" tall rect for cell bounds, and let the cell figure out the string height it needs
+        NSRect cellBounds = NSZeroRect;
+        cellBounds.size = NSMakeSize([tc width], CGFLOAT_MAX);
+        NSTextFieldCell *cell = [tc dataCellForRow:row];
+        // presently NSString, but may be attributed in future...
+        [cell setObjectValue:obj];
+        
+        height = (CFNumberRef)[[NSNumber alloc] initWithFloat:[cell cellSizeForBounds:cellBounds].height];
+        CFDictionarySetValue(_rowHeights, obj, height);
+        [(id)height release];
+        
+    }
+    return [(NSNumber *)height floatValue];
 }
 
 @end
