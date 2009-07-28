@@ -304,7 +304,7 @@ static NSString *__TLMGetTemporaryDirectory()
         }
         else {
             TLMLog(__func__, @"*** ERROR *** SHA256 signature does not match");
-            TLMLog(__func__, @"script: %@\nsha256: %@", scriptHash, checkHash);
+            TLMLog(__func__, @"script: %@\n\nsha256: %@", scriptHash, checkHash);
             [self setFailed:YES];
         }
     }
