@@ -56,6 +56,7 @@
 {
 @private
     NSProgressIndicator      *_progressIndicator;
+    NSProgressIndicator      *_progressBar;
     NSTextView               *_hostnameView;
     TLMTabView               *_tabView;
     TLMSplitView             *_splitView;
@@ -72,6 +73,7 @@
 }
 
 @property (nonatomic, retain) IBOutlet NSProgressIndicator *_progressIndicator;
+@property (nonatomic, retain) IBOutlet NSProgressIndicator *_progressBar;
 @property (nonatomic, retain) IBOutlet NSTextView *_hostnameView;
 @property (nonatomic, retain) IBOutlet TLMSplitView *_splitView;
 @property (nonatomic, retain) IBOutlet TLMLogDataSource *_logDataSource;
