@@ -52,7 +52,7 @@ typedef NSUInteger TLMLogMessageFlags;
     NSString           *_message;
     NSString           *_sender;
     NSString           *_level;
-    NSNumber           *_pid;  
+    pid_t               _pid;  
     TLMLogMessageFlags  _flags;
 }
 
@@ -60,7 +60,7 @@ typedef NSUInteger TLMLogMessageFlags;
 @property (readwrite, copy) NSString *message;
 @property (readwrite, copy) NSString *sender;
 @property (readwrite, copy) NSString *level;
-@property (readwrite, copy) NSNumber *pid;
+@property (readwrite) pid_t pid;
 @property (readwrite) TLMLogMessageFlags flags;
 
 @end
