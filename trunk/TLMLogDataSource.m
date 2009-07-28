@@ -140,7 +140,11 @@
     id obj = [self tableView:tableView objectValueForTableColumn:tc row:row];
     
     // calculating on-the-fly really slows down for a large number of rows, so we cache height by message
-    CFNumberRef height = CFDictionaryGetValue(_rowHeights, obj);
+    CFNumberRef height = NULL;
+    
+    // if object is nil, compute using the cell for a nil object
+    if (obj) height = CFDictionaryGetValue(_rowHeights, obj);
+    
     if (NULL == height) {
             
         // pass an "infinitely" tall rect for cell bounds, and let the cell figure out the string height it needs
@@ -151,7 +155,7 @@
         [cell setObjectValue:obj];
         
         height = (CFNumberRef)[[NSNumber alloc] initWithFloat:[cell cellSizeForBounds:cellBounds].height];
-        CFDictionarySetValue(_rowHeights, obj, height);
+        if (obj) CFDictionarySetValue(_rowHeights, obj, height);
         [(id)height release];
         
     }
