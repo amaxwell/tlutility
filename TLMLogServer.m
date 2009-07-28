@@ -47,8 +47,7 @@ NSString * const TLMLogServerUpdateNotification = @"TLMLogServerUpdateNotificati
 
 @synthesize messages = _messages;
 
-static NSArray  *_runLoopModes = nil;
-static NSNumber *_processID = nil;
+static NSArray *_runLoopModes = nil;
 
 + (void)initialize
 {
@@ -56,9 +55,6 @@ static NSNumber *_processID = nil;
     NSString *rlmodes[] = { NSDefaultRunLoopMode, NSEventTrackingRunLoopMode, NSModalPanelRunLoopMode };
     if (nil == _runLoopModes)
         _runLoopModes = [[NSArray alloc] initWithObjects:rlmodes count:(sizeof(rlmodes) / sizeof(NSString *))];
-    
-    if (nil == _processID)
-        _processID = [[NSNumber alloc] initWithInteger:getpid()];
 }
 
 + (id)sharedServer
@@ -218,7 +214,7 @@ void TLMLog(const char *sender, NSString *format, ...)
     
     // default to notice, since most of the stuff we log is informational
     [msg setLevel:@ASL_STRING_NOTICE];
-    [msg setPid:_processID];
+    [msg setPid:getpid()];
     [[TLMLogServer sharedServer] logMessage:msg];
     [msg release];
     
