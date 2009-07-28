@@ -52,7 +52,6 @@
     [_date release];
     [_sender release];
     [_message release];
-    [_pid release];
     [_level release];
     [super dealloc];
 }
@@ -64,7 +63,13 @@
     [coder encodeObject:_message];
     [coder encodeObject:_sender];
     [coder encodeObject:_level];
-    [coder encodeObject:_pid];
+    /*
+     Encode objects since old-style coding doesn't support primitive types directly,
+     and I don't want to worry about endianness (which should not be a problem on
+     the same host...but still).
+     */
+    [coder encodeObject:[NSNumber numberWithUnsignedInteger:_pid]];
+    [coder encodeObject:[NSNumber numberWithUnsignedInteger:_flags]];
 }
 
 - (id)initWithCoder:(NSCoder *)coder
@@ -75,7 +80,8 @@
         _message = [[coder decodeObject] copy];
         _sender = [[coder decodeObject] copy];
         _level = [[coder decodeObject] copy];
-        _pid = [[coder decodeObject] copy];
+        _pid = [[coder decodeObject] unsignedIntegerValue];
+        _flags = [[coder decodeObject] unsignedIntegerValue];
     }
     return self;
 }
@@ -101,7 +107,7 @@
         return NO;
     return YES;
 }
-- (NSString *)description { return [NSString stringWithFormat:@"%@ %@ %@[%@]\t%@", _date, _level, _sender, _pid, _message]; }
+- (NSString *)description { return [NSString stringWithFormat:@"%@ %@ %@[%lu]\t%@", _date, _level, _sender, (unsigned long)_pid, _message]; }
 - (NSComparisonResult)compare:(TLMLogMessage *)other { return [_date compare:[other date]]; }
 
 @end

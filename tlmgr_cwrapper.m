@@ -97,7 +97,7 @@ static void log_message_with_level(const char *level, NSString *message)
     [msg setMessage:message];
     [msg setSender:SENDER_NAME];
     [msg setLevel:[NSString stringWithUTF8String:level]];
-    [msg setPid:[NSNumber numberWithInteger:getpid()]];
+    [msg setPid:getpid()];
     [msg setFlags:_messageFlags];
     
     @try {
