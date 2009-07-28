@@ -65,6 +65,7 @@ static char _TLMOperationQueueOperationContext;
 @implementation TLMMainWindowController
 
 @synthesize _progressIndicator;
+@synthesize _progressBar;
 @synthesize _hostnameView;
 @synthesize _splitView;
 @synthesize _logDataSource;
@@ -107,6 +108,7 @@ static char _TLMOperationQueueOperationContext;
     [_hostnameView release];
     
     [_progressIndicator release];
+    [_progressBar release];
     [_logDataSource release];
     [_packageListDataSource release];
     [_updateListDataSource release];
@@ -126,6 +128,30 @@ static char _TLMOperationQueueOperationContext;
     
     // 10.5 release notes say this is enabled by default, but it returns NO
     [_progressIndicator setUsesThreadedAnimation:YES];
+    [_progressBar setUsesThreadedAnimation:YES];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(_startProgressBar:)
+                                                 name:TLMLogTotalBytesNotification
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(_updateProgressBar:)
+                                                 name:TLMLogProgressNotification
+                                               object:nil];
+}
+
+- (void)_startProgressBar:(NSNotification *)aNote
+{
+    [_progressBar setMinValue:0.0];
+    [_progressBar setDoubleValue:0.0];
+    [_progressBar setMaxValue:[[[aNote userInfo] objectForKey:TLMLogSize] doubleValue]];
+    [_progressBar setHidden:NO];
+    [_progressBar startAnimation:nil];
+}
+
+- (void)_updateProgressBar:(NSNotification *)aNote
+{
+    [_progressBar incrementBy:[[[aNote userInfo] objectForKey:TLMLogSize] doubleValue]];
 }
 
 - (void)windowDidLoad
