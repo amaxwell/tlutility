@@ -128,7 +128,6 @@ static char _TLMOperationQueueOperationContext;
     
     // 10.5 release notes say this is enabled by default, but it returns NO
     [_progressIndicator setUsesThreadedAnimation:YES];
-    [_progressBar setUsesThreadedAnimation:YES];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(_startProgressBar:)
@@ -137,6 +136,10 @@ static char _TLMOperationQueueOperationContext;
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(_updateProgressBar:)
                                                  name:TLMLogIncrementalProgressNotification
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(_stopProgressBar:)
+                                                 name:TLMLogFinishedProgressNotification
                                                object:nil];
 }
 

@@ -42,8 +42,9 @@
 extern NSString * const TLMLogServerUpdateNotification;
 
 // progress notifications posted on the main thread
-extern NSString * const TLMLogTotalProgressNotification;
-extern NSString * const TLMLogIncrementalProgressNotification;
+extern NSString * const TLMLogTotalProgressNotification;       // posted to begin deterministic progress updates
+extern NSString * const TLMLogIncrementalProgressNotification; // posted with number of bytes since previous update
+extern NSString * const TLMLogFinishedProgressNotification;    // no userInfo; posted when further progress is unknown
 
 // userInfo key in progress notifications (size in bytes as NSNumber)
 extern NSString * const TLMLogSize;

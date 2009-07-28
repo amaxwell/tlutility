@@ -43,6 +43,7 @@
 
 NSString * const TLMLogServerUpdateNotification = @"TLMLogServerUpdateNotification";
 NSString * const TLMLogTotalProgressNotification = @"TLMLogTotalProgressNotification";
+NSString * const TLMLogFinishedProgressNotification = @"TLMLogFinishedProgressNotification";
 NSString * const TLMLogIncrementalProgressNotification = @"TLMLogIncrementalProgressNotification";
 NSString * const TLMLogSize = @"TLMLogSize";
 
@@ -172,7 +173,7 @@ static NSConnection * __TLMLSCreateAndRegisterConnectionForServer(TLMLogServer *
                                                    forModes:_runLoopModes];
 }
     
-static NSString * __TLMParseMessageAndNotify(TLMLogMessage *logMessage)
+- (NSString *)_parseMessageAndNotify:(TLMLogMessage *)logMessage
 {
     NSString *msg = [logMessage message];      
     NSString *parsedMessage = nil;
@@ -206,7 +207,7 @@ static NSString * __TLMParseMessageAndNotify(TLMLogMessage *logMessage)
             NSDictionary *userInfo = [NSDictionary dictionaryWithObject:[NSNumber numberWithUnsignedInteger:(NSUInteger)bytes] 
                                                                  forKey:TLMLogSize];
             NSNotification *note = [NSNotification notificationWithName:TLMLogIncrementalProgressNotification
-                                                                 object:logMessage
+                                                                 object:self
                                                                userInfo:userInfo];
             
             // main thread perform is expensive, but these are low frequency events
@@ -220,15 +221,26 @@ static NSString * __TLMParseMessageAndNotify(TLMLogMessage *logMessage)
             NSDictionary *userInfo = [NSDictionary dictionaryWithObject:[NSNumber numberWithUnsignedInteger:(NSUInteger)totalBytes] 
                                                                  forKey:TLMLogSize];
             NSNotification *note = [NSNotification notificationWithName:TLMLogTotalProgressNotification
-                                                                 object:logMessage
+                                                                 object:self
                                                                userInfo:userInfo];
             
             // main thread perform is expensive, but these are very low frequency events
             [[NSNotificationCenter defaultCenter] performSelectorOnMainThread:@selector(postNotification:) withObject:note waitUntilDone:NO];
         }
         else if ([msg hasPrefix:@"end-of-header"]) {
-            parsedMessage = [[msg retain] autorelease];
+            
             // do nothing at this time
+            parsedMessage = NSLocalizedString(@"Beginning download and installation of packages", @"");
+        }
+        else if ([msg hasPrefix:@"end-of-updates"]) {
+            
+            parsedMessage = NSLocalizedString(@"Installation complete; reconfiguring TeX Live", @"");
+            NSNotification *note = [NSNotification notificationWithName:TLMLogFinishedProgressNotification
+                                                                 object:self
+                                                               userInfo:nil];
+            
+            // main thread perform is expensive, but these are very low frequency events
+            [[NSNotificationCenter defaultCenter] performSelectorOnMainThread:@selector(postNotification:) withObject:note waitUntilDone:NO];            
         }
     }
         
@@ -239,7 +251,7 @@ static NSString * __TLMParseMessageAndNotify(TLMLogMessage *logMessage)
 {
     // if the message is machine readable, parse it and post notifications, then reset the message text for display
     if ([message flags] & TLMLogMachineReadable) {
-        NSString *msg = __TLMParseMessageAndNotify(message);
+        NSString *msg = [self _parseMessageAndNotify:message];
         [message setMessage:msg];
     }
     
