@@ -282,7 +282,7 @@ static void __TLMMigrateBundleIdentifier()
         NSString *URLString = [[[TLMPreferenceController sharedPreferenceController] defaultServerURL] absoluteString];
         
         /*
-         Currently we only have to actual cases to be concerned with, so there's no point in overgeneralizing here.
+         Currently we only have two actual cases to be concerned with, so there's no point in overgeneralizing here.
          TL 2008 appended the year to the URL, but 2009 (and presumably following) releases do not.  Unfortunately,
          tlmgr handles the multiplexer URLs specially, and if someone uses a 2009 pretest tlmgr with a 2008 URL,
          tlmgr converts it to a 2009 URL and you get a 404 page instead of an error about a version mismatch.  This
