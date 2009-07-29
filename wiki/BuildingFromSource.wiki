@@ -1,0 +1,18 @@
+#summary How to compile TeX Live Utility.
+#labels Phase-Implementation
+
+== Get The Source ==
+
+Follow the instructions here: http://code.google.com/p/mactlmgr/source/checkout
+
+Make sure the vendorsrc directory is populated by the svn externals.  This should happen automatically, at least if you use command-line svn.
+
+== Set up Xcode ==
+
+Set Xcode's build preferences to use a separate location for build products an intermediate files, as in this screenshot.  Otherwise Xcode will dump all of its object files into the source directory, and the project will fail to compile and link due to missing frameworks ([http://sparkle.andymatuschak.org Sparkle] and [http://fileview.googlecode.com FileView]).
+
+http://mactlmgr.googlecode.com/svn/wiki/images/XcodePrefs.png
+
+== Compile ==
+
+Build the project in Xcode.  It will likely fail since it can't find the [http://fileview.googlecode.com FileView] IB plugin, so you'll have to add that to IB's preferences.  Just double-clicking the FileViewIBPlugin.ibplugin in Finder might work.
