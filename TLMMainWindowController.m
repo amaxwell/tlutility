@@ -150,9 +150,11 @@ static char _TLMOperationQueueOperationContext;
     [[[self _progressBar] superview] replaceSubview:[self _progressBar] with:pb];
     [self set_progressBar:pb];
     [[self _progressBar] setMinValue:0.0];
-    [[self _progressBar] setDoubleValue:0.0];
     [[self _progressBar] setMaxValue:[[[aNote userInfo] objectForKey:TLMLogSize] doubleValue]];
+    // we always have an integral number of bytes >> 1, so set a fake value here so it draws immediately
+    [[self _progressBar] setDoubleValue:0.5];
     [[self _progressBar] setHidden:NO];
+    [[self _progressBar] display];
 }
 
 - (void)_stopProgressBar:(NSNotification *)aNote
