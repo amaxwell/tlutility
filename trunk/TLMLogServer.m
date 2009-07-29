@@ -196,6 +196,8 @@ static NSConnection * __TLMLSCreateAndRegisterConnectionForServer(TLMLogServer *
                     status = NSLocalizedString(@"Deleted package: ", @"single trailing space");
                     break;
                 default:
+                    // tlmgr 2008 prints "exiting" here
+                    status = [status stringByAppendingString:@" "];
                     TLMLog(__func__, @"Unhandled status \"%@\"", status);
                     break;
             }
