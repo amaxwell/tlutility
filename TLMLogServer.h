@@ -54,6 +54,7 @@ extern NSString * const TLMLogSize;
 @private
     NSMutableArray *_messages;
     NSConnection   *_connection;
+    NSNotification *_nextNotification;
 }
 
 + (id)sharedServer;

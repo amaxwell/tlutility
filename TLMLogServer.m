@@ -140,6 +140,7 @@ static NSConnection * __TLMLSCreateAndRegisterConnectionForServer(TLMLogServer *
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self _destroyConnection];
     [_messages release];
+    [_nextNotification release];
     [super dealloc];
 }
 
@@ -172,6 +173,15 @@ static NSConnection * __TLMLSCreateAndRegisterConnectionForServer(TLMLogServer *
                                                coalesceMask:NSNotificationCoalescingOnSender
                                                    forModes:_runLoopModes];
 }
+
+- (void)_processNextNotification:(NSNotification *)note
+{
+    NSParameterAssert([NSThread isMainThread]);
+    if (_nextNotification)
+        [[NSNotificationCenter defaultCenter] postNotification:_nextNotification];
+    [_nextNotification autorelease];
+    _nextNotification = [note retain];
+}
     
 - (NSString *)_parseMessageAndNotify:(TLMLogMessage *)logMessage
 {
@@ -183,17 +193,18 @@ static NSConnection * __TLMLSCreateAndRegisterConnectionForServer(TLMLogServer *
         
         if ([comps count] >= 5) {
             
+            // log messages are future tense, since tlmgr notifies before install
             NSString *status = [comps objectAtIndex:1];
             unichar ch = [status length] ? [status characterAtIndex:0] : 0;
             switch (ch) {
                 case 'u':
-                    status = NSLocalizedString(@"Updated package: ", @"single trailing space");
+                    status = NSLocalizedString(@"Updating ", @"single trailing space");
                     break;
                 case 'a':
-                    status = NSLocalizedString(@"Added package: ", @"single trailing space");
+                    status = NSLocalizedString(@"Adding ", @"single trailing space");
                     break;
                 case 'd':
-                    status = NSLocalizedString(@"Deleted package: ", @"single trailing space");
+                    status = NSLocalizedString(@"Deleting ", @"single trailing space");
                     break;
                 default:
                     // tlmgr 2008 prints "exiting" here
@@ -211,9 +222,13 @@ static NSConnection * __TLMLSCreateAndRegisterConnectionForServer(TLMLogServer *
             NSNotification *note = [NSNotification notificationWithName:TLMLogIncrementalProgressNotification
                                                                  object:self
                                                                userInfo:userInfo];
-            
-            // main thread perform is expensive, but these are low frequency events
-            [[NSNotificationCenter defaultCenter] performSelectorOnMainThread:@selector(postNotification:) withObject:note waitUntilDone:NO];
+
+            /*
+             Main thread perform is expensive, but these are fairly low frequency events, and it's not doing much else.
+             This is a workaround for tlmgr printing /before/ it installs a package, rather than after.  I need the
+             notifications posted after install, or the progress bar doesn't work correctly.
+             */
+            [self performSelectorOnMainThread:@selector(_processNextNotification:) withObject:note waitUntilDone:NO modes:_runLoopModes];
         }
         else if ([msg hasPrefix:@"total-bytes"]) {
             
@@ -226,13 +241,15 @@ static NSConnection * __TLMLSCreateAndRegisterConnectionForServer(TLMLogServer *
                                                                  object:self
                                                                userInfo:userInfo];
             
-            // main thread perform is expensive, but these are very low frequency events
+            // main thread perform is expensive, but this occurs only once per update
             [[NSNotificationCenter defaultCenter] performSelectorOnMainThread:@selector(postNotification:) withObject:note waitUntilDone:NO];
         }
         else if ([msg hasPrefix:@"end-of-header"]) {
             
-            // do nothing at this time
             parsedMessage = NSLocalizedString(@"Beginning download and installation of packages", @"");
+
+            // !!! tlmgr 2008: make sure a leftover notification is dequeued, since it doesn't get end-of-updates
+            [self performSelectorOnMainThread:@selector(_processNextNotification:) withObject:nil waitUntilDone:YES modes:_runLoopModes];
         }
         else if ([msg hasPrefix:@"end-of-updates"]) {
             
@@ -241,7 +258,8 @@ static NSConnection * __TLMLSCreateAndRegisterConnectionForServer(TLMLogServer *
                                                                  object:self
                                                                userInfo:nil];
             
-            // main thread perform is expensive, but these are very low frequency events
+            // occurs after all machine-readable output has been printed; make sure we dequeue the last remaining notification
+            [self performSelectorOnMainThread:@selector(_processNextNotification:) withObject:nil waitUntilDone:NO modes:_runLoopModes];
             [[NSNotificationCenter defaultCenter] performSelectorOnMainThread:@selector(postNotification:) withObject:note waitUntilDone:NO];            
         }
     }
