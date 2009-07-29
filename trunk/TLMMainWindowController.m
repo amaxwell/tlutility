@@ -163,6 +163,9 @@ static char _TLMOperationQueueOperationContext;
 - (void)_updateProgressBar:(NSNotification *)aNote
 {
     [[self _progressBar] incrementBy:[[[aNote userInfo] objectForKey:TLMLogSize] doubleValue]];
+    // make sure it displays immediately
+    [[self _progressBar] display];
+    
     // workaround is required for backwards compatibility with TL 2008, which doesn't have end-of-updates marker
     if (ABS([[self _progressBar] doubleValue] - [[self _progressBar] maxValue]) < 5.0)
         [self _stopProgressBar:nil];
