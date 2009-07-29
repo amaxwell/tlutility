@@ -180,6 +180,18 @@ static NSDictionary *__TLMHeaderDictionaryWithLines(NSArray *headerLines)
 
     if ([header objectForKey:@"location-url"])
         [self setUpdateURL:[NSURL URLWithString:[header objectForKey:@"location-url"]]];
+    
+    // should be the last line in the output, so iterate in reverse order
+    NSUInteger outputStopIndex = [packageLines count];
+    while (outputStopIndex--) {
+        
+        // this marker is currently only on the updates code path, and we don't want to pass it to the parser
+        if ([[packageLines objectAtIndex:outputStopIndex] hasPrefix:@"end-of-updates"]) {
+            [packageLines removeObjectAtIndex:outputStopIndex];
+            TLMLog(__func__, @"Found end-of-updates line");
+            break;
+        }
+    }
 
     [self _parsePackageLines:packageLines withClass:[TLMOutputParser2 self]];
 }
