@@ -277,7 +277,7 @@ static void __TLMMigrateBundleIdentifier()
     
     if (texliveYear ) {
         
-        TLMLog(__func__, @"Looks like you're using TeX Live %d%Cgood!", texliveYear, 0x2026);
+        TLMLog(__func__, @"Looks like you're using TeX Live %d%Cgood!", (int)texliveYear, 0x2026);
         
         NSString *URLString = [[[TLMPreferenceController sharedPreferenceController] defaultServerURL] absoluteString];
         
@@ -305,7 +305,7 @@ static void __TLMMigrateBundleIdentifier()
             [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"Your TeX Live version is %d, but your mirror URL appears to be for TeX Live 2008.  If any operations fail, you may need to adjust your mirror URL in the preferences.", @"two integer specifiers"), (int)texliveYear]];
         }
         else {
-            TLMLog(__func__, @"Mirror URL looks okay for TeX Live %d", texliveYear);
+            TLMLog(__func__, @"Mirror URL looks okay for TeX Live %d", (int)texliveYear);
         }
         
         // always log a message in case the user turned off the warning, so there is no plausible deniability when things fail...

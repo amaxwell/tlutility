@@ -147,7 +147,7 @@ static char _TLMOperationFinishedContext;
         [self setErrorData:[_task errorData]];
         [self setOutputData:[_task outputData]];
     } else if (0 != status) {
-        TLMLog(__func__, @"termination status of task %@ was %d", [_task launchPath], status);
+        TLMLog(__func__, @"termination status of task %@ was %ld", [_task launchPath], (long)status);
         [self setErrorData:[_task errorData]];
         
         // would be nice to show this in the UI in an alert, but it's not always clear enough

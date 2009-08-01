@@ -118,7 +118,7 @@
             [self setPaperSize:@"a4"];
             break;
         default:
-            NSAssert1(0, @"Invalid tag %d", [sender tag]);
+            NSAssert1(0, @"Invalid tag %ld", (long)[sender tag]);
             break;
     }
 }
