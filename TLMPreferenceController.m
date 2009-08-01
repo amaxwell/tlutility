@@ -257,7 +257,7 @@ NSString * const TLMDisableVersionMismatchWarningKey = @"TLMDisableVersionMismat
         
     } while (remainingLength > 0);
     
-    TLMLog(__func__, @"%@ has %d files", [[self defaultServerURL] absoluteString], [files count]);
+    TLMLog(__func__, @"%@ has %lu files", [[self defaultServerURL] absoluteString], (long)[files count]);
     return ([files count] > 0);
 }
 
@@ -295,7 +295,7 @@ NSString * const TLMDisableVersionMismatchWarningKey = @"TLMDisableVersionMismat
     
     // response will not be an NSHTTPURLResponse for ftp: hosts, but data is empty
     if ([response respondsToSelector:@selector(statusCode)] && [response statusCode] != 200) {
-        TLMLog(__func__, @"http response from %@ was %d", URLString, [response statusCode]);
+        TLMLog(__func__, @"http response from %@ was %ld", URLString, (long)[response statusCode]);
         data = nil;
     }
     else if ([data length] == 0) {
