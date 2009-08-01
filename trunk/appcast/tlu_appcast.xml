@@ -195,5 +195,21 @@
             <pubDate>Fri, 24 Jul 2009 20:15:06 -0700</pubDate>
             <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20090724.tgz" sparkle:version="0.70" length="1561940" type="application/octet-stream" sparkle:dsaSignature="MCwCFDoDr3eeIwGAZOUe2mgCgkUe7CD/AhQjH/0N8RxvV73UxlKbxTlLjuPBjg=="></enclosure>
         </item>
+        <item>
+            <title>Version 0.72</title>
+            <description>
+                <h3>Changes Since 0.70</h3>
+                <li>Added a tlmgr/TeX Live version consistency check</li>
+                <li>Preferences are only removed in migration if synchronization is successful</li>
+                <li>Fixed a race condition between fork/exec and kevent</li>
+                <li>Initial failures of tlmgr_cwrapper will now be logged</li>
+                <li>The main window now displays a determinate progress bar during updates</li>
+                <li>Log tableview row heights are now cached, so it won't be slug-slow with lots of output</li>
+                <li>Exit for failed tasks is handled more correctly</li>
+                <li>Minor 64 bit cleanup of format strings</li>
+            </description>
+            <pubDate>Sat, 01 Aug 2009 09:16:51 -0700</pubDate>
+            <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20090801.tgz" sparkle:version="0.72" length="1407726" type="application/octet-stream" sparkle:dsaSignature="MCwCFGNOK+IgskyeBqeMuufp9KpOz2bkAhQsOuDwwZtm8TK7PbNVtzwF/xUnqw=="></enclosure>
+        </item>
     </channel>
 </rss>
