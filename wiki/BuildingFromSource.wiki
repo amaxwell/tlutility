@@ -13,6 +13,14 @@ Set Xcode's build preferences to use a separate location for build products an i
 
 http://mactlmgr.googlecode.com/svn/wiki/images/XcodePrefs.png
 
+== Create a Certificate
+
+You need to create a self-signed certificate, following the instructions on this page:
+
+http://developer.apple.com/documentation/Security/Conceptual/CodeSigningGuide/Procedures/Procedures.html 
+
+Make sure you name it "TeX Live Utility Signing Certificate" (no quotes), and add it to your keychain.  This will allow codesign to sign your binaries, which is also a runtime requiredment for tlmgr_cwrapper.
+
 == Compile ==
 
 Build the project in Xcode.  It will likely fail since it can't find the [http://fileview.googlecode.com FileView] IB plugin, so you'll have to add that to IB's preferences.  Just double-clicking the FileViewIBPlugin.ibplugin in Finder might work.
