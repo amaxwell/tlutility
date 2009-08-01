@@ -13,7 +13,7 @@ Set Xcode's build preferences to use a separate location for build products an i
 
 http://mactlmgr.googlecode.com/svn/wiki/images/XcodePrefs.png
 
-== Create a Certificate
+== Create a Certificate ==
 
 You need to create a self-signed certificate, following the instructions on this page:
 
