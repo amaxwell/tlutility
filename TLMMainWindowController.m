@@ -453,9 +453,9 @@ static char _TLMOperationQueueOperationContext;
      TL 2008: Karl sez 'bin-texlive' and 'texlive.infra' are the packages that the next version of tlmgr 
      will require you to install before installing anything else.
      
-     TL 2009: pretest appears to have 'texlive.infra' and 'texlive.infra.universal-darwin' for infrastructure
-     updates, so check for the prefix 'texlive.infra'.  The only other one is 'tlperl.win32', which we could
-     potentially (but not likely) run across.
+     TL 2009: 'bin-texlive' is gone, and we now have 'texlive.infra' and 'texlive.infra.universal-darwin' 
+     for infrastructure updates.  This is satisfied by checking for the prefix 'texlive.infra'.  The only 
+     other infrastructure packages is 'tlperl.win32', which we probably won't see.
      
      Note: a slow-to-update mirror may have a stale version, so check needsUpdate as well.
      */
