@@ -454,11 +454,12 @@ static char _TLMOperationQueueOperationContext;
      will require you to install before installing anything else.
      
      TL 2009: pretest appears to have 'texlive.infra' and 'texlive.infra.universal-darwin' for infrastructure
-     updates, so check for the prefix 'texlive.infra'.
+     updates, so check for the prefix 'texlive.infra'.  The only other one is 'tlperl.win32', which we could
+     potentially (but not likely) run across.
      
      Note: a slow-to-update mirror may have a stale version, so check needsUpdate as well.
      */
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"((name IN { 'bin-texlive', 'texlive.infra' }) OR (name BEGINSWITH 'texlive.infra')) AND (needsUpdate == YES)"];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"((name IN { 'bin-texlive', 'texlive.infra', 'tlperl.win32' }) OR (name BEGINSWITH 'texlive.infra')) AND (needsUpdate == YES)"];
     NSArray *packages = [allPackages filteredArrayUsingPredicate:predicate];
     
     if ([packages count]) {
