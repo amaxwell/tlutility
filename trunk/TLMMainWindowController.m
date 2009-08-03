@@ -449,9 +449,16 @@ static char _TLMOperationQueueOperationContext;
     
     NSArray *allPackages = [op packages];
 
-    // Karl sez these are the packages that the next version of tlmgr will require you to install before installing anything else
-    // note that a slow-to-update mirror may have a stale version, so check needsUpdate as well
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(name IN { 'bin-texlive', 'texlive.infra' }) AND (needsUpdate == YES)"];
+    /*
+     TL 2008: Karl sez 'bin-texlive' and 'texlive.infra' are the packages that the next version of tlmgr 
+     will require you to install before installing anything else.
+     
+     TL 2009: pretest appears to have 'texlive.infra' and 'texlive.infra.universal-darwin' for infrastructure
+     updates, so check for the prefix 'texlive.infra'.
+     
+     Note: a slow-to-update mirror may have a stale version, so check needsUpdate as well.
+     */
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"((name IN { 'bin-texlive', 'texlive.infra' }) OR (name BEGINSWITH 'texlive.infra')) AND (needsUpdate == YES)"];
     NSArray *packages = [allPackages filteredArrayUsingPredicate:predicate];
     
     if ([packages count]) {
