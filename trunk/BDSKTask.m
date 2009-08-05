@@ -67,7 +67,6 @@ struct BDSKTaskInternal {
 @implementation BDSKTask
 
 static int _kqueue = -1;
-static NSLock *_forkLock = nil;
 
 + (void)initialize
 {
@@ -75,7 +74,6 @@ static NSLock *_forkLock = nil;
     _kqueue = kqueue();
     // persistent thread to watch all tasks
     [NSThread detachNewThreadSelector:@selector(_watchQueue) toTarget:self withObject:nil];
-    _forkLock = [NSLock new];
 }
 
 #define ASSERT_LAUNCH do { if (!_internal->_launched) { [NSException raise:@"BDSKTaskException" format:@"Task has not been launched"]; } } while (0)
@@ -264,17 +262,15 @@ static void __BDSKTaskNotify(void *info)
         perror("failed to create blockpipe");
     
     /*
-     Unfortunately, a side effect of blocking on a pipe is that other processes inherit our blockpipe
-     descriptors as well.  Consequently, if taskB calls fork() while taskA is still setting up its
-     kevent, taskB inherits the pipe for taskA, and taskA will never launch since taskB doesn't close
-     them.  This was a very confusing race to debug, and it resulted in a bunch of orphaned child
-     processes.
-     
-     A more serious problem is that NSTask doesn't use this lock, so it's subject to the same race
-     condition.  Consequently, mixing BDSKTask and NSTask could be problematic.
+     Figure out the max number of file descriptors for a process; getrlimit is not listed as
+     async-signal safe in the sigaction(2) man page, so we assume it's not safe to call after 
+     fork().  The fork(2) page says that child rlimits are set to zero.
      */
-    [_forkLock lock];
-    
+    rlim_t maxOpenFiles = OPEN_MAX;
+    struct rlimit openFileLimit;
+    if (getrlimit(RLIMIT_NOFILE, &openFileLimit) == 0)
+        maxOpenFiles = openFileLimit.rlim_cur;
+        
     // !!! No CF or Cocoa after this point in the child process!
     _processIdentifier = fork();
     
@@ -290,8 +286,30 @@ static void __BDSKTaskNotify(void *info)
         if (-1 != fd_err) dup2(fd_err, STDERR_FILENO);  
         
         if (workingDir) chdir(workingDir);
+
+        /*         
+         Unfortunately, a side effect of blocking on a pipe is that other processes inherit our blockpipe
+         descriptors as well.  Consequently, if taskB calls fork() while taskA is still setting up its
+         kevent, taskB inherits the pipe for taskA, and taskA will never launch since taskB doesn't close
+         them.  This was a very confusing race to debug, and it resulted in a bunch of orphaned child
+         processes.
+         
+         Using a class-scope lock is one possible solution, but NSTask doesn't use that log, and subclasses
+         that override -launch would also not benefit from locking (e.g., TLMTask).  Since TLMTask sets up
+         NSPipes in -launch before calling -[super launch], those pipes and any created by Cocoa would not
+         be protected by that lock.  Closing all remaining file descriptors doesn't break any documented 
+         behavior of NSTask, and it should take care of that problem.  It's not a great solution, since 
+         inheriting other descriptors could possibly be useful, but I don't need to share arbitrary file 
+         descriptors, wherease I do need subclassing and threads to work properly.
+         */
+        rlim_t j;
+        for (j = (STDERR_FILENO + 1); j < maxOpenFiles; j++) {
+            
+            // don't close this until we're done reading from it!
+            if ((unsigned)blockpipe[0] != j)
+                (void) close(j);
+        }
         
-        close(blockpipe[1]);
         char ignored;
         // block until the parent has setup complete
         read(blockpipe[0], &ignored, 1);
@@ -337,10 +355,6 @@ static void __BDSKTaskNotify(void *info)
         // all setup is complete, so now widow the pipe and exec in the child
         close(blockpipe[0]);   
         close(blockpipe[1]);
-        
-        // okay to fork again now
-        [_forkLock unlock];
-        
     }
     
     // executed by child and parent
