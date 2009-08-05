@@ -157,6 +157,12 @@ static NSString *__TLMGetTemporaryDirectory()
 
 - (void)_synchronouslyDownloadURL:(NSURL *)aURL toPath:(NSString *)absolutePath
 {
+    /*
+     Apple's URL caching seems to be screwed up badly, since I regularly get a mismatched hash and script, but
+     a quit/relaunch seems to "fix" the problem.  We'll try this for a while and see how it goes...
+     */
+    [[NSURLCache sharedURLCache] performSelectorOnMainThread:@selector(removeAllCachedResponses) withObject:nil waitUntilDone:YES modes:[NSArray arrayWithObject:NSRunLoopCommonModes]];
+    
     NSURLRequest *request = [NSURLRequest requestWithURL:aURL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:60.0];
     
     // previous download must be finished
