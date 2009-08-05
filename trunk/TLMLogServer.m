@@ -206,6 +206,9 @@ static NSConnection * __TLMLSCreateAndRegisterConnectionForServer(TLMLogServer *
                 case 'd':
                     status = NSLocalizedString(@"Deleting ", @"single trailing space");
                     break;
+                case 'f':
+                    status = NSLocalizedString(@"Forcibly removed ", @"single trailing space");
+                    break;
                 default:
                     // tlmgr 2008 prints "exiting" here
                     status = [status stringByAppendingString:@" "];
@@ -262,8 +265,17 @@ static NSConnection * __TLMLSCreateAndRegisterConnectionForServer(TLMLogServer *
             [self performSelectorOnMainThread:@selector(_processNextNotification:) withObject:nil waitUntilDone:NO modes:_runLoopModes];
             [[NSNotificationCenter defaultCenter] performSelectorOnMainThread:@selector(postNotification:) withObject:note waitUntilDone:NO];            
         }
+        else {
+            // handle location-url and possibly other cases
+            parsedMessage = [[msg retain] autorelease];
+            if ([msg hasPrefix:@"location-url"] == NO)
+                TLMLog(__func__, @"Parser did not recognize message \"%@\"", parsedMessage);
+        }
     }
-        
+    else {
+        TLMLog(__func__, @"Only prepared to parse messages for update operations");
+        parsedMessage = [[msg retain] autorelease];
+    }
     return parsedMessage;
 }
 
@@ -271,8 +283,8 @@ static NSConnection * __TLMLSCreateAndRegisterConnectionForServer(TLMLogServer *
 {
     // if the message is machine readable, parse it and post notifications, then reset the message text for display
     if ([message flags] & TLMLogMachineReadable) {
-        NSString *msg = [self _parseMessageAndNotify:message];
-        [message setMessage:msg];
+        // guaranteed to be non-nil if the original message was non-nil
+        [message setMessage:[self _parseMessageAndNotify:message]];
     }
     
     @synchronized(_messages) {
