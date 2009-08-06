@@ -468,7 +468,7 @@ static char _TLMOperationQueueOperationContext;
         TLMLog(__func__, @"Critical updates detected: %@", [packages valueForKey:@"name"]);
         NSAlert *alert = [[NSAlert new] autorelease];
         [alert setMessageText:NSLocalizedString(@"Critical updates available.", @"alert title")];
-        [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"%lu packages are available for update, but the TeX Live installer packages listed here must be updated first.  Update now?", @"alert message text"), (unsigned long)[[op packages] count]]];
+        [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"%lu packages are available for update.  Of these, the TeX Live installer packages listed here must be updated first.  Update now?", @"alert message text"), (unsigned long)[[op packages] count]]];
         [alert addButtonWithTitle:NSLocalizedString(@"Update", @"button title")];
         [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"button title")];
         [alert beginSheetModalForWindow:[self window]
