@@ -197,10 +197,10 @@ static void __BDSKTaskNotify(void *info)
 {
     ASSERT_NOTLAUNCHED;
     
-    int argCount = [_arguments count];
+    NSUInteger argCount = [_arguments count];
     const char *workingDir = [_currentDirectoryPath fileSystemRepresentation];
     char **args = NSZoneCalloc([self zone], (argCount + 2), sizeof(char *));
-    int i, iMax = argCount;
+    NSUInteger i, iMax = argCount;
     args[0] = (char *)[_launchPath fileSystemRepresentation];
     for (i = 0; i < iMax; i++) {
         args[i + 1] = (char *)[[_arguments objectAtIndex:i] fileSystemRepresentation];
@@ -215,7 +215,7 @@ static void __BDSKTaskNotify(void *info)
         // fill with pointers to autoreleased C strings
         env = NSZoneCalloc([self zone], [environment count] + 1, sizeof(char *));
         NSString *key;
-        unsigned envIndex = 0;
+        NSUInteger envIndex = 0;
         for (key in environment) {
             env[envIndex++] = (char *)[[NSString stringWithFormat:@"%@=%@", key, [environment objectForKey:key]] UTF8String];        
         }
@@ -300,7 +300,7 @@ static void __BDSKTaskNotify(void *info)
          be protected by that lock.  Closing all remaining file descriptors doesn't break any documented 
          behavior of NSTask, and it should take care of that problem.  It's not a great solution, since 
          inheriting other descriptors could possibly be useful, but I don't need to share arbitrary file 
-         descriptors, wherease I do need subclassing and threads to work properly.
+         descriptors, whereas I do need subclassing and threads to work properly.
          */
         rlim_t j;
         for (j = (STDERR_FILENO + 1); j < maxOpenFiles; j++) {
