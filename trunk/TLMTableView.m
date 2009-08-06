@@ -81,12 +81,6 @@
         NSBeep();
 }
 
-- (NSControlSize)cellControlSize 
-{
-    NSCell *dataCell = [[[self tableColumns] lastObject] dataCell];
-    return nil == dataCell ? NSRegularControlSize : [dataCell controlSize];
-}
-
 - (void)setFont:(NSFont *)aFont
 {
     NSParameterAssert(aFont);
