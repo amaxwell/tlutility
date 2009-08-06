@@ -154,9 +154,9 @@
         // presently NSString, but may be attributed in future...
         [cell setObjectValue:obj];
         
-        height = (CFNumberRef)[[NSNumber alloc] initWithFloat:[cell cellSizeForBounds:cellBounds].height];
+        // use an autoreleased instance, since we may not add it to the dictionary
+        height = (CFNumberRef)[NSNumber numberWithFloat:[cell cellSizeForBounds:cellBounds].height];
         if (obj) CFDictionarySetValue(_rowHeights, obj, height);
-        [(id)height release];
         
     }
     return [(NSNumber *)height floatValue];
