@@ -59,6 +59,7 @@
 #import "TLMPapersizeController.h"
 #import "TLMTabView.h"
 #import "TLMReadWriteOperationQueue.h"
+#import "TLMSizeFormatter.h"
 
 static char _TLMOperationQueueOperationContext;
 
@@ -780,28 +781,14 @@ static char _TLMOperationQueueOperationContext;
         size += [[pkg size] unsignedIntegerValue];
     
     [alert setMessageText:NSLocalizedString(@"Update all packages?", @"alert title")];
-    // may not be correct for _updateInfrastructure, but tlmgr may remove stuff also...so leave it as-is
+    // size may not be correct for _updateInfrastructure, but tlmgr may remove stuff also...so leave it as-is
     NSMutableString *informativeText = [NSMutableString string];
     [informativeText appendString:NSLocalizedString(@"This will install all available updates and remove packages that no longer exist on the server.", @"alert message text")];
     
-    if (size > 0) {
-        
-        CGFloat totalSize = size;
-        NSString *sizeUnits = @"bytes";
-        
-        // check 1024 + 10% so the plural is always correct (at least in English)
-        if (totalSize > 1127) {
-            totalSize /= 1024.0;
-            sizeUnits = @"kilobytes";
-            
-            if (totalSize > 1127) {
-                totalSize /= 1024.0;
-                sizeUnits = @"megabytes";
-            }
-        }
-        
-        [informativeText appendFormat:NSLocalizedString(@"  Total installed size will be %.1f %@.", @"partial alert text, with double space in front, only used with tlmgr2"), totalSize, sizeUnits];
-    }
+    TLMSizeFormatter *sizeFormatter = [[TLMSizeFormatter new] autorelease];
+    NSString *sizeString = [sizeFormatter stringForObjectValue:[NSNumber numberWithUnsignedInteger:size]];
+    [informativeText appendFormat:NSLocalizedString(@"  Total installed size will be %@.", @"partial alert text, with double space in front, only used with tlmgr2"), sizeString];
+    
     [alert setInformativeText:informativeText];
     [alert addButtonWithTitle:NSLocalizedString(@"Update", @"button title")];
     [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"button title")];

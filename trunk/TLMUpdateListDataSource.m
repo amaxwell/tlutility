@@ -41,6 +41,7 @@
 #import "TLMInfoController.h"
 #import "TLMLogServer.h"
 #import "TLMTableView.h"
+#import "TLMSizeFormatter.h"
 
 @implementation TLMUpdateListDataSource
 
@@ -84,6 +85,9 @@
     
     // force this column to be displayed (only used with tlmgr2)
     [[_tableView tableColumnWithIdentifier:@"size"] setHidden:NO];
+    
+    TLMSizeFormatter *sizeFormatter = [[TLMSizeFormatter new] autorelease];
+    [[[_tableView tableColumnWithIdentifier:@"size"] dataCell] setFormatter:sizeFormatter];
 }
 
 - (void)setAllPackages:(NSArray *)packages
