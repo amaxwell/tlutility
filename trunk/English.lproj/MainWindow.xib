@@ -12,9 +12,9 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="5"/>
+			<integer value="123"/>
+			<integer value="8"/>
 			<integer value="158"/>
-			<integer value="129"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -985,7 +985,7 @@
 											<reference key="NSBackgroundColor" ref="739807809"/>
 											<reference key="NSTextColor" ref="651245384"/>
 										</object>
-										<int key="NSResizingMask">3</int>
+										<int key="NSResizingMask">2</int>
 										<bool key="NSIsResizeable">YES</bool>
 										<reference key="NSTableView" ref="907719207"/>
 									</object>
@@ -1037,7 +1037,7 @@
 											<reference key="NSBackgroundColor" ref="739807809"/>
 											<reference key="NSTextColor" ref="651245384"/>
 										</object>
-										<int key="NSResizingMask">3</int>
+										<int key="NSResizingMask">2</int>
 										<bool key="NSIsResizeable">YES</bool>
 										<reference key="NSTableView" ref="907719207"/>
 									</object>
@@ -1051,7 +1051,7 @@
 								<reference key="NSDelegate"/>
 								<reference key="NSDataSource"/>
 								<string key="NSAutosaveName">Package list outline view</string>
-								<int key="NSColumnAutoresizingStyle">4</int>
+								<int key="NSColumnAutoresizingStyle">3</int>
 								<int key="NSDraggingSourceMaskForLocal">15</int>
 								<int key="NSDraggingSourceMaskForNonLocal">0</int>
 								<bool key="NSAllowsTypeSelect">YES</bool>
@@ -1194,7 +1194,7 @@
 											<reference key="NSBackgroundColor" ref="739807809"/>
 											<reference key="NSTextColor" ref="651245384"/>
 										</object>
-										<int key="NSResizingMask">3</int>
+										<int key="NSResizingMask">2</int>
 										<bool key="NSIsResizeable">YES</bool>
 										<reference key="NSTableView" ref="650437859"/>
 									</object>
@@ -1220,7 +1220,7 @@
 											<reference key="NSBackgroundColor" ref="739807809"/>
 											<reference key="NSTextColor" ref="651245384"/>
 										</object>
-										<int key="NSResizingMask">3</int>
+										<int key="NSResizingMask">2</int>
 										<bool key="NSIsResizeable">YES</bool>
 										<reference key="NSTableView" ref="650437859"/>
 									</object>
@@ -1246,7 +1246,7 @@
 											<reference key="NSBackgroundColor" ref="739807809"/>
 											<reference key="NSTextColor" ref="651245384"/>
 										</object>
-										<int key="NSResizingMask">3</int>
+										<int key="NSResizingMask">2</int>
 										<bool key="NSIsResizeable">YES</bool>
 										<reference key="NSTableView" ref="650437859"/>
 									</object>
@@ -1257,7 +1257,7 @@
 										<double key="NSMaxWidth">3.4028230607370965e+38</double>
 										<object class="NSTableHeaderCell" key="NSHeaderCell">
 											<int key="NSCellFlags">75628096</int>
-											<int key="NSCellFlags2">2048</int>
+											<int key="NSCellFlags2">67110912</int>
 											<string key="NSContents">Size</string>
 											<reference key="NSSupport" ref="26"/>
 											<reference key="NSBackgroundColor" ref="256625896"/>
@@ -1265,14 +1265,14 @@
 										</object>
 										<object class="NSTextFieldCell" key="NSDataCell" id="801943341">
 											<int key="NSCellFlags">337772096</int>
-											<int key="NSCellFlags2">2048</int>
+											<int key="NSCellFlags2">67110912</int>
 											<string key="NSContents">Text Cell</string>
 											<reference key="NSSupport" ref="350031159"/>
 											<reference key="NSControlView" ref="650437859"/>
 											<reference key="NSBackgroundColor" ref="739807809"/>
 											<reference key="NSTextColor" ref="651245384"/>
 										</object>
-										<int key="NSResizingMask">3</int>
+										<int key="NSResizingMask">2</int>
 										<bool key="NSIsResizeable">YES</bool>
 										<reference key="NSTableView" ref="650437859"/>
 									</object>
@@ -1286,7 +1286,7 @@
 								<reference key="NSDelegate"/>
 								<reference key="NSDataSource"/>
 								<string key="NSAutosaveName">Update tableview</string>
-								<int key="NSColumnAutoresizingStyle">4</int>
+								<int key="NSColumnAutoresizingStyle">3</int>
 								<int key="NSDraggingSourceMaskForLocal">15</int>
 								<int key="NSDraggingSourceMaskForNonLocal">0</int>
 								<bool key="NSAllowsTypeSelect">YES</bool>
