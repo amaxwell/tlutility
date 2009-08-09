@@ -211,5 +211,22 @@
             <pubDate>Sat, 01 Aug 2009 09:16:51 -0700</pubDate>
             <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20090801.tgz" sparkle:version="0.72" length="1407726" type="application/octet-stream" sparkle:dsaSignature="MCwCFGNOK+IgskyeBqeMuufp9KpOz2bkAhQsOuDwwZtm8TK7PbNVtzwF/xUnqw=="></enclosure>
         </item>
+        <item>
+            <title>Version 0.73</title>
+            <description>
+                <h3>Changes Since 0.72</h3>
+                <li>Account for renaming of infrastructure packages in TL 2009, which was throwing off package counts</li>
+                <li>Clear the URL cache before downloading the update script, since Apple's URL loading appears to have problems</li>
+                <li>Handle more status lines in the new log parsing</li>
+                <li>Fix a pipe race condition that occasionally prevented the version number from being read</li>
+                <li>Reword the infrastructure update alert to be more clear</li>
+                <li>Fix a potential zombie crasher in the log table row height caching</li>
+                <li>Fix bug #15 by improving column sizing behavior</li>
+                <li>Display units in the size table column and right-align</li>
+                <li>Set minimum OS version to 10.5.7 to require NSOperationQueue bug fixes</li>
+            </description>
+            <pubDate>Sun, 09 Aug 2009 12:20:50 -0700</pubDate>
+            <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20090809.tgz" sparkle:version="0.73" length="1409704" type="application/octet-stream" sparkle:dsaSignature="MCwCFDSLtRUrLrG1yFjDpdoe9TT4QaOQAhQdUbMhHFq4YTROw9vrWq0lg4zZ5A=="></enclosure>
+        </item>
     </channel>
 </rss>
