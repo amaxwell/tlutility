@@ -236,7 +236,7 @@ static NSConnection * __TLMLSCreateAndRegisterConnectionForServer(TLMLogServer *
         else if ([msg hasPrefix:@"total-bytes"]) {
             
             NSInteger totalBytes = [[comps lastObject] integerValue];
-            parsedMessage = [[NSString alloc] initWithFormat:NSLocalizedString(@"Beginning download of %.1f kbytes", @""), totalBytes / 1024.0];
+            parsedMessage = [NSString stringWithFormat:NSLocalizedString(@"Beginning download of %.1f kbytes", @""), totalBytes / 1024.0];
 
             NSDictionary *userInfo = [NSDictionary dictionaryWithObject:[NSNumber numberWithUnsignedInteger:(NSUInteger)totalBytes] 
                                                                  forKey:TLMLogSize];
