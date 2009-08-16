@@ -787,7 +787,7 @@ static char _TLMOperationQueueOperationContext;
     
     TLMSizeFormatter *sizeFormatter = [[TLMSizeFormatter new] autorelease];
     NSString *sizeString = [sizeFormatter stringForObjectValue:[NSNumber numberWithUnsignedInteger:size]];
-    [informativeText appendFormat:NSLocalizedString(@"  Total installed size will be %@.", @"partial alert text, with double space in front, only used with tlmgr2"), sizeString];
+    [informativeText appendFormat:NSLocalizedString(@"  Total download size will be %@.", @"partial alert text, with double space in front, only used with tlmgr2"), sizeString];
     
     [alert setInformativeText:informativeText];
     [alert addButtonWithTitle:NSLocalizedString(@"Update", @"button title")];
