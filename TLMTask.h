@@ -42,12 +42,11 @@
 @interface TLMTask : BDSKTask
 {
 @private
-    NSData   *_outputData;
-    NSData   *_errorData;
-    NSString *_outputString;
-    NSString *_errorString;
-    BOOL      _readData;
-    NSThread *_readThread;
+    NSData          *_outputData;
+    NSData          *_errorData;
+    NSString        *_outputString;
+    NSString        *_errorString;
+    NSConditionLock *_lock;
 }
 
 // implemented to raise an exception since TLMTask manages stdio itself
@@ -56,9 +55,7 @@
 
 // 
 /*
- Implementation note: stdio channels are read lazily when either is requested.
- These calls execute on the thread that called -launch, and and will block 
- the calling thread if necessary.  
+ Implementation note: these calls will block until the task is completed. 
  
  If that is problematic, call errorData and outputData after calling -launch
  and waiting until the task exits (use -waitUntilExit).  Subsequent access 
@@ -66,7 +63,7 @@
  */
 @property (readonly) NSString *outputString;
 @property (readonly) NSString *errorString;
-@property (readonly, copy) NSData *errorData;
-@property (readonly, copy) NSData *outputData;
+@property (readonly) NSData *errorData;
+@property (readonly) NSData *outputData;
 
 @end
