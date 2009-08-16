@@ -41,6 +41,7 @@
 #import "TLMAppController.h"
 #import "TLMLogServer.h"
 #import "TLMTask.h"
+#import "TLMDownload.h"
 
 NSString * const TLMTexBinPathPreferenceKey = @"TLMTexBinPathPreferenceKey";       /* /usr/texbin                 */
 NSString * const TLMUseRootHomePreferenceKey = @"TLMUseRootHomePreferenceKey";     /* YES                         */
@@ -232,7 +233,7 @@ NSString * const TLMDisableVersionMismatchWarningKey = @"TLMDisableVersionMismat
         }
         
     } while (keepWaiting);
-        
+    
     
     CFReadStreamClose(stream);
     CFRelease(stream);
@@ -259,6 +260,11 @@ NSString * const TLMDisableVersionMismatchWarningKey = @"TLMDisableVersionMismat
     
     TLMLog(__func__, @"%@ has %lu files", [[self defaultServerURL] absoluteString], (long)[files count]);
     return ([files count] > 0);
+}
+
+- (NSString *)_downloadRunLoopMode
+{
+    return [NSString stringWithFormat:@"TLMPreferenceControllerRunLoopMode <%p>", self];
 }
 
 - (BOOL)_canConnectToDefaultServer
@@ -289,28 +295,24 @@ NSString * const TLMDisableVersionMismatchWarningKey = @"TLMDisableVersionMismat
     NSURLRequest *request = [NSURLRequest requestWithURL:[self defaultServerURL] 
                                              cachePolicy:NSURLRequestReloadIgnoringCacheData 
                                          timeoutInterval:URL_TIMEOUT];
-    NSHTTPURLResponse *response;
-    NSError *error = nil;
-    NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
     
-    // response will not be an NSHTTPURLResponse for ftp: hosts, but data is empty
-    if ([response respondsToSelector:@selector(statusCode)] && [response statusCode] != 200) {
-        TLMLog(__func__, @"http response from %@ was %ld", URLString, (long)[response statusCode]);
-        data = nil;
-    }
-    else if ([data length] == 0) {
-        TLMLog(__func__, @"no data from %@\nresponse = %@", URLString, response);
+    // NSURLConnection synchronous download blocks the panel timer, so the countdown gets stuck
+    TLMDownload *download = [[TLMDownload new] autorelease];
+    [download downloadRequest:request inMode:[self _downloadRunLoopMode]];
+    
+    while ([download isFinished] == NO) {
+        NSDate *next = [[NSDate alloc] initWithTimeIntervalSinceNow:0.5];
+        [[NSRunLoop currentRunLoop] runMode:[self _downloadRunLoopMode] beforeDate:next];
+        [next release];
     }
     
-    // doc for +[NSURLConnection sendSynchronousRequest:returningResponse:error] sez this will be nil if no error
-    if (error) {
+    NSError *error;
+    const BOOL failed = [download failed:&error];
+    
+    if (failed)
         TLMLog(__func__, @"error from loading %@: %@", URLString, error);
-    }
     
-    // this gets screwed up by "http://mirror.ctan.orgs/" getting redirected to opendns.com, but
-    // even if we can check for a 302, that's the same response that mirror.ctan.org gives...
-    
-    return ([data length] != 0);
+    return (failed == NO);
 }
 
 - (void)_updateProgressField:(NSTimer *)timer
@@ -319,6 +321,7 @@ NSString * const TLMDisableVersionMismatchWarningKey = @"TLMDisableVersionMismat
     CFTimeInterval delta = CFAbsoluteTimeGetCurrent() - [start doubleValue];
     delta = MAX(URL_TIMEOUT - delta, 0);
     [_progressField setStringValue:[NSString stringWithFormat:NSLocalizedString(@"%.0f seconds remaining.", @"keep short"), delta]];
+    [_progressPanel display];
 }
 
 - (IBAction)changeServerURL:(id)sender
@@ -336,11 +339,12 @@ NSString * const TLMDisableVersionMismatchWarningKey = @"TLMDisableVersionMismat
                                                         selector:@selector(_updateProgressField:) 
                                                         userInfo:[NSNumber numberWithDouble:CFAbsoluteTimeGetCurrent()] 
                                                          repeats:YES];
+        [[NSRunLoop currentRunLoop] addTimer:timer forMode:[self _downloadRunLoopMode]];
         // fire manually to get the initial status message
         [timer fire];
         [NSApp beginSheet:_progressPanel modalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
         [_progressIndicator startAnimation:nil];
-
+        
         /*
          It's not immediately obvious how to compose the URL, since each mirror has a different path.
          Do a quick check if this isn't one of the URLs from the bundled plist.
@@ -370,7 +374,7 @@ NSString * const TLMDisableVersionMismatchWarningKey = @"TLMDisableVersionMismat
             [_progressPanel orderOut:nil];
             [timer invalidate];
         }
-                
+        
         // reset since it's either accepted or reverted at this point
         _hasPendingServerEdit = NO;
     }
