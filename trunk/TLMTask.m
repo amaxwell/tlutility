@@ -37,29 +37,24 @@
  */
 
 #import "TLMTask.h"
+#import "TLMLogServer.h"
+#include <sys/event.h>
 
-static NSString * const _TLMTaskRunLoopMode = @"_TLMTaskRunLoopMode";
 
-@interface TLMTask()
-@property (readwrite, copy) NSData *errorData;
-@property (readwrite, copy) NSData *outputData;
-@end
-
+#define TLM_KQ_INIT     0
+#define TLM_KQ_SETUP    1
+#define TLM_KQ_WAITING  2
+#define TLM_KQ_FINISHED 3
 
 @implementation TLMTask
 
-@synthesize outputData = _outputData;
-@synthesize errorData = _errorData;
-
-
 - (void)dealloc
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [_readThread release];
     [_outputData release];
     [_errorData release];
     [_outputString release];
     [_errorString release];
+    [_lock release];
     [super dealloc];
 }
 
@@ -79,14 +74,86 @@ static NSString * const _TLMTaskRunLoopMode = @"_TLMTaskRunLoopMode";
     [super setStandardError:error];
 }
 
-- (void)_stdoutDataAvailable:(NSNotification *)aNote
+- (void)_readOutputAndErrorChannels
 {
-    [self setOutputData:[[aNote userInfo] objectForKey:NSFileHandleNotificationDataItem]];    
-}
+    NSAutoreleasePool *pool = [NSAutoreleasePool new];
+    
+    [_lock lockWhenCondition:TLM_KQ_INIT];
+    
+    // We just set these to NSPipes and acquired the lock, so calling these accessors is safe
+    int fdo = [[[self standardOutput] fileHandleForReading] fileDescriptor];
+    int fde = [[[self standardError] fileHandleForReading] fileDescriptor];
+    
+    // hopefully this never happens...
+    if (fdo < 0 || fde < 0) {
+        TLMLog(__func__, @"invalid stdio channels in task %@", self);
+        [pool release];
+        return;
+    }
+    
+    int kq_fd = kqueue();
+#define TLM_EVENT_COUNT 2
+    struct kevent events[TLM_EVENT_COUNT];
+    memset(events, 0, sizeof(struct kevent) * TLM_EVENT_COUNT);
+    
+    EV_SET(&events[0], fdo, EVFILT_READ, EV_ADD, 0, 0, NULL);
+    EV_SET(&events[1], fde, EVFILT_READ, EV_ADD, 0, 0, NULL);
+    kevent(kq_fd, events, TLM_EVENT_COUNT, NULL, 0, NULL);
+    
+    // kqueue is set up now, so we can launch
+    [_lock unlockWithCondition:TLM_KQ_SETUP];
+    
+    // wait until launch, then start running kevent loop
+    [_lock lockWhenCondition:TLM_KQ_WAITING];
 
-- (void)_stderrDataAvailable:(NSNotification *)aNote
-{
-    [self setErrorData:[[aNote userInfo] objectForKey:NSFileHandleNotificationDataItem]];    
+    struct timespec ts;
+    ts.tv_sec = 0;
+    ts.tv_nsec = 100000000;
+    
+    struct kevent event;
+    
+    NSMutableData *errBuffer = [NSMutableData data];
+    NSMutableData *outBuffer = [NSMutableData data];
+    
+    int eventCount;
+    
+    // most of this code is copied directly from tlmgr_cwrapper
+    while ((eventCount = kevent(kq_fd, NULL, 0, &event, 1, &ts)) != -1) {
+                
+        // if this was a timeout, don't read anything
+        if (0 == eventCount)
+            continue;
+        
+        size_t len = event.data;
+        char sbuf[2048];
+        char *buf = (len > sizeof(sbuf)) ? buf = malloc(len) : sbuf;
+        len = read(event.ident, buf, len);
+                
+        if (event.ident == (unsigned)fdo) {
+            [outBuffer appendBytes:buf length:len];
+        }
+        else if (event.ident == (unsigned)fde) {
+            [errBuffer appendBytes:buf length:len];
+        }
+
+        if (buf != sbuf) free(buf);
+        
+        // if not running, bail out
+        if ([self isRunning] == NO)
+            break;
+        
+    }
+    
+    events[0].flags = EV_DELETE;
+    events[1].flags = EV_DELETE;
+    kevent(kq_fd, events, TLM_EVENT_COUNT, NULL, 0, NULL);
+    close(kq_fd);
+    
+    _outputData = [outBuffer copy];
+    _errorData = [errBuffer copy];
+    [_lock unlockWithCondition:TLM_KQ_FINISHED];
+    
+    [pool release];
 }
 
 - (void)launch
@@ -95,73 +162,39 @@ static NSString * const _TLMTaskRunLoopMode = @"_TLMTaskRunLoopMode";
 
     [self setStandardOutput:[NSPipe pipe]];
     [self setStandardError:[NSPipe pipe]];
-    NSFileHandle *outfh = [[self standardOutput] fileHandleForReading];
-    NSFileHandle *errfh = [[self standardError] fileHandleForReading];
     
-    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-    [nc addObserver:self selector:@selector(_stdoutDataAvailable:) name:NSFileHandleReadToEndOfFileCompletionNotification object:outfh];
-    [nc addObserver:self selector:@selector(_stderrDataAvailable:) name:NSFileHandleReadToEndOfFileCompletionNotification object:errfh];
-    
-    [outfh readToEndOfFileInBackgroundAndNotifyForModes:[NSArray arrayWithObject:_TLMTaskRunLoopMode]];
-    [errfh readToEndOfFileInBackgroundAndNotifyForModes:[NSArray arrayWithObject:_TLMTaskRunLoopMode]];  
+    // make sure to initialize this before entering the thread...
+    _lock = [[NSConditionLock alloc] initWithCondition:TLM_KQ_INIT];
     
     /*
-     Need to run this thread's runloop to pick up the pipe notifications, so we keep track
-     of the thread that registered.  Doing this in -launch allows you to -init on one thread, then
-     call -launch on another thread.     
+     Use a separate thread for each task, since NSFileHandle may use a single thread as a funnel point for all channels 
+     in readToEndOfFileInBackgroundAndNotifyForModes:, in which case we get hosed when trying to run a TLMTask from 
+     separate threads if the first one is blocking.  Not clear if this is a problem prior to 10.6, but I ran into it
+     when one of the 2009 pretest mirrors was down.
      */
-    _readThread = [[NSThread currentThread] retain];
-    
+    [NSThread detachNewThreadSelector:@selector(_readOutputAndErrorChannels) toTarget:self withObject:nil];
+    [_lock lockWhenCondition:TLM_KQ_SETUP];
     [super launch];
-}
-
-- (void)_readDataFromPipes
-{
-    NSParameterAssert([[NSThread currentThread] isEqual:_readThread]);
     
-    // now that the task is finished, run the special runloop mode (only two sources in this mode)
-    SInt32 ret;
-    
-    do {
-        
-        // handle both sources in this mode immediately
-        // any nonzero timeout should be sufficient, since the task has completed and flushed the pipe
-        ret = CFRunLoopRunInMode((CFStringRef)_TLMTaskRunLoopMode, 0.1, FALSE);
-        
-        // should get this immediately
-        if (kCFRunLoopRunFinished == ret || kCFRunLoopRunStopped == ret) {
-            break;
-        }
-        
-        // hard timeout, since all I get when a task is terminated is kCFRunLoopRunTimedOut
-        if (kCFRunLoopRunTimedOut == ret) {
-            break;
-        }
-        
-    } while (kCFRunLoopRunHandledSource == ret);
-    
-    NSFileHandle *outfh = [[self standardOutput] fileHandleForReading];
-    NSFileHandle *errfh = [[self standardError] fileHandleForReading];
-    
-    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-    
-    [nc removeObserver:self name:NSFileHandleReadToEndOfFileCompletionNotification object:outfh];
-    [nc removeObserver:self name:NSFileHandleReadToEndOfFileCompletionNotification object:errfh];
-    
-    _readData = YES;
-}   
+    // now we're waiting for stdout and stderr
+    [_lock unlockWithCondition:TLM_KQ_WAITING];
+}  
 
 - (NSData *)outputData
 {
-    if (NO == _readData)
-        [self performSelector:@selector(_readDataFromPipes) onThread:_readThread withObject:nil waitUntilDone:YES];
+    if ([_lock condition] != TLM_KQ_FINISHED) {
+        [_lock lockWhenCondition:TLM_KQ_FINISHED];
+        [_lock unlock];
+    }
     return _outputData;
 }
 
 - (NSData *)errorData
 {
-    if (NO == _readData)
-        [self performSelector:@selector(_readDataFromPipes) onThread:_readThread withObject:nil waitUntilDone:YES];
+    if ([_lock condition] != TLM_KQ_FINISHED) {
+        [_lock lockWhenCondition:TLM_KQ_FINISHED];
+        [_lock unlock];
+    }
     return _errorData;
 }
 
