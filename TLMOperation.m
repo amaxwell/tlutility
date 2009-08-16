@@ -149,11 +149,12 @@ static char _TLMOperationFinishedContext;
     } else if (0 != status) {
         TLMLog(__func__, @"termination status of task %@ was %ld", [_task launchPath], (long)status);
         [self setErrorData:[_task errorData]];
-        
-        // would be nice to show this in the UI in an alert, but it's not always clear enough
-        TLMLog(__func__, @"%@", [self errorMessages]);
         [self setFailed:YES];
     }
+    
+    // would be nice to show this in the UI in an alert, but it's not always clear enough, and sometimes has output even in case of success
+    if ([self errorMessages])
+        TLMLog(__func__, @"Standard error from `%@ %@`\n%@", [_task launchPath], [[_task arguments] componentsJoinedByString:@" "], [self errorMessages]);
     
     signal(SIGPIPE, previousSignalMask);
     
