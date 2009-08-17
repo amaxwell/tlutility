@@ -130,7 +130,8 @@
      possible to avoid auto-installing them.
      
      Install doesn't allow multiple flavors, though, so if items that need update are selected with items that are not
-     installed, we just invalidate the action.
+     installed, we just invalidate the action.  Additionally, we don't allow reinstall here, but installed packages
+     shouldn't show up in this list anyway.
      */
     NSArray *selItems = [_packages objectsAtIndexes:[_tableView selectedRowIndexes]];
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(wasForciblyRemoved == YES) OR (isInstalled == NO)"];
