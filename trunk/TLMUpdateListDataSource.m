@@ -120,16 +120,24 @@
 
 - (BOOL)_validateInstallSelectedRows
 {
-    if ([[_tableView selectedRowIndexes] count] == 0)
+    const NSUInteger selectedRowCount = [[_tableView selectedRowIndexes] count];
+    if (selectedRowCount == 0)
         return NO;
     
-    // only allow install action for forcibly removed packages; this is a special case to aid recovery from a failed update
+    /*
+     Allow install action for forcibly removed packages; this is a special case to aid recovery from a failed update.
+     Also allow installing uninstalled packages that would otherwise be installed by update --all, since it's now
+     possible to avoid auto-installing them.
+     
+     Install doesn't allow multiple flavors, though, so if items that need update are selected with items that are not
+     installed, we just invalidate the action.
+     */
     NSArray *selItems = [_packages objectsAtIndexes:[_tableView selectedRowIndexes]];
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(wasForciblyRemoved == NO)"];
-    if ([[selItems filteredArrayUsingPredicate:predicate] count])
-        return NO;
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(wasForciblyRemoved == YES) OR (isInstalled == NO)"];
+    if ([[selItems filteredArrayUsingPredicate:predicate] count] == selectedRowCount)
+        return YES;
     
-    return YES;
+    return NO;
 }
 
 - (BOOL)validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem>)anItem;
