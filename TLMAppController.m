@@ -119,7 +119,12 @@ static void __TLMMigrateBundleIdentifier()
     // causes syslog performance problems if enabled by default
     [defaults setObject:[NSNumber numberWithBool:NO] forKey:TLMUseSyslogPreferenceKey];
     
+    // user-settable from alert sheet; resets itself on various pref changes
     [defaults setObject:[NSNumber numberWithBool:NO] forKey:TLMDisableVersionMismatchWarningKey];
+    
+    // set to YES for compatibility with tlmgr default behavior
+    [defaults setObject:[NSNumber numberWithBool:YES] forKey:TLMAutoInstallPreferenceKey];
+    [defaults setObject:[NSNumber numberWithBool:YES] forKey:TLMAutoRemovePreferenceKey];
     
     [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
     
@@ -228,9 +233,8 @@ static void __TLMMigrateBundleIdentifier()
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:TLMDisableVersionMismatchWarningKey];
 }
 
-- (void)checkVersionConsistency
++ (NSInteger)_texliveYear:(NSString **)versionStr
 {
-    TLMLog(__func__, @"Checking TeX Live version%C", 0x2026);
     // always run the check and log the result
     TLMTask *tlmgrTask = [[TLMTask new] autorelease];
     [tlmgrTask setLaunchPath:[[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath]];
@@ -242,10 +246,9 @@ static void __TLMMigrateBundleIdentifier()
     
     // !!! this happens periodically, and I don't yet know why...
     if (nil == versionString)
-        TLMLog(__func__, @"Failed to read version string: %@", [tlmgrTask errorString]);
+        TLMLog(__func__, @"Failed to read version string: %@, ret = %d", [tlmgrTask errorString], [tlmgrTask terminationStatus]);
     
     versionString = [versionString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    TLMLog(__func__, @"Using tlmgr version:\n%@", versionString);
     NSArray *versionLines = [versionString componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
     NSInteger texliveYear = 0;
     
@@ -274,6 +277,23 @@ static void __TLMMigrateBundleIdentifier()
             }
         }
     }
+    if (versionStr)
+        *versionStr = versionString;
+    return texliveYear;
+}
+
++ (NSInteger)texliveYear
+{
+    return [self _texliveYear:NULL];
+}
+
+- (void)checkVersionConsistency
+{
+    TLMLog(__func__, @"Checking TeX Live version%C", 0x2026);
+    
+    NSString *versionString;
+    NSInteger texliveYear = [[self class] _texliveYear:&versionString];
+    TLMLog(__func__, @"Using tlmgr version: %@", versionString);
     
     if (texliveYear ) {
         

@@ -51,6 +51,12 @@
     NSString *locationString = [location absoluteString];
     NSMutableArray *options = [NSMutableArray arrayWithObjects:@"--location", locationString, @"--machine-readable", @"update", nil];
     
+    if ([[TLMPreferenceController sharedPreferenceController] autoInstall] == NO)
+        [options addObject:@"--no-auto-install"];
+    
+    if ([[TLMPreferenceController sharedPreferenceController] autoRemove] == NO)
+        [options addObject:@"--no-auto-remove"];
+    
     if (nil == packageNames) {
         [options addObject:@"--all"];
     }

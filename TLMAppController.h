@@ -51,6 +51,7 @@
 
 // see if tlmgr version matches TeX Live mirror URL (heuristic)
 - (void)checkVersionConsistency;
++ (NSInteger)texliveYear;
 
 - (IBAction)showPreferences:(id)sender;
 - (IBAction)openDisasterRecoveryPage:(id)sender;

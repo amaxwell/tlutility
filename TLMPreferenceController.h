@@ -44,6 +44,8 @@ extern NSString * const TLMInfraPathPreferenceKey;
 extern NSString * const TLMUseSyslogPreferenceKey;
 extern NSString * const TLMFullServerURLPreferenceKey;
 extern NSString * const TLMDisableVersionMismatchWarningKey;
+extern NSString * const TLMAutoInstallPreferenceKey;
+extern NSString * const TLMAutoRemovePreferenceKey;
 
 @interface TLMPreferenceController : NSWindowController 
 {
@@ -52,6 +54,8 @@ extern NSString * const TLMDisableVersionMismatchWarningKey;
     NSComboBox          *_serverComboBox;
     NSButton            *_rootHomeCheckBox;
     NSButton            *_useSyslogCheckBox;
+    NSButton            *_autoinstallCheckBox;
+    NSButton            *_autoremoveCheckBox;
     NSArray             *_servers;
     NSPanel             *_progressPanel;
     NSProgressIndicator *_progressIndicator;
@@ -64,16 +68,28 @@ extern NSString * const TLMDisableVersionMismatchWarningKey;
 - (IBAction)changeServerURL:(id)sender;
 - (IBAction)toggleUseRootHome:(id)sender;
 - (IBAction)toggleUseSyslog:(id)sender;
+- (IBAction)toggleAutoinstall:(id)sender;
+- (IBAction)toggleAutoremove:(id)sender;
 
 @property (nonatomic, retain) IBOutlet NSPathControl *_texbinPathControl;
 @property (nonatomic, retain) IBOutlet NSComboBox *_serverComboBox;
 @property (nonatomic, retain) IBOutlet NSButton *_rootHomeCheckBox;
 @property (nonatomic, retain) IBOutlet NSButton *_useSyslogCheckBox;
+@property (nonatomic, retain) IBOutlet NSButton *_autoinstallCheckBox;
+@property (nonatomic, retain) IBOutlet NSButton *_autoremoveCheckBox;
 @property (nonatomic, retain) IBOutlet NSPanel *_progressPanel;
 @property (nonatomic, retain) IBOutlet NSProgressIndicator *_progressIndicator;
 @property (nonatomic, retain) IBOutlet NSTextField *_progressField;
 
-// composes TLMServerURLPreferenceKey and TLMServerPathPreferenceKey
+/*
+ 
+ NOTE: although property syntax is used, these keys are not observable with
+ KVO at present.  Since no bindings are currently used, and I only use KVO 
+ in code when there's no other option, this is not a problem.
+ 
+ */
+
+// composes the URL as needed
 @property (readonly) NSURL *defaultServerURL;
 
 // returns the local tlpdb location, suitable for --location
@@ -84,5 +100,9 @@ extern NSString * const TLMDisableVersionMismatchWarningKey;
 
 // adds texdoc to TLMTexBinPathPreferenceKey, standardizes path
 @property (readonly) NSString *texdocAbsolutePath;
+
+// tlmgr 2009 modifiers to update action
+@property (readonly) BOOL autoInstall;
+@property (readonly) BOOL autoRemove;
 
 @end
