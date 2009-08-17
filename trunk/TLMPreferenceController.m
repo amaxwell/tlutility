@@ -49,6 +49,8 @@ NSString * const TLMInfraPathPreferenceKey = @"TLMInfraPathPreferenceKey";      
 NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";         /* NO                          */
 NSString * const TLMFullServerURLPreferenceKey = @"TLMFullServerURLPreferenceKey"; /* composed URL                */
 NSString * const TLMDisableVersionMismatchWarningKey = @"TLMDisableVersionMismatchWarningKey"; /* NO              */
+NSString * const TLMAutoInstallPreferenceKey = @"TLMAutoInstallPreferenceKey";     /* YES (2009 only)             */
+NSString * const TLMAutoRemovePreferenceKey = @"TLMAutoRemovePreferenceKey";       /* YES (2009 only)             */
 
 #define TLMGR_CMD @"tlmgr"
 #define TEXDOC_CMD @"texdoc"
@@ -64,6 +66,8 @@ NSString * const TLMDisableVersionMismatchWarningKey = @"TLMDisableVersionMismat
 @synthesize _progressPanel;
 @synthesize _progressIndicator;
 @synthesize _progressField;
+@synthesize _autoremoveCheckBox;
+@synthesize _autoinstallCheckBox;
 
 + (id)sharedPreferenceController;
 {
@@ -82,12 +86,7 @@ NSString * const TLMDisableVersionMismatchWarningKey = @"TLMDisableVersionMismat
 {
     self = [super initWithWindowNibName:name];
     if (self) {
-        NSMutableArray *servers = [NSMutableArray array];
-        // current server from prefs seems to be added automatically when setting stringValue
-        NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"DefaultMirrors" ofType:@"plist"];
-        if (plistPath)
-            [servers addObjectsFromArray:[NSArray arrayWithContentsOfFile:plistPath]];
-        _servers = [servers copy];
+
     }
     return self;
 }
@@ -102,7 +101,57 @@ NSString * const TLMDisableVersionMismatchWarningKey = @"TLMDisableVersionMismat
     [_progressPanel release];
     [_progressIndicator release];
     [_progressField release];
+    [_autoremoveCheckBox release];
+    [_autoinstallCheckBox release];
     [super dealloc];
+}
+
+- (void)_updateUI
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [_rootHomeCheckBox setState:[defaults boolForKey:TLMUseRootHomePreferenceKey]];
+    [_useSyslogCheckBox setState:[defaults boolForKey:TLMUseSyslogPreferenceKey]];
+    [_autoinstallCheckBox setState:[defaults boolForKey:TLMAutoInstallPreferenceKey]];
+    [_autoremoveCheckBox setState:[defaults boolForKey:TLMAutoRemovePreferenceKey]];
+    
+    const NSInteger texliveYear = [TLMAppController texliveYear];
+    [_autoinstallCheckBox setEnabled:(texliveYear != 2008)];
+    [_autoremoveCheckBox setEnabled:(texliveYear != 2008)];
+    
+    // current server from prefs seems to be added automatically when setting stringValue
+    NSMutableArray *servers = [NSMutableArray array];
+    NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"DefaultMirrors" ofType:@"plist"];
+    NSDictionary *mirrorsByYear = nil;
+    if (plistPath)
+        mirrorsByYear = [NSDictionary dictionaryWithContentsOfFile:plistPath];
+        
+    /*
+     2008 mirrors have the year included.  Even though 2008 mirrors are going away as soon as 2009 goes live,
+     converting to a dictionary here allows adding mirrors for pretest or future changes.
+     */
+    if (texliveYear == 2008) {
+        [servers addObjectsFromArray:[mirrorsByYear objectForKey:@"2008"]];
+    }
+    else {
+        [servers addObjectsFromArray:[mirrorsByYear objectForKey:@"tlnet"]];
+    }
+    
+    [_servers autorelease];
+    _servers = [servers copy];
+    [_serverComboBox reloadData];
+}
+
+- (void)updateUI
+{
+    // coalesce these since we spawn a task and reload a plist from disk
+    [[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(_updateUI) object:nil];
+    [self performSelector:@selector(_updateUI) withObject:nil afterDelay:0.1];
+}
+
+- (void)windowDidBecomeMain:(NSNotification *)notification
+{
+    // account for possible TeXDist prefpane changes
+    [self updateUI];
 }
 
 - (void)awakeFromNib
@@ -114,11 +163,8 @@ NSString * const TLMDisableVersionMismatchWarningKey = @"TLMDisableVersionMismat
     [_serverComboBox setStringValue:[defaults objectForKey:TLMFullServerURLPreferenceKey]];
     [_serverComboBox setFormatter:[[TLMURLFormatter new] autorelease]];
     [_serverComboBox setDelegate:self];
-    
-    [_rootHomeCheckBox setState:[defaults boolForKey:TLMUseRootHomePreferenceKey]];
-    [_useSyslogCheckBox setState:[defaults boolForKey:TLMUseSyslogPreferenceKey]];
-    
-    [_serverComboBox setDelegate:self];
+    [_serverComboBox setDataSource:self];
+    [self updateUI];
 }
 
 - (IBAction)toggleUseRootHome:(id)sender;
@@ -131,6 +177,16 @@ NSString * const TLMDisableVersionMismatchWarningKey = @"TLMDisableVersionMismat
     [[NSUserDefaults standardUserDefaults] setBool:([sender state] == NSOnState) forKey:TLMUseSyslogPreferenceKey];
 }
 
+- (IBAction)toggleAutoinstall:(id)sender;
+{
+    [[NSUserDefaults standardUserDefaults] setBool:([sender state] == NSOnState) forKey:TLMAutoInstallPreferenceKey];
+}
+
+- (IBAction)toggleAutoremove:(id)sender;
+{
+    [[NSUserDefaults standardUserDefaults] setBool:([sender state] == NSOnState) forKey:TLMAutoRemovePreferenceKey];
+}
+
 - (void)updateTeXBinPathWithURL:(NSURL *)aURL
 {
     [_texbinPathControl setURL:aURL];
@@ -141,6 +197,7 @@ NSString * const TLMDisableVersionMismatchWarningKey = @"TLMDisableVersionMismat
     
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:TLMDisableVersionMismatchWarningKey];
     [[NSApp delegate] checkVersionConsistency];
+    [self updateUI];
 }
 
 - (void)openPanelDidEnd:(NSOpenPanel*)panel returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
@@ -504,5 +561,9 @@ NSString * const TLMDisableVersionMismatchWarningKey = @"TLMDisableVersionMismat
     if (dragURL) [self updateTeXBinPathWithURL:dragURL];
     return (nil != dragURL);
 }
+
+- (BOOL)autoInstall { return [[NSUserDefaults standardUserDefaults] boolForKey:TLMAutoInstallPreferenceKey]; }
+
+- (BOOL)autoRemove { return [[NSUserDefaults standardUserDefaults] boolForKey:TLMAutoRemovePreferenceKey]; }
 
 @end
