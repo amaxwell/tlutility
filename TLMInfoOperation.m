@@ -129,7 +129,6 @@ static NSArray * __TLMURLsFromTexdocOutput(NSString *outputString)
          texdoc info: makeindex aliased to base/makeindex
          1 /usr/local/texlive/2008/texmf-dist/doc/makeindex/base/makeindex.pdf
          */
-        TLMLog(__func__, @"Texdoc version %.2f is installed; using new style parsing.", version);
         NSArray *lines = [outputString componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
         for (NSString *line in lines) {
             NSScanner *scanner = [NSScanner scannerWithString:line];
@@ -150,7 +149,6 @@ static NSArray * __TLMURLsFromTexdocOutput(NSString *outputString)
          /usr/local/texlive/2008/texmf/doc/man/man1/makeindex.pdf
          /usr/local/texlive/2008/texmf-dist/doc/makeindex/base/makeindex.dvi
          */
-        TLMLog(__func__, @"Texdoc version %.2f is installed; using old style parsing.", version);
         NSArray *docPaths = [outputString componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
         for (NSString *docPath in docPaths) {
             // avoid empty lines...
@@ -199,8 +197,6 @@ static NSArray * __TLMURLsFromTexdocOutput(NSString *outputString)
     if (r.length)
         packageName = [packageName substringToIndex:r.location];
     
-    TLMLog(__func__, @"Finding documentation for %@%C", packageName, 0x2026);
-
     sig_t previousSignalMask = signal(SIGPIPE, SIG_IGN);
     
     TLMTask *task = [[TLMTask new] autorelease];
@@ -234,10 +230,11 @@ static NSArray * __TLMURLsFromTexdocOutput(NSString *outputString)
             [self setDocumentationURLs:docURLs];
     }
     
-    if (errorString)
+    // don't bother logging any errors in case of cancellation
+    if (errorString && [self isCancelled] == NO)
         TLMLog(__func__, @"%@", [errorString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]);
     
-    if ([[self documentationURLs] count] == 0)
+    if ([[self documentationURLs] count] == 0 && [self isCancelled] == NO)
         TLMLog(__func__, @"Unable to find documentation for %@", packageName);
 
     [pool release];
