@@ -600,12 +600,12 @@ static char _TLMOperationQueueOperationContext;
     [self _updateURLView];
 }
 
-- (void)_refreshFullPackageListFromLocation:(NSURL *)location
+- (void)_refreshFullPackageListFromLocation:(NSURL *)location offline:(BOOL)offline
 {
     [self _displayStatusString:nil dataSource:_packageListDataSource];
     // disable refresh action for this view
     [_packageListDataSource setRefreshing:YES];
-    TLMListOperation *op = [[TLMListOperation alloc] initWithLocation:location];
+    TLMListOperation *op = [[TLMListOperation alloc] initWithLocation:location offline:offline];
     [self _addOperation:op selector:@selector(_handleListFinishedNotification:)];
     [op release];
     TLMLog(__func__, @"Refreshing list of all packages%C", 0x2026);           
@@ -626,7 +626,7 @@ static char _TLMOperationQueueOperationContext;
     else if ([op isCancelled] == NO) {
         
         // This is slow, but if a package installed other dependencies, we have no way of manually removing from the list.  We also need to ensure that the same mirror is used, so results are consistent.
-        [self _refreshFullPackageListFromLocation:[op updateURL]];
+        [self _refreshFullPackageListFromLocation:[op updateURL] offline:NO];
         
         // this is always displayed, so should always be updated as well
         [self _refreshUpdatedPackageListFromLocation:[op updateURL]];
@@ -656,7 +656,7 @@ static char _TLMOperationQueueOperationContext;
     else if ([op isCancelled] == NO) {
         
         // This is slow, but if a package removed other dependencies, we have no way of manually removing from the list.  We also need to ensure that the same mirror is used, so results are consistent.
-        [self _refreshFullPackageListFromLocation:[_packageListDataSource lastUpdateURL]];
+        [self _refreshFullPackageListFromLocation:[_packageListDataSource lastUpdateURL] offline:NO];
         
         // this is always displayed, so should always be updated as well
         [self _refreshUpdatedPackageListFromLocation:[_packageListDataSource lastUpdateURL]];
@@ -760,11 +760,12 @@ static char _TLMOperationQueueOperationContext;
         serverURL = [[TLMPreferenceController sharedPreferenceController] offlineServerURL];
         TLMLog(__func__, @"Network connection is down (%@).  Trying local install database %@%C", desc, serverURL, 0x2026);
         [(id)desc autorelease];
-        [self _refreshFullPackageListFromLocation:serverURL];
+        // only TL 2009 supports --only-installed; TL 2008 works if we pass serverURL, though
+        [self _refreshFullPackageListFromLocation:serverURL offline:([TLMAppController texliveYear] > 2008)];
         [self _displayStatusString:NSLocalizedString(@"Network is unavailable", @"") dataSource:_updateListDataSource];
     }
     else {
-        [self _refreshFullPackageListFromLocation:serverURL];
+        [self _refreshFullPackageListFromLocation:serverURL offline:NO];
     }
 }
 

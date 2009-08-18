@@ -46,8 +46,8 @@
     NSURL   *_updateURL;
 }
 
-// location must be non-nil
-- (id)initWithLocation:(NSURL *)location;
+// location must be non-nil; if offline is YES, only locally installed packages will be shown
+- (id)initWithLocation:(NSURL *)location offline:(BOOL)offline;
 
 // array of TLMPackageNode objects
 @property (readonly) NSArray *packageNodes;
