@@ -184,7 +184,8 @@ static bool hasKeyPrefix(NSString *line)
             }
             value = [NSMutableString string];
             NSRange r = [line rangeOfString:@":"];
-            key = [line substringToIndex:r.location];
+            // downcase to allow for changes from CamelCase
+            key = [[line substringToIndex:r.location] lowercaseString];
             [value appendString:[line substringFromIndex:NSMaxRange(r)]];
         }
         else {
@@ -213,7 +214,8 @@ static bool hasKeyPrefix(NSString *line)
     NSFont *userFont = [NSFont userFontOfSize:0.0];
     NSFont *boldFont = [[NSFontManager sharedFontManager] convertFont:userFont toHaveTrait:NSBoldFontMask];
 
-    value = [info objectForKey:@"Package"];
+    // note that all keys are downcased; tlmgr 2008 used CamelCase, but Karl might switch 2009 to lowercase
+    value = [info objectForKey:@"package"];
     if (value) {
         previousLength = [attrString length];
         [[attrString mutableString] appendString:NSLocalizedString(@"Package:", @"heading in info panel")];
@@ -224,7 +226,7 @@ static bool hasKeyPrefix(NSString *line)
         [attrString addAttribute:NSFontAttributeName value:userFont range:NSMakeRange(previousLength, [attrString length] - previousLength)];
     }
     
-    value = [info objectForKey:@"ShortDesc"];
+    value = [info objectForKey:@"shortdesc"];
     if (value) {
         previousLength = [attrString length];
         [[attrString mutableString] appendString:NSLocalizedString(@"Summary:", @"heading in info panel")];
@@ -235,7 +237,7 @@ static bool hasKeyPrefix(NSString *line)
         [attrString addAttribute:NSFontAttributeName value:userFont range:NSMakeRange(previousLength, [attrString length] - previousLength)];
     }
     
-    value = [info objectForKey:@"Installed"];
+    value = [info objectForKey:@"installed"];
     if (value) {
         previousLength = [attrString length];
         [[attrString mutableString] appendString:NSLocalizedString(@"Status:", @"heading in info panel")];
@@ -276,7 +278,7 @@ static bool hasKeyPrefix(NSString *line)
         }
     }
     
-    value = [info objectForKey:@"LongDesc"];
+    value = [info objectForKey:@"longdesc"];
     if (value) {
         previousLength = [attrString length];
         [[attrString mutableString] appendString:NSLocalizedString(@"Description:\n", @"heading in info panel")];
