@@ -63,7 +63,7 @@ extern NSString * const TLMAutoRemovePreferenceKey;
     BOOL                 _hasPendingServerEdit;
 }
 
-+ (id)sharedPreferenceController;
++ (TLMPreferenceController *)sharedPreferenceController;
 - (IBAction)changeTexBinPath:(id)sender;
 - (IBAction)changeServerURL:(id)sender;
 - (IBAction)toggleUseRootHome:(id)sender;
@@ -92,8 +92,8 @@ extern NSString * const TLMAutoRemovePreferenceKey;
 // composes the URL as needed
 @property (readonly) NSURL *defaultServerURL;
 
-// returns the local tlpdb location, suitable for --location
-@property (readonly) NSURL *offlineServerURL;
+// returns the local tlpdb location, suitable for --location in TL 2008 only
+@property (readonly) NSURL *offlineServerURL DEPRECATED_ATTRIBUTE;
 
 // adds tlmgr to TLMTexBinPathPreferenceKey, standardizes path
 @property (readonly) NSString *tlmgrAbsolutePath;

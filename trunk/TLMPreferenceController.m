@@ -69,7 +69,7 @@ NSString * const TLMAutoRemovePreferenceKey = @"TLMAutoRemovePreferenceKey";    
 @synthesize _autoremoveCheckBox;
 @synthesize _autoinstallCheckBox;
 
-+ (id)sharedPreferenceController;
++ (TLMPreferenceController *)sharedPreferenceController;
 {
     static id sharedInstance = nil;
     if (nil == sharedInstance)
@@ -469,7 +469,7 @@ NSString * const TLMAutoRemovePreferenceKey = @"TLMAutoRemovePreferenceKey";    
 }
 
 - (NSURL *)offlineServerURL
-{
+{    
     // kpsewhich -var-value=SELFAUTOPARENT
     NSString *kpsewhichPath = [self kpsewhichAbsolutePath];
     NSURL *serverURL = nil;

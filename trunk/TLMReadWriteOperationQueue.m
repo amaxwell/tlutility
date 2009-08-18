@@ -62,7 +62,7 @@ static char _TLMOperationQueueOperationContext;
     [self defaultQueue];
 }
 
-+ (id)defaultQueue;
++ (TLMReadWriteOperationQueue *)defaultQueue;
 {
     static id sharedInstance = nil;
     if (nil == sharedInstance)
