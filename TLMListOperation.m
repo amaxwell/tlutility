@@ -49,12 +49,19 @@
 
 @synthesize updateURL = _updateURL;
 
-- (id)initWithLocation:(NSURL *)location
+- (id)initWithLocation:(NSURL *)location offline:(BOOL)offline
 {
     NSParameterAssert([location absoluteString]);
-    NSMutableArray *options = [NSMutableArray arrayWithObjects:@"--location", [location absoluteString], @"list", nil];
+    NSArray *options;
+    if (NO == offline)
+        options = [NSArray arrayWithObjects:@"--location", [location absoluteString], @"list", nil];
+    else
+        options = [NSArray arrayWithObjects:@"list", @"--only-installed", nil];
     NSString *cmd = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath];
-    return [self initWithCommand:cmd options:options];
+    self = [self initWithCommand:cmd options:options];
+    if (offline)
+        [self setUpdateURL:location];
+    return self;
 }
 
 - (void)dealloc
@@ -84,7 +91,8 @@
         [self setUpdateURL:[NSURL URLWithString:urlString]];
         [packageLines removeObjectAtIndex:0];
     }
-    else if ([packageLines count]) {
+    // updateURL is non-nil if we're in offline mode and running TL 2009, so don't warn in that case
+    else if ([packageLines count] && nil == [self updateURL]) {
         TLMLog(__func__, @"Expected prefix \"%@\" but actual line was:\n%@", installPrefix, [packageLines objectAtIndex:0]);
         TLMLog(__func__, @"*** WARNING ***\nUnable to determine URL from previous listing, so the default will be used.  Ignore this warning if you have not previously updated TeX Live");
     }
