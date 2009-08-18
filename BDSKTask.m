@@ -408,7 +408,7 @@ static void __BDSKTaskNotify(void *info)
         NSDate *next = [[NSDate allocWithZone:[self zone]] initWithTimeIntervalSinceNow:0.1];
         [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:next];
         [next release];
-}
+    }
 }
 
 @end
@@ -436,13 +436,13 @@ static void __BDSKTaskNotify(void *info)
                 task = [task retain];
                 pthread_mutex_unlock(&task->_internal->_lock);
             
-            if ((evt.fflags & NOTE_EXIT) == NOTE_EXIT)
-                [task _taskExited];
-            else if ((evt.fflags & NOTE_SIGNAL) == NOTE_SIGNAL)
-                [task _taskSignaled];
+                if ((evt.fflags & NOTE_EXIT) == NOTE_EXIT)
+                    [task _taskExited];
+                else if ((evt.fflags & NOTE_SIGNAL) == NOTE_SIGNAL)
+                    [task _taskSignaled];
             
                 [task release];
-        }
+            }
             
         }
         [pool release];
