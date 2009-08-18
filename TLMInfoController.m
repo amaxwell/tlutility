@@ -70,7 +70,7 @@ static NSString * const TLMInfoFileViewIconScaleKey = @"TLMInfoFileViewIconScale
 @synthesize _fileView;
 @synthesize fileObjects = _fileObjects;
 
-+ (id)sharedInstance
++ (TLMInfoController *)sharedInstance
 {
     static id sharedInstance = nil;
     if (nil == sharedInstance)

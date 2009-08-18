@@ -51,7 +51,7 @@
     NSTextField         *_statusField;
 }
 
-+ (id)sharedInstance;
++ (TLMReleaseNotesController *)sharedInstance;
 
 @property (nonatomic, retain) IBOutlet NSTableView *_versionsTable;
 @property (nonatomic, retain) IBOutlet WebView *_notesView;

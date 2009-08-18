@@ -57,7 +57,7 @@ extern NSString * const TLMLogSize;
     NSNotification *_nextNotification;
 }
 
-+ (id)sharedServer;
++ (TLMLogServer *)sharedServer;
 
 // returns messages in range (anIndex, end) or nil if anIndex is out of range
 - (NSArray *)messagesFromIndex:(NSUInteger)anIndex;

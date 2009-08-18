@@ -51,7 +51,7 @@
     NSArray             *_fileObjects;
 }
 
-+ (id)sharedInstance;
++ (TLMInfoController *)sharedInstance;
 - (void)showInfoForPackage:(id <TLMInfo>)package;
 - (void)cancel;
 

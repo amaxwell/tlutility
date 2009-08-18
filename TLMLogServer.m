@@ -61,7 +61,7 @@ static NSArray *_runLoopModes = nil;
         _runLoopModes = [[NSArray alloc] initWithObjects:rlmodes count:(sizeof(rlmodes) / sizeof(NSString *))];
 }
 
-+ (id)sharedServer
++ (TLMLogServer *)sharedServer
 {
     static id sharedServer = nil;
     if (nil == sharedServer) {

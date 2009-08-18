@@ -51,7 +51,7 @@
 }
 
 // should only be a single instance of this, or else the read/write semantics are meaningless
-+ (id)defaultQueue;
++ (TLMReadWriteOperationQueue *)defaultQueue;
 
 // operations must implement -isWriter
 - (void)addOperation:(TLMOperation *)op;

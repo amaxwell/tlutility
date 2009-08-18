@@ -50,7 +50,7 @@
 @synthesize notes = _notes;
 @synthesize versions = _versions;
 
-+ (id)sharedInstance
++ (TLMReleaseNotesController *)sharedInstance
 {
     static id sharedInstance = nil;
     if (nil == sharedInstance)
