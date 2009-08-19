@@ -553,6 +553,9 @@ static char _TLMOperationQueueOperationContext;
     
     // cancel info in case it's stuck
     [[TLMInfoController sharedInstance] cancel];
+    
+    // hide the progress bar in case we're installing
+    [self _stopProgressBar:nil];
 }
 
 - (void)_handlePapersizeFinishedNotification:(NSNotification *)aNote

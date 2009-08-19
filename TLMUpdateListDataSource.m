@@ -88,13 +88,74 @@
     
     TLMSizeFormatter *sizeFormatter = [[TLMSizeFormatter new] autorelease];
     [[[_tableView tableColumnWithIdentifier:@"size"] dataCell] setFormatter:sizeFormatter];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(_handleProgressNotification:)
+                                                 name:TLMLogIncrementalProgressNotification
+                                               object:nil];
+}
+
+- (void)_selectPackages:(NSArray *)packages
+{
+    NSMutableIndexSet *indexes = [NSMutableIndexSet indexSet];
+    for (TLMPackage *pkg in packages) {
+        NSUInteger idx = [_packages indexOfObject:pkg];
+        if (NSNotFound != idx)
+            [indexes addIndex:idx];
+    }
+    [_tableView selectRowIndexes:indexes byExtendingSelection:NO];
+}
+
+- (void)_selectPackagesNamed:(NSArray *)names
+{
+    [self _selectPackages:[_packages filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"name IN %@", names]]];
+}
+
+- (void)_handleProgressNotification:(NSNotification *)aNote
+{
+    NSString *pkgName = [[aNote userInfo] objectForKey:TLMLogPackageName];
+    if (pkgName) {
+        TLMPackage *toRemove = [[_allPackages filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"name LIKE %@", pkgName]] lastObject];
+        [[toRemove retain] autorelease];
+        
+        NSMutableArray *toSelect = nil;
+        if ([_tableView numberOfSelectedRows]) {
+            toSelect = [[[_packages objectsAtIndexes:[_tableView selectedRowIndexes]] mutableCopy] autorelease];
+            [toSelect removeObject:toRemove];
+        }
+        
+        // remove from the display array...
+        [_packages removeObject:toRemove];        
+        // now remove from the full array
+        NSMutableArray *allPackages = [[_allPackages mutableCopy] autorelease];
+        [allPackages removeObject:toRemove];
+        
+        // accessor does search:nil, which resets _packages and clears the search; we don't want that
+        [_allPackages release];
+        _allPackages = [allPackages copy];
+        
+        [_packages sortUsingDescriptors:_sortDescriptors];
+        [_tableView reloadData];
+        
+        // wait until after reloading to reselect...
+        [self _selectPackages:toSelect];
+    }
 }
 
 - (void)setAllPackages:(NSArray *)packages
 {
+    // select based on name, since package identity will change
+    NSArray *selectedPackageNames = nil;
+    if ([_tableView numberOfSelectedRows])
+        selectedPackageNames = [[_packages objectsAtIndexes:[_tableView selectedRowIndexes]] valueForKey:@"name"];
+    [_tableView selectRowIndexes:[NSIndexSet indexSet] byExtendingSelection:NO];
+    
     [_allPackages autorelease];
     _allPackages = [packages copy];
     [self search:nil];
+    
+    if ([selectedPackageNames count])
+        [self _selectPackagesNamed:selectedPackageNames];
 }
    
 - (BOOL)_validateUpdateSelectedRows

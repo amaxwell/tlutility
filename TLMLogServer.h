@@ -48,6 +48,7 @@ extern NSString * const TLMLogFinishedProgressNotification;    // no userInfo; p
 
 // userInfo key in progress notifications (size in bytes as NSNumber)
 extern NSString * const TLMLogSize;
+extern NSString * const TLMLogPackageName;
 
 @interface TLMLogServer : NSObject 
 {
