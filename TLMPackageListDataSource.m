@@ -166,6 +166,7 @@
 - (IBAction)search:(id)sender;
 {
     NSString *searchString = [_searchField stringValue];
+    NSArray *selectedItems = [_outlineView selectedItems];
     
     if (nil == searchString || [searchString isEqualToString:@""]) {
         [_displayedPackageNodes setArray:_packageNodes];
@@ -179,6 +180,15 @@
     }
     [_displayedPackageNodes sortUsingDescriptors:_sortDescriptors];    
     [_outlineView reloadData];
+    
+    // restore previously selected packages, if possible
+    NSMutableIndexSet *indexes = [NSMutableIndexSet indexSet];
+    for (id item in selectedItems) {
+        NSInteger idx = [_outlineView rowForItem:item];
+        if (-1 != idx)
+            [indexes addIndex:idx];
+    }
+    [_outlineView selectRowIndexes:indexes byExtendingSelection:NO];
 }
 
 #pragma mark NSOutlineView datasource
