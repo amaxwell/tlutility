@@ -230,6 +230,7 @@
 - (IBAction)search:(id)sender;
 {
     NSString *searchString = [_searchField stringValue];
+    NSArray *selectedPackages = [_tableView numberOfSelectedRows] ? [_packages objectsAtIndexes:[_tableView selectedRowIndexes]] : nil;
     
     if (nil == searchString || [searchString isEqualToString:@""]) {
         [_packages setArray:_allPackages];
@@ -243,6 +244,10 @@
     }
     [_packages sortUsingDescriptors:_sortDescriptors];
     [_tableView reloadData];
+    
+    // restore previously selected packages, if possible
+    if (selectedPackages)
+        [self _selectPackages:selectedPackages];
 }
 
 // TODO: should this be a toggle to show/hide?
