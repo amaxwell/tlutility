@@ -228,5 +228,26 @@
             <pubDate>Sun, 09 Aug 2009 12:20:50 -0700</pubDate>
             <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20090809.tgz" sparkle:version="0.73" length="1409704" type="application/octet-stream" sparkle:dsaSignature="MCwCFDSLtRUrLrG1yFjDpdoe9TT4QaOQAhQdUbMhHFq4YTROw9vrWq0lg4zZ5A=="></enclosure>
         </item>
+        <item>
+            <title>Version 0.74</title>
+            <description>
+                <h3>Changes Since 0.73</h3>
+                <li>Fix a minor memory leak</li>
+                <li>Always show standard error from tasks</li>
+                <li>Reimplement NSFileHandle asynchronous reading to fix deadlock on 10.6</li>
+                <li>Reword some alerts</li>
+                <li>Fix the countdown timer that displays when checking a mirror URL</li>
+                <li>Added support for disabling auto-remove and auto-install (TL 2009 only)</li>
+                <li>Allow installation of uninstalled packages from the update list</li>
+                <li>Allow for changes in tlmgr show output (TL 2009 only)</li>
+                <li>Remove some obnoxious logging around texdoc tasks</li>
+                <li>Fixed support for offline listing in TL 2009</li>
+                <li>Added a Quick Look item to the main menu for documentation thumbnails</li>
+                <li>Fix web thumbnails, which broke with the latest Safari update</li>
+                <li>Show thumbnails for README files</li>
+            </description>
+            <pubDate>Tue, 18 Aug 2009 19:30:03 -0700</pubDate>
+            <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20090818.tgz" sparkle:version="0.74" length="1419998" type="application/octet-stream" sparkle:dsaSignature="MCwCFDKdn/iPjyjl38Z76q5hK8HhAgw5AhQ96i0idDhJq9k8Szzxq3DBroweew=="></enclosure>
+        </item>
     </channel>
 </rss>
