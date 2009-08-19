@@ -784,7 +784,17 @@ static char _TLMOperationQueueOperationContext;
     [alert setMessageText:NSLocalizedString(@"Update all packages?", @"alert title")];
     // size may not be correct for _updateInfrastructure, but tlmgr may remove stuff also...so leave it as-is
     NSMutableString *informativeText = [NSMutableString string];
-    [informativeText appendString:NSLocalizedString(@"This will install all available updates and remove packages that no longer exist on the server.", @"alert message text")];
+    [informativeText appendString:NSLocalizedString(@"This will install all available updates.", @"update alert message text part 1")];
+    
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(willBeRemoved == YES)"];
+    NSUInteger removeCount = [[[_updateListDataSource allPackages] filteredArrayUsingPredicate:predicate] count];
+    if ([[TLMPreferenceController sharedPreferenceController] autoRemove] && removeCount)
+        [informativeText appendFormat:@"  %@", NSLocalizedString(@"Packages that no longer exist on the server will be removed.", @"update alert message text part 2 (optional)")];
+    
+    predicate = [NSPredicate predicateWithFormat:@"(isInstalled == NO)"];
+    NSUInteger installCount = [[[_updateListDataSource allPackages] filteredArrayUsingPredicate:predicate] count];
+    if ([[TLMPreferenceController sharedPreferenceController] autoInstall] && installCount)
+        [informativeText appendFormat:@"  %@", NSLocalizedString(@"New packages will be installed.", @"update alert message text part 3 (optional)")];
     
     TLMSizeFormatter *sizeFormatter = [[TLMSizeFormatter new] autorelease];
     NSString *sizeString = [sizeFormatter stringForObjectValue:[NSNumber numberWithUnsignedInteger:size]];
