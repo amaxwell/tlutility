@@ -46,6 +46,7 @@ NSString * const TLMLogTotalProgressNotification = @"TLMLogTotalProgressNotifica
 NSString * const TLMLogFinishedProgressNotification = @"TLMLogFinishedProgressNotification";
 NSString * const TLMLogIncrementalProgressNotification = @"TLMLogIncrementalProgressNotification";
 NSString * const TLMLogSize = @"TLMLogSize";
+NSString * const TLMLogPackageName = @"TLMLogPackageName";
 
 @implementation TLMLogServer
 
@@ -220,8 +221,7 @@ static NSConnection * __TLMLSCreateAndRegisterConnectionForServer(TLMLogServer *
             parsedMessage = [status stringByAppendingString:[comps objectAtIndex:0]];
             
             NSInteger bytes = [[comps objectAtIndex:4] integerValue];
-            NSDictionary *userInfo = [NSDictionary dictionaryWithObject:[NSNumber numberWithUnsignedInteger:(NSUInteger)bytes] 
-                                                                 forKey:TLMLogSize];
+            NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInteger:(NSUInteger)bytes], TLMLogSize, [comps objectAtIndex:0], TLMLogPackageName, nil];
             NSNotification *note = [NSNotification notificationWithName:TLMLogIncrementalProgressNotification
                                                                  object:self
                                                                userInfo:userInfo];
