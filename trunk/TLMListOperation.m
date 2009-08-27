@@ -84,7 +84,7 @@
      
      NOTE: the version shipped with August 2008 MacTeX does not print this diagnostic.
      */
-    NSString *installPrefix = @"tlmgr: installation location ";
+    NSString *installPrefix = @"tlmgr: package repository ";
     if ([packageLines count] && [[packageLines objectAtIndex:0] hasPrefix:installPrefix]) {
         NSString *urlString = [[packageLines objectAtIndex:0] stringByReplacingOccurrencesOfString:installPrefix withString:@""];
         TLMLog(__func__, @"Using mirror at %@", urlString);
@@ -94,7 +94,7 @@
     // updateURL is non-nil if we're in offline mode and running TL 2009, so don't warn in that case
     else if ([packageLines count] && nil == [self updateURL]) {
         TLMLog(__func__, @"Expected prefix \"%@\" but actual line was:\n%@", installPrefix, [packageLines objectAtIndex:0]);
-        TLMLog(__func__, @"*** WARNING ***\nUnable to determine URL from previous listing, so the default will be used.  Ignore this warning if you have not previously updated TeX Live");
+        TLMLog(__func__, @"*** WARNING ***\nUnable to determine URL from previous listing, so the default will be used.");
     }
     
     _packageNodes = [[TLMOutputParser nodesWithListLines:packageLines] copy];
