@@ -44,117 +44,94 @@
 
 #pragma mark Update parsing
 
++ (NSString *)_statusStringForCharacter:(unichar)ch
+{
+    NSString *status = nil;
+    switch (ch) {
+        case 'd':
+            status = NSLocalizedString(@"Deleted on server", @"status for package");
+            break;
+        case 'u':
+            status = NSLocalizedString(@"Updated on server", @"status for package");
+            break;
+        case 'a':
+            status = NSLocalizedString(@"Not installed", @"status for package");
+            break;
+        case 'f':
+            status = NSLocalizedString(@"Forcibly removed", @"status for package");
+            break;
+        case 'r':
+            status = NSLocalizedString(@"Local version is newer", @"status for package");
+            break;
+        default:
+            TLMLog(__func__, @"Unknown status code \"%C\"", ch);
+            break;
+    }
+    return status;
+}
+
+/*
+ froude:tmp amaxwell$ tlmgr2 --machine-readable update --list 2>/dev/null
+ ...
+ casyl	f	-	-	-
+ pageno	d	-	-	-
+ arsclassica	a	-	11634	297310
+ oberdiek	u	10278	11378	12339256
+ 
+ */
+
+#define MAX_COLUMNS 5
+
+enum {
+    TLMNameIndex          = 0,
+    TLMStatusIndex        = 1,
+    TLMLocalVersionIndex  = 2,
+    TLMRemoteVersionIndex = 3,
+    TLMSizeIndex          = 4
+};
+
 + (TLMPackage *)packageWithUpdateLine:(NSString *)outputLine;
 {
-    NSParameterAssert(nil != outputLine);   
-    
-    NSString *removePrefix = @"remove ";
-
     TLMPackage *package = [TLMPackage package];
     
-    // e.g. "remove pageno (removed on server)"
-    if ([outputLine hasPrefix:removePrefix]) {
-        
-        // package will be removed by `tlmgr update --all`
-        NSMutableString *mstatus = [NSMutableString stringWithString:outputLine];
-        CFStringTrimWhitespace((CFMutableStringRef)mstatus);
-        [mstatus deleteCharactersInRange:NSMakeRange(0, [removePrefix length])];
-        NSRange r = [mstatus rangeOfCharacterFromSet:[NSCharacterSet whitespaceCharacterSet]];
-        if (r.length) {
-            [package setName:[mstatus substringToIndex:r.location]];
-            [package setStatus:NSLocalizedString(@"Deleted on server", @"status for package")];
-            [package setWillBeRemoved:YES];
-            [package setInstalled:YES];
-        }
-    }
-    // e.g. "answers cannot be found in http://mirror.ctan.org/systems/texlive/tlnet/2008"
-    else if ([outputLine rangeOfString:@"cannot be found"].length) {
-        
-        // this is the old version of "removed on server"
-        NSRange r = [outputLine rangeOfCharacterFromSet:[NSCharacterSet whitespaceCharacterSet]];
-        [package setName:[outputLine substringToIndex:r.location]];
-        [package setStatus:NSLocalizedString(@"Deleted on server", @"status for package")];
-        [package setWillBeRemoved:YES];
-        [package setInstalled:YES];
-    }
-    // e.g. "auto-install: pstool"
-    else if ([outputLine hasPrefix:@"auto-install:"]) {
-        
-        // package that will be installed automatically when running `tlmgr update --all`
-        NSRange r = [outputLine rangeOfString:@"auto-install:"];
-        [package setName:[[outputLine substringFromIndex:NSMaxRange(r)] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
-        [package setStatus:NSLocalizedString(@"Not installed", @"status for package")];
-    }
-    // e.g. "ifxetex: local: 9906, source: 10831"
-    else if ([outputLine rangeOfString:@"local:"].length) {
-        
-        // package is installed, but needs update
-        [package setStatus:NSLocalizedString(@"Updated on server", @"status for package")];
-        [package setInstalled:YES];
-        [package setNeedsUpdate:YES];
-        
-        NSScanner *scanner = [[NSScanner alloc] initWithString:outputLine];
-        
-        NSString *packageName;
-        if ([scanner scanUpToString:@":" intoString:&packageName]) {
-            [package setName:packageName];
-            
-            // scan past the colon
-            [scanner scanString:@":" intoString:NULL];
-        }
-        
-        if ([scanner scanString:@"local:" intoString:NULL]) {
-            NSString *localVersion;
-            if ([scanner scanCharactersFromSet:[NSCharacterSet alphanumericCharacterSet] intoString:&localVersion])
-                [package setLocalVersion:localVersion];
-            
-            // scan past the comma
-            [scanner scanString:@"," intoString:NULL];
-        }
-        
-        if ([scanner scanString:@"source:" intoString:NULL]) {
-            NSString *remoteVersion;
-            if ([scanner scanCharactersFromSet:[NSCharacterSet alphanumericCharacterSet] intoString:&remoteVersion])
-                [package setRemoteVersion:remoteVersion];
-        }
-        [scanner release];
-    }
-    // e.g. "skipping forcibly removed package casyl"
-    else if ([outputLine hasPrefix:@"skipping forcibly removed package "]) {
-        
-        [package setStatus:NSLocalizedString(@"Forcibly removed", @"status for package")];
-        [package setWasForciblyRemoved:YES];
-        [package setName:[outputLine stringByReplacingOccurrencesOfString:@"skipping forcibly removed package " withString:@""]];
-    }
-    // e.g. "bin-texlive: local revision (11693) is newer than revision in http://foo.bar.mirror/ (11613), not updating"
-    else if ([outputLine rangeOfString:@"is newer than revision in"].length) {
-        
-        // this is quite possibly the most gruesomely ad-hoc of all the version 1 messages...
-        [package setStatus:NSLocalizedString(@"Local version is newer", @"status for package")];
-        [package setInstalled:YES];
-
-        NSScanner *scanner = [[NSScanner alloc] initWithString:outputLine];
-        
-        NSString *name;
-        if ([scanner scanUpToString:@":" intoString:&name])
-            [package setName:name];
-
-        NSString *localVersion;
-        if ([scanner scanString:@": local revision (" intoString:NULL] && [scanner scanUpToString:@")" intoString:&localVersion])
-            [package setLocalVersion:localVersion];
-        
-        NSString *remoteVersion;
-        if ([scanner scanUpToString:@"(" intoString:NULL] && [scanner scanString:@"(" intoString:NULL] && [scanner scanUpToString:@")" intoString:&remoteVersion])
-            [package setRemoteVersion:remoteVersion];
-        
-        [scanner release];
-        
-    }
-    else {
-        // This may happen with some packages in an intermediate version of tlmgr.  Not worth dealing with, since we'll typically be updating infrastructure immediately and never really use that output.
+    // probably safe to use \t as separator here, but just accept any whitespace
+    NSArray *components = [outputLine componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    
+    // !!! early return here after a sanity check
+    if ([components count] < MAX_COLUMNS) {
+        TLMLog(__func__, @"Unexpected number of tokens in line \"%@\"", outputLine);
         [package setName:NSLocalizedString(@"Error parsing output line", @"error message for unreadable package")];
         [package setStatus:outputLine];
         [package setFailedToParse:YES];
+        return package;
+    }
+    
+    [package setName:[components objectAtIndex:TLMNameIndex]];
+    
+    unichar ch = [[components objectAtIndex:TLMStatusIndex] characterAtIndex:0];
+    [package setStatus:[self _statusStringForCharacter:ch]];
+    
+    if ('d' == ch)
+        [package setWillBeRemoved:YES];
+    
+    if ('a' != ch)
+        [package setInstalled:YES];
+    
+    if ('u' == ch)
+        [package setNeedsUpdate:YES];
+    
+    if ('f' == ch)
+        [package setWasForciblyRemoved:YES];
+    
+    if (NO == [[components objectAtIndex:TLMLocalVersionIndex] isEqualToString:@"-"])
+        [package setLocalVersion:[components objectAtIndex:TLMLocalVersionIndex]];
+    
+    if (NO == [[components objectAtIndex:TLMRemoteVersionIndex] isEqualToString:@"-"])
+        [package setRemoteVersion:[components objectAtIndex:TLMRemoteVersionIndex]];
+    
+    if (NO == [[components objectAtIndex:TLMSizeIndex] isEqualToString:@"-"]) {
+        NSInteger s = [[components objectAtIndex:TLMSizeIndex] integerValue];
+        if (s > 0) [package setSize:[NSNumber numberWithUnsignedInteger:s]];
     }
     
     return package;
