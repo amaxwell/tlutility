@@ -44,7 +44,6 @@
 @private
     NSArray *_packages;
     NSURL   *_updateURL;
-    SEL      _parseSelector;
 }
 
 - (id)initWithLocation:(NSURL *)location;
