@@ -188,7 +188,7 @@ static NSConnection * __TLMLSCreateAndRegisterConnectionForServer(TLMLogServer *
 {
     NSString *msg = [logMessage message];      
     NSString *parsedMessage = nil;
-    if (([logMessage flags] & TLMLogUpdateOperation) != 0) {
+    if (([logMessage flags] & TLMLogUpdateOperation) || ([logMessage flags] & TLMLogInstallOperation)) {
         
         NSArray *comps = [msg componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
         
@@ -209,6 +209,12 @@ static NSConnection * __TLMLSCreateAndRegisterConnectionForServer(TLMLogServer *
                     break;
                 case 'f':
                     status = NSLocalizedString(@"Forcibly removed ", @"single trailing space");
+                    break;
+                case 'i':
+                    status = NSLocalizedString(@"Installing ", @"single trailing space");
+                    break;
+                case 'I':
+                    status = NSLocalizedString(@"Reinstalling ", @"single trailing space");
                     break;
                 default:
                     // tlmgr 2008 prints "exiting" here
@@ -250,9 +256,6 @@ static NSConnection * __TLMLSCreateAndRegisterConnectionForServer(TLMLogServer *
         else if ([msg hasPrefix:@"end-of-header"]) {
             
             parsedMessage = NSLocalizedString(@"Beginning download and installation of packages", @"");
-
-            // !!! tlmgr 2008: make sure a leftover notification is dequeued, since it doesn't get end-of-updates
-            [self performSelectorOnMainThread:@selector(_processNextNotification:) withObject:nil waitUntilDone:YES modes:_runLoopModes];
         }
         else if ([msg hasPrefix:@"end-of-updates"]) {
             
