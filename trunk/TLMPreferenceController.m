@@ -51,6 +51,7 @@ NSString * const TLMFullServerURLPreferenceKey = @"TLMFullServerURLPreferenceKey
 NSString * const TLMDisableVersionMismatchWarningKey = @"TLMDisableVersionMismatchWarningKey"; /* NO              */
 NSString * const TLMAutoInstallPreferenceKey = @"TLMAutoInstallPreferenceKey";     /* YES (2009 only)             */
 NSString * const TLMAutoRemovePreferenceKey = @"TLMAutoRemovePreferenceKey";       /* YES (2009 only)             */
+NSString * const TLMSetCommandLineServerPreferenceKey = @"TLMSetCommandLineServerPreferenceKey"; /* NO            */
 
 #define TLMGR_CMD @"tlmgr"
 #define TEXDOC_CMD @"texdoc"
@@ -61,6 +62,7 @@ NSString * const TLMAutoRemovePreferenceKey = @"TLMAutoRemovePreferenceKey";    
 
 @synthesize _texbinPathControl;
 @synthesize _serverComboBox;
+@synthesize _setCommandLineServerCheckbox;
 @synthesize _rootHomeCheckBox;
 @synthesize _useSyslogCheckBox;
 @synthesize _progressPanel;
@@ -108,6 +110,7 @@ NSString * const TLMAutoRemovePreferenceKey = @"TLMAutoRemovePreferenceKey";    
     [_progressField release];
     [_autoremoveCheckBox release];
     [_autoinstallCheckBox release];
+    [_setCommandLineServerCheckbox release];
     [super dealloc];
 }
 
@@ -117,7 +120,8 @@ NSString * const TLMAutoRemovePreferenceKey = @"TLMAutoRemovePreferenceKey";    
     [_rootHomeCheckBox setState:[defaults boolForKey:TLMUseRootHomePreferenceKey]];
     [_useSyslogCheckBox setState:[defaults boolForKey:TLMUseSyslogPreferenceKey]];
     [_autoinstallCheckBox setState:[defaults boolForKey:TLMAutoInstallPreferenceKey]];
-    [_autoremoveCheckBox setState:[defaults boolForKey:TLMAutoRemovePreferenceKey]];    
+    [_autoremoveCheckBox setState:[defaults boolForKey:TLMAutoRemovePreferenceKey]];   
+    [_setCommandLineServerCheckbox setState:[defaults boolForKey:TLMSetCommandLineServerPreferenceKey]];
 }
 
 - (void)windowDidBecomeMain:(NSNotification *)notification
@@ -142,6 +146,22 @@ NSString * const TLMAutoRemovePreferenceKey = @"TLMAutoRemovePreferenceKey";    
 - (IBAction)toggleUseRootHome:(id)sender;
 {
     [[NSUserDefaults standardUserDefaults] setBool:([sender state] == NSOnState) forKey:TLMUseRootHomePreferenceKey];
+}
+
+- (void)_syncCommandLineServerOption
+{
+    // tlmgr --machine-readable option location
+    // tlmgr option location http://foo.bar.com/tlnet
+    
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:TLMSetCommandLineServerPreferenceKey]) {
+        
+    }
+}
+
+- (IBAction)toggleCommandLineServer:(id)sender;
+{
+    [[NSUserDefaults standardUserDefaults] setBool:([sender state] == NSOnState) forKey:TLMSetCommandLineServerPreferenceKey];
+    [self _syncCommandLineServerOption];
 }
 
 - (IBAction)toggleUseSyslog:(id)sender;
@@ -410,6 +430,7 @@ NSString * const TLMAutoRemovePreferenceKey = @"TLMAutoRemovePreferenceKey";    
     
     // reset the pref if things have changed
     if ([oldValue isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:TLMFullServerURLPreferenceKey]] == NO) {
+        [self _syncCommandLineServerOption];
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:TLMDisableVersionMismatchWarningKey];
         [[NSApp delegate] checkVersionConsistency];    
     }
