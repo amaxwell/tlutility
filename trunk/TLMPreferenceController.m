@@ -481,7 +481,7 @@ NSString * const TLMAutoRemovePreferenceKey = @"TLMAutoRemovePreferenceKey";    
         [task waitUntilExit];
         if ([task terminationStatus] == 0 && [task outputString]) {
             NSString *str = [[task outputString] stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]];
-            serverURL = [[[NSURL alloc] initWithScheme:NSURLFileScheme host:@"" path:str] autorelease];
+            serverURL = [NSURL fileURLWithPath:str isDirectory:YES];
         }
         else {
             TLMLog(__func__, @"kpsewhich returned an error: %@", [task errorString]);
@@ -492,6 +492,23 @@ NSString * const TLMAutoRemovePreferenceKey = @"TLMAutoRemovePreferenceKey";    
         TLMLog(__func__, @"no kpsewhich executable at %@", kpsewhichPath);
     }
     return serverURL;
+}
+
+- (BOOL)installRequiresRootPrivileges
+{
+    NSString *path = [[self offlineServerURL] path];
+    
+    // will fail regardless...
+    if (nil == path)
+        return NO;
+    
+    if ([NSThread isMainThread])
+        return [[NSFileManager defaultManager] isWritableFileAtPath:path];
+    
+    NSFileManager *fm = [NSFileManager new];
+    BOOL ret = [fm isWritableFileAtPath:path];
+    [fm release];
+    return ret;
 }
 
 #pragma mark Server combo box datasource

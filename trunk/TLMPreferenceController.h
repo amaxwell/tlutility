@@ -101,6 +101,9 @@ extern NSString * const TLMAutoRemovePreferenceKey;
 // adds texdoc to TLMTexBinPathPreferenceKey, standardizes path
 @property (readonly) NSString *texdocAbsolutePath;
 
+// checks permission on offlineServerURL
+@property (readonly) BOOL installRequiresRootPrivileges;
+
 // tlmgr 2009 modifiers to update action
 @property (readonly) BOOL autoInstall;
 @property (readonly) BOOL autoRemove;
