@@ -54,7 +54,7 @@
 - (id)initWithLocation:(NSURL *)location
 {
     NSParameterAssert([location absoluteString]);
-    NSArray *options = [NSArray arrayWithObjects:@"--machine-readable", @"--location", [location absoluteString], @"update", @"--list", nil];
+    NSArray *options = [NSArray arrayWithObjects:@"--machine-readable", @"--repository", [location absoluteString], @"update", @"--list", nil];
     NSString *cmd = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath];
     return [self initWithCommand:cmd options:options];
 }

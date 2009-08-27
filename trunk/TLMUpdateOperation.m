@@ -49,7 +49,7 @@
     NSParameterAssert(location);
     NSString *cmd = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath]; 
     NSString *locationString = [location absoluteString];
-    NSMutableArray *options = [NSMutableArray arrayWithObjects:@"--location", locationString, @"--machine-readable", @"update", nil];
+    NSMutableArray *options = [NSMutableArray arrayWithObjects:@"--repository", locationString, @"--machine-readable", @"update", nil];
     
     if ([[TLMPreferenceController sharedPreferenceController] autoInstall] == NO)
         [options addObject:@"--no-auto-install"];
