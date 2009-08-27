@@ -756,10 +756,10 @@ static char _TLMOperationQueueOperationContext;
     [(id)diagnostic autorelease];
     CFStringRef desc = NULL;
     if (diagnostic && kCFNetDiagnosticConnectionDown == CFNetDiagnosticCopyNetworkStatusPassively(diagnostic, &desc)) {
-        serverURL = [[TLMPreferenceController sharedPreferenceController] offlineServerURL];
+        // this is basically a dummy URL that we pass through in offline mode
+        serverURL = [[TLMPreferenceController sharedPreferenceController] installDirectory];
         TLMLog(__func__, @"Network connection is down (%@).  Trying local install database %@%C", desc, serverURL, 0x2026);
         [(id)desc autorelease];
-        // only TL 2009 supports --only-installed; TL 2008 works if we pass serverURL, though
         [self _refreshFullPackageListFromLocation:serverURL offline:YES];
         [self _displayStatusString:NSLocalizedString(@"Network is unavailable", @"") dataSource:_updateListDataSource];
     }
