@@ -288,16 +288,13 @@ static void __TLMMigrateBundleIdentifier()
 }
 
 - (void)checkVersionConsistency
-{
-    TLMLog(__func__, @"Checking TeX Live version%C", 0x2026);
-    
+{    
     NSString *versionString;
     NSInteger texliveYear = [[self class] _texliveYear:&versionString];
-    TLMLog(__func__, @"Using tlmgr version: %@", versionString);
     
     if (texliveYear ) {
         
-        TLMLog(__func__, @"Looks like you're using TeX Live %d%Cgood!", (int)texliveYear, 0x2026);
+        TLMLog(__func__, @"Looks like you're using TeX Live %d%C", (int)texliveYear, 0x2026);
         
         NSString *URLString = [[[TLMPreferenceController sharedPreferenceController] defaultServerURL] absoluteString];
         
@@ -311,12 +308,11 @@ static void __TLMMigrateBundleIdentifier()
         
         NSAlert *alert = nil;
         
-        if (2008 == texliveYear && [URLString hasSuffix:@"2008"] == NO) {
+        if (2008 == texliveYear) {
             
             alert = [[NSAlert new] autorelease];
-            [alert setMessageText:NSLocalizedString(@"Mirror URL may not match TeX Live version", @"")];
-            [alert setInformativeText:NSLocalizedString(@"Mirror URLs for TeX Live 2008 generally have \"2008\" appended to them.  If any operations fail, you may need to adjust your mirror URL in the preferences.", @"")];
-            
+            [alert setMessageText:NSLocalizedString(@"Unsupported TeX Live version", @"")];
+            [alert setInformativeText:NSLocalizedString(@"TeX Live Utility requires TeX Live 2009 or later.  You need TeX Live Utility 0.74 or earlier in order to use TeX Live 2008.", @"")];
         }
         else if (texliveYear > 2008 && [URLString hasSuffix:@"2008"]) {
             

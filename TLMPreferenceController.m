@@ -86,7 +86,12 @@ NSString * const TLMAutoRemovePreferenceKey = @"TLMAutoRemovePreferenceKey";    
 {
     self = [super initWithWindowNibName:name];
     if (self) {
-
+        // current server from prefs seems to be added automatically when setting stringValue
+        NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"DefaultMirrors" ofType:@"plist"];
+        NSDictionary *mirrorsByYear = nil;
+        if (plistPath)
+            mirrorsByYear = [NSDictionary dictionaryWithContentsOfFile:plistPath];
+        _servers = [[mirrorsByYear objectForKey:@"tlnet"] copy];
     }
     return self;
 }
@@ -106,51 +111,18 @@ NSString * const TLMAutoRemovePreferenceKey = @"TLMAutoRemovePreferenceKey";    
     [super dealloc];
 }
 
-- (void)_updateUI
+- (void)updateUI
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [_rootHomeCheckBox setState:[defaults boolForKey:TLMUseRootHomePreferenceKey]];
     [_useSyslogCheckBox setState:[defaults boolForKey:TLMUseSyslogPreferenceKey]];
     [_autoinstallCheckBox setState:[defaults boolForKey:TLMAutoInstallPreferenceKey]];
-    [_autoremoveCheckBox setState:[defaults boolForKey:TLMAutoRemovePreferenceKey]];
-    
-    const NSInteger texliveYear = [TLMAppController texliveYear];
-    [_autoinstallCheckBox setEnabled:(texliveYear != 2008)];
-    [_autoremoveCheckBox setEnabled:(texliveYear != 2008)];
-    
-    // current server from prefs seems to be added automatically when setting stringValue
-    NSMutableArray *servers = [NSMutableArray array];
-    NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"DefaultMirrors" ofType:@"plist"];
-    NSDictionary *mirrorsByYear = nil;
-    if (plistPath)
-        mirrorsByYear = [NSDictionary dictionaryWithContentsOfFile:plistPath];
-        
-    /*
-     2008 mirrors have the year included.  Even though 2008 mirrors are going away as soon as 2009 goes live,
-     converting to a dictionary here allows adding mirrors for pretest or future changes.
-     */
-    if (texliveYear == 2008) {
-        [servers addObjectsFromArray:[mirrorsByYear objectForKey:@"2008"]];
-    }
-    else {
-        [servers addObjectsFromArray:[mirrorsByYear objectForKey:@"tlnet"]];
-    }
-    
-    [_servers autorelease];
-    _servers = [servers copy];
-    [_serverComboBox reloadData];
-}
-
-- (void)updateUI
-{
-    // coalesce these since we spawn a task and reload a plist from disk
-    [[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(_updateUI) object:nil];
-    [self performSelector:@selector(_updateUI) withObject:nil afterDelay:0.1];
+    [_autoremoveCheckBox setState:[defaults boolForKey:TLMAutoRemovePreferenceKey]];    
 }
 
 - (void)windowDidBecomeMain:(NSNotification *)notification
 {
-    // account for possible TeXDist prefpane changes
+    // account for possible TeXDist prefpane changes (this was for TL 2008 vs. 2009 differences)
     [self updateUI];
 }
 

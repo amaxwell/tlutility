@@ -764,7 +764,7 @@ static char _TLMOperationQueueOperationContext;
         TLMLog(__func__, @"Network connection is down (%@).  Trying local install database %@%C", desc, serverURL, 0x2026);
         [(id)desc autorelease];
         // only TL 2009 supports --only-installed; TL 2008 works if we pass serverURL, though
-        [self _refreshFullPackageListFromLocation:serverURL offline:([TLMAppController texliveYear] > 2008)];
+        [self _refreshFullPackageListFromLocation:serverURL offline:YES];
         [self _displayStatusString:NSLocalizedString(@"Network is unavailable", @"") dataSource:_updateListDataSource];
     }
     else {
