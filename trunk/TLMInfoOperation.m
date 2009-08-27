@@ -82,78 +82,25 @@
     return [infoString autorelease];
 }
 
-static float __TLMTexdocVersion()
-{
-    NSString *cmd = [[TLMPreferenceController sharedPreferenceController] texdocAbsolutePath];
-    TLMTask *task = [[TLMTask new] autorelease];
-    [task setLaunchPath:cmd];
-    
-    /*
-     NB: 0.4 uses -v for --version.  Unfortunately, 0.42 uses -v for --verbose and has no short 
-     option for version, so we'll use the lowest common denominator.
-     */
-    [task setArguments:[NSArray arrayWithObject:@"--version"]];
-    [task launch];
-    [task waitUntilExit];
-    
-    /*
-     0.4 output: "texdoc version: 0.4"
-     0.42 output: "texdoc 0.42"
-     svn output: "texdoc 0.42+ svn r45"
-     */    
-    NSString *versionString = [task terminationStatus] == EXIT_SUCCESS ? [task outputString] : nil;
-    
-    NSScanner *scanner = nil;
-    if (versionString)
-        scanner = [NSScanner scannerWithString:versionString];
-        
-    // return something invalid on failure
-    float version = -1.0;
-    if ([scanner scanUpToCharactersFromSet:[NSCharacterSet decimalDigitCharacterSet] intoString:NULL])
-        [scanner scanFloat:&version];
-    
-    return version;
-}
-
 static NSArray * __TLMURLsFromTexdocOutput(NSString *outputString)
 {
-    float version = __TLMTexdocVersion();
     NSMutableArray *docURLs = [NSMutableArray array];
 
-    // 0.41 was never released (comparing version > 0.4 may not be true due to floating point error)
-    if (version < 0 || version >= 0.41) {
-        /*
-         froude:tmp amaxwell$ texdoc --version
-         texdoc 0.42
-         froude:tmp amaxwell$ texdoc -l -I makeindex
-         texdoc info: makeindex aliased to base/makeindex
-         1 /usr/local/texlive/2008/texmf-dist/doc/makeindex/base/makeindex.pdf
-         */
-        NSArray *lines = [outputString componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
-        for (NSString *line in lines) {
-            NSScanner *scanner = [NSScanner scannerWithString:line];
-            if ([scanner scanCharactersFromSet:[NSCharacterSet decimalDigitCharacterSet] intoString:NULL]) {
-                NSString *docPath = [scanner isAtEnd] ? nil : [[scanner string] substringFromIndex:[scanner scanLocation]];
-                docPath = [docPath stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-                NSURL *docURL = nil;
-                if (docPath) docURL = [NSURL fileURLWithPath:docPath];
-                if (docURL) [docURLs addObject:docURL];
-            }
-        }
-    }
-    else {
-        /*
-         froude:tmp amaxwell$ texdoc --version
-         texdoc version: 0.4
-         froude:tmp amaxwell$ texdoc -l -I makeindex
-         /usr/local/texlive/2008/texmf/doc/man/man1/makeindex.pdf
-         /usr/local/texlive/2008/texmf-dist/doc/makeindex/base/makeindex.dvi
-         */
-        NSArray *docPaths = [outputString componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
-        for (NSString *docPath in docPaths) {
-            // avoid empty lines...
+    /*
+     froude:tmp amaxwell$ texdoc --version
+     texdoc 0.42
+     froude:tmp amaxwell$ texdoc -l -I makeindex
+     texdoc info: makeindex aliased to base/makeindex
+     1 /usr/local/texlive/2008/texmf-dist/doc/makeindex/base/makeindex.pdf
+     */
+    NSArray *lines = [outputString componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+    for (NSString *line in lines) {
+        NSScanner *scanner = [NSScanner scannerWithString:line];
+        if ([scanner scanCharactersFromSet:[NSCharacterSet decimalDigitCharacterSet] intoString:NULL]) {
+            NSString *docPath = [scanner isAtEnd] ? nil : [[scanner string] substringFromIndex:[scanner scanLocation]];
             docPath = [docPath stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-            NSURL *docURL = [docPath isEqualToString:@""] ? nil : [NSURL fileURLWithPath:docPath];
+            NSURL *docURL = nil;
+            if (docPath) docURL = [NSURL fileURLWithPath:docPath];
             if (docURL) [docURLs addObject:docURL];
         }
     }
