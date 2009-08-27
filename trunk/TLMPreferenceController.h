@@ -92,8 +92,8 @@ extern NSString * const TLMAutoRemovePreferenceKey;
 // composes the URL as needed
 @property (readonly) NSURL *defaultServerURL;
 
-// returns the local tlpdb location, suitable for --location in TL 2008 only
-@property (readonly) NSURL *offlineServerURL DEPRECATED_ATTRIBUTE;
+// returns the local installation directory (/usr/local/texlive/2009)
+@property (readonly) NSURL *installDirectory;
 
 // adds tlmgr to TLMTexBinPathPreferenceKey, standardizes path
 @property (readonly) NSString *tlmgrAbsolutePath;

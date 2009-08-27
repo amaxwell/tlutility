@@ -440,7 +440,7 @@ NSString * const TLMAutoRemovePreferenceKey = @"TLMAutoRemovePreferenceKey";    
     return [[texbinPath stringByAppendingPathComponent:KPSEWHICH_CMD] stringByStandardizingPath];
 }
 
-- (NSURL *)offlineServerURL
+- (NSURL *)installDirectory
 {    
     // kpsewhich -var-value=SELFAUTOPARENT
     NSString *kpsewhichPath = [self kpsewhichAbsolutePath];
@@ -468,7 +468,7 @@ NSString * const TLMAutoRemovePreferenceKey = @"TLMAutoRemovePreferenceKey";    
 
 - (BOOL)installRequiresRootPrivileges
 {
-    NSString *path = [[self offlineServerURL] path];
+    NSString *path = [[self installDirectory] path];
     
     // will fail regardless...
     if (nil == path)
