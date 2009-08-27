@@ -112,6 +112,8 @@ static void __TLMMigrateBundleIdentifier()
     [defaults setObject:tlnetDefault forKey:TLMFullServerURLPreferenceKey];
     
     [defaults setObject:@"/usr/texbin" forKey:TLMTexBinPathPreferenceKey];
+    [defaults setObject:[NSNumber numberWithBool:NO] forKey:TLMSetCommandLineServerPreferenceKey];
+    
     // typically avoids problems with junk in your home directory
     [defaults setObject:[NSNumber numberWithBool:YES] forKey:TLMUseRootHomePreferenceKey];
     [defaults setObject:@"update-tlmgr-latest.sh" forKey:TLMInfraPathPreferenceKey];

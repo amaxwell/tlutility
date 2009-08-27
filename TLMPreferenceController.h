@@ -46,12 +46,14 @@ extern NSString * const TLMFullServerURLPreferenceKey;
 extern NSString * const TLMDisableVersionMismatchWarningKey;
 extern NSString * const TLMAutoInstallPreferenceKey;
 extern NSString * const TLMAutoRemovePreferenceKey;
+extern NSString * const TLMSetCommandLineServerPreferenceKey;
 
 @interface TLMPreferenceController : NSWindowController 
 {
 @private
     NSPathControl       *_texbinPathControl;
     NSComboBox          *_serverComboBox;
+    NSButton            *_setCommandLineServerCheckbox;
     NSButton            *_rootHomeCheckBox;
     NSButton            *_useSyslogCheckBox;
     NSButton            *_autoinstallCheckBox;
@@ -67,12 +69,14 @@ extern NSString * const TLMAutoRemovePreferenceKey;
 - (IBAction)changeTexBinPath:(id)sender;
 - (IBAction)changeServerURL:(id)sender;
 - (IBAction)toggleUseRootHome:(id)sender;
+- (IBAction)toggleCommandLineServer:(id)sender;
 - (IBAction)toggleUseSyslog:(id)sender;
 - (IBAction)toggleAutoinstall:(id)sender;
 - (IBAction)toggleAutoremove:(id)sender;
 
 @property (nonatomic, retain) IBOutlet NSPathControl *_texbinPathControl;
 @property (nonatomic, retain) IBOutlet NSComboBox *_serverComboBox;
+@property (nonatomic, retain) IBOutlet NSButton *_setCommandLineServerCheckbox;
 @property (nonatomic, retain) IBOutlet NSButton *_rootHomeCheckBox;
 @property (nonatomic, retain) IBOutlet NSButton *_useSyslogCheckBox;
 @property (nonatomic, retain) IBOutlet NSButton *_autoinstallCheckBox;
