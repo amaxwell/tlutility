@@ -48,7 +48,7 @@
 {
     NSString *cmd = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath]; 
     NSString *locationString = [location absoluteString];
-    NSMutableArray *options = [NSMutableArray arrayWithObjects:@"--machine-readable", @"--location", locationString, @"install", nil];
+    NSMutableArray *options = [NSMutableArray arrayWithObjects:@"--machine-readable", @"--repository", locationString, @"install", nil];
     if (reinstall)
         [options addObject:@"--reinstall"];
     [options addObjectsFromArray:packageNames];

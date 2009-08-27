@@ -54,7 +54,7 @@
     NSParameterAssert([location absoluteString]);
     NSArray *options;
     if (NO == offline)
-        options = [NSArray arrayWithObjects:@"--location", [location absoluteString], @"list", nil];
+        options = [NSArray arrayWithObjects:@"--repository", [location absoluteString], @"list", nil];
     else
         options = [NSArray arrayWithObjects:@"list", @"--only-installed", nil];
     NSString *cmd = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath];
