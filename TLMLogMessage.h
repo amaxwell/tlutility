@@ -39,9 +39,10 @@
 #import <Cocoa/Cocoa.h>
 
 enum {
-    TLMLogDefault         = 0,        /* no parsing possible   */
-    TLMLogMachineReadable = (1 << 0), /* message can be parsed */
-    TLMLogUpdateOperation = (1 << 1)  /* operation/output type */
+    TLMLogDefault          = 0,        /* no parsing possible   */
+    TLMLogMachineReadable  = (1 << 0), /* message can be parsed */
+    TLMLogUpdateOperation  = (1 << 1), /* operation/output type */
+    TLMLogInstallOperation = (1 << 2)  /* operation/output type */
 };
 typedef NSUInteger TLMLogMessageFlags;
 
