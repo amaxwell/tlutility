@@ -14,6 +14,7 @@
 		F90520DA0EFDCB5400B489FE /* TLMAuthorizedOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F90520D90EFDCB5400B489FE /* TLMAuthorizedOperation.m */; };
 		F905217F0EFEA98600B489FE /* PapersizeSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = F905217E0EFEA98600B489FE /* PapersizeSheet.xib */; };
 		F9129BC0102F25AC000A7B50 /* TLMSizeFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = F9129BBF102F25AC000A7B50 /* TLMSizeFormatter.m */; };
+		F91858E0104798C400341791 /* TLMOptionOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F91858DF104798C400341791 /* TLMOptionOperation.m */; };
 		F922D79E1038B1E1004E9B12 /* TLMDownload.m in Sources */ = {isa = PBXBuildFile; fileRef = F922D79D1038B1E1004E9B12 /* TLMDownload.m */; };
 		F94E74A20EF4965100E0B78F /* TLMTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = F94E74A10EF4965100E0B78F /* TLMTableView.m */; };
 		F96249D10F1C453B007F3D70 /* TLMReleaseNotesController.m in Sources */ = {isa = PBXBuildFile; fileRef = F96249D00F1C453B007F3D70 /* TLMReleaseNotesController.m */; };
@@ -233,6 +234,8 @@
 		F905217E0EFEA98600B489FE /* PapersizeSheet.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PapersizeSheet.xib; sourceTree = "<group>"; };
 		F9129BBE102F25AC000A7B50 /* TLMSizeFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMSizeFormatter.h; sourceTree = "<group>"; };
 		F9129BBF102F25AC000A7B50 /* TLMSizeFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMSizeFormatter.m; sourceTree = "<group>"; };
+		F91858DE104798C400341791 /* TLMOptionOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMOptionOperation.h; sourceTree = "<group>"; };
+		F91858DF104798C400341791 /* TLMOptionOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMOptionOperation.m; sourceTree = "<group>"; };
 		F922D79C1038B1E1004E9B12 /* TLMDownload.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMDownload.h; sourceTree = "<group>"; };
 		F922D79D1038B1E1004E9B12 /* TLMDownload.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMDownload.m; sourceTree = "<group>"; };
 		F94E74A00EF4965100E0B78F /* TLMTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMTableView.h; sourceTree = "<group>"; };
@@ -542,6 +545,8 @@
 				F97A7E4F0F13067C008EBCEA /* TLMTask.m */,
 				F9F043010F180031008DFE8C /* TLMReadWriteOperationQueue.h */,
 				F9F043020F180031008DFE8C /* TLMReadWriteOperationQueue.m */,
+				F91858DE104798C400341791 /* TLMOptionOperation.h */,
+				F91858DF104798C400341791 /* TLMOptionOperation.m */,
 			);
 			name = Operations;
 			sourceTree = "<group>";
@@ -823,6 +828,7 @@
 				F96249D10F1C453B007F3D70 /* TLMReleaseNotesController.m in Sources */,
 				F9129BC0102F25AC000A7B50 /* TLMSizeFormatter.m in Sources */,
 				F922D79E1038B1E1004E9B12 /* TLMDownload.m in Sources */,
+				F91858E0104798C400341791 /* TLMOptionOperation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
