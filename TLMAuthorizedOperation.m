@@ -64,6 +64,7 @@ struct TLMAOInternal {
     pid_t            _underlying_pid;   /* tlmgr or update script  */
     struct kevent    _underlying_event; /* tlmgr or update script  */
     BOOL             _childFinished;    /* tlmgr_cwrapper finished */
+    BOOL             _authorizationRequired;
     AuthorizationRef _authorization;
 };    
 
@@ -92,6 +93,8 @@ struct TLMAOInternal {
         [fullOptions insertObject:absolutePath atIndex:0];
         _internal->_options = [fullOptions copy];
         [fullOptions release];
+        
+        _internal->_authorizationRequired = [[TLMPreferenceController sharedPreferenceController] installRequiresRootPrivileges];
     }
     return self;
 }
@@ -121,6 +124,8 @@ struct TLMAOInternal {
 
 - (AuthorizationRef)_authorization
 {
+    NSParameterAssert(_internal->_authorizationRequired);
+    
     AuthorizationFlags authFlags = kAuthorizationFlagDefaults;
 
     // create a single authorization for the lifetime of this instance
@@ -147,6 +152,18 @@ struct TLMAOInternal {
     }
     
     return noErr == status ? _internal->_authorization : NULL;
+}
+
+static NSArray * __TLMOptionArrayFromArguments(char **nullTerminatedArguments)
+{
+    NSMutableArray *options = [NSMutableArray array];
+    char **ptr = nullTerminatedArguments;
+    while (NULL != *ptr) {
+        NSString *opt = [NSString stringWithUTF8String:*ptr];
+        [options addObject:opt];
+        *ptr++;
+    }
+    return options;
 }
 
 - (void)_killChildProcesses
@@ -178,24 +195,36 @@ struct TLMAOInternal {
         TLMLog(__func__, @"killing underlying pid = %d", _internal->_underlying_pid);
         killargs[2] = (char *)[[NSString stringWithFormat:@"%d", _internal->_underlying_pid] fileSystemRepresentation];
     }
+
+    // run the task using AEWP if authorization required, or as unprivileged user if not
+    if (_internal->_authorizationRequired) {
     
-    // logs a message and returns NULL if authorization failed
-    AuthorizationRef authorization = [self _authorization];
-     
-    OSStatus status = noErr;
-    /*
-     In general, you're supposed to write your own helper tool for AEWP.  However, /bin/kill is guaranteed to do exactly what
-     we need, and it's used all the time with sudo.  Hence, I'm taking the easy way out (again) and avoiding a possibly buggy
-     rewrite of kill(1).
-     */
-    if (authorization)
-        status = AuthorizationExecuteWithPrivileges(authorization, "/bin/kill", kAuthorizationFlagDefaults, killargs, NULL); 
-    
-    if (noErr != status) {
-        NSString *errStr;
-        errStr = [NSString stringWithFormat:@"AuthorizationExecuteWithPrivileges error: %d (%s)", status, GetMacOSStatusErrorString(status)];
-        [self _appendStringToErrorData:errStr];
+        // logs a message and returns NULL if authorization failed
+        AuthorizationRef authorization = [self _authorization];
+         
+        OSStatus status = noErr;
+        /*
+         In general, you're supposed to write your own helper tool for AEWP.  However, /bin/kill is guaranteed to do exactly what
+         we need, and it's used all the time with sudo.  Hence, I'm taking the easy way out (again) and avoiding a possibly buggy
+         rewrite of kill(1).
+         */
+        if (authorization)
+            status = AuthorizationExecuteWithPrivileges(authorization, "/bin/kill", kAuthorizationFlagDefaults, killargs, NULL); 
+        
+        if (noErr != status) {
+            NSString *errStr;
+            errStr = [NSString stringWithFormat:@"AuthorizationExecuteWithPrivileges error: %d (%s)", status, GetMacOSStatusErrorString(status)];
+            [self _appendStringToErrorData:errStr];
+        }
     }
+    else {
+
+        TLMTask *task = [TLMTask launchedTaskWithLaunchPath:@"/bin/kill" arguments:__TLMOptionArrayFromArguments(killargs)];        
+        [task waitUntilExit];
+        if ([task terminationStatus] && [task standardError])
+            [self _appendStringToErrorData:[task standardError]];
+    }
+
 }    
 
 - (void)_closeQueue
@@ -353,7 +382,7 @@ static BOOL __TLMCheckSignature()
     AuthorizationRef authorization = NULL;
 
     // codesign failure sets -failed bit
-    if (NO == [self failed] && (authorization = [self _authorization]) != NULL) {
+    if (NO == [self failed] && (NO == _internal->_authorizationRequired || (authorization = [self _authorization]) != NULL)) {
         
         // set up the connection to listen on our worker thread, so we avoid a race when exiting
         NSConnection *connection = [NSConnection connectionWithReceivePort:[NSPort port] sendPort:nil];
@@ -410,7 +439,20 @@ static BOOL __TLMCheckSignature()
          Passing a NULL communicationsPipe to AEWP means we return immediately instead of blocking until the child exits.  
          This allows us to pass the child PID back via IPC (DO at present), then monitor the process and check -isCancelled.
          */
-        OSStatus status = AuthorizationExecuteWithPrivileges(authorization, cmdPath, kAuthorizationFlagDefaults, args, NULL);
+        OSStatus status;
+        TLMTask *task = nil;
+        
+        if (_internal->_authorizationRequired) {
+            
+            status = AuthorizationExecuteWithPrivileges(authorization, cmdPath, kAuthorizationFlagDefaults, args, NULL);
+        }
+        else {
+            
+            task = [TLMTask launchedTaskWithLaunchPath:__TLMCwrapperPath() arguments:__TLMOptionArrayFromArguments(args)];
+            if ([task isRunning])
+                status = errAuthorizationSuccess;
+        }
+
         
         NSZoneFree([self zone], args);
         args = NULL;
@@ -421,12 +463,20 @@ static BOOL __TLMCheckSignature()
             // poll until the child exits
             [self _runUntilChildExit];
         }
-        else {
+        else if (_internal->_authorizationRequired) {
             NSString *errStr;
             errStr = [NSString stringWithFormat:@"AuthorizationExecuteWithPrivileges error: %d (%s)", status, GetMacOSStatusErrorString(status)];
             [self _appendStringToErrorData:errStr];
             [self setFailed:YES];
-        }  
+        } 
+
+        // unprivileged path; get the error from NSTask
+        if (task && [task isRunning] == NO && [task terminationStatus] != 0) {
+            if ([task errorString])
+                [self _appendStringToErrorData:[task errorString]];
+            [self setFailed:YES];
+        }
+
         
         // child has exited at this point
         if (connection) {
