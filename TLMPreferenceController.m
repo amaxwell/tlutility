@@ -153,11 +153,23 @@ NSString * const TLMSetCommandLineServerPreferenceKey = @"TLMSetCommandLineServe
 - (void)_handleLocationOperationFinished:(NSNotification *)aNote
 {
 #warning machine readable
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:TLMOperationFinishedNotification object:[aNote object]];
+    TLMOptionOperation *op = [aNote object];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:TLMOperationFinishedNotification object:op];
+    NSParameterAssert(_pendingOptionChangeCount);
+    _pendingOptionChangeCount -= 1;
+    
     NSArray *args = [NSArray arrayWithObjects:@"option", @"location", nil];
     TLMTask *checkTask = [TLMTask launchedTaskWithLaunchPath:[self tlmgrAbsolutePath] arguments:args];
     [checkTask waitUntilExit];
-    TLMLog(__func__, @"Finished setting command line server location:\n\t%@", [checkTask outputString]);
+    
+    if ([op failed] || [op isCancelled]) {
+        NSAlert *alert = [[NSAlert new] autorelease];
+        [alert setMessageText:NSLocalizedString(@"The location in the TeX Live database was not changed", @"")];
+        [alert beginSheetModalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
+    }
+    else {
+        TLMLog(__func__, @"Finished setting command line server location:\n\t%@", [checkTask outputString]);
+    }
 }   
 
 - (void)_syncCommandLineServerOption
@@ -172,6 +184,8 @@ NSString * const TLMSetCommandLineServerPreferenceKey = @"TLMSetCommandLineServe
                                                  selector:@selector(_handleLocationOperationFinished:) 
                                                      name:TLMOperationFinishedNotification 
                                                    object:op];
+        // make sure we can't close the window until this is finished
+        _pendingOptionChangeCount += 1;
         [[TLMReadWriteOperationQueue defaultQueue] addOperation:op];
         [op release];
     }
@@ -527,6 +541,10 @@ NSString * const TLMSetCommandLineServerPreferenceKey = @"TLMSetCommandLineServe
     return (NO == ret);
 }
 
+- (BOOL)autoInstall { return [[NSUserDefaults standardUserDefaults] boolForKey:TLMAutoInstallPreferenceKey]; }
+
+- (BOOL)autoRemove { return [[NSUserDefaults standardUserDefaults] boolForKey:TLMAutoRemovePreferenceKey]; }
+
 #pragma mark Server combo box datasource
 
 - (NSInteger)numberOfItemsInComboBox:(NSComboBox *)aComboBox;
@@ -574,7 +592,7 @@ NSString * const TLMSetCommandLineServerPreferenceKey = @"TLMSetCommandLineServe
 // make sure to end editing on close (should only block if _hasPendingServerEdit is true)
 - (BOOL)windowShouldClose:(id)sender;
 {
-    return [[self window] makeFirstResponder:nil];
+    return [[self window] makeFirstResponder:nil] && 0 == _pendingOptionChangeCount;
 }
 
 #pragma mark Path control delegate
@@ -595,8 +613,5 @@ NSString * const TLMSetCommandLineServerPreferenceKey = @"TLMSetCommandLineServe
     return (nil != dragURL);
 }
 
-- (BOOL)autoInstall { return [[NSUserDefaults standardUserDefaults] boolForKey:TLMAutoInstallPreferenceKey]; }
-
-- (BOOL)autoRemove { return [[NSUserDefaults standardUserDefaults] boolForKey:TLMAutoRemovePreferenceKey]; }
 
 @end
