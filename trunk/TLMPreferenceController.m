@@ -42,6 +42,8 @@
 #import "TLMLogServer.h"
 #import "TLMTask.h"
 #import "TLMDownload.h"
+#import "TLMReadWriteOperationQueue.h"
+#import "TLMOptionOperation.h"
 
 NSString * const TLMTexBinPathPreferenceKey = @"TLMTexBinPathPreferenceKey";       /* /usr/texbin                 */
 NSString * const TLMUseRootHomePreferenceKey = @"TLMUseRootHomePreferenceKey";     /* YES                         */
@@ -148,13 +150,30 @@ NSString * const TLMSetCommandLineServerPreferenceKey = @"TLMSetCommandLineServe
     [[NSUserDefaults standardUserDefaults] setBool:([sender state] == NSOnState) forKey:TLMUseRootHomePreferenceKey];
 }
 
+- (void)_handleLocationOperationFinished:(NSNotification *)aNote
+{
+#warning machine readable
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:TLMOperationFinishedNotification object:[aNote object]];
+    NSArray *args = [NSArray arrayWithObjects:@"option", @"location", nil];
+    TLMTask *checkTask = [TLMTask launchedTaskWithLaunchPath:[self tlmgrAbsolutePath] arguments:args];
+    [checkTask waitUntilExit];
+    TLMLog(__func__, @"Finished setting command line server location:\n\t%@", [checkTask outputString]);
+}   
+
 - (void)_syncCommandLineServerOption
 {
     // tlmgr --machine-readable option location
     // tlmgr option location http://foo.bar.com/tlnet
     
     if ([[NSUserDefaults standardUserDefaults] boolForKey:TLMSetCommandLineServerPreferenceKey]) {
-        
+        TLMLog(__func__, @"Setting command line server location to %@", [[self defaultServerURL] absoluteString]);
+        TLMOptionOperation *op = [[TLMOptionOperation alloc] initWithKey:@"location" value:[[self defaultServerURL] absoluteString]];
+        [[NSNotificationCenter defaultCenter] addObserver:self 
+                                                 selector:@selector(_handleLocationOperationFinished:) 
+                                                     name:TLMOperationFinishedNotification 
+                                                   object:op];
+        [[TLMReadWriteOperationQueue defaultQueue] addOperation:op];
+        [op release];
     }
 }
 
