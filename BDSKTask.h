@@ -64,4 +64,6 @@
     struct BDSKTaskInternal *_internal;
 }
 
++ (BDSKTask *)launchedTaskWithLaunchPath:(NSString *)path arguments:(NSArray *)arguments;
+
 @end

@@ -76,6 +76,15 @@ static int _kqueue = -1;
     [NSThread detachNewThreadSelector:@selector(_watchQueue) toTarget:self withObject:nil];
 }
 
++ (BDSKTask *)launchedTaskWithLaunchPath:(NSString *)path arguments:(NSArray *)arguments;
+{
+    BDSKTask *task = [[self new] autorelease];
+    [task setLaunchPath:path];
+    [task setArguments:arguments];
+    [task launch];
+    return task;
+}
+
 #define ASSERT_LAUNCH do { if (!_internal->_launched) { [NSException raise:@"BDSKTaskException" format:@"Task has not been launched"]; } } while (0)
 #define ASSERT_NOTLAUNCHED do { if (_internal->_launched) { [NSException raise:@"BDSKTaskException" format:@"Task has already been launched"]; } } while (0)
 
