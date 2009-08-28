@@ -53,6 +53,8 @@
 - (void)setStandardOutput:(id)output;
 - (void)setStandardError:(id)error;
 
++ (TLMTask *)launchedTaskWithLaunchPath:(NSString *)path arguments:(NSArray *)arguments;
+
 // 
 /*
  Implementation note: these calls will block until the task is completed. 

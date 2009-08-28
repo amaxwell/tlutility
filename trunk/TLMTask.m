@@ -48,6 +48,15 @@
 
 @implementation TLMTask
 
++ (TLMTask *)launchedTaskWithLaunchPath:(NSString *)path arguments:(NSArray *)arguments;
+{
+    TLMTask *task = [[self new] autorelease];
+    [task setLaunchPath:path];
+    [task setArguments:arguments];
+    [task launch];
+    return task;
+}
+
 - (void)dealloc
 {
     [_outputData release];
