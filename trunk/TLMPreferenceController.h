@@ -63,6 +63,7 @@ extern NSString * const TLMSetCommandLineServerPreferenceKey;
     NSProgressIndicator *_progressIndicator;
     NSTextField         *_progressField;
     BOOL                 _hasPendingServerEdit;
+    NSUInteger           _pendingOptionChangeCount;
 }
 
 + (TLMPreferenceController *)sharedPreferenceController;
