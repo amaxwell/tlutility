@@ -120,7 +120,6 @@ static NSDictionary *__TLMHeaderDictionaryWithLines(NSArray *headerLines)
     if (NSNotFound != headerStopIndex) {
         header = __TLMHeaderDictionaryWithLines([packageLines subarrayWithRange:NSMakeRange(0, headerStopIndex)]);
         [packageLines removeObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, headerStopIndex + 1)]];
-        TLMLog(__func__, @"header = %@", header);
     }
     else {
         // saw this happen once (tlmgr returned an error)
@@ -130,15 +129,16 @@ static NSDictionary *__TLMHeaderDictionaryWithLines(NSArray *headerLines)
 
     if ([header objectForKey:@"location-url"])
         [self setUpdateURL:[NSURL URLWithString:[header objectForKey:@"location-url"]]];
+    else
+        TLMLog(__func__, @"*** WARNING *** missing location-url in header = %@", header);
     
     // should be the last line in the output, so iterate in reverse order
     NSUInteger outputStopIndex = [packageLines count];
     while (outputStopIndex--) {
         
-        // this marker is currently only on the updates code path, and we don't want to pass it to the parser
+        // this marker is currently only on the machine-readable code paths, and we don't want to pass it to the parser
         if ([[packageLines objectAtIndex:outputStopIndex] hasPrefix:@"end-of-updates"]) {
             [packageLines removeObjectAtIndex:outputStopIndex];
-            TLMLog(__func__, @"Found end-of-updates line");
             break;
         }
     }
