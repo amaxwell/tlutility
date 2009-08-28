@@ -50,19 +50,20 @@
     NSString *cmd = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath]; 
     NSString *locationString = [location absoluteString];
     NSMutableArray *options = [NSMutableArray arrayWithObjects:@"--repository", locationString, @"--machine-readable", @"update", nil];
-    
-    if ([[TLMPreferenceController sharedPreferenceController] autoInstall] == NO)
-        [options addObject:@"--no-auto-install"];
-    
-    if ([[TLMPreferenceController sharedPreferenceController] autoRemove] == NO)
-        [options addObject:@"--no-auto-remove"];
-    
+        
     if (nil == packageNames) {
         [options addObject:@"--all"];
     }
     else {
         [options addObjectsFromArray:packageNames];
     }
+    
+    // from tlmgr docs, these appear to come after the package name
+    if ([[TLMPreferenceController sharedPreferenceController] autoInstall] == NO)
+        [options addObject:@"--no-auto-install"];
+    
+    if ([[TLMPreferenceController sharedPreferenceController] autoRemove] == NO)
+        [options addObject:@"--no-auto-remove"];    
     
     self = [self initWithCommand:cmd options:options];
     if (self) {
