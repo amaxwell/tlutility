@@ -496,12 +496,12 @@ NSString * const TLMSetCommandLineServerPreferenceKey = @"TLMSetCommandLineServe
         return NO;
     
     if ([NSThread isMainThread])
-        return [[NSFileManager defaultManager] isWritableFileAtPath:path];
+        return (NO == [[NSFileManager defaultManager] isWritableFileAtPath:path]);
     
     NSFileManager *fm = [NSFileManager new];
     BOOL ret = [fm isWritableFileAtPath:path];
     [fm release];
-    return ret;
+    return (NO == ret);
 }
 
 #pragma mark Server combo box datasource
