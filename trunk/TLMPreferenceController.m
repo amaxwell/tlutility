@@ -489,6 +489,10 @@ NSString * const TLMSetCommandLineServerPreferenceKey = @"TLMSetCommandLineServe
 
 - (BOOL)installRequiresRootPrivileges
 {
+    // this option requires you to run as root
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:TLMUseRootHomePreferenceKey])
+        return YES;
+    
     NSString *path = [[self installDirectory] path];
     
     // will fail regardless...
