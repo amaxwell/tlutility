@@ -449,8 +449,8 @@ static BOOL __TLMCheckSignature()
         else {
             
             task = [TLMTask launchedTaskWithLaunchPath:__TLMCwrapperPath() arguments:__TLMOptionArrayFromArguments(args)];
-            if ([task isRunning])
-                status = errAuthorizationSuccess;
+            // set to nonzero if the task failed to launch
+            status = [task isRunning] ? errAuthorizationSuccess : coreFoundationUnknownErr;
         }
 
         
