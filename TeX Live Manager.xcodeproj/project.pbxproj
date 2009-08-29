@@ -970,6 +970,7 @@
 					__info_plist,
 					"\"$(SRCROOT)/$(INFOPLIST_FILE)\"",
 				);
+				RUN_CLANG_STATIC_ANALYZER = YES;
 				SDKROOT = macosx10.6;
 			};
 			name = Debug;
