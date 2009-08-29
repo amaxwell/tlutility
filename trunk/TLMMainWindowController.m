@@ -848,7 +848,7 @@ static char _TLMOperationQueueOperationContext;
         TLMLog(__func__, @"Tried to remove infrastructure packages: %@", packages);
         NSAlert *alert = [[NSAlert new] autorelease];
         [alert setMessageText:NSLocalizedString(@"Some of these packages cannot be removed.", @"alert title")];
-        [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"You are attempting to remove critical parts of the underlying TeX Live infrastructure, and I won't help you do that.", @"alert message text")]];
+        [alert setInformativeText:NSLocalizedString(@"You are attempting to remove critical parts of the underlying TeX Live infrastructure, and I won't help you do that.", @"alert message text")];
         [alert beginSheetModalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
     }
     else {

@@ -48,7 +48,7 @@ extern NSString * const TLMAutoInstallPreferenceKey;
 extern NSString * const TLMAutoRemovePreferenceKey;
 extern NSString * const TLMSetCommandLineServerPreferenceKey;
 
-@interface TLMPreferenceController : NSWindowController 
+@interface TLMPreferenceController : NSWindowController <NSComboBoxDataSource>
 {
 @private
     NSPathControl       *_texbinPathControl;

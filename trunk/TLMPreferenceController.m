@@ -140,7 +140,6 @@ NSString * const TLMSetCommandLineServerPreferenceKey = @"TLMSetCommandLineServe
     // only display the hostname part
     [_serverComboBox setStringValue:[defaults objectForKey:TLMFullServerURLPreferenceKey]];
     [_serverComboBox setFormatter:[[TLMURLFormatter new] autorelease]];
-    [_serverComboBox setDelegate:self];
     [_serverComboBox setDataSource:self];
     [self updateUI];
 }
