@@ -45,7 +45,6 @@
 {
     NSParameterAssert(key);
     NSParameterAssert(value);
-#warning machine readable
     NSString *cmd = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath];
     return [self initWithCommand:cmd options:[NSArray arrayWithObjects:@"option", key, value, nil]];
 }
