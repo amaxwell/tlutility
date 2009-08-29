@@ -149,34 +149,53 @@ NSString * const TLMSetCommandLineServerPreferenceKey = @"TLMSetCommandLineServe
     [[NSUserDefaults standardUserDefaults] setBool:([sender state] == NSOnState) forKey:TLMUseRootHomePreferenceKey];
 }
 
+- (NSURL *)_currentTeXLiveLocationOption
+{
+    NSArray *args = [NSArray arrayWithObjects:@"--machine-readable", @"option", @"location", nil];
+    TLMTask *checkTask = [TLMTask launchedTaskWithLaunchPath:[self tlmgrAbsolutePath] arguments:args];
+    [checkTask waitUntilExit];
+    
+    NSString *location = nil;
+    if ([checkTask terminationStatus] == 0 && [checkTask outputString]) {
+        location = [[checkTask outputString] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        location = [[location componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] lastObject];
+    }
+    
+    return location ? [NSURL URLWithString:location] : nil;
+}
+
 - (void)_handleLocationOperationFinished:(NSNotification *)aNote
 {
-#warning machine readable
     TLMOptionOperation *op = [aNote object];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:TLMOperationFinishedNotification object:op];
     NSParameterAssert(_pendingOptionChangeCount);
     _pendingOptionChangeCount -= 1;
     
-    NSArray *args = [NSArray arrayWithObjects:@"option", @"location", nil];
-    TLMTask *checkTask = [TLMTask launchedTaskWithLaunchPath:[self tlmgrAbsolutePath] arguments:args];
-    [checkTask waitUntilExit];
+    NSString *location = [[self _currentTeXLiveLocationOption] absoluteString];
+    if (nil == location)
+        location = NSLocalizedString(@"Error reading location from TeX Live", @"");
     
     if ([op failed] || [op isCancelled]) {
         NSAlert *alert = [[NSAlert new] autorelease];
         [alert setMessageText:NSLocalizedString(@"The location in the TeX Live database was not changed", @"")];
+        [alert setInformativeText:[NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"The current location is:", @""), location]];
         [alert beginSheetModalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
     }
     else {
-        TLMLog(__func__, @"Finished setting command line server location:\n\t%@", [checkTask outputString]);
+        TLMLog(__func__, @"Finished setting command line server location:\n\tlocation = %@", location);
     }
 }   
 
 - (void)_syncCommandLineServerOption
 {
-    // tlmgr --machine-readable option location
-    // tlmgr option location http://foo.bar.com/tlnet
+    // !!! early return since there's nothing to do here...
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:TLMSetCommandLineServerPreferenceKey] == NO)
+        return;
     
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:TLMSetCommandLineServerPreferenceKey]) {
+    NSURL *location = [self _currentTeXLiveLocationOption];
+
+    // this is kind of slow, so avoid doing it unless we really have to
+    if ([location isEqual:[self defaultServerURL]] == NO) {
         TLMLog(__func__, @"Setting command line server location to %@", [[self defaultServerURL] absoluteString]);
         TLMOptionOperation *op = [[TLMOptionOperation alloc] initWithKey:@"location" value:[[self defaultServerURL] absoluteString]];
         [[NSNotificationCenter defaultCenter] addObserver:self 
