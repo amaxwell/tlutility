@@ -970,7 +970,7 @@
 					__info_plist,
 					"\"$(SRCROOT)/$(INFOPLIST_FILE)\"",
 				);
-				SDKROOT = macosx10.5;
+				SDKROOT = macosx10.6;
 			};
 			name = Debug;
 		};
@@ -999,7 +999,7 @@
 					__info_plist,
 					"\"$(SRCROOT)/$(INFOPLIST_FILE)\"",
 				);
-				SDKROOT = macosx10.5;
+				SDKROOT = macosx10.6;
 			};
 			name = Release;
 		};

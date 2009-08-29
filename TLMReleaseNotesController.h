@@ -39,7 +39,7 @@
 #import <Cocoa/Cocoa.h>
 #import <WebKit/WebKit.h>
 
-@interface TLMReleaseNotesController : NSWindowController
+@interface TLMReleaseNotesController : NSWindowController <NSTableViewDelegate>
 {
 @private
     NSArray             *_versions;

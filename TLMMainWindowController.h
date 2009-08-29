@@ -52,7 +52,7 @@
 @end
 
 
-@interface TLMMainWindowController : NSWindowController <TLMTabViewDelegate>
+@interface TLMMainWindowController : NSWindowController <TLMTabViewDelegate, NSWindowDelegate>
 {
 @private
     NSProgressIndicator      *_progressIndicator;

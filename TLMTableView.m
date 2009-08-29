@@ -76,7 +76,7 @@
 - (IBAction)copy:(id)sender;
 {
     if ([self dataSourceAllowsCopying])
-        [[self dataSource] tableView:self writeSelectedRowsToPasteboard:[NSPasteboard generalPasteboard]];
+        [(id <TLMTableDataSource>)[self dataSource] tableView:self writeSelectedRowsToPasteboard:[NSPasteboard generalPasteboard]];
     else
         NSBeep();
 }

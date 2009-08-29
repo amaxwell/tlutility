@@ -72,7 +72,7 @@
     
     if (inDivider) {
         if ([theEvent clickCount] > 1 && [[self delegate] respondsToSelector:@selector(splitView:doubleClickedDividerAt:)])
-            [[self delegate] splitView:self doubleClickedDividerAt:i];
+            [(id <TLMSplitViewDelegate>)[self delegate] splitView:self doubleClickedDividerAt:i];
         else
             [super mouseDown:theEvent];
     } else {
