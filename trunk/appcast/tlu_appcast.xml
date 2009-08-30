@@ -249,5 +249,23 @@
             <pubDate>Tue, 18 Aug 2009 19:30:03 -0700</pubDate>
             <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20090818.tgz" sparkle:version="0.74" length="1419998" type="application/octet-stream" sparkle:dsaSignature="MCwCFDKdn/iPjyjl38Z76q5hK8HhAgw5AhQ96i0idDhJq9k8Szzxq3DBroweew=="></enclosure>
         </item>
+        <item>
+            <title>Version 0.80</title>
+            <description>
+                <h3>Changes Since 0.74</h3>
+                <li>Items are now removed from the update list during the update</li>
+                <li>Selection is preserved during update/install/search</li>
+                <li>TeX Live 2008 compatibility code is now gone</li>
+                <li>Updated some output parsing for the latest TeX Live 2009 tests</li>
+                <li>Install now has progress bar updates</li>
+                <li>Can optionally set TeX Live mirror URL in preferences for command-line usage</li>
+                <li>Actions should no longer prompt for authentication unnecessarily</li>
+                <li>Reduced some annoying log messages</li>
+                <li>Drop privileges in command-line helper after launch tlmgr</li>
+                <li>Added a warning when using a development version of TeX Live with one of the default mirrors</li>
+            </description>
+            <pubDate>Sun, 30 Aug 2009 15:43:05 -0700</pubDate>
+            <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20090830.tgz" sparkle:version="0.80" length="1434277" type="application/octet-stream" sparkle:dsaSignature="MC0CFFGwyaU+K9S3s2S56mIOpVpi0pHQAhUAgyJV8rMT5S6Qdm4/LC9Tjcw+hQA="></enclosure>
+        </item>
     </channel>
 </rss>
