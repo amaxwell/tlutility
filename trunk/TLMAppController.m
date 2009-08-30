@@ -235,7 +235,7 @@ static void __TLMMigrateBundleIdentifier()
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:TLMDisableVersionMismatchWarningKey];
 }
 
-+ (NSInteger)_texliveYear:(NSString **)versionStr
++ (NSInteger)_texliveYear:(NSString **)versionStr isDevelopmentVersion:(BOOL *)isDev
 {
     // always run the check and log the result
     TLMTask *tlmgrTask = [[TLMTask new] autorelease];
@@ -253,6 +253,7 @@ static void __TLMMigrateBundleIdentifier()
     versionString = [versionString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     NSArray *versionLines = [versionString componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
     NSInteger texliveYear = 0;
+    if (isDev) *isDev = NO;
     
     if ([versionLines count]) {
         
@@ -272,6 +273,11 @@ static void __TLMMigrateBundleIdentifier()
         for (versionString in versionLines) {
             
             if ([versionString hasPrefix:@"TeX Live"]) {
+                
+                // allow handling development versions differently (not sure this is stable year-to-year)
+                if (isDev && [versionString hasSuffix:@"dev"])
+                    *isDev = YES;
+                    
                 NSScanner *scanner = [NSScanner scannerWithString:versionString];
                 [scanner setCharactersToBeSkipped:[[NSCharacterSet decimalDigitCharacterSet] invertedSet]];
                 [scanner scanInteger:&texliveYear];
@@ -286,13 +292,14 @@ static void __TLMMigrateBundleIdentifier()
 
 + (NSInteger)texliveYear
 {
-    return [self _texliveYear:NULL];
+    return [self _texliveYear:NULL isDevelopmentVersion:NULL];
 }
 
 - (void)checkVersionConsistency
 {    
     NSString *versionString;
-    NSInteger texliveYear = [[self class] _texliveYear:&versionString];
+    BOOL isDev;
+    NSInteger texliveYear = [[self class] _texliveYear:&versionString isDevelopmentVersion:&isDev];
     
     if (texliveYear ) {
         
@@ -320,7 +327,14 @@ static void __TLMMigrateBundleIdentifier()
             
             alert = [[NSAlert new] autorelease];
             [alert setMessageText:NSLocalizedString(@"Mirror URL may not match TeX Live version", @"")];
-            [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"Your TeX Live version is %d, but your mirror URL appears to be for TeX Live 2008.  If any operations fail, you may need to adjust your mirror URL in the preferences.", @"two integer specifiers"), (int)texliveYear]];
+            [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"Your TeX Live version is %d, but your mirror URL appears to be for TeX Live 2008.  If any operations fail, you may need to adjust your mirror URL in the preferences.", @"single integer specifier"), (int)texliveYear]];
+        }
+        // this check is not sufficient, but users who edit preferences and run a development version should be able to cope
+        else if (isDev && [[[TLMPreferenceController sharedPreferenceController] defaultServers] containsObject:URLString]) {
+            
+            alert = [[NSAlert new] autorelease];
+            [alert setMessageText:NSLocalizedString(@"Mirror URL may not match TeX Live version", @"")];
+            [alert setInformativeText:NSLocalizedString(@"You appear to be using a development version of TeX Live, which may not be supported by your current mirror URL in the preference setttings.", @"alert text")];
         }
         else {
             TLMLog(__func__, @"Mirror URL looks okay for TeX Live %d", (int)texliveYear);
