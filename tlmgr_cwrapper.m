@@ -61,8 +61,6 @@
 
 extern char **environ;
 
-/* http://www.cocoabuilder.com/archive/message/cocoa/2001/6/15/21704 */
-
 static id _logServer = nil;
 static TLMLogMessageFlags _messageFlags = TLMLogDefault;
 
@@ -164,51 +162,48 @@ static void log_lines_and_clear(NSMutableData *data, bool is_error)
     // clear the mutable data
     [data replaceBytesInRange:NSMakeRange(0, last) withBytes:NULL length:0];
 }
+
+/* 
+ argv[0]: tlmgr_cwrapper
+ argv[1]: DO server name for IPC
+ argv[2]: log message flags
+ argv[3]: y or n
+ argv[4]: tlmgr
+ argv[n]: tlmgr arguments
+ */
+
+#define ARG_SELF        0
+#define ARG_SERVER_NAME 1
+#define ARG_LOG_FLAGS   2
+#define ARG_SET_HOME    3
+#define ARG_CMD         4
+#define ARG_CMD_ARGS    5
     
 int main(int argc, char *argv[]) {
     
     NSAutoreleasePool *pool = [NSAutoreleasePool new];
         
     /* this call was the original purpose of the program */
+    /* http://www.cocoabuilder.com/archive/message/cocoa/2001/6/15/21704 */
     setuid(geteuid());
     
-    /* 
-     argv[0]: tlmgr_cwrapper
-     argv[1]: DO server name for IPC
-     argv[2]: log message flags
-     argv[3]: y or n
-     argv[4]: tlmgr
-     argv[n]: tlmgr arguments
-     */
-    if (argc < 5) {
+    if (argc < ARG_CMD_ARGS) {
         log_error(@"insufficient arguments");
         exit(1);
     }
-    
-    NSString *parentName = [NSString stringWithUTF8String:argv[1]];
-    id parent = [NSConnection rootProxyForConnectionWithRegisteredName:parentName host:nil];
-    [parent setProtocolForProxy:@protocol(TLMAuthOperationProtocol)];
-    
-    /* do this early so the parent kqueue can monitor the process */
-    @try {
-        [parent setWrapperPID:getpid()];
-    }
-    @catch (id exception) {
-        log_error(@"failed to send PID to server:\n\t%@", exception);
-    }
-    
+        
     /* single integer, holding flags for the log messages       */
     /* NB: machine-readable output is all on stdout, not stderr */
     char *invalid = NULL;
-    _messageFlags = strtoul(argv[2], &invalid, 10);
+    _messageFlags = strtoul(argv[ARG_LOG_FLAGS], &invalid, 10);
     if (invalid && '\0' != *invalid) {
-        log_error(@"second argument '%s' was not an unsigned long value", argv[2]);
+        log_error(@"second argument '%s' was not an unsigned long value", argv[ARG_LOG_FLAGS]);
         exit(1);
     }
         
     /* Require a single character argument 'y' || 'n'.      */
     /* Don't accept 'yes' or 'no' or 'nitwit' as arguments. */
-    char *c = argv[3];
+    char *c = argv[ARG_SET_HOME];
     if (strlen(c) != 1 || ('y' != *c && 'n' != *c)) {
         log_error(@"third argument '%s' was not recognized", c);
         exit(1);
@@ -216,24 +211,42 @@ int main(int argc, char *argv[]) {
     
     /* If yes, do what sudo -H does: read root's passwd entry and change HOME. */
     if ('y' == *c) {    
-        struct passwd *pw = getpwuid(getuid());
+                
+        /* note that getuid() may no longer return 0 */
+        struct passwd *pw = getpwuid(0);
         if (NULL == pw) {
             log_error(@"getpwuid failed in tlmgr_cwrapper");
             exit(1);
         }
+        
+        /* The point of this is to write to root's home directory, so make we are root */
+        if (setuid(0) != 0) {
+            log_error(@"UID %d cannot write to %s\n", getuid(), pw->pw_dir);
+            exit(1);
+        }
+        
         setenv("HOME", pw->pw_dir, 1);
     }
     
+    /* copy this for later logging */
+    const char *childHome = strdup(getenv("HOME"));
+        
     /* This is a security issue, since we don't want to trust relative paths. */
-    NSString *nsPath = [NSString stringWithUTF8String:argv[4]];
-    if ([nsPath isAbsolutePath] == NO) {
-        log_error(@"*** ERROR *** rejecting insecure path %@", nsPath);
+    if (strlen(argv[ARG_CMD]) == 0 || argv[ARG_CMD][0] != '/') {
+        log_error(@"*** ERROR *** rejecting insecure path %s", argv[ARG_CMD]);
         exit(1);
     }
     
     /* This catches a stupid mistake that I've made a few times in configuring the task. */
-    if ([[NSFileManager defaultManager] isExecutableFileAtPath:nsPath] == NO) {
-        log_error(@"*** ERROR *** non-executable file at path %@", nsPath);
+    if (access(argv[ARG_CMD], X_OK) != 0) {
+        log_error(@"*** ERROR *** non-executable file at path %s", argv[ARG_CMD]);
+        exit(1);
+    }
+    
+    /* Need this after fork(), so fail if we can't get it */
+    struct passwd *nobody = getpwnam("nobody");
+    if (NULL == nobody) {
+        log_error(@"getpwnam failed in tlmgr_cwrapper");
         exit(1);
     }
     
@@ -251,7 +264,7 @@ int main(int argc, char *argv[]) {
     int outpipe[2];
     int errpipe[2];
     
-    // pipe to avoid a race between exec and kevent; problem in BDSKTask isn't relevant here
+    /* pipe to avoid a race between exec and kevent; problem in BDSKTask isn't relevant here */
     int waitpipe[2];
 
     if (pipe(outpipe) < 0 || pipe(errpipe) < 0 || pipe(waitpipe) < 0) {
@@ -269,14 +282,11 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
     
-    /* log information as error so we get the TLMLogDefault flags */
-    log_error(@"tlmgr_cwrapper: HOME = '%s'\n", getenv("HOME"));
-
     int ret = 0;
     pid_t child = fork();
     if (0 == child) {
         
-        // set process group for killpg()
+        /* set process group for killpg() */
         (void)setpgid(getpid(), getpid());
         
         close(outpipe[0]);
@@ -284,11 +294,11 @@ int main(int argc, char *argv[]) {
         
         close(waitpipe[1]);
         char ignored;
-        // block until the parent has setup complete
+        /* block until the parent has setup complete */
         read(waitpipe[0], &ignored, 1);    
         close(waitpipe[0]);
 
-        i = execve(argv[4], &argv[4], environ);
+        i = execve(argv[ARG_CMD], &argv[ARG_CMD], environ);
         _exit(i);
     }
     else if (-1 == child) {
@@ -297,15 +307,49 @@ int main(int argc, char *argv[]) {
     }
     else {
         
+        /* drop privileges to nobody immediately after fork() (mainly for running as root) */            
+        (void) setenv("HOME", nobody->pw_dir, 1);
+        (void) setgid(nobody->pw_gid);
+        (void) setuid(nobody->pw_uid);
+        
+        /* if dropping privileges failed, this call will succeed */
+        if (setuid(0) == 0) {
+            log_error(@"dropping privileges failed\n");
+            exit(1);
+        }
+        else {
+            log_error(@"dropped privileges to user nobody\n");
+        }
+        
+        /*
+         Formerly set this up immediately (before fork()) so the parent kqueue could monitor tlmgr_cwrapper,
+         but waiting to use Foundation until after we drop privileges seems to be worthwhile.  In addition,
+         the primary errors to catch prior to fork() are early-exit errors due to programming errors.
+         */
+        NSString *parentName = [NSString stringWithUTF8String:argv[ARG_SERVER_NAME]];
+        id parent = [NSConnection rootProxyForConnectionWithRegisteredName:parentName host:nil];
+        [parent setProtocolForProxy:@protocol(TLMAuthOperationProtocol)];
+        
+        /* allows the parent kqueue to monitor tlmgr_cwrapper and/or kill it */
+        @try {
+            [parent setWrapperPID:getpid()];
+        }
+        @catch (id exception) {
+            log_error(@"failed to send PID to server:\n\t%@", exception);
+        }        
+        
+        /* allows the parent kqueue to monitor tlmgr and/or kill it */
         @try {
             [parent setUnderlyingPID:child];
         }
         @catch (id exception) {
             log_error(@"failed to send PID to server:\n\t%@", exception);
         }
-                
-        int childStatus;
         
+        /* log information as error so we get the TLMLogDefault flags */
+        log_error(@"tlmgr_cwrapper: child HOME = '%s'\n", childHome);
+        log_error(@"tlmgr_cwrapper: current HOME = '%s'\n", getenv("HOME"));
+                        
         int kq_fd = kqueue();
 #define TLM_EVENT_COUNT 3
         struct kevent events[TLM_EVENT_COUNT];
@@ -319,7 +363,7 @@ int main(int argc, char *argv[]) {
         EV_SET(&events[2], errpipe[0], EVFILT_READ, EV_ADD, 0, 0, NULL);
         kevent(kq_fd, events, TLM_EVENT_COUNT, NULL, 0, NULL);
         
-        // kqueue setup complete, so widow the pipe to allow exec to proceed
+        /* kqueue setup complete, so widow the pipe to allow exec to proceed */
         close(waitpipe[1]);
         close(waitpipe[0]);
         
@@ -337,7 +381,7 @@ int main(int argc, char *argv[]) {
         
         while ((eventCount = kevent(kq_fd, NULL, 0, &event, 1, &ts)) != -1 && stillRunning) {
             
-            // if this was a timeout, don't try reading from the event
+            /* if this was a timeout, don't try reading from the event */
             if (0 == eventCount)
                 continue;
             
@@ -375,10 +419,10 @@ int main(int argc, char *argv[]) {
             
             [innerPool release];
             
-            // originally checked here to see if tlmgr removed itself, but the dedicated update makes that unnecessary
+            /* originally checked here to see if tlmgr removed itself, but the dedicated update makes that unnecessary */
         }    
         
-        // log any leftovers
+        /* log any leftovers */
         if ([outBuffer length]) {
             NSString *str = [[NSString alloc] initWithData:outBuffer encoding:NSUTF8StringEncoding];
             log_notice(@"%@", str);
@@ -391,6 +435,7 @@ int main(int argc, char *argv[]) {
             [str release];
         }
         
+        int childStatus;
         ret = waitpid(child, &childStatus, WNOHANG | WUNTRACED);
         ret = (ret != 0 && WIFEXITED(childStatus)) ? WEXITSTATUS(childStatus) : EXIT_FAILURE;
         log_error(@"exit status of pid = %d was %d", child, ret);
