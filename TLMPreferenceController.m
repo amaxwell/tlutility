@@ -72,6 +72,7 @@ NSString * const TLMSetCommandLineServerPreferenceKey = @"TLMSetCommandLineServe
 @synthesize _progressField;
 @synthesize _autoremoveCheckBox;
 @synthesize _autoinstallCheckBox;
+@synthesize defaultServers = _servers;
 
 + (TLMPreferenceController *)sharedPreferenceController;
 {

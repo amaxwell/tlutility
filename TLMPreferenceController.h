@@ -85,6 +85,7 @@ extern NSString * const TLMSetCommandLineServerPreferenceKey;
 @property (nonatomic, retain) IBOutlet NSPanel *_progressPanel;
 @property (nonatomic, retain) IBOutlet NSProgressIndicator *_progressIndicator;
 @property (nonatomic, retain) IBOutlet NSTextField *_progressField;
+@property (readonly) NSArray *defaultServers;
 
 /*
  
