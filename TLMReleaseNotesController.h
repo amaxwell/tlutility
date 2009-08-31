@@ -39,7 +39,11 @@
 #import <Cocoa/Cocoa.h>
 #import <WebKit/WebKit.h>
 
+#if MAC_OS_X_VERSION_MAX_ALLOWED > MAC_OS_X_VERSION_10_5
 @interface TLMReleaseNotesController : NSWindowController <NSTableViewDelegate>
+#else
+@interface TLMReleaseNotesController : NSWindowController
+#endif
 {
 @private
     NSArray             *_versions;
