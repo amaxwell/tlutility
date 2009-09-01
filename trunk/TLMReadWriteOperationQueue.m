@@ -52,6 +52,7 @@
 @synthesize writing = _isWriting;
 
 static char _TLMOperationQueueOperationContext;
+static bool _suddenTerminationSupported = false;
 
 + (void)initialize
 {
@@ -60,6 +61,9 @@ static char _TLMOperationQueueOperationContext;
     didInit = true;
 
     [self defaultQueue];
+    if ([NSProcessInfo instancesRespondToSelector:@selector(enableSuddenTermination)] && 
+        [NSProcessInfo instancesRespondToSelector:@selector(disableSuddenTermination)])
+        _suddenTerminationSupported = true;
 }
 
 + (TLMReadWriteOperationQueue *)defaultQueue;
@@ -140,6 +144,43 @@ static char _TLMOperationQueueOperationContext;
     // may cause callout to KVO
     for (TLMOperation *op in toAdd)
         [_operationQueue addOperation:op];
+}
+
+- (void)_updateSuddenTermination:(NSNumber *)isWriting
+{
+    NSParameterAssert([NSThread isMainThread]);
+    if ([isWriting boolValue]) {
+        [[NSProcessInfo processInfo] disableSuddenTermination];
+        _suddenTerminationDisabled = YES;
+    }
+    else if (_suddenTerminationDisabled) {
+        [[NSProcessInfo processInfo] enableSuddenTermination];
+        _suddenTerminationDisabled = NO;
+    }
+}
+
+- (BOOL)isWriting
+{
+    BOOL ret;
+    @synchronized (self) {
+        ret = _isWriting;
+    }
+    return ret;
+}
+
+- (void)setWriting:(BOOL)isWriting
+{
+    @synchronized (self) {
+        if (_suddenTerminationSupported) {
+            if ([NSThread isMainThread]) {
+                [self _updateSuddenTermination:[NSNumber numberWithBool:isWriting]];
+            }
+            else {
+                [self performSelectorOnMainThread:@selector(_updateSuddenTermination:) withObject:[NSNumber numberWithBool:isWriting] waitUntilDone:NO]; 
+            }
+        }
+        _isWriting = isWriting;
+    }
 }
 
 // NB: this will arrive on the queue's thread
