@@ -46,6 +46,7 @@
     NSOperationQueue *_operationQueue;
     NSMutableArray   *_pendingOperations;
     BOOL              _isWriting;
+    BOOL              _suddenTerminationDisabled;
     NSLock           *_queueLock;
     NSUInteger        _operationCount;
 }
