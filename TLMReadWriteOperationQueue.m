@@ -39,6 +39,13 @@
 #import "TLMReadWriteOperationQueue.h"
 #import "TLMOperation.h"
 
+#if MAC_OS_X_VERSION_MAX_ALLOWED <= MAC_OS_X_VERSION_10_5
+@interface NSProcessInfo (TLMSuddenTermination)
+- (void)enableSuddenTermination;
+- (void)disableSuddenTermination;
+@end
+#endif
+
 @interface TLMReadWriteOperationQueue ()
 @property (readwrite) NSUInteger operationCount;
 @property (readwrite) BOOL writing;
