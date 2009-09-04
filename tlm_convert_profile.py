@@ -5,7 +5,12 @@ from Foundation import *
 
 profile = open("/usr/local/texlive/2009/tlpkg/texlive.profile")
 
-profileValues = []
+options = []
+variables = []
+docs = []
+lang = []
+collections = []
+other = []
 
 for line in profile:
     
@@ -29,32 +34,31 @@ for line in profile:
     # default human-readable string
     profileDictionary["name"] = key
     
-    if key == "selected_scheme":
-        profileDictionary["name"] = "Scheme"
-        profileDictionary["type"] = "scheme"
-    elif key.startswith("TEX"):
+    if key.startswith("TEX"):
         profileDictionary["name"] = key
         profileDictionary["type"] = "variable"
+        variables.append(profileDictionary)
     # do longest match first on keys with a common prefix
     elif key.startswith("collection-documentation-"):
         profileDictionary["name"] = key[len("collection-documentation-"):].capitalize()
         profileDictionary["type"] = "documentation"
+        docs.append(profileDictionary)
     elif key.startswith("collection-lang"):
         profileDictionary["name"] = key[len("collection-lang"):].capitalize()
         profileDictionary["type"] = "language"
+        lang.append(profileDictionary)
     elif key.startswith("collection-"):
         profileDictionary["name"] = key[len("collection-"):]
         profileDictionary["type"] = "collection"
+        collections.append(profileDictionary)
     elif key.startswith("option"):
         profileDictionary["type"] = "option"
+        options.append(profileDictionary)
     else:
         profileDictionary["type"] = "unknown"
-        
-    profileValues.append(profileDictionary)
-        
-for pd in profileValues:
-    
-    print "%s\t%s\t%s\t%s" % (pd["key"], pd["name"], pd["value"], pd["type"])
+        other.append(profileDictionary)
+                
+profileValues = { "options" : options, "variables" : variables, "documentation" : docs, "languages" : lang, "collections" : collections, "other" : other }
     
 plist, error = NSPropertyListSerialization.dataFromPropertyList_format_errorDescription_(profileValues, NSPropertyListXMLFormat_v1_0, None)
 
