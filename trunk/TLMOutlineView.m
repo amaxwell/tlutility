@@ -75,7 +75,7 @@
 - (IBAction)copy:(id)sender;
 {
     if ([self dataSourceAllowsCopying])
-        [[self dataSource] outlineView:self writeSelectedRowsToPasteboard:[NSPasteboard generalPasteboard]];
+        [(id <TLMOutlineViewDataSource>)[self dataSource] outlineView:self writeSelectedRowsToPasteboard:[NSPasteboard generalPasteboard]];
     else
         NSBeep();
 }
