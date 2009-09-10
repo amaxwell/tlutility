@@ -316,12 +316,16 @@ static void __TLMMigrateBundleIdentifier()
          */
         
         NSAlert *alert = nil;
+        BOOL allowSuppression = YES;
         
         if (2008 == texliveYear) {
             
             alert = [[NSAlert new] autorelease];
             [alert setMessageText:NSLocalizedString(@"Unsupported TeX Live version", @"")];
-            [alert setInformativeText:NSLocalizedString(@"TeX Live Utility requires TeX Live 2009 or later.  You need TeX Live Utility 0.74 or earlier in order to use TeX Live 2008.", @"")];
+            [alert setInformativeText:NSLocalizedString(@"This version of TeX Live Utility requires TeX Live 2009 or later.  You need TeX Live Utility 0.74 or earlier in order to use TeX Live 2008.", @"")];
+            
+            // disable alert suppression on this path, since the user has made an unfortunate choice...
+            allowSuppression = NO;
         }
         else if (texliveYear > 2008 && [URLString hasSuffix:@"2008"]) {
             
@@ -344,13 +348,18 @@ static void __TLMMigrateBundleIdentifier()
         if (alert)
             TLMLog(__func__, @"*** WARNING *** Potential version mismatch between tlmgr and mirror URL %@", URLString);
         
-        if (alert && [[NSUserDefaults standardUserDefaults] boolForKey:TLMDisableVersionMismatchWarningKey] == NO) {
-            [alert setShowsSuppressionButton:YES];
+        if (alert && (NO == allowSuppression || [[NSUserDefaults standardUserDefaults] boolForKey:TLMDisableVersionMismatchWarningKey] == NO)) {
+            
+            SEL endSel = NULL;
+            if (allowSuppression) {
+                [alert setShowsSuppressionButton:YES];
+                endSel = @selector(versionWarningDidEnd:returnCode:contextInfo:);
+            }
             
             // always show on the main window
             [alert beginSheetModalForWindow:[_mainWindowController window] 
                               modalDelegate:self 
-                             didEndSelector:@selector(versionWarningDidEnd:returnCode:contextInfo:) 
+                             didEndSelector:endSel 
                                 contextInfo:NULL];            
         }
     }
