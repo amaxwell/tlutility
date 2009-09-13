@@ -135,7 +135,7 @@
         
         size_t len = event.data;
         char sbuf[2048];
-        char *buf = (len > sizeof(sbuf)) ? buf = malloc(len) : sbuf;
+        char *buf = (len > sizeof(sbuf)) ? malloc(len) : sbuf;
         len = read(event.ident, buf, len);
                 
         if (event.ident == (unsigned)fdo) {
