@@ -68,6 +68,7 @@
     NSUInteger                _operationCount;
     CGFloat                   _lastTextViewHeight;
     BOOL                      _updateInfrastructure;
+    NSDictionary             *_previousInfrastructureVersions;
 
     TLMLogDataSource         *_logDataSource;
     TLMUpdateListDataSource  *_updateListDataSource;
