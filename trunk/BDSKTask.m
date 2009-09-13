@@ -413,6 +413,7 @@ static void __BDSKTaskNotify(void *info)
 
 - (void)waitUntilExit;
 {
+    ASSERT_LAUNCH;
     while ([self isRunning]) {
         NSDate *next = [[NSDate allocWithZone:[self zone]] initWithTimeIntervalSinceNow:0.1];
         [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:next];
