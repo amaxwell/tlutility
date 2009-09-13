@@ -60,6 +60,7 @@
 #import "TLMTabView.h"
 #import "TLMReadWriteOperationQueue.h"
 #import "TLMSizeFormatter.h"
+#import "TLMTask.h"
 
 static char _TLMOperationQueueOperationContext;
 
@@ -113,6 +114,7 @@ static char _TLMOperationQueueOperationContext;
     [_logDataSource release];
     [_packageListDataSource release];
     [_updateListDataSource release];
+    [_previousInfrastructureVersions release];
     
     [super dealloc];
 }
@@ -438,6 +440,43 @@ static char _TLMOperationQueueOperationContext;
     [op release];
 }
 
+static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
+{
+    NSMutableDictionary *versions = [NSMutableDictionary new];
+    for (NSString *name in packageNames) {
+        TLMTask *task = [[TLMTask new] autorelease];
+        [task setLaunchPath:[[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath]];
+        [task setArguments:[NSArray arrayWithObjects:@"show", name, nil]];
+        [task launch];
+        [task waitUntilExit];
+
+        /*
+         $ tlmgr show texlive.infra
+         package:    texlive.infra
+         category:   TLCore
+         shortdesc:  basic TeX Live infrastructure
+         longdesc:   This package contains the files needed to get the TeX Live tools (notably tlmgr) running: perl modules, xz binaries, plus (sometimes) tar and wget.  These files end up in the standalone install packages.
+         installed:  Yes
+         revision:   15199
+         collection: collection-basic
+        */
+                
+        if ([task outputString]) {
+            NSArray *lines = [[task outputString] componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+            for (NSString *line in lines) {
+                line = [line stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+                NSRange r = [line rangeOfString:@":"];
+                if (r.length && [[line substringToIndex:r.location] caseInsensitiveCompare:@"revision"] == NSOrderedSame) {
+                    NSInteger vers = [[line substringFromIndex:NSMaxRange(r)] intValue];
+                    if (vers > 0) [versions setObject:[NSNumber numberWithInteger:vers] forKey:name];
+                    break;
+                }
+            }
+        }
+    }
+    return versions;
+}
+
 - (void)_handleListUpdatesFinishedNotification:(NSNotification *)aNote
 {
     NSParameterAssert([NSThread isMainThread]);
@@ -447,19 +486,18 @@ static char _TLMOperationQueueOperationContext;
     NSArray *allPackages = [op packages];
 
     /*
-     TL 2008: Karl sez 'bin-texlive' and 'texlive.infra' are the packages that the next version of tlmgr 
-     will require you to install before installing anything else.
-     
      TL 2009: 'bin-texlive' is gone, and we now have 'texlive.infra' and 'texlive.infra.universal-darwin' 
      for infrastructure updates.  This is satisfied by checking for the prefix 'texlive.infra'.  The only 
      other infrastructure packages is 'tlperl.win32', which we probably won't see.
      
      Note: a slow-to-update mirror may have a stale version, so check needsUpdate as well.
      */
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"((name IN { 'bin-texlive', 'texlive.infra', 'tlperl.win32' }) OR (name BEGINSWITH 'texlive.infra')) AND (needsUpdate == YES)"];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"((name == 'tlperl.win32' OR name BEGINSWITH 'texlive.infra')) AND (needsUpdate == YES)"];
     NSArray *packages = [allPackages filteredArrayUsingPredicate:predicate];
     
     if ([packages count]) {
+        [_previousInfrastructureVersions release];
+        _previousInfrastructureVersions = __TLMCopyVersionsForPackageNames([packages valueForKey:@"name"]);
         _updateInfrastructure = YES;
         // log for debugging, then display an alert so the user has some idea of what's going on...
         TLMLog(__func__, @"Critical updates detected: %@", [packages valueForKey:@"name"]);
@@ -535,8 +573,33 @@ static char _TLMOperationQueueOperationContext;
                              didEndSelector:@selector(disasterAlertDidEnd:returnCode:contextInfo:) 
                                 contextInfo:NULL];            
         }
+        else if (_updateInfrastructure) {
+            
+            /*
+             See if texlive.infra version is the same after installing update-tlmgr-latest.sh, which can happen
+             if there's an inconsistency between texlive.infra in tlnet and what got wrapped up in the script.
+             */
+            NSDictionary *currentVersions = [__TLMCopyVersionsForPackageNames([_previousInfrastructureVersions allKeys]) autorelease];
+            if ([currentVersions isEqualToDictionary:_previousInfrastructureVersions]) {
+                NSAlert *alert = [[NSAlert new] autorelease];
+                [alert setMessageText:NSLocalizedString(@"Possible update failure.", @"alert title")];
+                [alert setInformativeText:NSLocalizedString(@"The TeX Live infrastructure packages have the same version after updating.  This could be a packaging problem on the server.  If you see this message repeatedly, wait until the problem is resolved in TeX Live before attempting another update.", @"alert message text")];
+                
+                // refresh packages after this sheet ends, since it'll likely show the infra update alert sheet
+                [alert beginSheetModalForWindow:[self window] 
+                                  modalDelegate:self 
+                                 didEndSelector:@selector(versionAlertDidEnd:returnCode:contextInfo:) 
+                                    contextInfo:NULL];
+            }
+            
+        }
         else {
-            // This is slow, but if infrastructure was updated or a package installed other dependencies, we have no way of manually removing from the list.  We also need to ensure that the same mirror is used, so results are consistent.
+            
+            /*
+             This is slow, but if infrastructure was updated or a package installed other dependencies, 
+             we have no way of manually removing from the list.  We also need to ensure that the same 
+             mirror is used, so results are consistent.
+             */
             [self _refreshUpdatedPackageListFromLocation:[self _lastUpdateURL]];
         }
     }
@@ -677,6 +740,11 @@ static char _TLMOperationQueueOperationContext;
         [[NSApp delegate] openDisasterRecoveryPage:nil];
     else
         TLMLog(__func__, @"User chose not to open %@ after failure", @"http://tug.org/texlive/tlmgr.html");
+}
+
+- (void)versionAlertDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)unused
+{
+    [self _refreshUpdatedPackageListFromLocation:[self _lastUpdateURL]];
 }
 
 - (void)cancelWarningSheetDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
@@ -840,7 +908,7 @@ static char _TLMOperationQueueOperationContext;
 {   
     // Some idiot could try to wipe out tlmgr itself, so let's try to prevent that...
     // NB: we can have the architecture appended to the package name, so use beginswith.
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(SELF beginswith 'bin-texlive') OR (SELF beginswith 'texlive.infra')"];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF beginswith 'texlive.infra'"];
     NSArray *packages = [packageNames filteredArrayUsingPredicate:predicate];
     
     if ([packages count]) {
