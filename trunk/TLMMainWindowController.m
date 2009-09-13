@@ -591,6 +591,9 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
                                  didEndSelector:@selector(versionAlertDidEnd:returnCode:contextInfo:) 
                                     contextInfo:NULL];
             }
+            else {
+                [self _refreshUpdatedPackageListFromLocation:[self _lastUpdateURL]];
+            }
             
         }
         else {
