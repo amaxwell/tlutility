@@ -66,8 +66,8 @@ typedef NSUInteger TLMProfileType;
 - (id)childAtIndex:(NSUInteger)anIndex;
 - (NSString *)profileString;
 
-@property (readonly) NSString *name;
+@property (readonly, copy) NSString *name;
 @property (readonly) TLMProfileType type;
-@property (readonly) id value;
+@property (readonly, copy) id value;
 
 @end
