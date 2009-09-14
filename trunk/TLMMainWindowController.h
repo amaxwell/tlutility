@@ -44,6 +44,7 @@
 @class TLMStatusWindow;
 @class TLMPackageListDataSource;
 @class TLMUpdateListDataSource;
+@class TLMInstallDataSource;
 @class TLMGradientView;
 
 @protocol TLMListDataSource <NSObject>
@@ -73,8 +74,13 @@
     TLMLogDataSource         *_logDataSource;
     TLMUpdateListDataSource  *_updateListDataSource;
     TLMPackageListDataSource *_packageListDataSource;
+    TLMInstallDataSource     *_installDataSource;
     id <TLMListDataSource>    _currentListDataSource;
 }
+
+// IB 3.2 is losing the first @property declaration unless I move this ahead of it
+- (IBAction)changePapersize:(id)sender;
+- (IBAction)cancelAllOperations:(id)sender;
 
 @property (nonatomic, retain) IBOutlet NSProgressIndicator *_progressIndicator;
 @property (nonatomic, retain) IBOutlet NSProgressIndicator *_progressBar;
@@ -83,12 +89,10 @@
 @property (nonatomic, retain) IBOutlet TLMLogDataSource *_logDataSource;
 @property (nonatomic, retain) IBOutlet TLMPackageListDataSource *_packageListDataSource;
 @property (nonatomic, retain) IBOutlet TLMUpdateListDataSource *_updateListDataSource;
+@property (nonatomic, retain) IBOutlet TLMInstallDataSource *_installDataSource;
 @property (nonatomic, retain) IBOutlet TLMTabView *_tabView;
 @property (nonatomic, retain) IBOutlet TLMGradientView *_statusBarView;
 @property (nonatomic, readonly) BOOL infrastructureNeedsUpdate;
-
-- (IBAction)changePapersize:(id)sender;
-- (IBAction)cancelAllOperations:(id)sender;
 
 // install/update actions will use lastUpdateURL
 - (void)updateAllPackages;

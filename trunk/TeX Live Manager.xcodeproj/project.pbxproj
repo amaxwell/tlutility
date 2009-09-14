@@ -32,6 +32,9 @@
 		F99D9B0B0F01731E00A1DCCB /* TLMTabView.m in Sources */ = {isa = PBXBuildFile; fileRef = F99D9B0A0F01731E00A1DCCB /* TLMTabView.m */; };
 		F99E51980EEE4AD5006E6B39 /* TLMURLFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = F99E51970EEE4AD5006E6B39 /* TLMURLFormatter.m */; };
 		F9A057B60F507624008C804E /* DVIImporter.mdimporter in CopyFiles */ = {isa = PBXBuildFile; fileRef = F9A057B20F5075DD008C804E /* DVIImporter.mdimporter */; };
+		F9A49FC71059E64400F5AC62 /* TLMInstallDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = F9A49FC61059E64400F5AC62 /* TLMInstallDataSource.m */; };
+		F9A4A093105CA67100F5AC62 /* TLMProfileNode.m in Sources */ = {isa = PBXBuildFile; fileRef = F9A4A092105CA67100F5AC62 /* TLMProfileNode.m */; };
+		F9A4A106105D736B00F5AC62 /* texlive.profile.plist in Resources */ = {isa = PBXBuildFile; fileRef = F9A4A105105D736B00F5AC62 /* texlive.profile.plist */; };
 		F9A8BB370EF8B11200E35DC9 /* TLMInfraUpdateOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F9A8BB360EF8B11200E35DC9 /* TLMInfraUpdateOperation.m */; };
 		F9ABAA5E0EF198D500497E0F /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = F9ABAA5D0EF198D500497E0F /* Credits.rtf */; };
 		F9B062000F0F388500BB03D3 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = F9B061FF0F0F388500BB03D3 /* Localizable.strings */; };
@@ -265,6 +268,11 @@
 		F99E51960EEE4AD5006E6B39 /* TLMURLFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMURLFormatter.h; sourceTree = "<group>"; };
 		F99E51970EEE4AD5006E6B39 /* TLMURLFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMURLFormatter.m; sourceTree = "<group>"; };
 		F9A057A80F5075DD008C804E /* DVIImporter.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = DVIImporter.xcodeproj; path = DVIImporter/DVIImporter.xcodeproj; sourceTree = "<group>"; };
+		F9A49FC51059E64400F5AC62 /* TLMInstallDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMInstallDataSource.h; sourceTree = "<group>"; };
+		F9A49FC61059E64400F5AC62 /* TLMInstallDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMInstallDataSource.m; sourceTree = "<group>"; };
+		F9A4A091105CA67100F5AC62 /* TLMProfileNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMProfileNode.h; sourceTree = "<group>"; };
+		F9A4A092105CA67100F5AC62 /* TLMProfileNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMProfileNode.m; sourceTree = "<group>"; };
+		F9A4A105105D736B00F5AC62 /* texlive.profile.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = texlive.profile.plist; sourceTree = "<group>"; };
 		F9A8BB350EF8B11200E35DC9 /* TLMInfraUpdateOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMInfraUpdateOperation.h; sourceTree = "<group>"; };
 		F9A8BB360EF8B11200E35DC9 /* TLMInfraUpdateOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMInfraUpdateOperation.m; sourceTree = "<group>"; };
 		F9ABAA5D0EF198D500497E0F /* Credits.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = Credits.rtf; sourceTree = "<group>"; };
@@ -377,6 +385,8 @@
 				F96249D00F1C453B007F3D70 /* TLMReleaseNotesController.m */,
 				F9129BBE102F25AC000A7B50 /* TLMSizeFormatter.h */,
 				F9129BBF102F25AC000A7B50 /* TLMSizeFormatter.m */,
+				F9A49FC51059E64400F5AC62 /* TLMInstallDataSource.h */,
+				F9A49FC61059E64400F5AC62 /* TLMInstallDataSource.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -438,6 +448,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				F9A4A105105D736B00F5AC62 /* texlive.profile.plist */,
 				F9B061FF0F0F388500BB03D3 /* Localizable.strings */,
 				F9DCD43E0F06F76F00600DD2 /* dsa_pub.pem */,
 				F97E860B0EFA3BFD00862882 /* TeXDistDocument.icns */,
@@ -502,6 +513,8 @@
 				F9B134770EEB2065007C0046 /* TLMPackage.m */,
 				F9B1347B0EEB208C007C0046 /* TLMOutputParser.h */,
 				F9B1347C0EEB208C007C0046 /* TLMOutputParser.m */,
+				F9A4A091105CA67100F5AC62 /* TLMProfileNode.h */,
+				F9A4A092105CA67100F5AC62 /* TLMProfileNode.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -751,6 +764,7 @@
 				F9DCD43F0F06F76F00600DD2 /* dsa_pub.pem in Resources */,
 				F9B062000F0F388500BB03D3 /* Localizable.strings in Resources */,
 				F96249D50F1C516F007F3D70 /* ReleaseNotes.xib in Resources */,
+				F9A4A106105D736B00F5AC62 /* texlive.profile.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -829,6 +843,8 @@
 				F9129BC0102F25AC000A7B50 /* TLMSizeFormatter.m in Sources */,
 				F922D79E1038B1E1004E9B12 /* TLMDownload.m in Sources */,
 				F91858E0104798C400341791 /* TLMOptionOperation.m in Sources */,
+				F9A49FC71059E64400F5AC62 /* TLMInstallDataSource.m in Sources */,
+				F9A4A093105CA67100F5AC62 /* TLMProfileNode.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -955,6 +971,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_MISSING_FIELD_INITIALIZERS = YES;
 				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -970,7 +987,6 @@
 					__info_plist,
 					"\"$(SRCROOT)/$(INFOPLIST_FILE)\"",
 				);
-				RUN_CLANG_STATIC_ANALYZER = YES;
 				SDKROOT = macosx10.6;
 			};
 			name = Debug;
@@ -986,6 +1002,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_MISSING_FIELD_INITIALIZERS = YES;
 				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;

@@ -40,6 +40,7 @@
 #import "TLMPackage.h"
 #import "TLMPackageListDataSource.h"
 #import "TLMUpdateListDataSource.h"
+#import "TLMInstallDataSource.h"
 
 #import "TLMListUpdatesOperation.h"
 #import "TLMUpdateOperation.h"
@@ -75,7 +76,10 @@ static char _TLMOperationQueueOperationContext;
 @synthesize _tabView;
 @synthesize _statusBarView;
 @synthesize _updateListDataSource;
+@synthesize _installDataSource;
 @synthesize infrastructureNeedsUpdate = _updateInfrastructure;
+
+#define ENABLE_INSTALL 0
 
 - (id)init
 {
@@ -128,6 +132,9 @@ static char _TLMOperationQueueOperationContext;
     [_tabView setDelegate:self];
     [_tabView addTabNamed:NSLocalizedString(@"Manage Updates", @"tab title") withView:[[_updateListDataSource tableView]  enclosingScrollView]];
     [_tabView addTabNamed:NSLocalizedString(@"Manage Packages", @"tab title") withView:[[_packageListDataSource outlineView] enclosingScrollView]];
+#if ENABLE_INSTALL
+    [_tabView addTabNamed:NSLocalizedString(@"Install", @"tab title") withView:[[_installDataSource outlineView] enclosingScrollView]];
+#endif
     
     // 10.5 release notes say this is enabled by default, but it returns NO
     [_progressIndicator setUsesThreadedAnimation:YES];
@@ -308,7 +315,11 @@ static char _TLMOperationQueueOperationContext;
 - (void)_removeDataSourceFromResponderChain:(id)dataSource
 {
     NSResponder *next = [self nextResponder];
+#if ENABLE_INSTALL
+    if ([next isEqual:_updateListDataSource] || [next isEqual:_packageListDataSource] || [next isEqual:_installDataSource]) {
+#else
     if ([next isEqual:_updateListDataSource] || [next isEqual:_packageListDataSource]) {
+#endif
         [self setNextResponder:[next nextResponder]];
         [next setNextResponder:nil];
     }
@@ -319,6 +330,9 @@ static char _TLMOperationQueueOperationContext;
     NSResponder *next = [self nextResponder];
     NSParameterAssert([next isEqual:_updateListDataSource] == NO);
     NSParameterAssert([next isEqual:_packageListDataSource] == NO);
+#if ENABLE_INSTALL
+    NSParameterAssert([next isEqual:_installDataSource] == NO);
+#endif
     
     [self setNextResponder:dataSource];
     [dataSource setNextResponder:next];
@@ -328,11 +342,11 @@ static char _TLMOperationQueueOperationContext;
 {
     // clear the status overlay, if any
     [[_currentListDataSource statusWindow] fadeOutAndRemove:NO];
+    [self _removeDataSourceFromResponderChain:_currentListDataSource];
     
     switch (anIndex) {
         case 0:
             
-            [self _removeDataSourceFromResponderChain:_packageListDataSource];
             [self _insertDataSourceInResponderChain:_updateListDataSource];   
             _currentListDataSource = _updateListDataSource;
             [self _updateURLView];
@@ -341,9 +355,8 @@ static char _TLMOperationQueueOperationContext;
             if ([[_updateListDataSource allPackages] count])
                 [_updateListDataSource search:nil];
             break;
-        case 1:
+        case 2:
             
-            [self _removeDataSourceFromResponderChain:_updateListDataSource];
             [self _insertDataSourceInResponderChain:_packageListDataSource];   
             _currentListDataSource = _packageListDataSource;
             [self _updateURLView];
@@ -357,6 +370,15 @@ static char _TLMOperationQueueOperationContext;
                 [self refreshFullPackageList];
 
             break;
+#if ENABLE_INSTALL
+        case 3:
+            [self _insertDataSourceInResponderChain:_installDataSource];
+            _currentListDataSource = _installDataSource;
+            [self _updateURLView];
+            [[_currentListDataSource statusWindow] fadeIn];
+            
+            break;
+#endif
         default:
             break;
     }
