@@ -363,30 +363,16 @@
 				F94E74BA0EF49AE100E0B78F /* Views */,
 				F9C490D70EEEF44200E44FA6 /* Operations */,
 				F9F56B7E0EF32F3500E934A9 /* Logging */,
-				F9B134660EEB19CB007C0046 /* TLMMainWindowController.h */,
+				F98FAB3D105DF0D7002C1972 /* Datasources */,
+				F98FAB3E105DF112002C1972 /* Window controllers */,
 				F922D79C1038B1E1004E9B12 /* TLMDownload.h */,
 				F922D79D1038B1E1004E9B12 /* TLMDownload.m */,
-				F9B134670EEB19CB007C0046 /* TLMMainWindowController.m */,
 				F9B1345F0EEB1894007C0046 /* TLMAppController.h */,
 				F9B134600EEB1894007C0046 /* TLMAppController.m */,
-				F9B13B160EECE5AE007C0046 /* TLMInfoController.h */,
-				F9B13B170EECE5AE007C0046 /* TLMInfoController.m */,
-				F9F130590EED94F700D9968D /* TLMPreferenceController.h */,
-				F9F1305A0EED94F700D9968D /* TLMPreferenceController.m */,
 				F99E51960EEE4AD5006E6B39 /* TLMURLFormatter.h */,
 				F99E51970EEE4AD5006E6B39 /* TLMURLFormatter.m */,
-				F9FAA44C0EFCBECD0040EAB2 /* TLMPapersizeController.h */,
-				F9FAA44D0EFCBECD0040EAB2 /* TLMPapersizeController.m */,
-				F9D37D620F01EA8900FB755E /* TLMUpdateListDataSource.h */,
-				F9D37D630F01EA8900FB755E /* TLMUpdateListDataSource.m */,
-				F964A6330F0070E80006868B /* TLMPackageListDataSource.h */,
-				F964A6340F0070E80006868B /* TLMPackageListDataSource.m */,
-				F96249CF0F1C453B007F3D70 /* TLMReleaseNotesController.h */,
-				F96249D00F1C453B007F3D70 /* TLMReleaseNotesController.m */,
 				F9129BBE102F25AC000A7B50 /* TLMSizeFormatter.h */,
 				F9129BBF102F25AC000A7B50 /* TLMSizeFormatter.m */,
-				F9A49FC51059E64400F5AC62 /* TLMInstallDataSource.h */,
-				F9A49FC61059E64400F5AC62 /* TLMInstallDataSource.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -494,6 +480,36 @@
 				F9D37E7A0F02B5F700FB755E /* TLMOutlineView.m */,
 			);
 			name = Views;
+			sourceTree = "<group>";
+		};
+		F98FAB3D105DF0D7002C1972 /* Datasources */ = {
+			isa = PBXGroup;
+			children = (
+				F9D37D620F01EA8900FB755E /* TLMUpdateListDataSource.h */,
+				F9D37D630F01EA8900FB755E /* TLMUpdateListDataSource.m */,
+				F964A6330F0070E80006868B /* TLMPackageListDataSource.h */,
+				F964A6340F0070E80006868B /* TLMPackageListDataSource.m */,
+				F9A49FC51059E64400F5AC62 /* TLMInstallDataSource.h */,
+				F9A49FC61059E64400F5AC62 /* TLMInstallDataSource.m */,
+			);
+			name = Datasources;
+			sourceTree = "<group>";
+		};
+		F98FAB3E105DF112002C1972 /* Window controllers */ = {
+			isa = PBXGroup;
+			children = (
+				F9B134660EEB19CB007C0046 /* TLMMainWindowController.h */,
+				F9B134670EEB19CB007C0046 /* TLMMainWindowController.m */,
+				F9B13B160EECE5AE007C0046 /* TLMInfoController.h */,
+				F9B13B170EECE5AE007C0046 /* TLMInfoController.m */,
+				F9F130590EED94F700D9968D /* TLMPreferenceController.h */,
+				F9F1305A0EED94F700D9968D /* TLMPreferenceController.m */,
+				F9FAA44C0EFCBECD0040EAB2 /* TLMPapersizeController.h */,
+				F9FAA44D0EFCBECD0040EAB2 /* TLMPapersizeController.m */,
+				F96249CF0F1C453B007F3D70 /* TLMReleaseNotesController.h */,
+				F96249D00F1C453B007F3D70 /* TLMReleaseNotesController.m */,
+			);
+			name = "Window controllers";
 			sourceTree = "<group>";
 		};
 		F9A057A90F5075DD008C804E /* Products */ = {
