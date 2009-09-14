@@ -128,4 +128,14 @@
     [fh writeData:[[TLMProfileNode profileStringWithRoot:_rootNode] dataUsingEncoding:NSUTF8StringEncoding]];
 }
 
+- (void)outlineView:(TLMOutlineView *)outlineView writeSelectedRowsToPasteboard:(NSPasteboard *)pboard;
+{
+    if ([outlineView numberOfRows] != [outlineView numberOfSelectedRows])
+        return NSBeep();
+    
+    NSString *profileString = [TLMProfileNode profileStringWithRoot:_rootNode];
+    [pboard declareTypes:[NSArray arrayWithObject:NSStringPboardType] owner:nil];
+    [pboard setString:profileString forType:NSStringPboardType];
+}
+
 @end

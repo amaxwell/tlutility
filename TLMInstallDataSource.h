@@ -38,10 +38,11 @@
 
 #import <Cocoa/Cocoa.h>
 #import "TLMMainWindowController.h"
+#import "TLMOutlineView.h"
 
-@class TLMOutlineView, TLMProfileNode;
+@class TLMProfileNode;
 
-@interface TLMInstallDataSource : NSResponder <TLMListDataSource>
+@interface TLMInstallDataSource : NSResponder <TLMListDataSource, TLMOutlineViewDataSource>
 {
 @private
     TLMOutlineView          *_outlineView;
