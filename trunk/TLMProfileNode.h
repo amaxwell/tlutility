@@ -49,7 +49,7 @@ enum {
 };
 typedef NSUInteger TLMProfileType;
 
-@interface TLMProfileNode : NSObject 
+@interface TLMProfileNode : NSObject <NSCoding>
 {
 @private
     TLMProfileType  _type;
