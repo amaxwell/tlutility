@@ -175,6 +175,28 @@ static TLMProfileNode * __findNodeForType(TLMProfileNode *rootNode, const TLMPro
     return string;
 }
 
+- (id)initWithCoder:(NSCoder *)coder
+{
+    self = [super init];
+    if (self) {
+        _type = [coder decodeIntegerForKey:@"_type"];
+        _name = [[coder decodeObjectForKey:@"_name"] retain];
+        _key = [[coder decodeObjectForKey:@"_key"] retain];
+        _children = [[coder decodeObjectForKey:@"_children"] retain];
+        _value = [[coder decodeObjectForKey:@"_value"] retain];
+    }
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)coder
+{
+    [coder encodeInteger:_type forKey:@"_type"];
+    [coder encodeObject:_name forKey:@"_name"];
+    [coder encodeObject:_key forKey:@"_key"];
+    [coder encodeObject:_children forKey:@"_children"];
+    [coder encodeObject:_value forKey:@"_value"];
+}
+
 - (void)dealloc
 {
     [_name release];
