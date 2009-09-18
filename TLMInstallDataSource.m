@@ -71,14 +71,21 @@
     [super dealloc];
 }
 
-- (void)awakeFromNib
+- (void)_loadRootNode
 {
+    if (_rootNode) return;
+    
     if ([[NSFileManager defaultManager] fileExistsAtPath:_archivePath]) {
         _rootNode = [[NSKeyedUnarchiver unarchiveObjectWithFile:_archivePath] retain];
     }
     else {
         _rootNode = [TLMProfileNode newDefaultProfile];
     }
+}
+
+- (void)awakeFromNib
+{
+    [self _loadRootNode];
     _checkboxCell = [[NSButtonCell alloc] initTextCell:@""];
     [_checkboxCell setButtonType:NSSwitchButton];
     [_checkboxCell setControlSize:NSSmallControlSize];
@@ -143,6 +150,20 @@
     NSParameterAssert([[tableColumn identifier] isEqualToString:@"value"]);
     [item setValue:object];    
     [NSKeyedArchiver archiveRootObject:_rootNode toFile:_archivePath];
+}
+
+- (id)outlineView:(NSOutlineView *)outlineView itemForPersistentObject:(id)object;
+{
+    [self _loadRootNode];
+    for (NSUInteger r = 0; r < [_rootNode numberOfChildren]; r++)
+        if ([[[_rootNode childAtIndex:r] name] isEqualToString:object])
+            return [_rootNode childAtIndex:r];
+    return nil;
+}
+
+- (id)outlineView:(NSOutlineView *)outlineView persistentObjectForItem:(TLMProfileNode *)item;
+{
+    return [item name];
 }
 
 - (void)outlineView:(TLMOutlineView *)outlineView writeSelectedRowsToPasteboard:(NSPasteboard *)pboard;
