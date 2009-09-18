@@ -46,8 +46,22 @@
 @synthesize outlineView = _outlineView;
 @synthesize _controller;
 
+- (id)init
+{
+    self = [super init];
+    if (self) {
+        _archivePath = [NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES) lastObject];
+        NSString *appname = [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString *)kCFBundleNameKey];
+        _archivePath = [_archivePath stringByAppendingPathComponent:appname];
+        [[NSFileManager defaultManager] createDirectoryAtPath:_archivePath withIntermediateDirectories:YES attributes:nil error:NULL];
+        _archivePath = [[_archivePath stringByAppendingPathComponent:@"default.tluprofile"] copyWithZone:[self zone]];
+    }
+    return self;
+}
+
 - (void)dealloc
 {
+    [_archivePath release];
     [_outlineView release];
     [_rootNode release];
     [_controller release];
@@ -59,7 +73,12 @@
 
 - (void)awakeFromNib
 {
-    _rootNode = [TLMProfileNode newDefaultProfile];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:_archivePath]) {
+        _rootNode = [[NSKeyedUnarchiver unarchiveObjectWithFile:_archivePath] retain];
+    }
+    else {
+        _rootNode = [TLMProfileNode newDefaultProfile];
+    }
     _checkboxCell = [[NSButtonCell alloc] initTextCell:@""];
     [_checkboxCell setButtonType:NSSwitchButton];
     [_checkboxCell setControlSize:NSSmallControlSize];
@@ -122,10 +141,8 @@
 - (void)outlineView:(NSOutlineView *)outlineView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn byItem:(id)item;
 {
     NSParameterAssert([[tableColumn identifier] isEqualToString:@"value"]);
-    [item setValue:object];
-    
-    NSFileHandle *fh = [NSFileHandle fileHandleWithStandardOutput];
-    [fh writeData:[[TLMProfileNode profileStringWithRoot:_rootNode] dataUsingEncoding:NSUTF8StringEncoding]];
+    [item setValue:object];    
+    [NSKeyedArchiver archiveRootObject:_rootNode toFile:_archivePath];
 }
 
 - (void)outlineView:(TLMOutlineView *)outlineView writeSelectedRowsToPasteboard:(NSPasteboard *)pboard;

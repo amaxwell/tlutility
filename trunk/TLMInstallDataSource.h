@@ -45,6 +45,7 @@
 @interface TLMInstallDataSource : NSResponder <TLMListDataSource, TLMOutlineViewDataSource>
 {
 @private
+    NSString                *_archivePath;
     TLMOutlineView          *_outlineView;
     TLMProfileNode          *_rootNode;
     TLMMainWindowController *_controller;
