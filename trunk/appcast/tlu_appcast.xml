@@ -279,5 +279,14 @@
             <pubDate>Sun, 20 Sep 2009 11:26:22 -0700</pubDate>
             <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20090920.tgz" sparkle:version="0.81" length="1751548" type="application/octet-stream" sparkle:dsaSignature="MCwCFGeyccQMLPIZ/HuNRhL50kjcmN5BAhR0JPXv5a3l1r5vDrv+ysIlRzA0Mg=="></enclosure>
         </item>
+        <item>
+            <title>Version 0.82</title>
+            <description>
+                <h3>Changes Since 0.81</h3>
+                <li>Fixed issue 27, manage packages view was not populated</li>
+            </description>
+            <pubDate>Sun, 20 Sep 2009 15:10:35 -0700</pubDate>
+            <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20090920a.tgz" sparkle:version="0.82" length="1751811" type="application/octet-stream" sparkle:dsaSignature="MCwCFCHk9xrRFROVk8MXb8t0MDQgxM5dAhRqLmLMP4t4yRfWDlXKwz+GJZ8Qgw=="></enclosure>
+        </item>
     </channel>
 </rss>
