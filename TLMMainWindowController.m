@@ -355,7 +355,7 @@ static char _TLMOperationQueueOperationContext;
             if ([[_updateListDataSource allPackages] count])
                 [_updateListDataSource search:nil];
             break;
-        case 2:
+        case 1:
             
             [self _insertDataSourceInResponderChain:_packageListDataSource];   
             _currentListDataSource = _packageListDataSource;
@@ -371,7 +371,7 @@ static char _TLMOperationQueueOperationContext;
 
             break;
 #if ENABLE_INSTALL
-        case 3:
+        case 2:
             [self _insertDataSourceInResponderChain:_installDataSource];
             _currentListDataSource = _installDataSource;
             [self _updateURLView];
