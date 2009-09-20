@@ -267,5 +267,17 @@
             <pubDate>Sun, 30 Aug 2009 15:43:05 -0700</pubDate>
             <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20090830.tgz" sparkle:version="0.80" length="1434277" type="application/octet-stream" sparkle:dsaSignature="MC0CFFGwyaU+K9S3s2S56mIOpVpi0pHQAhUAgyJV8rMT5S6Qdm4/LC9Tjcw+hQA="></enclosure>
         </item>
+        <item>
+            <title>Version 0.81</title>
+            <description>
+                <h3>Changes Since 0.80</h3>
+                <li>Support sudden termination on 10.6</li>
+                <li>Fixed a few compiler warnings</li>
+                <li>Warn if infrastructure version does not change after an update</li>
+                <li>Nibs are no longer flattened, in the off chance that someone tries to localize TLU</li>
+            </description>
+            <pubDate>Sun, 20 Sep 2009 11:26:22 -0700</pubDate>
+            <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20090920.tgz" sparkle:version="0.81" length="1751548" type="application/octet-stream" sparkle:dsaSignature="MCwCFGeyccQMLPIZ/HuNRhL50kjcmN5BAhR0JPXv5a3l1r5vDrv+ysIlRzA0Mg=="></enclosure>
+        </item>
     </channel>
 </rss>
