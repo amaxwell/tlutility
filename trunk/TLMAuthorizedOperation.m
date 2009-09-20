@@ -159,9 +159,8 @@ static NSArray * __TLMOptionArrayFromArguments(char **nullTerminatedArguments)
     NSMutableArray *options = [NSMutableArray array];
     char **ptr = nullTerminatedArguments;
     while (NULL != *ptr) {
-        NSString *opt = [NSString stringWithUTF8String:*ptr];
+        NSString *opt = [NSString stringWithUTF8String:*ptr++];
         [options addObject:opt];
-        *ptr++;
     }
     return options;
 }
