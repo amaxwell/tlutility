@@ -66,8 +66,10 @@ def GetSymRoot():
     xcprefs = NSUserDefaults.standardUserDefaults().persistentDomainForName_("com.apple.Xcode")
     return xcprefs["PBXApplicationwideBuildSettings"]["SYMROOT"].stringByStandardizingPath()
 
-# fixed paths
-SOURCE_DIR = os.path.expanduser("~/build/mactlmgr")
+# determine the path based on the path of this program
+SOURCE_DIR = os.path.dirname(os.path.abspath(sys.argv[0]))
+assert len(SOURCE_DIR)
+assert SOURCE_DIR.startswith("/")
 
 # name of secure note in Keychain
 KEY_NAME = "TeX Live Utility Sparkle Key"
