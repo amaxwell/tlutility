@@ -1,8 +1,8 @@
 //
-//  TLMInstallDataSource.h
+//  TLMNetInstallOperation.h
 //  TeX Live Manager
 //
-//  Created by Adam Maxwell on 09/10/09.
+//  Created by Adam Maxwell on 09/20/09.
 /*
  This software is Copyright (c) 2009
  Adam Maxwell. All rights reserved.
@@ -37,27 +37,23 @@
  */
 
 #import <Cocoa/Cocoa.h>
-#import "TLMMainWindowController.h"
-#import "TLMOutlineView.h"
+#import "TLMAuthorizedOperation.h"
 
-@class TLMProfileNode;
-
-@interface TLMInstallDataSource : NSResponder <TLMListDataSource, TLMOutlineViewDataSource>
+@interface TLMNetInstallOperation : TLMAuthorizedOperation 
 {
 @private
-    NSString                *_archivePath;
-    TLMOutlineView          *_outlineView;
-    TLMProfileNode          *_rootNode;
-    TLMMainWindowController *_controller;
-    NSURL                   *_lastUpdateURL;
-    TLMStatusWindow         *_statusWindow;
-    NSButtonCell            *_checkboxCell;
+    NSURL         *_location;
+    NSString      *_updateDirectory;
+    NSString      *_scriptPath;
+    NSURLDownload *_download;
+    long long      _receivedLength;
+    long long      _lastLoggedLength;
+    long long      _expectedLength;
+    BOOL           _downloadComplete;    
 }
 
-- (IBAction)installSelectedRows:(id)sender;
-- (NSString *)currentProfile;
+- (id)initWithProfile:(NSString *)profile location:(NSURL *)location;
 
-@property (nonatomic, retain) IBOutlet TLMOutlineView *outlineView;
-@property (nonatomic, retain) IBOutlet TLMMainWindowController *_controller;
+@property (readonly, copy) NSURL *updateURL;
 
 @end

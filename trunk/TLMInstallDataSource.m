@@ -105,6 +105,24 @@
     [_outlineView reloadItem:node];
 }
 
+- (BOOL)validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem>)anItem;
+{
+    SEL action = [anItem action];
+    if (@selector(installSelectedRows:) == action)
+        return YES;
+    return NO;
+}
+
+- (NSString *)currentProfile
+{
+    return [TLMProfileNode profileStringWithRoot:_rootNode];
+}
+
+- (IBAction)installSelectedRows:(id)sender;
+{
+    [_controller netInstall];
+}
+
 #pragma mark NSOutlineView datasource
 
 - (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)anIndex ofItem:(TLMProfileNode *)item;
