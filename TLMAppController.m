@@ -114,6 +114,8 @@ static void __TLMMigrateBundleIdentifier()
     [defaults setObject:@"/usr/texbin" forKey:TLMTexBinPathPreferenceKey];
     [defaults setObject:[NSNumber numberWithBool:NO] forKey:TLMSetCommandLineServerPreferenceKey];
     
+    [defaults setObject:@"install-tl-unx.tar.gz" forKey:TLMNetInstallerPathPreferenceKey];
+    
     // typically avoids problems with junk in your home directory
     [defaults setObject:[NSNumber numberWithBool:YES] forKey:TLMUseRootHomePreferenceKey];
     [defaults setObject:@"update-tlmgr-latest.sh" forKey:TLMInfraPathPreferenceKey];

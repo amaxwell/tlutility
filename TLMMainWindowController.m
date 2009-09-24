@@ -50,6 +50,7 @@
 #import "TLMListOperation.h"
 #import "TLMRemoveOperation.h"
 #import "TLMInstallOperation.h"
+#import "TLMNetInstallOperation.h"
 
 #import "TLMSplitView.h"
 #import "TLMStatusWindow.h"
@@ -79,7 +80,7 @@ static char _TLMOperationQueueOperationContext;
 @synthesize _installDataSource;
 @synthesize infrastructureNeedsUpdate = _updateInfrastructure;
 
-#define ENABLE_INSTALL 0
+#define ENABLE_INSTALL 1
 
 - (id)init
 {
@@ -316,10 +317,11 @@ static char _TLMOperationQueueOperationContext;
 {
     NSResponder *next = [self nextResponder];
 #if ENABLE_INSTALL
-    if ([next isEqual:_updateListDataSource] || [next isEqual:_packageListDataSource] || [next isEqual:_installDataSource]) {
+    if ([next isEqual:_updateListDataSource] || [next isEqual:_packageListDataSource] || [next isEqual:_installDataSource])
 #else
-    if ([next isEqual:_updateListDataSource] || [next isEqual:_packageListDataSource]) {
+    if ([next isEqual:_updateListDataSource] || [next isEqual:_packageListDataSource])
 #endif
+    {
         [self setNextResponder:[next nextResponder]];
         [next setNextResponder:nil];
     }
@@ -748,6 +750,20 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
         // this is always displayed, so should always be updated as well
         [self _refreshUpdatedPackageListFromLocation:[_packageListDataSource lastUpdateURL]];
     }    
+}
+
+- (void)_handleNetInstallFinishedNotification:(NSNotification *)aNote
+{
+    [self _handleInstallFinishedNotification:aNote];
+}
+    
+- (void)netInstall
+{
+    NSParameterAssert([_currentListDataSource isEqual:_installDataSource]);
+    NSString *profile = [(TLMInstallDataSource *)_updateListDataSource currentProfile];
+    TLMNetInstallOperation *op = [[TLMNetInstallOperation alloc] initWithProfile:profile location:nil];
+    [self _addOperation:op selector:@selector(_handleNetInstallFinishedNotification:)];
+    [op release];
 }
 
 #pragma mark Alert callbacks

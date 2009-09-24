@@ -98,6 +98,7 @@
 - (void)updateAllPackages;
 - (void)installPackagesWithNames:(NSArray *)packageNames reinstall:(BOOL)reinstall;
 - (void)updatePackagesWithNames:(NSArray *)packageNames;
+- (void)netInstall;
 
 // action to manually reinstall tlmgr itself
 - (void)updateInfrastructure:(id)sender;
