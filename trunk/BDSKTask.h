@@ -48,7 +48,6 @@
  
  Exceptions should only be raised for violation of the API contract (e.g. calling BDSKTask::terminationStatus while the task is still running, or setting the launch path after the task has launched).
  
- @warning Not designed for subclassing.
  */
 
 @interface BDSKTask : NSTask {
