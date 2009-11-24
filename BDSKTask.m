@@ -275,7 +275,7 @@ static void __BDSKTaskNotify(void *info)
     else if (nil != fh) {
         fd_err = [fh isEqual:[NSFileHandle fileHandleWithNullDevice]] ? fd_null : [fh fileDescriptor];
     }
-
+    
     // avoid a race between exec and setting up our kqueue
     int blockpipe[2] = { -1, -1 };
     if (pipe(blockpipe))
@@ -290,7 +290,7 @@ static void __BDSKTaskNotify(void *info)
     struct rlimit openFileLimit;
     if (getrlimit(RLIMIT_NOFILE, &openFileLimit) == 0)
         maxOpenFiles = openFileLimit.rlim_cur;
-        
+    
     // !!! No CF or Cocoa after this point in the child process!
     _processIdentifier = fork();
     
@@ -299,14 +299,14 @@ static void __BDSKTaskNotify(void *info)
         
         // set process group for killpg()
         (void)setpgid(getpid(), getpid());
-              
+        
         // setup stdio descriptors (if not inheriting from parent)
         if (-1 != fd_inp) dup2(fd_inp, STDIN_FILENO);        
         if (-1 != fd_out) dup2(fd_out, STDOUT_FILENO);
         if (-1 != fd_err) dup2(fd_err, STDERR_FILENO);  
         
         if (workingDir) chdir(workingDir);
-
+        
         /*         
          Unfortunately, a side effect of blocking on a pipe is that other processes inherit our blockpipe
          descriptors as well.  Consequently, if taskB calls fork() while taskA is still setting up its
@@ -334,7 +334,7 @@ static void __BDSKTaskNotify(void *info)
         // block until the parent has setup complete
         read(blockpipe[0], &ignored, 1);
         close(blockpipe[0]);
-
+        
         int ret = execve(args[0], args, env);
         _exit(ret);
     }
@@ -352,9 +352,9 @@ static void __BDSKTaskNotify(void *info)
         
         // NSTask docs say that these descriptors are closed in the parent task; required to make pipes work properly
         [handlesToClose makeObjectsPerformSelector:@selector(closeFile)];
-
+        
         if (-1 != fd_null) close(fd_null);
-
+        
         /*
          The kevent will have a weak reference to this task, so -dealloc can occur without waiting for notification.
          This behavior is documented for NSTask, presumably so you can fire it off and not have any resources hanging
@@ -457,12 +457,12 @@ static void __BDSKTaskNotify(void *info)
                  */
                 task = [task retain];
                 pthread_mutex_unlock(&task->_internal->_lock);
-            
+                
                 if ((evt.fflags & NOTE_EXIT) == NOTE_EXIT)
                     [task _taskExited];
                 else if ((evt.fflags & NOTE_SIGNAL) == NOTE_SIGNAL)
                     [task _taskSignaled];
-            
+                
                 [task release];
             }
             
@@ -516,17 +516,29 @@ static void __BDSKTaskNotify(void *info)
     NSParameterAssert(_internal->_launched);
     NSParameterAssert(_internal->_running);
     NSParameterAssert(_internal->_event.udata == self);
-        
+    
     _internal->_event.flags = EV_DELETE;
     kevent(_kqueue, &_internal->_event, 1, NULL, 0, NULL);   
     
-    int status;
-    if (0 == waitpid(_processIdentifier, &status, WNOHANG))
+    /*
+     Was passing WNOHANG, but http://lists.apple.com/archives/darwin-dev/2009/Nov/msg00100.html describes
+     a race condition between kqueue and wait.  Since we know the child has exited, we can allow waitpid
+     to block without fear that it will block indefinitely.
+     */
+    int wait_flags = 0;
+    int ret, status;
+    
+    // keep trying in case of EINTR
+    ret = waitpid(_processIdentifier, &status, wait_flags);
+    while (-1 == ret && EINTR == errno)
+        ret = waitpid(_processIdentifier, &status, wait_flags);
+    
+    if (0 == ret)
         NSLog(@"*** ERROR *** task %@ (child pid = %d) still running", self, _processIdentifier);
     
     _processIdentifier = -1;
-
-    int ret = WIFEXITED(status) ? WEXITSTATUS(status) : 1;
+    
+    ret = WIFEXITED(status) ? WEXITSTATUS(status) : 1;
     bool swap;
     
     // set return value, then set isRunning to false
@@ -537,7 +549,7 @@ static void __BDSKTaskNotify(void *info)
     do {
         swap = OSAtomicCompareAndSwap32Barrier(_internal->_running, 0, &_internal->_running);
     } while (false == swap);    
-        
+    
     /* 
      Transfer ownership through the callout to avoid dealloc.  Lock runloop source access
      since the source may be handled before CFRunLoopWakeUp() is called, and it is 
