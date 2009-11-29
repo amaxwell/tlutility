@@ -83,14 +83,14 @@ static void __TLMMigrateBundleIdentifier()
     
     __TLMMigrateBundleIdentifier();
     
-    NSString *tlnetDefault = @"http://mirror.ctan.org/systems/texlive/tlnet/2008";
+    NSString *tlnetDefault = @"http://mirror.ctan.org/systems/texlive/tlnet";
     
     // convert from the old-style composed path to full path, preserving user-specified settings
     NSString *userURL = [[NSUserDefaults standardUserDefaults] objectForKey:@"TLMServerURLPreferenceKey"];
     if (userURL && nil == [[NSUserDefaults standardUserDefaults] objectForKey:TLMFullServerURLPreferenceKey]) {
         
         // path portion of the old default for TL 2008
-        NSString *serverPath = @"systems/texlive/tlnet/2008";
+        NSString *serverPath = @"systems/texlive/tlnet";
         if ([[NSUserDefaults standardUserDefaults] objectForKey:@"TLMServerPathPreferenceKey"])
             serverPath = [[NSUserDefaults standardUserDefaults] objectForKey:@"TLMServerPathPreferenceKey"];
         
