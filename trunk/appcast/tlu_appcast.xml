@@ -288,5 +288,15 @@
             <pubDate>Sun, 20 Sep 2009 15:10:35 -0700</pubDate>
             <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20090920a.tgz" sparkle:version="0.82" length="1751811" type="application/octet-stream" sparkle:dsaSignature="MCwCFCHk9xrRFROVk8MXb8t0MDQgxM5dAhRqLmLMP4t4yRfWDlXKwz+GJZ8Qgw=="></enclosure>
         </item>
+        <item>
+            <title>Version 0.83</title>
+            <description>
+                <h3>Changes Since 0.82</h3>
+                <li>Fix a couple of minor task race conditions</li>
+                <li>Set the default URL for a new installation to TL 2009</li>
+            </description>
+            <pubDate>Sat, 28 Nov 2009 16:58:29 -0800</pubDate>
+            <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20091128.tgz" sparkle:version="0.83" length="1762168" type="application/octet-stream" sparkle:dsaSignature="MCwCFACJmUfBByXEfpg41iRFPu3wAPk+AhRPmFHYhN5AoR8MepXENItaGCgiSg=="></enclosure>
+        </item>
     </channel>
 </rss>
