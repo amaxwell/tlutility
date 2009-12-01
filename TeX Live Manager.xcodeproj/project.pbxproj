@@ -72,6 +72,7 @@
 		F9F043030F180031008DFE8C /* TLMReadWriteOperationQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F043020F180031008DFE8C /* TLMReadWriteOperationQueue.m */; };
 		F9F130560EED94D800D9968D /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = F9F130550EED94D800D9968D /* Preferences.xib */; };
 		F9F1305B0EED94F700D9968D /* TLMPreferenceController.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F1305A0EED94F700D9968D /* TLMPreferenceController.m */; };
+		F9F1C11310C5ABA300D32C17 /* NSMenu_TLMExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F1C11210C5ABA300D32C17 /* NSMenu_TLMExtensions.m */; };
 		F9F56B4C0EF31F8800E934A9 /* TLMLogMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F56B4B0EF31F8800E934A9 /* TLMLogMessage.m */; };
 		F9F56BA10EF36F8B00E934A9 /* TLMLogDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F56BA00EF36F8B00E934A9 /* TLMLogDataSource.m */; };
 		F9FAA44E0EFCBECD0040EAB2 /* TLMPapersizeController.m in Sources */ = {isa = PBXBuildFile; fileRef = F9FAA44D0EFCBECD0040EAB2 /* TLMPapersizeController.m */; };
@@ -331,6 +332,8 @@
 		F9F130530EED94CC00D9968D /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/Preferences.xib; sourceTree = "<group>"; };
 		F9F130590EED94F700D9968D /* TLMPreferenceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMPreferenceController.h; sourceTree = "<group>"; };
 		F9F1305A0EED94F700D9968D /* TLMPreferenceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMPreferenceController.m; sourceTree = "<group>"; };
+		F9F1C11110C5ABA300D32C17 /* NSMenu_TLMExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSMenu_TLMExtensions.h; sourceTree = "<group>"; };
+		F9F1C11210C5ABA300D32C17 /* NSMenu_TLMExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSMenu_TLMExtensions.m; sourceTree = "<group>"; };
 		F9F56B4A0EF31F8800E934A9 /* TLMLogMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMLogMessage.h; sourceTree = "<group>"; };
 		F9F56B4B0EF31F8800E934A9 /* TLMLogMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMLogMessage.m; sourceTree = "<group>"; };
 		F9F56B9F0EF36F8B00E934A9 /* TLMLogDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMLogDataSource.h; sourceTree = "<group>"; };
@@ -379,6 +382,8 @@
 				F99E51970EEE4AD5006E6B39 /* TLMURLFormatter.m */,
 				F9129BBE102F25AC000A7B50 /* TLMSizeFormatter.h */,
 				F9129BBF102F25AC000A7B50 /* TLMSizeFormatter.m */,
+				F9F1C11110C5ABA300D32C17 /* NSMenu_TLMExtensions.h */,
+				F9F1C11210C5ABA300D32C17 /* NSMenu_TLMExtensions.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -873,6 +878,7 @@
 				F9A4A093105CA67100F5AC62 /* TLMProfileNode.m in Sources */,
 				F98FADA910672943002C1972 /* TLMNetInstallOperation.m in Sources */,
 				F9053F4810B21B0D00BF5C0B /* TLMProgressIndicatorCell.m in Sources */,
+				F9F1C11310C5ABA300D32C17 /* NSMenu_TLMExtensions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

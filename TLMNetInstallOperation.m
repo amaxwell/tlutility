@@ -84,7 +84,7 @@ static NSString *__TLMGetTemporaryDirectory()
         [super dealloc];
         return nil;
     }
-    NSString *locationString = @"file://localhost/Volumes/Local/Users/amaxwell/tlnet2009/tlnet/";
+    NSString *locationString = [@"~/tlnet2009/tlnet/" stringByStandardizingPath];
     NSArray *options = [NSArray arrayWithObjects:@"-profile", profilePath, @"-location", locationString, nil];
     self = [super initWithCommand:scriptPath options:options];
     if (self) {
