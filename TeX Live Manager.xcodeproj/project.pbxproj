@@ -13,6 +13,7 @@
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		F90520DA0EFDCB5400B489FE /* TLMAuthorizedOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F90520D90EFDCB5400B489FE /* TLMAuthorizedOperation.m */; };
 		F905217F0EFEA98600B489FE /* PapersizeSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = F905217E0EFEA98600B489FE /* PapersizeSheet.xib */; };
+		F9053F4810B21B0D00BF5C0B /* TLMProgressIndicatorCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F9053F4710B21B0D00BF5C0B /* TLMProgressIndicatorCell.m */; };
 		F9129BC0102F25AC000A7B50 /* TLMSizeFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = F9129BBF102F25AC000A7B50 /* TLMSizeFormatter.m */; };
 		F91858E0104798C400341791 /* TLMOptionOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F91858DF104798C400341791 /* TLMOptionOperation.m */; };
 		F922D79E1038B1E1004E9B12 /* TLMDownload.m in Sources */ = {isa = PBXBuildFile; fileRef = F922D79D1038B1E1004E9B12 /* TLMDownload.m */; };
@@ -236,6 +237,8 @@
 		F90520D80EFDCB5400B489FE /* TLMAuthorizedOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMAuthorizedOperation.h; sourceTree = "<group>"; };
 		F90520D90EFDCB5400B489FE /* TLMAuthorizedOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMAuthorizedOperation.m; sourceTree = "<group>"; };
 		F905217E0EFEA98600B489FE /* PapersizeSheet.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PapersizeSheet.xib; sourceTree = "<group>"; };
+		F9053F4610B21B0D00BF5C0B /* TLMProgressIndicatorCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMProgressIndicatorCell.h; sourceTree = "<group>"; };
+		F9053F4710B21B0D00BF5C0B /* TLMProgressIndicatorCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMProgressIndicatorCell.m; sourceTree = "<group>"; };
 		F9129BBE102F25AC000A7B50 /* TLMSizeFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMSizeFormatter.h; sourceTree = "<group>"; };
 		F9129BBF102F25AC000A7B50 /* TLMSizeFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMSizeFormatter.m; sourceTree = "<group>"; };
 		F91858DE104798C400341791 /* TLMOptionOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMOptionOperation.h; sourceTree = "<group>"; };
@@ -469,6 +472,8 @@
 		F94E74BA0EF49AE100E0B78F /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				F9053F4610B21B0D00BF5C0B /* TLMProgressIndicatorCell.h */,
+				F9053F4710B21B0D00BF5C0B /* TLMProgressIndicatorCell.m */,
 				F99D9B090F01731E00A1DCCB /* TLMTabView.h */,
 				F99D9B0A0F01731E00A1DCCB /* TLMTabView.m */,
 				F9B13ADA0EECD9DA007C0046 /* TLMSplitView.h */,
@@ -867,6 +872,7 @@
 				F9A49FC71059E64400F5AC62 /* TLMInstallDataSource.m in Sources */,
 				F9A4A093105CA67100F5AC62 /* TLMProfileNode.m in Sources */,
 				F98FADA910672943002C1972 /* TLMNetInstallOperation.m in Sources */,
+				F9053F4810B21B0D00BF5C0B /* TLMProgressIndicatorCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -993,7 +999,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_VERSION = 4.2;
 				GCC_WARN_ABOUT_MISSING_FIELD_INITIALIZERS = YES;
 				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -1026,7 +1032,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_VERSION = 4.2;
 				GCC_WARN_ABOUT_MISSING_FIELD_INITIALIZERS = YES;
 				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
