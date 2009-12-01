@@ -63,6 +63,7 @@
 #import "TLMReadWriteOperationQueue.h"
 #import "TLMSizeFormatter.h"
 #import "TLMTask.h"
+#import "TLMProgressIndicatorCell.h"
 
 static char _TLMOperationQueueOperationContext;
 
@@ -171,6 +172,7 @@ static char _TLMOperationQueueOperationContext;
 - (void)_stopProgressBar:(NSNotification *)aNote
 {
     [[self _progressBar] setHidden:YES];
+    [NSApp setApplicationIconImage:nil];
 }
 
 - (void)_updateProgressBar:(NSNotification *)aNote
@@ -178,6 +180,9 @@ static char _TLMOperationQueueOperationContext;
     [[self _progressBar] incrementBy:[[[aNote userInfo] objectForKey:TLMLogSize] doubleValue]];
     // make sure it displays immediately
     [[self _progressBar] display];
+    
+    CGFloat p = [[self _progressBar] doubleValue] / [[self _progressBar] maxValue];
+    [NSApp setApplicationIconImage:[TLMProgressIndicatorCell applicationIconBadgedWithProgress:p]];
 }
 
 - (void)windowDidLoad
