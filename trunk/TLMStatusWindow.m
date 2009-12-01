@@ -214,6 +214,13 @@ static void CenterRectInRect(NSRect *toCenter, NSRect enclosingRect)
     [self setFrame:frame display:YES];
 }
 
+- (void)orderWindow:(NSWindowOrderingMode)place relativeTo:(NSInteger)otherWin;
+{
+    [super orderWindow:place relativeTo:otherWin];
+    // attempt to fix race when adding child window: http://code.google.com/p/mactlmgr/issues/detail?id=33
+    if (_frameView) [self handleViewFrameChange:nil];
+}
+
 - (void)setFrameView:(NSView *)aView
 {
     NSAssert(nil == _frameView, @"it is an error to reset the frame view");
