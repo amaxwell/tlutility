@@ -265,6 +265,13 @@ static NSString * const TLMInfoFileViewIconScaleKey = @"TLMInfoFileViewIconScale
     return [[_fileObjects objectAtIndex:anIndex] name];
 }
 
+#pragma mark FileView delegate
+
+- (void)fileView:(FileView *)aFileView willPopUpMenu:(NSMenu *)aMenu onIconAtIndex:(NSUInteger)anIndex
+{
+    // FVOpenMenuItemTag
+}
+
 @end
 
 @implementation _TLMFileObject
