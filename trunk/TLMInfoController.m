@@ -42,6 +42,7 @@
 #import "TLMOutputParser.h"
 #import "TLMLogServer.h"
 #import <FileView/FileView.h>
+#import "NSMenu_TLMExtensions.h"
 
 @interface _TLMFileObject : NSObject
 {
@@ -269,7 +270,9 @@ static NSString * const TLMInfoFileViewIconScaleKey = @"TLMInfoFileViewIconScale
 
 - (void)fileView:(FileView *)aFileView willPopUpMenu:(NSMenu *)aMenu onIconAtIndex:(NSUInteger)anIndex
 {
-    // FVOpenMenuItemTag
+    NSInteger idx = [aMenu indexOfItemWithTag:FVOpenMenuItemTag];
+    if (-1 != idx)
+        [aMenu insertOpenWithMenuForURL:[[_fileObjects objectAtIndex:anIndex] URL] atIndex:(idx + 1)];
 }
 
 @end
