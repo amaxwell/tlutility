@@ -42,6 +42,7 @@
 #import "TLMLogServer.h"
 #import "TLMReleaseNotesController.h"
 #import "TLMTask.h"
+#import <SystemConfiguration/SystemConfiguration.h>
 
 @implementation TLMAppController
 
@@ -131,9 +132,12 @@ static void __TLMMigrateBundleIdentifier()
     [defaults setObject:[NSNumber numberWithBool:YES] forKey:TLMAutoRemovePreferenceKey];
     
     [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
-    
+
+    // call before anything uses tlmgr
+    [self updateProxyEnvironment];
+
     // make sure this is set up early enough to use tasks anywhere
-    [self updatePathEnvironment];
+    [self updatePathEnvironment];    
 }
 
 + (NSMutableArray *)_systemPaths
@@ -211,6 +215,73 @@ static void __TLMMigrateBundleIdentifier()
     
     setenv("PATH", [newPath fileSystemRepresentation], 1);
     TLMLog(__func__, @"Using PATH = \"%@\"", systemPaths);
+}
+
++ (void)_updateProxyVariablesFromStore:(SCDynamicStoreRef)store
+{
+    /*
+     Attempt to handle kSCPropNetProxiesExceptionsList?
+     How about passwords?  No constants for the names used.
+     */
+    NSDictionary *proxies = [(id)SCDynamicStoreCopyProxies(store) autorelease];
+    
+    if ([[proxies objectForKey:(id)kSCPropNetProxiesHTTPEnable] intValue] != 0) {
+        
+        NSString *proxy = [proxies objectForKey:(id)kSCPropNetProxiesHTTPProxy];
+        NSNumber *port = [proxies objectForKey:(id)kSCPropNetProxiesHTTPPort];
+        
+        if (port) proxy = [proxy stringByAppendingFormat:@":%d", [port intValue]];
+        const char *value = [proxy UTF8String];
+        if (value && strlen(value)) setenv("http_proxy", value, 1);
+        TLMLog(__func__, @"Set http_proxy = %@", proxy);
+    }
+    else {
+        unsetenv("http_proxy");
+        TLMLog(__func__, @"Unset http_proxy");
+    }
+    
+    if ([[proxies objectForKey:(id)kSCPropNetProxiesFTPEnable] intValue] != 0) {
+        
+        NSString *proxy = [proxies objectForKey:(id)kSCPropNetProxiesFTPProxy];
+        NSNumber *port = [proxies objectForKey:(id)kSCPropNetProxiesFTPPort];
+        
+        if (port) proxy = [proxy stringByAppendingFormat:@":%d", [port intValue]];
+        const char *value = [proxy UTF8String];
+        if (value && strlen(value)) setenv("ftp_proxy", value, 1);
+        TLMLog(__func__, @"Set ftp_proxy = %@", proxy);
+    }
+    else {
+        unsetenv("ftp_proxy");
+        TLMLog(__func__, @"Unset ftp_proxy");
+    }
+}
+
+static void __TLMProxySettingsChanged(SCDynamicStoreRef store, CFArrayRef changedKeys, void *info)
+{
+    [(id)info _updateProxyVariablesFromStore:store];
+}
+
++ (void)updateProxyEnvironment
+{
+    static SCDynamicStoreRef _dynamicStore = NULL;
+    if (NULL == _dynamicStore) {
+        SCDynamicStoreContext ctxt = { 0, self, CFRetain, CFRelease, CFCopyDescription };
+        _dynamicStore = SCDynamicStoreCreate(NULL, CFBundleGetIdentifier(CFBundleGetMainBundle()), __TLMProxySettingsChanged, &ctxt);
+        CFRunLoopSourceRef rlSource = SCDynamicStoreCreateRunLoopSource(kCFAllocatorDefault, _dynamicStore, 0);
+        CFRunLoopAddSource(CFRunLoopGetMain(), rlSource, kCFRunLoopCommonModes);
+        CFRelease(rlSource);
+        
+        CFMutableArrayRef keys = CFArrayCreateMutable(kCFAllocatorDefault, 0, &kCFTypeArrayCallBacks);
+        
+        // use SCDynamicStore keys as NSNotification names; don't release them
+        CFStringRef key = SCDynamicStoreKeyCreateProxies(NULL);
+        CFArrayAppendValue(keys, key);
+        
+        if(SCDynamicStoreSetNotificationKeys(_dynamicStore, keys, NULL) == FALSE)
+            TLMLog(__func__, @"unable to register for proxy change notifications");
+        CFRelease(keys);
+    }  
+    [self _updateProxyVariablesFromStore:_dynamicStore];
 }
 
 - (void)dealloc
