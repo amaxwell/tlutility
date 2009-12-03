@@ -40,6 +40,7 @@
 #import "TLMLogServer.h"
 #import "TLMLogMessage.h"
 #import <asl.h>
+#import <pthread.h>
 
 NSString * const TLMLogServerUpdateNotification = @"TLMLogServerUpdateNotification";
 NSString * const TLMLogTotalProgressNotification = @"TLMLogTotalProgressNotification";
@@ -62,15 +63,15 @@ static NSArray *_runLoopModes = nil;
         _runLoopModes = [[NSArray alloc] initWithObjects:rlmodes count:(sizeof(rlmodes) / sizeof(NSString *))];
 }
 
+// Do not use directly!  File scope only because pthread_once doesn't take an argument.
+static id _sharedServer = nil;
+static void __TLMLogServerInit() { _sharedServer = [TLMLogServer new]; }
+
 + (TLMLogServer *)sharedServer
 {
-    static id sharedServer = nil;
-    if (nil == sharedServer) {
-        // raise on any accidental calls during -init, since this is not reentrant
-        sharedServer = [NSNull null];
-        sharedServer = [self new];
-    }
-    return sharedServer;
+    static pthread_once_t once = PTHREAD_ONCE_INIT;
+    (void) pthread_once(&once, __TLMLogServerInit);
+    return _sharedServer;
 }
 
 static NSConnection * __TLMLSCreateAndRegisterConnectionForServer(TLMLogServer *server)
