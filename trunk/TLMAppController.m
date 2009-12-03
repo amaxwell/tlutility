@@ -79,9 +79,6 @@ static void __TLMMigrateBundleIdentifier()
     if (true == didInit) return;
     didInit = true;
     
-    // force setup of the log server
-    [TLMLogServer sharedServer];
-    
     __TLMMigrateBundleIdentifier();
     
     NSString *tlnetDefault = @"http://mirror.ctan.org/systems/texlive/tlnet";
@@ -131,13 +128,7 @@ static void __TLMMigrateBundleIdentifier()
     [defaults setObject:[NSNumber numberWithBool:YES] forKey:TLMAutoInstallPreferenceKey];
     [defaults setObject:[NSNumber numberWithBool:YES] forKey:TLMAutoRemovePreferenceKey];
     
-    [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
-
-    // call before anything uses tlmgr
-    [self updateProxyEnvironment];
-
-    // make sure this is set up early enough to use tasks anywhere
-    [self updatePathEnvironment];    
+    [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];   
 }
 
 + (NSMutableArray *)_systemPaths
@@ -261,6 +252,7 @@ static void __TLMProxySettingsChanged(SCDynamicStoreRef store, CFArrayRef change
     [(id)info _updateProxyVariablesFromStore:store];
 }
 
+// update $http_proxy and $ftp_proxy by reading dynamic store
 + (void)updateProxyEnvironment
 {
     static SCDynamicStoreRef _dynamicStore = NULL;
@@ -295,8 +287,14 @@ static void __TLMProxySettingsChanged(SCDynamicStoreRef store, CFArrayRef change
     return ([_mainWindowController windowShouldClose:sender]) ? NSTerminateNow : NSTerminateCancel;
 }
 
-- (void)awakeFromNib
+- (void)applicationDidFinishLaunching:(NSNotification *)notification;
 {
+    // call before anything uses tlmgr
+    [[self class] updateProxyEnvironment];
+    
+    // make sure this is set up early enough to use tasks anywhere
+    [[self class] updatePathEnvironment]; 
+    
     if (nil == _mainWindowController)
         _mainWindowController = [[TLMMainWindowController alloc] init];
     [_mainWindowController showWindow:nil];

@@ -49,9 +49,6 @@
 // update $PATH from NSUserDefaults
 + (void)updatePathEnvironment;
 
-// update $http_proxy and $ftp_proxy by reading dynamic store
-+ (void)updateProxyEnvironment;
-
 // see if tlmgr version matches TeX Live mirror URL (heuristic)
 - (void)checkVersionConsistency;
 + (NSInteger)texliveYear;
