@@ -208,7 +208,7 @@ static void __TLMMigrateBundleIdentifier()
     TLMLog(__func__, @"Using PATH = \"%@\"", systemPaths);
 }
 
-+ (void)_updateProxyVariablesFromStore:(SCDynamicStoreRef)store
+static void __TLMProxySettingsChanged(SCDynamicStoreRef store, CFArrayRef changedKeys, void *info)
 {
     /*
      Attempt to handle kSCPropNetProxiesExceptionsList?
@@ -247,33 +247,22 @@ static void __TLMMigrateBundleIdentifier()
     }
 }
 
-static void __TLMProxySettingsChanged(SCDynamicStoreRef store, CFArrayRef changedKeys, void *info)
-{
-    [(id)info _updateProxyVariablesFromStore:store];
-}
-
 // update $http_proxy and $ftp_proxy by reading dynamic store
 + (void)updateProxyEnvironment
 {
     static SCDynamicStoreRef _dynamicStore = NULL;
     if (NULL == _dynamicStore) {
-        SCDynamicStoreContext ctxt = { 0, self, CFRetain, CFRelease, CFCopyDescription };
-        _dynamicStore = SCDynamicStoreCreate(NULL, CFBundleGetIdentifier(CFBundleGetMainBundle()), __TLMProxySettingsChanged, &ctxt);
+        _dynamicStore = SCDynamicStoreCreate(NULL, CFBundleGetIdentifier(CFBundleGetMainBundle()), __TLMProxySettingsChanged, NULL);
         CFRunLoopSourceRef rlSource = SCDynamicStoreCreateRunLoopSource(kCFAllocatorDefault, _dynamicStore, 0);
         CFRunLoopAddSource(CFRunLoopGetMain(), rlSource, kCFRunLoopCommonModes);
         CFRelease(rlSource);
-        
-        CFMutableArrayRef keys = CFArrayCreateMutable(kCFAllocatorDefault, 0, &kCFTypeArrayCallBacks);
-        
-        // use SCDynamicStore keys as NSNotification names; don't release them
-        CFStringRef key = SCDynamicStoreKeyCreateProxies(NULL);
-        CFArrayAppendValue(keys, key);
+                
+        CFArrayRef keys = (CFArrayRef)[NSArray arrayWithObject:[(id)SCDynamicStoreKeyCreateProxies(NULL) autorelease]];
         
         if(SCDynamicStoreSetNotificationKeys(_dynamicStore, keys, NULL) == FALSE)
             TLMLog(__func__, @"unable to register for proxy change notifications");
-        CFRelease(keys);
     }  
-    [self _updateProxyVariablesFromStore:_dynamicStore];
+    __TLMProxySettingsChanged(_dynamicStore, NULL, NULL);
 }
 
 - (void)dealloc
