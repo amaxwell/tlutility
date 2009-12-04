@@ -226,7 +226,7 @@ static void __TLMMigrateBundleIdentifier()
         if (value && strlen(value)) setenv("http_proxy", value, 1);
         TLMLog(__func__, @"Set http_proxy = %@", proxy);
     }
-    else {
+    else if (getenv("http_proxy") != NULL) {
         unsetenv("http_proxy");
         TLMLog(__func__, @"Unset http_proxy");
     }
@@ -241,7 +241,7 @@ static void __TLMMigrateBundleIdentifier()
         if (value && strlen(value)) setenv("ftp_proxy", value, 1);
         TLMLog(__func__, @"Set ftp_proxy = %@", proxy);
     }
-    else {
+    else if (getenv("ftp_proxy") != NULL) {
         unsetenv("ftp_proxy");
         TLMLog(__func__, @"Unset ftp_proxy");
     }
