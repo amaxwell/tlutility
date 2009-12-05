@@ -62,6 +62,10 @@
         } else {
             divRect.origin.y = NSMaxY(divRect);
             divRect.size.height = [self dividerThickness];
+            if (divRect.size.height < 3.0) {
+                divRect.origin.y -= 1.5;
+                divRect.size.height = 3.0;
+            }
         }
         
         if (NSMouseInRect(mouseLoc, divRect, [self isFlipped])) {
@@ -88,18 +92,23 @@
 
 - (void)drawDividerInRect:(NSRect)aRect
 {
-#if 1
     [NSGraphicsContext saveGraphicsState];
     [[NSColor darkGrayColor] set];
     
     NSBezierPath *path = [NSBezierPath bezierPath];
-    const CGFloat x = floor(aRect.origin.x) + 0.5;
-    [path moveToPoint:NSMakePoint(x, NSMinY(aRect))];
-    [path lineToPoint:NSMakePoint(x, NSMaxY(aRect))];
+    if ([self isVertical]) {
+        const CGFloat x = floor(NSMidX(aRect)) + 0.5;
+        [path moveToPoint:NSMakePoint(x, NSMinY(aRect))];
+        [path lineToPoint:NSMakePoint(x, NSMaxY(aRect))];
+    }
+    else {
+        const CGFloat y = floor(NSMidY(aRect)) + 0.5;
+        [path moveToPoint:NSMakePoint(NSMinX(aRect), y)];
+        [path moveToPoint:NSMakePoint(NSMaxX(aRect), y)];
+    }
     [path setLineWidth:0.0];
     [path stroke];
     [NSGraphicsContext restoreGraphicsState];
-#endif
 }
 
 
