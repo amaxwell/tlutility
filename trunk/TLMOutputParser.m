@@ -39,6 +39,7 @@
 #import "TLMOutputParser.h"
 #import "TLMPackageNode.h"
 #import "TLMLogServer.h"
+#import "TLMPreferenceController.h"
 
 @implementation TLMOutputParser
 
@@ -142,9 +143,19 @@ enum {
 static bool hasKeyPrefix(NSString *line)
 {
     NSScanner *scanner = [NSScanner scannerWithString:line];
-    [scanner setCharactersToBeSkipped:[NSCharacterSet alphanumericCharacterSet]];
+    static NSCharacterSet *keySet = nil;
+    if (nil == keySet) {
+        NSMutableCharacterSet *cset = [NSMutableCharacterSet alphanumericCharacterSet];
+        [cset addCharactersInString:@" ,-"];
+        keySet = [cset copy];
+    }
+    [scanner setCharactersToBeSkipped:keySet];
     return ([scanner scanString:@":" intoString:NULL]);
 }
+
+#define RUN_FILE_KEY    @"run files"
+#define SOURCE_FILE_KEY @"source files"
+#define DOC_FILE_KEY    @"doc files"
 
 + (NSDictionary *)_infoDictionaryWithString:(NSString *)infoString
 {
@@ -152,27 +163,95 @@ static bool hasKeyPrefix(NSString *line)
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     NSString *key = nil;
     NSMutableString *value = nil;
+    
+    NSMutableArray *runfiles = [NSMutableArray array];
+    NSMutableArray *sourcefiles = [NSMutableArray array];
+    NSMutableArray *docfiles = [NSMutableArray array];
+    int state;
+    
+    NSString *installPath = [[[TLMPreferenceController sharedPreferenceController] installDirectory] path];
+    
     for (NSString *line in lines) {
+        
+        enum {
+            PREAMBLE_STATE,
+            RUNFILE_STATE,
+            SOURCEFILE_STATE,
+            DOCFILE_STATE
+        };
+        
+        // !!! hack here; skip this line
+        if ([line hasPrefix:@"Included files, by type:"])
+            continue;
 
         if (hasKeyPrefix(line)) {
+            
+            // save previous key/value pair
             if (key && value) {
                 CFStringTrimWhitespace((CFMutableStringRef)value);
                 [dict setObject:value forKey:key];
             }
+            
             value = [NSMutableString string];
             NSRange r = [line rangeOfString:@":"];
             // downcase to allow for changes from CamelCase
             key = [[line substringToIndex:r.location] lowercaseString];
             [value appendString:[line substringFromIndex:NSMaxRange(r)]];
+            
+            if ([key isEqualToString:RUN_FILE_KEY])
+                state = RUNFILE_STATE;
+            else if ([key isEqualToString:SOURCE_FILE_KEY])
+                state = SOURCEFILE_STATE;
+            else if ([key isEqualToString:DOC_FILE_KEY])
+                state = DOCFILE_STATE;
+            else
+                state = PREAMBLE_STATE;
+            
         }
         else {
-            [value appendString:line];
+            
+            switch (state) {
+                case PREAMBLE_STATE:
+                    [value appendString:line];
+                    break;
+                case RUNFILE_STATE:
+                    line = [line stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+                    if ([line isEqualToString:@""] == NO && installPath) {
+                        NSURL *fileURL = [NSURL fileURLWithPath:[installPath stringByAppendingPathComponent:line]];
+                        if (fileURL) [runfiles addObject:fileURL];
+                    }
+                    break;
+                case SOURCEFILE_STATE:
+                    line = [line stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+                    if ([line isEqualToString:@""] == NO && installPath) {
+                        NSURL *fileURL = [NSURL fileURLWithPath:[installPath stringByAppendingPathComponent:line]];
+                        if (fileURL) [sourcefiles addObject:fileURL];
+                    }
+                    break;
+                case DOCFILE_STATE:
+                    line = [line stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+                    if ([line isEqualToString:@""] == NO && installPath) {
+                        NSURL *fileURL = [NSURL fileURLWithPath:[installPath stringByAppendingPathComponent:line]];
+                        if (fileURL) [docfiles addObject:fileURL];
+                    }
+                    break;
+                default:
+                    break;
+            }
+            
         }
     }
+    
+    // this is whitespace; if it's ever a legitimate value, I'll have to rewrite the parser...
     if (key && value) {
         CFStringTrimWhitespace((CFMutableStringRef)value);
         [dict setObject:value forKey:key];
     }
+    
+    [dict setObject:runfiles forKey:RUN_FILE_KEY];
+    [dict setObject:sourcefiles forKey:SOURCE_FILE_KEY];
+    [dict setObject:docfiles forKey:DOC_FILE_KEY];
+    
     return dict;
 }
 
@@ -266,6 +345,7 @@ static bool hasKeyPrefix(NSString *line)
         [attrString addAttribute:NSFontAttributeName value:userFont range:NSMakeRange(previousLength, [attrString length] - previousLength)];
     }
     
+    // documentation from texdoc
     if ([docURLs count]) {
         previousLength = [attrString length];
         [[attrString mutableString] appendString:NSLocalizedString(@"\nDocumentation:\n", @"heading in info panel")];
@@ -276,6 +356,63 @@ static bool hasKeyPrefix(NSString *line)
             [[attrString mutableString] appendString:[[docURL path] lastPathComponent]];
             [attrString addAttribute:NSFontAttributeName value:userFont range:NSMakeRange(previousLength, [attrString length] - previousLength)];
             [attrString addAttribute:NSLinkAttributeName value:docURL range:NSMakeRange(previousLength, [attrString length] - previousLength)];
+            [attrString addAttribute:NSCursorAttributeName value:[NSCursor pointingHandCursor] range:NSMakeRange(previousLength, [attrString length] - previousLength)];
+            
+            previousLength = [attrString length];
+            [[attrString mutableString] appendString:@"\n"];
+            [attrString removeAttribute:NSLinkAttributeName range:NSMakeRange(previousLength, [attrString length] - previousLength)];
+        }        
+    }
+    
+    NSArray *runURLs = [info objectForKey:RUN_FILE_KEY];
+    if ([runURLs count]) {
+        previousLength = [attrString length];
+        [[attrString mutableString] appendString:NSLocalizedString(@"\nRun Files:\n", @"heading in info panel")];
+        [attrString addAttribute:NSFontAttributeName value:boldFont range:NSMakeRange(previousLength, [attrString length] - previousLength)];
+        
+        for (NSURL *aURL in runURLs) {
+            previousLength = [attrString length];
+            [[attrString mutableString] appendString:[[aURL path] lastPathComponent]];
+            [attrString addAttribute:NSFontAttributeName value:userFont range:NSMakeRange(previousLength, [attrString length] - previousLength)];
+            [attrString addAttribute:NSLinkAttributeName value:aURL range:NSMakeRange(previousLength, [attrString length] - previousLength)];
+            [attrString addAttribute:NSCursorAttributeName value:[NSCursor pointingHandCursor] range:NSMakeRange(previousLength, [attrString length] - previousLength)];
+            
+            previousLength = [attrString length];
+            [[attrString mutableString] appendString:@"\n"];
+            [attrString removeAttribute:NSLinkAttributeName range:NSMakeRange(previousLength, [attrString length] - previousLength)];
+        }        
+    }
+    
+    NSArray *sourceURLs = [info objectForKey:SOURCE_FILE_KEY];
+    if ([sourceURLs count]) {
+        previousLength = [attrString length];
+        [[attrString mutableString] appendString:NSLocalizedString(@"\nSource Files:\n", @"heading in info panel")];
+        [attrString addAttribute:NSFontAttributeName value:boldFont range:NSMakeRange(previousLength, [attrString length] - previousLength)];
+        
+        for (NSURL *aURL in sourceURLs) {
+            previousLength = [attrString length];
+            [[attrString mutableString] appendString:[[aURL path] lastPathComponent]];
+            [attrString addAttribute:NSFontAttributeName value:userFont range:NSMakeRange(previousLength, [attrString length] - previousLength)];
+            [attrString addAttribute:NSLinkAttributeName value:aURL range:NSMakeRange(previousLength, [attrString length] - previousLength)];
+            [attrString addAttribute:NSCursorAttributeName value:[NSCursor pointingHandCursor] range:NSMakeRange(previousLength, [attrString length] - previousLength)];
+            
+            previousLength = [attrString length];
+            [[attrString mutableString] appendString:@"\n"];
+            [attrString removeAttribute:NSLinkAttributeName range:NSMakeRange(previousLength, [attrString length] - previousLength)];
+        }        
+    }
+    
+    docURLs = [info objectForKey:SOURCE_FILE_KEY];
+    if ([docURLs count]) {
+        previousLength = [attrString length];
+        [[attrString mutableString] appendString:NSLocalizedString(@"\nDoc Files:\n", @"heading in info panel")];
+        [attrString addAttribute:NSFontAttributeName value:boldFont range:NSMakeRange(previousLength, [attrString length] - previousLength)];
+        
+        for (NSURL *aURL in docURLs) {
+            previousLength = [attrString length];
+            [[attrString mutableString] appendString:[[aURL path] lastPathComponent]];
+            [attrString addAttribute:NSFontAttributeName value:userFont range:NSMakeRange(previousLength, [attrString length] - previousLength)];
+            [attrString addAttribute:NSLinkAttributeName value:aURL range:NSMakeRange(previousLength, [attrString length] - previousLength)];
             [attrString addAttribute:NSCursorAttributeName value:[NSCursor pointingHandCursor] range:NSMakeRange(previousLength, [attrString length] - previousLength)];
             
             previousLength = [attrString length];
