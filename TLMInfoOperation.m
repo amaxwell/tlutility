@@ -54,7 +54,7 @@
 {
     NSParameterAssert(packageName);
     NSString *location = [[[TLMPreferenceController sharedPreferenceController] defaultServerURL] absoluteString];
-    NSArray *options = [NSArray arrayWithObjects:@"--repository", location, @"show", packageName, nil];
+    NSArray *options = [NSArray arrayWithObjects:@"--repository", location, @"show", @"--list", packageName, nil];
     NSString *cmd = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath];
     self = [self initWithCommand:cmd options:options];
     if (self) {
