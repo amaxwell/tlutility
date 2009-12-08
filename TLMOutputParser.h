@@ -39,6 +39,16 @@
 #import <Cocoa/Cocoa.h>
 #import "TLMPackage.h"
 
+@protocol TLMInfoOutput
+
+- (NSAttributedString *)attributedString;
+- (NSArray *)runfiles;
+- (NSArray *)sourcefiles;
+- (NSArray *)docfiles;
+
+@end
+
+
 @interface TLMOutputParser : NSObject
 
 // result is guaranteed non-nil, but raises if outputLine is nil
@@ -47,7 +57,7 @@
 
 // returns a plain string if parsing fails, raises if infoString is nil
 // for output of `tlmgr show'
-+ (NSAttributedString *)attributedStringWithInfoString:(NSString *)infoString docURLs:(NSArray *)docURLs;
++ (id <TLMInfoOutput>)outputWithInfoString:(NSString *)infoString docURLs:(NSArray *)docURLs;
 
 // returns an array of TLMPackageNodes, each of which may have child nodes
 // for output of `tlmgr list`
