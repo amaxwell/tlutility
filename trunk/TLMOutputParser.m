@@ -41,6 +41,21 @@
 #import "TLMLogServer.h"
 #import "TLMPreferenceController.h"
 
+@interface _TLMInfoOutput : NSObject <TLMInfoOutput>
+{
+@private
+    NSAttributedString *_attributedString;
+    NSArray            *_runfiles;
+    NSArray            *_sourcefiles;
+    NSArray            *_docfiles;
+}
+@property (nonatomic, copy) NSAttributedString *attributedString;
+@property (nonatomic, copy) NSArray *runfiles;
+@property (nonatomic, copy) NSArray *sourcefiles;
+@property (nonatomic, copy) NSArray *docfiles;
+@end
+
+
 @implementation TLMOutputParser
 
 #pragma mark Update parsing
@@ -255,13 +270,16 @@ static bool hasKeyPrefix(NSString *line)
     return dict;
 }
 
-+ (NSAttributedString *)attributedStringWithInfoString:(NSString *)infoString docURLs:(NSArray *)docURLs;
++ (id <TLMInfoOutput>)outputWithInfoString:(NSString *)infoString docURLs:(NSArray *)docURLs;
 {
     NSDictionary *info = [self _infoDictionaryWithString:infoString];
+    _TLMInfoOutput *output = [[_TLMInfoOutput new] autorelease];
     
     // !!! early return here if parsing fails
-    if ([info count] == 0)
-        return [[[NSAttributedString alloc] initWithString:infoString] autorelease];
+    if ([info count] == 0) {
+        [output setAttributedString:[[[NSAttributedString alloc] initWithString:infoString] autorelease]];
+        return output;
+    }
     
     NSMutableAttributedString *attrString = [[NSMutableAttributedString alloc] init];
     
@@ -420,8 +438,14 @@ static bool hasKeyPrefix(NSString *line)
             [attrString removeAttribute:NSLinkAttributeName range:NSMakeRange(previousLength, [attrString length] - previousLength)];
         }        
     }
+    
+    [output setAttributedString:attrString];
+    [attrString release];
+    [output setRunfiles:[info objectForKey:RUN_FILE_KEY]];
+    [output setSourcefiles:[info objectForKey:SOURCE_FILE_KEY]];
+    [output setDocfiles:[info objectForKey:SOURCE_FILE_KEY]];
         
-    return [attrString autorelease];
+    return output;
 }
 
 #pragma mark List parsing
@@ -518,6 +542,25 @@ static bool hasKeyPrefix(NSString *line)
     }
     
     return nodes;
+}
+
+@end
+
+
+@implementation _TLMInfoOutput
+
+@synthesize attributedString = _attributedString;
+@synthesize runfiles = _runfiles;
+@synthesize sourcefiles = _sourcefiles;
+@synthesize docfiles = _docfiles;
+
+- (void)dealloc
+{
+    [_attributedString release];
+    [_runfiles release];
+    [_sourcefiles release];
+    [_docfiles release];
+    [super dealloc];
 }
 
 @end

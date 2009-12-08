@@ -43,6 +43,7 @@
 #import "TLMLogServer.h"
 #import <FileView/FileView.h>
 #import "NSMenu_TLMExtensions.h"
+#import "TLMOutlineView.h"
 
 @interface _TLMFileObject : NSObject
 {
@@ -58,6 +59,9 @@
 
 @interface TLMInfoController()
 @property (readwrite, copy) NSArray *fileObjects;
+@property (readwrite, copy) NSArray *runfiles;
+@property (readwrite, copy) NSArray *sourcefiles;
+@property (readwrite, copy) NSArray *docfiles;
 @end
 
 static char _TLMInfoFileViewScaleObserverationContext;
@@ -70,6 +74,10 @@ static NSString * const TLMInfoFileViewIconScaleKey = @"TLMInfoFileViewIconScale
 @synthesize _tabView;
 @synthesize _fileView;
 @synthesize fileObjects = _fileObjects;
+@synthesize runfiles = _runfiles;
+@synthesize sourcefiles = _sourcefiles;
+@synthesize docfiles = _docfiles;
+@synthesize _outlineView;
 
 + (TLMInfoController *)sharedInstance
 {
@@ -100,23 +108,29 @@ static NSString * const TLMInfoFileViewIconScaleKey = @"TLMInfoFileViewIconScale
     [_tabView release];
     [_fileView release];
     [_fileObjects release];
+    [_runfiles release];
+    [_sourcefiles release];
+    [_docfiles release];
+    [_outlineView release];
     [super dealloc];
 }
 
 - (void)_recenterSpinner
 {
-    NSRect windowFrame = [[self window] frame];
-    windowFrame.origin = [[self window] convertScreenToBase:windowFrame.origin];
-    NSRect bounds = [[_spinner superview] convertRect:windowFrame fromView:nil];
-    NSSize spinnerSize = [_spinner bounds].size;
-    NSPoint origin = NSMakePoint(NSMidX(bounds), NSMidY(bounds));
-    origin.x -= (spinnerSize.width / 2);
-    origin.y -= (spinnerSize.height / 2);
-    NSRect spinnerFrame;
-    spinnerFrame.size = spinnerSize;
-    spinnerFrame.origin = origin;
-    [_spinner setFrame:spinnerFrame];
-    [[_spinner superview] setNeedsDisplay:YES];
+    if ([[_tabView selectedTabViewItem] isEqual:[_tabView tabViewItemAtIndex:0]] == NO) {
+        NSRect windowFrame = [[self window] frame];
+        windowFrame.origin = [[self window] convertScreenToBase:windowFrame.origin];
+        NSRect bounds = [[_spinner superview] convertRect:windowFrame fromView:nil];
+        NSSize spinnerSize = [_spinner bounds].size;
+        NSPoint origin = NSMakePoint(NSMidX(bounds), NSMidY(bounds));
+        origin.x -= (spinnerSize.width / 2);
+        origin.y -= (spinnerSize.height / 2);
+        NSRect spinnerFrame;
+        spinnerFrame.size = spinnerSize;
+        spinnerFrame.origin = origin;
+        [_spinner setFrame:spinnerFrame];
+        [[_spinner superview] setNeedsDisplay:YES];
+    }
 }    
 
 - (void)handleContentViewBoundsChanged:(NSNotification *)aNote
@@ -139,6 +153,8 @@ static NSString * const TLMInfoFileViewIconScaleKey = @"TLMInfoFileViewIconScale
     if ([[NSUserDefaults standardUserDefaults] objectForKey:TLMInfoFileViewIconScaleKey] != nil)
         [_fileView setIconScale:[[NSUserDefaults standardUserDefaults] doubleForKey:TLMInfoFileViewIconScaleKey]];
     [_fileView addObserver:self forKeyPath:@"iconScale" options:0 context:&_TLMInfoFileViewScaleObserverationContext];
+    
+    [_outlineView setFontNamePreferenceKey:@"TLMInfoOutlineViewFontName" sizePreferenceKey:@"TLMInfoOutlineViewFontSize"];
 }
 
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
@@ -183,7 +199,15 @@ static NSString * const TLMInfoFileViewIconScaleKey = @"TLMInfoFileViewIconScale
             [_fileView reloadIcons];
             [[self window] setTitle:[op packageName]];
             [_textView setSelectedRange:NSMakeRange(0, 0)];
-            [[_textView textStorage] setAttributedString:[TLMOutputParser attributedStringWithInfoString:result docURLs:docURLs]];
+            id <TLMInfoOutput> output = [TLMOutputParser outputWithInfoString:result docURLs:docURLs];
+            [[_textView textStorage] setAttributedString:[output attributedString]];
+            
+            [self setRunfiles:[output runfiles]];
+            [self setSourcefiles:[output sourcefiles]];
+            [self setDocfiles:[output docfiles]];
+            [_outlineView reloadData];
+            [_outlineView expandItem:nil expandChildren:YES];
+            
         }
         else {
             [_textView setString:[NSString stringWithFormat:NSLocalizedString(@"Unable to find info for %@", @"error message for info panel"), [op packageName]]];
@@ -213,6 +237,11 @@ static NSString * const TLMInfoFileViewIconScaleKey = @"TLMInfoFileViewIconScale
             [self setFileObjects:nil];
             [_fileView reloadIcons];
             
+            [self setRunfiles:nil];
+            [self setSourcefiles:nil];
+            [self setDocfiles:nil];
+            [_outlineView reloadData];
+            
             [_tabView selectLastTabViewItem:nil];
             [self _recenterSpinner];
             [_spinner startAnimation:nil];
@@ -236,6 +265,10 @@ static NSString * const TLMInfoFileViewIconScaleKey = @"TLMInfoFileViewIconScale
         [_spinner stopAnimation:nil];
         [self setFileObjects:nil];
         [_fileView reloadIcons];
+        [self setRunfiles:nil];
+        [self setSourcefiles:nil];
+        [self setDocfiles:nil];
+        [_outlineView reloadData];
         [_tabView selectFirstTabViewItem:nil];
     }        
 }
@@ -273,6 +306,65 @@ static NSString * const TLMInfoFileViewIconScaleKey = @"TLMInfoFileViewIconScale
     NSInteger idx = [aMenu indexOfItemWithTag:FVOpenMenuItemTag];
     if (-1 != idx)
         [aMenu insertOpenWithMenuForURL:[[_fileObjects objectAtIndex:anIndex] URL] atIndex:(idx + 1)];
+}
+
+#pragma mark Outline view
+
+- (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)index ofItem:(id)item;
+{
+    if (nil == item) {
+         switch (index) {
+             case 0:
+                 return _runfiles;
+                 break;
+             case 1:
+                 return _sourcefiles;
+                 break;
+             case 2:
+                 return _docfiles;
+                 break;
+             default:
+                 break;
+         }
+    }
+    return [item objectAtIndex:index];
+}
+
+- (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item { return [item isKindOfClass:[NSURL class]] == NO; }
+
+- (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item 
+{ 
+    if (nil == item) return 3;
+    return [item isKindOfClass:[NSArray class]] ? [item count] : 0; 
+}
+
+- (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item 
+{ 
+    if (item == _runfiles)
+        return NSLocalizedString(@"Run Files", @"");
+    if (item == _sourcefiles)
+        return NSLocalizedString(@"Source Files", @"");
+    if (item == _docfiles)
+        return NSLocalizedString(@"Doc Files", @"");
+    return item;
+}
+
+// optional methods
+- (BOOL)outlineView:(NSOutlineView *)outlineView isGroupItem:(id)item { return [item isKindOfClass:[NSURL class]] == NO; }
+
+- (NSCell *)outlineView:(NSOutlineView *)outlineView dataCellForTableColumn:(NSTableColumn *)tableColumn item:(id)item;
+{
+    NSCell *dataCell = [tableColumn dataCell];
+    if ([item isKindOfClass:[NSURL class]]) {
+        NSFont *font = [dataCell font];
+        dataCell = [[NSPathCell new] autorelease];
+        // NSPathStylePopUp is the only one that doesn't look like crap in a table...maybe just a plain file/icon cell would be better
+        [(NSPathCell *)dataCell setPathStyle:NSPathStylePopUp];
+#warning delegate or action
+        [dataCell setFont:font];
+        [dataCell setEditable:NO];
+    }
+    return dataCell; 
 }
 
 @end
