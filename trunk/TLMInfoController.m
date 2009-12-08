@@ -112,6 +112,7 @@ static NSString * const TLMInfoFileViewIconScaleKey = @"TLMInfoFileViewIconScale
     [_sourcefiles release];
     [_docfiles release];
     [_outlineView release];
+    [_clickedCell release];
     [super dealloc];
 }
 
@@ -341,12 +342,36 @@ static NSString * const TLMInfoFileViewIconScaleKey = @"TLMInfoFileViewIconScale
 - (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item 
 { 
     if (item == _runfiles)
-        return NSLocalizedString(@"Run Files", @"");
+        return NSLocalizedString(@"RUN FILES", @"all caps tableview group title");
     if (item == _sourcefiles)
-        return NSLocalizedString(@"Source Files", @"");
+        return NSLocalizedString(@"SOURCE FILES", @"all caps tableview group title");
     if (item == _docfiles)
-        return NSLocalizedString(@"Doc Files", @"");
+        return NSLocalizedString(@"DOC FILES", @"all caps tableview group title");
     return item;
+}
+
+- (void)pathCell:(NSPathCell *)pathCell willPopUpMenu:(NSMenu *)menu;
+{
+    [_clickedCell autorelease];
+    _clickedCell = [pathCell retain];
+}
+
+- (void)_pathCellAction:(id)sender
+{
+    /*
+     The sender is the outline view, and the URL is nil, so this doesn't work at all.  This is almost certainly
+     because the clickedPathComponentCell isn't set on the cell returned from preparedCellAtColumn:row:, which
+     is quite understandable.  There's no way to get at the menu or cell without stashing it in an ivar, though,
+     which doesn't fit with the documented/intended design.
+     
+    NSLog(@"sender = %@", sender);
+    id clickedCell = [_outlineView preparedCellAtColumn:0 row:[_outlineView clickedRow]];
+    NSLog(@"%@", [[clickedCell clickedPathComponentCell] URL]); 
+     */
+    
+    NSURL *clickedURL = [[_clickedCell clickedPathComponentCell] URL];
+    if ([[NSWorkspace sharedWorkspace] openURL:clickedURL] == NO)
+        NSBeep();
 }
 
 // optional methods
@@ -360,9 +385,11 @@ static NSString * const TLMInfoFileViewIconScaleKey = @"TLMInfoFileViewIconScale
         dataCell = [[NSPathCell new] autorelease];
         // NSPathStylePopUp is the only one that doesn't look like crap in a table...maybe just a plain file/icon cell would be better
         [(NSPathCell *)dataCell setPathStyle:NSPathStylePopUp];
-#warning delegate or action
         [dataCell setFont:font];
         [dataCell setEditable:NO];
+        [dataCell setTarget:self];
+        [dataCell setAction:@selector(_pathCellAction:)];
+        [(NSPathCell *)dataCell setDelegate:self];
     }
     return dataCell; 
 }

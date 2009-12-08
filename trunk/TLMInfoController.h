@@ -54,6 +54,7 @@
     NSArray             *_runfiles;
     NSArray             *_sourcefiles;
     NSArray             *_docfiles;
+    NSPathCell          *_clickedCell;
 }
 
 + (TLMInfoController *)sharedInstance;
