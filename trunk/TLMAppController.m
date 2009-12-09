@@ -128,6 +128,10 @@ static void __TLMMigrateBundleIdentifier()
     [defaults setObject:[NSNumber numberWithBool:YES] forKey:TLMAutoInstallPreferenceKey];
     [defaults setObject:[NSNumber numberWithBool:YES] forKey:TLMAutoRemovePreferenceKey];
     
+    // disable TL critical repo by default
+    [defaults setObject:[NSNumber numberWithBool:NO] forKey:TLMShouldListTLCritical];
+    [defaults setObject:@"ftp://tug.org/texlive/tlcritical" forKey:TLMTLCriticalRepository];
+    
     [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];   
 }
 

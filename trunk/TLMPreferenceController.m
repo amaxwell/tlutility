@@ -45,16 +45,18 @@
 #import "TLMReadWriteOperationQueue.h"
 #import "TLMOptionOperation.h"
 
-NSString * const TLMTexBinPathPreferenceKey = @"TLMTexBinPathPreferenceKey";       /* /usr/texbin                 */
-NSString * const TLMUseRootHomePreferenceKey = @"TLMUseRootHomePreferenceKey";     /* YES                         */
-NSString * const TLMInfraPathPreferenceKey = @"TLMInfraPathPreferenceKey";         /* update-tlmgr-latest.sh      */
-NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";         /* NO                          */
-NSString * const TLMFullServerURLPreferenceKey = @"TLMFullServerURLPreferenceKey"; /* composed URL                */
-NSString * const TLMDisableVersionMismatchWarningKey = @"TLMDisableVersionMismatchWarningKey"; /* NO              */
-NSString * const TLMAutoInstallPreferenceKey = @"TLMAutoInstallPreferenceKey";     /* YES (2009 only)             */
-NSString * const TLMAutoRemovePreferenceKey = @"TLMAutoRemovePreferenceKey";       /* YES (2009 only)             */
-NSString * const TLMSetCommandLineServerPreferenceKey = @"TLMSetCommandLineServerPreferenceKey"; /* NO            */
-NSString * const TLMNetInstallerPathPreferenceKey = @"TLMNetInstallerPathPreferenceKey"; /* install-tl-unx.tar.gz */
+NSString * const TLMTexBinPathPreferenceKey = @"TLMTexBinPathPreferenceKey";       /* /usr/texbin                      */
+NSString * const TLMUseRootHomePreferenceKey = @"TLMUseRootHomePreferenceKey";     /* YES                              */
+NSString * const TLMInfraPathPreferenceKey = @"TLMInfraPathPreferenceKey";         /* update-tlmgr-latest.sh           */
+NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";         /* NO                               */
+NSString * const TLMFullServerURLPreferenceKey = @"TLMFullServerURLPreferenceKey"; /* composed URL                     */
+NSString * const TLMDisableVersionMismatchWarningKey = @"TLMDisableVersionMismatchWarningKey"; /* NO                   */
+NSString * const TLMAutoInstallPreferenceKey = @"TLMAutoInstallPreferenceKey";     /* YES (2009 only)                  */
+NSString * const TLMAutoRemovePreferenceKey = @"TLMAutoRemovePreferenceKey";       /* YES (2009 only)                  */
+NSString * const TLMSetCommandLineServerPreferenceKey = @"TLMSetCommandLineServerPreferenceKey"; /* NO                 */
+NSString * const TLMNetInstallerPathPreferenceKey = @"TLMNetInstallerPathPreferenceKey"; /* install-tl-unx.tar.gz      */
+NSString * const TLMShouldListTLCritical = @"TLMShouldListTLCritical";             /* NO                               */
+NSString * const TLMTLCriticalRepository = @"TLMTLCriticalRepository";             /* ftp://tug.org/texlive/tlcritical */
 
 #define TLMGR_CMD @"tlmgr"
 #define TEXDOC_CMD @"texdoc"
@@ -97,7 +99,13 @@ NSString * const TLMNetInstallerPathPreferenceKey = @"TLMNetInstallerPathPrefere
         NSDictionary *mirrorsByYear = nil;
         if (plistPath)
             mirrorsByYear = [NSDictionary dictionaryWithContentsOfFile:plistPath];
-        _servers = [[mirrorsByYear objectForKey:@"tlnet"] copy];
+        NSMutableArray *servers = [NSMutableArray arrayWithArray:[mirrorsByYear objectForKey:@"tlnet"]];
+        
+        // insert TL critical repo if this hidden pref is set
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:TLMShouldListTLCritical])
+            [servers insertObject:[[NSUserDefaults standardUserDefaults] objectForKey:TLMTLCriticalRepository] atIndex:0];
+        
+        _servers = [servers copy];
     }
     return self;
 }
@@ -433,6 +441,9 @@ NSString * const TLMNetInstallerPathPreferenceKey = @"TLMNetInstallerPathPrefere
     NSString *serverURLString = [[sender cell] stringValue];
     [[NSUserDefaults standardUserDefaults] setObject:serverURLString forKey:TLMFullServerURLPreferenceKey];
     
+    if ([[NSURL URLWithString:serverURLString] isEqual:[NSURL URLWithString:[[NSUserDefaults standardUserDefaults] objectForKey:TLMTLCriticalRepository]]])
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:TLMShouldListTLCritical];
+    
     // only display the dialog if the user has manually typed something in the text field
     if (_hasPendingServerEdit) {
         
@@ -486,6 +497,19 @@ NSString * const TLMNetInstallerPathPreferenceKey = @"TLMNetInstallerPathPrefere
         [self _syncCommandLineServerOption];
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:TLMDisableVersionMismatchWarningKey];
         [[NSApp delegate] checkVersionConsistency];    
+        
+        /*
+         Allow changes to the combo box list to persist in the session, but not across launches 
+         since dealing with incompatible repos is not practical.
+         */
+        if ([_servers containsObject:serverURLString] == NO) {
+            NSMutableArray *servers = [_servers mutableCopy];
+            [servers insertObject:serverURLString atIndex:0];
+            [_servers release];
+            _servers = [servers copy];
+            [servers release];
+            [_serverComboBox reloadData];
+        }
     }
 }
 
