@@ -86,7 +86,7 @@
 																			<object class="FileView" id="58691880">
 																				<reference key="NSNextResponder" ref="727294889"/>
 																				<int key="NSvFlags">274</int>
-																				<string key="NSFrameSize">{158, 1405.4}</string>
+																				<string key="NSFrameSize">{173, 307}</string>
 																				<reference key="NSSuperview" ref="727294889"/>
 																				<object class="NSColor" key="backgroundColor">
 																					<int key="NSColorSpace">6</int>
@@ -103,7 +103,7 @@
 																				<double key="iconScale">1.000000e+00</double>
 																			</object>
 																		</object>
-																		<string key="NSFrame">{{1, 1}, {158, 307}}</string>
+																		<string key="NSFrame">{{1, 1}, {173, 307}}</string>
 																		<reference key="NSSuperview" ref="381397786"/>
 																		<reference key="NSNextKeyView" ref="58691880"/>
 																		<reference key="NSDocView" ref="58691880"/>
@@ -120,18 +120,17 @@
 																	</object>
 																	<object class="NSScroller" id="714682327">
 																		<reference key="NSNextResponder" ref="381397786"/>
-																		<int key="NSvFlags">256</int>
-																		<string key="NSFrame">{{159, 1}, {15, 307}}</string>
+																		<int key="NSvFlags">-2147483392</int>
+																		<string key="NSFrame">{{334, 1}, {15, 616}}</string>
 																		<reference key="NSSuperview" ref="381397786"/>
-																		<bool key="NSEnabled">YES</bool>
 																		<reference key="NSTarget" ref="381397786"/>
 																		<string key="NSAction">_doScroller:</string>
-																		<double key="NSPercent">2.184431e-01</double>
+																		<double key="NSPercent">3.593932e-01</double>
 																	</object>
 																	<object class="NSScroller" id="888306192">
 																		<reference key="NSNextResponder" ref="381397786"/>
 																		<int key="NSvFlags">-2147483392</int>
-																		<string key="NSFrame">{{1, 288}, {158, 15}}</string>
+																		<string key="NSFrame">{{1, 602}, {333, 15}}</string>
 																		<reference key="NSSuperview" ref="381397786"/>
 																		<int key="NSsFlags">1</int>
 																		<reference key="NSTarget" ref="381397786"/>
@@ -142,7 +141,7 @@
 																<string key="NSFrameSize">{175, 309}</string>
 																<reference key="NSSuperview" ref="502038598"/>
 																<reference key="NSNextKeyView" ref="727294889"/>
-																<int key="NSsFlags">626</int>
+																<int key="NSsFlags">562</int>
 																<reference key="NSVScroller" ref="714682327"/>
 																<reference key="NSHScroller" ref="888306192"/>
 																<reference key="NSContentView" ref="727294889"/>
@@ -412,7 +411,7 @@
 																					<nil key="NSDefaultParagraphStyle"/>
 																				</object>
 																				<int key="NSTVFlags">7</int>
-																				<string key="NSMaxSize">{300, 1e+07}</string>
+																				<string key="NSMaxSize">{623, 1e+07}</string>
 																				<string key="NSMinize">{299, 0}</string>
 																				<nil key="NSDelegate"/>
 																			</object>
@@ -600,6 +599,7 @@
 												<string key="NSFrame">{{0, -1}, {500, 512}}</string>
 												<reference key="NSSuperview" ref="723999534"/>
 												<int key="NSDividerStyle">2</int>
+												<string key="NSAutosaveName">Info panel horizontal splitview</string>
 											</object>
 										</object>
 										<string key="NSFrameSize">{500, 511}</string>
