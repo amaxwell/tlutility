@@ -216,7 +216,16 @@ static void __TLMProxySettingsChanged(SCDynamicStoreRef store, CFArrayRef change
 {
     /*
      Attempt to handle kSCPropNetProxiesExceptionsList?
-     How about passwords?  No constants for the names used.
+     
+     How about passwords?
+     
+     Keychain should be able to find this using the server name and account name,
+     and presumably one of kSecProtocolTypeHTTPProxy or kSecProtocolTypeFTPProxy
+     for the protocol.  So the only requirement would be a default for the username,
+     unless there's a way to get that out of the keychain...maybe kSecAccountItemAttr?
+     
+     There's also no way to tell that a given proxy requires a username/password,
+     at least in the SC constants, so that requires a bool default.
      */
     NSDictionary *proxies = [(id)SCDynamicStoreCopyProxies(store) autorelease];
     
