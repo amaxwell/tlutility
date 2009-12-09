@@ -82,6 +82,40 @@
     return [infoString autorelease];
 }
 
+static float __TLMTexdocVersion()
+{
+    NSString *cmd = [[TLMPreferenceController sharedPreferenceController] texdocAbsolutePath];
+    TLMTask *task = [[TLMTask new] autorelease];
+    [task setLaunchPath:cmd];
+    
+    /*
+     NB: 0.4 uses -v for --version.  Unfortunately, 0.42 uses -v for --verbose and has no short 
+     option for version, so we'll use the lowest common denominator.
+     */
+    [task setArguments:[NSArray arrayWithObject:@"--version"]];
+    [task launch];
+    [task waitUntilExit];
+    
+    /*
+     0.40 output: "texdoc version: 0.4"
+     0.42 output: "texdoc 0.42"
+     svn output:  "texdoc 0.42+ svn r45"
+     0.60 output: "texdoc 0.60"
+     */    
+    NSString *versionString = [task terminationStatus] == EXIT_SUCCESS ? [task outputString] : nil;
+    
+    NSScanner *scanner = nil;
+    if (versionString)
+        scanner = [NSScanner scannerWithString:versionString];
+    
+    // return something invalid on failure
+    float version = -1.0;
+    if ([scanner scanUpToCharactersFromSet:[NSCharacterSet decimalDigitCharacterSet] intoString:NULL])
+        [scanner scanFloat:&version];
+    
+    return version;
+}
+
 static NSArray * __TLMURLsFromTexdocOutput(NSString *outputString)
 {
     NSMutableArray *docURLs = [NSMutableArray array];
@@ -104,6 +138,58 @@ static NSArray * __TLMURLsFromTexdocOutput(NSString *outputString)
             if (docURL) [docURLs addObject:docURL];
         }
     }
+    return docURLs;
+}
+
+#warning confirm version number
+static bool __TLMTexdocHasMachineReadable() { return (__TLMTexdocVersion() > 0.59); }
+
+static NSArray * __TLMURLsFromTexdocOutput2(NSString *outputString)
+{
+    
+    /*
+     http://tug.org/mailman/private/texdoc/2009-November/000120.html
+     
+     Message from mpg:
+     
+         I also made another change, as a preparation for next version. So the
+         final (or so I hope) format is:
+         
+         argument <tab> score <tab> filename
+         
+         as in:
+         
+         foo	1	/path/a
+         foo	0	/path/b
+         bar	1	/path/c
+         
+         Currently the score doesn't mean anything, you can just consider it as
+         dummy values. But in future versions, there should be a scoring system
+         in texdoc, and the score will be a real value. (I intend to use this
+         info in coverage-check scripts, but maybe you'll want to use it in some
+         way too. I'll keep you informed when the score will become meaningful.)
+
+     stokes:tmp amaxwell$ texdoc --version
+     texdoc 0.60
+     stokes:tmp amaxwell$ texdoc -l -I -M makeindex
+     makeindex	10	/usr/local/texlive/2009/texmf-dist/doc/support/makeindex/makeindex.pdf
+     makeindex	1.5	/usr/local/texlive/2009/texmf-dist/doc/support/makeindex/ind.pdf
+     makeindex	1	/usr/local/texlive/2009/texmf/doc/man/man1/makeindex.man1.pdf
+     makeindex	1	/usr/local/texlive/2009/texmf-dist/doc/generic/FAQ-en/html/FAQ-makeindex.html
+     */
+
+    NSArray *lines = [outputString componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+    NSMutableArray *docURLs = [NSMutableArray arrayWithCapacity:[lines count]];
+
+    for (NSString *line in lines) {
+        
+        NSArray *comps = [line componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+        if ([comps count] < 3) continue;
+        
+        NSURL *aURL = [NSURL fileURLWithPath:[comps objectAtIndex:2]];
+        if (aURL) [docURLs addObject:aURL];
+    }
+    
     return docURLs;
 }
 
@@ -148,7 +234,12 @@ static NSArray * __TLMURLsFromTexdocOutput(NSString *outputString)
     
     TLMTask *task = [[TLMTask new] autorelease];
     [task setLaunchPath:cmd];
-    [task setArguments:[NSArray arrayWithObjects:@"-l", @"-I", packageName, nil]];
+    
+    const bool useMachineReadable = __TLMTexdocHasMachineReadable();
+    if (useMachineReadable)
+        [task setArguments:[NSArray arrayWithObjects:@"--list", @"--nointeract", @"--machine", packageName, nil]];
+    else
+        [task setArguments:[NSArray arrayWithObjects:@"-l", @"-I", packageName, nil]];
     [task launch];
     
     // Reimplement -[NSTask waitUntilExit] so we can handle -[NSOperation cancel].
@@ -172,7 +263,7 @@ static NSArray * __TLMURLsFromTexdocOutput(NSString *outputString)
     signal(SIGPIPE, previousSignalMask);
     
     if (outputString) {
-        NSArray *docURLs = __TLMURLsFromTexdocOutput(outputString);
+        NSArray *docURLs = useMachineReadable ? __TLMURLsFromTexdocOutput2(outputString) : __TLMURLsFromTexdocOutput(outputString);
         if ([docURLs count])
             [self setDocumentationURLs:docURLs];
     }
