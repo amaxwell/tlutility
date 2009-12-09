@@ -153,9 +153,7 @@ static NSString * const TLMInfoFileViewIconScaleKey = @"TLMInfoFileViewIconScale
     [_spinner setUsesThreadedAnimation:YES];
     if ([[NSUserDefaults standardUserDefaults] objectForKey:TLMInfoFileViewIconScaleKey] != nil)
         [_fileView setIconScale:[[NSUserDefaults standardUserDefaults] doubleForKey:TLMInfoFileViewIconScaleKey]];
-    [_fileView addObserver:self forKeyPath:@"iconScale" options:0 context:&_TLMInfoFileViewScaleObserverationContext];
-    
-    [_outlineView setFontNamePreferenceKey:@"TLMInfoOutlineViewFontName" sizePreferenceKey:@"TLMInfoOutlineViewFontSize"];
+    [_fileView addObserver:self forKeyPath:@"iconScale" options:0 context:&_TLMInfoFileViewScaleObserverationContext];    
 }
 
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
