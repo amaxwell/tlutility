@@ -309,6 +309,13 @@ static NSString * const TLMInfoFileViewIconScaleKey = @"TLMInfoFileViewIconScale
 
 #pragma mark Outline view
 
+/*
+ NB: there is a fair amount of stuff dependent on having 3 categories here, and also a bunch
+ of checks for isKindOfClass:.  I'd generally eschew that, but in this case it's simpler than
+ writing another treenode class, and this isn't intended to do anything fancy.  Performance
+ is also fine, again since there are so few nodes to deal with.
+ */
+
 - (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)index ofItem:(id)item;
 {
     if (nil == item) {
@@ -379,16 +386,22 @@ static NSString * const TLMInfoFileViewIconScaleKey = @"TLMInfoFileViewIconScale
 {
     NSCell *dataCell = [tableColumn dataCell];
     if ([item isKindOfClass:[NSURL class]]) {
-        NSFont *font = [dataCell font];
         dataCell = [[NSPathCell new] autorelease];
-        // NSPathStylePopUp is the only one that doesn't look like crap in a table...maybe just a plain file/icon cell would be better
+        /*
+         NSPathStylePopUp is the only one that doesn't look like crap in a table, and the popup is
+         probably the most useful variant for the UI.
+         */
         [(NSPathCell *)dataCell setPathStyle:NSPathStylePopUp];
-        [dataCell setFont:font];
         [dataCell setEditable:NO];
         [dataCell setTarget:self];
         [dataCell setAction:@selector(_pathCellAction:)];
         [(NSPathCell *)dataCell setDelegate:self];
     }
+    
+    // small size fits better with the UI here; changing from system font looks funny, though
+    [dataCell setControlSize:NSSmallControlSize];
+    [dataCell setFont:[NSFont systemFontOfSize:[NSFont smallSystemFontSize]]];
+
     return dataCell; 
 }
 
