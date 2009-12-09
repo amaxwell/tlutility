@@ -182,14 +182,14 @@ static bool hasKeyPrefix(NSString *line)
     NSMutableArray *runfiles = [NSMutableArray array];
     NSMutableArray *sourcefiles = [NSMutableArray array];
     NSMutableArray *docfiles = [NSMutableArray array];
-    int state;
+    int state = -1;
     
     NSString *installPath = [[[TLMPreferenceController sharedPreferenceController] installDirectory] path];
     
     for (NSString *line in lines) {
         
         enum {
-            PREAMBLE_STATE,
+            PREAMBLE_STATE = 0,
             RUNFILE_STATE,
             SOURCEFILE_STATE,
             DOCFILE_STATE
