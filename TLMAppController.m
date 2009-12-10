@@ -43,6 +43,7 @@
 #import "TLMReleaseNotesController.h"
 #import "TLMTask.h"
 #import <SystemConfiguration/SystemConfiguration.h>
+#import <Sparkle/Sparkle.h>
 
 @implementation TLMAppController
 
@@ -479,6 +480,24 @@ static void __TLMProxySettingsChanged(SCDynamicStoreRef store, CFArrayRef change
 {
     [[TLMReleaseNotesController sharedInstance] showWindow:nil];
 }
+
+#if 0
+
+- (SUAppcastItem *)bestValidUpdateInAppcast:(SUAppcast *)appcast forUpdater:(SUUpdater *)updater;
+{
+    SUAppcastItem *item;
+    NSUInteger year = [[self class] texliveYear];
+    
+    for (item in [appcast items]) {
+    
+        // find newest version corresponding to this TL release
+        
+    }
+
+    return item;
+}
+
+#endif
 
 #if 0
 
