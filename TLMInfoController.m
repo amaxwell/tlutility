@@ -59,9 +59,6 @@
 
 @interface TLMInfoController()
 @property (readwrite, copy) NSArray *fileObjects;
-@property (readwrite, copy) NSArray *runfiles;
-@property (readwrite, copy) NSArray *sourcefiles;
-@property (readwrite, copy) NSArray *docfiles;
 @end
 
 static char _TLMInfoFileViewScaleObserverationContext;
@@ -74,9 +71,6 @@ static NSString * const TLMInfoFileViewIconScaleKey = @"TLMInfoFileViewIconScale
 @synthesize _tabView;
 @synthesize _fileView;
 @synthesize fileObjects = _fileObjects;
-@synthesize runfiles = _runfiles;
-@synthesize sourcefiles = _sourcefiles;
-@synthesize docfiles = _docfiles;
 @synthesize _outlineView;
 
 + (TLMInfoController *)sharedInstance
@@ -93,6 +87,11 @@ static NSString * const TLMInfoFileViewIconScaleKey = @"TLMInfoFileViewIconScale
     if (self) {
         _infoQueue = [NSOperationQueue new];
         [_infoQueue setMaxConcurrentOperationCount:1];
+        
+        // keep mutable arrays so we can do pointer comparison in datasource methods
+        _runfiles = [NSMutableArray new];
+        _sourcefiles = [NSMutableArray new];
+        _docfiles = [NSMutableArray new];
     }
     return self;
 }
@@ -201,9 +200,9 @@ static NSString * const TLMInfoFileViewIconScaleKey = @"TLMInfoFileViewIconScale
             id <TLMInfoOutput> output = [TLMOutputParser outputWithInfoString:result docURLs:docURLs];
             [[_textView textStorage] setAttributedString:[output attributedString]];
             
-            [self setRunfiles:[output runfiles]];
-            [self setSourcefiles:[output sourcefiles]];
-            [self setDocfiles:[output docfiles]];
+            [_runfiles setArray:[output runfiles]];
+            [_sourcefiles setArray:[output sourcefiles]];
+            [_docfiles setArray:[output docfiles]];
             [_outlineView reloadData];
             [_outlineView expandItem:nil expandChildren:YES];
             
@@ -236,9 +235,9 @@ static NSString * const TLMInfoFileViewIconScaleKey = @"TLMInfoFileViewIconScale
             [self setFileObjects:nil];
             [_fileView reloadIcons];
             
-            [self setRunfiles:nil];
-            [self setSourcefiles:nil];
-            [self setDocfiles:nil];
+            [_runfiles removeAllObjects];
+            [_sourcefiles removeAllObjects];
+            [_docfiles removeAllObjects];
             [_outlineView reloadData];
             
             [_tabView selectLastTabViewItem:nil];
@@ -264,9 +263,9 @@ static NSString * const TLMInfoFileViewIconScaleKey = @"TLMInfoFileViewIconScale
         [_spinner stopAnimation:nil];
         [self setFileObjects:nil];
         [_fileView reloadIcons];
-        [self setRunfiles:nil];
-        [self setSourcefiles:nil];
-        [self setDocfiles:nil];
+        [_runfiles removeAllObjects];
+        [_sourcefiles removeAllObjects];
+        [_docfiles removeAllObjects];
         [_outlineView reloadData];
         [_tabView selectFirstTabViewItem:nil];
     }        

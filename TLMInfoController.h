@@ -51,9 +51,9 @@
     NSArray             *_fileObjects;
     
     TLMOutlineView      *_outlineView;
-    NSArray             *_runfiles;
-    NSArray             *_sourcefiles;
-    NSArray             *_docfiles;
+    NSMutableArray      *_runfiles;
+    NSMutableArray      *_sourcefiles;
+    NSMutableArray      *_docfiles;
     NSPathCell          *_clickedCell;
 }
 
