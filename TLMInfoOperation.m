@@ -142,7 +142,7 @@ static NSArray * __TLMURLsFromTexdocOutput(NSString *outputString)
 }
 
 // version 0.50 and greater have machine readable
-static bool __TLMTexdocHasMachineReadable() { return ((int)(__TLMTexdocVersion() * 10) >= 50); }
+static bool __TLMTexdocHasMachineReadable() { return ((int)(__TLMTexdocVersion() * 100) >= 50); }
 
 static NSArray * __TLMURLsFromTexdocOutput2(NSString *outputString)
 {
