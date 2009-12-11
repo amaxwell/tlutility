@@ -214,14 +214,33 @@ static void __TLMMigrateBundleIdentifier()
     TLMLog(__func__, @"Using PATH = \"%@\"", systemPaths);
 }
 
+static void __TLMSetProxyEnvironment(const char *var, NSString *proxy, const uint16_t port)
+{
+    NSCParameterAssert(var);
+    NSCParameterAssert(proxy);
+    
+    // !!! log before inserting user/pass
+    TLMLog(__func__, @"Setting %s = %@:%d", var, proxy, port);
+
+    /*
+     There's no SystemConfiguration key to tell that a given proxy requires a username/password,
+     but System Preferences will add a password to the keychain for this proxy if it's required,
+     and will delete it from the keychain if the password field content is deleted.  Hence, this
+     seems like a pretty reasonable check.
+     */
+    NSString *user, *pass;
+    if (TLMGetUserAndPassForProxy(proxy, port, &user, &pass))
+        proxy = [NSString stringWithFormat:@"%@:%@@%@", user, pass, proxy];
+    
+    if (port) proxy = [proxy stringByAppendingFormat:@":%d", port];
+    const char *value = [proxy UTF8String];
+    if (value && strlen(value)) setenv(var, value, 1);
+}
+
 static void __TLMProxySettingsChanged(SCDynamicStoreRef store, CFArrayRef changedKeys, void *info)
 {
     /*
-     Attempt to handle kSCPropNetProxiesExceptionsList?
-       
-     There's also no way to tell that a given proxy requires a username/password,
-     at least in the SC constants, but Sys Prefs appears to manage the keychain
-     such that if we find a password, it will be required.
+     Attempt to handle kSCPropNetProxiesExceptionsList?  Probably not worth it...
      */
     NSDictionary *proxies = [(id)SCDynamicStoreCopyProxies(store) autorelease];
     
@@ -230,14 +249,7 @@ static void __TLMProxySettingsChanged(SCDynamicStoreRef store, CFArrayRef change
         NSString *proxy = [proxies objectForKey:(id)kSCPropNetProxiesHTTPProxy];
         NSNumber *port = [proxies objectForKey:(id)kSCPropNetProxiesHTTPPort];
         
-        NSString *user, *pass;
-        if (TLMGetUserAndPassForProxy(&user, &pass, proxy, [port shortValue]))
-            proxy = [NSString stringWithFormat:@"%@:%@@%@", user, pass, proxy];
-        
-        if (port) proxy = [proxy stringByAppendingFormat:@":%d", [port intValue]];
-        const char *value = [proxy UTF8String];
-        if (value && strlen(value)) setenv("http_proxy", value, 1);
-        TLMLog(__func__, @"Set http_proxy = %@", proxy);
+        __TLMSetProxyEnvironment("http_proxy", proxy, [port shortValue]);
     }
     else if (getenv("http_proxy") != NULL) {
         unsetenv("http_proxy");
@@ -249,14 +261,7 @@ static void __TLMProxySettingsChanged(SCDynamicStoreRef store, CFArrayRef change
         NSString *proxy = [proxies objectForKey:(id)kSCPropNetProxiesFTPProxy];
         NSNumber *port = [proxies objectForKey:(id)kSCPropNetProxiesFTPPort];
         
-        NSString *user, *pass;
-        if (TLMGetUserAndPassForProxy(&user, &pass, proxy, [port shortValue]))
-            proxy = [NSString stringWithFormat:@"%@:%@@%@", user, pass, proxy];
-        
-        if (port) proxy = [proxy stringByAppendingFormat:@":%d", [port intValue]];
-        const char *value = [proxy UTF8String];
-        if (value && strlen(value)) setenv("ftp_proxy", value, 1);
-        TLMLog(__func__, @"Set ftp_proxy = %@", proxy);
+        __TLMSetProxyEnvironment("ftp_proxy", proxy, [port shortValue]);
     }
     else if (getenv("ftp_proxy") != NULL) {
         unsetenv("ftp_proxy");
