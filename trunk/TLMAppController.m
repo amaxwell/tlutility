@@ -44,6 +44,7 @@
 #import "TLMTask.h"
 #import <SystemConfiguration/SystemConfiguration.h>
 #import <Sparkle/Sparkle.h>
+#import "KeychainUtilities.h"
 
 @implementation TLMAppController
 
@@ -217,16 +218,10 @@ static void __TLMProxySettingsChanged(SCDynamicStoreRef store, CFArrayRef change
 {
     /*
      Attempt to handle kSCPropNetProxiesExceptionsList?
-     
-     How about passwords?
-     
-     Keychain should be able to find this using the server name and account name,
-     and presumably one of kSecProtocolTypeHTTPProxy or kSecProtocolTypeFTPProxy
-     for the protocol.  So the only requirement would be a default for the username,
-     unless there's a way to get that out of the keychain...maybe kSecAccountItemAttr?
-     
+       
      There's also no way to tell that a given proxy requires a username/password,
-     at least in the SC constants, so that requires a bool default.
+     at least in the SC constants, but Sys Prefs appears to manage the keychain
+     such that if we find a password, it will be required.
      */
     NSDictionary *proxies = [(id)SCDynamicStoreCopyProxies(store) autorelease];
     
@@ -234,6 +229,10 @@ static void __TLMProxySettingsChanged(SCDynamicStoreRef store, CFArrayRef change
         
         NSString *proxy = [proxies objectForKey:(id)kSCPropNetProxiesHTTPProxy];
         NSNumber *port = [proxies objectForKey:(id)kSCPropNetProxiesHTTPPort];
+        
+        NSString *user, *pass;
+        if (TLMGetUserAndPassForProxy(&user, &pass, proxy, [port shortValue]))
+            proxy = [NSString stringWithFormat:@"%@:%@@%@", user, pass, proxy];
         
         if (port) proxy = [proxy stringByAppendingFormat:@":%d", [port intValue]];
         const char *value = [proxy UTF8String];
@@ -249,6 +248,10 @@ static void __TLMProxySettingsChanged(SCDynamicStoreRef store, CFArrayRef change
         
         NSString *proxy = [proxies objectForKey:(id)kSCPropNetProxiesFTPProxy];
         NSNumber *port = [proxies objectForKey:(id)kSCPropNetProxiesFTPPort];
+        
+        NSString *user, *pass;
+        if (TLMGetUserAndPassForProxy(&user, &pass, proxy, [port shortValue]))
+            proxy = [NSString stringWithFormat:@"%@:%@@%@", user, pass, proxy];
         
         if (port) proxy = [proxy stringByAppendingFormat:@":%d", [port intValue]];
         const char *value = [proxy UTF8String];
