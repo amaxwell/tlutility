@@ -93,6 +93,7 @@
 - (void)windowDidLoad
 {
     [super windowDidLoad];
+    [[self window] setTitle:NSLocalizedString(@"Release Notes", @"Window title")];
     if ([_versions count] == 0) {
         [_statusField setStringValue:NSLocalizedString(@"Downloading release notes", @"")];
         [self _startDownload];   
