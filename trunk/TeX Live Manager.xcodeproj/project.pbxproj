@@ -12,7 +12,6 @@
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		F90520DA0EFDCB5400B489FE /* TLMAuthorizedOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F90520D90EFDCB5400B489FE /* TLMAuthorizedOperation.m */; };
-		F905217F0EFEA98600B489FE /* PapersizeSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = F905217E0EFEA98600B489FE /* PapersizeSheet.xib */; };
 		F9053F4810B21B0D00BF5C0B /* TLMProgressIndicatorCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F9053F4710B21B0D00BF5C0B /* TLMProgressIndicatorCell.m */; };
 		F9129BC0102F25AC000A7B50 /* TLMSizeFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = F9129BBF102F25AC000A7B50 /* TLMSizeFormatter.m */; };
 		F91858E0104798C400341791 /* TLMOptionOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F91858DF104798C400341791 /* TLMOptionOperation.m */; };
@@ -31,6 +30,7 @@
 		F9963EC50F0490E9005F0174 /* TLMRemoveOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F9963EC40F0490E9005F0174 /* TLMRemoveOperation.m */; };
 		F9963FEF0F054999005F0174 /* TLMInstallOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F9963FEE0F054999005F0174 /* TLMInstallOperation.m */; };
 		F9999F9C10D1C33800F594CB /* TLMKeychainUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = F9999F9B10D1C33800F594CB /* TLMKeychainUtilities.m */; };
+		F9999FE510D2AAFF00F594CB /* PapersizeSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = F9999FE410D2AAFF00F594CB /* PapersizeSheet.xib */; };
 		F99CCDE70F0EB56E00D67ED0 /* DefaultMirrors.plist in Resources */ = {isa = PBXBuildFile; fileRef = F99CCDDA0F0EAFB300D67ED0 /* DefaultMirrors.plist */; };
 		F99D9B0B0F01731E00A1DCCB /* TLMTabView.m in Sources */ = {isa = PBXBuildFile; fileRef = F99D9B0A0F01731E00A1DCCB /* TLMTabView.m */; };
 		F99E51980EEE4AD5006E6B39 /* TLMURLFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = F99E51970EEE4AD5006E6B39 /* TLMURLFormatter.m */; };
@@ -239,7 +239,7 @@
 		8D1107320486CEB800E47090 /* TeX Live Utility.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TeX Live Utility.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F90520D80EFDCB5400B489FE /* TLMAuthorizedOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMAuthorizedOperation.h; sourceTree = "<group>"; };
 		F90520D90EFDCB5400B489FE /* TLMAuthorizedOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMAuthorizedOperation.m; sourceTree = "<group>"; };
-		F905217E0EFEA98600B489FE /* PapersizeSheet.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PapersizeSheet.xib; sourceTree = "<group>"; };
+		F905217E0EFEA98600B489FE /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/PapersizeSheet.xib; sourceTree = "<group>"; };
 		F9053F4610B21B0D00BF5C0B /* TLMProgressIndicatorCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMProgressIndicatorCell.h; sourceTree = "<group>"; };
 		F9053F4710B21B0D00BF5C0B /* TLMProgressIndicatorCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMProgressIndicatorCell.m; sourceTree = "<group>"; };
 		F9129BBE102F25AC000A7B50 /* TLMSizeFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMSizeFormatter.h; sourceTree = "<group>"; };
@@ -465,7 +465,7 @@
 				F9B134700EEB1B13007C0046 /* MainWindow.xib */,
 				F9B13B2A0EECEB05007C0046 /* InfoPanel.xib */,
 				F9F130550EED94D800D9968D /* Preferences.xib */,
-				F905217E0EFEA98600B489FE /* PapersizeSheet.xib */,
+				F9999FE410D2AAFF00F594CB /* PapersizeSheet.xib */,
 				F99CCDDA0F0EAFB300D67ED0 /* DefaultMirrors.plist */,
 				F96249D40F1C516F007F3D70 /* ReleaseNotes.xib */,
 			);
@@ -800,7 +800,7 @@
 				F9ABAA5E0EF198D500497E0F /* Credits.rtf in Resources */,
 				F97E85740EFA18F400862882 /* TeXDistTool.icns in Resources */,
 				F97E860C0EFA3BFD00862882 /* TeXDistDocument.icns in Resources */,
-				F905217F0EFEA98600B489FE /* PapersizeSheet.xib in Resources */,
+				F9999FE510D2AAFF00F594CB /* PapersizeSheet.xib in Resources */,
 				F9DCD43F0F06F76F00600DD2 /* dsa_pub.pem in Resources */,
 				F9B062000F0F388500BB03D3 /* Localizable.strings in Resources */,
 				F96249D50F1C516F007F3D70 /* ReleaseNotes.xib in Resources */,
@@ -946,6 +946,14 @@
 				1DDD58150DA1D0A300B32029 /* English */,
 			);
 			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+		F9999FE410D2AAFF00F594CB /* PapersizeSheet.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F905217E0EFEA98600B489FE /* English */,
+			);
+			name = PapersizeSheet.xib;
 			sourceTree = "<group>";
 		};
 		F9B061FF0F0F388500BB03D3 /* Localizable.strings */ = {
