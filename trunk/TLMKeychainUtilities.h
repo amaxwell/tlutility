@@ -43,7 +43,7 @@
 
 __BEGIN_DECLS
 
-extern bool TLMGetUserAndPassForProxy(NSString **user, NSString **pass, NSString *host, const uint16_t port);
+extern bool TLMGetUserAndPassForProxy(NSString *host, const uint16_t port, NSString **user, NSString **pass);
 
 __END_DECLS
 
