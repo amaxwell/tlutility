@@ -460,6 +460,8 @@ static void __TLMProxySettingsChanged(SCDynamicStoreRef store, CFArrayRef change
     [[TLMPreferenceController sharedPreferenceController] showWindow:nil];
 }
 
+#pragma mark Help Menu
+
 - (IBAction)openDisasterRecoveryPage:(id)sender
 {
     NSURL *aURL = [NSURL URLWithString:@"http://tug.org/texlive/tlmgr.html"];
@@ -488,6 +490,8 @@ static void __TLMProxySettingsChanged(SCDynamicStoreRef store, CFArrayRef change
 {
     [[TLMReleaseNotesController sharedInstance] showWindow:nil];
 }
+
+#pragma mark -
 
 #if 0
 
