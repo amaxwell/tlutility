@@ -65,8 +65,13 @@ bool TLMGetUserAndPassForProxy(NSString **user, NSString **pass, NSString *host,
      removing a proxy in Sys Prefs or unchecking the password box will remove the proxy password
      from the keychain.
      */
+    if (errSecItemNotFound == err) {
+        TLMLog(__func__, @"No username/password for proxy %@:%d", host, port);
+        return false;
+    }
+    
     if (noErr != err) {
-        TLMLog(__func__, @"SecKeychainFindInternetPassword: %s", GetMacOSStatusErrorString(err));
+        TLMLog(__func__, @"unexpected error from SecKeychainFindInternetPassword: %s", GetMacOSStatusErrorString(err));
         return false;
     }
     
@@ -122,7 +127,7 @@ bool TLMGetUserAndPassForProxy(NSString **user, NSString **pass, NSString *host,
     SecKeychainAttributeList *attrList = NULL;
     void *attrs;
     
-    // finally, we can actually copy the attributes out of this thing
+    // finally, we can actually copy the attributes out of this thing (causes a 2nd authorization dialog to appear)
     err = SecKeychainItemCopyAttributesAndData(item, attrInfo, NULL, &attrList, &len, &attrs);
     assert(noErr == err);
     assert(attrInfo->count == attrList->count);
