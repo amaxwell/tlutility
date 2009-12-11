@@ -36,7 +36,7 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "KeychainUtilities.h"
+#import "TLMKeychainUtilities.h"
 #import "TLMLogServer.h"
 #import <CoreServices/CoreServices.h>
 #import <Security/Security.h>

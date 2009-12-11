@@ -44,7 +44,7 @@
 #import "TLMTask.h"
 #import <SystemConfiguration/SystemConfiguration.h>
 #import <Sparkle/Sparkle.h>
-#import "KeychainUtilities.h"
+#import "TLMKeychainUtilities.h"
 
 @implementation TLMAppController
 
