@@ -41,7 +41,7 @@
 #import <CoreServices/CoreServices.h>
 #import <Security/Security.h>
 
-bool TLMGetUserAndPassForProxy(NSString **user, NSString **pass, NSString *host, const uint16_t port)
+bool TLMGetUserAndPassForProxy(NSString *host, const uint16_t port, NSString **user, NSString **pass)
 {
     NSCParameterAssert(user);
     NSCParameterAssert(pass);
