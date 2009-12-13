@@ -237,6 +237,31 @@ static void __TLMSetProxyEnvironment(const char *var, NSString *proxy, const uin
     if (value && strlen(value)) setenv(var, value, 1);
 }
 
+static void __TLMPacCallback(void *info, CFArrayRef proxyList, CFErrorRef error)
+{
+    bool *finished = info;
+    *finished = true;
+    NSDictionary *firstProxy = CFArrayGetCount(proxyList) ? (id)CFArrayGetValueAtIndex(proxyList, 0) : nil;
+    NSString *proxyType = [firstProxy objectForKey:(id)kCFProxyTypeKey];
+    TLMLog(__func__, @"Proxy list = %@", proxyList);
+    if ([proxyType isEqualToString:(id)kCFProxyTypeNone] == NO) {
+        
+        NSString *proxy = [firstProxy objectForKey:(id)kCFProxyHostNameKey];
+        NSString *port = [firstProxy objectForKey:(id)kCFProxyPortNumberKey];
+        
+        /*
+         Should set individually, but that really requires getting a proxy for each 
+         request before executing tlmgr so we know the actual host.  This will probably
+         work in most common cases.
+         */
+        __TLMSetProxyEnvironment("http_proxy", proxy, [port intValue]);
+        __TLMSetProxyEnvironment("ftp_proxy", proxy, [port intValue]);
+    }
+    else {
+        TLMLog(__func__, @"No proxy required for %@", [[[TLMPreferenceController sharedPreferenceController] defaultServerURL] absoluteString]);
+    }
+}
+
 static void __TLMProxySettingsChanged(SCDynamicStoreRef store, CFArrayRef changedKeys, void *info)
 {
     /*
@@ -244,28 +269,63 @@ static void __TLMProxySettingsChanged(SCDynamicStoreRef store, CFArrayRef change
      */
     NSDictionary *proxies = [(id)SCDynamicStoreCopyProxies(store) autorelease];
     
-    if ([[proxies objectForKey:(id)kSCPropNetProxiesHTTPEnable] intValue] != 0) {
+    // try to handle a PAC URL first
+    if ([[proxies objectForKey:(id)kSCPropNetProxiesProxyAutoConfigEnable] intValue] != 0) {
         
-        NSString *proxy = [proxies objectForKey:(id)kSCPropNetProxiesHTTPProxy];
-        NSNumber *port = [proxies objectForKey:(id)kSCPropNetProxiesHTTPPort];
+        NSString *proxy = [proxies objectForKey:(id)kSCPropNetProxiesProxyAutoConfigURLString];
+
+        if (proxy) {
+            
+            // manually get the underlying proxy for the default server URL
+            NSURL *pacURL = [NSURL URLWithString:proxy];
+            NSURL *mirrorURL = [[TLMPreferenceController sharedPreferenceController] defaultServerURL];
+            
+            TLMLog(__func__, @"Trying to find a proxy for %@ using PAC %@%C", [mirrorURL absoluteString], proxy, 0x2026);
+            
+            bool finished = false;
+            CFStreamClientContext ctxt = { 0, &finished, NULL, NULL, NULL };
+            
+            // not a create/copy, but how is this deallocated?
+            CFRunLoopSourceRef rls = CFNetworkExecuteProxyAutoConfigurationURL((CFURLRef)pacURL, (CFURLRef)mirrorURL, __TLMPacCallback, &ctxt);
+            CFStringRef mode = CFSTR("__TLMProxyAutoConfigRunLoopMode");
+            CFRunLoopAddSource(CFRunLoopGetCurrent(), rls, mode);
+            
+            do {
+                (void) CFRunLoopRunInMode(mode, 0.1, TRUE);
+            } while (false == finished);
+        }
+        else {
+            TLMLog(__func__, @"No PAC URL given");
+        }
+
+    }
+    else {
         
-        __TLMSetProxyEnvironment("http_proxy", proxy, [port shortValue]);
-    }
-    else if (getenv("http_proxy") != NULL) {
-        unsetenv("http_proxy");
-        TLMLog(__func__, @"Unset http_proxy");
-    }
+        // manually specified proxies
     
-    if ([[proxies objectForKey:(id)kSCPropNetProxiesFTPEnable] intValue] != 0) {
+        if ([[proxies objectForKey:(id)kSCPropNetProxiesHTTPEnable] intValue] != 0) {
+            
+            NSString *proxy = [proxies objectForKey:(id)kSCPropNetProxiesHTTPProxy];
+            NSNumber *port = [proxies objectForKey:(id)kSCPropNetProxiesHTTPPort];
+            
+            __TLMSetProxyEnvironment("http_proxy", proxy, [port shortValue]);
+        }
+        else if (getenv("http_proxy") != NULL) {
+            unsetenv("http_proxy");
+            TLMLog(__func__, @"Unset http_proxy");
+        }
         
-        NSString *proxy = [proxies objectForKey:(id)kSCPropNetProxiesFTPProxy];
-        NSNumber *port = [proxies objectForKey:(id)kSCPropNetProxiesFTPPort];
-        
-        __TLMSetProxyEnvironment("ftp_proxy", proxy, [port shortValue]);
-    }
-    else if (getenv("ftp_proxy") != NULL) {
-        unsetenv("ftp_proxy");
-        TLMLog(__func__, @"Unset ftp_proxy");
+        if ([[proxies objectForKey:(id)kSCPropNetProxiesFTPEnable] intValue] != 0) {
+            
+            NSString *proxy = [proxies objectForKey:(id)kSCPropNetProxiesFTPProxy];
+            NSNumber *port = [proxies objectForKey:(id)kSCPropNetProxiesFTPPort];
+            
+            __TLMSetProxyEnvironment("ftp_proxy", proxy, [port shortValue]);
+        }
+        else if (getenv("ftp_proxy") != NULL) {
+            unsetenv("ftp_proxy");
+            TLMLog(__func__, @"Unset ftp_proxy");
+        }
     }
 }
 
