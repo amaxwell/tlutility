@@ -84,7 +84,9 @@ static NSString *__TLMGetTemporaryDirectory()
         [super dealloc];
         return nil;
     }
-    NSString *locationString = [@"~/tlnet2009/tlnet/" stringByStandardizingPath];
+#warning temporary
+    NSString *locationString = [@"~/tlnet/" stringByStandardizingPath];
+    location = [NSURL fileURLWithPath:locationString];
     NSArray *options = [NSArray arrayWithObjects:@"-profile", profilePath, @"-location", locationString, nil];
     self = [super initWithCommand:scriptPath options:options];
     if (self) {
@@ -206,7 +208,7 @@ static NSString *__TLMGetTemporaryDirectory()
     CFURLRef fullURL = CFURLCreateCopyAppendingPathComponent(CFGetAllocator(_location), (CFURLRef)_location, (CFStringRef)path, FALSE);
     NSURL *scriptURL = [(id)fullURL autorelease];
     
-    [self _synchronouslyDownloadURL:scriptURL toPath:path];
+    [self _synchronouslyDownloadURL:scriptURL toPath:[_updateDirectory stringByAppendingPathComponent:path]];
     
     // set rwxr-xr-x
     if (_downloadComplete) {
@@ -214,9 +216,12 @@ static NSString *__TLMGetTemporaryDirectory()
         TLMTask *untarTask = [[TLMTask new] autorelease];
         [untarTask setCurrentDirectoryPath:_updateDirectory];
         [untarTask setLaunchPath:@"/usr/bin/tar"];
-        [untarTask setArguments:[NSArray arrayWithObjects:@"-zxvf", path, nil]];
+        [untarTask setArguments:[NSArray arrayWithObjects:@"-zxvf", path, @"--strip-components", @"1", nil]];
         [untarTask launch];
         [untarTask waitUntilExit];
+        
+        TLMLog(__func__, @"stdout: %@", [untarTask outputString]);
+        TLMLog(__func__, @"stderr: %@", [untarTask errorString]);
         
         _downloadComplete = (0 == [untarTask terminationStatus]);
     }
