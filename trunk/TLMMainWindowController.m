@@ -81,7 +81,7 @@ static char _TLMOperationQueueOperationContext;
 @synthesize _installDataSource;
 @synthesize infrastructureNeedsUpdate = _updateInfrastructure;
 
-#define ENABLE_INSTALL 1
+#define ENABLE_INSTALL 0
 
 - (id)init
 {
