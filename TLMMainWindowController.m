@@ -81,7 +81,7 @@ static char _TLMOperationQueueOperationContext;
 @synthesize _installDataSource;
 @synthesize infrastructureNeedsUpdate = _updateInfrastructure;
 
-#define ENABLE_INSTALL 0
+#define ENABLE_INSTALL 1
 
 - (id)init
 {
@@ -765,8 +765,8 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 - (void)netInstall
 {
     NSParameterAssert([_currentListDataSource isEqual:_installDataSource]);
-    NSString *profile = [(TLMInstallDataSource *)_updateListDataSource currentProfile];
-    TLMNetInstallOperation *op = [[TLMNetInstallOperation alloc] initWithProfile:profile location:nil];
+    NSString *profile = [_installDataSource currentProfile];
+    TLMNetInstallOperation *op = [[TLMNetInstallOperation alloc] initWithProfile:profile location:[self _lastUpdateURL]];
     [self _addOperation:op selector:@selector(_handleNetInstallFinishedNotification:)];
     [op release];
 }
