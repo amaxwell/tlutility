@@ -219,9 +219,6 @@ static void __TLMSetProxyEnvironment(const char *var, NSString *proxy, const uin
     NSCParameterAssert(var);
     NSCParameterAssert(proxy);
     
-    if ([[NSURL URLWithString:proxy] scheme] == nil)
-        proxy = [@"http://" stringByAppendingString:proxy];
-    
     // !!! log before inserting user/pass
     TLMLog(__func__, @"Setting %s = %@:%d", var, proxy, port);
 
@@ -236,6 +233,10 @@ static void __TLMSetProxyEnvironment(const char *var, NSString *proxy, const uin
         proxy = [NSString stringWithFormat:@"%@:%@@%@", user, pass, proxy];
         TLMLog(__func__, @"Found username and password from keychain for proxy %@:%d", proxy, port);
     }
+    
+    // do this after the keychain lookup
+    if ([[NSURL URLWithString:proxy] scheme] == nil)
+        proxy = [@"http://" stringByAppendingString:proxy];
     
     if (port) proxy = [proxy stringByAppendingFormat:@":%d", port];
     const char *value = [proxy UTF8String];
