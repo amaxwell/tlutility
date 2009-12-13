@@ -230,8 +230,8 @@ static void __TLMSetProxyEnvironment(const char *var, NSString *proxy, const uin
      */
     NSString *user, *pass;
     if (TLMGetUserAndPassForProxy(proxy, port, &user, &pass)) {
-        proxy = [NSString stringWithFormat:@"%@:%@@%@", user, pass, proxy];
         TLMLog(__func__, @"Found username and password from keychain for proxy %@:%d", proxy, port);
+        proxy = [NSString stringWithFormat:@"%@:%@@%@", user, pass, proxy];
     }
     
     // do this after the keychain lookup
