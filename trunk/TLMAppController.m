@@ -219,6 +219,9 @@ static void __TLMSetProxyEnvironment(const char *var, NSString *proxy, const uin
     NSCParameterAssert(var);
     NSCParameterAssert(proxy);
     
+    if ([[NSURL URLWithString:proxy] scheme] == nil)
+        proxy = [@"http://" stringByAppendingString:proxy];
+    
     // !!! log before inserting user/pass
     TLMLog(__func__, @"Setting %s = %@:%d", var, proxy, port);
 
