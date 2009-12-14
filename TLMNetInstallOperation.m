@@ -87,7 +87,7 @@ static NSString *__TLMGetTemporaryDirectory()
 #warning temporary
     NSString *locationString = [@"~/tlnet/" stringByStandardizingPath];
     location = [NSURL fileURLWithPath:locationString];
-    NSArray *options = [NSArray arrayWithObjects:@"-profile", profilePath, @"-location", locationString, nil];
+    NSArray *options = [NSArray arrayWithObjects:@"-profile", profilePath, @"-repository", locationString, nil];
     self = [super initWithCommand:scriptPath options:options];
     if (self) {
         _location = [location copy];
