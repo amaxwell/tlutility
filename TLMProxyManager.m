@@ -177,11 +177,7 @@ static void __TLMSetProxyEnvironment(const char *var, NSString *proxy, const uin
     NSCParameterAssert(var);
     NSCParameterAssert(proxy);
     
-    // !!! log before inserting user/pass
-    TLMLog(__func__, @"Setting %s = %@:%d", var, proxy, port);
-    
-    // we may have a scheme, depending on how the user entered the value in System Preferences
-    
+    NSMutableString *displayProxy = [[proxy mutableCopy] autorelease];
     NSString *scheme = [[NSURL URLWithString:proxy] scheme];
     
     /*
@@ -189,6 +185,11 @@ static void __TLMSetProxyEnvironment(const char *var, NSString *proxy, const uin
      but System Preferences will add a password to the keychain for this proxy if it's required,
      and will delete it from the keychain if the password field content is deleted.  Hence, this
      seems like a pretty reasonable check.
+     
+     Note that the proxy parameter may or may not have a scheme, depending on how the user entered
+     the value in System Preferences.  Keychain lookup requires that we use the value exactly as
+     provided, but we need to insert username/password/port at the correct location.  If a scheme
+     is absent, we have to prepend it, or wget will fail mysteriously.
      */
     NSString *user, *pass;
     if (__TLMGetUserAndPassForProxy(proxy, port, &user, &pass)) {
@@ -202,12 +203,36 @@ static void __TLMSetProxyEnvironment(const char *var, NSString *proxy, const uin
         
         proxy = [NSString stringWithFormat:@"%@:%@@%@", user, pass, proxy];
     }
+    else {
+        // set pass to nil; used as flag later
+        user = nil;
+        pass = nil;
+    }
     
-    // prepend after the keychain lookup, which uses whatever was entered in system prefs
+    // now safe to prepend the scheme, since we're done inserting
     if (nil == scheme) scheme = @"http";
     proxy = [NSString stringWithFormat:@"%@://%@", scheme, proxy];
     
     if (port) proxy = [proxy stringByAppendingFormat:@":%d", port];
+    
+    /*
+     Hide password with bullets before logging it, in case this is being echoed to syslog.
+     This log statement is critical for debugging, so we need it after all the munging is done.
+     */
+    [displayProxy setString:proxy];
+    const NSRange r = pass ? [displayProxy rangeOfString:pass] : NSMakeRange(NSNotFound, 0);
+    if (r.length) {
+        NSMutableString *stars = [NSMutableString stringWithCapacity:[pass length]];
+        for (NSUInteger idx = 0; idx < [pass length]; idx++)
+            [stars appendFormat:@"%C", 0x2022];
+        [displayProxy replaceCharactersInRange:r withString:stars];
+    }
+    else if (pass) {
+        // non-nil password, but couldn't find it...could assert here
+        [displayProxy setString:@"*** ERROR *** unable to find password string; not displaying anything"];
+    }
+    TLMLog(__func__, @"setting %s = %@", var, displayProxy);
+    
     const char *value = [proxy UTF8String];
     if (value && strlen(value)) setenv(var, value, 1);
 }
