@@ -216,6 +216,12 @@ static NSString *__TLMGetTemporaryDirectory()
         TLMTask *untarTask = [[TLMTask new] autorelease];
         [untarTask setCurrentDirectoryPath:_updateDirectory];
         [untarTask setLaunchPath:@"/usr/bin/tar"];
+        
+        /*
+         By default, this will untar into a directory with the date appended; e.g., install-tl-20091213
+         and the script lives one level below that.  Instead of listing the directory or the first path
+         in the tarball, just strip the first component.
+         */
         [untarTask setArguments:[NSArray arrayWithObjects:@"-zxvf", path, @"--strip-components", @"1", nil]];
         [untarTask launch];
         [untarTask waitUntilExit];
