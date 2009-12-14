@@ -42,9 +42,8 @@
 #import "TLMLogServer.h"
 #import "TLMReleaseNotesController.h"
 #import "TLMTask.h"
-#import <SystemConfiguration/SystemConfiguration.h>
 #import <Sparkle/Sparkle.h>
-#import "TLMKeychainUtilities.h"
+#import "TLMProxyManager.h"
 
 @implementation TLMAppController
 
@@ -214,145 +213,6 @@ static void __TLMMigrateBundleIdentifier()
     TLMLog(__func__, @"Using PATH = \"%@\"", systemPaths);
 }
 
-static void __TLMSetProxyEnvironment(const char *var, NSString *proxy, const uint16_t port)
-{
-    NSCParameterAssert(var);
-    NSCParameterAssert(proxy);
-    
-    // !!! log before inserting user/pass
-    TLMLog(__func__, @"Setting %s = %@:%d", var, proxy, port);
-
-    /*
-     There's no SystemConfiguration key to tell that a given proxy requires a username/password,
-     but System Preferences will add a password to the keychain for this proxy if it's required,
-     and will delete it from the keychain if the password field content is deleted.  Hence, this
-     seems like a pretty reasonable check.
-     */
-    NSString *user, *pass;
-    if (TLMGetUserAndPassForProxy(proxy, port, &user, &pass)) {
-        TLMLog(__func__, @"Found username and password from keychain for proxy %@:%d", proxy, port);
-        proxy = [NSString stringWithFormat:@"%@:%@@%@", user, pass, proxy];
-    }
-    
-    // do this after the keychain lookup
-    if ([[NSURL URLWithString:proxy] scheme] == nil)
-        proxy = [@"http://" stringByAppendingString:proxy];
-    
-    if (port) proxy = [proxy stringByAppendingFormat:@":%d", port];
-    const char *value = [proxy UTF8String];
-    if (value && strlen(value)) setenv(var, value, 1);
-}
-
-static void __TLMPacCallback(void *info, CFArrayRef proxyList, CFErrorRef error)
-{
-    bool *finished = info;
-    *finished = true;
-    NSDictionary *firstProxy = CFArrayGetCount(proxyList) ? (id)CFArrayGetValueAtIndex(proxyList, 0) : nil;
-    NSString *proxyType = [firstProxy objectForKey:(id)kCFProxyTypeKey];
-    TLMLog(__func__, @"Proxy list = %@", proxyList);
-    if ([proxyType isEqualToString:(id)kCFProxyTypeNone] == NO) {
-        
-        NSString *proxy = [firstProxy objectForKey:(id)kCFProxyHostNameKey];
-        NSString *port = [firstProxy objectForKey:(id)kCFProxyPortNumberKey];
-        
-        /*
-         Should set individually, but that really requires getting a proxy for each 
-         request before executing tlmgr so we know the actual host.  This will probably
-         work in most common cases.
-         */
-        __TLMSetProxyEnvironment("http_proxy", proxy, [port intValue]);
-        __TLMSetProxyEnvironment("ftp_proxy", proxy, [port intValue]);
-    }
-    else {
-        TLMLog(__func__, @"No proxy required for %@", [[[TLMPreferenceController sharedPreferenceController] defaultServerURL] absoluteString]);
-    }
-}
-
-static void __TLMProxySettingsChanged(SCDynamicStoreRef store, CFArrayRef changedKeys, void *info)
-{
-    /*
-     Attempt to handle kSCPropNetProxiesExceptionsList?  Probably not worth it...
-     */
-    NSDictionary *proxies = [(id)SCDynamicStoreCopyProxies(store) autorelease];
-    
-    // try to handle a PAC URL first
-    if ([[proxies objectForKey:(id)kSCPropNetProxiesProxyAutoConfigEnable] intValue] != 0) {
-        
-        NSString *proxy = [proxies objectForKey:(id)kSCPropNetProxiesProxyAutoConfigURLString];
-
-        if (proxy) {
-            
-            // manually get the underlying proxy for the default server URL
-            NSURL *pacURL = [NSURL URLWithString:proxy];
-            NSURL *mirrorURL = [[TLMPreferenceController sharedPreferenceController] defaultServerURL];
-            
-            TLMLog(__func__, @"Trying to find a proxy for %@ using PAC %@%C", [mirrorURL absoluteString], proxy, 0x2026);
-            
-            bool finished = false;
-            CFStreamClientContext ctxt = { 0, &finished, NULL, NULL, NULL };
-            
-            // not a create/copy, but how is this deallocated?
-            CFRunLoopSourceRef rls = CFNetworkExecuteProxyAutoConfigurationURL((CFURLRef)pacURL, (CFURLRef)mirrorURL, __TLMPacCallback, &ctxt);
-            CFStringRef mode = CFSTR("__TLMProxyAutoConfigRunLoopMode");
-            CFRunLoopAddSource(CFRunLoopGetCurrent(), rls, mode);
-            
-            do {
-                (void) CFRunLoopRunInMode(mode, 0.1, TRUE);
-            } while (false == finished);
-        }
-        else {
-            TLMLog(__func__, @"No PAC URL given");
-        }
-
-    }
-    else {
-        
-        // manually specified proxies
-    
-        if ([[proxies objectForKey:(id)kSCPropNetProxiesHTTPEnable] intValue] != 0) {
-            
-            NSString *proxy = [proxies objectForKey:(id)kSCPropNetProxiesHTTPProxy];
-            NSNumber *port = [proxies objectForKey:(id)kSCPropNetProxiesHTTPPort];
-            
-            __TLMSetProxyEnvironment("http_proxy", proxy, [port shortValue]);
-        }
-        else if (getenv("http_proxy") != NULL) {
-            unsetenv("http_proxy");
-            TLMLog(__func__, @"Unset http_proxy");
-        }
-        
-        if ([[proxies objectForKey:(id)kSCPropNetProxiesFTPEnable] intValue] != 0) {
-            
-            NSString *proxy = [proxies objectForKey:(id)kSCPropNetProxiesFTPProxy];
-            NSNumber *port = [proxies objectForKey:(id)kSCPropNetProxiesFTPPort];
-            
-            __TLMSetProxyEnvironment("ftp_proxy", proxy, [port shortValue]);
-        }
-        else if (getenv("ftp_proxy") != NULL) {
-            unsetenv("ftp_proxy");
-            TLMLog(__func__, @"Unset ftp_proxy");
-        }
-    }
-}
-
-// update $http_proxy and $ftp_proxy by reading dynamic store
-+ (void)updateProxyEnvironment
-{
-    static SCDynamicStoreRef _dynamicStore = NULL;
-    if (NULL == _dynamicStore) {
-        _dynamicStore = SCDynamicStoreCreate(NULL, CFBundleGetIdentifier(CFBundleGetMainBundle()), __TLMProxySettingsChanged, NULL);
-        CFRunLoopSourceRef rlSource = SCDynamicStoreCreateRunLoopSource(kCFAllocatorDefault, _dynamicStore, 0);
-        CFRunLoopAddSource(CFRunLoopGetMain(), rlSource, kCFRunLoopCommonModes);
-        CFRelease(rlSource);
-                
-        CFArrayRef keys = (CFArrayRef)[NSArray arrayWithObject:[(id)SCDynamicStoreKeyCreateProxies(NULL) autorelease]];
-        
-        if(SCDynamicStoreSetNotificationKeys(_dynamicStore, keys, NULL) == FALSE)
-            TLMLog(__func__, @"unable to register for proxy change notifications");
-    }  
-    __TLMProxySettingsChanged(_dynamicStore, NULL, NULL);
-}
-
 - (void)dealloc
 {
     [_mainWindowController release];
@@ -367,7 +227,7 @@ static void __TLMProxySettingsChanged(SCDynamicStoreRef store, CFArrayRef change
 - (void)applicationDidFinishLaunching:(NSNotification *)notification;
 {
     // call before anything uses tlmgr
-    [[self class] updateProxyEnvironment];
+    [[TLMProxyManager sharedManager] updateProxyEnvironmentForURL:nil];
     
     // make sure this is set up early enough to use tasks anywhere
     [[self class] updatePathEnvironment]; 

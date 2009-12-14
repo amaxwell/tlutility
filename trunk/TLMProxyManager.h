@@ -38,13 +38,15 @@
 
 #import <Cocoa/Cocoa.h>
 
-#ifndef _KEYCHAIN_UTILITIES_H_
-#define _KEYCHAIN_UTILITIES_H_
+@interface TLMProxyManager : NSObject
+{
+@private
+    NSURL              *_targetURL;
+    void               *_dynamicStore;
+    CFRunLoopSourceRef  _rls;
+}
 
-__BEGIN_DECLS
++ (id)sharedManager;
+- (void)updateProxyEnvironmentForURL:(NSURL *)aURL;
 
-extern bool TLMGetUserAndPassForProxy(NSString *host, const uint16_t port, NSString **user, NSString **pass);
-
-__END_DECLS
-
-#endif
+@end
