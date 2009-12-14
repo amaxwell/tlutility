@@ -275,23 +275,29 @@ static void __TLMProxySettingsChanged(SCDynamicStoreRef store, CFArrayRef change
     if ([[proxies objectForKey:(id)kSCPropNetProxiesProxyAutoConfigEnable] intValue] != 0) {
         
         NSString *proxy = [proxies objectForKey:(id)kSCPropNetProxiesProxyAutoConfigURLString];
+        NSURL *pacURL = nil;
+        if (proxy) 
+            pacURL = [NSURL URLWithString:proxy];
         
-        if (proxy) {
+        if (pacURL) {
             
-            // manually get the underlying proxy for the default server URL
-            NSURL *pacURL = [NSURL URLWithString:proxy];
+            // need to manually get the underlying proxy for this specific target URL
             NSURL *mirrorURL = [self targetURL];
+            NSCParameterAssert(mirrorURL);
             
             TLMLog(__func__, @"Trying to find a proxy for %@ using PAC %@%C", [mirrorURL absoluteString], proxy, 0x2026);
             
+            // NB: CFNetworkExecuteProxyAutoConfigurationURL crashes if you pass a NULL context
             bool finished = false;
             CFStreamClientContext ctxt = { 0, &finished, NULL, NULL, NULL };
             
-            // not a create/copy, but how is this deallocated?
+            // 10.6 header says this follows the copy rule, but the docs and 10.5 header say nothing about ownership
             CFRunLoopSourceRef rls = CFNetworkExecuteProxyAutoConfigurationURL((CFURLRef)pacURL, (CFURLRef)mirrorURL, __TLMPacCallback, &ctxt);
             CFStringRef mode = CFSTR("__TLMProxyAutoConfigRunLoopMode");
             CFRunLoopAddSource(CFRunLoopGetCurrent(), rls, mode);
+            if (rls) CFRelease(rls);
             
+            // callout here will set the proxy environment variables, so we're done after this
             do {
                 (void) CFRunLoopRunInMode(mode, 0.1, TRUE);
             } while (false == finished);
@@ -303,7 +309,7 @@ static void __TLMProxySettingsChanged(SCDynamicStoreRef store, CFArrayRef change
     }
     else {
         
-        // manually specified proxies or PAC disabled (in the latter case we unset proxies, which is what we want)
+        // manually specified proxies, or disabled PAC (in the latter case we unset proxies, which is what we want)
         
         if ([[proxies objectForKey:(id)kSCPropNetProxiesHTTPEnable] intValue] != 0) {
             
