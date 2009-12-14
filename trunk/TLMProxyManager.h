@@ -47,6 +47,14 @@
 }
 
 + (id)sharedManager;
+
+/*
+ Instead of maintaining this globally with setenv, it may be better to do something like
+ [[TLMProxyManager sharedManager] proxyForURL:], and then pass it to all tlmgr tasks.  
+ That's only worth doing if autoconfigured proxies return different URLs depending on the
+ mirror you get from the multiplexer, but I really don't think that's going to be a problem
+ in practice.
+ */
 - (void)updateProxyEnvironmentForURL:(NSURL *)aURL;
 
 @end
