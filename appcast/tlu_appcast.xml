@@ -298,5 +298,21 @@
             <pubDate>Sat, 28 Nov 2009 16:58:29 -0800</pubDate>
             <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20091128.tgz" sparkle:version="0.83" length="1762168" type="application/octet-stream" sparkle:dsaSignature="MCwCFACJmUfBByXEfpg41iRFPu3wAPk+AhRPmFHYhN5AoR8MepXENItaGCgiSg=="></enclosure>
         </item>
+        <item>
+            <title>Version 0.85</title>
+            <description>
+                <h3>Changes Since 0.83</h3>
+                <li>Draw a progress indicator badge on the application icon during updates</li>
+                <li>Added Open With item to file icon context menu</li>
+                <li>Possible fix for issue 33, race when adding status window</li>
+                <li>Added support for proxies, using info from System Preferences and the keychain</li>
+                <li>Added support for --list option to tlmgr show command, so the info window has extended file listings</li>
+                <li>TLCritical repository will be remembered in preferences if previously used</li>
+                <li>Revised texdoc usage to use the new machine-readable output option</li>
+                <li>Fixed some issues with Quick Look of texdoc listing icons</li>
+            </description>
+            <pubDate>Mon, 14 Dec 2009 18:46:43 -0800</pubDate>
+            <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20091214.tgz" sparkle:version="0.85" length="1807019" type="application/octet-stream" sparkle:dsaSignature="MC0CFFVJDXvlJfX2dIdgXh05FNRJU1i9AhUAgcfQRIX2cGxPN0Rsm68Mrsd/aBg="></enclosure>
+        </item>
     </channel>
 </rss>
