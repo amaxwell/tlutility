@@ -475,6 +475,7 @@ static bool hasKeyPrefix(NSString *line)
    bin-bibtex.alpha-linux: binary files of bin-bibtex for alpha-linux
    bin-bibtex.amd64-freebsd: binary files of bin-bibtex for amd64-freebsd
    [...]
+ i censor: 
 */ 
 
 + (TLMPackageNode *)_newPackageNodeWithOutputLine:(NSString *)line
@@ -511,8 +512,17 @@ static bool hasKeyPrefix(NSString *line)
         [scanner scanString:@":" intoString:NULL];
     }
     
-    if (NO == [scanner isAtEnd])
-        [node setShortDescription:[line substringFromIndex:[scanner scanLocation]]];
+    if (NO == [scanner isAtEnd]) {
+        NSString *shortDesc = [[line substringFromIndex:[scanner scanLocation]] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+        if ([shortDesc rangeOfString:@"shortdesc missing"].length || [shortDesc length] == 0)
+            [node setShortDescription:NSLocalizedString(@"Missing short description", @"value in tableview")];
+        else
+            [node setShortDescription:shortDesc];
+    }
+    else {
+        [node setShortDescription:NSLocalizedString(@"Missing short description", @"value in tableview")];
+        TLMLog(__func__, @"No description for %@", line);
+    }
     [scanner release];
     
     return node;
