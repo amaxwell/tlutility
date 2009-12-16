@@ -298,12 +298,18 @@ static void __TLMProxySettingsChanged(SCDynamicStoreRef store, CFArrayRef change
             CFRunLoopSourceRef rls = CFNetworkExecuteProxyAutoConfigurationURL((CFURLRef)pacURL, (CFURLRef)mirrorURL, __TLMPacCallback, &ctxt);
             CFStringRef mode = CFSTR("__TLMProxyAutoConfigRunLoopMode");
             CFRunLoopAddSource(CFRunLoopGetCurrent(), rls, mode);
-            if (rls) CFRelease(rls);
             
             // callout here will set the proxy environment variables, so we're done after this
             do {
                 (void) CFRunLoopRunInMode(mode, 0.1, TRUE);
             } while (false == finished);
+            
+            // not clear from the docs if invalidation is required or is CFNetwork handles that
+            if (rls) {
+                if (CFRunLoopSourceIsValid(rls)) CFRunLoopSourceInvalidate(rls);
+                CFRelease(rls);
+            }
+
         }
         else {
             TLMLog(__func__, @"No PAC URL given");
