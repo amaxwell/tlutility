@@ -66,13 +66,15 @@ static NSString *_separatorString = nil;
     NSMutableString *string = [NSMutableString new];
     [string appendString:_name];
     [string appendString:_separatorString];
-    [string appendString:_description];
+    if (_description)
+        [string appendString:_description];
     
     for (TLMPackageNode *child in _children) {
         [string appendString:_separatorString];
         [string appendString:[child name]];
         [string appendString:_separatorString];
-        [string appendString:[child shortDescription]];
+        if ([child shortDescription])
+            [string appendString:[child shortDescription]];
     }
     
     BOOL matches = [string rangeOfString:searchTerm options:NSCaseInsensitiveSearch].length > 0;
