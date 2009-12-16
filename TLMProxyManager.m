@@ -241,10 +241,12 @@ static void __TLMPacCallback(void *info, CFArrayRef proxyList, CFErrorRef error)
 {
     bool *finished = info;
     *finished = true;
-    NSDictionary *firstProxy = CFArrayGetCount(proxyList) ? (id)CFArrayGetValueAtIndex(proxyList, 0) : nil;
-    NSString *proxyType = [firstProxy objectForKey:(id)kCFProxyTypeKey];
     TLMLog(__func__, @"Proxy list = %@", proxyList);
-    if ([proxyType isEqualToString:(id)kCFProxyTypeNone] == NO) {
+    if (NULL == proxyList)
+        TLMLog(__func__, @"Error finding proxy: %@", error);
+    NSDictionary *firstProxy = (proxyList && CFArrayGetCount(proxyList)) ? (id)CFArrayGetValueAtIndex(proxyList, 0) : nil;
+    NSString *proxyType = [firstProxy objectForKey:(id)kCFProxyTypeKey];
+    if (proxyType && [proxyType isEqualToString:(id)kCFProxyTypeNone] == NO) {
         
         NSString *proxy = [firstProxy objectForKey:(id)kCFProxyHostNameKey];
         NSString *port = [firstProxy objectForKey:(id)kCFProxyPortNumberKey];
@@ -257,9 +259,10 @@ static void __TLMPacCallback(void *info, CFArrayRef proxyList, CFErrorRef error)
         __TLMSetProxyEnvironment("http_proxy", proxy, [port intValue]);
         __TLMSetProxyEnvironment("ftp_proxy", proxy, [port intValue]);
     }
-    else {
+    else if (proxyType) {
         TLMLog(__func__, @"No proxy required for URL");
     }
+    // nil proxyType is an error
 }
 
 static void __TLMProxySettingsChanged(SCDynamicStoreRef store, CFArrayRef changedKeys, void *info)
