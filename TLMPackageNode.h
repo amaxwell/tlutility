@@ -58,7 +58,7 @@
 
 @property (readwrite, copy) NSString *name;
 @property (readwrite, copy) NSString *fullName;
-@property (readwrite, copy) NSString *shortDescription;
+@property (readwrite, copy) NSString *shortDescription; // may be nil
 @property (readwrite) BOOL hasParent;
 @property (readonly) NSString *status;
 
