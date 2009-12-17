@@ -196,7 +196,6 @@ static void CenterRectInRect(NSRect *toCenter, NSRect enclosingRect)
 
 - (void)setParentWindow:(NSWindow *)parent
 {
-    [super setParentWindow:parent];
     if (parent && nil == [self frameView]) {
         [self setFrame:[parent frame] display:NO];
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -204,6 +203,8 @@ static void CenterRectInRect(NSRect *toCenter, NSRect enclosingRect)
                                                      name:NSWindowDidResizeNotification
                                                    object:parent];
     }
+    // call after setting frame and registering; try #2 to fix issue 33
+    [super setParentWindow:parent];
 }
 
 - (void)handleViewFrameChange:(NSNotification *)aNote
