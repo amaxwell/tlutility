@@ -235,7 +235,7 @@ static NSString *__TLMGetTemporaryDirectory()
     if (_downloadComplete) {
         
         const char *fs_path = [_scriptPath fileSystemRepresentation];
-        if (chmod(fs_path, S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH)) {
+        if (chmod(fs_path, S_IRUSR | S_IXUSR)) {
             const char *s = strerror(errno);
             TLMLog(__func__, @"Failed to set script permissions: %s", s);
             [self setFailed:YES];
