@@ -38,6 +38,7 @@
 
 #import "TLMUpdateOperation.h"
 #import "TLMPreferenceController.h"
+#import "TLMAppController.h"
 
 @implementation TLMUpdateOperation
 
@@ -49,7 +50,13 @@
     NSParameterAssert(location);
     NSString *cmd = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath]; 
     NSString *locationString = [location absoluteString];
-    NSMutableArray *options = [NSMutableArray arrayWithObjects:@"--repository", locationString, @"--machine-readable", @"update", nil];
+    NSMutableArray *options = [NSMutableArray arrayWithObjects:@"--repository", locationString, @"--machine-readable", nil];
+    
+    // added after TL 2009 release
+    if ([TLMAppController tlmgrSupportsPersistentDownloads])
+        [options addObject:@"--persistent-downloads"];
+    
+    [options addObject:@"update"];
         
     if (nil == packageNames) {
         [options addObject:@"--all"];
