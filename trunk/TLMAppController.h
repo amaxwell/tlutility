@@ -53,6 +53,8 @@
 - (void)checkVersionConsistency;
 + (NSInteger)texliveYear;
 
++ (BOOL)tlmgrSupportsPersistentDownloads;
+
 - (IBAction)showPreferences:(id)sender;
 - (IBAction)openDisasterRecoveryPage:(id)sender;
 - (IBAction)openTLUWiki:(id)sender;

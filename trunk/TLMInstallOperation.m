@@ -38,6 +38,7 @@
 
 #import "TLMInstallOperation.h"
 #import "TLMPreferenceController.h"
+#import "TLMAppController.h"
 
 @implementation TLMInstallOperation
 
@@ -48,7 +49,14 @@
 {
     NSString *cmd = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath]; 
     NSString *locationString = [location absoluteString];
-    NSMutableArray *options = [NSMutableArray arrayWithObjects:@"--machine-readable", @"--repository", locationString, @"install", nil];
+    NSMutableArray *options = [NSMutableArray arrayWithObjects:@"--machine-readable", @"--repository", locationString, nil];
+    
+    // added after TL 2009 release
+    if ([TLMAppController tlmgrSupportsPersistentDownloads])
+        [options addObject:@"--persistent-downloads"];
+    
+    [options addObject:@"install"];
+    
     if (reinstall)
         [options addObject:@"--reinstall"];
     [options addObjectsFromArray:packageNames];

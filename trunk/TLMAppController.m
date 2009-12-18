@@ -243,7 +243,7 @@ static void __TLMMigrateBundleIdentifier()
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:TLMDisableVersionMismatchWarningKey];
 }
 
-+ (NSInteger)_texliveYear:(NSString **)versionStr isDevelopmentVersion:(BOOL *)isDev
++ (NSInteger)_texliveYear:(NSString **)versionStr isDevelopmentVersion:(BOOL *)isDev tlmgrVersion:(NSInteger *)tlmgrVersion
 {
     // always run the check and log the result
     TLMTask *tlmgrTask = [[TLMTask new] autorelease];
@@ -289,7 +289,13 @@ static void __TLMMigrateBundleIdentifier()
                 NSScanner *scanner = [NSScanner scannerWithString:versionString];
                 [scanner setCharactersToBeSkipped:[[NSCharacterSet decimalDigitCharacterSet] invertedSet]];
                 [scanner scanInteger:&texliveYear];
-                break;
+            }
+            
+            if ([versionString hasPrefix:@"tlmgr revision"]) {
+                
+                NSScanner *scanner = [NSScanner scannerWithString:versionString];
+                [scanner setCharactersToBeSkipped:[[NSCharacterSet decimalDigitCharacterSet] invertedSet]];
+                [scanner scanInteger:tlmgrVersion];
             }
         }
     }
@@ -300,14 +306,22 @@ static void __TLMMigrateBundleIdentifier()
 
 + (NSInteger)texliveYear
 {
-    return [self _texliveYear:NULL isDevelopmentVersion:NULL];
+    return [self _texliveYear:NULL isDevelopmentVersion:NULL tlmgrVersion:NULL];
+}
+
++ (BOOL)tlmgrSupportsPersistentDownloads;
+{
+    NSInteger tlmgrVersion;
+    const BOOL ret = ([self _texliveYear:NULL isDevelopmentVersion:NULL tlmgrVersion:&tlmgrVersion] && tlmgrVersion >= 16424);
+    TLMLog(__func__, @"tlmgr %lu %@ persistent download option", (unsigned long)tlmgrVersion, ret ? @"supports" : @"does not support");
+    return ret;
 }
 
 - (void)checkVersionConsistency
 {    
     NSString *versionString;
     BOOL isDev;
-    NSInteger texliveYear = [[self class] _texliveYear:&versionString isDevelopmentVersion:&isDev];
+    NSInteger texliveYear = [[self class] _texliveYear:&versionString isDevelopmentVersion:&isDev tlmgrVersion:NULL];
     
     if (texliveYear ) {
         
