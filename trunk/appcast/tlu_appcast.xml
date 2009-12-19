@@ -314,5 +314,18 @@
             <pubDate>Mon, 14 Dec 2009 18:46:43 -0800</pubDate>
             <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20091214.tgz" sparkle:version="0.85" length="1807019" type="application/octet-stream" sparkle:dsaSignature="MC0CFFVJDXvlJfX2dIdgXh05FNRJU1i9AhUAgcfQRIX2cGxPN0Rsm68Mrsd/aBg="></enclosure>
         </item>
+        <item>
+            <title>Version 0.86</title>
+            <description>
+                <h3>Changes Since 0.85</h3>
+                <li>Fixed exception while searching due to missing catalogue information (issue 40)</li>
+                <li>Fixed crash when finding a PAC proxy failed (issue 38 and 39)</li>
+                <li>Another attempt at fixing issue 32, cosmetic problem with status window</li>
+                <li>More restrictive permissions on shell scripts</li>
+                <li>Support --persistent-downloads option in future tlmgr</li>
+            </description>
+            <pubDate>Fri, 18 Dec 2009 17:26:26 -0800</pubDate>
+            <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20091218.tgz" sparkle:version="0.86" length="1812974" type="application/octet-stream" sparkle:dsaSignature="MCsCE0IdbtziaNZQcRqbieU4cj7iTbICFBj6k9e2o6n1egYW6ZMudUbvINV6"></enclosure>
+        </item>
     </channel>
 </rss>
