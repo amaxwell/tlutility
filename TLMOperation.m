@@ -113,6 +113,11 @@ static char _TLMOperationFinishedContext;
     return _errorMessages;
 }
 
+- (NSString *)_taskDescription 
+{ 
+    return [NSString stringWithFormat:@"`%@ %@`", [_task launchPath], [[_task arguments] componentsJoinedByString:@" "]];
+}
+
 - (void)main
 {
     NSAutoreleasePool *pool = [NSAutoreleasePool new];
@@ -140,21 +145,27 @@ static char _TLMOperationFinishedContext;
             
     // don't try dealing with partial text data
     if ([self isCancelled]) {
+        TLMLog(__func__, @"Cancelled %@", [self _taskDescription]);
         [self setOutputData:nil];
         [self setErrorData:nil];
     // force an immediate read of the pipes
-    } else if (0 == status) {
+    } else if (EXIT_SUCCESS == status) {
+        TLMLog(__func__, @"Successfully executed %@", [self _taskDescription]);
         [self setErrorData:[_task errorData]];
         [self setOutputData:[_task outputData]];
     } else if (0 != status) {
-        TLMLog(__func__, @"termination status of task %@ was %ld", [_task launchPath], (long)status);
+        TLMLog(__func__, @"Failed executing %@ (error %ld)", [self _taskDescription], (long)status);
         [self setErrorData:[_task errorData]];
         [self setFailed:YES];
     }
     
-    // would be nice to show this in the UI in an alert, but it's not always clear enough, and sometimes has output even in case of success
+    /*
+     It would be nice to show this in the UI in an alert, but it's not always clear enough, and
+     always has output even in case of success.  I used to prefix this with "Standard error ..."
+     but that confused users; now we have to determine the task and exit status from preceding lines.
+     */
     if ([self errorMessages])
-        TLMLog(__func__, @"Standard error from `%@ %@`\n%@", [_task launchPath], [[_task arguments] componentsJoinedByString:@" "], [self errorMessages]);
+        TLMLog(__func__, @"%@", [[self errorMessages] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]);
     
     signal(SIGPIPE, previousSignalMask);
     
