@@ -87,7 +87,7 @@
     
     // in TL 2009, tlmgr returns 0 when auth is required, but prints an error message
     if ([task errorString])
-        TLMLog(__func__, @"Standard error from `%@ %@`: %@", [task launchPath], [[task arguments] componentsJoinedByString:@" "], [task errorString]);
+        TLMLog(__func__, @"stderr from `%@ %@`: %@", [task launchPath], [[task arguments] componentsJoinedByString:@" "], [task errorString]);
     
     [self setPaperSize:currentSize];
     
