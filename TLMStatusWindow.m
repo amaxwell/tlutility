@@ -256,7 +256,8 @@ static void CenterRectInRect(NSRect *toCenter, NSRect enclosingRect)
         [[NSNotificationCenter defaultCenter] removeObserver:self];
         [[self parentWindow] removeChildWindow:self];
         // this will orderOut parent as well if attached
-        [self performSelector:@selector(orderOut:) withObject:nil afterDelay:1.0];
+        const NSTimeInterval delay = [[NSAnimationContext currentContext] duration] + 0.05;
+        [self performSelector:@selector(orderOut:) withObject:nil afterDelay:delay];
     }
     [[self animator] setAlphaValue:0.0];
 }
