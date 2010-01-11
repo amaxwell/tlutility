@@ -4,7 +4,7 @@
 //
 //  Created by Adam Maxwell on 12/6/08.
 /*
- This software is Copyright (c) 2008-2009
+ This software is Copyright (c) 2008-2010
  Adam Maxwell. All rights reserved.
  
  Redistribution and use in source and binary forms, with or without
@@ -81,7 +81,7 @@ static char _TLMOperationQueueOperationContext;
 @synthesize _installDataSource;
 @synthesize infrastructureNeedsUpdate = _updateInfrastructure;
 
-#define ENABLE_INSTALL 0
+#define ENABLE_INSTALL 1
 
 - (id)init
 {
