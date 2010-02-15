@@ -85,7 +85,7 @@ static NSString *__TLMGetTemporaryDirectory()
         return nil;
     }
 
-    NSArray *options = [NSArray arrayWithObjects:@"-persistent-downloads", @"-profile", profilePath, @"-repository", [location absoluteString], nil];
+    NSArray *options = [NSArray arrayWithObjects:@"-profile", profilePath, @"-repository", [location absoluteString], nil];
     self = [super initWithCommand:scriptPath options:options];
     if (self) {
         _location = [location copy];
