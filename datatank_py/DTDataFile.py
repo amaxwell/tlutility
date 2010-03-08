@@ -681,7 +681,7 @@ def write_test(file_path):
     mesh = mesh_function(xx, yy)
     
     # save to separate files
-    with DTDataFile("mesh2.dtbin", truncate=True) as mesh_file:
+    with DTDataFile("mesh.dtbin", truncate=True) as mesh_file:
         mesh_file.write_2dmesh_one(mesh, np.min(x), np.min(y), dx, dy, "TestMesh")
     output_file.write_2dmesh_one(mesh, np.min(x), np.min(y), dx, dy, "TestMesh")    
         
@@ -758,7 +758,7 @@ def read_test(file_path):
         
 if __name__ == '__main__':
     
-    write_test("test2.dtbin")
-    read_test("test2.dtbin")
-    read_test("mesh2.dtbin")
+    write_test("test.dtbin")
+    read_test("test.dtbin")
+    read_test("mesh.dtbin")
     
