@@ -6,10 +6,10 @@ import os
 import numpy as np
 from DTDataFile import DTDataFile
 
-def write_test(file_path):
+def write_2dmesh(file_path):
     
-    output_file = DTDataFile(file_path, truncate=True)
-
+    output_file = DTDataFile(file_path)
+    output_file.DEBUG = True
     # Create and save a single 2D Mesh.  The mesh_function is kind of
     # unnecessary since you can just multiply xx and yy directly, 
     # but it fits well with using a 2D function + grid in DataTank.
@@ -25,8 +25,13 @@ def write_test(file_path):
     # save to separate files
     with DTDataFile("mesh.dtbin", truncate=True) as mesh_file:
         mesh_file.write_2dmesh_one(mesh, np.min(x), np.min(y), dx, dy, "TestMesh")
-    output_file.write_2dmesh_one(mesh, np.min(x), np.min(y), dx, dy, "TestMesh")    
-        
+    output_file.write_2dmesh_one(mesh, np.min(x), np.min(y), dx, dy, "TestMesh")
+    output_file.close()
+
+def write_images(file_path):
+            
+    output_file = DTDataFile(file_path)
+    output_file.DEBUG = True
     # write a single bitmap image (requires PIL)
     try:
         from PIL import Image
@@ -42,13 +47,15 @@ def write_test(file_path):
         
     except Exception, e:
         print "failed to load or write image:", e
+    output_file.close()
     
+def write_arrays(file_path):
+    
+    output_file = DTDataFile(file_path)
+    output_file.DEBUG = True
     # write a 1D array of shorts
     test_array = np.array(range(0, 10), dtype=np.int16)
     output_file.write(test_array, "Test0")
-    
-    # write a single string
-    output_file.write("Test single string", "TestSingleString")
     
     # write a Python list
     output_file.write([0, 10, 5, 7, 9], "TestPythonList")
@@ -70,12 +77,27 @@ def write_test(file_path):
     test_array = np.array(range(0, 12), dtype=np.float)
     test_array = test_array.reshape(3, 2, 2)
     output_file.write_array(test_array, "Test3", dt_type="Array")
+    output_file.close()
+
+def write_test(file_path):
+    
+    assert os.path.exists(file_path) is False, "delete file before running tests"
+        
+    write_2dmesh(file_path)
+    write_images(file_path)
+    write_arrays(file_path)
+        
+    output_file = DTDataFile(file_path, truncate=False)    
+    output_file.DEBUG = True
     
     # write a time-varying 1D array (list of numbers)
     for idx in xrange(0, 10):
         time_test = np.array(range(idx, idx + 10), np.double)
         output_file.write(time_test, "TimeTest_%d" % (idx), time=idx * 2.)
     
+    # write a single string
+    output_file.write("Test single string", "TestSingleString")
+
     # write a time-varying string with Unicode characters
     for idx in xrange(0, 10):
         output_file.write_string(u"Χριστός : time index %d" % (idx), "StringTest_%d" % (idx), time=idx * 2.)
@@ -91,15 +113,19 @@ def write_test(file_path):
 def read_test(file_path):
     
     f = DTDataFile(file_path)
+    f.DEBUG = True
     print f
     for name in f:
-        #print "%s = %s" % (name, f[name])
+        # Call this to make sure the variables are actually read, since that will
+        # potentially have numerous side effects.  Printing this is overwhelming.
         ignored = f[name]
         
     f.close()
         
 if __name__ == '__main__':
     
+    if os.path.exists("test.dtbin"):
+        os.remove("test.dtbin")
     write_test("test.dtbin")
     read_test("test.dtbin")
     read_test("mesh.dtbin")
