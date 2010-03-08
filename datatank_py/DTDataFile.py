@@ -126,6 +126,7 @@ class DTDataFile(object):
         self._swap = None
         self._little_endian = None
         self._struct = None
+        self.DEBUG = False
     
     # this is the DTDataFileStructure
     def _read_object_header_at_offset(self, offset):
@@ -151,6 +152,8 @@ class DTDataFile(object):
         """
         
         self._name_offset_map = {}
+        # ensure we have a consistent file
+        self._file.flush()
         self._file.seek(0)
         # all headers are the same length
         default_file_header = "DataTank Binary File LE\0"
@@ -197,8 +200,18 @@ class DTDataFile(object):
         
         """
         
-        if len(self._name_offset_map) == 0 or self._length != os.path.getsize(self._file_path):
-            print "reloading content"
+        current_size = os.path.getsize(self._file_path)
+        if (len(self._name_offset_map) == 0 and current_size > 0) or self._length != current_size:
+            
+            # This check is here to ensure that the optimization strategy is working properly.
+            # If we see lots of spurious reload messages, something is likely haywire.
+            if self.DEBUG:
+                reasons = []
+                if len(self._name_offset_map) == 0:
+                    reasons.append("Empty offset map (current size = %d)" % (current_size))
+                if self._length != os.path.getsize(self._file_path):
+                    reasons.append("length %d != actual size %d" % (self._length, current_size))
+                print "reloading content:", " ".join(reasons)
             self._read_in_content()
     
     def close(self):
@@ -267,7 +280,7 @@ class DTDataFile(object):
         elif var_type == 12:
             data_type = "i1" # DTDataFile_Signed8Char
         
-        assert data_type is not None, "unknown array type: " + str(array.dtype)
+        assert data_type is not None, "unhandled DTArray type"
                     
         # don't need to include the byte order unless it's not host-ordered
         if self._swap:
