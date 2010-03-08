@@ -353,6 +353,9 @@ class DTDataFile(object):
             shape.append(n)
         if o > 1:
             shape.append(o)
+            
+        # see the array writing code
+        shape.reverse()
         
         # TODO: will this actually convert to host byte order?
         if self._swap:
