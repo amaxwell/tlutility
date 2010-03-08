@@ -319,7 +319,7 @@
 						<key>Plot</key>
 						<dict>
 							<key>Selected</key>
-							<string>Plot of TimeTest Flattened</string>
+							<string>Plot of TimeTest</string>
 						</dict>
 						<key>XorY</key>
 						<integer>0</integer>
@@ -373,7 +373,7 @@
 						<key>Plot</key>
 						<dict>
 							<key>Selected</key>
-							<string>Plot of TimeTest Flattened</string>
+							<string>Plot of TimeTest</string>
 						</dict>
 						<key>SwitchAt</key>
 						<string>20K</string>
@@ -437,7 +437,7 @@
 				</dict>
 			</dict>
 			<key>DrawingHeight</key>
-			<real>213</real>
+			<real>247</real>
 			<key>DrawingWindow</key>
 			<dict>
 				<key>ClickMenu</key>
@@ -538,7 +538,7 @@
 				</dict>
 			</dict>
 			<key>ViewSizeJoined</key>
-			<string>424,213</string>
+			<string>524,247</string>
 			<key>ViewSizeSeparated</key>
 			<string></string>
 			<key>Visible</key>
@@ -547,10 +547,10 @@
 			<string>Plot of TimeTest Flattened</string>
 			<key>WindowPos</key>
 			<array>
-				<real>872</real>
-				<real>439</real>
-				<real>422</real>
-				<real>439</real>
+				<real>589</real>
+				<real>380</real>
+				<real>522</real>
+				<real>498</real>
 			</array>
 		</dict>
 		<dict>
@@ -1655,13 +1655,13 @@
 		<key>CurrentTime</key>
 		<dict>
 			<key>CurrentValue</key>
-			<real>3.5899999999999999</real>
+			<real>0.0</real>
 			<key>MaxValue</key>
-			<real>18</real>
+			<real>9</real>
 			<key>MinValue</key>
 			<real>0.0</real>
 			<key>String</key>
-			<string>3.59</string>
+			<string>0</string>
 		</dict>
 		<key>Duration</key>
 		<string>10</string>
@@ -1670,7 +1670,7 @@
 		<key>Loop</key>
 		<string>Off</string>
 		<key>TimeHint</key>
-		<real>0.0</real>
+		<real>3.5899999999999999</real>
 		<key>TimeStep</key>
 		<string>1.0</string>
 		<key>TimeStepSwitch</key>
@@ -1966,22 +1966,6 @@
 			<key>VariableName</key>
 			<string>TimeTest</string>
 			<key>VariableType</key>
-			<string>Array</string>
-		</dict>
-		<dict>
-			<key>Content</key>
-			<dict>
-				<key>Array</key>
-				<dict>
-					<key>Selected</key>
-					<string>TimeTest</string>
-				</dict>
-			</dict>
-			<key>Selection</key>
-			<string>Flatten Array</string>
-			<key>VariableName</key>
-			<string>TimeTest Flattened</string>
-			<key>VariableType</key>
 			<string>NumberList</string>
 		</dict>
 		<dict>
@@ -1992,7 +1976,7 @@
 				<key>Numbers</key>
 				<dict>
 					<key>Selected</key>
-					<string>TimeTest Flattened</string>
+					<string>TimeTest</string>
 				</dict>
 				<key>Start</key>
 				<dict>
@@ -2020,7 +2004,7 @@
 			<key>Selection</key>
 			<string>From List Of Numbers</string>
 			<key>VariableName</key>
-			<string>Plot of TimeTest Flattened</string>
+			<string>Plot of TimeTest</string>
 			<key>VariableType</key>
 			<string>Plot1D</string>
 		</dict>
