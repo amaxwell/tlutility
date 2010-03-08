@@ -6,7 +6,7 @@ import os
 import numpy as np
 from DTDataFile import DTDataFile
 
-def write_2dmesh(file_path):
+def write_2dmeshes(file_path):
     
     output_file = DTDataFile(file_path)
     output_file.DEBUG = True
@@ -23,9 +23,10 @@ def write_2dmesh(file_path):
     mesh = mesh_function(xx, yy)
     
     # save to separate files
+    grid = (np.min(x), np.min(y), dx, dy)
     with DTDataFile("mesh.dtbin", truncate=True) as mesh_file:
-        mesh_file.write_2dmesh_one(mesh, np.min(x), np.min(y), dx, dy, "TestMesh")
-    output_file.write_2dmesh_one(mesh, np.min(x), np.min(y), dx, dy, "TestMesh")
+        mesh_file.write_2dmesh_one(mesh, "TestMesh", grid=grid)
+    output_file.write_2dmesh_one(mesh, "TestMesh", grid=grid)
     output_file.close()
 
 def write_images(file_path):
@@ -108,7 +109,7 @@ def write_test(file_path):
     # add a table of open files or something, and force subsequent access as read-only?
     #
         
-    write_2dmesh(file_path)
+    write_2dmeshes(file_path)
     write_images(file_path)
     write_arrays(file_path)
         

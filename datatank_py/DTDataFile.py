@@ -1,9 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""DTDataFile.py
-
-Pure python script for generating binary files for DataTank.  The 
+"""Pure python script for generating binary files for DataTank.  The 
 internal details of the file format were determined from DTSource:
 
 http://www.visualdatatools.com/DTSource.html
@@ -32,8 +30,6 @@ suggestions, comments, and patches should be sent to the maintainer
 by e-mail: amaxwell AT mac DOT com
 
 This script is released under a BSD license, as follows:
-
-Created by Adam Maxwell on 03/06/10.
 
 This software is Copyright (c) 2010
 Adam Maxwell. All rights reserved.
@@ -72,20 +68,11 @@ import sys, os
 from struct import Struct
 import numpy as np
 
-# struct DTDataFileStructure {
-#     int64_t blockLength;  // Total length of this block (including this entry).
-#     int type;
-#     int m;
-#     int n;
-#     int o;
-#     int nameLength;             // Includes the ending \0
-# };
-
 if sys.byteorder != "little":
     print "warning: saving big-endian files has not been tested"
 
 def _ensure_array(obj):
-    """convert list or tuple to numpy array
+    """Convert list or tuple to numpy array.
 
     This doesn't work as desired for scalars, which end up as a 0-D array
     (correctly, but we need an array of length 1 to write to DTDataFile).
@@ -98,7 +85,7 @@ def _ensure_array(obj):
 
 # the last component is the time index (if present)
 def _basename_of_variable(varname):
-    """returns the base name of a variable, without the time index
+    """Get the base name of a variable, without the time index.
     
     Given a variable "FooBar_10", the last component is the time index (if present),
     so we want to strip the "_10".  This does no error checking.  You should not be
@@ -116,11 +103,16 @@ def _basename_of_variable(varname):
     return "_".join(comps[:-1])
 
 def _type_string_from_dtarray_type(var_type):
-    """returns an appropriate prefix and width-based type
+    """Returns an appropriate prefix and width-based type.
+    
+    Arguments:
+    var_type -- an integer type used in the C++ DTDataFile
+    
+    Returns:
+    a string type suitable for np.dtype(), or None if the type couldn't be determined
     
     This is mainly useful for passing to routines that allow byte-swapping,
     since you can prefix it with < or > as needed to construct a numpy.dtype.
-    Returns None if the type couldn't be determined.
     
     """
     
@@ -144,12 +136,23 @@ def _type_string_from_dtarray_type(var_type):
     return data_type
     
 def _dtarray_type_and_size_from_object(obj):
-    """returns an integer and size corresponding to DTDataFile types
+    """Determine C++ DTDataFile type and size for an object.
     
-    Return value is (array_type, size_in_bytes).
+    Arguments:
+    obj -- a string or numpy array
+    
+    Returns:
+    Integer type and size (array_type, size_in_bytes).
     (None, None) is returned in case of an error.
     
+    NB: np.float is not supported because I'm not sure of the size yet.
+    Also, np.int actually ends up as np.int64, at least on Snow Leopard,
+    and there's no DTArray type for that.  Maybe truncation is an option
+    for int, but I'd rather raise an exception.
+    
     """
+
+    # TODO: figure out size of np.float
     
     if isinstance(obj, str) or isinstance(obj, unicode):
         return (20, 1)
@@ -184,8 +187,41 @@ def _dtarray_type_and_size_from_object(obj):
     return (None, None)
             
 class DTDataFile(object):
-    """docstring for DTDataFile"""
+    """This class roughly corresponds to the C++ DTDataFile class.
+    
+    Higher-level access is provided for some objects (e.g., PIL image),
+    but it is primarily for writing arrays and strings.  In fact, all
+    DataTank stores is arrays and strings, with naming conventions to
+    define how they're interpreted.
+    
+    You should not have multiple DTDataFile instances open for the same
+    file on disk, or your file's state will get trashed.
+    
+    Reading values is fairly easy, and DTDataFile provides a 
+    dictionary-style interface to the variables.  For example,
+    assuming that a variable named "Array_One" exists:
+    
+    >>> f = DTDataFile("a.dtbin")
+    >>> v = f["Array_One"]
+    
+    You can also iterate a DTDataFile directly, and each iteration
+    returns a variable name.
+    
+    """
+    
     def __init__(self, file_path, truncate=False):
+        """Creates a new DTDataFile instance.
+        
+        Arguments:
+        file_path -- absolute or relative path
+        truncate -- whether to truncate the file if it exists
+        
+        The default mode is to append to a file, creating it if
+        it doesn't already exist.  Passing True for truncate will
+        entirely clear the file's content.
+        
+        """
+        
         super(DTDataFile, self).__init__()
         self._file_path = file_path
         self._file = open(file_path, "wb+" if truncate else "ab+")
@@ -196,11 +232,19 @@ class DTDataFile(object):
         self._struct = None
         self.DEBUG = False
     
-    # this is the DTDataFileStructure
     def _read_object_header_at_offset(self, offset):
-        """read DTDataFileStructure at the specified offset in the file
+        """Read DTDataFileStructure at the specified offset in the file.
         
-        Returns a tuple (block_length, var_type, m, n, o, name_length)
+        Arguments:
+        offset -- integer byte position in the underlying file
+        
+        Returns:
+        A tuple (block_length, var_type, m, n, o, name_length)
+        
+        This is a Python version of the C++ DTDataFileStructure,
+        where m, n, and o are the dimension sizes.  Note that
+        block_length includes the length of this object header,
+        and name_length includes a nul character.
         
         """
 
@@ -212,10 +256,14 @@ class DTDataFile(object):
         return self._struct.unpack(bytes_read)
     
     def _read_in_content(self):
-        """(re)read the variable list from disk
+        """Read or update the variable list from disk.
         
         Builds a dictionary of variable name --> offset, where offset is suitable for
-        passing to _read_object_header_at_offset.
+        passing to _read_object_header_at_offset.  Also records the endianness of the
+        file and determines an appropriate header structure.
+        
+        This method walks the entire file on-disk, so it may be expensive to compute
+        for large files.
         
         """
         
@@ -260,11 +308,12 @@ class DTDataFile(object):
             self._file.seek(next_block)
     
     def _reload_content_if_needed(self):
-        """ensures the name-offset dictionary is current
+        """Ensures the name-offset dictionary is current.
         
         Called before reading variable names or accessing values.  This is
         a no-op if file size has not changed; any rewrites to content that
-        do not change length are ignored.
+        do not change length are ignored, so you can call this as often as
+        needed without taking a big hit.
         
         """
         
@@ -283,7 +332,7 @@ class DTDataFile(object):
             self._read_in_content()
     
     def close(self):
-        """close the underlying file object
+        """Close the underlying file object.
         
         Further access to variables and names is not possible at this point
         and will raise an exception.
@@ -296,17 +345,19 @@ class DTDataFile(object):
         self._name_offset_map = {}
         
     def variable_names(self):
-        """list of variable names
-        
-        The returned list is unsorted.
-        
-        """
+        """Unsorted list of variable names."""
 
         self._reload_content_if_needed()
         return self._name_offset_map.keys()
 
     def variable_named(self, name):
-        """procedural API for getting a value from disk
+        """Procedural API for getting a value from disk.
+        
+        Arguments:
+        name -- the variable name as user-visible in the file (without the trailing nul)
+        
+        Returns:
+        A string, scalar, or numpy array.
         
         This returns values as strings, scalars, or numpy arrays.  No attempt is made to
         convert a given array to its abstract type (so you can retrieve each plane of a
@@ -364,39 +415,24 @@ class DTDataFile(object):
         return values.reshape(shape)        
         
     def __iter__(self):
-        """iterate variables by name
-        
-        Variables are unordered, as in a hashing collection.  Do not rely
-        on any apparent ordering.
-        
-        """
+        """Unordered iteration of variables by name."""
         
         return self.variable_names().__iter__()
         
     def __getitem__(self, key):
-        """access variable values by name
-        
-        This provides a dictionary-style interface to the variables.  For example,
-        assuming that a variable named "Array_One" exists:
-        
-        >>> f = DTDataFile("a.dtbin")
-        >>> v = f["Array_One"]
-        
-        """
+        """Access variable values by name."""
         
         return self.variable_named(key)
     
     def __enter__(self):
-        """support for with statement
-        
-        """
+        """Support for with statement."""
         
         return self
     
     def __exit__(self, exc_type, exc_val, exc_tb):
-        """support for with statement
+        """Support for with statement.
         
-        Clean up resources, when using this idiom:
+        Cleans up resources when using this idiom:
         
         >>> with DTDataFile("foo.dtbin", truncate=True) as df:
         ...     df.write_2dmesh_one(mesh, 0, 0, dx, dy, "FooBar")
@@ -407,13 +443,14 @@ class DTDataFile(object):
         return False
         
     def __str__(self):
+        """Basic description of the object and its size."""
         string = super(DTDataFile, self).__str__()
         self._reload_content_if_needed()
         string += "\n\tPath: %s\n\tSize: %s bytes\n\tCount: %s variables" % (os.path.abspath(self._file_path), self._length, len(self.variable_names()))
         return string
         
     def _check_and_write_header(self):
-        """checks for dtbin header and writes it if file is empty
+        """Checks for dtbin header and writes it if the file is empty.
     
         The output file must be open for binary reading and writing.
         On return, the file position will be restored or at end-of-file
@@ -447,9 +484,15 @@ class DTDataFile(object):
             self._struct = Struct(format)
 
     def _write_string(self, string, name):
-        """writes a single string to the output file
+        """Writes a single string to the output file.
+        
+        Arguments:
+        string -- the value to write
+        name -- the user-visible name of the string variable
 
-        Characters are encoded as UTF-8, since DataTank seems to handle that.
+        This is the lowest-level string writing interface, and is for internal use.
+        If the string is a unicode instance, characters are encoded 
+        as UTF-8, since DataTank seems to handle that correctly.
 
         """
 
@@ -473,11 +516,17 @@ class DTDataFile(object):
         self._name_offset_map[name] = block_start
 
     def _write_array(self, array, name):
-        """write a numpy array to the given file object
+        """Write an array to the given file object.
+        
+        Arguments:
+        array -- a numpy.ndarray, list or tuple
+        name -- the user-visible name of the array variable
 
+        This is the lowest-level array writing interface, and is for internal use.
         Writes an array object and header to a .dtbin file.  Handles up to 3 dimensions.
         Arrays are not visible in DataTank unless an additional name is written.
-        Python lists and tuples are converted to double-precision arrays.
+        Python lists and tuples are converted to double-precision arrays, but scalars
+        must be converted beforehand.
 
         """
 
@@ -495,17 +544,6 @@ class DTDataFile(object):
         array = np.reshape(array.flatten(), shape, order="C")
 
         # map ndarray type to DTArray type and record element size in bytes
-        dt_array_type = None
-        element_size = 0    
-
-        #
-        # NB: np.float is not supported because I'm not sure of the size yet.
-        # Also, np.int actually ends up as np.int64, at least on Snow Leopard,
-        # and there's no DTArray type for that.  Maybe truncation is an option
-        # for int, but I'd rather raise an exception.
-        #
-
-        # TODO: figure out size of np.float
         (dt_array_type, element_size) = _dtarray_type_and_size_from_object(array)
             
         # look up a type to pass to np.array.tofile(), mainly so we can swap bytes
@@ -547,23 +585,31 @@ class DTDataFile(object):
         self._name_offset_map[name] = block_start  
             
     def write_array(self, array, name, dt_type=None, time=None):
-        """write an array with time dependence
+        """Write an array with optional time dependence.
         
-        If this is the first time this array has been written, this method will
-        add a string to expose it in DataTank, using the dt_type parameter, which
+        Arguments:
+        array -- a numpy array, list, or tuple
+        name -- user-visible name of the array variable
+        dt_type -- string type used by DataTank
+        time -- time value if this variable is time-varying
+        
+        If this is a time-varying array and no values have been written, this will
+        add a string to expose it in DataTank using the dt_type parameter, which
         is a DataTank type such as "Array" or "NumberList."  The time parameter is
         a double-precision floating point value, relative to DataTank's time slider.
 
         Note that if time dependence is used, the caller is responsible for appending
         "_N" to the variable, where N is an integer >= 0 and strictly increasing 
-        with time.  A call might look like this:
+        with time.  A contrived example follows:
         
         >>> import numpy as np
         >>> f = DTDataFile("foo.dtbin")
         >>> for idx in xrange(0, 10):
         ...     point_test = np.array(range(idx, idx + 10), np.double)
         ...     point_test = point_test.reshape((point_test.size / 2, 2))
-        ...     f.write_array(point_test, "PointTest_%d" % (idx), dt_type="2D Point Collection", time=idx * 2.)
+        ...     tp = "2D Point Collection"
+        ...     tm = idx * 2.
+        ...     f.write_array(point_test, "Points_%d" % (idx), dt_type=tp, time=tm)
         
         Note that the actual variable type is "2D Point Collection," and the caller
         is responsible for setting the array shape correctly.  This should work for any
@@ -589,7 +635,12 @@ class DTDataFile(object):
             self._write_array(np.array((time,), dtype=np.double), name + "_time")
 
     def write_string(self, string, name, time=None):
-        """write a string with time dependence
+        """Write a string with time dependence.
+        
+        Arguments:
+        string -- the value to save
+        name -- the user-visible name of the string variable
+        time -- time value if this variable is time-varying
         
         If this is the first time this string has been written, this method will
         add a string to expose it in DataTank.  The time parameter is a 
@@ -602,7 +653,8 @@ class DTDataFile(object):
         >>> import datetime
         >>> f = DTDataFile("foo.dtbin")
         >>> for idx in xrange(0, 10):
-        ...     f.write_array(datetime.now().isoformat(), "PointTest_%d" % (idx), time=idx * 2.)
+        ...     s = datetime.now().isoformat()
+        ...     f.write_array(s, "PointTest_%d" % (idx), time=idx * 2.)
                 
         """
         
@@ -622,11 +674,23 @@ class DTDataFile(object):
             self._write_array(np.array((time,), dtype=np.double), name + "_time")
 
     def write(self, obj, name, dt_type=None, time=None):
-        """write a single value to a file object by name
+        """Write a single value to a file object by name.
+        
+        Arguments:
+        obj -- string, numpy array, list, tuple, or scalar value
+        name -- user-visible name of the variable
+        dt_type -- string type used by DataTank
+        time -- time value if this variable is time-varying
 
         Handles various object types, and adds appropriate names so they're visible
-        in DataTank.  String, scalar, ndarray, tuple, and list objects are supported.
-        Saves a 1D array as a List of Numbers and other shapes as Array.
+        in DataTank.  String, scalar, ndarray, tuple, and list objects are supported,
+        although ndarray gives the most specific interface for precision and avoids
+        type conversions.
+        
+        This method saves a 0D array (scalar) as a "Real Number", a 1D array as a
+        "List of Numbers" and other shapes as "Array" by default.  Use the dt_type
+        parameter if you want something specific, such as "2D Point" for a point
+        (although the caller has to ensure the shape is correct).
 
         """
 
@@ -646,13 +710,18 @@ class DTDataFile(object):
         else:
             assert False, "unhandled object type"
 
-    def write_image_one(self, image, name):
-        """save a single PIL image
+    def write_image_one(self, image, name, grid=None):
+        """Save a single PIL image.
+        
+        Arguments:
+        image -- a PIL image
+        name -- the user-visible name of the image variable
+        grid -- the origin and pixel size of the image, as (xmin, ymin, dx, dy)
 
         Handles RGB and grayscale images, with or without an alpha channel.
         16-bit images should be supported, but I don't have one to test with
         at the moment.  DTBitmap2D itself doesn't support floating-point images,
-        but those are typically elevation data that I want as a DTMesh2D anyway.
+        but those are typically elevation data that I'd want as a DTMesh2D anyway.
 
         """
 
@@ -692,16 +761,21 @@ class DTDataFile(object):
             assert False, "unsupported image mode"
 
         # Equivalent of WriteNoSize(DTDataStorage, string, DTMesh2DGrid).
-        # Sets origin and pixel size; could use gdal here to get this properly
-        # for georeferenced images.
-        self._write_array((0, 0, 1, 1), name)       
+        if grid is None:
+            grid = (0, 0, 1, 1)
+        self._write_array(grid, name)       
 
-    def write_2dmesh_one(self, values, xmin, ymin, dx, dy, name):
-        """save a single 2D mesh
+    def write_2dmesh_one(self, values, name, grid=None):
+        """Save a single 2D mesh variable.
+        
+        Arguments:
+        values -- the mesh array (must be an ndarray)
+        grid -- the origin and element size of the mesh, as (xmin, ymin, dx, dy)
 
         This saves the equivalent of a 2D mesh grid and values to the given file object.
         The grid is described by xmin, ymin, dx, dy, and the extent of the grid is
         determined by the shape of the values array (which has a single value per node).
+        If no grid is given, a unit grid with origin (0, 0) is assumed.
 
         """
 
@@ -715,12 +789,15 @@ class DTDataFile(object):
         # 5. Write name and type for DataTank
         #
 
+        if grid is None:
+            grid = (0, 0, 1, 1)
+            
+        (xmin, ymin, dx, dy) = grid 
         xmax = xmin + values.shape[1] * float(dx)
         ymax = ymin + values.shape[0] * float(dy)
 
         # will be converted to double arrays
         bbox = (xmin, xmax, ymin, ymax)
-        grid = (xmin, ymin, dx, dy)
 
         self._write_array(bbox, name + "_bbox2D")
         self._write_array(grid, name + "_loc")
