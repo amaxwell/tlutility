@@ -55,9 +55,9 @@ def write_arrays(file_path):
     output_file = DTDataFile(file_path)
     output_file.DEBUG = True
     
-    # write a 1D array of shorts
+    # write a 1D array of shorts using the dictionary interface
     test_array = np.array(range(0, 10), dtype=np.int16)
-    output_file.write(test_array, "Test0")
+    output_file["Test0"] = test_array
     
     read_array = output_file["Test0"]
     assert np.all(test_array == read_array), "failed 1D int16 array test"

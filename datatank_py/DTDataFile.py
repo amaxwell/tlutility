@@ -204,8 +204,27 @@ class DTDataFile(object):
     >>> f = DTDataFile("a.dtbin")
     >>> v = f["Array_One"]
     
+    Setting is similar, but you're at the mercy of the type conversion
+    as in the write() method, and you can't specify a time:
+    
+    >>> import numpy as np
+    >>> f = DTDataFile("a.dtbin")
+    >>> f["My array"] = np.zeros((2, 2))
+    >>> f["My array"]
+    array([[ 0.,  0.],
+           [ 0.,  0.]])
+           
+    Note that if you try to set the same variable name again,
+    an exception will be thrown.  Don't do that.
+    
     You can also iterate a DTDataFile directly, and each iteration
-    returns a variable name.
+    returns a variable name.  Variable names are unordered, as in
+    hashing collections.
+    
+    DTDataFile supports the with statement in Python 2.5 and 2.6,
+    so you can use this idiom to ensure resources are cleaned up:
+    >>> with DTDataFile("foo.dtbin", truncate=True) as df:
+    ...     df.write_2dmesh_one(mesh, 0, 0, dx, dy, "FooBar")
     
     """
     
@@ -415,30 +434,19 @@ class DTDataFile(object):
         return values.reshape(shape)        
         
     def __iter__(self):
-        """Unordered iteration of variables by name."""
-        
+        # unordered iteration
         return self.variable_names().__iter__()
         
     def __getitem__(self, key):
-        """Access variable values by name."""
-        
+        # support for dictionary-style getting
         return self.variable_named(key)
     
     def __enter__(self):
-        """Support for with statement."""
-        
+        # support for with statement
         return self
     
     def __exit__(self, exc_type, exc_val, exc_tb):
-        """Support for with statement.
-        
-        Cleans up resources when using this idiom:
-        
-        >>> with DTDataFile("foo.dtbin", truncate=True) as df:
-        ...     df.write_2dmesh_one(mesh, 0, 0, dx, dy, "FooBar")
-        
-        """
-        
+        # support for with statement
         self.close()
         return False
         
@@ -709,6 +717,10 @@ class DTDataFile(object):
             self.write_array(array, name, dt_type=dt_type, time=time)
         else:
             assert False, "unhandled object type"
+            
+    def __setitem__(self, name, value):
+        # support for dictionary-style setting; this is very limited
+        self.write(value, name)
 
     def write_image_one(self, image, name, grid=None):
         """Save a single PIL image.
