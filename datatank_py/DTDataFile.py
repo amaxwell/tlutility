@@ -114,6 +114,74 @@ def _basename_of_variable(varname):
         return varname
         
     return "_".join(comps[:-1])
+
+def _type_string_from_dtarray_type(var_type):
+    """returns an appropriate prefix and width-based type
+    
+    This is mainly useful for passing to routines that allow byte-swapping,
+    since you can prefix it with < or > as needed to construct a numpy.dtype.
+    Returns None if the type couldn't be determined.
+    
+    """
+    
+    if var_type == 1:
+        data_type = "f8" # DTDataFile_Double
+    elif var_type == 2:
+        data_type = "f4" # DTDataFile_Single
+    elif var_type == 8:
+        data_type = "i4" # DTDataFile_Signed32Int
+    elif var_type == 9:
+        data_type = "u2" # DTDataFile_UnsignedShort
+    elif var_type == 10:
+        data_type = "i2" # DTDataFile_Short
+    elif var_type == 11:
+        data_type = "u1" # DTDataFile_Unsigned8Char
+    elif var_type == 12:
+        data_type = "i1" # DTDataFile_Signed8Char
+    else:
+        data_type = None
+        
+    return data_type
+    
+def _dtarray_type_and_size_from_object(obj):
+    """returns an integer and size corresponding to DTDataFile types
+    
+    Return value is (array_type, size_in_bytes).
+    (None, None) is returned in case of an error.
+    
+    """
+    
+    if isinstance(obj, str) or isinstance(obj, unicode):
+        return (20, 1)
+    elif isinstance(obj, np.ndarray):
+        array = obj
+        if array.dtype in (np.float64, np.double):
+            dt_array_type = 1 # DTDataFile_Double
+            element_size = 8
+        elif array.dtype in (np.float32,):
+            dt_array_type = 2 # DTDataFile_Single
+            element_size = 4
+        elif array.dtype in (np.int32,):
+            dt_array_type = 8 # DTDataFile_Signed32Int
+            element_size = 4
+        elif array.dtype in (np.uint16, np.ushort):
+            dt_array_type = 9 # DTDataFile_UnsignedShort
+            element_size = 2
+        elif array.dtype in (np.int16, np.short):
+            dt_array_type = 10 # DTDataFile_Short
+            element_size = 2
+        elif array.dtype in (np.uint8, np.ubyte):
+            dt_array_type = 11 # DTDataFile_Unsigned8Char
+            element_size = 1
+        elif array.dtype in (np.int8, np.byte):
+            dt_array_type = 12 # DTDataFile_Signed8Char
+            element_size = 1
+        
+        return (dt_array_type, element_size)
+
+    # default case is an error
+    print "unable to determine DT type for object %s" % (type(obj))
+    return (None, None)
             
 class DTDataFile(object):
     """docstring for DTDataFile"""
@@ -164,10 +232,10 @@ class DTDataFile(object):
             header = self._file.read(len(default_file_header))
             if header == "DataTank Binary File LE\0":
                 self._little_endian = True
-                self._swap = False if sys.byteorder is "little" else True
+                self._swap = False if sys.byteorder == "little" else True
             else:
                 self._little_endian = False
-                self._swap = True if sys.byteorder is "little" else False
+                self._swap = True if sys.byteorder == "little" else False
         
             # DTDataFileStructure: long long followed by 5 ints
             # http://docs.python.org/library/struct.html
@@ -262,28 +330,13 @@ class DTDataFile(object):
             bytes_read = self._file.read(block_length - self._struct.size - name_length).strip("\0")
             return unicode(bytes_read, "utf-8")
 
-        # DTArray types
-        byte_order = "<" if self._little_endian else ">"
-        data_type = None
-        if var_type == 1:
-            data_type = "f8" # DTDataFile_Double
-        elif var_type == 2:
-            data_type = "f4" # DTDataFile_Single
-        elif var_type == 8:
-            data_type = "i4" # DTDataFile_Signed32Int
-        elif var_type == 9:
-            data_type = "u2" # DTDataFile_UnsignedShort
-        elif var_type == 10:
-            data_type = "i2" # DTDataFile_Short
-        elif var_type == 11:
-            data_type = "u1" # DTDataFile_Unsigned8Char
-        elif var_type == 12:
-            data_type = "i1" # DTDataFile_Signed8Char
-        
+        # everything else is a DTArray type
+        data_type = _type_string_from_dtarray_type(var_type)
         assert data_type is not None, "unhandled DTArray type"
                     
         # don't need to include the byte order unless it's not host-ordered
         if self._swap:
+            byte_order = "<" if self._little_endian else ">"
             data_type = byte_order + data_type
         
         element_count = m * n * o
@@ -443,35 +496,27 @@ class DTDataFile(object):
         element_size = 0    
 
         #
-        # NB: np.float is not supported because I'm not sure of the size yet,
-        # and np.int actually ends up as np.int64, at least on Snow Leopard,
+        # NB: np.float is not supported because I'm not sure of the size yet.
+        # Also, np.int actually ends up as np.int64, at least on Snow Leopard,
         # and there's no DTArray type for that.  Maybe truncation is an option
         # for int, but I'd rather raise an exception.
         #
 
         # TODO: figure out size of np.float
-        if array.dtype in (np.float64, np.double):
-            dt_array_type = 1 # DTDataFile_Double
-            element_size = 8
-        elif array.dtype in (np.float32,):
-            dt_array_type = 2 # DTDataFile_Single
-            element_size = 4
-        elif array.dtype in (np.int32,):
-            dt_array_type = 8 # DTDataFile_Signed32Int
-            element_size = 4
-        elif array.dtype in (np.uint16, np.ushort):
-            dt_array_type = 9 # DTDataFile_UnsignedShort
-            element_size = 2
-        elif array.dtype in (np.int16, np.short):
-            dt_array_type = 10 # DTDataFile_Short
-            element_size = 2
-        elif array.dtype in (np.uint8, np.ubyte):
-            dt_array_type = 11 # DTDataFile_Unsigned8Char
-            element_size = 1
-        elif array.dtype in (np.int8, np.byte):
-            dt_array_type = 12 # DTDataFile_Signed8Char
-            element_size = 1
+        (dt_array_type, element_size) = _dtarray_type_and_size_from_object(array)
+            
+        # look up a type to pass to np.array.tofile(), mainly so we can swap bytes
+        data_type = _type_string_from_dtarray_type(dt_array_type)
+        assert data_type is not None, "unhandled DTArray type"
 
+        # don't need to change the byte order unless it's not host-ordered
+        if self._swap:
+            # TODO: see if this actually works, since tofile doesn't allow byte swapping
+            print "WARNING: byte-swapped writing has not been tested"
+            byte_order = "<" if self._little_endian else ">"
+            data_type = byte_order + data_type
+            array = array.astype(np.dtype(data_type))
+            
         assert dt_array_type is not None, "unknown array type: " + str(array.dtype)
 
         shape = array.shape
