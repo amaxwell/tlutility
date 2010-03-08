@@ -68,6 +68,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 """
 
+from __future__ import with_statement
 import sys, os
 from struct import Struct
 import numpy as np
@@ -687,7 +688,10 @@ def write_test(file_path):
     # write a single bitmap image (requires PIL)
     try:
         from PIL import Image
-        image = Image.open("/Library/Desktop Pictures/Art/Poppies Blooming.jpg")
+        if os.path.exists("/Library/Desktop Pictures/Art/Poppies Blooming.jpg"):
+            image = Image.open("/Library/Desktop Pictures/Art/Poppies Blooming.jpg")
+        else:
+            image = Image.open("/Library/Desktop Pictures/Nature/Earth Horizon.jpg")
         output_file.write_image_one(image, "Image")
     
         # add an alpha channel and save the new image
