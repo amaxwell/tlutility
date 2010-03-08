@@ -53,30 +53,48 @@ def write_arrays(file_path):
     
     output_file = DTDataFile(file_path)
     output_file.DEBUG = True
+    
     # write a 1D array of shorts
     test_array = np.array(range(0, 10), dtype=np.int16)
     output_file.write(test_array, "Test0")
+    
+    read_array = output_file["Test0"]
+    assert np.all(test_array == read_array), "failed 1D int16 array test"
     
     # write a Python list
     output_file.write([0, 10, 5, 7, 9], "TestPythonList")
     
     # write a single number
-    output_file.write(10.5, "TestRealNumber")
+    value = 10.5
+    output_file.write(value, "TestRealNumber")
+    
+    read_value = output_file["TestRealNumber"]
+    assert value == read_value, "failed real number test"
     
     # write a 2D array of ints
     test_array = np.array(range(0, 10), dtype=np.int32)
     test_array = test_array.reshape((5, 2))
     output_file.write_array(test_array, "Test1", dt_type="Array")
     
+    read_array = output_file["Test1"]
+    assert np.all(test_array == read_array), "failed 2D int32 array test"
+    
     # write a 2D array of doubles
     test_array = test_array.astype(np.float64)
     test_array /= 2.3
     output_file.write_array(test_array, "Test2", dt_type="Array")
     
+    read_array = output_file["Test2"]
+    assert np.all(test_array == read_array), "failed 2D double array test"
+    
     # write a 3D array of floats
     test_array = np.array(range(0, 12), dtype=np.float)
     test_array = test_array.reshape(3, 2, 2)
     output_file.write_array(test_array, "Test3", dt_type="Array")
+    
+    read_array = output_file["Test3"]
+    assert np.all(test_array == read_array), "failed 3D float array test"
+    
     output_file.close()
 
 def write_test(file_path):
@@ -103,7 +121,9 @@ def write_test(file_path):
         output_file.write(time_test, "TimeTest_%d" % (idx), time=idx * 2.)
     
     # write a single string
-    output_file.write("Test single string", "TestSingleString")
+    string = "Test single string"
+    output_file.write(string, "TestSingleString")
+    assert string == output_file["TestSingleString"], "failed string test"
 
     # write a time-varying string with Unicode characters
     for idx in xrange(0, 10):
