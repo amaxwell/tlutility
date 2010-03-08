@@ -379,6 +379,7 @@ class DTDataFile(object):
             # setting up a new file, so choose native byte order
             assert previous_offset == 0, "file is missing dtbinary header"
             self._file.write(file_header)
+            self._file.flush()
             # DTDataFileStructure: long long followed by 5 ints
             # http://docs.python.org/library/struct.html
             if sys.byteorder == "little":
@@ -411,6 +412,7 @@ class DTDataFile(object):
         self._file.write(string + "\0")
         
         # update file length and variable map manually
+        self._file.flush()
         self._length = self._file.tell()
         self._name_offset_map[name] = block_start
 
@@ -492,6 +494,7 @@ class DTDataFile(object):
         array.tofile(self._file)
         
         # update file length and variable map manually
+        self._file.flush()
         self._length = self._file.tell()
         self._name_offset_map[name] = block_start  
             

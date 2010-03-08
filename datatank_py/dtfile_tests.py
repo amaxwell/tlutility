@@ -82,6 +82,13 @@ def write_arrays(file_path):
 def write_test(file_path):
     
     assert os.path.exists(file_path) is False, "delete file before running tests"
+    
+    # 
+    # Note: I tried creating the file here and keeping it open while calling the
+    # following functions, but that failed horribly and caused an inconsistent file.
+    # Summary: having these open at the same time will cause problems.  Maybe I should
+    # add a table of open files or something, and force subsequent access as read-only?
+    #
         
     write_2dmesh(file_path)
     write_images(file_path)
