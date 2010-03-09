@@ -27,6 +27,7 @@ def write_2dmeshes(file_path):
     with DTDataFile("mesh.dtbin", truncate=True) as mesh_file:
         mesh_file.write_2dmesh_one(mesh, "TestMesh", grid=grid)
     output_file.write_2dmesh_one(mesh, "TestMesh", grid=grid)
+    output_file.close()
     
     # use GDAL to load a 16 bit GeoTIFF file and display it as a 2D mesh
     with DTDataFile("mesh.dtbin") as mesh_file:
@@ -41,10 +42,7 @@ def write_2dmeshes(file_path):
             grid = (xmin, ymin, dx, abs(dy))
             mesh_file.write_2dmesh_one(np.flipud(mesh), "Image from GDAL", grid=grid)
         except Exception, e:
-            print "failed to load or write image as mesh:", e
-    
-    
-    output_file.close()
+            print "failed to load or write image as mesh:", e    
 
 def write_images(file_path):
             
