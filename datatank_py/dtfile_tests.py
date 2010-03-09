@@ -27,6 +27,23 @@ def write_2dmeshes(file_path):
     with DTDataFile("mesh.dtbin", truncate=True) as mesh_file:
         mesh_file.write_2dmesh_one(mesh, "TestMesh", grid=grid)
     output_file.write_2dmesh_one(mesh, "TestMesh", grid=grid)
+    
+    # use GDAL to load a 16 bit GeoTIFF file and display it as a 2D mesh
+    with DTDataFile("mesh.dtbin") as mesh_file:
+        try:
+            from osgeo import gdal
+            from osgeo.gdalconst import GA_ReadOnly
+            path = os.path.expanduser("~/Mapping/Puget Sound/psdem/skagit_ll_int16_elevation_feet.tiff")
+            dataset = gdal.Open(path, GA_ReadOnly)
+            (xmin, dx, rot1, ymax, rot2, dy) = dataset.GetGeoTransform()
+            mesh = dataset.ReadAsArray()
+            ymin = ymax + dy * mesh.shape[1]
+            grid = (xmin, ymin, dx, abs(dy))
+            mesh_file.write_2dmesh_one(np.flipud(mesh), "Image from GDAL", grid=grid)
+        except Exception, e:
+            print "failed to load or write image as mesh:", e
+    
+    
     output_file.close()
 
 def write_images(file_path):
@@ -48,6 +65,7 @@ def write_images(file_path):
         
     except Exception, e:
         print "failed to load or write image:", e
+
     output_file.close()
     
 def write_arrays(file_path):
