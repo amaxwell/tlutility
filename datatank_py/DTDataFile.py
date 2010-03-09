@@ -185,6 +185,70 @@ def _dtarray_type_and_size_from_object(obj):
     # default case is an error
     print "unable to determine DT type for object %s" % (type(obj))
     return (None, None)
+
+def _array_from_image(image):
+    """Convert a PIL image to a numpy ndarray.
+    
+    Arguments:
+    image -- a PIL image instance
+    
+    Returns:
+    a numpy ndarray or None if an error occurred
+    
+    """
+    
+    array = None
+    if image.mode.startswith(("I", "F")):
+        
+        def _parse_mode(mode):
+            # Modes aren't very well documented, and I see results that
+            # differ from the documentation.  They seem to follow this:
+            # http://www.pythonware.com/library/pil/handbook/decoder.htm
+            suffix = mode.split(";")[-1]
+            np_type = ""
+            if suffix != mode:
+                mode_size = ""
+                mode_fmt = ""
+                for c in suffix:
+                    if c.isdigit():
+                        mode_size += c
+                    else:
+                        mode_fmt += c
+                if mode_fmt.startswith("N") is False:
+                    # big-endian if starts with B, little otherwise
+                    np_type += ">" if mode_fmt.startswith("B") else "<"
+                if mode_fmt.endswith("S"):
+                    # signed int
+                    np_type += "i"
+                else:
+                    # float or unsigned int
+                    np_type += "f" if mode.endswith("F") else "u"
+                # convert to size in bytes
+                np_type += str(int(mode_size) / 8)
+            elif mode == "F":
+                np_type = "f4"
+            elif mode == "I":
+                np_type = "i4"
+            else:
+                return None
+            return np.dtype(np_type)
+        
+        dt = _parse_mode(image.mode)
+        if dt is None:
+            print "unable to determine image bit depth and byte order for mode \"%s\"" % (image.mode)
+        else:
+            try:
+                # fails for signed int16 images produced by GDAL, but works with unsigned
+                array = np.fromstring(image.tostring(), dtype=dt)
+                array = array.reshape((image.size[1], image.size[0]))
+            except Exception, e:
+                print "image.tostring() failed for image with mode \"%s\" (PIL error: %s)" % (image.mode, str(e))
+        
+    else:    
+        # doesn't seem to work reliably for GDAL-produced 16 bit GeoTIFF
+        array = np.asarray(image)
+    
+    return array
             
 class DTDataFile(object):
     """This class roughly corresponds to the C++ DTDataFile class.
@@ -737,55 +801,8 @@ class DTDataFile(object):
 
         """
         
-        if image.mode.startswith(("I", "F")):
-            
-            def _parse_mode(mode):
-                # Modes aren't very well documented, and I see results that
-                # differ from the documentation.  They seem to follow this:
-                # http://www.pythonware.com/library/pil/handbook/decoder.htm
-                suffix = mode.split(";")[-1]
-                np_type = ""
-                if suffix != mode:
-                    mode_size = ""
-                    mode_fmt = ""
-                    for c in suffix:
-                        if c.isdigit():
-                            mode_size += c
-                        else:
-                            mode_fmt += c
-                    if mode_fmt.startswith("N") is False:
-                        # big-endian if starts with B, little otherwise
-                        np_type += ">" if mode_fmt.startswith("B") else "<"
-                    if mode_fmt.endswith("S"):
-                        # signed int
-                        np_type += "i"
-                    else:
-                        # float or unsigned int
-                        np_type += "f" if mode.endswith("F") else "u"
-                    # convert to size in bytes
-                    np_type += str(int(mode_size) / 8)
-                elif mode == "F":
-                    np_type = "f4"
-                elif mode == "I":
-                    np_type = "i4"
-                else:
-                    print "unknown mode", mode
-                    return None
-                return np.dtype(np_type)
-            
-            dt = _parse_mode(image.mode)
-            assert dt is not None, "unable to determine image bit depth and byte order"
-            try:
-                array = np.fromstring(image.tostring(), dtype=dt)
-                array = array.reshape((image.size[1], image.size[0]))
-            except Exception, e:
-                print "failed to convert image to an array:", e
-                raise e
-            
-        else:    
-            # doesn't seem to work reliably for GDAL-produced 16 bit GeoTIFF
-            array = np.asarray(image)
-            
+        array = _array_from_image(image)
+        assert array is not None, "unable to convert the image to a numpy array"
         assert array.dtype in (np.int16, np.uint16, np.uint8, np.int8, np.bool), "unsupported bit depth"
 
         # no suffix on DataTank names for 8 bit images
