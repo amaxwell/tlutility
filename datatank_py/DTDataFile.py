@@ -736,15 +736,63 @@ class DTDataFile(object):
         but those are typically elevation data that I'd want as a DTMesh2D anyway.
 
         """
-
-        array = np.asarray(image)
+        
+        if image.mode.startswith(("I", "F")):
+            
+            def _parse_mode(mode):
+                # Modes aren't very well documented, and I see results that
+                # differ from the documentation.  They seem to follow this:
+                # http://www.pythonware.com/library/pil/handbook/decoder.htm
+                suffix = mode.split(";")[-1]
+                np_type = ""
+                if suffix != mode:
+                    mode_size = ""
+                    mode_fmt = ""
+                    for c in suffix:
+                        if c.isdigit():
+                            mode_size += c
+                        else:
+                            mode_fmt += c
+                    if mode_fmt.startswith("N") is False:
+                        # big-endian if starts with B, little otherwise
+                        np_type += ">" if mode_fmt.startswith("B") else "<"
+                    if mode_fmt.endswith("S"):
+                        # signed int
+                        np_type += "i"
+                    else:
+                        # float or unsigned int
+                        np_type += "f" if mode.endswith("F") else "u"
+                    # convert to size in bytes
+                    np_type += str(int(mode_size) / 8)
+                elif mode == "F":
+                    np_type = "f4"
+                elif mode == "I":
+                    np_type = "i4"
+                else:
+                    print "unknown mode", mode
+                    return None
+                return np.dtype(np_type)
+            
+            dt = _parse_mode(image.mode)
+            assert dt is not None, "unable to determine image bit depth and byte order"
+            try:
+                array = np.fromstring(image.tostring(), dtype=dt)
+                array = array.reshape((image.size[1], image.size[0]))
+            except Exception, e:
+                print "failed to convert image to an array:", e
+                raise e
+            
+        else:    
+            # doesn't seem to work reliably for GDAL-produced 16 bit GeoTIFF
+            array = np.asarray(image)
+            
         assert array.dtype in (np.int16, np.uint16, np.uint8, np.int8, np.bool), "unsupported bit depth"
 
-        # no suffix for 8 bit images
+        # no suffix on DataTank names for 8 bit images
         name_suffix = "" if array.dtype in (np.uint8, np.int8) else "16"
 
         self._write_string("2D Bitmap", "Seq_" + name)
-        if image.mode in ("1", "P", "L", "LA"):
+        if image.mode in ("1", "P", "L", "LA") or image.mode.startswith(("F", "I")):
 
             # convert binary image of dtype=bool to uint8
             if image.mode == "1":
@@ -755,7 +803,7 @@ class DTDataFile(object):
                 array = array.copy().astype(np.uint8)
                 array *= 255
 
-            if image.mode in ("1", "L", "P"):
+            if image.mode in ("1", "L", "P") or image.mode.startswith(("F", "I")):
                 self._write_array(np.flipud(array), name + "_Gray" + name_suffix)
             else:
                 assert image.mode == "LA", "requires gray + alpha image"
@@ -768,7 +816,8 @@ class DTDataFile(object):
             self._write_array(np.flipud(array[:,:,1]), name + "_Green" + name_suffix)
             self._write_array(np.flipud(array[:,:,2]), name + "_Blue" + name_suffix)
             if image.mode == "RGBA":
-                self._write_array(np.flipud(array[:,:,3]), name + "_Alpha" + name_suffix)
+                self._write_array(np.flipud(array[:,:,3]), name + "_Alpha" + name_suffix)            
+                            
         else:
             assert False, "unsupported image mode"
 
