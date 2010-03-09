@@ -504,6 +504,8 @@ class DTDataFile(object):
 
         """
 
+        assert name not in self._name_offset_map, "variable name already exists"
+
         self._check_and_write_header()
         block_start = self._file.tell()
 
@@ -537,6 +539,8 @@ class DTDataFile(object):
         must be converted beforehand.
 
         """
+
+        assert name not in self._name_offset_map, "variable name already exists"
 
         self._check_and_write_header()    
         block_start = self._file.tell()
@@ -632,8 +636,6 @@ class DTDataFile(object):
         if time and base_name not in self.variable_names():
             self._write_string(dt_type, base_name)
         elif time is None:
-            # avoid duplicating a variable
-            assert base_name not in self.variable_names(), "variable already exists"
             self._write_string(dt_type, base_name)
             
         # caller is responsible for appending _index as needed for time series
@@ -671,8 +673,6 @@ class DTDataFile(object):
         if time and base_name not in self.variable_names():
             self._write_string("String", base_name)
         elif time is None:
-            # avoid duplicating a variable
-            assert base_name not in self.variable_names(), "variable already exists"
             self._write_string("String", base_name)
              
         # caller is responsible for appending _index as needed for time series
