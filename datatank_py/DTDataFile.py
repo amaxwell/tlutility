@@ -782,17 +782,18 @@ class DTDataFile(object):
             array = np.array((obj,))
             self.write_array(array, name, dt_type="Real Number", time=time)
         elif isinstance(obj, (tuple, list)) and isinstance(obj[0], (str, unicode)):
-            # this must be a StringList
+            # this will be a StringList
             offsets = []
             char_list = []
             current_offset = 0
+            # flat list of character codes, with each string separated by a null
             for string in obj:
-                string = string.encode("utf-8")
+                string = (string + "\0").encode("utf-8")
                 char_list += [ord(x) for x in string]
                 offsets.append(current_offset)
                 current_offset += len(string)
             self._write_array(np.array(offsets, dtype=np.int32), name + "_offs")
-            self.write_array(np.array(char_list, dtype=np.uint8), name, dt_type="StringList", time=time)
+            self.write_array(np.array(char_list, dtype=np.int8), name, dt_type="StringList", time=time)
         elif isinstance(obj, (np.ndarray, tuple, list)):
             # need to be able to call shape
             array = _ensure_array(obj)
