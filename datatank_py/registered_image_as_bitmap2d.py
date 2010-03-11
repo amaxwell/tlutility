@@ -9,6 +9,20 @@ from time import clock
 
 if __name__ == '__main__':
     
+    #
+    # This program replaces a standard DataTank External Program module
+    # in C++.  Note that it must be executable (chmod 755 in Terminal)
+    # and gdal and numpy are required.
+    #
+    # It takes as input a file path, then loads an image from it, using
+    # GDAL to determine the raster origin and pixel size.  The image is
+    # then saved as a 2D Bitmap object, either 8 or 16 bits as needed.
+    #
+    # Note that this is not appropriate for elevation data, as DataTank
+    # will normalize the file range from [0, 1] if you extract the gray
+    # component.
+    #
+    
     input_file = DTDataFile("Input.dtbin")
     image_path = input_file["Image Path"]
     input_file.close()
@@ -33,10 +47,10 @@ if __name__ == '__main__':
 
     (xmin, dx, rot1, ymax, rot2, dy) = dataset.GetGeoTransform()
     mesh = dataset.ReadAsArray()
-    ymin = ymax + dy * mesh.shape[-1]
+    ymin = ymax + dy * mesh.shape[1]
     grid = (xmin, ymin, dx, abs(dy))
     suffix = "16" if mesh.dtype in (np.int16, np.uint16) else ""
-                    
+                        
     with DTDataFile("Output.dtbin", truncate=True) as output_file:
         
         # The normal write_array doesn't help with composite types,
@@ -76,7 +90,6 @@ if __name__ == '__main__':
         else:
             errors.append("Unhandled mesh shape: %s" % (mesh.shape))
         
-        print output_file.variable_names()
         # Here again, we have to use low-level writing to avoid a name
         # conflict, since the high-level methods will write a "Seq_Var"
         # to expose the variable (and conflict with the previous name).

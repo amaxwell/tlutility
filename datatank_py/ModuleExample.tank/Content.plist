@@ -709,139 +709,6 @@
 				<real>621</real>
 			</array>
 		</dict>
-		<dict>
-			<key>Antialiasing</key>
-			<string>YES</string>
-			<key>Axis</key>
-			<dict>
-				<key>YScale</key>
-				<dict>
-					<key>Inline</key>
-					<dict>
-						<key>Number</key>
-						<string>1</string>
-					</dict>
-					<key>SelectedNumber</key>
-					<integer>0</integer>
-				</dict>
-			</dict>
-			<key>BoundingBox</key>
-			<dict>
-				<key>MaxXValue</key>
-				<string></string>
-				<key>MaxYValue</key>
-				<string></string>
-				<key>MinXValue</key>
-				<string></string>
-				<key>MinYValue</key>
-				<string></string>
-				<key>RangeType</key>
-				<integer>0</integer>
-				<key>Region</key>
-				<dict>
-					<key>SelectedNumber</key>
-					<integer>0</integer>
-				</dict>
-			</dict>
-			<key>CommandContents</key>
-			<array>
-				<dict>
-					<key>CommandName</key>
-					<string>skagit_utm_int16_elevation_feet.tiff</string>
-					<key>CommandType</key>
-					<string>Bitmap</string>
-					<key>Computation</key>
-					<dict>
-						<key>Bitmap</key>
-						<dict>
-							<key>Selected</key>
-							<string>skagit_utm_int16_elevation_feet.tiff</string>
-						</dict>
-						<key>ClockWiseCropSwitch</key>
-						<string>Off</string>
-						<key>Crop</key>
-						<dict>
-							<key>SelectedNumber</key>
-							<integer>0</integer>
-						</dict>
-						<key>CropSwitch</key>
-						<string>On</string>
-						<key>Interpolation</key>
-						<integer>0</integer>
-						<key>Sparsify</key>
-						<string>On</string>
-					</dict>
-					<key>Drawn</key>
-					<string>Include</string>
-					<key>Status</key>
-					<string>Visible</string>
-				</dict>
-			</array>
-			<key>DrawingHeight</key>
-			<real>348</real>
-			<key>DrawingWindow</key>
-			<dict>
-				<key>ClickMenu</key>
-				<dict>
-					<key>EntryName</key>
-					<string>Automatic</string>
-					<key>EntryNumber</key>
-					<integer>0</integer>
-				</dict>
-			</dict>
-			<key>DrawingWindowType</key>
-			<string>2DGraph</string>
-			<key>FigureName</key>
-			<string>Untitled</string>
-			<key>MaxHeight</key>
-			<string></string>
-			<key>MaxWidth</key>
-			<string></string>
-			<key>OutputHeight</key>
-			<string></string>
-			<key>OutputWidth</key>
-			<string></string>
-			<key>QT</key>
-			<dict>
-				<key>Format</key>
-				<string>Animation</string>
-				<key>Quality</key>
-				<dict>
-					<key>EntryName</key>
-					<string>Lossless</string>
-					<key>EntryNumber</key>
-					<integer>0</integer>
-				</dict>
-				<key>Range</key>
-				<string>0,∞</string>
-				<key>ShowInFinder</key>
-				<string>On</string>
-				<key>TimeStep</key>
-				<string>1.0</string>
-			</dict>
-			<key>SeparateWindowPos</key>
-			<array>
-				<real>0.0</real>
-				<real>0.0</real>
-				<real>0.0</real>
-				<real>0.0</real>
-			</array>
-			<key>ViewSizeJoined</key>
-			<string>532,348</string>
-			<key>ViewSizeSeparated</key>
-			<string></string>
-			<key>Visible</key>
-			<string>YES</string>
-			<key>WindowName</key>
-			<string>skagit_utm_int16_elevation_feet.tiff</string>
-			<key>WindowPos</key>
-			<array>
-				<real>887</real>
-				<real>506</real>
-				<real>530</real>
-				<real>672</real>
-			</array>
-		</dict>
 	</array>
 	<key>InformationSize</key>
 	<array>
@@ -953,35 +820,6 @@
 		<dict>
 			<key>Content</key>
 			<dict>
-				<key>File</key>
-				<dict>
-					<key>Inline</key>
-					<dict>
-						<key>Text</key>
-						<string>~/Mapping/Puget Sound/psdem/skagit_utm_int16_elevation_feet.tiff</string>
-					</dict>
-					<key>SelectedNumber</key>
-					<integer>0</integer>
-				</dict>
-				<key>Origin</key>
-				<string>0,0</string>
-				<key>Step</key>
-				<string>1</string>
-				<key>Swap</key>
-				<string>Off</string>
-				<key>Transform</key>
-				<integer>0</integer>
-			</dict>
-			<key>Selection</key>
-			<string>From File</string>
-			<key>VariableName</key>
-			<string>skagit_utm_int16_elevation_feet.tiff</string>
-			<key>VariableType</key>
-			<string>Bitmap2D</string>
-		</dict>
-		<dict>
-			<key>Content</key>
-			<dict>
 				<key>Bitmap</key>
 				<dict>
 					<key>Selected</key>
@@ -1011,7 +849,7 @@
 				<key>Input</key>
 				<string>Input.dtbin</string>
 				<key>LastInput</key>
-				<string>/Volumes/Local/Users/amaxwell/Desktop</string>
+				<string>/Volumes/Local/Users/amaxwell/build/datatank_py</string>
 				<key>Output</key>
 				<string>Output.dtbin</string>
 				<key>Project</key>
@@ -1030,7 +868,7 @@
 							<key>Inline</key>
 							<dict>
 								<key>String</key>
-								<string>~/Downloads/naip2.tiff</string>
+								<string>~/Mapping/sequim_region_landsat/86382168.tif</string>
 							</dict>
 							<key>SelectedNumber</key>
 							<integer>0</integer>
@@ -1050,8 +888,8 @@
 	</array>
 	<key>WindowPos</key>
 	<array>
-		<real>51</real>
-		<real>262</real>
+		<real>88</real>
+		<real>313</real>
 		<real>512</real>
 		<real>865</real>
 	</array>
