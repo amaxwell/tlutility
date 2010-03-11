@@ -113,7 +113,7 @@
 							<key>Inline</key>
 							<dict>
 								<key>Menu</key>
-								<integer>0</integer>
+								<integer>2</integer>
 							</dict>
 							<key>SelectedNumber</key>
 							<integer>0</integer>
@@ -123,7 +123,7 @@
 							<key>Inline</key>
 							<dict>
 								<key>Range</key>
-								<string>0.467,0.945</string>
+								<string>0,1</string>
 							</dict>
 							<key>SelectedNumber</key>
 							<integer>0</integer>
@@ -327,7 +327,7 @@
 				</dict>
 			</array>
 			<key>DrawingHeight</key>
-			<real>287</real>
+			<real>472</real>
 			<key>DrawingWindow</key>
 			<dict>
 				<key>ClickMenu</key>
@@ -376,7 +376,7 @@
 				<real>0.0</real>
 			</array>
 			<key>ViewSizeJoined</key>
-			<string>496,287</string>
+			<string>620,472</string>
 			<key>ViewSizeSeparated</key>
 			<string></string>
 			<key>Visible</key>
@@ -385,10 +385,10 @@
 			<string>2D Bitmap Gray</string>
 			<key>WindowPos</key>
 			<array>
-				<real>730</real>
-				<real>310</real>
-				<real>494</real>
-				<real>568</real>
+				<real>1612</real>
+				<real>285</real>
+				<real>618</real>
+				<real>889</real>
 			</array>
 		</dict>
 		<dict>
@@ -700,13 +700,146 @@
 			<key>Visible</key>
 			<string>YES</string>
 			<key>WindowName</key>
-			<string>2D Bitmap PNG</string>
+			<string>2D Bitmap RGB</string>
 			<key>WindowPos</key>
 			<array>
 				<real>806</real>
 				<real>257</real>
 				<real>567</real>
 				<real>621</real>
+			</array>
+		</dict>
+		<dict>
+			<key>Antialiasing</key>
+			<string>YES</string>
+			<key>Axis</key>
+			<dict>
+				<key>YScale</key>
+				<dict>
+					<key>Inline</key>
+					<dict>
+						<key>Number</key>
+						<string>1</string>
+					</dict>
+					<key>SelectedNumber</key>
+					<integer>0</integer>
+				</dict>
+			</dict>
+			<key>BoundingBox</key>
+			<dict>
+				<key>MaxXValue</key>
+				<string></string>
+				<key>MaxYValue</key>
+				<string></string>
+				<key>MinXValue</key>
+				<string></string>
+				<key>MinYValue</key>
+				<string></string>
+				<key>RangeType</key>
+				<integer>0</integer>
+				<key>Region</key>
+				<dict>
+					<key>SelectedNumber</key>
+					<integer>0</integer>
+				</dict>
+			</dict>
+			<key>CommandContents</key>
+			<array>
+				<dict>
+					<key>CommandName</key>
+					<string>skagit_utm_int16_elevation_feet.tiff</string>
+					<key>CommandType</key>
+					<string>Bitmap</string>
+					<key>Computation</key>
+					<dict>
+						<key>Bitmap</key>
+						<dict>
+							<key>Selected</key>
+							<string>skagit_utm_int16_elevation_feet.tiff</string>
+						</dict>
+						<key>ClockWiseCropSwitch</key>
+						<string>Off</string>
+						<key>Crop</key>
+						<dict>
+							<key>SelectedNumber</key>
+							<integer>0</integer>
+						</dict>
+						<key>CropSwitch</key>
+						<string>On</string>
+						<key>Interpolation</key>
+						<integer>0</integer>
+						<key>Sparsify</key>
+						<string>On</string>
+					</dict>
+					<key>Drawn</key>
+					<string>Include</string>
+					<key>Status</key>
+					<string>Visible</string>
+				</dict>
+			</array>
+			<key>DrawingHeight</key>
+			<real>348</real>
+			<key>DrawingWindow</key>
+			<dict>
+				<key>ClickMenu</key>
+				<dict>
+					<key>EntryName</key>
+					<string>Automatic</string>
+					<key>EntryNumber</key>
+					<integer>0</integer>
+				</dict>
+			</dict>
+			<key>DrawingWindowType</key>
+			<string>2DGraph</string>
+			<key>FigureName</key>
+			<string>Untitled</string>
+			<key>MaxHeight</key>
+			<string></string>
+			<key>MaxWidth</key>
+			<string></string>
+			<key>OutputHeight</key>
+			<string></string>
+			<key>OutputWidth</key>
+			<string></string>
+			<key>QT</key>
+			<dict>
+				<key>Format</key>
+				<string>Animation</string>
+				<key>Quality</key>
+				<dict>
+					<key>EntryName</key>
+					<string>Lossless</string>
+					<key>EntryNumber</key>
+					<integer>0</integer>
+				</dict>
+				<key>Range</key>
+				<string>0,∞</string>
+				<key>ShowInFinder</key>
+				<string>On</string>
+				<key>TimeStep</key>
+				<string>1.0</string>
+			</dict>
+			<key>SeparateWindowPos</key>
+			<array>
+				<real>0.0</real>
+				<real>0.0</real>
+				<real>0.0</real>
+				<real>0.0</real>
+			</array>
+			<key>ViewSizeJoined</key>
+			<string>532,348</string>
+			<key>ViewSizeSeparated</key>
+			<string></string>
+			<key>Visible</key>
+			<string>YES</string>
+			<key>WindowName</key>
+			<string>skagit_utm_int16_elevation_feet.tiff</string>
+			<key>WindowPos</key>
+			<array>
+				<real>887</real>
+				<real>506</real>
+				<real>530</real>
+				<real>672</real>
 			</array>
 		</dict>
 	</array>
@@ -800,7 +933,7 @@
 							<key>Inline</key>
 							<dict>
 								<key>String</key>
-								<string>~/Desktop/00164658/00164658_int16.tiff</string>
+								<string>~/Mapping/Puget Sound/psdem/skagit_utm_int16_elevation_feet.tiff</string>
 							</dict>
 							<key>SelectedNumber</key>
 							<integer>0</integer>
@@ -820,6 +953,35 @@
 		<dict>
 			<key>Content</key>
 			<dict>
+				<key>File</key>
+				<dict>
+					<key>Inline</key>
+					<dict>
+						<key>Text</key>
+						<string>~/Mapping/Puget Sound/psdem/skagit_utm_int16_elevation_feet.tiff</string>
+					</dict>
+					<key>SelectedNumber</key>
+					<integer>0</integer>
+				</dict>
+				<key>Origin</key>
+				<string>0,0</string>
+				<key>Step</key>
+				<string>1</string>
+				<key>Swap</key>
+				<string>Off</string>
+				<key>Transform</key>
+				<integer>0</integer>
+			</dict>
+			<key>Selection</key>
+			<string>From File</string>
+			<key>VariableName</key>
+			<string>skagit_utm_int16_elevation_feet.tiff</string>
+			<key>VariableType</key>
+			<string>Bitmap2D</string>
+		</dict>
+		<dict>
+			<key>Content</key>
+			<dict>
 				<key>Bitmap</key>
 				<dict>
 					<key>Selected</key>
@@ -830,6 +992,8 @@
 			</dict>
 			<key>Selection</key>
 			<string>Color Component</string>
+			<key>ToggleOpen</key>
+			<string>YES</string>
 			<key>VariableName</key>
 			<string>Component of 2D Bitmap</string>
 			<key>VariableType</key>
@@ -866,7 +1030,7 @@
 							<key>Inline</key>
 							<dict>
 								<key>String</key>
-								<string>~/Desktop/Screen shot 2010-03-01 at 7.04.25 PM.png</string>
+								<string>~/Downloads/naip2.tiff</string>
 							</dict>
 							<key>SelectedNumber</key>
 							<integer>0</integer>

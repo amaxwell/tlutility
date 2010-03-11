@@ -18,20 +18,25 @@ if __name__ == '__main__':
     
     if image_path:
         image_path = os.path.expanduser(image_path)
-    if os.path.exists(image_path) is False:
-        errors.append("\"%@\" does not exist" % (image_path))
+    if image_path is None or os.path.exists(image_path) is False:
+        errors.append("\"%s\" does not exist" % (image_path))
     
-    dataset = gdal.Open(str(image_path), GA_ReadOnly)
+    dataset = None if image_path is None else gdal.Open(str(image_path), GA_ReadOnly)
     if dataset is None:
+        # set an error and bail out; DataTank doesn't appear to use this, but displays
+        # stderr output instead, so print them also
         errors.append("Unable to open as an image file")
+        with DTDataFile("Output.dtbin", truncate=True) as output_file:
+            output_file["ExecutionErrors"] = errors
+            output_file["ExecutionTime"] = clock() - start_time
+            exit(1)
+
     (xmin, dx, rot1, ymax, rot2, dy) = dataset.GetGeoTransform()
     mesh = dataset.ReadAsArray()
     ymin = ymax + dy * mesh.shape[-1]
     grid = (xmin, ymin, dx, abs(dy))
-        
-    end_time = clock()
     suffix = "16" if mesh.dtype in (np.int16, np.uint16) else ""
-            
+                    
     with DTDataFile("Output.dtbin", truncate=True) as output_file:
         
         # The normal write_array doesn't help with composite types,
@@ -39,7 +44,7 @@ if __name__ == '__main__':
         # to avoid naming this "Var" and relying on DTDataFile to change
         # the name to "Seq_Var" (since we need the name "Var" later).
         output_file._write_string("2D Bitmap", "Seq_Var")
-        output_file["ExecutionTime"] = end_time - start_time
+        output_file["ExecutionTime"] = clock() - start_time
         
         # e.g., (3, 900, 1440) for an RGB
         if len(mesh.shape) == 3:
