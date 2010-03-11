@@ -789,7 +789,7 @@ class DTDataFile(object):
             for string in obj:
                 string = string.encode("utf-8")
                 char_list += [ord(x) for x in string]
-                offsets.append(len(string))
+                offsets.append(current_offset)
                 current_offset += len(string)
             self._write_array(np.array(offsets, dtype=np.int32), name + "_offs")
             self.write_array(np.array(char_list, dtype=np.uint8), name, dt_type="StringList", time=time)
