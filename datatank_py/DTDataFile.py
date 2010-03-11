@@ -775,7 +775,7 @@ class DTDataFile(object):
         # a string in the end.
         #
 
-        if isinstance(obj, str):
+        if isinstance(obj, (str, unicode)):
             self.write_string(obj, name, time=time)
         elif isinstance(obj, (float, int)):
             # convert to an array, but allow numpy to pick the type
