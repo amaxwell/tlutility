@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>Inputs</key>
+		<array>
+			<dict>
+				<key>Extra</key>
+				<dict>
+					<key>String</key>
+					<string>%1.3e</string>
+				</dict>
+				<key>Name</key>
+				<string>Format String</string>
+				<key>Type</key>
+				<string>String</string>
+			</dict>
+			<dict>
+				<key>Extra</key>
+				<dict>
+					<key>Number</key>
+					<string>11353000</string>
+				</dict>
+				<key>Name</key>
+				<string>Number</string>
+				<key>Type</key>
+				<string>Real Number</string>
+			</dict>
+		</array>
+		<key>Name</key>
+		<string>Formatted Number</string>
+		<key>Type</key>
+		<string>String</string>
+	</dict>
+</array>
+</plist>
