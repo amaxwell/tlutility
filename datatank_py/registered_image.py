@@ -14,10 +14,16 @@ if __name__ == '__main__':
     input_file.close()
     
     start_time = clock()
+    errors = []
     
-    image_path = os.path.expanduser(image_path)
+    if image_path:
+        image_path = os.path.expanduser(image_path)
+    if os.path.exists(image_path) is False:
+        errors.append("\"%@\" does not exist" % (image_path))
     
     dataset = gdal.Open(str(image_path), GA_ReadOnly)
+    if dataset is None:
+        errors.append("Unable to open as an image file")
     (xmin, dx, rot1, ymax, rot2, dy) = dataset.GetGeoTransform()
     mesh = dataset.ReadAsArray()
     ymin = ymax + dy * mesh.shape[-1]
@@ -61,6 +67,9 @@ if __name__ == '__main__':
 
             # Gray (tested with int16)
             output_file["Var_Gray"] = np.flipud(mesh) 
+            
+        else:
+            errors.append("Unhandled mesh shape: %s" % (mesh.shape))
         
         print output_file.variable_names()
         # Here again, we have to use low-level writing to avoid a name
@@ -68,4 +77,6 @@ if __name__ == '__main__':
         # to expose the variable (and conflict with the previous name).
         output_file._write_array(grid, "Var")
                         
-    # need to save a StringList of execution errors
+        # need to save a StringList of execution errors as Seq_ExecutionErrors
+        if len(errors):
+            output_file["ExecutionErrors"] = errors
