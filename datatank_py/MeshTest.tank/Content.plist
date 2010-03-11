@@ -1270,7 +1270,7 @@
 							<key>Inline</key>
 							<dict>
 								<key>Range</key>
-								<string>-50,100</string>
+								<string>119,241</string>
 							</dict>
 							<key>SelectedNumber</key>
 							<integer>0</integer>
@@ -1532,8 +1532,8 @@
 			<string>Image from GDAL</string>
 			<key>WindowPos</key>
 			<array>
-				<real>834</real>
-				<real>418</real>
+				<real>751</real>
+				<real>118</real>
 				<real>632</real>
 				<real>760</real>
 			</array>
@@ -1855,7 +1855,7 @@
 	<key>WindowPos</key>
 	<array>
 		<real>36</real>
-		<real>300</real>
+		<real>0.0</real>
 		<real>512</real>
 		<real>878</real>
 	</array>

@@ -99,8 +99,9 @@ def _basename_of_variable(varname):
     # handle variables that aren't time-varying
     if len(comps) == 1:
         return varname
-        
-    return "_".join(comps[:-1])
+    
+    # this is kind of a heuristic; assume anything that is all digits is a time index
+    return "_".join(comps[:-1]) if comps[-1].isdigit() else varname
 
 def _type_string_from_dtarray_type(var_type):
     """Returns an appropriate prefix and width-based type.
@@ -765,14 +766,34 @@ class DTDataFile(object):
         (although the caller has to ensure the shape is correct).
 
         """
+        
+        #
+        # The Obj-C programmer in me hates using isinstance here, but I'm not sure
+        # what else to do, short of adding a separate write method for each data
+        # type.  The basic problem is that you have to map to specific types in order
+        # to use DTDataFile, and everything needs to be converted to an ndarray or
+        # a string in the end.
+        #
 
         if isinstance(obj, str):
             self.write_string(obj, name, time=time)
-        elif isinstance(obj, float) or isinstance(obj, int):
+        elif isinstance(obj, (float, int)):
             # convert to an array, but allow numpy to pick the type
             array = np.array((obj,))
             self.write_array(array, name, dt_type="Real Number", time=time)
-        elif isinstance(obj, np.ndarray) or isinstance(obj, tuple) or isinstance(obj, list):
+        elif isinstance(obj, (tuple, list)) and isinstance(obj[0], (str, unicode)):
+            # this must be a StringList
+            offsets = []
+            char_list = []
+            current_offset = 0
+            for string in obj:
+                string = string.encode("utf-8")
+                char_list += [ord(x) for x in string]
+                offsets.append(len(string))
+                current_offset += len(string)
+            self._write_array(np.array(offsets, dtype=np.int32), name + "_offs")
+            self.write_array(np.array(char_list, dtype=np.uint8), name, dt_type="StringList", time=time)
+        elif isinstance(obj, (np.ndarray, tuple, list)):
             # need to be able to call shape
             array = _ensure_array(obj)
             # DTDataStorage::WriteOne changes the type based on the dimensions, so do the same.
@@ -811,7 +832,8 @@ class DTDataFile(object):
         self._write_string("2D Bitmap", "Seq_" + name)
         if image.mode in ("1", "P", "L", "LA") or image.mode.startswith(("F", "I")):
 
-            # convert binary image of dtype=bool to uint8
+            # Convert binary image of dtype=bool to uint8, although this is probably
+            # a better candidate for a or use as a mask.
             if image.mode == "1":
                 print "warning: converting binary image to uint8"
                 # TODO: this crashes when I test it with a binary TIFF, but it looks like a

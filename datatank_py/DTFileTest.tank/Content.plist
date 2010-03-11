@@ -1670,7 +1670,7 @@
 		<key>Loop</key>
 		<string>Off</string>
 		<key>TimeHint</key>
-		<real>3.5899999999999999</real>
+		<real>0.0</real>
 		<key>TimeStep</key>
 		<string>1.0</string>
 		<key>TimeStepSwitch</key>
@@ -1724,6 +1724,45 @@
 			<string>DataFile</string>
 			<key>ViewHeight</key>
 			<real>160</real>
+		</dict>
+		<dict>
+			<key>Content</key>
+			<dict>
+				<key>File</key>
+				<dict>
+					<key>Selected</key>
+					<string>test.dtbin</string>
+				</dict>
+				<key>VariableName</key>
+				<dict>
+					<key>Title</key>
+					<string>TestStringList</string>
+					<key>Token</key>
+					<string>TestStringList</string>
+				</dict>
+			</dict>
+			<key>Selection</key>
+			<string>Read</string>
+			<key>VariableName</key>
+			<string>TestStringList</string>
+			<key>VariableType</key>
+			<string>StringList</string>
+		</dict>
+		<dict>
+			<key>Content</key>
+			<dict>
+				<key>String</key>
+				<dict>
+					<key>Selected</key>
+					<string>TestStringList</string>
+				</dict>
+			</dict>
+			<key>Selection</key>
+			<string>String In Window</string>
+			<key>VariableName</key>
+			<string>Content of TestStringList</string>
+			<key>VariableType</key>
+			<string>Output</string>
 		</dict>
 		<dict>
 			<key>Content</key>

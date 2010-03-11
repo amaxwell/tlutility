@@ -34,7 +34,7 @@ def write_2dmeshes(file_path):
         try:
             from osgeo import gdal
             from osgeo.gdalconst import GA_ReadOnly
-            path = os.path.expanduser("~/Mapping/Puget Sound/psdem/skagit_ll_int16_elevation_feet.tiff")
+            path = os.path.expanduser("~/Desktop/00164658/00164658_int16.tiff")
             dataset = gdal.Open(path, GA_ReadOnly)
             (xmin, dx, rot1, ymax, rot2, dy) = dataset.GetGeoTransform()
             mesh = dataset.ReadAsArray()
@@ -145,6 +145,9 @@ def write_test(file_path):
     # write a time-varying string with Unicode characters
     for idx in xrange(0, 10):
         output_file.write_string(u"Χριστός : time index %d" % (idx), "StringTest_%d" % (idx), time=idx * 2.)
+        
+    string_list = ["First String", "Second String", "Third String"]
+    output_file.write(string_list, "TestStringList")
         
     # write a time-varying 2D point collection
     for idx in xrange(0, 10):
