@@ -713,7 +713,7 @@
 	<key>InformationSize</key>
 	<array>
 		<real>400</real>
-		<real>314</real>
+		<real>811</real>
 	</array>
 	<key>Time</key>
 	<dict>
@@ -764,7 +764,7 @@
 			<key>MinValue</key>
 			<real>0.0</real>
 			<key>String</key>
-			<string>0</string>
+			<string></string>
 		</dict>
 	</dict>
 	<key>Variables</key>
@@ -773,7 +773,7 @@
 			<key>Content</key>
 			<dict>
 				<key>Application</key>
-				<string>registered_image.py</string>
+				<string>registered_image_as_bitmap2d.py</string>
 				<key>Argument</key>
 				<string></string>
 				<key>Communication</key>
@@ -839,7 +839,7 @@
 			<key>Content</key>
 			<dict>
 				<key>Application</key>
-				<string>registered_image.py</string>
+				<string>registered_image_as_bitmap2d.py</string>
 				<key>Argument</key>
 				<string></string>
 				<key>Communication</key>
@@ -886,8 +886,8 @@
 	</array>
 	<key>WindowPos</key>
 	<array>
-		<real>31</real>
-		<real>13</real>
+		<real>51</real>
+		<real>262</real>
 		<real>512</real>
 		<real>865</real>
 	</array>
