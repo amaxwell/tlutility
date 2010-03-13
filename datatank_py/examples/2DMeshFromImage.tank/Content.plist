@@ -333,6 +333,47 @@
 	<key>Variables</key>
 	<array>
 		<dict>
+			<key>Comment</key>
+			<string>This will ensure that we pass an absolute path, since CWD is different</string>
+			<key>VariableName</key>
+			<string>DAComment - 1</string>
+			<key>VariableType</key>
+			<string>Comment</string>
+		</dict>
+		<dict>
+			<key>Content</key>
+			<dict>
+				<key>FileName</key>
+				<string>int16.tiff</string>
+			</dict>
+			<key>Selection</key>
+			<string>Single File</string>
+			<key>VariableName</key>
+			<string>Elevation Raster</string>
+			<key>VariableType</key>
+			<string>FileName</string>
+		</dict>
+		<dict>
+			<key>Content</key>
+			<dict>
+				<key>Extension</key>
+				<string>Off</string>
+				<key>File</key>
+				<dict>
+					<key>Selected</key>
+					<string>Elevation Raster</string>
+				</dict>
+				<key>Path</key>
+				<string>On</string>
+			</dict>
+			<key>Selection</key>
+			<string>From File Name</string>
+			<key>VariableName</key>
+			<string>Name of Elevation Raster</string>
+			<key>VariableType</key>
+			<string>String</string>
+		</dict>
+		<dict>
 			<key>Content</key>
 			<dict>
 				<key>Application</key>
@@ -363,8 +404,8 @@
 								<key>String</key>
 								<string>~/Desktop/00164658/00164658_int16.tiff</string>
 							</dict>
-							<key>SelectedNumber</key>
-							<integer>0</integer>
+							<key>Selected</key>
+							<string>Name of Elevation Raster</string>
 						</dict>
 					</dict>
 				</array>
@@ -397,7 +438,7 @@
 	</array>
 	<key>WindowPos</key>
 	<array>
-		<real>1</real>
+		<real>24</real>
 		<real>80</real>
 		<real>512</real>
 		<real>798</real>

@@ -327,7 +327,7 @@
 				</dict>
 			</array>
 			<key>DrawingHeight</key>
-			<real>472</real>
+			<real>466</real>
 			<key>DrawingWindow</key>
 			<dict>
 				<key>ClickMenu</key>
@@ -376,7 +376,7 @@
 				<real>0.0</real>
 			</array>
 			<key>ViewSizeJoined</key>
-			<string>620,472</string>
+			<string>620,466</string>
 			<key>ViewSizeSeparated</key>
 			<string></string>
 			<key>Visible</key>
@@ -385,10 +385,10 @@
 			<string>2D Bitmap Gray</string>
 			<key>WindowPos</key>
 			<array>
-				<real>1612</real>
-				<real>285</real>
+				<real>766</real>
+				<real>0.0</real>
 				<real>618</real>
-				<real>889</real>
+				<real>878</real>
 			</array>
 		</dict>
 		<dict>
@@ -703,7 +703,7 @@
 			<string>2D Bitmap RGB</string>
 			<key>WindowPos</key>
 			<array>
-				<real>806</real>
+				<real>527</real>
 				<real>257</real>
 				<real>567</real>
 				<real>621</real>
@@ -770,6 +770,47 @@
 	<key>Variables</key>
 	<array>
 		<dict>
+			<key>Comment</key>
+			<string>This will ensure that we pass an absolute path, since CWD is different</string>
+			<key>VariableName</key>
+			<string>DAComment - 1</string>
+			<key>VariableType</key>
+			<string>Comment</string>
+		</dict>
+		<dict>
+			<key>Content</key>
+			<dict>
+				<key>FileName</key>
+				<string>int16.tiff</string>
+			</dict>
+			<key>Selection</key>
+			<string>Single File</string>
+			<key>VariableName</key>
+			<string>Gray File</string>
+			<key>VariableType</key>
+			<string>FileName</string>
+		</dict>
+		<dict>
+			<key>Content</key>
+			<dict>
+				<key>Extension</key>
+				<string>Off</string>
+				<key>File</key>
+				<dict>
+					<key>Selected</key>
+					<string>Gray File</string>
+				</dict>
+				<key>Path</key>
+				<string>On</string>
+			</dict>
+			<key>Selection</key>
+			<string>From File Name</string>
+			<key>VariableName</key>
+			<string>Name of Gray File</string>
+			<key>VariableType</key>
+			<string>String</string>
+		</dict>
+		<dict>
 			<key>Content</key>
 			<dict>
 				<key>Application</key>
@@ -800,10 +841,10 @@
 							<key>Inline</key>
 							<dict>
 								<key>String</key>
-								<string>~/Mapping/Puget Sound/psdem/skagit_utm_int16_elevation_feet.tiff</string>
+								<string>int16.tiff</string>
 							</dict>
-							<key>SelectedNumber</key>
-							<integer>0</integer>
+							<key>Selected</key>
+							<string>Name of Gray File</string>
 						</dict>
 					</dict>
 				</array>
@@ -840,6 +881,39 @@
 		<dict>
 			<key>Content</key>
 			<dict>
+				<key>FileName</key>
+				<string>rgb_geo.tiff</string>
+			</dict>
+			<key>Selection</key>
+			<string>Single File</string>
+			<key>VariableName</key>
+			<string>RGB File</string>
+			<key>VariableType</key>
+			<string>FileName</string>
+		</dict>
+		<dict>
+			<key>Content</key>
+			<dict>
+				<key>Extension</key>
+				<string>Off</string>
+				<key>File</key>
+				<dict>
+					<key>Selected</key>
+					<string>RGB File</string>
+				</dict>
+				<key>Path</key>
+				<string>On</string>
+			</dict>
+			<key>Selection</key>
+			<string>From File Name</string>
+			<key>VariableName</key>
+			<string>Name of RGB File</string>
+			<key>VariableType</key>
+			<string>String</string>
+		</dict>
+		<dict>
+			<key>Content</key>
+			<dict>
 				<key>Application</key>
 				<string>registered_image_as_bitmap2d.py</string>
 				<key>Argument</key>
@@ -868,10 +942,10 @@
 							<key>Inline</key>
 							<dict>
 								<key>String</key>
-								<string>~/Mapping/sequim_region_landsat/86382168.tif</string>
+								<string>rgb_geo.tiff</string>
 							</dict>
-							<key>SelectedNumber</key>
-							<integer>0</integer>
+							<key>Selected</key>
+							<string>Name of RGB File</string>
 						</dict>
 					</dict>
 				</array>
@@ -889,7 +963,7 @@
 	<key>WindowPos</key>
 	<array>
 		<real>88</real>
-		<real>313</real>
+		<real>13</real>
 		<real>512</real>
 		<real>865</real>
 	</array>

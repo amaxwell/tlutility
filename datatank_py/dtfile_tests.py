@@ -34,8 +34,7 @@ def write_2dmeshes(file_path):
         try:
             from osgeo import gdal
             from osgeo.gdalconst import GA_ReadOnly
-            path = os.path.expanduser("~/Desktop/00164658/00164658_int16.tiff")
-            dataset = gdal.Open(path, GA_ReadOnly)
+            dataset = gdal.Open("examples/int16.tiff", GA_ReadOnly)
             (xmin, dx, rot1, ymax, rot2, dy) = dataset.GetGeoTransform()
             mesh = dataset.ReadAsArray()
             ymin = ymax + dy * mesh.shape[1]

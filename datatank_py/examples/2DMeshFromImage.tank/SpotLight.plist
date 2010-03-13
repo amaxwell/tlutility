@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>Comment</key>
+	<string>This will ensure that we pass an absolute path, since CWD is different</string>
 	<key>String</key>
 	<string>~/Desktop/00164658/00164658_int16.tiff</string>
 </dict>

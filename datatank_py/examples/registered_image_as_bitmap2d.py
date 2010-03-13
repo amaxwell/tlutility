@@ -57,7 +57,7 @@ if __name__ == '__main__':
         # so we have to drop to the low-level string writing in order
         # to avoid naming this "Var" and relying on DTDataFile to change
         # the name to "Seq_Var" (since we need the name "Var" later).
-        output_file._write_string("2D Bitmap", "Seq_Var")
+        output_file.write_anonymous("2D Bitmap", "Seq_Var")
         output_file["ExecutionTime"] = clock() - start_time
         
         # e.g., (3, 900, 1440) for an RGB
@@ -93,7 +93,7 @@ if __name__ == '__main__':
         # Here again, we have to use low-level writing to avoid a name
         # conflict, since the high-level methods will write a "Seq_Var"
         # to expose the variable (and conflict with the previous name).
-        output_file._write_array(grid, "Var")
+        output_file.write_anonymous(grid, "Var")
                         
         # need to save a StringList of execution errors as Seq_ExecutionErrors
         if len(errors):
