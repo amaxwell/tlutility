@@ -112,6 +112,14 @@ def write_arrays(file_path):
     read_array = output_file["Test3"]
     assert np.all(test_array == read_array), "failed 3D float array test"
     
+    # write a list of floats
+    test_array = np.array(range(0, 12), dtype=np.float32)
+    output_file["Test4"] = test_array
+    
+    read_array = output_file["Test4"]
+    assert np.all(test_array == read_array), "failed list of floats test"
+    
+    
     output_file.close()
 
 def write_test(file_path):
