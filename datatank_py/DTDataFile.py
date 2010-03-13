@@ -660,6 +660,31 @@ class DTDataFile(object):
         self._file.flush()
         self._length = self._file.tell()
         self._name_offset_map[name] = block_start  
+    
+    def write_anonymous(self, obj, name):
+        """Write an object that will not be visible in DataTank.
+        
+        Arguments:
+        array -- a string, numpy array, list, or tuple
+        name -- name of the variable
+        
+        This is used for writing additional arrays and strings used by compound types,
+        such as a 2D Mesh, which has an additional grid array.
+        
+        """
+        
+        # for now, just a simple wrapper around the primitive write methods
+        if isinstance(obj, (str, unicode)):
+            self._write_string(obj, name)
+        elif isinstance(obj, (float, int)):
+            # convert to an array, but allow numpy to pick the type
+            array = np.array((obj,))
+            self._write_array(np.array((obj,)), name)
+        elif isinstance(obj, (np.ndarray, tuple, list)):  
+            assert isinstance(obj[0], (str, unicode)) is False, "anonymous StringList unsupported"
+            self._write_array(_ensure_array(obj), name)
+        else:
+            assert False, "unhandled object type"
             
     def write_array(self, array, name, dt_type=None, time=None):
         """Write an array with optional time dependence.
