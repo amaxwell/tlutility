@@ -8,8 +8,7 @@ if __name__ == '__main__':
     
     #
     # This program replaces a standard DataTank External Program module
-    # in C++.  Note that it must be executable (chmod 755 in Terminal)
-    # and gdal and numpy are required.
+    # in C++.  Note that it must be executable (chmod 755 in Terminal).
     #
     
     input_file = DTDataFile("Input.dtbin")
