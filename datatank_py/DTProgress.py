@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from math import floor
+import os
 
 class DTProgress(object):
     """Drive progress indicator for DataTank.
@@ -16,6 +17,8 @@ class DTProgress(object):
     def __init__(self):
         super(DTProgress, self).__init__()
         self._current_length = 0
+        # save this in case a client changes CWD
+        self._path = os.path.join(os.getcwdu(), "DTProgress")
         
     def update_percentage(self, percent):
         """Updates the progress indicator if needed.
@@ -32,7 +35,7 @@ class DTProgress(object):
             # file here instead of keeping it open, so we can ensure that it's
             # cleaned up properly.
             mode = "w" if self._current_length == 0 else "a"
-            with open("DTProgress", mode) as pfile:
+            with open(self._path, mode) as pfile:
                 # write a single character to the file for each percentage point
                 while self._current_length < new_length:
                     pfile.write("x")
@@ -47,5 +50,4 @@ if __name__ == '__main__':
     for idx in xrange(0, 300):
         progress.update_percentage(idx / 300.)
     
-    import os
     assert os.path.getsize("DTProgress") == 100
