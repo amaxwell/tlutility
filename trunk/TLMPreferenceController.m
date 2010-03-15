@@ -190,6 +190,9 @@ NSString * const TLMTLCriticalRepository = @"TLMTLCriticalRepository";          
         [alert setMessageText:NSLocalizedString(@"The location in the TeX Live database was not changed", @"")];
         [alert setInformativeText:[NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"The current location is:", @""), location]];
         [alert beginSheetModalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
+        // now out of sync, so disable this pref and uncheck the box so that's obvious
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:TLMSetCommandLineServerPreferenceKey];
+        [self updateUI];
     }
     else {
         TLMLog(__func__, @"Finished setting command line server location:\n\tlocation = %@", location);
