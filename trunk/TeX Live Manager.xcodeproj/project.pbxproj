@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 45;
+	objectVersion = 46;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -690,7 +690,7 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "TeX Live Manager" */;
-			compatibilityVersion = "Xcode 3.1";
+			compatibilityVersion = "Xcode 3.2";
 			hasScannedForEncodings = 1;
 			mainGroup = 29B97314FDCFA39411CA2CEA /* TeX Live Manager */;
 			projectDirPath = "";
@@ -1040,7 +1040,7 @@
 					__info_plist,
 					"\"$(SRCROOT)/$(INFOPLIST_FILE)\"",
 				);
-				SDKROOT = macosx10.5;
+				SDKROOT = macosx10.6;
 				WARNING_CFLAGS = "-Wall";
 			};
 			name = Debug;
@@ -1072,7 +1072,7 @@
 					__info_plist,
 					"\"$(SRCROOT)/$(INFOPLIST_FILE)\"",
 				);
-				SDKROOT = macosx10.5;
+				SDKROOT = macosx10.6;
 				WARNING_CFLAGS = "-Wall";
 			};
 			name = Release;
