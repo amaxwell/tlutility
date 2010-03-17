@@ -50,7 +50,7 @@ if __name__ == '__main__':
     mesh = dataset.ReadAsArray()
     if mesh.dtype in (np.int8, np.uint8, np.int16, np.uint16):
         mesh = mesh.astype(np.float32)
-    ymin = ymax + dy * mesh.shape[1]
+    ymin = ymax + dy * dataset.RasterYSize
     grid = (xmin, ymin, dx, abs(dy))
                         
     with DTDataFile("Output.dtbin", truncate=True) as output_file:

@@ -47,7 +47,7 @@ if __name__ == '__main__':
 
     (xmin, dx, rot1, ymax, rot2, dy) = dataset.GetGeoTransform()
     mesh = dataset.ReadAsArray()
-    ymin = ymax + dy * mesh.shape[1]
+    ymin = ymax + dy * dataset.RasterYSize
     grid = (xmin, ymin, dx, abs(dy))
     suffix = "16" if mesh.dtype in (np.int16, np.uint16) else ""
                         
