@@ -51,11 +51,7 @@ extern NSString * const TLMNetInstallerPathPreferenceKey;
 extern NSString * const TLMShouldListTLCritical;
 extern NSString * const TLMTLCriticalRepository;
 
-#if MAC_OS_X_VERSION_MAX_ALLOWED > MAC_OS_X_VERSION_10_5
 @interface TLMPreferenceController : NSWindowController <NSComboBoxDataSource>
-#else
-@interface TLMPreferenceController : NSWindowController
-#endif
 {
 @private
     NSPathControl       *_texbinPathControl;
