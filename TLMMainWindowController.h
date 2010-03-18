@@ -52,11 +52,7 @@
 @property (nonatomic, retain) TLMStatusWindow *statusWindow;
 @end
 
-#if MAC_OS_X_VERSION_MAX_ALLOWED > MAC_OS_X_VERSION_10_5
 @interface TLMMainWindowController : NSWindowController <TLMTabViewDelegate, NSWindowDelegate>
-#else
-@interface TLMMainWindowController : NSWindowController <TLMTabViewDelegate>
-#endif
 {
 @private
     NSProgressIndicator      *_progressIndicator;
