@@ -1,5 +1,5 @@
 /*
- *  tlmgr_cwrapper.c
+ *  tlu_ipctask.c
  *  TeX Live Manager
  *
  *  Created by Adam Maxwell on 12/7/08.
@@ -50,7 +50,7 @@
 #import "TLMLogMessage.h"
 #include <asl.h>
 
-#define SENDER_NAME @"tlmgr_cwrapper"
+#define SENDER_NAME @"tlu_ipctask"
 
 @protocol TLMAuthOperationProtocol
 
@@ -71,7 +71,7 @@ static void establish_log_connection()
         [_logServer setProtocolForProxy:@protocol(TLMLogServerProtocol)];
     }
     @catch (id exception) {
-        asl_log(NULL, NULL, ASL_LEVEL_ERR, "tlmgr_cwrapper: caught exception %s connecting to server", [[exception description] UTF8String]);
+        asl_log(NULL, NULL, ASL_LEVEL_ERR, "tlu_ipctask: caught exception %s connecting to server", [[exception description] UTF8String]);
         _logServer = nil;
     }
 }    
@@ -102,7 +102,7 @@ static void log_message_with_level(const char *level, NSString *message, NSUInte
         [_logServer logMessage:msg];
     }
     @catch (id exception) {
-        asl_log(NULL, NULL, ASL_LEVEL_ERR, "tlmgr_cwrapper: caught exception %s in log_message_with_level", [[exception description] UTF8String]);
+        asl_log(NULL, NULL, ASL_LEVEL_ERR, "tlu_ipctask: caught exception %s in log_message_with_level", [[exception description] UTF8String]);
         // log to asl as a fallback
         asl_log(NULL, NULL, ASL_LEVEL_ERR, "%s", [message UTF8String]);
         [_logServer release];
@@ -164,7 +164,7 @@ static void log_lines_and_clear(NSMutableData *data, bool is_error)
 }
 
 /* 
- argv[0]: tlmgr_cwrapper
+ argv[0]: tlu_ipctask
  argv[1]: DO server name for IPC
  argv[2]: log message flags
  argv[3]: y or n
@@ -215,7 +215,7 @@ int main(int argc, char *argv[]) {
         /* note that getuid() may no longer return 0 */
         struct passwd *pw = getpwuid(0);
         if (NULL == pw) {
-            log_error(@"getpwuid failed in tlmgr_cwrapper");
+            log_error(@"getpwuid failed in tlu_ipctask");
             exit(1);
         }
         
@@ -246,7 +246,7 @@ int main(int argc, char *argv[]) {
     /* Need this after fork(), so fail if we can't get it */
     struct passwd *nobody = getpwnam("nobody");
     if (NULL == nobody) {
-        log_error(@"getpwnam failed in tlmgr_cwrapper");
+        log_error(@"getpwnam failed in tlu_ipctask");
         exit(1);
     }
     
@@ -268,17 +268,17 @@ int main(int argc, char *argv[]) {
     int waitpipe[2];
 
     if (pipe(outpipe) < 0 || pipe(errpipe) < 0 || pipe(waitpipe) < 0) {
-        log_error(@"pipe failed in tlmgr_cwrapper");
+        log_error(@"pipe failed in tlu_ipctask");
         exit(1);
     }
     
     if (dup2(outpipe[1], STDOUT_FILENO) < 0) {
-        log_error(@"dup2 stdout failed in tlmgr_cwrapper");
+        log_error(@"dup2 stdout failed in tlu_ipctask");
         exit(1);
     }
     
     if (dup2(errpipe[1], STDERR_FILENO) < 0) {
-        log_error(@"dup2 stderr failed in tlmgr_cwrapper");
+        log_error(@"dup2 stderr failed in tlu_ipctask");
         exit(1);
     }
     
@@ -322,7 +322,7 @@ int main(int argc, char *argv[]) {
         }
         
         /*
-         Formerly set this up immediately (before fork()) so the parent kqueue could monitor tlmgr_cwrapper,
+         Formerly set this up immediately (before fork()) so the parent kqueue could monitor tlu_ipctask,
          but waiting to use Foundation until after we drop privileges seems to be worthwhile.  In addition,
          the primary errors to catch prior to fork() are early-exit errors due to programming errors.
          */
@@ -330,7 +330,7 @@ int main(int argc, char *argv[]) {
         id parent = [NSConnection rootProxyForConnectionWithRegisteredName:parentName host:nil];
         [parent setProtocolForProxy:@protocol(TLMAuthOperationProtocol)];
         
-        /* allows the parent kqueue to monitor tlmgr_cwrapper and/or kill it */
+        /* allows the parent kqueue to monitor tlu_ipctask and/or kill it */
         @try {
             [parent setWrapperPID:getpid()];
         }
@@ -347,8 +347,8 @@ int main(int argc, char *argv[]) {
         }
         
         /* log information as error so we get the TLMLogDefault flags */
-        log_error(@"tlmgr_cwrapper: child HOME = '%s'\n", childHome);
-        log_error(@"tlmgr_cwrapper: current HOME = '%s'\n", getenv("HOME"));
+        log_error(@"tlu_ipctask: child HOME = '%s'\n", childHome);
+        log_error(@"tlu_ipctask: current HOME = '%s'\n", getenv("HOME"));
                         
         int kq_fd = kqueue();
 #define TLM_EVENT_COUNT 3

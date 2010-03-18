@@ -126,7 +126,7 @@
     
     int eventCount;
     
-    // most of this code is copied directly from tlmgr_cwrapper
+    // most of this code is copied directly from tlu_ipctask
     while ((eventCount = kevent(kq_fd, NULL, 0, &event, 1, &ts)) != -1) {
                 
         // if this was a timeout, don't read anything

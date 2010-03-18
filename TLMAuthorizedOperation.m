@@ -47,7 +47,7 @@
 #import <sys/event.h>
 #import <sys/time.h>
 
-// for Distributed Objects (used by tlmgr_cwrapper)
+// for Distributed Objects (used by tlu_ipctask)
 @protocol TLMAuthOperationProtocol
 
 - (void)setWrapperPID:(in pid_t)pid;
@@ -63,7 +63,7 @@ struct TLMAOInternal {
     struct kevent    _cwrapper_event;
     pid_t            _underlying_pid;   /* tlmgr or update script  */
     struct kevent    _underlying_event; /* tlmgr or update script  */
-    BOOL             _childFinished;    /* tlmgr_cwrapper finished */
+    BOOL             _childFinished;    /* tlu_ipctask finished */
     BOOL             _authorizationRequired;
     AuthorizationRef _authorization;
 };    
@@ -170,12 +170,12 @@ static NSArray * __TLMOptionArrayFromArguments(char **nullTerminatedArguments)
     
     // currently this can happen if the signed binary was tampered with, since AEWP returns 0 but the program fails to launch (so never checks in)
     if (0 == _internal->_cwrapper_pid) {
-        TLMLog(__func__, @"tlmgr_cwrapper was not running");
+        TLMLog(__func__, @"tlu_ipctask was not running");
         return;
     }
     
     // underlying_pid may be zero...
-    TLMLog(__func__, @"killing tlmgr_cwrapper pid = %d", _internal->_cwrapper_pid);
+    TLMLog(__func__, @"killing tlu_ipctask pid = %d", _internal->_cwrapper_pid);
     char *killargs[] = { NULL, NULL, NULL, NULL };
     
     // use SIGKILL since tlmgr doesn't respond to SIGTERM
@@ -188,7 +188,7 @@ static NSArray * __TLMOptionArrayFromArguments(char **nullTerminatedArguments)
      */
     killargs[1] = (char *)[[NSString stringWithFormat:@"%d", _internal->_cwrapper_pid] fileSystemRepresentation];
     
-    // possible that tlmgr has exited and tlmgr_cwrapper is hanging, so we only have one process to kill
+    // possible that tlmgr has exited and tlu_ipctask is hanging, so we only have one process to kill
     if (_internal->_underlying_pid) {
         TLMLog(__func__, @"killing underlying pid = %d", _internal->_underlying_pid);
         killargs[2] = (char *)[[NSString stringWithFormat:@"%d", _internal->_underlying_pid] fileSystemRepresentation];
@@ -229,7 +229,7 @@ static NSArray * __TLMOptionArrayFromArguments(char **nullTerminatedArguments)
 {
     if (-1 != _internal->_kqueue) {
         
-        // remove the tlmgr_cwrapper kevent from the queue
+        // remove the tlu_ipctask kevent from the queue
         _internal->_cwrapper_event.flags = EV_DELETE;
         kevent(_internal->_kqueue, &_internal->_cwrapper_event, 1, NULL, 0, NULL);
         
@@ -243,7 +243,7 @@ static NSArray * __TLMOptionArrayFromArguments(char **nullTerminatedArguments)
     }
 }   
 
-// process executed by tlmgr_cwrapper: either tlmgr or the update script
+// process executed by tlu_ipctask: either tlmgr or the update script
 - (NSString *)_underlyingCommand
 {
     // print the full path and all arguments
@@ -282,7 +282,7 @@ static NSArray * __TLMOptionArrayFromArguments(char **nullTerminatedArguments)
                                     
                 // set failure flag if cwrapper failed
                 [self setFailed:(EXIT_SUCCESS != ret)];
-                TLMLog(__func__, @"kqueue noted that tlmgr_cwrapper (pid = %d) exited with status %d", event.ident, ret);
+                TLMLog(__func__, @"kqueue noted that tlu_ipctask (pid = %d) exited with status %d", event.ident, ret);
             }
             else if ((pid_t)event.ident == _internal->_underlying_pid) {
                 
@@ -322,7 +322,7 @@ static NSArray * __TLMOptionArrayFromArguments(char **nullTerminatedArguments)
  */
 static NSString *__TLMCwrapperPath()
 {
-    NSString *path = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"tlmgr_cwrapper"];
+    NSString *path = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"tlu_ipctask"];
     NSCParameterAssert(path);
     return path;
 }
@@ -330,7 +330,7 @@ static NSString *__TLMCwrapperPath()
 /*
  Even if codesign has been tampered with, the kill option in the signature should still prevent launch.  
  Unfortunately, we get no output and no PID checkin when the file has been modified; it's killed too early.  
- This function is a preflight check to give some useful diagnostics before trying to execute tlmgr_cwrapper,
+ This function is a preflight check to give some useful diagnostics before trying to execute tlu_ipctask,
  but it's not critical to security.
  */
 static BOOL __TLMCheckSignature()
@@ -368,8 +368,8 @@ static BOOL __TLMCheckSignature()
         
     TLMLog(__func__, @"Checking code signature before running %@ as root%C", [__TLMCwrapperPath() lastPathComponent], 0x2026);
     if (__TLMCheckSignature() == NO) {
-        TLMLog(__func__, @"*** ERROR *** The tlmgr_cwrapper has been modified after signing!\nRefusing to run child process with invalid signature.");
-        [self _appendStringToErrorData:NSLocalizedString(@"The tlmgr_cwrapper helper application may have been tampered with.", @"")];
+        TLMLog(__func__, @"*** ERROR *** The tlu_ipctask has been modified after signing!\nRefusing to run child process with invalid signature.");
+        [self _appendStringToErrorData:NSLocalizedString(@"The tlu_ipctask helper application may have been tampered with.", @"")];
         [self setFailed:YES];
         [self cancel];
     }
@@ -398,9 +398,9 @@ static BOOL __TLMCheckSignature()
         const char *cmdPath = [__TLMCwrapperPath() fileSystemRepresentation];
         
         /*
-         *** IMPORTANT: change the arg count offset if tlmgr_cwrapper options change. ***
+         *** IMPORTANT: change the arg count offset if tlu_ipctask options change. ***
          
-         Use calloc to zero the arg vector, then add the two required options for tlmgr_cwrapper
+         Use calloc to zero the arg vector, then add the two required options for tlu_ipctask
          before adding the subprocess path and options.  A terminating 0 is required.
          */
         char **args = NSZoneCalloc([self zone], ([_internal->_options count] + 4), sizeof(char *));
@@ -485,7 +485,7 @@ static BOOL __TLMCheckSignature()
         }
     }
     
-    // ordinarily tlmgr_cwrapper won't pass anything back up to us
+    // ordinarily tlu_ipctask won't pass anything back up to us
     if ([self errorMessages])
         TLMLog(__func__, @"%@", [self errorMessages]);
     
@@ -498,7 +498,7 @@ static BOOL __TLMCheckSignature()
 - (void)setWrapperPID:(pid_t)pid;
 {
     _internal->_cwrapper_pid = pid;
-    TLMLog(__func__, @"tlmgr_cwrapper checking in:  tlmgr_cwrapper pid = %d", pid);
+    TLMLog(__func__, @"tlu_ipctask checking in:  tlu_ipctask pid = %d", pid);
     EV_SET(&_internal->_cwrapper_event, pid, EVFILT_PROC, EV_ADD, NOTE_EXIT, 0, NULL);
     kevent(_internal->_kqueue, &_internal->_cwrapper_event, 1, NULL, 0, NULL);      
 }
@@ -506,7 +506,7 @@ static BOOL __TLMCheckSignature()
 - (void)setUnderlyingPID:(pid_t)pid;
 {
     _internal->_underlying_pid = pid;
-    TLMLog(__func__, @"tlmgr_cwrapper checking in: pid = %d (%@)", pid, [self _underlyingCommand]);
+    TLMLog(__func__, @"tlu_ipctask checking in: pid = %d (%@)", pid, [self _underlyingCommand]);
     EV_SET(&_internal->_underlying_event, pid, EVFILT_PROC, EV_ADD, NOTE_EXIT, 0, NULL);
     kevent(_internal->_kqueue, &_internal->_underlying_event, 1, NULL, 0, NULL);      
 }

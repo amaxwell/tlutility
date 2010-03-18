@@ -52,7 +52,7 @@
 // authorized operations only exist to write
 @property (readonly) BOOL isWriter;
 
-// flags passed through tlmgr_cwrapper
+// flags passed through tlu_ipctask
 @property(readonly) TLMLogMessageFlags messageFlags;
 
 @end
