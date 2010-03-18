@@ -41,7 +41,7 @@
 @class TLMPackage, FileView, TLMOutlineView;
 @protocol TLMInfo;
 
-@interface TLMInfoController : NSWindowController {
+@interface TLMInfoController : NSWindowController <NSPathCellDelegate> {
 @private
     NSTextView          *_textView;
     NSProgressIndicator *_spinner;

@@ -41,7 +41,7 @@
 static NSString *TLMMenuTargetURL = @"TLMMenuTargetURL";
 static NSString *TLMMenuApplicationURL = @"TLMMenuApplicationURL";
 
-@interface TLMOpenWithMenuController : NSObject 
+@interface TLMOpenWithMenuController : NSObject <NSMenuDelegate>
 + (id)sharedInstance;
 - (void)openURLWithApplication:(id)sender;
 @end
