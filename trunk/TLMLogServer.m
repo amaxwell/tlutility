@@ -303,7 +303,7 @@ static NSConnection * __TLMLSCreateAndRegisterConnectionForServer(TLMLogServer *
     }
     
     // Herb S. requested this so there'd be a record of all messages in one place.
-    // If tlmgr_cwrapper fails to connect, it'll start logging to asl, so using this funnel point should be sufficient.
+    // If tlu_ipctask fails to connect, it'll start logging to asl, so using this funnel point should be sufficient.
     // Added a pref since setting paper size causes syslog to crap itself.
     if ([[NSUserDefaults standardUserDefaults] boolForKey:TLMUseSyslogPreferenceKey])
         asl_log(NULL, NULL, ASL_LEVEL_NOTICE, "%s", [[message message] UTF8String]);
