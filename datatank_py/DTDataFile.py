@@ -159,6 +159,7 @@ def _dtarray_type_and_size_from_object(obj):
         return (20, 1)
     elif isinstance(obj, np.ndarray):
         array = obj
+        dt_array_type = None
         if array.dtype in (np.float64, np.double):
             dt_array_type = 1 # DTDataFile_Double
             element_size = 8
@@ -181,7 +182,11 @@ def _dtarray_type_and_size_from_object(obj):
             dt_array_type = 12 # DTDataFile_Signed8Char
             element_size = 1
         
-        return (dt_array_type, element_size)
+        # could be something like int64
+        if dt_array_type != None:
+            return (dt_array_type, element_size)
+        else:
+            print "unsupported ndarray type %s" % (array.dtype)
 
     # default case is an error
     print "unable to determine DT type for object %s" % (type(obj))
@@ -803,8 +808,13 @@ class DTDataFile(object):
         if isinstance(obj, (str, unicode)):
             self.write_string(obj, name, time=time)
         elif isinstance(obj, (float, int)):
-            # convert to an array, but allow numpy to pick the type
-            array = np.array((obj,))
+            # convert to an array, but allow numpy to pick the type for a float
+            if isinstance(obj, float):
+                array = np.array((obj,))  
+            else:
+                # coerce int to int32, since it defaults to int64 on 64 bit systems, but check size
+                assert obj <= np.iinfo(np.int32).max and obj >= np.iinfo(np.int32).min, "integer too large for 32-bit type"
+                array = np.array((obj,), dtype=np.int32)
             self.write_array(array, name, dt_type="Real Number", time=time)
         elif isinstance(obj, (tuple, list)) and isinstance(obj[0], (str, unicode)):
             # this will be a StringList
@@ -827,7 +837,7 @@ class DTDataFile(object):
                 dt_type = "NumberList" if len(array.shape) == 1 else "Array"
             self.write_array(array, name, dt_type=dt_type, time=time)
         else:
-            assert False, "unhandled object type"
+            assert False, "unhandled object type" + str(type(obj))
             
     def __setitem__(self, name, value):
         # support for dictionary-style setting; this is very limited
