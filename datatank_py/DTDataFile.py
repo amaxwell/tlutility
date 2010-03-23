@@ -596,7 +596,6 @@ class DTDataFile(object):
         self._file.write(string + "\0")
         
         # update file length and variable map manually
-        self._file.flush()
         self._length = self._file.tell()
         self._name_offset_map[name] = block_start
 
@@ -667,7 +666,6 @@ class DTDataFile(object):
         array.tofile(self._file)
         
         # update file length and variable map manually
-        self._file.flush()
         self._length = self._file.tell()
         self._name_offset_map[name] = block_start  
     
