@@ -435,7 +435,12 @@ class DTDataFile(object):
         
     def variable_names(self):
         """Unsorted list of variable names."""
-
+        
+        #
+        # WARNING: calling this in asserts at each write was killing performance,
+        # due to overhead of dict.keys().  Accessing the dict directly in those
+        # methods increased speed by 10x.
+        #
         self._reload_content_if_needed()
         return self._name_offset_map.keys()
 
@@ -734,7 +739,7 @@ class DTDataFile(object):
         
         # Expose the time series; dt_type is something like "Array" or "NumberList"
         base_name = "Seq_" + _basename_of_variable(name)
-        if time and base_name not in self.variable_names():
+        if time and base_name not in self._name_offset_map:
             self._write_string(dt_type, base_name)
         elif time is None:
             self._write_string(dt_type, base_name)
@@ -771,7 +776,7 @@ class DTDataFile(object):
         
         # Expose a time series of type String
         base_name = "Seq_" + _basename_of_variable(name)
-        if time and base_name not in self.variable_names():
+        if time and base_name not in self._name_offset_map:
             self._write_string("String", base_name)
         elif time is None:
             self._write_string("String", base_name)
