@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 def _times_considered_same(t1, t2):
     """docstring for _times_considered_same"""
@@ -16,7 +17,7 @@ class DTSeries(object):
         self._type = series_type
         
         # add series type descriptor
-        datafile[series_name] = series_type
+        datafile.write_anonymous(series_type, "Seq_" + series_name)
     
     def datafile(self):
         return self._datafile
@@ -94,8 +95,12 @@ class DTSeriesGroup(DTSeries):
 if __name__ == '__main__':
     
     import numpy as np
+    import os
     from datatank_py.DTDataFile import DTDataFile
     from datatank_py.DTProgress import DTProgress
+    from time import clock
+    
+    start_time = clock()
     
     with DTDataFile("Output.dtbin", truncate=True) as df:
         
@@ -103,11 +108,15 @@ if __name__ == '__main__':
     
         group = DTSeriesGroup(df, "Var")
         group.add(0.0, (0, 1, 2, 3.), "String 1", 1)
-        # progress.update_percentage(1 / 3.)
-        # group.add(1.1, (4, 5, 6, 7.), "String 1.1", 1.1)
-        # progress.update_percentage(2 / 3.)
-        # group.add(1.5, (8, 9, 10, 11.), "String 1.5", 1.5)
-        # progress.update_percentage(1.)
+        progress.update_percentage(1 / 3.)
+        group.add(1.1, (4, 5, 6, 7.), "String 1.1", 1.1)
+        progress.update_percentage(2 / 3.)
+        group.add(1.5, (8, 9, 10, 11.), "String 1.5", 1.5)
+        progress.update_percentage(1.)
         
-        for v in df.variable_names():
-            print "%s = %s" % (v, df[v])
+        df["ExecutionTime"] = clock() - start_time
+        df["ExecutionErrors"] = [""]
+        
+        # for v in df.variable_names():
+        #     print "%s = %s" % (v, df[v])
+                    
