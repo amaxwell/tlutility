@@ -673,6 +673,38 @@ class DTDataFile(object):
         self._length = self._file.tell()
         self._name_offset_map[name] = block_start  
     
+    def _dt_write(self, obj, name, time, anonymous=False):
+        """Wrapper that calls dt_write on a compound object.
+        
+        Arguments:
+        obj -- object that implements dt_write and dt_type
+        name -- user-visible name of the variable
+        time -- time value if this variable is time-varying        
+        anonymous -- whether to expose the variable name by prefixing with Seq_
+        
+        """
+        
+        # get the type by introspection
+        assert hasattr(obj, "dt_type"), "object must implement dt_type as well"
+        dt_type = obj.dt_type()
+        
+        # Expose a time series of type dt_type
+        if anonymous == False:
+            base_name = "Seq_" + _basename_of_variable(name)
+            if time and base_name not in self._name_offset_map:
+                self._write_string(dt_type, base_name)
+            elif time is None:
+                self._write_string(dt_type, base_name)
+        else:
+            assert time == None, "anonymous write cannot save a time variable"
+             
+        # caller is responsible for appending _index as needed for time series
+        obj.dt_write(self, name)
+
+        if time:
+            assert name[-1].isdigit(), "time series names must end with a digit"
+            self._write_array(np.array((time,), dtype=np.double), name + "_time")
+            
     def write_anonymous(self, obj, name):
         """Write an object that will not be visible in DataTank.
         
@@ -686,7 +718,9 @@ class DTDataFile(object):
         """
         
         # for now, just a simple wrapper around the primitive write methods
-        if isinstance(obj, (str, unicode)):
+        if hasattr(obj, "dt_write"):
+            self._dt_write(obj, name, None, anonymous=True)
+        elif isinstance(obj, (str, unicode)):
             self._write_string(obj, name)
         elif isinstance(obj, (float, int)):
             # convert to an array, but allow numpy to pick the type for a float
@@ -791,36 +825,6 @@ class DTDataFile(object):
             assert name[-1].isdigit(), "time series names must end with a digit"
             self._write_array(np.array((time,), dtype=np.double), name + "_time")
 
-    def _dt_write(self, obj, name, time):
-        """Wrapper that calls dt_write on a compound object.
-        
-        Arguments:
-        obj -- object that implements dt_write and dt_type
-        name -- user-visible name of the variable
-        time -- time value if this variable is time-varying
-        
-        
-        
-        """
-        
-        # get the type by introspection
-        assert hasattr(obj, "dt_type"), "object must implement dt_type as well"
-        dt_type = obj.dt_type()
-        
-        # Expose a time series of type dt_type
-        base_name = "Seq_" + _basename_of_variable(name)
-        if time and base_name not in self._name_offset_map:
-            self._write_string(dt_type, base_name)
-        elif time is None:
-            self._write_string(dt_type, base_name)
-             
-        # caller is responsible for appending _index as needed for time series
-        obj.dt_write(self, name)
-
-        if time:
-            assert name[-1].isdigit(), "time series names must end with a digit"
-            self._write_array(np.array((time,), dtype=np.double), name + "_time")
-            
     def write(self, obj, name, dt_type=None, time=None):
         """Write a single value to a file object by name.
         
