@@ -68,6 +68,10 @@ import sys, os
 from struct import Struct
 import numpy as np
 
+# from cProfile, these are surprisingly expensive to get
+_INT32_MAX = np.iinfo(np.int32).max
+_INT32_MIN = np.iinfo(np.int32).min
+
 if sys.byteorder != "little":
     print "warning: saving big-endian files has not been tested"
 
@@ -690,7 +694,7 @@ class DTDataFile(object):
                 array = np.array((obj,))  
             else:
                 # coerce int to int32, since it defaults to int64 on 64 bit systems, but check size
-                assert obj <= np.iinfo(np.int32).max and obj >= np.iinfo(np.int32).min, "integer too large for 32-bit type"
+                assert obj <= _INT32_MAX and obj >= _INT32_MIN, "integer too large for 32-bit type"
                 array = np.array((obj,), dtype=np.int32)
             self._write_array(array, name)
         elif isinstance(obj, (np.ndarray, tuple, list)):  
@@ -822,7 +826,7 @@ class DTDataFile(object):
                 array = np.array((obj,))  
             else:
                 # coerce int to int32, since it defaults to int64 on 64 bit systems, but check size
-                assert obj <= np.iinfo(np.int32).max and obj >= np.iinfo(np.int32).min, "integer too large for 32-bit type"
+                assert obj <= _INT32_MAX and obj >= _INT32_MIN, "integer too large for 32-bit type"
                 array = np.array((obj,), dtype=np.int32)
             self.write_array(array, name, dt_type="Real Number", time=time)
         elif isinstance(obj, (tuple, list)) and isinstance(obj[0], (str, unicode)):
