@@ -488,6 +488,10 @@ class DTDataFile(object):
         values = np.fromfile(self._file, dtype=np.dtype(data_type), count=element_count)
         assert values.size == element_count, "unable to read all data"
         
+        # TODO: will this actually convert to host byte order?
+        if self._swap:
+            values = values.astype(np.dtype(data_type[1:]))   
+        
         # handle scalar values specially
         if m == 1 and n == 1 and o == 1:
             return values[0]
@@ -501,11 +505,7 @@ class DTDataFile(object):
             
         # see the array writing code
         shape.reverse()
-        
-        # TODO: will this actually convert to host byte order?
-        if self._swap:
-            values = values.astype(np.dtype(data_type[1:]))   
-            
+                    
         return values.reshape(shape)        
         
     def __iter__(self):
