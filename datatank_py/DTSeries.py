@@ -33,6 +33,7 @@ class DTSeries(object):
     def basename(self, count=None):
         if count == None:
             count = self.savecount() - 1
+        assert count >= 0, "invalid count"
         return "%s_%d" % (self.name(), count)
     
     def time_values(self):
@@ -53,7 +54,7 @@ class DTSeries(object):
              assert _times_considered_same(time, self.last_time()) == False, "time values too close together"
              
         self._time_values.append(time)
-        self._datafile.write_anonymous(time, "%s_%d_time" % (self.name(), self.savecount()))
+        self._datafile.write_anonymous(time, self.basename() + "_time")
         
 class DTSeriesGroup(DTSeries):
     """Base series group class"""
@@ -88,7 +89,7 @@ class DTSeriesGroup(DTSeries):
         self.datafile().write_anonymous(array_value, self.basename() + "_OutputArray")
         self.datafile().write_anonymous(string_value, self.basename() + "_OutputString")
         self.datafile().write_anonymous(number_value, self.basename() + "_Output Number")
-        self.datafile().write_anonymous(np.array([]), self.basename())
+        self.datafile().write_anonymous(np.array([], dtype=np.float64), self.basename())
 
 if __name__ == '__main__':
     
@@ -102,8 +103,11 @@ if __name__ == '__main__':
     
         group = DTSeriesGroup(df, "Var")
         group.add(0.0, (0, 1, 2, 3.), "String 1", 1)
-        progress.update_percentage(1 / 3.)
-        group.add(1.1, (4, 5, 6, 7.), "String 1.1", 1.1)
-        progress.update_percentage(2 / 3.)
-        group.add(1.5, (8, 9, 10, 11.), "String 1.5", 1.5)
-        progress.update_percentage(1.)
+        # progress.update_percentage(1 / 3.)
+        # group.add(1.1, (4, 5, 6, 7.), "String 1.1", 1.1)
+        # progress.update_percentage(2 / 3.)
+        # group.add(1.5, (8, 9, 10, 11.), "String 1.5", 1.5)
+        # progress.update_percentage(1.)
+        
+        for v in df.variable_names():
+            print "%s = %s" % (v, df[v])
