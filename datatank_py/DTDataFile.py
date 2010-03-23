@@ -682,11 +682,17 @@ class DTDataFile(object):
         if isinstance(obj, (str, unicode)):
             self._write_string(obj, name)
         elif isinstance(obj, (float, int)):
-            # convert to an array, but allow numpy to pick the type
-            array = np.array((obj,))
-            self._write_array(np.array((obj,)), name)
+            # convert to an array, but allow numpy to pick the type for a float
+            if isinstance(obj, float):
+                array = np.array((obj,))  
+            else:
+                # coerce int to int32, since it defaults to int64 on 64 bit systems, but check size
+                assert obj <= np.iinfo(np.int32).max and obj >= np.iinfo(np.int32).min, "integer too large for 32-bit type"
+                array = np.array((obj,), dtype=np.int32)
+            self._write_array(array, name)
         elif isinstance(obj, (np.ndarray, tuple, list)):  
-            assert isinstance(obj[0], (str, unicode)) is False, "anonymous StringList unsupported"
+            if len(obj):
+                assert isinstance(obj[0], (str, unicode)) is False, "anonymous StringList unsupported"
             self._write_array(_ensure_array(obj), name)
         else:
             assert False, "unhandled object type"
