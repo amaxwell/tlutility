@@ -750,6 +750,7 @@ class DTDataFile(object):
         self._write_array(array, name)
 
         if time:
+            assert name[-1].isdigit(), "time series names must end with a digit"
             self._write_array(np.array((time,), dtype=np.double), name + "_time")
 
     def write_string(self, string, name, time=None):
@@ -787,8 +788,39 @@ class DTDataFile(object):
         self._write_string(string, name)
 
         if time:
+            assert name[-1].isdigit(), "time series names must end with a digit"
             self._write_array(np.array((time,), dtype=np.double), name + "_time")
 
+    def _dt_write(self, obj, name, time):
+        """Wrapper that calls dt_write on a compound object.
+        
+        Arguments:
+        obj -- object that implements dt_write and dt_type
+        name -- user-visible name of the variable
+        time -- time value if this variable is time-varying
+        
+        
+        
+        """
+        
+        # get the type by introspection
+        assert hasattr(obj, "dt_type"), "object must implement dt_type as well"
+        dt_type = obj.dt_type()
+        
+        # Expose a time series of type dt_type
+        base_name = "Seq_" + _basename_of_variable(name)
+        if time and base_name not in self._name_offset_map:
+            self._write_string(dt_type, base_name)
+        elif time is None:
+            self._write_string(dt_type, base_name)
+             
+        # caller is responsible for appending _index as needed for time series
+        obj.dt_write(self, name)
+
+        if time:
+            assert name[-1].isdigit(), "time series names must end with a digit"
+            self._write_array(np.array((time,), dtype=np.double), name + "_time")
+            
     def write(self, obj, name, dt_type=None, time=None):
         """Write a single value to a file object by name.
         
@@ -801,12 +833,30 @@ class DTDataFile(object):
         Handles various object types, and adds appropriate names so they're visible
         in DataTank.  String, scalar, ndarray, tuple, and list objects are supported,
         although ndarray gives the most specific interface for precision and avoids
-        type conversions.
+        type conversions.  
         
         This method saves a 0D array (scalar) as a "Real Number", a 1D array as a
         "List of Numbers" and other shapes as "Array" by default.  Use the dt_type
         parameter if you want something specific, such as "2D Point" for a point
         (although the caller has to ensure the shape is correct).
+        
+        In addition, any object that implements dt_type and dt_write methods can be 
+        passed, which allows saving compound types such as 2D Mesh or 2D Bitmap,
+        without bloating up DTDataFile with all of those types.
+        
+        The dt_type method must return a DataTank type name:
+        
+            def dt_type(self):
+                return "2D Mesh"
+        
+        The dt_write method should use write_anonymous to save all variables as
+        required for the object.  The datafile argument is this DTDataFile instance.
+        Note that dt_write must not expose the variable by adding a "Seq" name, as
+        that is the responsibility of DTDataFile as the higher-level object.
+        
+            def dt_write(self, datafile, name):
+                ...
+                datafile.write_anonymous( ... , name)
 
         """
         
@@ -817,8 +867,10 @@ class DTDataFile(object):
         # to use DTDataFile, and everything needs to be converted to an ndarray or
         # a string in the end.
         #
-
-        if isinstance(obj, (str, unicode)):
+        
+        if hasattr(obj, "dt_write"):
+            self._dt_write(obj, name, time)
+        elif isinstance(obj, (str, unicode)):
             self.write_string(obj, name, time=time)
         elif isinstance(obj, (float, int)):
             # convert to an array, but allow numpy to pick the type for a float
