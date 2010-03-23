@@ -1,20 +1,41 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import numpy as np
+
 def _times_considered_same(t1, t2):
     """docstring for _times_considered_same"""
     return abs(t1 - t2) <= 0.000001 * (t1 + t2)
 
 class DTSeries(object):
-    """Base class for series support"""
+    """Base class for series support.
+    
+    In general, you shouldn't need to use this class; it's only provided for
+    symmetry with DTSource, and to be used by DTSeriesGroup.  However, it
+    may also be useful for non-group objects in future.
+    
+    """
+    
     def __init__(self, datafile, series_name, series_type):
         super(DTSeries, self).__init__()
+        """Create a new series.
+        
+        Arguments:
+        datafile -- an empty DTDataFile instance
+        series_name -- the name of the series variable
+        series_type -- the type of the series variable
+        
+        The name will typically be "Var", and the type will be whatever is the
+        base type stored, such as "Group" for a group object.
+        
+        """
+        
         self._name = series_name
         self._time_values = []
         
-        # TODO: assert empty file
         self._datafile = datafile
-        self._type = series_type
+        # appending and reading is too much work at this point
+        assert len(datafile.variable_names()) == 0, "an empty data file is required"
         
         # add series type descriptor
         datafile.write_anonymous(series_type, "Seq_" + series_name)
@@ -22,20 +43,11 @@ class DTSeries(object):
     def datafile(self):
         return self._datafile
         
-    def type(self):
-        return self._series_type
-        
     def savecount(self):
         return len(self.time_values())
         
-    def name(self):
-        return self._name
-        
-    def basename(self, count=None):
-        if count == None:
-            count = self.savecount() - 1
-        assert count >= 0, "invalid count"
-        return "%s_%d" % (self.name(), count)
+    def basename(self):
+        return "%s_%d" % (self._name, self.savecount() - 1)
     
     def time_values(self):
         return self._time_values
@@ -59,64 +71,59 @@ class DTSeries(object):
         
 class DTSeriesGroup(DTSeries):
     """Base series group class"""
-    def __init__(self, datafile, name):
+    def __init__(self, datafile, name, name_to_type):
+        """Create a new series group.
+        
+        Arguments:
+        datafile -- an empty DTDataFile instance
+        name -- the name of the group
+        name_to_type -- a dictionary mapping variable names to DataTank types, such as
+                        { "Output Array":"Array", "Single Value":"Real Number" }.
+                        
+        This defines the structure of the group.  
+                        
+        """
+        
         super(DTSeriesGroup, self).__init__(datafile, name, "Group")
         
-    def write_structure(self):
-        
-        basename = "SeqInfo_" + self.name()
-        
-        self.datafile().write_anonymous("OutputArray", basename + "_1N")
-        self.datafile().write_anonymous("Array", basename + "_1T")
-        
-        self.datafile().write_anonymous("OutputString", basename + "_2N")
-        self.datafile().write_anonymous("String", basename + "_2T")
-        
-        self.datafile().write_anonymous("Output Number", basename + "_3N")
-        self.datafile().write_anonymous("Real Number", basename + "_3T")
-        
-        self.datafile().write_anonymous(3, basename + "_N")
-        self.datafile().write_anonymous("Group", basename)
-        
-    def add(self, time, array_value, string_value, number_value):
-        
-        if self.savecount() == 0:
-            self.write_structure()
+        # save for sanity checking
+        self._names = set(name_to_type.keys())
+        basename = "SeqInfo_" + name
+
+        # WriteStructure equivalent; unordered in this case
+        idx = 1
+        for varname in name_to_type:
+            datafile.write_anonymous(varname, "%s_%dN" % (basename, idx))
+            datafile.write_anonymous(name_to_type[varname],  "%s_%dT" % (basename, idx))
+            idx += 1
             
+        datafile.write_anonymous(len(name_to_type), basename + "_N")
+        datafile.write_anonymous("Group", basename)
+        
+    def add(self, time, values):
+        """Add a dictionary of values.
+        
+        Arguments:
+        time -- the time value represented by these values
+        values -- dictionary mapping variable name to value
+                
+        When adding to the group, all variables must be present, or an exception 
+        will be raised.  The caller is responsible for ensuring that value types 
+        must be consistent with the expected data.  Compound types (e.g., 2D Mesh) 
+        are not currently supported.  For those, you could subclass DTSeriesGroup 
+        and override this method to use your own writing logic.
+        
+        """
+        
+        assert self._names == set(values.keys()), "inconsistent variable names"
+        
         # DTSeries::SharedSave
         self.shared_save(time)
         
         # DTRetGroup::Write
-        self.datafile().write_anonymous(array_value, self.basename() + "_OutputArray")
-        self.datafile().write_anonymous(string_value, self.basename() + "_OutputString")
-        self.datafile().write_anonymous(number_value, self.basename() + "_Output Number")
+        for name in values:
+            self.datafile().write_anonymous(values[name], "%s_%s" % (self.basename(), name))
+        
+        # expose the variable for DT
         self.datafile().write_anonymous(np.array([], dtype=np.float64), self.basename())
 
-if __name__ == '__main__':
-    
-    import numpy as np
-    import os
-    from datatank_py.DTDataFile import DTDataFile
-    from datatank_py.DTProgress import DTProgress
-    from time import clock
-    
-    start_time = clock()
-    
-    with DTDataFile("Output.dtbin", truncate=True) as df:
-        
-        progress = DTProgress()
-    
-        group = DTSeriesGroup(df, "Var")
-        group.add(0.0, (0, 1, 2, 3.), "String 1", 1)
-        progress.update_percentage(1 / 3.)
-        group.add(1.1, (4, 5, 6, 7.), "String 1.1", 1.1)
-        progress.update_percentage(2 / 3.)
-        group.add(1.5, (8, 9, 10, 11.), "String 1.5", 1.5)
-        progress.update_percentage(1.)
-        
-        df["ExecutionTime"] = clock() - start_time
-        df["ExecutionErrors"] = [""]
-        
-        # for v in df.variable_names():
-        #     print "%s = %s" % (v, df[v])
-                    

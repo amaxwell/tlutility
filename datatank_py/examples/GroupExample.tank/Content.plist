@@ -5,7 +5,148 @@
 	<key>Attachments</key>
 	<array/>
 	<key>DrawingWindows</key>
-	<array/>
+	<array>
+		<dict>
+			<key>Antialiasing</key>
+			<string>YES</string>
+			<key>CommandContents</key>
+			<array>
+				<dict>
+					<key>CommandName</key>
+					<string>OutputString from Group</string>
+					<key>CommandType</key>
+					<string>String</string>
+					<key>Computation</key>
+					<dict>
+						<key>Alignment</key>
+						<integer>0</integer>
+						<key>Format</key>
+						<dict>
+							<key>Inline</key>
+							<dict>
+								<key>Color</key>
+								<dict>
+									<key>Color</key>
+									<dict>
+										<key>Blue</key>
+										<real>0.0</real>
+										<key>Green</key>
+										<real>0.0</real>
+										<key>Red</key>
+										<real>0.0</real>
+										<key>Space</key>
+										<string>NSCalibratedRGBColorSpace</string>
+									</dict>
+								</dict>
+								<key>Name</key>
+								<string>Helvetica</string>
+								<key>Size</key>
+								<string>12</string>
+								<key>Type</key>
+								<integer>4</integer>
+							</dict>
+							<key>SelectedNumber</key>
+							<integer>0</integer>
+						</dict>
+						<key>Location</key>
+						<dict>
+							<key>Inline</key>
+							<dict>
+								<key>Point</key>
+								<string>0,0</string>
+							</dict>
+							<key>SelectedNumber</key>
+							<integer>0</integer>
+						</dict>
+						<key>Offset</key>
+						<string>0,0</string>
+						<key>Rotation</key>
+						<string>0</string>
+						<key>String</key>
+						<dict>
+							<key>Inline</key>
+							<dict>
+								<key>String</key>
+								<string>Text</string>
+							</dict>
+							<key>Selected</key>
+							<string>OutputString from Group</string>
+						</dict>
+						<key>SuperAndSub</key>
+						<string>On</string>
+					</dict>
+					<key>Drawn</key>
+					<string>Include</string>
+					<key>Status</key>
+					<string>Visible</string>
+				</dict>
+			</array>
+			<key>DrawingHeight</key>
+			<real>198</real>
+			<key>DrawingWindow</key>
+			<dict>
+				<key>ClickMenu</key>
+				<dict>
+					<key>EntryName</key>
+					<string>Automatic</string>
+					<key>EntryNumber</key>
+					<integer>0</integer>
+				</dict>
+			</dict>
+			<key>DrawingWindowType</key>
+			<string>DADrawingImages</string>
+			<key>FigureName</key>
+			<string>Untitled</string>
+			<key>MaxHeight</key>
+			<string></string>
+			<key>MaxWidth</key>
+			<string></string>
+			<key>OutputHeight</key>
+			<string></string>
+			<key>OutputWidth</key>
+			<string></string>
+			<key>QT</key>
+			<dict>
+				<key>Format</key>
+				<string>Animation</string>
+				<key>Quality</key>
+				<dict>
+					<key>EntryName</key>
+					<string>Lossless</string>
+					<key>EntryNumber</key>
+					<integer>0</integer>
+				</dict>
+				<key>Range</key>
+				<string>0,∞</string>
+				<key>ShowInFinder</key>
+				<string>On</string>
+				<key>TimeStep</key>
+				<string>1.0</string>
+			</dict>
+			<key>SeparateWindowPos</key>
+			<array>
+				<real>0.0</real>
+				<real>0.0</real>
+				<real>0.0</real>
+				<real>0.0</real>
+			</array>
+			<key>ViewSizeJoined</key>
+			<string>514,198</string>
+			<key>ViewSizeSeparated</key>
+			<string></string>
+			<key>Visible</key>
+			<string>NO</string>
+			<key>WindowName</key>
+			<string>OutputString from Group</string>
+			<key>WindowPos</key>
+			<array>
+				<real>567</real>
+				<real>484</real>
+				<real>512</real>
+				<real>413</real>
+			</array>
+		</dict>
+	</array>
 	<key>InformationSize</key>
 	<array>
 		<real>400</real>
@@ -16,13 +157,13 @@
 		<key>CurrentTime</key>
 		<dict>
 			<key>CurrentValue</key>
-			<real>0.0</real>
+			<real>2</real>
 			<key>MaxValue</key>
 			<real>2</real>
 			<key>MinValue</key>
 			<real>0.0</real>
 			<key>String</key>
-			<string>0</string>
+			<string>2</string>
 		</dict>
 		<key>Duration</key>
 		<string>10</string>
@@ -69,19 +210,19 @@
 			<key>Content</key>
 			<dict>
 				<key>Application</key>
-				<string>DTSeries.py</string>
+				<string>group_example.py</string>
 				<key>Argument</key>
 				<string></string>
 				<key>DirName</key>
 				<string>.</string>
 				<key>DirType</key>
-				<integer>1</integer>
+				<integer>0</integer>
 				<key>GroupName</key>
 				<string>DT_RetGroup</string>
 				<key>Input</key>
-				<string>Input.dtbin</string>
+				<string>GEInput.dtbin</string>
 				<key>Output</key>
-				<string>Output.dtbin</string>
+				<string>GEOutput.dtbin</string>
 				<key>Project</key>
 				<string></string>
 				<key>Structure</key>
@@ -111,7 +252,7 @@
 						<key>Include</key>
 						<string>On</string>
 						<key>Name</key>
-						<string>InputPath</string>
+						<string>InputString</string>
 						<key>Type</key>
 						<string>String</string>
 						<key>Var</key>
@@ -265,7 +406,7 @@
 	<key>WindowPos</key>
 	<array>
 		<real>44</real>
-		<real>54</real>
+		<real>354</real>
 		<real>512</real>
 		<real>824</real>
 	</array>
