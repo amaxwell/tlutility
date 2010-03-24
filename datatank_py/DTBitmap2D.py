@@ -11,7 +11,6 @@ class _DTBitmap2D(object):
             
     def __init__(self):
         super(_DTBitmap2D, self).__init__()
-        print "__init__", type(self)
         self.grid = (0, 0, 1, 1)
         for n in _DTBitmap2D.CHANNEL_NAMES:
             setattr(self, n, None)
