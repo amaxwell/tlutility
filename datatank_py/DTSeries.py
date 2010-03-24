@@ -110,8 +110,8 @@ class DTSeriesGroup(DTSeries):
         When adding to the group, all variables must be present, or an exception 
         will be raised.  The caller is responsible for ensuring that value types 
         must be consistent with the expected data.  Compound types (e.g., 2D Mesh) 
-        are not currently supported.  For those, you could subclass DTSeriesGroup 
-        and override this method to use your own writing logic.
+        are supported via wrapper objects that implement the dt_write protocol.
+        See DTDataFile documentation for more details.
         
         """
         
