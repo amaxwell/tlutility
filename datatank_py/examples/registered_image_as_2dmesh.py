@@ -19,10 +19,6 @@ if __name__ == '__main__':
     # then saved as a 2D Mesh object.  Integer 8 and 16-byte images are
     # converted to 32-bit floats. 
     #
-    # Note that this is not appropriate for elevation data, as DataTank
-    # will normalize the file range from [0, 1] if you extract the gray
-    # component.
-    #
     
     input_file = DTDataFile("Input.dtbin")
     image_path = input_file["Image Path"]
