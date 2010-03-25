@@ -14,8 +14,8 @@ taken as needed from the Write() implementation of various objects.
 The intent is not to duplicate all of the functionality of DTSource,
 but allow saving the results of computations in objects that are
 easily readable by DataTank.  High-level objects such as meshes
-and images can be handled specially as needed, but they're really
-just specially-named collections of DTArray objects.
+and images can be handled specially as needed; see the DTMesh2D
+and DTBitmap2D classes as example.
 
 The API is strongly centered around what I need for DataTank, and
 I've explicitly avoided trying to overdesign this by adding lots of
@@ -164,70 +164,6 @@ def _dtarray_type_and_size_from_object(obj):
     # default case is an error
     print "unable to determine DT type for object %s" % (type(obj))
     return (None, None)
-
-def _array_from_image(image):
-    """Convert a PIL image to a numpy ndarray.
-    
-    Arguments:
-    image -- a PIL image instance
-    
-    Returns:
-    a numpy ndarray or None if an error occurred
-    
-    """
-    
-    array = None
-    if image.mode.startswith(("I", "F")):
-        
-        def _parse_mode(mode):
-            # Modes aren't very well documented, and I see results that
-            # differ from the documentation.  They seem to follow this:
-            # http://www.pythonware.com/library/pil/handbook/decoder.htm
-            suffix = mode.split(";")[-1]
-            np_type = ""
-            if suffix != mode:
-                mode_size = ""
-                mode_fmt = ""
-                for c in suffix:
-                    if c.isdigit():
-                        mode_size += c
-                    else:
-                        mode_fmt += c
-                if mode_fmt.startswith("N") is False:
-                    # big-endian if starts with B, little otherwise
-                    np_type += ">" if mode_fmt.startswith("B") else "<"
-                if mode_fmt.endswith("S"):
-                    # signed int
-                    np_type += "i"
-                else:
-                    # float or unsigned int
-                    np_type += "f" if mode.endswith("F") else "u"
-                # convert to size in bytes
-                np_type += str(int(mode_size) / 8)
-            elif mode == "F":
-                np_type = "f4"
-            elif mode == "I":
-                np_type = "i4"
-            else:
-                return None
-            return np.dtype(np_type)
-        
-        dt = _parse_mode(image.mode)
-        if dt is None:
-            print "unable to determine image bit depth and byte order for mode \"%s\"" % (image.mode)
-        else:
-            try:
-                # fails for signed int16 images produced by GDAL, but works with unsigned
-                array = np.fromstring(image.tostring(), dtype=dt)
-                array = array.reshape((image.size[1], image.size[0]))
-            except Exception, e:
-                print "image.tostring() failed for image with mode \"%s\" (PIL error: %s)" % (image.mode, str(e))
-        
-    else:    
-        # doesn't seem to work reliably for GDAL-produced 16 bit GeoTIFF
-        array = np.asarray(image)
-    
-    return array
             
 class DTDataFile(object):
     """This class roughly corresponds to the C++ DTDataFile class.
@@ -878,104 +814,6 @@ class DTDataFile(object):
             assert False, "unhandled object type" + str(type(obj))
             
     def __setitem__(self, name, value):
-        # support for dictionary-style setting; this is very limited
+        # support for dictionary-style setting; calls write()
         self.write(value, name)
-
-    def write_image_one(self, image, name, grid=None):
-        """Save a single PIL image.
-        
-        Arguments:
-        image -- a PIL image
-        name -- the user-visible name of the image variable
-        grid -- the origin and pixel size of the image, as (xmin, ymin, dx, dy)
-
-        Handles RGB and grayscale images, with or without an alpha channel.
-        16-bit images should be supported, but I don't have one to test with
-        at the moment.  DTBitmap2D itself doesn't support floating-point images,
-        but those are typically elevation data that I'd want as a DTMesh2D anyway.
-
-        """
-        
-        array = _array_from_image(image)
-        assert array is not None, "unable to convert the image to a numpy array"
-        assert array.dtype in (np.int16, np.uint16, np.uint8, np.int8, np.bool), "unsupported bit depth"
-
-        # no suffix on DataTank names for 8 bit images
-        name_suffix = "" if array.dtype in (np.uint8, np.int8) else "16"
-
-        self._write_string("2D Bitmap", "Seq_" + name)
-        if image.mode in ("1", "P", "L", "LA") or image.mode.startswith(("F", "I")):
-
-            # Convert binary image of dtype=bool to uint8, although this is probably
-            # a better candidate for a or use as a mask.
-            if image.mode == "1":
-                print "warning: converting binary image to uint8"
-                # TODO: this crashes when I test it with a binary TIFF, but it looks like a
-                # bug in numpy or PIL.  Strangely, it doesn't crash if I copy immediately after
-                # calling asarray above.
-                array = array.copy().astype(np.uint8)
-                array *= 255
-
-            if image.mode in ("1", "L", "P") or image.mode.startswith(("F", "I")):
-                self._write_array(np.flipud(array), name + "_Gray" + name_suffix)
-            else:
-                assert image.mode == "LA", "requires gray + alpha image"
-                self._write_array(np.flipud(array[:,0]), name + "_Gray" + name_suffix)
-                self._write_array(np.flipud(array[:,1]), name + "_Alpha" + name_suffix)
-
-        elif image.mode in ("RGB", "RGBA"):
-
-            self._write_array(np.flipud(array[:,:,0]), name + "_Red" + name_suffix)
-            self._write_array(np.flipud(array[:,:,1]), name + "_Green" + name_suffix)
-            self._write_array(np.flipud(array[:,:,2]), name + "_Blue" + name_suffix)
-            if image.mode == "RGBA":
-                self._write_array(np.flipud(array[:,:,3]), name + "_Alpha" + name_suffix)            
-                            
-        else:
-            assert False, "unsupported image mode"
-
-        # Equivalent of WriteNoSize(DTDataStorage, string, DTMesh2DGrid).
-        if grid is None:
-            grid = (0, 0, 1, 1)
-        self._write_array(grid, name)       
-
-    def write_2dmesh_one(self, values, name, grid=None):
-        """Save a single 2D mesh variable.
-        
-        Arguments:
-        values -- the mesh array (must be an ndarray)
-        grid -- the origin and element size of the mesh, as (xmin, ymin, dx, dy)
-
-        This saves the equivalent of a 2D mesh grid and values to the given file object.
-        The grid is described by xmin, ymin, dx, dy, and the extent of the grid is
-        determined by the shape of the values array (which has a single value per node).
-        If no grid is given, a unit grid with origin (0, 0) is assumed.
-
-        """
-
-        #
-        # 1. Write bounding box as DTRegion2D as "name" + "_bbox2D"
-        #    This is a double array with corners ordered (xmin, xmax, ymin, ymax)
-        # 2. Write grid using WriteNoSize as "name" + "_loc"
-        #    This is a double array with (xmin, ymin, dx, dy)
-        # 3. Write mask (ignored for now)
-        # 4. Write values as array "name"
-        # 5. Write name and type for DataTank
-        #
-
-        if grid is None:
-            grid = (0, 0, 1, 1)
-            
-        (xmin, ymin, dx, dy) = grid 
-        xmax = xmin + values.shape[1] * float(dx)
-        ymax = ymin + values.shape[0] * float(dy)
-
-        # will be converted to double arrays
-        bbox = (xmin, xmax, ymin, ymax)
-
-        self._write_array(bbox, name + "_bbox2D")
-        self._write_array(grid, name + "_loc")
-        self._write_array(values, name)
-        self._write_string("2D Mesh", "Seq_" + name)
-
     

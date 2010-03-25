@@ -585,7 +585,7 @@
 			<key>ViewSizeSeparated</key>
 			<string>581,563</string>
 			<key>Visible</key>
-			<string>NO</string>
+			<string>YES</string>
 			<key>WindowName</key>
 			<string>Python mesh</string>
 			<key>WindowPos</key>
@@ -758,7 +758,7 @@
 							<key>Inline</key>
 							<dict>
 								<key>Range</key>
-								<string>0,1</string>
+								<string>0.0519,200</string>
 							</dict>
 							<key>Selected</key>
 							<string>Range of TestMesh</string>
@@ -1175,12 +1175,12 @@
 			<key>ViewSizeSeparated</key>
 			<string>581,563</string>
 			<key>Visible</key>
-			<string>NO</string>
+			<string>YES</string>
 			<key>WindowName</key>
 			<string>DataTank mesh</string>
 			<key>WindowPos</key>
 			<array>
-				<real>687</real>
+				<real>700</real>
 				<real>90</real>
 				<real>666</real>
 				<real>788</real>
@@ -1804,7 +1804,7 @@
 					<key>Inline</key>
 					<dict>
 						<key>Function</key>
-						<string>x^2+y^2</string>
+						<string>cos(x) + cos(y)</string>
 					</dict>
 					<key>SelectedNumber</key>
 					<integer>0</integer>

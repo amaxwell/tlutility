@@ -30,6 +30,16 @@ class DTMesh2D(object):
         
     def dt_write(self, datafile, name):
         
+        #
+        # 1. Write bounding box as DTRegion2D as "name" + "_bbox2D"
+        #    This is a double array with corners ordered (xmin, xmax, ymin, ymax)
+        # 2. Write grid using WriteNoSize as "name" + "_loc"
+        #    This is a double array with (xmin, ymin, dx, dy)
+        # 3. Write mask (ignored for now)
+        # 4. Write values as array "name"
+        # 5. Write name and type for DataTank
+        #
+        
         (xmin, ymin, dx, dy) = self._grid 
         xmax = xmin + self._values.shape[1] * float(dx)
         ymax = ymin + self._values.shape[0] * float(dy)
@@ -40,27 +50,3 @@ class DTMesh2D(object):
         datafile.write_anonymous(bbox, name + "_bbox2D")
         datafile.write_anonymous(self._grid, name + "_loc")
         datafile.write_anonymous(self._values, name)
-
-if __name__ == '__main__':
-    
-    from datatank_py.DTDataFile import DTDataFile
-    
-    output_file = DTDataFile("dt_write_test.dtbin", truncate=True)
-    output_file.DEBUG = True
-    # Create and save a single 2D Mesh.  The mesh_function is kind of
-    # unnecessary since you can just multiply xx and yy directly, 
-    # but it fits well with using a 2D function + grid in DataTank.
-    def mesh_function(x, y):
-        return np.cos(x) + np.cos(y)
-    
-    # return the step to avoid getting fouled up in computing it
-    (x, dx) = np.linspace(-10, 10, 50, retstep=True)
-    (y, dy) = np.linspace(-10, 10, 100, retstep=True)
-    xx, yy = np.meshgrid(x, y)
-    mesh = mesh_function(xx, yy)
-    
-    grid = (np.min(x), np.min(y), dx, dy)
-    dtmesh = DTMesh2D(mesh, grid=grid)
-    output_file["Test dt_write 2D Mesh"] = dtmesh
-    
-    output_file.close()

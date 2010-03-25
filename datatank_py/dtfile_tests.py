@@ -6,17 +6,20 @@
 from __future__ import with_statement
 import os
 import numpy as np
-from DTDataFile import DTDataFile
+from datatank_py.DTDataFile import DTDataFile
+from datatank_py.DTMesh2D import DTMesh2D
+from datatank_py.DTBitmap2D import DTBitmap2D
 
 def write_2dmeshes(file_path):
     
     output_file = DTDataFile(file_path)
     output_file.DEBUG = True
+    
     # Create and save a single 2D Mesh.  The mesh_function is kind of
     # unnecessary since you can just multiply xx and yy directly, 
     # but it fits well with using a 2D function + grid in DataTank.
-    def mesh_function(x,y):
-        return x**2+y**2
+    def mesh_function(x, y):
+        return np.cos(x) + np.cos(y)
     
     # return the step to avoid getting fouled up in computing it
     (x, dx) = np.linspace(-10, 10, 50, retstep=True)
@@ -24,24 +27,20 @@ def write_2dmeshes(file_path):
     xx, yy = np.meshgrid(x, y)
     mesh = mesh_function(xx, yy)
     
-    # save to separate files
     grid = (np.min(x), np.min(y), dx, dy)
-    with DTDataFile("mesh.dtbin", truncate=True) as mesh_file:
-        mesh_file.write_2dmesh_one(mesh, "TestMesh", grid=grid)
-    output_file.write_2dmesh_one(mesh, "TestMesh", grid=grid)
+    dtmesh = DTMesh2D(mesh, grid=grid)
+    
+    output_file["TestMesh"] = dtmesh
     output_file.close()
+    
+    # write to a separate file also
+    with DTDataFile("mesh.dtbin", truncate=True) as mesh_file:
+        mesh_file["TestMesh"] = dtmesh
     
     # use GDAL to load a 16 bit GeoTIFF file and display it as a 2D mesh
     with DTDataFile("mesh.dtbin") as mesh_file:
         try:
-            from osgeo import gdal
-            from osgeo.gdalconst import GA_ReadOnly
-            dataset = gdal.Open("examples/int16.tiff", GA_ReadOnly)
-            (xmin, dx, rot1, ymax, rot2, dy) = dataset.GetGeoTransform()
-            mesh = dataset.ReadAsArray()
-            ymin = ymax + dy * mesh.shape[1]
-            grid = (xmin, ymin, dx, abs(dy))
-            mesh_file.write_2dmesh_one(np.flipud(mesh), "Image from GDAL", grid=grid)
+            mesh_file["Image from GDAL"] = DTBitmap2D("examples/int16.tiff").mesh_from_channel()
         except Exception, e:
             print "failed to load or write image as mesh:", e    
 
@@ -52,15 +51,18 @@ def write_images(file_path):
     # write a single bitmap image (requires PIL)
     try:
         from PIL import Image
+        image_path = None
         if os.path.exists("/Library/Desktop Pictures/Art/Poppies Blooming.jpg"):
-            image = Image.open("/Library/Desktop Pictures/Art/Poppies Blooming.jpg")
+            image_path = "/Library/Desktop Pictures/Art/Poppies Blooming.jpg"
         else:
-            image = Image.open("/Library/Desktop Pictures/Nature/Earth Horizon.jpg")
-        output_file.write_image_one(image, "Image")
+            image_path = "/Library/Desktop Pictures/Nature/Earth Horizon.jpg"
+
+        output_file["Image"] = DTBitmap2D(image_path)
     
         # add an alpha channel and save the new image
+        image = Image.open(image_path)
         image.putalpha(200)
-        output_file.write_image_one(image, "ImageAlpha")
+        output_file["ImageAlpha"] = DTBitmap2D(image)
         
     except Exception, e:
         print "failed to load or write image:", e

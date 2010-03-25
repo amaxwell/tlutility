@@ -216,17 +216,4 @@ def DTBitmap2D(path_or_image):
             obj = None
             
     return obj
-
-
-if __name__ == '__main__':
-    
-    from datatank_py.DTDataFile import DTDataFile
-    with DTDataFile("DTBitmap2D.dtbin", truncate=True) as df:
-        img = _DTGDALBitmap2D("examples/int16.tiff")
-        df["GDAL image"] = img
-        df["GDAL image mesh"] = img.mesh_from_channel()
-        df["PIL image"] = _DTPILBitmap2D("/Library/Desktop Pictures/Art/Poppies Blooming.jpg")
-        
-        # for v in df:
-        #     print "%s = %s" % (v, df[v])
     

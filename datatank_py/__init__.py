@@ -1,1 +1,1 @@
-__all__ = [ "DTDataFile", "DTProgress", "DTSeries", "DTMesh2D" ]
+__all__ = [ "DTDataFile", "DTProgress", "DTSeries", "DTMesh2D", "DTBitmap2D" ]
