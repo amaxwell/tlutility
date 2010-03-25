@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# This software is under a BSD license.  See LICENSE.txt for details.
 
 from math import floor
 import os

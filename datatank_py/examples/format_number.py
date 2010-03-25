@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# This software is under a BSD license.  See LICENSE.txt for details.
 
 import os, sys
 from datatank_py.DTDataFile import DTDataFile

@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# This software is under a BSD license.  See LICENSE.txt for details.
+
 try:
     from PIL import Image
 except Exception, e:

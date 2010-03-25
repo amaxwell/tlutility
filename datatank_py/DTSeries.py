@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# This software is under a BSD license.  See LICENSE.txt for details.
+
 import numpy as np
 
 def _times_considered_same(t1, t2):

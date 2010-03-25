@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# This software is under a BSD license.  See LICENSE.txt for details.
+
 from datatank_py.DTDataFile import DTDataFile
 from datatank_py.DTProgress import DTProgress
 from datatank_py.DTSeries import DTSeriesGroup
