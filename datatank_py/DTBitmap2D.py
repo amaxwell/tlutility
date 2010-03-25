@@ -1,7 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from PIL import Image
+try:
+    from PIL import Image
+except Exception, e:
+    pass
+try:
+    from osgeo import gdal
+    from osgeo.gdalconst import GA_ReadOnly
+except Exception, e:
+    pass
 import numpy as np
 
 class _DTBitmap2D(object):
@@ -25,9 +33,14 @@ class _DTBitmap2D(object):
                 return v.dtype
         return None
         
+    def mesh_from_channel(self, channel="gray"):
+        import datatank_py.DTMesh2D
+        return datatank_py.DTMesh2D.DTMesh2D(getattr(self, channel), grid=self.grid)
+        
     def dt_write(self, datafile, name):
         
         suffix = "16" if self.dtype() in (np.uint16, np.int16) else ""
+        assert self.dtype() not in (np.float64, np.float32), "DataTank does not support floating-point images"
         
         for channel_name in _DTBitmap2D.CHANNEL_NAMES:
             values = getattr(self, channel_name)
@@ -42,10 +55,7 @@ class _DTGDALBitmap2D(_DTBitmap2D):
     def __init__(self, image_path):
         
         super(_DTGDALBitmap2D, self).__init__()
-        
-        from osgeo import gdal
-        from osgeo.gdalconst import GA_ReadOnly
-        
+                
         dataset = gdal.Open(str(image_path), GA_ReadOnly)
         (xmin, dx, rot1, ymax, rot2, dy) = dataset.GetGeoTransform()
         mesh = dataset.ReadAsArray()
@@ -209,8 +219,10 @@ def DTBitmap2D(path_or_image):
 if __name__ == '__main__':
     
     from datatank_py.DTDataFile import DTDataFile
-    with DTDataFile("/tmp/DTBitmap2D.dtbin", truncate=True) as df:
-        df["GDAL image"] = _DTGDALBitmap2D("examples/int16.tiff")
+    with DTDataFile("DTBitmap2D.dtbin", truncate=True) as df:
+        img = _DTGDALBitmap2D("examples/int16.tiff")
+        df["GDAL image"] = img
+        df["GDAL image mesh"] = img.mesh_from_channel()
         df["PIL image"] = _DTPILBitmap2D("/Library/Desktop Pictures/Art/Poppies Blooming.jpg")
         
         # for v in df:
