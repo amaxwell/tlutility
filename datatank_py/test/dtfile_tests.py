@@ -40,7 +40,7 @@ def write_2dmeshes(file_path):
     # use GDAL to load a 16 bit GeoTIFF file and display it as a 2D mesh
     with DTDataFile("mesh.dtbin") as mesh_file:
         try:
-            mesh_file["Image from GDAL"] = DTBitmap2D("examples/int16.tiff").mesh_from_channel()
+            mesh_file["Image from GDAL"] = DTBitmap2D("../examples/int16.tiff").mesh_from_channel()
         except Exception, e:
             print "failed to load or write image as mesh:", e    
 
