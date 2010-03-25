@@ -159,7 +159,7 @@ def _dtarray_type_and_size_from_object(obj):
 
     # TODO: figure out size of np.float
     
-    if isinstance(obj, str) or isinstance(obj, unicode):
+    if isinstance(obj, basestring):
         return (20, 1)
     elif isinstance(obj, np.ndarray):
         array = obj
@@ -720,7 +720,7 @@ class DTDataFile(object):
         # for now, just a simple wrapper around the primitive write methods
         if hasattr(obj, "dt_write"):
             self._dt_write(obj, name, None, anonymous=True)
-        elif isinstance(obj, (str, unicode)):
+        elif isinstance(obj, basestring):
             self._write_string(obj, name)
         elif isinstance(obj, (float, int)):
             # convert to an array, but allow numpy to pick the type for a float
@@ -733,7 +733,7 @@ class DTDataFile(object):
             self._write_array(array, name)
         elif isinstance(obj, (np.ndarray, tuple, list)):  
             if len(obj):
-                assert isinstance(obj[0], (str, unicode)) is False, "anonymous StringList unsupported"
+                assert isinstance(obj[0], basestring) is False, "anonymous StringList unsupported"
             self._write_array(_ensure_array(obj), name)
         else:
             assert False, "unhandled object type"
@@ -874,7 +874,7 @@ class DTDataFile(object):
         
         if hasattr(obj, "dt_write"):
             self._dt_write(obj, name, time)
-        elif isinstance(obj, (str, unicode)):
+        elif isinstance(obj, basestring):
             self.write_string(obj, name, time=time)
         elif isinstance(obj, (float, int)):
             # convert to an array, but allow numpy to pick the type for a float
@@ -885,7 +885,7 @@ class DTDataFile(object):
                 assert obj <= _INT32_MAX and obj >= _INT32_MIN, "integer too large for 32-bit type"
                 array = np.array((obj,), dtype=np.int32)
             self.write_array(array, name, dt_type="Real Number", time=time)
-        elif isinstance(obj, (tuple, list)) and isinstance(obj[0], (str, unicode)):
+        elif isinstance(obj, (tuple, list)) and isinstance(obj[0], basestring):
             # this will be a StringList
             offsets = []
             char_list = []
