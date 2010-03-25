@@ -15,7 +15,14 @@ except Exception, e:
 import numpy as np
 
 class _DTBitmap2D(object):
-    """docstring for DTBitmap2D"""
+    """Base implementation for DTBitmap2D.
+    
+    Implements storage for bitmap channels and grid, and implements dt_type and
+    dt_write protocol methods.  Subclasses read/write directly to attributes
+    red, green, blue, alpha, gray, grid.  Do not instantiate this directly and
+    save it.
+    
+    """
     
     CHANNEL_NAMES = ("red", "green", "blue", "alpha", "gray")
             
@@ -53,11 +60,13 @@ class _DTBitmap2D(object):
         datafile.write_anonymous(self.grid, name)
 
 class _DTGDALBitmap2D(_DTBitmap2D):
-    """docstring for DTGDALBitmap2D"""
+    """Private subclass that wraps up the GDAL logic."""
     def __init__(self, image_path):
         
         super(_DTGDALBitmap2D, self).__init__()
-                
+        
+        # FIXME: GDAL craps out if you pass a unicode object as a path; not sure
+        # what to do here.  Pass image_path.encode("utf-8")?
         dataset = gdal.Open(str(image_path), GA_ReadOnly)
         (xmin, dx, rot1, ymax, rot2, dy) = dataset.GetGeoTransform()
         mesh = dataset.ReadAsArray()
@@ -158,7 +167,7 @@ def _array_from_image(image):
     return array
         
 class _DTPILBitmap2D(_DTBitmap2D):
-    """docstring for DTPILBitmap2D"""
+    """Private subclass that wraps up the PIL logic."""
     def __init__(self, image_or_path):
         
         super(_DTPILBitmap2D, self).__init__()
@@ -199,6 +208,37 @@ class _DTPILBitmap2D(_DTBitmap2D):
         del image
                 
 def DTBitmap2D(path_or_image):
+    """Creates a new DTBitmap2D object from a path or PIL image.
+    
+    Arguments:
+    path_or_image -- a path to an image file or a PIL image object
+    
+    Returns:
+    A DTBitmap2D object that implements dt_type and dt_write
+    
+    If a PIL image is provided, it will be used as-is, and the grid
+    will be a unit grid with origin at (0, 0).  If a path is provided,
+    DTBitmap2D will try to use GDAL to load the image and extract its
+    components, as well as any spatial referencing included with the
+    image.  If GDAL fails for any reason, PIL will be used as a fallback.
+    
+    The object returned is actually a private subclass, and should not
+    be relied on.  It will implement the dt_write protocol, so can be
+    saved to a DTDataFile.  It also implements mesh_from_channel, whicn
+    can be used to extract a given bitmap plane as a DTMesh2D object:
+    
+    >>> from datatank_py.DTBitmap2D import DTBitmap2D
+    >>> img = DTBitmap2D("int16.tiff")
+    >>> img.mesh_from_channel()
+    <datatank_py.DTMesh2D.DTMesh2D object at 0x101a7a1d0>
+    >>> img = DTBitmap2D("rgb_geo.tiff")
+    >>> img.mesh_from_channel(channel="red")
+    <datatank_py.DTMesh2D.DTMesh2D object at 0x10049ab90>
+    
+    Note that DTBitmap2D does not attempt to be lazy at loading data; it
+    will read the entire image into memory as soon as you instantiate it.
+        
+    """
     
     obj = None
     if isinstance(path_or_image, basestring):
