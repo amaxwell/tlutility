@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import numpy as np
+
 class DTMesh2D(object):
     """2D Mesh object."""
     
@@ -14,6 +16,10 @@ class DTMesh2D(object):
         
         """
         
+        # 2D mesh is floating point, either single or double precision
+        if values.dtype in (np.int8, np.uint8, np.int16, np.uint16):
+            values = values.astype(np.float32)
+            
         self._values = values
         self._grid = grid if grid != None else (0, 0, 1, 1)
     
@@ -35,7 +41,6 @@ class DTMesh2D(object):
 
 if __name__ == '__main__':
     
-    import numpy as np
     from datatank_py.DTDataFile import DTDataFile
     
     output_file = DTDataFile("dt_write_test.dtbin", truncate=True)
