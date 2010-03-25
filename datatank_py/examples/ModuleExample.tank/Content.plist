@@ -123,7 +123,7 @@
 							<key>Inline</key>
 							<dict>
 								<key>Range</key>
-								<string>0,1</string>
+								<string>0.00182,0.00368</string>
 							</dict>
 							<key>SelectedNumber</key>
 							<integer>0</integer>
@@ -698,7 +698,7 @@
 			<key>ViewSizeSeparated</key>
 			<string></string>
 			<key>Visible</key>
-			<string>YES</string>
+			<string>NO</string>
 			<key>WindowName</key>
 			<string>2D Bitmap RGB</string>
 			<key>WindowPos</key>
@@ -962,7 +962,7 @@
 	</array>
 	<key>WindowPos</key>
 	<array>
-		<real>88</real>
+		<real>45</real>
 		<real>13</real>
 		<real>512</real>
 		<real>865</real>

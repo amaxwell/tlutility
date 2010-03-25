@@ -216,4 +216,3 @@ def DTBitmap2D(path_or_image):
             obj = None
             
     return obj
-    

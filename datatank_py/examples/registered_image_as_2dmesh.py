@@ -5,9 +5,8 @@
 
 import os
 import numpy as np
-from osgeo import gdal
-from osgeo.gdalconst import GA_ReadOnly
 from datatank_py.DTDataFile import DTDataFile
+from datatank_py.DTBitmap2D import DTBitmap2D
 from time import clock
 
 if __name__ == '__main__':
@@ -35,8 +34,8 @@ if __name__ == '__main__':
     if image_path is None or os.path.exists(image_path) is False:
         errors.append("\"%s\" does not exist" % (image_path))
     
-    dataset = None if image_path is None else gdal.Open(str(image_path), GA_ReadOnly)
-    if dataset is None:
+    img = DTBitmap2D(image_path)
+    if img is None:
         # set an error and bail out; DataTank doesn't appear to use this, but displays
         # stderr output instead, so print them also
         errors.append("Unable to open as an image file")
@@ -44,23 +43,11 @@ if __name__ == '__main__':
             output_file["ExecutionErrors"] = errors
             output_file["ExecutionTime"] = clock() - start_time
             exit(1)
-
-    (xmin, dx, rot1, ymax, rot2, dy) = dataset.GetGeoTransform()
-    mesh = dataset.ReadAsArray()
-    if mesh.dtype in (np.int8, np.uint8, np.int16, np.uint16):
-        mesh = mesh.astype(np.float32)
-    ymin = ymax + dy * dataset.RasterYSize
-    grid = (xmin, ymin, dx, abs(dy))
                         
     with DTDataFile("Output.dtbin", truncate=True) as output_file:
         
         output_file["ExecutionTime"] = clock() - start_time
-        
-        # e.g., (3, 900, 1440) for an RGB
-        if len(mesh.shape) == 2:
-            output_file.write_2dmesh_one(np.flipud(mesh), "Var", grid=grid)
-        else:
-            errors.append("Unhandled mesh shape: %s" % (mesh.shape))
+        output_file["Var"] = img.mesh_from_channel()
                         
         # need to save a StringList of execution errors as Seq_ExecutionErrors
         if len(errors):
