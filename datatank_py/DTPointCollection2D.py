@@ -51,8 +51,8 @@ class DTPointCollection2D(object):
             
     def bounding_box(self):
         if self._xvalues == None or np.size(self._xvalues) == 0:
-            return (0, 0, 0, 0)
-        return (min(self._xvalues), max(self._xvalues), min(self._yvalues), max(self._yvalues))
+            return (-np.inf, np.inf, -np.inf, np.inf)
+        return (np.nanmin(self._xvalues), np.nanmax(self._xvalues), np.nanmin(self._yvalues), np.nanmax(self._yvalues))
         
     def add_point(self, point):
         self._xvalues = np.append(self._xvalues, point.x)
