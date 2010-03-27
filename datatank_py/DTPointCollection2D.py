@@ -55,8 +55,8 @@ class DTPointCollection2D(object):
         return (min(self._xvalues), max(self._xvalues), min(self._yvalues), max(self._yvalues))
         
     def add_point(self, point):
-        self._xvalues = np.concatenate((self._xvalues, (point.x,)))
-        self._yvalues = np.concatenate((self._yvalues, (point.y,)))
+        self._xvalues = np.append(self._xvalues, point.x)
+        self._yvalues = np.append(self._yvalues, point.y)
         
     def __str__(self):
         s = "{\n"
