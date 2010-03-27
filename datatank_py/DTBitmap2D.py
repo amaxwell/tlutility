@@ -13,6 +13,7 @@ try:
 except Exception, e:
     pass
 import numpy as np
+import sys
 
 class _DTBitmap2D(object):
     """Base implementation for DTBitmap2D.
@@ -65,9 +66,11 @@ class _DTGDALBitmap2D(_DTBitmap2D):
         
         super(_DTGDALBitmap2D, self).__init__()
         
-        # FIXME: GDAL craps out if you pass a unicode object as a path; not sure
-        # what to do here.  Pass image_path.encode("utf-8")?
-        dataset = gdal.Open(str(image_path), GA_ReadOnly)
+        # NB: GDAL craps out if you pass a unicode object as a path
+        if isinstance(image_path, unicode):
+            image_path = image_path.encode(sys.getfilesystemencoding())
+            
+        dataset = gdal.Open(image_path, GA_ReadOnly)
         (xmin, dx, rot1, ymax, rot2, dy) = dataset.GetGeoTransform()
         mesh = dataset.ReadAsArray()
         ymin = ymax + dy * dataset.RasterYSize
