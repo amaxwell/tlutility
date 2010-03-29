@@ -376,32 +376,33 @@ class DTDataFile(object):
         block_start = self._name_offset_map[name]
         (block_length, var_type, m, n, o, name_length) = self._read_object_header_at_offset(block_start)
         
+        # WARNING: this is constant, but make sure to call self._file.seek(data_start)
+        # before calling anything that actually reads from the file, especially since
+        # recursive calls can change the file pointer.
         data_start = block_start + self._struct.size + name_length
-        self._file.seek(data_start)
         
         # DTDataFile_String
         if var_type == 20:
+            self._file.seek(data_start)
             bytes_read = self._file.read(block_length - self._struct.size - name_length).strip("\0")
             return unicode(bytes_read, "utf-8")
         elif name.startswith("Seq_") is False:
             
             # !!! reentrancy here
             dt_type = self.variable_named("Seq_" + name)
-            self._file.seek(data_start)
             
             # This is a slippery slope, but I needed StringList support.  In general,
-            # reading compound types should probably not be done here, or I should have
-            # a wrapper method to do "raw" reads without any name munging.  StringList
-            # is sort of a special case anyway, since it's composed of native Python 
-            # objects, unlike a DTMesh2D.
+            # reading compound types should not be done here, but StringList is a special
+            # case since it's composed of native Python objects, unlike a DTMesh2D, and
+            # we don't want a StringList Python class to wrap a list of strings.
             if dt_type == "StringList":
                 
                 element_count = m * n * o
+                self._file.seek(data_start)
                 values = np.fromfile(self._file, dtype=np.dtype(np.int8), count=element_count)
                 
-                offsets = self.variable_named(name + "_offs")
                 # !!! reentrancy here
-                self._file.seek(data_start)
+                offsets = self.variable_named(name + "_offs")
 
                 assert offsets != None, "invalid StringList: no offsets found for %s" % (name)
                 string_list = []
@@ -421,18 +422,15 @@ class DTDataFile(object):
         data_type = _type_string_from_dtarray_type(var_type)
         assert data_type is not None, "unhandled DTArray type"
                     
-        # don't need to include the byte order unless it's not host-ordered
-        if self._swap:
+        # include the byte order when it's not host-ordered and wider than 8 bits
+        if self._swap and data_type.endswith("1") is False:
             byte_order = "<" if self._little_endian else ">"
             data_type = byte_order + data_type
         
         element_count = m * n * o
+        self._file.seek(data_start)
         values = np.fromfile(self._file, dtype=np.dtype(data_type), count=element_count)
         assert values.size == element_count, "unable to read all data"
-        
-        # TODO: will this actually convert to host byte order?
-        if self._swap:
-            values = values.astype(np.dtype(data_type[1:]))   
         
         # handle scalar values specially
         if m == 1 and n == 1 and o == 1:
@@ -579,7 +577,7 @@ class DTDataFile(object):
         assert data_type is not None, "unhandled DTArray type"
 
         # don't need to change the byte order unless it's not host-ordered
-        if self._swap:
+        if self._swap and data_type.endswith("1") is False:
             # TODO: see if this actually works, since tofile doesn't allow byte swapping
             print "WARNING: byte-swapped writing has not been tested"
             byte_order = "<" if self._little_endian else ">"
