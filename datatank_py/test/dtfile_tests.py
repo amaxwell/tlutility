@@ -159,6 +159,7 @@ def write_test(file_path):
         
     string_list = ["First String", "Second String", "Third String"]
     output_file.write(string_list, "TestStringList")
+    assert string_list == output_file["TestStringList"], "failed string list test"
         
     # write a time-varying 2D point collection
     for idx in xrange(0, 10):
@@ -168,7 +169,7 @@ def write_test(file_path):
             
     output_file.close()   
 
-def read_test(file_path):
+def read_test(file_path, print_values=False):
     
     f = DTDataFile(file_path)
     f.DEBUG = True
@@ -176,7 +177,9 @@ def read_test(file_path):
     for name in f:
         # Call this to make sure the variables are actually read, since that will
         # potentially have numerous side effects.  Printing this is overwhelming.
-        ignored = f[name]
+        value = f[name]
+        if print_values:
+            print "%s = %s" % (name, value)
         
     f.close()
         
@@ -187,3 +190,4 @@ if __name__ == '__main__':
     write_test("test.dtbin")
     read_test("test.dtbin")
     read_test("mesh.dtbin")
+    

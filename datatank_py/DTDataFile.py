@@ -383,7 +383,40 @@ class DTDataFile(object):
         if var_type == 20:
             bytes_read = self._file.read(block_length - self._struct.size - name_length).strip("\0")
             return unicode(bytes_read, "utf-8")
+        elif name.startswith("Seq_") is False:
+            
+            # !!! reentrancy here
+            dt_type = self.variable_named("Seq_" + name)
+            self._file.seek(data_start)
+            
+            # This is a slippery slope, but I needed StringList support.  In general,
+            # reading compound types should probably not be done here, or I should have
+            # a wrapper method to do "raw" reads without any name munging.  StringList
+            # is sort of a special case anyway, since it's composed of native Python 
+            # objects, unlike a DTMesh2D.
+            if dt_type == "StringList":
+                
+                element_count = m * n * o
+                values = np.fromfile(self._file, dtype=np.dtype(np.int8), count=element_count)
+                
+                offsets = self.variable_named(name + "_offs")
+                # !!! reentrancy here
+                self._file.seek(data_start)
 
+                assert offsets != None, "invalid StringList: no offsets found for %s" % (name)
+                string_list = []
+                
+                for idx in xrange(0, len(offsets)):
+                    start = offsets[idx]
+                    end = offsets[idx + 1] if idx < (len(offsets) - 1) else values.size
+                    # get rid of trailing null
+                    if end > 0:
+                        end -= 1
+                    string = "".join([chr(x) for x in values[start:end]]).decode("utf-8")
+                    string_list.append(string)
+                
+                return string_list
+                            
         # everything else is a DTArray type
         data_type = _type_string_from_dtarray_type(var_type)
         assert data_type is not None, "unhandled DTArray type"
