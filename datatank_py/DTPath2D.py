@@ -86,6 +86,10 @@ if __name__ == '__main__':
         
         xvalues = np.linspace(0, 10, num=100)
         yvalues = np.sin(xvalues)
+        xvalues = np.append(xvalues, np.flipud(xvalues))
+        xvalues = np.append(xvalues, xvalues[0])
+        yvalues = np.append(yvalues, -yvalues)
+        yvalues = np.append(yvalues, yvalues[0])
         df["Path 3"] = DTPath2D(xvalues, yvalues)
         
         
