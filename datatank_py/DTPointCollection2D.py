@@ -3,6 +3,7 @@
 
 # This software is under a BSD license.  See LICENSE.txt for details.
 
+from __future__ import with_statement
 import numpy as np
 
 class DTPointCollection2D(object):
