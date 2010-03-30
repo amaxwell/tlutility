@@ -42,12 +42,12 @@ try:
     _INT32_MAX = np.iinfo(np.int32).max
     _INT32_MIN = np.iinfo(np.int32).min
 except AttributeError:
+    # These constants don't exist in the ancient version of NumPy included with
+    # OS X 10.5.8, so here are the values from NumPy 2.0.0dev8291.
+    print "WARNING: int32 limits not found in NumPy, likely because version %s is too old" % (np.version.version)
     _INT32_MAX = 2147483647
     _INT32_MIN = -2147483648
     
-if sys.byteorder != "little":
-    print "warning: saving big-endian files has not been tested"
-
 def _ensure_array(obj):
     """Convert list or tuple to numpy array.
 
@@ -485,7 +485,6 @@ class DTDataFile(object):
     
         """
     
-        # TODO: test on big-endian system
         file_header = "DataTank Binary File LE\0" if sys.byteorder == "little" else "DataTank Binary File BE\0"
         assert self._file.mode.endswith("b+"), "file must be opened with wb+ or ab+"
     
@@ -582,8 +581,6 @@ class DTDataFile(object):
 
         # don't need to change the byte order unless it's not host-ordered
         if self._swap and data_type.endswith("1") is False:
-            # TODO: see if this actually works, since tofile doesn't allow byte swapping
-            print "WARNING: byte-swapped writing has not been tested"
             byte_order = "<" if self._little_endian else ">"
             data_type = byte_order + data_type
             array = array.astype(np.dtype(data_type))
