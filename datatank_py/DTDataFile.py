@@ -473,7 +473,7 @@ class DTDataFile(object):
         """Basic description of the object and its size."""
         string = super(DTDataFile, self).__str__()
         self._reload_content_if_needed()
-        string += "\n\tPath: %s\n\tSize: %s bytes\n\tLittle-endian: %s\n\tSwap bytes: %s\n\tCount: %s variables" % (os.path.abspath(self._file_path), self._length, self._little_endian, self._swap, len(self.variable_names()))
+        string += "\n\tPath: %s\n\tSize: %s bytes\n\tLittle-endian content: %s\n\tSwap bytes: %s\n\tCount: %s variables" % (os.path.abspath(self._file_path), self._length, self._little_endian, self._swap, len(self.variable_names()))
         return string
         
     def _check_and_write_header(self):
