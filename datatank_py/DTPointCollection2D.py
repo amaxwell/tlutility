@@ -9,16 +9,15 @@ import numpy as np
 class DTPointCollection2D(object):
     """2D Point collection object."""
     
-    def __init__(self, points, xvalues=None, yvalues=None):
+    def __init__(self, xvalues, yvalues):
         super(DTPointCollection2D, self).__init__()
         """Create a new 2D point collection.
         
         Arguments:
-        points -- array of (x, y) points as 2 X N array
-        xvalues -- array of x values; points must be None
-        yvalues -- array of y values; points must be None
+        xvalues -- array of x values
+        yvalues -- array of y values
         
-        Pass None or an empty array for points to get an empty collection
+        Pass empty arrays to get an empty collection
         that can be added to with add_point().
         
         """
@@ -35,20 +34,10 @@ class DTPointCollection2D(object):
         # The array is layed out as:
         # array(0,j) = x coordinate of point j, array(1,j) = y coordinate of point j.
         
-        if xvalues != None or yvalues != None:
-            assert xvalues != None and yvalues != None, "both x and y arrays are required"
-            assert len(xvalues) == len(yvalues), "inconsistent lengths"
-            self._xvalues = np.array(xvalues).astype(np.double)
-            self._yvalues = np.array(yvalues).astype(np.double)
-        elif points != None and np.size(points):
-            assert xvalues == None and yvalues == None, "pass either points or separate x/y arrays"
-            assert points.shape[0] == 2, "incorrect shape"
-            self._xvalues = points[0,:].astype(np.double)
-            self._yvalues = points[1,:].astype(np.double)
-        else:
-            assert xvalues == None and yvalues == None, "pass either points or separate x/y arrays"
-            self._xvalues = np.array([], dtype=np.double)
-            self._yvalues = np.array([], dtype=np.double)
+        assert xvalues != None and yvalues != None, "both x and y arrays are required"
+        assert len(xvalues) == len(yvalues), "inconsistent lengths"
+        self._xvalues = np.array(xvalues).astype(np.double)
+        self._yvalues = np.array(yvalues).astype(np.double)
             
     def bounding_box(self):
         if self._xvalues == None or np.size(self._xvalues) == 0:
@@ -59,9 +48,20 @@ class DTPointCollection2D(object):
         self._xvalues = np.append(self._xvalues, point.x)
         self._yvalues = np.append(self._yvalues, point.y)
         
+    def __len__(self):
+        # xvalues is a vector, so len works
+        return len(self._xvalues)
+        
+    def __iter__(self):
+        for i in xrange(0, len(self)):
+            yield (self._xvalues[i], self._yvalues[i])
+        
+    def __getitem__(self, idx):
+        return (self._xvalues[idx], self._yvalues[idx])
+        
     def __str__(self):
         s = "{\n"
-        for x, y in zip(self._xvalues, self._yvalues):
+        for x, y in self:
             s += "(%s, %s)\n" % (x, y)
         s += "}\n"
         return s
@@ -80,15 +80,15 @@ if __name__ == '__main__':
     
     with DTDataFile("point_collection_2d.dtbin", truncate=True) as df:
         
-        collection = DTPointCollection2D(None)
+        collection = DTPointCollection2D([], [])
         for x in xrange(0, 100):
             collection.add_point(DTPoint2D(x, x * x / 100.))
 
         df["Point collection 1"] = collection
         
-        points = np.vstack(([1, 2, 3, 4, 5], [1, 2, 3, 4, 5]))
-        df["Point collection 2"] = DTPointCollection2D(points)
-        
         xvals = (10, 20, 30, 40, 50)
         yvals = xvals
-        df["Point collection 3"] = DTPointCollection2D(None, xvalues=xvals, yvalues=yvals)
+        pc = DTPointCollection2D(xvals, yvals)
+        df["Point collection 2"] = pc
+        
+        print pc
