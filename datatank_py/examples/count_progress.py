@@ -27,7 +27,7 @@ if __name__ == '__main__':
     progress = DTProgress()
     
     # sleep in a loop just to slow things down enough
-    for idx in xrange(0, int(number)):
+    for idx in xrange(int(number)):
         values.append(idx)
         progress.update_percentage(idx / float(number))
         sleep(0.1)

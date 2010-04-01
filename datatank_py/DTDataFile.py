@@ -411,7 +411,7 @@ class DTDataFile(object):
                 assert offsets != None, "invalid StringList: no offsets found for %s" % (name)
                 string_list = []
                 
-                for idx in xrange(0, len(offsets)):
+                for idx in xrange(len(offsets)):
                     start = offsets[idx]
                     end = offsets[idx + 1] if idx < (len(offsets) - 1) else values.size
                     # get rid of trailing null
@@ -695,7 +695,7 @@ class DTDataFile(object):
         
         >>> import numpy as np
         >>> f = DTDataFile("foo.dtbin")
-        >>> for idx in xrange(0, 10):
+        >>> for idx in xrange(10):
         ...     point_test = np.array(range(idx, idx + 10), np.double)
         ...     point_test = point_test.reshape((point_test.size / 2, 2))
         ...     tp = "2D Point Collection"
@@ -742,7 +742,7 @@ class DTDataFile(object):
         
         >>> import datetime
         >>> f = DTDataFile("foo.dtbin")
-        >>> for idx in xrange(0, 10):
+        >>> for idx in xrange(10):
         ...     s = datetime.now().isoformat()
         ...     f.write_array(s, "PointTest_%d" % (idx), time=idx * 2.)
                 

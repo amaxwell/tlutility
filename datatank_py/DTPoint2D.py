@@ -31,5 +31,5 @@ if __name__ == '__main__':
     
     with DTDataFile("point2d.dtbin", truncate=True) as df:
         
-        for x in xrange(0, 10):
+        for x in xrange(10):
             df["Point %d" % x] = DTPoint2D(x, x)

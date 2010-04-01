@@ -41,7 +41,7 @@ if __name__ == '__main__':
         def mesh_function(x, y, p):
             return np.cos(x + p) + np.cos(y + p)
                 
-        for idx in xrange(0, COUNT):
+        for idx in xrange(COUNT):
             mesh = mesh_function(xx, yy, idx / 10.)
             group.add(idx / 10., { "Output Mesh":DTMesh2D(mesh, grid=grid), "Output Index":idx })
             progress.update_percentage(float(idx) / COUNT)

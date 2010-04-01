@@ -34,7 +34,7 @@ class DTPointValueCollection2D(object):
         self._values = np.append(self._values, value)
     
     def __iter__(self):
-        for i in xrange(0, len(self)):
+        for i in xrange(len(self)):
             x, y = self._points[i]
             yield (x, y, self._values[i])
         
@@ -67,7 +67,7 @@ if __name__ == '__main__':
     with DTDataFile("point_value_collection_2d.dtbin", truncate=True) as df:
         
         points = DTPointCollection2D([], [])
-        for x in xrange(0, 100):
+        for x in xrange(100):
             points.add_point(DTPoint2D(x, x * x / 100.))
 
         df["Point value collection 1"] = DTPointValueCollection2D(points, range(0, 100))

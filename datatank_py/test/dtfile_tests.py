@@ -144,7 +144,7 @@ def write_test(file_path):
     output_file.DEBUG = True
     
     # write a time-varying 1D array (list of numbers)
-    for idx in xrange(0, 10):
+    for idx in xrange(10):
         time_test = np.array(range(idx, idx + 10), np.double)
         output_file.write(time_test, "TimeTest_%d" % (idx), time=idx * 2.)
     
@@ -154,7 +154,7 @@ def write_test(file_path):
     assert string == output_file["TestSingleString"], "failed string test"
 
     # write a time-varying string with Unicode characters
-    for idx in xrange(0, 10):
+    for idx in xrange(10):
         output_file.write_string(u"Χριστός : time index %d" % (idx), "StringTest_%d" % (idx), time=idx * 2.)
         
     string_list = ["First String", "Second String", "Third String"]
@@ -162,7 +162,7 @@ def write_test(file_path):
     assert string_list == output_file["TestStringList"], "failed string list test"
         
     # write a time-varying 2D point collection
-    for idx in xrange(0, 10):
+    for idx in xrange(10):
         point_test = np.array(range(idx, idx + 10), np.double)
         point_test = point_test.reshape((point_test.size / 2, 2))
         output_file.write_array(point_test, "PointTest_%d" % (idx), dt_type="2D Point Collection", time=idx * 2.)

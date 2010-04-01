@@ -53,7 +53,7 @@ class DTPointCollection2D(object):
         return len(self._xvalues)
         
     def __iter__(self):
-        for i in xrange(0, len(self)):
+        for i in xrange(len(self)):
             yield (self._xvalues[i], self._yvalues[i])
         
     def __getitem__(self, idx):
@@ -81,7 +81,7 @@ if __name__ == '__main__':
     with DTDataFile("point_collection_2d.dtbin", truncate=True) as df:
         
         collection = DTPointCollection2D([], [])
-        for x in xrange(0, 100):
+        for x in xrange(100):
             collection.add_point(DTPoint2D(x, x * x / 100.))
 
         df["Point collection 1"] = collection

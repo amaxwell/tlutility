@@ -50,7 +50,7 @@ class DTProgress(object):
 if __name__ == '__main__':
     
     progress = DTProgress()
-    for idx in xrange(0, 300):
+    for idx in xrange(300):
         progress.update_percentage(idx / 300.)
     
     assert os.path.getsize("DTProgress") == 100
