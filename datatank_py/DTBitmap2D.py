@@ -33,7 +33,7 @@ class _DTBitmap2D(object):
         for n in _DTBitmap2D.CHANNEL_NAMES:
             setattr(self, n, None)
     
-    def dt_type(self):
+    def __dt_type__(self):
         return "2D Bitmap"
         
     def dtype(self):
@@ -47,7 +47,7 @@ class _DTBitmap2D(object):
         import datatank_py.DTMesh2D
         return datatank_py.DTMesh2D.DTMesh2D(getattr(self, channel), grid=self.grid)
         
-    def dt_write(self, datafile, name):
+    def __dt_write__(self, datafile, name):
         
         suffix = "16" if self.dtype() in (np.uint16, np.int16) else ""
         assert self.dtype() not in (np.float64, np.float32), "DataTank does not support floating-point images"

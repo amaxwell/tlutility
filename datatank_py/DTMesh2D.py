@@ -25,10 +25,10 @@ class DTMesh2D(object):
         self._values = values
         self._grid = grid if grid != None else (0, 0, 1, 1)
     
-    def dt_type(self):
+    def __dt_type__(self):
         return "2D Mesh"
         
-    def dt_write(self, datafile, name):
+    def __dt_write__(self, datafile, name):
         
         #
         # 1. Write bounding box as DTRegion2D as "name" + "_bbox2D"

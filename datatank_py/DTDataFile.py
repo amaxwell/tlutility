@@ -36,6 +36,7 @@ by e-mail: amaxwell AT mac DOT com
 import sys, os
 from struct import Struct
 import numpy as np
+from DTPyWrite import dt_writer
 
 # from cProfile, these are surprisingly expensive to get
 try:
@@ -611,10 +612,10 @@ class DTDataFile(object):
         self._name_offset_map[name] = block_start  
     
     def _dt_write(self, obj, name, time, anonymous=False):
-        """Wrapper that calls dt_write on a compound object.
+        """Wrapper that calls __dt_write__ on a compound object.
         
         Arguments:
-        obj -- object that implements dt_write and dt_type
+        obj -- object that implements __dt_write__ and __dt_type__
         name -- user-visible name of the variable
         time -- time value if this variable is time-varying        
         anonymous -- whether to expose the variable name by prefixing with Seq_
@@ -622,8 +623,8 @@ class DTDataFile(object):
         """
         
         # get the type by introspection
-        assert hasattr(obj, "dt_type"), "object must implement dt_type as well"
-        dt_type = obj.dt_type()
+        assert dt_writer(obj), "object must implement dt_writer methods"
+        dt_type = obj.__dt_type__()
         
         # Expose a time series of type dt_type
         if anonymous == False:
@@ -636,7 +637,7 @@ class DTDataFile(object):
             assert time == None, "anonymous write cannot save a time variable"
              
         # caller is responsible for appending _index as needed for time series
-        obj.dt_write(self, name)
+        obj.__dt_write__(self, name)
 
         if time:
             assert name[-1].isdigit(), "time series names must end with a digit"
@@ -655,7 +656,7 @@ class DTDataFile(object):
         """
         
         # for now, just a simple wrapper around the primitive write methods
-        if hasattr(obj, "dt_write"):
+        if dt_writer(obj):
             self._dt_write(obj, name, None, anonymous=True)
         elif isinstance(obj, basestring):
             self._write_string(obj, name)
@@ -781,21 +782,21 @@ class DTDataFile(object):
         parameter if you want something specific, such as "2D Point" for a point
         (although the caller has to ensure the shape is correct).
         
-        In addition, any object that implements dt_type and dt_write methods can be 
-        passed, which allows saving compound types such as 2D Mesh or 2D Bitmap,
+        In addition, any object that implements __dt_type__ and __dt_write__ methods 
+        can be passed, which allows saving compound types such as 2D Mesh or 2D Bitmap,
         without bloating up DTDataFile with all of those types.
         
-        The dt_type method must return a DataTank type name:
+        The __dt_type__ method must return a DataTank type name:
         
-            def dt_type(self):
+            def __dt_type__(self):
                 return "2D Mesh"
         
-        The dt_write method should use write_anonymous to save all variables as
+        The __dt_write__ method should use write_anonymous to save all variables as
         required for the object.  The datafile argument is this DTDataFile instance.
-        Note that dt_write must not expose the variable by adding a "Seq" name, as
+        Note that __dt_write__ must not expose the variable by adding a "Seq" name, as
         that is the responsibility of DTDataFile as the higher-level object.
         
-            def dt_write(self, datafile, name):
+            def __dt_write__(self, datafile, name):
                 ...
                 datafile.write_anonymous( ... , name)
 
@@ -809,7 +810,7 @@ class DTDataFile(object):
         # a string in the end.
         #
         
-        if hasattr(obj, "dt_write"):
+        if dt_writer(obj):
             self._dt_write(obj, name, time)
         elif isinstance(obj, basestring):
             self.write_string(obj, name, time=time)

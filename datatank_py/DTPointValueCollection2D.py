@@ -51,10 +51,10 @@ class DTPointValueCollection2D(object):
         s += "}\n"
         return s
     
-    def dt_type(self):
+    def __dt_type__(self):
         return "2D Point Value Collection"
         
-    def dt_write(self, datafile, name):
+    def __dt_write__(self, datafile, name):
         datafile.write_anonymous(self._values, name + "_V")
         datafile.write_anonymous(self._points, name)
 

@@ -19,10 +19,10 @@ class DTPoint2D(object):
         self.x = float(x)
         self.y = float(y)
     
-    def dt_type(self):
+    def __dt_type__(self):
         return "2D Point"
         
-    def dt_write(self, datafile, name):
+    def __dt_write__(self, datafile, name):
         datafile.write_anonymous((self.x, self.y), name)
 
 if __name__ == '__main__':

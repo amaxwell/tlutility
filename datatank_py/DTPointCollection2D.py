@@ -66,10 +66,10 @@ class DTPointCollection2D(object):
         s += "}\n"
         return s
     
-    def dt_type(self):
+    def __dt_type__(self):
         return "2D Point Collection"
         
-    def dt_write(self, datafile, name):
+    def __dt_write__(self, datafile, name):
         datafile.write_anonymous(self.bounding_box(), name + "_bbox2D")
         datafile.write_anonymous(np.dstack((self._xvalues, self._yvalues)), name)
 
