@@ -66,7 +66,7 @@
 - (BOOL)validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem>)anItem;
 {
     if ([anItem action] == @selector(copy:))
-        return [self numberOfSelectedRows] > 0 && [self dataSourceAllowsCopying];
+        return ([self numberOfSelectedRows] > 0 || [self numberOfSelectedColumns] > 0) && [self dataSourceAllowsCopying];
     else if ([anItem action] == @selector(changeFont:))
         return ([self fontNamePreferenceKey] && [self fontSizePreferenceKey]);
     else
