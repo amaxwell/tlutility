@@ -447,7 +447,8 @@ static char _TLMOperationQueueOperationContext;
 
 - (void)_addOperation:(TLMOperation *)op selector:(SEL)sel
 {
-    if (op && [self _checkCommandPathAndWarn:YES]) {
+    // avoid the tlmgr check when installing
+    if (op && ([_currentListDataSource isEqual:_installDataSource] || [self _checkCommandPathAndWarn:YES])) {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:sel name:TLMOperationFinishedNotification object:op];
         [[TLMReadWriteOperationQueue defaultQueue] addOperation:op];
     }
