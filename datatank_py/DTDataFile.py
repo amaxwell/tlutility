@@ -33,6 +33,8 @@ by e-mail: amaxwell AT mac DOT com
 
 """
 
+__all__ = ["DTDataFile"]
+
 import sys, os
 from struct import Struct
 import numpy as np
