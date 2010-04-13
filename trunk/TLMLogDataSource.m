@@ -121,9 +121,22 @@
 
 - (void)tableView:(TLMTableView *)tableView writeSelectedRowsToPasteboard:(NSPasteboard *)pboard;
 {
+    NSParameterAssert(tableView == _tableView);
     [pboard declareTypes:[NSArray arrayWithObject:NSStringPboardType] owner:nil];
-    NSArray *messages = [_messages objectsAtIndexes:[_tableView selectedRowIndexes]];
-    [pboard setString:[messages componentsJoinedByString:@"\n"] forType:NSStringPboardType];
+    if ([[tableView selectedRowIndexes] count]) {
+        NSArray *messages = [_messages objectsAtIndexes:[tableView selectedRowIndexes]];
+        [pboard setString:[messages componentsJoinedByString:@"\n"] forType:NSStringPboardType];
+    }
+    else if ([[tableView selectedColumnIndexes] count]) {
+        NSArray *columns = [[tableView tableColumns] objectsAtIndexes:[tableView selectedColumnIndexes]];
+        NSMutableString *string = [NSMutableString string];
+        for (NSInteger row = 0; row < [self numberOfRowsInTableView:tableView]; row++) {
+            for (NSTableColumn *col in columns)
+                [string appendFormat:@"%@\t", [self tableView:tableView objectValueForTableColumn:col row:row]];
+            [string appendString:@"\n"];
+        }
+        [pboard setString:string forType:NSStringPboardType];
+    }
 }
 
 - (void)tableViewColumnDidResize:(NSNotification *)aNotification
