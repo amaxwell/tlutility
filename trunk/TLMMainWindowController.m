@@ -171,6 +171,7 @@ static char _TLMOperationQueueOperationContext;
 
 - (void)_stopProgressBar:(NSNotification *)aNote
 {
+    [[self _progressBar] setDoubleValue:[[self _progressBar] maxValue]];
     [[self _progressBar] setHidden:YES];
     [NSApp setApplicationIconImage:nil];
 }
