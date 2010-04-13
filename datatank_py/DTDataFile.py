@@ -212,12 +212,13 @@ class DTDataFile(object):
     
     """
     
-    def __init__(self, file_path, truncate=False):
+    def __init__(self, file_path, truncate=False, readonly=False):
         """Creates a new DTDataFile instance.
         
         Arguments:
         file_path -- absolute or relative path
-        truncate -- whether to truncate the file if it exists
+        truncate -- whether to truncate the file if it exists (default is False)
+        readonly -- open the file for read-only access (default is False)
         
         The default mode is to append to a file, creating it if
         it doesn't already exist.  Passing True for truncate will
@@ -227,7 +228,16 @@ class DTDataFile(object):
         
         super(DTDataFile, self).__init__()
         self._file_path = file_path
-        self._file = open(file_path, "wb+" if truncate else "ab+")
+        if readonly:
+            assert truncate == False, "truncate and readonly are mutually exclusive"
+            filemode = "rb"
+        elif truncate:
+            assert readonly == False, "truncate and readonly are mutually exclusive"
+            filemode = "wb+"
+        else:
+            assert readonly == False, "truncate and readonly are mutually exclusive"
+            filemode = "ab+"
+        self._file = open(file_path, filemode)
         self._length = os.path.getsize(file_path)
         self._name_offset_map = {}
         self._swap = None
