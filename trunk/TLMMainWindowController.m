@@ -171,6 +171,7 @@ static char _TLMOperationQueueOperationContext;
 
 - (void)_stopProgressBar:(NSNotification *)aNote
 {
+    // we're done with the progress bar now, so set it to maxValue to keep it from using CPU while hidden (seen on 10.6.3)
     [[self _progressBar] setDoubleValue:[[self _progressBar] maxValue]];
     [[self _progressBar] setHidden:YES];
     [NSApp setApplicationIconImage:nil];
