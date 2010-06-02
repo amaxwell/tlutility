@@ -363,7 +363,11 @@ static void __TLMMigrateBundleIdentifier()
             [alert setInformativeText:NSLocalizedString(@"You appear to be using a development version of TeX Live, which may not be supported by your current mirror URL in the preference setttings.", @"alert text")];
         }
         else {
-            TLMLog(__func__, @"Mirror URL looks okay for TeX Live %d", (int)texliveYear);
+            /*
+             Formerly logged that the URL was okay, but that was only correct for the transition from TL 2008 to 2009.
+             However, tlmgr itself will perform that check and log if it fails, so logging that it's okay was just
+             confusing pretest users.
+             */
         }
         
         // always log a message in case the user turned off the warning, so there is no plausible deniability when things fail...
