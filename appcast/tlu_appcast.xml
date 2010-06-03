@@ -327,5 +327,22 @@
             <pubDate>Fri, 18 Dec 2009 17:26:26 -0800</pubDate>
             <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20091218.tgz" sparkle:version="0.86" length="1812974" type="application/octet-stream" sparkle:dsaSignature="MCsCE0IdbtziaNZQcRqbieU4cj7iTbICFBj6k9e2o6n1egYW6ZMudUbvINV6"></enclosure>
         </item>
+        <item>
+            <title>Version 0.87</title>
+            <description>
+                <h3>Changes Since 0.86</h3>
+                <li>Use "stderr" instead of "error" to avoid confusion in log messages</li>
+                <li>Use correct interval for fading out status window</li>
+                <li>Fix some task race conditions</li>
+                <li>Correctly update location sync checkbox when cancelling a change</li>
+                <li>Rename tlmgr_cwrapper tool to tlu_ipctask, to avoid confusion with tlmgr itself</li>
+                <li>Set the progress bar to its maximum value before hiding it, so it doesn't use CPU cycles</li>
+                <li>Allow selecting and copying individual columns of the log view</li>
+                <li>Fix bugs in documentation thumbnail view</li>
+                <li>Spacebar now toggles preview in documentation thumbnail view</li>
+            </description>
+            <pubDate>Wed, 02 Jun 2010 20:24:47 -0700</pubDate>
+            <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20100602.tgz" sparkle:version="0.87" length="1593850" type="application/octet-stream" sparkle:dsaSignature="MC0CFQCKBuFBkw0X98VVDolKqFDfkwwZZQIUduzNXVpVKyJWt6uXYyuGzM+S6R0="></enclosure>
+        </item>
     </channel>
 </rss>
