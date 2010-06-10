@@ -354,10 +354,11 @@ class DTDataFile(object):
         
         """
         
-        self._file.close()
-        # could use as a sentinel to allow reopening
-        self._file = None
-        self._name_offset_map = {}
+        if self._file != None:
+            self._file.close()
+            # could use as a sentinel to allow reopening
+            self._file = None
+            self._name_offset_map = {}
         
     def variable_names(self):
         """Unsorted list of variable names."""
