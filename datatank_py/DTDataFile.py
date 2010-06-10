@@ -358,7 +358,8 @@ class DTDataFile(object):
             self._file.close()
             # could use as a sentinel to allow reopening
             self._file = None
-            self._name_offset_map = {}
+            
+        self._name_offset_map = {}
         
     def variable_names(self):
         """Unsorted list of variable names."""
@@ -482,6 +483,10 @@ class DTDataFile(object):
         # support for with statement
         self.close()
         return False
+        
+    def __del__(self):
+        # close the file when an instance is deleted
+        self.close()
         
     def __str__(self):
         """Basic description of the object and its size."""
