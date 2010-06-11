@@ -60,6 +60,7 @@
 - (IBAction)search:(id)sender;
 - (IBAction)showInfo:(id)sender;
 - (IBAction)installSelectedRows:(id)sender;
+- (IBAction)reinstallSelectedRows:(id)sender;
 - (IBAction)removeSelectedRows:(id)sender;
 - (IBAction)forciblyRemoveSelectedRows:(id)sender;
 - (IBAction)refreshList:(id)sender;

@@ -215,6 +215,8 @@
         return [self _validateInstallSelectedRows];
     else if (@selector(refreshList:) == action)
         return NO == _refreshing;
+    else if (@selector(reinstallSelectedRows:) == action)
+        return [[_tableView selectedRowIndexes] count] > 0;
     else
         return YES;
 }
@@ -225,6 +227,13 @@
  
     // never a reinstall here (see validation)
     [_controller installPackagesWithNames:[selItems valueForKey:@"name"] reinstall:NO];
+}
+
+// for times when the local package is newer, and you want to force a downgrade
+- (IBAction)reinstallSelectedRows:(id)sender;
+{
+    NSArray *selItems = [_packages objectsAtIndexes:[_tableView selectedRowIndexes]];
+    [_controller installPackagesWithNames:[selItems valueForKey:@"name"] reinstall:YES];
 }
 
 - (IBAction)search:(id)sender;
