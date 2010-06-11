@@ -115,6 +115,13 @@
     [_controller installPackagesWithNames:[selItems valueForKey:@"fullName"] reinstall:([packages count] > 0)];
 }
 
+// install automatically does this, so the action is only implemented here for symmetry
+- (IBAction)reinstallSelectedRows:(id)sender;
+{
+    NSArray *selItems = [_outlineView selectedItems];
+    [_controller installPackagesWithNames:[selItems valueForKey:@"fullName"] reinstall:YES];
+}
+
 - (IBAction)removeSelectedRows:(id)sender;
 {
     NSArray *packageNames = [[_outlineView selectedItems] valueForKey:@"fullName"];
@@ -150,7 +157,7 @@
         return [[[TLMInfoController sharedInstance] window] isVisible] == NO;
     else if (@selector(removeSelectedRows:) == action || @selector(forciblyRemoveSelectedRows:) == action)
         return [self _validateRemoveSelectedRow];
-    else if (@selector(installSelectedRows:) == action)
+    else if (@selector(installSelectedRows:) == action || @selector(reinstallSelectedRows:) == action)
         return [[_outlineView selectedRowIndexes] count] > 0;
     else if (@selector(refreshList:) == action)
         return NO == _refreshing;
