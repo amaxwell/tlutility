@@ -217,6 +217,9 @@ static NSConnection * __TLMLSCreateAndRegisterConnectionForServer(TLMLogServer *
                 case 'I':
                     status = NSLocalizedString(@"Reinstalling ", @"single trailing space");
                     break;
+                case 'r':
+                    status = NSLocalizedString(@"Local version is newer ", @"single trailing space");
+                    break;
                 default:
                     // tlmgr 2008 prints "exiting" here
                     status = [status stringByAppendingString:@" "];
