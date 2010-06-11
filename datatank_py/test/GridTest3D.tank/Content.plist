@@ -45,13 +45,13 @@
 							<key>Inline</key>
 							<dict>
 								<key>CurrentValue</key>
-								<real>-72.699999999999989</real>
+								<real>-62.220000000000006</real>
 								<key>MaxValue</key>
 								<real>180</real>
 								<key>MinValue</key>
 								<real>-180</real>
 								<key>String</key>
-								<string>-72.7</string>
+								<string>-62.22</string>
 							</dict>
 							<key>SelectedNumber</key>
 							<integer>0</integer>
@@ -63,13 +63,13 @@
 							<key>Inline</key>
 							<dict>
 								<key>CurrentValue</key>
-								<real>37.269999999999996</real>
+								<real>30.18</real>
 								<key>MaxValue</key>
 								<real>90</real>
 								<key>MinValue</key>
 								<real>-90</real>
 								<key>String</key>
-								<string>37.27</string>
+								<string>30.18</string>
 							</dict>
 							<key>SelectedNumber</key>
 							<integer>0</integer>
@@ -257,7 +257,7 @@
 				</dict>
 			</array>
 			<key>DrawingHeight</key>
-			<real>43</real>
+			<real>372</real>
 			<key>DrawingWindowType</key>
 			<string>3DGraph</string>
 			<key>FigureName</key>
@@ -288,17 +288,15 @@
 				<key>TimeStep</key>
 				<string>1.0</string>
 			</dict>
-			<key>SeparateWindow</key>
-			<string>YES</string>
 			<key>SeparateWindowPos</key>
 			<array>
-				<real>3106</real>
-				<real>25</real>
+				<real>442</real>
+				<real>132</real>
 				<real>543</real>
 				<real>514</real>
 			</array>
 			<key>ViewSizeJoined</key>
-			<string>504,43</string>
+			<string>579,372</string>
 			<key>ViewSizeSeparated</key>
 			<string>543,492</string>
 			<key>Visible</key>
@@ -307,10 +305,10 @@
 			<string>10 x 20 x 5 grid</string>
 			<key>WindowPos</key>
 			<array>
-				<real>758</real>
-				<real>741</real>
-				<real>502</real>
-				<real>437</real>
+				<real>513</real>
+				<real>273</real>
+				<real>577</real>
+				<real>605</real>
 			</array>
 		</dict>
 		<dict>
@@ -672,12 +670,17 @@
 			<string>Projection of Slice of grid</string>
 			<key>WindowPos</key>
 			<array>
-				<real>2952</real>
-				<real>522</real>
+				<real>809</real>
+				<real>220</real>
 				<real>574</real>
 				<real>658</real>
 			</array>
 		</dict>
+	</array>
+	<key>InformationSize</key>
+	<array>
+		<real>400</real>
+		<real>314</real>
 	</array>
 	<key>Time</key>
 	<dict>
@@ -728,7 +731,7 @@
 			<key>MinValue</key>
 			<real>0.0</real>
 			<key>String</key>
-			<string>0</string>
+			<string></string>
 		</dict>
 	</dict>
 	<key>Variables</key>
@@ -741,7 +744,7 @@
 				<key>FileIsClosed</key>
 				<string>NO</string>
 				<key>FileName</key>
-				<string>~/build/datatank_py/structured_grid3d.dtbin</string>
+				<string>structured_grid3d.dtbin</string>
 			</dict>
 			<key>Selection</key>
 			<string>Open</string>
@@ -859,12 +862,12 @@
 			<string>CoordinatePlane3D</string>
 		</dict>
 	</array>
-	<key>WindowPosition</key>
+	<key>WindowPos</key>
 	<array>
-		<real>15</real>
-		<real>260</real>
-		<real>926</real>
-		<real>905</real>
+		<real>1</real>
+		<real>476</real>
+		<real>512</real>
+		<real>402</real>
 	</array>
 </dict>
 </plist>
