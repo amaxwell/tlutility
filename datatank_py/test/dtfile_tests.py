@@ -108,8 +108,8 @@ def write_arrays(file_path):
     assert np.all(test_array == read_array), "failed 2D double array test"
     
     # write a 3D array of floats
-    test_array = np.array(range(0, 12), dtype=np.float)
-    test_array = test_array.reshape(3, 2, 2)
+    test_array = np.array(range(0, 24), dtype=np.float)
+    test_array = test_array.reshape(4, 3, 2)
     output_file.write_array(test_array, "Test3", dt_type="Array")
     
     read_array = output_file["Test3"]
