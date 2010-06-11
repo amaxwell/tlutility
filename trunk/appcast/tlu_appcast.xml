@@ -344,5 +344,15 @@
             <pubDate>Wed, 02 Jun 2010 20:24:47 -0700</pubDate>
             <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20100602.tgz" sparkle:version="0.87" length="1593850" type="application/octet-stream" sparkle:dsaSignature="MC0CFQCKBuFBkw0X98VVDolKqFDfkwwZZQIUduzNXVpVKyJWt6uXYyuGzM+S6R0="></enclosure>
         </item>
+        <item>
+            <title>Version 0.88</title>
+            <description>
+                <h3>Changes Since 0.87</h3>
+                <li>Added support for "r" in status log</li>
+                <li>Added support for reinstalling (main menu only, not toolbar)</li>
+            </description>
+            <pubDate>Fri, 11 Jun 2010 15:19:04 -0700</pubDate>
+            <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20100611.tgz" sparkle:version="0.88" length="1598518" type="application/octet-stream" sparkle:dsaSignature="MCwCFBt+3TfTe1ZbeRU45tRtBCZ7uUU5AhR9bgqQ9sZpar5kYD1OPX1tlv7buA=="></enclosure>
+        </item>
     </channel>
 </rss>
