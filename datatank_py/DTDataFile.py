@@ -463,9 +463,12 @@ class DTDataFile(object):
             shape.append(o)
             
         # see the array writing code
-        shape.reverse()
+        order = "F"
+        if len(shape) < 3:
+            shape.reverse()
+            order = "C"
                     
-        return values.reshape(shape)        
+        return values.reshape(shape, order=order)        
         
     def __iter__(self):
         # unordered iteration
@@ -588,8 +591,9 @@ class DTDataFile(object):
         # Reshaping with order="F" for FORTRAN doesn't work as I think it should, but
         # flattening and manually reshaping it works as expected, using C ordering.
         shape = list(array.shape)
-        shape.reverse()
-        array = np.reshape(array.flatten(), shape, order="C")
+        if len(shape) < 3:
+            shape.reverse()
+            array = np.reshape(array.flatten(), shape, order="C")
 
         # map ndarray type to DTArray type and record element size in bytes
         (dt_array_type, element_size) = _dtarray_type_and_size_from_object(array)
@@ -623,7 +627,10 @@ class DTDataFile(object):
         # write the variable name
         self._file.write(name + "\0")
         # write the variable values as raw binary
-        array.tofile(self._file)
+        if len(shape) < 3:
+            array.tofile(self._file)
+        else:
+            self._file.write(array.tostring(order="F"))
         
         # update file length and variable map manually
         self._length = self._file.tell()
