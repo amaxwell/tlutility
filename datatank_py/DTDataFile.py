@@ -462,7 +462,7 @@ class DTDataFile(object):
         if o > 1:
             shape.append(o)
             
-        # see the array writing code
+        # see the array writing code; code for 2D and 3D arrays is slightly different
         order = "F"
         if len(shape) < 3:
             shape.reverse()
@@ -587,13 +587,16 @@ class DTDataFile(object):
         array = _ensure_array(array)
         assert len(array.shape) > 0, "zero dimension array is not allowed"
         assert len(array.shape) <= 3, "maximum of 3 dimensions is supported"
-
-        # Reshaping with order="F" for FORTRAN doesn't work as I think it should, but
-        # flattening and manually reshaping it works as expected, using C ordering.
-        shape = list(array.shape)
-        if len(shape) < 3:
-            shape.reverse()
-            array = np.reshape(array.flatten(), shape, order="C")
+        
+        # Flip the axes so the shape is compatible with DTArray indexing, then
+        # write the array in C order.
+        if len(array.shape) == 2:
+            reversed_shape = list(array.shape)
+            reversed_shape.reverse()
+            array = array.reshape(reversed_shape)
+        elif len(array.shape) == 3:
+            newarray = array.transpose().reshape(array.shape)
+            array = array.flatten("F").reshape(array.shape)
 
         # map ndarray type to DTArray type and record element size in bytes
         (dt_array_type, element_size) = _dtarray_type_and_size_from_object(array)
@@ -612,14 +615,10 @@ class DTDataFile(object):
 
         shape = array.shape
         m = shape[0]
-        n = 1
-        o = 1
-        if len(shape) > 1:
-            n = shape[1]
-        if len(shape) > 2:
-            o = shape[2]
-
-        block_length = self._struct.size + len(name) + 1 + array.size * element_size
+        n = shape[1] if len(shape) > 1 else 1
+        o = shape[2] if len(shape) > 2 else 1
+        
+        block_length = self._struct.size + len(name) + 1 + m * n * o * element_size
         file_struct = self._struct.pack(block_length, dt_array_type, m, n, o, len(name) + 1)
 
         # write the header
@@ -627,10 +626,7 @@ class DTDataFile(object):
         # write the variable name
         self._file.write(name + "\0")
         # write the variable values as raw binary
-        if len(shape) < 3:
-            array.tofile(self._file)
-        else:
-            self._file.write(array.tostring(order="F"))
+        array.tofile(self._file)
         
         # update file length and variable map manually
         self._length = self._file.tell()
