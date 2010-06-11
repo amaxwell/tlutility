@@ -30,18 +30,23 @@ class DTStructuredGrid3D(object):
             self._z = np.zeros((len(x), len(y), len(z)), dtype=np.double)
             
             # There may be a one-liner to do this with array slicing and broadcasting,
-            # but I wasted too much time trying to find it.  This works.
-            for zi in xrange(len(z)):
-                for yi in xrange(len(y)):
-                    self._x[:,yi,zi] = x
-                    
-            for xi in xrange(len(x)):
-                for yi in xrange(len(y)):
-                    self._z[xi,yi,:] = z
+            # but I wasted too much time trying to find it.  This is copied from 
+            # DTStructuredGrid3D.cpp, so it should work.
             
-            for xi in xrange(len(x)):
+            for xi, xv in enumerate(x):
                 for zi in xrange(len(z)):
-                    self._y[xi,:,zi] = y
+                    for yi in xrange(len(y)):
+                        self._x[xi,yi,zi] = xv
+            
+            for yi, yv in enumerate(y):
+                for zi in xrange(len(z)):
+                    for xi in xrange(len(x)):
+                        self._y[xi,yi,zi] = yv
+            
+            for zi, zv in enumerate(z):
+                for yi in xrange(len(y)):
+                    for xi in xrange(len(x)):
+                        self._z[xi,yi,zi] = zv
             
         else:
             assert np.shape(x) == np.shape(y)
@@ -78,8 +83,11 @@ if __name__ == '__main__':
     from DTDataFile import DTDataFile
     with DTDataFile("structured_grid3d.dtbin", truncate=True) as df:
                 
-        grid = DTStructuredGrid3D(range(0, 10), range(0, 20), range(0, 5))
-        df["10 x 20 x 5 grid"] = grid
+        grid = DTStructuredGrid3D(range(5), range(4), range(3))
+        df["grid"] = grid
     
         print grid
+        #print "x=", grid._x
+        #print "y=", grid._y
+        #print "z=", grid._z
         
