@@ -462,13 +462,9 @@ class DTDataFile(object):
         if o > 1:
             shape.append(o)
             
-        # see the array writing code; code for 2D and 3D arrays is slightly different
-        order = "F"
-        if len(shape) < 3:
-            shape.reverse()
-            order = "C"
-                    
-        return values.reshape(shape, order=order)        
+        # see the array writing code
+        shape.reverse()
+        return values.reshape(shape, order="C")        
         
     def __iter__(self):
         # unordered iteration
@@ -589,14 +585,18 @@ class DTDataFile(object):
         assert len(array.shape) <= 3, "maximum of 3 dimensions is supported"
         
         # Flip the axes so the shape is compatible with DTArray indexing, then
-        # write the array in C order.
-        if len(array.shape) == 2:
-            reversed_shape = list(array.shape)
-            reversed_shape.reverse()
-            array = array.reshape(reversed_shape)
-        elif len(array.shape) == 3:
-            newarray = array.transpose().reshape(array.shape)
-            array = array.flatten("F").reshape(array.shape)
+        # write the array in C order.  DTSource indexes as (row, column, slice)
+        # and numpy indexes as (slice, row, column).  This gets very confusing.
+        # Further, the row/column display in DataTank when you view an array as
+        # text is backwards.  I tried various schemes of flipping arrays here to
+        # make this more transparent, but just ended up confusing myself really
+        # badly.  In the end, the important thing to remember is that the user
+        # is responsible for the array shape; in numpy, you need to remember
+        # that you're indexing (slice, row, column), and reorder that as needed
+        # for DataTank.
+        reversed_shape = list(array.shape)
+        reversed_shape.reverse()
+        array = array.reshape(reversed_shape, order="C")
 
         # map ndarray type to DTArray type and record element size in bytes
         (dt_array_type, element_size) = _dtarray_type_and_size_from_object(array)

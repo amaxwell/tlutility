@@ -17,6 +17,10 @@ class DTStructuredGrid3D(object):
         x -- vector or 3D array of x values
         y -- vector or 3D array of y values
         z -- vector or 3D array of z values
+        
+        Note: if a full 3D array is passed, it must be ordered as (z, y, x)
+        for compatibility with DataTank.  When using vectors, this is handled
+        automatically.
                 
         """                   
                    
@@ -25,9 +29,10 @@ class DTStructuredGrid3D(object):
             # DataTank fails to read if we just save the vectors, unfortunately,
             # so we need to expand to the full array.  This is lame.
             
-            self._x = np.zeros((len(x), len(y), len(z)), dtype=np.double)
-            self._y = np.zeros((len(x), len(y), len(z)), dtype=np.double)
-            self._z = np.zeros((len(x), len(y), len(z)), dtype=np.double)
+            shape = (len(z), len(y), len(x))
+            self._x = np.zeros(shape, dtype=np.double)
+            self._y = np.zeros(shape, dtype=np.double)
+            self._z = np.zeros(shape, dtype=np.double)
             
             # There may be a one-liner to do this with array slicing and broadcasting,
             # but I wasted too much time trying to find it.  This is copied from 
@@ -36,17 +41,17 @@ class DTStructuredGrid3D(object):
             for xi, xv in enumerate(x):
                 for zi in xrange(len(z)):
                     for yi in xrange(len(y)):
-                        self._x[xi,yi,zi] = xv
+                        self._x[zi,yi,xi] = xv
             
             for yi, yv in enumerate(y):
                 for zi in xrange(len(z)):
                     for xi in xrange(len(x)):
-                        self._y[xi,yi,zi] = yv
+                        self._y[zi,yi,xi] = yv
             
             for zi, zv in enumerate(z):
                 for yi in xrange(len(y)):
                     for xi in xrange(len(x)):
-                        self._z[xi,yi,zi] = zv
+                        self._z[zi,yi,xi] = zv
             
         else:
             assert np.shape(x) == np.shape(y)

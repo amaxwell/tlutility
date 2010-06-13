@@ -16,6 +16,9 @@ class DTStructuredMesh3D(object):
         Arguments:
         values -- 3D array of values
         grid -- DTStructuredGrid3D object (defaults to unit grid) or the name of a previously saved grid
+        
+        Note that the values array must be ordered as (z, y, x) for compatibility
+        with the grid and DataTank.
                 
         """                   
         
@@ -48,7 +51,14 @@ if __name__ == '__main__':
     with DTDataFile("structured_mesh3d.dtbin", truncate=True) as df:
                 
         grid = DTStructuredGrid3D(range(10), range(20), range(5))
-        mesh = DTStructuredMesh3D(np.zeros((10, 20, 5)), grid=grid)
+        values = np.zeros(10 * 20 * 5)
+        for i in xrange(len(values)):
+            values[i] = i
+            
+        # DataTank indexes differently from numpy; the grid is z,y,x ordered
+        values = values.reshape((5, 20, 10))
+        
+        mesh = DTStructuredMesh3D(values, grid=grid)
         df["3D mesh"] = mesh
     
         print mesh
