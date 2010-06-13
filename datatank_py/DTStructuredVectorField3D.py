@@ -30,7 +30,7 @@ class DTStructuredVectorField3D(object):
         if isinstance(grid, basestring) == False:
             
             if grid == None:
-                grid = DTStructuredGrid3D(range(shape[0]), range(shape[1]), range(shape[3]))
+                grid = DTStructuredGrid3D(range(shape[3]), range(shape[1]), range(shape[0]))
             
             assert shape == grid.shape(), "grid shape %s != value shape %s" % (grid.shape(), shape)
             
@@ -57,9 +57,10 @@ if __name__ == '__main__':
     with DTDataFile("structured_vector_field3d.dtbin", truncate=True) as df:
                 
         grid = DTStructuredGrid3D(range(10), range(20), range(5))
-        u = np.ones((10, 20, 5))
-        v = np.ones((10, 20, 5))
-        w = np.ones((10, 20, 5))
+        # must order value arrays as z, y, x for compatibility with the grid
+        u = np.ones((5, 20, 10))
+        v = np.ones((5, 20, 10))
+        w = np.ones((5, 20, 10))
         mesh = DTStructuredVectorField3D(u, v, w, grid=grid)
         df["3D vector field"] = mesh
     

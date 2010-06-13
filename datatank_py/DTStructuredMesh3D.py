@@ -28,7 +28,7 @@ class DTStructuredMesh3D(object):
         if isinstance(grid, basestring) == False:
             
             if grid == None:
-                grid = DTStructuredGrid3D(range(shape[0]), range(shape[1]), range(shape[3]))
+                grid = DTStructuredGrid3D(range(shape[3]), range(shape[1]), range(shape[0]))
             
             assert shape == grid.shape(), "grid shape %s != value shape %s" % (grid.shape(), shape)
             
