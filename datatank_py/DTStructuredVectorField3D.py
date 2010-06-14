@@ -54,7 +54,7 @@ class DTStructuredVectorField3D(object):
 if __name__ == '__main__':
     
     from DTDataFile import DTDataFile
-    with DTDataFile("structured_vector_field3d.dtbin", truncate=True) as df:
+    with DTDataFile("test/structured_vector_field3d.dtbin", truncate=True) as df:
                 
         grid = DTStructuredGrid3D(range(10), range(20), range(5))
         # must order value arrays as z, y, x for compatibility with the grid

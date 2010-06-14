@@ -48,7 +48,7 @@ class DTStructuredMesh3D(object):
 if __name__ == '__main__':
     
     from DTDataFile import DTDataFile
-    with DTDataFile("structured_mesh3d.dtbin", truncate=True) as df:
+    with DTDataFile("test/structured_mesh3d.dtbin", truncate=True) as df:
                 
         grid = DTStructuredGrid3D(range(10), range(20), range(5))
         values = np.zeros(10 * 20 * 5)

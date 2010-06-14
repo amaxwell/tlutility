@@ -45,13 +45,13 @@
 							<key>Inline</key>
 							<dict>
 								<key>CurrentValue</key>
-								<real>-62.220000000000006</real>
+								<real>-45.469999999999999</real>
 								<key>MaxValue</key>
 								<real>180</real>
 								<key>MinValue</key>
 								<real>-180</real>
 								<key>String</key>
-								<string>-62.22</string>
+								<string>-45.47</string>
 							</dict>
 							<key>SelectedNumber</key>
 							<integer>0</integer>
@@ -63,13 +63,13 @@
 							<key>Inline</key>
 							<dict>
 								<key>CurrentValue</key>
-								<real>30.18</real>
+								<real>41.269999999999996</real>
 								<key>MaxValue</key>
 								<real>90</real>
 								<key>MinValue</key>
 								<real>-90</real>
 								<key>String</key>
-								<string>30.18</string>
+								<string>41.27</string>
 							</dict>
 							<key>SelectedNumber</key>
 							<integer>0</integer>
@@ -676,11 +676,357 @@
 				<real>658</real>
 			</array>
 		</dict>
+		<dict>
+			<key>Antialiasing</key>
+			<string>YES</string>
+			<key>Axis</key>
+			<dict>
+				<key>YScale</key>
+				<dict>
+					<key>Inline</key>
+					<dict>
+						<key>Number</key>
+						<string>1</string>
+					</dict>
+					<key>SelectedNumber</key>
+					<integer>0</integer>
+				</dict>
+				<key>ZScale</key>
+				<dict>
+					<key>Inline</key>
+					<dict>
+						<key>Number</key>
+						<string>1</string>
+					</dict>
+					<key>SelectedNumber</key>
+					<integer>0</integer>
+				</dict>
+			</dict>
+			<key>BoundingBox</key>
+			<dict>
+				<key>MaxXValue</key>
+				<string></string>
+				<key>MaxYValue</key>
+				<string></string>
+				<key>MaxZValue</key>
+				<string></string>
+				<key>MinXValue</key>
+				<string></string>
+				<key>MinYValue</key>
+				<string></string>
+				<key>MinZValue</key>
+				<string></string>
+				<key>RangeType</key>
+				<integer>0</integer>
+				<key>Region</key>
+				<dict>
+					<key>SelectedNumber</key>
+					<integer>0</integer>
+				</dict>
+			</dict>
+			<key>Camera</key>
+			<dict>
+				<key>Active</key>
+				<integer>0</integer>
+				<key>Cameras</key>
+				<array>
+					<dict>
+						<key>CameraType</key>
+						<string>Spherical</string>
+						<key>Horizontal</key>
+						<dict>
+							<key>Inline</key>
+							<dict>
+								<key>CurrentValue</key>
+								<real>-90.429999999999993</real>
+								<key>MaxValue</key>
+								<real>180</real>
+								<key>MinValue</key>
+								<real>-180</real>
+								<key>String</key>
+								<string>-90.43</string>
+							</dict>
+							<key>SelectedNumber</key>
+							<integer>0</integer>
+						</dict>
+						<key>Magnification</key>
+						<dict>
+							<key>Inline</key>
+							<dict>
+								<key>CurrentValue</key>
+								<real>20</real>
+								<key>MaxValue</key>
+								<real>60</real>
+								<key>MinValue</key>
+								<real>2</real>
+								<key>String</key>
+								<string>20</string>
+							</dict>
+							<key>SelectedNumber</key>
+							<integer>0</integer>
+						</dict>
+						<key>Name</key>
+						<string>Spherical</string>
+						<key>UpVector</key>
+						<integer>0</integer>
+						<key>Vertical</key>
+						<dict>
+							<key>Inline</key>
+							<dict>
+								<key>CurrentValue</key>
+								<real>57</real>
+								<key>MaxValue</key>
+								<real>90</real>
+								<key>MinValue</key>
+								<real>-90</real>
+								<key>String</key>
+								<string>57</string>
+							</dict>
+							<key>SelectedNumber</key>
+							<integer>0</integer>
+						</dict>
+					</dict>
+				</array>
+			</dict>
+			<key>CommandContents</key>
+			<array>
+				<dict>
+					<key>CommandName</key>
+					<string>3D mesh</string>
+					<key>CommandType</key>
+					<string>Mesh Slices</string>
+					<key>Computation</key>
+					<dict>
+						<key>Crop</key>
+						<dict>
+							<key>SelectedNumber</key>
+							<integer>0</integer>
+						</dict>
+						<key>CropSwitch</key>
+						<string>On</string>
+						<key>Mesh</key>
+						<dict>
+							<key>Selected</key>
+							<string>3D mesh</string>
+						</dict>
+						<key>Opacity</key>
+						<dict>
+							<key>Inline</key>
+							<dict>
+								<key>Number</key>
+								<string>1</string>
+							</dict>
+							<key>SelectedNumber</key>
+							<integer>0</integer>
+						</dict>
+						<key>Ramp</key>
+						<dict>
+							<key>Inline</key>
+							<dict>
+								<key>Menu</key>
+								<integer>0</integer>
+							</dict>
+							<key>SelectedNumber</key>
+							<integer>0</integer>
+						</dict>
+						<key>Range</key>
+						<dict>
+							<key>Inline</key>
+							<dict>
+								<key>Range</key>
+								<string>0,999</string>
+							</dict>
+							<key>SelectedNumber</key>
+							<integer>0</integer>
+						</dict>
+						<key>SliceRange</key>
+						<string>0,4</string>
+						<key>SliceType</key>
+						<integer>2</integer>
+						<key>SliceValue</key>
+						<dict>
+							<key>Inline</key>
+							<dict>
+								<key>CurrentValue</key>
+								<real>1.77</real>
+								<key>MaxValue</key>
+								<real>4</real>
+								<key>MinValue</key>
+								<real>0.0</real>
+								<key>String</key>
+								<string>1.77</string>
+							</dict>
+							<key>SelectedNumber</key>
+							<integer>0</integer>
+						</dict>
+						<key>Swap</key>
+						<string>Off</string>
+					</dict>
+					<key>Drawn</key>
+					<string>Include</string>
+					<key>Status</key>
+					<string>Visible</string>
+					<key>ToggleOpen</key>
+					<string>YES</string>
+				</dict>
+				<dict>
+					<key>CommandName</key>
+					<string>3D vector field</string>
+					<key>CommandType</key>
+					<string>Vector Collection</string>
+					<key>Computation</key>
+					<dict>
+						<key>Color</key>
+						<dict>
+							<key>Inline</key>
+							<dict>
+								<key>Color</key>
+								<dict>
+									<key>Blue</key>
+									<real>0.0</real>
+									<key>Green</key>
+									<real>0.0</real>
+									<key>Red</key>
+									<real>0.0</real>
+									<key>Space</key>
+									<string>NSCalibratedRGBColorSpace</string>
+								</dict>
+							</dict>
+							<key>SelectedNumber</key>
+							<integer>0</integer>
+						</dict>
+						<key>Crop</key>
+						<string>On</string>
+						<key>Region</key>
+						<dict>
+							<key>SelectedNumber</key>
+							<integer>0</integer>
+						</dict>
+						<key>RoughAt</key>
+						<string>1000</string>
+						<key>Scaling</key>
+						<string>1.0</string>
+						<key>Type</key>
+						<integer>0</integer>
+						<key>UpperBound</key>
+						<string>4000</string>
+						<key>VectorCollection</key>
+						<dict>
+							<key>Selected</key>
+							<string>3D vector field</string>
+						</dict>
+						<key>Width</key>
+						<string>1.0</string>
+					</dict>
+					<key>Drawn</key>
+					<string>Include</string>
+					<key>Status</key>
+					<string>Visible</string>
+				</dict>
+			</array>
+			<key>DrawingHeight</key>
+			<real>312</real>
+			<key>DrawingWindowType</key>
+			<string>3DGLGraph</string>
+			<key>FigureName</key>
+			<string>Untitled</string>
+			<key>Lights</key>
+			<dict>
+				<key>Lights</key>
+				<array/>
+			</dict>
+			<key>MaxHeight</key>
+			<string></string>
+			<key>MaxWidth</key>
+			<string></string>
+			<key>OutputHeight</key>
+			<string></string>
+			<key>OutputWidth</key>
+			<string></string>
+			<key>QT</key>
+			<dict>
+				<key>Format</key>
+				<string>Animation</string>
+				<key>Quality</key>
+				<dict>
+					<key>EntryName</key>
+					<string>Lossless</string>
+					<key>EntryNumber</key>
+					<integer>0</integer>
+				</dict>
+				<key>Range</key>
+				<string>0,∞</string>
+				<key>ShowInFinder</key>
+				<string>On</string>
+				<key>TimeStep</key>
+				<string>1.0</string>
+			</dict>
+			<key>Rendering</key>
+			<dict>
+				<key>BackgroundColor</key>
+				<dict>
+					<key>Inline</key>
+					<dict>
+						<key>Color</key>
+						<dict>
+							<key>Alpha</key>
+							<real>0.0</real>
+							<key>Blue</key>
+							<real>1</real>
+							<key>Green</key>
+							<real>1</real>
+							<key>Red</key>
+							<real>1</real>
+							<key>Space</key>
+							<string>NSCalibratedRGBColorSpace</string>
+						</dict>
+					</dict>
+					<key>SelectedNumber</key>
+					<integer>0</integer>
+				</dict>
+				<key>Density</key>
+				<string>1</string>
+				<key>Fog</key>
+				<string>Off</string>
+				<key>FogType</key>
+				<integer>0</integer>
+				<key>LinearRange</key>
+				<string>0,1</string>
+				<key>Offset</key>
+				<string>1,10</string>
+				<key>Smoothing</key>
+				<integer>3</integer>
+				<key>Sorting</key>
+				<integer>0</integer>
+			</dict>
+			<key>SeparateWindowPos</key>
+			<array>
+				<real>0.0</real>
+				<real>0.0</real>
+				<real>0.0</real>
+				<real>0.0</real>
+			</array>
+			<key>ViewSizeJoined</key>
+			<string>602,312</string>
+			<key>ViewSizeSeparated</key>
+			<string></string>
+			<key>Visible</key>
+			<string>YES</string>
+			<key>WindowName</key>
+			<string>3D mesh</string>
+			<key>WindowPos</key>
+			<array>
+				<real>625</real>
+				<real>265</real>
+				<real>600</real>
+				<real>613</real>
+			</array>
+		</dict>
 	</array>
 	<key>InformationSize</key>
 	<array>
 		<real>400</real>
-		<real>314</real>
+		<real>348</real>
 	</array>
 	<key>Time</key>
 	<dict>
@@ -748,8 +1094,6 @@
 			</dict>
 			<key>Selection</key>
 			<string>Open</string>
-			<key>ToggleOpen</key>
-			<string>YES</string>
 			<key>VariableName</key>
 			<string>structured_grid3d.dtbin</string>
 			<key>VariableType</key>
@@ -826,8 +1170,6 @@
 			</dict>
 			<key>Selection</key>
 			<string>Projection</string>
-			<key>ToggleOpen</key>
-			<string>YES</string>
 			<key>VariableName</key>
 			<string>Projection of Slice of grid</string>
 			<key>VariableType</key>
@@ -854,20 +1196,106 @@
 			</dict>
 			<key>Selection</key>
 			<string>Slider</string>
-			<key>ToggleOpen</key>
-			<string>YES</string>
 			<key>VariableName</key>
 			<string>XY Coordinate Plane</string>
 			<key>VariableType</key>
 			<string>CoordinatePlane3D</string>
 		</dict>
+		<dict>
+			<key>Content</key>
+			<dict>
+				<key>Ending</key>
+				<string>On</string>
+				<key>FileIsClosed</key>
+				<string>NO</string>
+				<key>FileName</key>
+				<string>structured_mesh3d.dtbin</string>
+			</dict>
+			<key>Selection</key>
+			<string>Open</string>
+			<key>VariableName</key>
+			<string>structured_mesh3d.dtbin</string>
+			<key>VariableType</key>
+			<string>DataFile</string>
+			<key>ViewHeight</key>
+			<real>160</real>
+		</dict>
+		<dict>
+			<key>Content</key>
+			<dict>
+				<key>File</key>
+				<dict>
+					<key>Selected</key>
+					<string>structured_mesh3d.dtbin</string>
+				</dict>
+				<key>ReadForBB</key>
+				<string>Off</string>
+				<key>VariableName</key>
+				<dict>
+					<key>Title</key>
+					<string>3D mesh</string>
+					<key>Token</key>
+					<string>3D mesh</string>
+				</dict>
+			</dict>
+			<key>Selection</key>
+			<string>Read</string>
+			<key>VariableName</key>
+			<string>3D mesh</string>
+			<key>VariableType</key>
+			<string>StructuredMesh3D</string>
+		</dict>
+		<dict>
+			<key>Content</key>
+			<dict>
+				<key>Ending</key>
+				<string>On</string>
+				<key>FileIsClosed</key>
+				<string>NO</string>
+				<key>FileName</key>
+				<string>structured_vector_field3d.dtbin</string>
+			</dict>
+			<key>Selection</key>
+			<string>Open</string>
+			<key>VariableName</key>
+			<string>structured_vector_field3d.dtbin</string>
+			<key>VariableType</key>
+			<string>DataFile</string>
+			<key>ViewHeight</key>
+			<real>160</real>
+		</dict>
+		<dict>
+			<key>Content</key>
+			<dict>
+				<key>File</key>
+				<dict>
+					<key>Selected</key>
+					<string>structured_vector_field3d.dtbin</string>
+				</dict>
+				<key>ReadForBB</key>
+				<string>Off</string>
+				<key>VariableName</key>
+				<dict>
+					<key>Title</key>
+					<string>3D vector field</string>
+					<key>Token</key>
+					<string>3D vector field</string>
+				</dict>
+			</dict>
+			<key>Selection</key>
+			<string>Read</string>
+			<key>VariableName</key>
+			<string>3D vector field</string>
+			<key>VariableType</key>
+			<string>StructuredVectorField3D</string>
+		</dict>
 	</array>
 	<key>WindowPos</key>
 	<array>
-		<real>1</real>
-		<real>476</real>
+		<real>0.0</real>
+		<real>45</real>
 		<real>512</real>
-		<real>402</real>
+		<real>833</real>
 	</array>
 </dict>
 </plist>
