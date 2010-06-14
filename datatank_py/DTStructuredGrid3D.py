@@ -9,7 +9,7 @@ import numpy as np
 class DTStructuredGrid3D(object):
     """3D structured grid object."""
     
-    def __init__(self, x, y, z):
+    def __init__(self, x, y, z, mask=None):
         super(DTStructuredGrid3D, self).__init__()
         """Create a new 3D structured grid.
         
@@ -60,6 +60,8 @@ class DTStructuredGrid3D(object):
             self._x = np.array(x, dtype=np.double)
             self._y = np.array(y, dtype=np.double)
             self._z = np.array(z, dtype=np.double)
+            
+        self._mask = mask if mask != None else np.array([], dtype=np.int32)
     
     def __dt_type__(self):
         return "3D Structured Grid"
@@ -70,9 +72,6 @@ class DTStructuredGrid3D(object):
     def bounding_box(self):
         return DTRegion3D(np.min(self._x), np.max(self._x), np.min(self._y), np.max(self._y), np.min(self._z), np.max(self._z))
         
-    def mask(self):
-        return np.array([], dtype=np.int32)
-        
     def __str__(self):
         return self.__dt_type__() + ": " + str(self.bounding_box())
         
@@ -81,7 +80,7 @@ class DTStructuredGrid3D(object):
         datafile.write_anonymous(self._x, name + "_X")
         datafile.write_anonymous(self._y, name + "_Y")
         datafile.write_anonymous(self._z, name + "_Z")
-        datafile.write_anonymous(self.mask(), name)
+        datafile.write_anonymous(self._mask, name)
 
 if __name__ == '__main__':
     

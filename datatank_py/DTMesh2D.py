@@ -8,7 +8,7 @@ import numpy as np
 class DTMesh2D(object):
     """2D Mesh object."""
     
-    def __init__(self, values, grid=None):
+    def __init__(self, values, grid=None, mask=None):
         super(DTMesh2D, self).__init__()
         """Create a new 2D mesh.
         
@@ -24,6 +24,7 @@ class DTMesh2D(object):
             
         self._values = values
         self._grid = grid if grid != None else (0, 0, 1, 1)
+        self._mask = mask
     
     def __dt_type__(self):
         return "2D Mesh"
@@ -49,4 +50,6 @@ class DTMesh2D(object):
 
         datafile.write_anonymous(bbox, name + "_bbox2D")
         datafile.write_anonymous(self._grid, name + "_loc")
+        if self._mask != None:
+            datafile.write_anonymous(self._mask, name + "_dom")
         datafile.write_anonymous(self._values, name)
