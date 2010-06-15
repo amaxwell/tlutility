@@ -26,40 +26,25 @@ class DTStructuredGrid3D(object):
                    
         if (len(np.shape(x)) == 1 and len(np.shape(y)) == 1 and len(np.shape(z)) == 1):
             
-            # DataTank fails to read if we just save the vectors, unfortunately,
-            # so we need to expand to the full array.  This is lame.
+            # If we pass in vectors, DataTank expects them to have a 3D shape,
+            # which is kind of peculiar.  This does avoid expanding the full
+            # arrays, though.
             
-            shape = (len(z), len(y), len(x))
-            self._x = np.zeros(shape, dtype=np.double)
-            self._y = np.zeros(shape, dtype=np.double)
-            self._z = np.zeros(shape, dtype=np.double)
+            self._x = np.zeros((1, 1, len(x)), dtype=np.float32)
+            self._y = np.zeros((1, len(y), 1), dtype=np.float32)
+            self._z = np.zeros((len(z), 1, 1), dtype=np.float32)
             
-            # There may be a one-liner to do this with array slicing and broadcasting,
-            # but I wasted too much time trying to find it.  This is copied from 
-            # DTStructuredGrid3D.cpp, so it should work.
-            
-            for xi, xv in enumerate(x):
-                for zi in xrange(len(z)):
-                    for yi in xrange(len(y)):
-                        self._x[zi,yi,xi] = xv
-            
-            for yi, yv in enumerate(y):
-                for zi in xrange(len(z)):
-                    for xi in xrange(len(x)):
-                        self._y[zi,yi,xi] = yv
-            
-            for zi, zv in enumerate(z):
-                for yi in xrange(len(y)):
-                    for xi in xrange(len(x)):
-                        self._z[zi,yi,xi] = zv
+            self._x[0,0,:] = x
+            self._y[0,:,0] = y
+            self._z[:,0,0] = z
             
         else:
             assert np.shape(x) == np.shape(y)
             assert np.shape(x) == np.shape(z)
             assert np.shape(y) == np.shape(z)
-            self._x = np.array(x, dtype=np.double)
-            self._y = np.array(y, dtype=np.double)
-            self._z = np.array(z, dtype=np.double)
+            self._x = np.array(x, dtype=np.float32)
+            self._y = np.array(y, dtype=np.float32)
+            self._z = np.array(z, dtype=np.float32)
             
         self._mask = mask if mask != None else np.array([], dtype=np.int32)
     
