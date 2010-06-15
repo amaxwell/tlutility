@@ -30,11 +30,10 @@ class DTMask(object):
         o = self._o
         
         flat_mask = mask_values.flatten()
-        print flat_mask
         how_many_intervals = 0
         for k in xrange(o):
             for j in xrange(n):
-                ijk = j * m + k * n
+                ijk = j * m + k * n * m
                 until = ijk + m
                 while ijk < until:
                     # find the first entry that contains a zero
@@ -50,7 +49,7 @@ class DTMask(object):
         location = 0
         for k in xrange(o):
             for j in xrange(n):
-                ijk = j * m + k * n
+                ijk = j * m + k * n * m
                 until = ijk + m
                 while ijk < until:
                     # find the first entry that contains a zero
@@ -79,10 +78,10 @@ class DTMask(object):
         if self._o > 1:
             dims.append(self._o)
         dims.reverse()
-        print "dims=", dims
+        #print "dims=", dims
         # row/column mismatch (remember that intervals is always 2 x N)
         intervals = self._intervals.swapaxes(0, 1)
-        print intervals
+        #print intervals
         datafile.write_anonymous(np.array(dims, dtype=np.int32), name + "_dim")
         datafile.write_anonymous(intervals, name)
 
@@ -94,37 +93,37 @@ if __name__ == '__main__':
 
     with DTDataFile("test/mask.dtbin", truncate=True) as df:
         
-        # mesh_array = np.ones((100,))
-        # for i in xrange(mesh_array.size):
-        #     mesh_array[i] = i
-        # mesh_array = mesh_array.reshape((20, 5))
-        # mask_array = np.zeros((mesh_array.size,), dtype=np.int32)
-        # for i in xrange(mask_array.size):
-        #     mask_array[i] = 1 if i % 2 else 0
-        # mask_array = mask_array.reshape(mesh_array.shape)
-        # 
-        # df["Even-odd mesh"] = DTMesh2D(mesh_array, mask=DTMask(mask_array))
-        # 
-        # def mesh_function(x, y):
-        #      return np.cos(x) + np.cos(y)
-        # 
-        # # return the step to avoid getting fouled up in computing it
-        # (x, dx) = np.linspace(-10, 10, 20, retstep=True)
-        # (y, dy) = np.linspace(-10, 10, 20, retstep=True)
-        # xx, yy = np.meshgrid(x, y)
-        # mesh = mesh_function(xx, yy)
-        # 
-        # grid = (np.min(x), np.min(y), dx, dy)
-        # 
-        # mask_array = np.zeros(mesh.shape)
-        # mask_array[np.where(mesh < 1)] = 1
-        # mask = DTMask(mask_array)
-        # print mesh.shape, mesh.size
-        # print mask_array.shape, mask_array.size
-        # dtmesh = DTMesh2D(mesh, grid=grid, mask=mask)
-        # df["Holy mesh"] = dtmesh
+        mesh_array = np.ones((100,))
+        for i in xrange(mesh_array.size):
+            mesh_array[i] = i
+        mesh_array = mesh_array.reshape((20, 5))
+        mask_array = np.zeros((mesh_array.size,), dtype=np.int32)
+        for i in xrange(mask_array.size):
+            mask_array[i] = 1 if i % 2 else 0
+        mask_array = mask_array.reshape(mesh_array.shape)
         
-        m, n, o = (5, 4, 3)
+        df["Even-odd mesh"] = DTMesh2D(mesh_array, mask=DTMask(mask_array))
+        
+        def mesh_function(x, y):
+             return np.cos(x) + np.cos(y)
+        
+        # return the step to avoid getting fouled up in computing it
+        (x, dx) = np.linspace(-10, 10, 20, retstep=True)
+        (y, dy) = np.linspace(-10, 10, 20, retstep=True)
+        xx, yy = np.meshgrid(x, y)
+        mesh = mesh_function(xx, yy)
+        
+        grid = (np.min(x), np.min(y), dx, dy)
+        
+        mask_array = np.zeros(mesh.shape)
+        mask_array[np.where(mesh < 1)] = 1
+        mask = DTMask(mask_array)
+        print mesh.shape, mesh.size
+        print mask_array.shape, mask_array.size
+        dtmesh = DTMesh2D(mesh, grid=grid, mask=mask)
+        df["Holy mesh"] = dtmesh
+        
+        m, n, o = (10, 8, 6)
         mask_array = np.ones(m * n * o)
         for i in xrange(mask_array.size):
             mask_array[i] = 1 if i % 2 else 0
