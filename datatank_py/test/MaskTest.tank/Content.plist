@@ -358,6 +358,179 @@
 				<real>857</real>
 			</array>
 		</dict>
+		<dict>
+			<key>Antialiasing</key>
+			<string>YES</string>
+			<key>BoundingBox</key>
+			<dict>
+				<key>MaxXValue</key>
+				<string></string>
+				<key>MaxYValue</key>
+				<string></string>
+				<key>MaxZValue</key>
+				<string></string>
+				<key>MinXValue</key>
+				<string></string>
+				<key>MinYValue</key>
+				<string></string>
+				<key>MinZValue</key>
+				<string></string>
+				<key>RangeType</key>
+				<integer>0</integer>
+				<key>Region</key>
+				<dict>
+					<key>SelectedNumber</key>
+					<integer>0</integer>
+				</dict>
+			</dict>
+			<key>Camera</key>
+			<dict>
+				<key>Active</key>
+				<integer>0</integer>
+				<key>Cameras</key>
+				<array>
+					<dict>
+						<key>CameraType</key>
+						<string>Spherical Orthographic</string>
+						<key>Horizontal</key>
+						<dict>
+							<key>Inline</key>
+							<dict>
+								<key>CurrentValue</key>
+								<real>50</real>
+								<key>MaxValue</key>
+								<real>180</real>
+								<key>MinValue</key>
+								<real>-180</real>
+								<key>String</key>
+								<string>50</string>
+							</dict>
+							<key>SelectedNumber</key>
+							<integer>0</integer>
+						</dict>
+						<key>Name</key>
+						<string>Spherical</string>
+						<key>Vertical</key>
+						<dict>
+							<key>Inline</key>
+							<dict>
+								<key>CurrentValue</key>
+								<real>20</real>
+								<key>MaxValue</key>
+								<real>90</real>
+								<key>MinValue</key>
+								<real>-90</real>
+								<key>String</key>
+								<string>20</string>
+							</dict>
+							<key>SelectedNumber</key>
+							<integer>0</integer>
+						</dict>
+					</dict>
+				</array>
+			</dict>
+			<key>CommandContents</key>
+			<array>
+				<dict>
+					<key>CommandName</key>
+					<string>3D grid masked</string>
+					<key>CommandType</key>
+					<string>Grid</string>
+					<key>Computation</key>
+					<dict>
+						<key>LineStyle</key>
+						<dict>
+							<key>Inline</key>
+							<dict>
+								<key>Color</key>
+								<dict>
+									<key>Color</key>
+									<dict>
+										<key>Blue</key>
+										<real>0.0</real>
+										<key>Green</key>
+										<real>0.0</real>
+										<key>Red</key>
+										<real>0.0</real>
+										<key>Space</key>
+										<string>NSCalibratedRGBColorSpace</string>
+									</dict>
+								</dict>
+								<key>LineWidth</key>
+								<string>0.5</string>
+							</dict>
+							<key>SelectedNumber</key>
+							<integer>0</integer>
+						</dict>
+						<key>Mesh</key>
+						<dict>
+							<key>Selected</key>
+							<string>3D grid masked</string>
+						</dict>
+						<key>Restrict</key>
+						<string>On</string>
+					</dict>
+					<key>Drawn</key>
+					<string>Include</string>
+					<key>Status</key>
+					<string>Visible</string>
+				</dict>
+			</array>
+			<key>DrawingHeight</key>
+			<real>294</real>
+			<key>DrawingWindowType</key>
+			<string>3DGraph</string>
+			<key>FigureName</key>
+			<string>Untitled</string>
+			<key>MaxHeight</key>
+			<string></string>
+			<key>MaxWidth</key>
+			<string></string>
+			<key>OutputHeight</key>
+			<string></string>
+			<key>OutputWidth</key>
+			<string></string>
+			<key>QT</key>
+			<dict>
+				<key>Format</key>
+				<string>Animation</string>
+				<key>Quality</key>
+				<dict>
+					<key>EntryName</key>
+					<string>Lossless</string>
+					<key>EntryNumber</key>
+					<integer>0</integer>
+				</dict>
+				<key>Range</key>
+				<string>0,∞</string>
+				<key>ShowInFinder</key>
+				<string>On</string>
+				<key>TimeStep</key>
+				<string>1.0</string>
+			</dict>
+			<key>SeparateWindowPos</key>
+			<array>
+				<real>0.0</real>
+				<real>0.0</real>
+				<real>0.0</real>
+				<real>0.0</real>
+			</array>
+			<key>ViewSizeJoined</key>
+			<string>684,294</string>
+			<key>ViewSizeSeparated</key>
+			<string></string>
+			<key>Visible</key>
+			<string>YES</string>
+			<key>WindowName</key>
+			<string>3D grid masked</string>
+			<key>WindowPos</key>
+			<array>
+				<real>978</real>
+				<real>588</real>
+				<real>682</real>
+				<real>590</real>
+			</array>
+		</dict>
 	</array>
 	<key>Time</key>
 	<dict>
@@ -447,9 +620,34 @@
 				<key>VariableName</key>
 				<dict>
 					<key>Title</key>
-					<string>Masked mesh</string>
+					<string>3D grid masked</string>
 					<key>Token</key>
-					<string>Masked mesh</string>
+					<string>3D grid masked</string>
+				</dict>
+			</dict>
+			<key>Selection</key>
+			<string>Read</string>
+			<key>VariableName</key>
+			<string>3D grid masked</string>
+			<key>VariableType</key>
+			<string>StructuredGrid3D</string>
+		</dict>
+		<dict>
+			<key>Content</key>
+			<dict>
+				<key>File</key>
+				<dict>
+					<key>Selected</key>
+					<string>mask.dtbin</string>
+				</dict>
+				<key>ReadForBB</key>
+				<string>Off</string>
+				<key>VariableName</key>
+				<dict>
+					<key>Title</key>
+					<string>Holy mesh</string>
+					<key>Token</key>
+					<string>Holy mesh</string>
 				</dict>
 			</dict>
 			<key>Selection</key>

@@ -18,7 +18,6 @@ class DTMask(object):
         
         """
         
-        # treat array indexes as the same as in DT, for now
         mask_values = np.array(mask_values, dtype=np.bool)
         mask_shape = mask_values.shape
         
@@ -26,11 +25,12 @@ class DTMask(object):
         self._n = mask_shape[1] if len(mask_shape) > 1 else 1
         self._o = mask_shape[2] if len(mask_shape) > 2 else 1
         
-        m = self._o
+        m = self._m
         n = self._n
-        o = self._m
+        o = self._o
         
         flat_mask = mask_values.flatten()
+        print flat_mask
         how_many_intervals = 0
         for k in xrange(o):
             for j in xrange(n):
@@ -79,8 +79,10 @@ class DTMask(object):
         if self._o > 1:
             dims.append(self._o)
         dims.reverse()
+        print "dims=", dims
         # row/column mismatch (remember that intervals is always 2 x N)
         intervals = self._intervals.swapaxes(0, 1)
+        print intervals
         datafile.write_anonymous(np.array(dims, dtype=np.int32), name + "_dim")
         datafile.write_anonymous(intervals, name)
 
@@ -88,35 +90,47 @@ if __name__ == '__main__':
     
     from datatank_py.DTDataFile import DTDataFile
     from datatank_py.DTMesh2D import DTMesh2D
+    from datatank_py.DTStructuredGrid3D import DTStructuredGrid3D
+
     with DTDataFile("test/mask.dtbin", truncate=True) as df:
         
-        def mesh_function(x, y):
-            return np.cos(x) + np.cos(y)
-            
-        mesh_array = np.ones((100,))
-        for i in xrange(mesh_array.size):
-            mesh_array[i] = i
-        mesh_array = mesh_array.reshape((20, 5))
-        mask_array = np.zeros((mesh_array.size,), dtype=np.int32)
+        # mesh_array = np.ones((100,))
+        # for i in xrange(mesh_array.size):
+        #     mesh_array[i] = i
+        # mesh_array = mesh_array.reshape((20, 5))
+        # mask_array = np.zeros((mesh_array.size,), dtype=np.int32)
+        # for i in xrange(mask_array.size):
+        #     mask_array[i] = 1 if i % 2 else 0
+        # mask_array = mask_array.reshape(mesh_array.shape)
+        # 
+        # df["Even-odd mesh"] = DTMesh2D(mesh_array, mask=DTMask(mask_array))
+        # 
+        # def mesh_function(x, y):
+        #      return np.cos(x) + np.cos(y)
+        # 
+        # # return the step to avoid getting fouled up in computing it
+        # (x, dx) = np.linspace(-10, 10, 20, retstep=True)
+        # (y, dy) = np.linspace(-10, 10, 20, retstep=True)
+        # xx, yy = np.meshgrid(x, y)
+        # mesh = mesh_function(xx, yy)
+        # 
+        # grid = (np.min(x), np.min(y), dx, dy)
+        # 
+        # mask_array = np.zeros(mesh.shape)
+        # mask_array[np.where(mesh < 1)] = 1
+        # mask = DTMask(mask_array)
+        # print mesh.shape, mesh.size
+        # print mask_array.shape, mask_array.size
+        # dtmesh = DTMesh2D(mesh, grid=grid, mask=mask)
+        # df["Holy mesh"] = dtmesh
+        
+        m, n, o = (5, 4, 3)
+        mask_array = np.ones(m * n * o)
         for i in xrange(mask_array.size):
             mask_array[i] = 1 if i % 2 else 0
-        mask_array = mask_array.reshape(mesh_array.shape)
-        
-        df["Even-odd mesh"] = DTMesh2D(mesh_array, mask=DTMask(mask_array))
-        
-        # return the step to avoid getting fouled up in computing it
-        (x, dx) = np.linspace(-10, 10, 20, retstep=True)
-        (y, dy) = np.linspace(-10, 10, 20, retstep=True)
-        xx, yy = np.meshgrid(x, y)
-        mesh = mesh_function(xx, yy)
-
-        grid = (np.min(x), np.min(y), dx, dy)
-        
-        mask_array = np.zeros(mesh.shape)
-        mask_array[np.where(mesh < 1)] = 1
+        mask_array = mask_array.reshape((m, n, o))
         mask = DTMask(mask_array)
-        print mesh.shape, mesh.size
-        print mask_array.shape, mask_array.size
-        dtmesh = DTMesh2D(mesh, grid=grid, mask=mask)
-        df["Masked mesh"] = dtmesh
+        
+        grid = DTStructuredGrid3D(range(m), range(n), range(o), mask=mask)
+        df["3D grid masked"] = grid
         
