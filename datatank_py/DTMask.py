@@ -18,9 +18,15 @@ class DTMask(object):
         
         """
         
+        # in Python order (zyx), same as a mesh values array
         mask_values = np.array(mask_values, dtype=np.bool)
-        mask_shape = mask_values.shape
+        mask_shape = list(mask_values.shape)
         
+        # switch to DataTank order for indexing compatibility
+        mask_shape.reverse()
+        mask_values = mask_values.reshape(mask_shape)
+        
+        # set nonexistent dims to unity for compatibility with DataTank
         self._m = mask_shape[0]
         self._n = mask_shape[1] if len(mask_shape) > 1 else 1
         self._o = mask_shape[2] if len(mask_shape) > 2 else 1
@@ -64,7 +70,10 @@ class DTMask(object):
                         
                         self._intervals[0, location] = start
                         self._intervals[1, location] = ijk - 1
-                        location += 1                
+                        location += 1       
+                                 
+        # row/column mismatch (remember that intervals is always 2 x N)
+        self._intervals = self._intervals.swapaxes(0, 1)
         
     def __dt_type__(self):
         # ??? not sure if this is correct
@@ -77,13 +86,9 @@ class DTMask(object):
         dims = [self._m, self._n]
         if self._o > 1:
             dims.append(self._o)
-        dims.reverse()
-        #print "dims=", dims
-        # row/column mismatch (remember that intervals is always 2 x N)
-        intervals = self._intervals.swapaxes(0, 1)
-        #print intervals
+
         datafile.write_anonymous(np.array(dims, dtype=np.int32), name + "_dim")
-        datafile.write_anonymous(intervals, name)
+        datafile.write_anonymous(self._intervals, name)
 
 if __name__ == '__main__':
     
@@ -108,8 +113,8 @@ if __name__ == '__main__':
              return np.cos(x) + np.cos(y)
         
         # return the step to avoid getting fouled up in computing it
-        (x, dx) = np.linspace(-10, 10, 20, retstep=True)
-        (y, dy) = np.linspace(-10, 10, 20, retstep=True)
+        (x, dx) = np.linspace(-10, 10, 80, retstep=True)
+        (y, dy) = np.linspace(-10, 20, 120, retstep=True)
         xx, yy = np.meshgrid(x, y)
         mesh = mesh_function(xx, yy)
         
@@ -118,8 +123,7 @@ if __name__ == '__main__':
         mask_array = np.zeros(mesh.shape)
         mask_array[np.where(mesh < 1)] = 1
         mask = DTMask(mask_array)
-        print mesh.shape, mesh.size
-        print mask_array.shape, mask_array.size
+
         dtmesh = DTMesh2D(mesh, grid=grid, mask=mask)
         df["Holy mesh"] = dtmesh
         
@@ -127,7 +131,9 @@ if __name__ == '__main__':
         mask_array = np.ones(m * n * o)
         for i in xrange(mask_array.size):
             mask_array[i] = 1 if i % 2 else 0
-        mask_array = mask_array.reshape((m, n, o))
+            
+        # mask dimension order should be consistent with array value order
+        mask_array = mask_array.reshape((o, n, m))
         mask = DTMask(mask_array)
         
         grid = DTStructuredGrid3D(range(m), range(n), range(o), mask=mask)
