@@ -126,21 +126,15 @@ NSString * const TLMTLCriticalRepository = @"TLMTLCriticalRepository";          
     [super dealloc];
 }
 
-- (NSURL *)_currentTeXLiveLocationOption
+static NSURL * __TLMParseLocationOption(NSString *location)
 {
-    NSArray *args = [NSArray arrayWithObjects:@"--machine-readable", @"option", @"location", nil];
-    TLMTask *checkTask = [TLMTask launchedTaskWithLaunchPath:[self tlmgrAbsolutePath] arguments:args];
-    [checkTask waitUntilExit];
-    
-    NSString *location = nil;
-    if ([checkTask terminationStatus] == 0 && [checkTask outputString]) {
-        location = [[checkTask outputString] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    if (location) {
+        location = [location stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
         location = [[location componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] lastObject];
         // remove trailing slashes before comparison, although this is a directory
         while ([location hasSuffix:@"/"])
-            location = [location substringToIndex:([location length] - 1)];
+            location = [location substringToIndex:([location length] - 1)];        
     }
-    
     return location ? [NSURL URLWithString:location] : nil;
 }
 
@@ -160,6 +154,26 @@ NSString * const TLMTLCriticalRepository = @"TLMTLCriticalRepository";          
     [self updateUI];
 }
 
+- (void)_handleLocationTaskTerminated:(NSNotification *)aNote
+{
+    TLMTask *checkTask = [aNote object];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:NSTaskDidTerminateNotification
+                                                  object:checkTask];
+    NSURL *serverURL = [self defaultServerURL];
+    NSURL *tlmgrURL = nil;
+    if ([checkTask terminationStatus] == 0)
+        tlmgrURL = __TLMParseLocationOption([checkTask outputString]);
+    if ([tlmgrURL isEqual:serverURL] == NO && [[NSUserDefaults standardUserDefaults] boolForKey:TLMSetCommandLineServerPreferenceKey]) {
+        TLMLog(__func__, @"Default server URL mismatch with tlmgr; unsetting preference key.\n\tDefault: %@\n\ttlmgr: %@", serverURL, tlmgrURL);
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:TLMSetCommandLineServerPreferenceKey];
+        [self updateUI];
+    }
+    else if ([[NSUserDefaults standardUserDefaults] boolForKey:TLMSetCommandLineServerPreferenceKey]) {
+        TLMLog(__func__, @"Default server URL same as tlmgr default:\n\t %@", [serverURL absoluteString]);
+    }
+}
+
 - (void)awakeFromNib
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -169,18 +183,32 @@ NSString * const TLMTLCriticalRepository = @"TLMTLCriticalRepository";          
     [_serverComboBox setStringValue:[defaults objectForKey:TLMFullServerURLPreferenceKey]];
     [_serverComboBox setFormatter:[[TLMURLFormatter new] autorelease]];
     [_serverComboBox setDataSource:self];
-    NSURL *tlmgrURL = [self _currentTeXLiveLocationOption];
-    NSURL *serverURL = [self defaultServerURL];
-    if ([tlmgrURL isEqual:serverURL] == NO && [defaults boolForKey:TLMSetCommandLineServerPreferenceKey]) {
-        TLMLog(__func__, @"Default server URL mismatch with tlmgr; unsetting preference key.\n\tDefault: %@\n\ttlmgr: %@", serverURL, tlmgrURL);
-        [defaults setBool:NO forKey:TLMSetCommandLineServerPreferenceKey];
-    }
+        
+    // this needs to be asynchronous, since it really slows down the panel opening
+    NSArray *args = [NSArray arrayWithObjects:@"--machine-readable", @"option", @"location", nil];
+    TLMTask *checkTask = [[TLMTask new] autorelease];
+    [checkTask setLaunchPath:[self tlmgrAbsolutePath]];
+    [checkTask setArguments:args];
+    [checkTask setCurrentDirectoryPath:NSTemporaryDirectory()];
+    [[NSNotificationCenter defaultCenter] addObserver:self 
+                                             selector:@selector(_handleLocationTaskTerminated:) 
+                                                 name:NSTaskDidTerminateNotification 
+                                               object:checkTask];
+    [checkTask launch];
     [self updateUI];
 }
 
 - (IBAction)toggleUseRootHome:(id)sender;
 {
     [[NSUserDefaults standardUserDefaults] setBool:([sender state] == NSOnState) forKey:TLMUseRootHomePreferenceKey];
+}
+
+- (NSURL *)_currentTeXLiveLocationOption
+{
+    NSArray *args = [NSArray arrayWithObjects:@"--machine-readable", @"option", @"location", nil];
+    TLMTask *checkTask = [TLMTask launchedTaskWithLaunchPath:[self tlmgrAbsolutePath] arguments:args];
+    [checkTask waitUntilExit];
+    return ([checkTask terminationStatus] == 0) ? __TLMParseLocationOption([checkTask outputString]) : nil;
 }
 
 - (void)_handleLocationOperationFinished:(NSNotification *)aNote
