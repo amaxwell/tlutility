@@ -126,6 +126,24 @@ NSString * const TLMTLCriticalRepository = @"TLMTLCriticalRepository";          
     [super dealloc];
 }
 
+- (NSURL *)_currentTeXLiveLocationOption
+{
+    NSArray *args = [NSArray arrayWithObjects:@"--machine-readable", @"option", @"location", nil];
+    TLMTask *checkTask = [TLMTask launchedTaskWithLaunchPath:[self tlmgrAbsolutePath] arguments:args];
+    [checkTask waitUntilExit];
+    
+    NSString *location = nil;
+    if ([checkTask terminationStatus] == 0 && [checkTask outputString]) {
+        location = [[checkTask outputString] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        location = [[location componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] lastObject];
+        // remove trailing slashes before comparison, although this is a directory
+        while ([location hasSuffix:@"/"])
+            location = [location substringToIndex:([location length] - 1)];
+    }
+    
+    return location ? [NSURL URLWithString:location] : nil;
+}
+
 - (void)updateUI
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -151,27 +169,18 @@ NSString * const TLMTLCriticalRepository = @"TLMTLCriticalRepository";          
     [_serverComboBox setStringValue:[defaults objectForKey:TLMFullServerURLPreferenceKey]];
     [_serverComboBox setFormatter:[[TLMURLFormatter new] autorelease]];
     [_serverComboBox setDataSource:self];
+    NSURL *tlmgrURL = [self _currentTeXLiveLocationOption];
+    NSURL *serverURL = [self defaultServerURL];
+    if ([tlmgrURL isEqual:serverURL] == NO && [defaults boolForKey:TLMSetCommandLineServerPreferenceKey]) {
+        TLMLog(__func__, @"Default server URL mismatch with tlmgr; unsetting preference key.\n\tDefault: %@\n\ttlmgr: %@", serverURL, tlmgrURL);
+        [defaults setBool:NO forKey:TLMSetCommandLineServerPreferenceKey];
+    }
     [self updateUI];
 }
 
 - (IBAction)toggleUseRootHome:(id)sender;
 {
     [[NSUserDefaults standardUserDefaults] setBool:([sender state] == NSOnState) forKey:TLMUseRootHomePreferenceKey];
-}
-
-- (NSURL *)_currentTeXLiveLocationOption
-{
-    NSArray *args = [NSArray arrayWithObjects:@"--machine-readable", @"option", @"location", nil];
-    TLMTask *checkTask = [TLMTask launchedTaskWithLaunchPath:[self tlmgrAbsolutePath] arguments:args];
-    [checkTask waitUntilExit];
-    
-    NSString *location = nil;
-    if ([checkTask terminationStatus] == 0 && [checkTask outputString]) {
-        location = [[checkTask outputString] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        location = [[location componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] lastObject];
-    }
-    
-    return location ? [NSURL URLWithString:location] : nil;
 }
 
 - (void)_handleLocationOperationFinished:(NSNotification *)aNote
@@ -520,7 +529,10 @@ NSString * const TLMTLCriticalRepository = @"TLMTLCriticalRepository";          
 
 - (NSURL *)defaultServerURL
 {
-    return [NSURL URLWithString:[[NSUserDefaults standardUserDefaults] objectForKey:TLMFullServerURLPreferenceKey]];
+    NSString *location = [[NSUserDefaults standardUserDefaults] objectForKey:TLMFullServerURLPreferenceKey];
+    while ([location hasSuffix:@"/"])
+        location = [location substringToIndex:([location length] - 1)];
+    return [NSURL URLWithString:location];
 }
 
 - (NSString *)tlmgrAbsolutePath
