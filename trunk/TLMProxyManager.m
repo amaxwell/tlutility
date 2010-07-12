@@ -299,16 +299,23 @@ static void __TLMProxySettingsChanged(SCDynamicStoreRef store, CFArrayRef change
             CFStringRef mode = CFSTR("__TLMProxyAutoConfigRunLoopMode");
             CFRunLoopAddSource(CFRunLoopGetCurrent(), rls, mode);
             
+            const CFAbsoluteTime stopTime = CFAbsoluteTimeGetCurrent() + 3.0;
+            
             // callout here will set the proxy environment variables, so we're done after this
             do {
                 (void) CFRunLoopRunInMode(mode, 0.1, TRUE);
-            } while (false == finished);
+            } while (false == finished && CFAbsoluteTimeGetCurrent() < stopTime);
             
             // not clear from the docs if invalidation is required or is CFNetwork handles that
-            if (rls) {
+            if (finished && rls) {
                 if (CFRunLoopSourceIsValid(rls)) CFRunLoopSourceInvalidate(rls);
-                CFRelease(rls);
             }
+            else if (false == finished) {
+                // 
+                TLMLog(__func__, @"CFNetworkExecuteProxyAutoConfigurationURL failed to complete after 3 seconds.  Proxy support may not work.");
+            }
+            
+            if (rls) CFRelease(rls);
 
         }
         else {
