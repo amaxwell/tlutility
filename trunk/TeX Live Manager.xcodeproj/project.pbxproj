@@ -78,6 +78,7 @@
 		F9F56B4C0EF31F8800E934A9 /* TLMLogMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F56B4B0EF31F8800E934A9 /* TLMLogMessage.m */; };
 		F9F56BA10EF36F8B00E934A9 /* TLMLogDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F56BA00EF36F8B00E934A9 /* TLMLogDataSource.m */; };
 		F9FAA44E0EFCBECD0040EAB2 /* TLMPapersizeController.m in Sources */ = {isa = PBXBuildFile; fileRef = F9FAA44D0EFCBECD0040EAB2 /* TLMPapersizeController.m */; };
+		F9FE58B4123EB80800B6008F /* TLMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = F9FE58B3123EB80800B6008F /* TLMDatabase.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -345,6 +346,8 @@
 		F9F56BA00EF36F8B00E934A9 /* TLMLogDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMLogDataSource.m; sourceTree = "<group>"; };
 		F9FAA44C0EFCBECD0040EAB2 /* TLMPapersizeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMPapersizeController.h; sourceTree = "<group>"; };
 		F9FAA44D0EFCBECD0040EAB2 /* TLMPapersizeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMPapersizeController.m; sourceTree = "<group>"; };
+		F9FE58B2123EB80800B6008F /* TLMDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMDatabase.h; sourceTree = "<group>"; };
+		F9FE58B3123EB80800B6008F /* TLMDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMDatabase.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -392,6 +395,8 @@
 				F9F1C11210C5ABA300D32C17 /* NSMenu_TLMExtensions.m */,
 				F9999F9A10D1C33800F594CB /* TLMProxyManager.h */,
 				F9999F9B10D1C33800F594CB /* TLMProxyManager.m */,
+				F9FE58B2123EB80800B6008F /* TLMDatabase.h */,
+				F9FE58B3123EB80800B6008F /* TLMDatabase.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -889,6 +894,7 @@
 				F9053F4810B21B0D00BF5C0B /* TLMProgressIndicatorCell.m in Sources */,
 				F9F1C11310C5ABA300D32C17 /* NSMenu_TLMExtensions.m in Sources */,
 				F9999F9C10D1C33800F594CB /* TLMProxyManager.m in Sources */,
+				F9FE58B4123EB80800B6008F /* TLMDatabase.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1019,6 +1025,7 @@
 		C01FCF4F08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(NATIVE_ARCH_ACTUAL)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
