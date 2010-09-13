@@ -44,6 +44,7 @@
 #import "TLMTask.h"
 #import <Sparkle/Sparkle.h>
 #import "TLMProxyManager.h"
+#import "TLMDatabase.h"
 
 @implementation TLMAppController
 
@@ -368,6 +369,18 @@ static void __TLMMigrateBundleIdentifier()
              However, tlmgr itself will perform that check and log if it fails, so logging that it's okay was just
              confusing pretest users.
              */
+            NSInteger remoteVersion = [TLMDatabase yearForMirrorURL:nil];
+            if (remoteVersion > texliveYear) {
+                alert = [[NSAlert new] autorelease];
+                [alert setMessageText:NSLocalizedString(@"Mirror URL has a newer TeX Live version", @"")];
+                [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"Your TeX Live version is %d, but your mirror URL appears to be for TeX Live %d.  You may need to manually upgrade to a newer version of TeX Live.", @"single integer specifier"), (int)texliveYear, (int)remoteVersion]];
+            }
+            else if (remoteVersion < texliveYear) {
+                alert = [[NSAlert new] autorelease];
+                [alert setMessageText:NSLocalizedString(@"Mirror URL has an older TeX Live version", @"")];
+                [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"Your TeX Live version is %d, but your mirror URL appears to be for TeX Live %d.  You may need to manually switch to a mirror with the newer version.", @"single integer specifier"), (int)texliveYear, (int)remoteVersion]];
+            }
+            TLMLog(__func__, @"Remote version is %d", remoteVersion);
         }
         
         // always log a message in case the user turned off the warning, so there is no plausible deniability when things fail...
