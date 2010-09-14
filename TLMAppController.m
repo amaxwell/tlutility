@@ -380,6 +380,7 @@ static void __TLMMigrateBundleIdentifier()
                 [alert setMessageText:NSLocalizedString(@"Mirror URL has an older TeX Live version", @"")];
                 [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"Your TeX Live version is %d, but your mirror URL appears to be for TeX Live %d.  You may need to manually switch to a mirror with the newer version.", @"single integer specifier"), (int)texliveYear, (int)remoteVersion]];
             }
+            allowSuppression = NO;
             TLMLog(__func__, @"Remote version is %d", remoteVersion);
         }
         
