@@ -67,6 +67,9 @@ extern NSString * const TLMTLCriticalRepository;
     NSTextField         *_progressField;
     BOOL                 _hasPendingServerEdit;
     NSUInteger           _pendingOptionChangeCount;
+    NSURL               *_legacyRepositoryURL;
+    int16_t              _repositoryYear;
+    int16_t              _installedYear;
 }
 
 + (TLMPreferenceController *)sharedPreferenceController;

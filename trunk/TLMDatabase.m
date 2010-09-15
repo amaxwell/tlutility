@@ -49,19 +49,19 @@
 }
 
 - (id)initWithURL:(NSURL *)tlpdbURL;
-- (NSUInteger)versionNumber;
+- (int16_t)versionNumber;
 
 @end
 
 @implementation TLMDatabase
 
-+ (NSUInteger)yearForMirrorURL:(NSURL *)aURL;
++ (int16_t)yearForMirrorURL:(NSURL *)aURL;
 {
     if (nil == aURL)
         aURL = [[TLMPreferenceController sharedPreferenceController] defaultServerURL];
     NSURL *tlpdbURL = [NSURL URLWithString:[[aURL absoluteString] stringByAppendingPathComponent:@"tlpkg/texlive.tlpdb"]];
     _TLMDatabase *db = [[_TLMDatabase alloc] initWithURL:tlpdbURL];
-    NSUInteger version = [db versionNumber];
+    int16_t version = [db versionNumber];
     [db release];
     return version;
 }
@@ -120,10 +120,10 @@
     }
 }
 
-- (NSUInteger)versionNumber;
+- (int16_t)versionNumber;
 {
     [self _downloadDatabaseHead];
-    NSUInteger version = NSNotFound;
+    int16_t version = -1;
     if ([_tlpdbData length] >= MIN_DATA_LENGTH) {
         /*
          name 00texlive.config
@@ -163,7 +163,7 @@
             char *year = NSZoneMalloc(NSDefaultMallocZone(), matchLength + 1);
             memset(year, 0, matchLength + 1);
             memcpy(year, &tlpdb_str[match[1].rm_so], matchLength);
-            version = strtoul(year, NULL, 0);
+            version = strtol(year, NULL, 0);
             NSZoneFree(NSDefaultMallocZone(), year);
         }
         else {

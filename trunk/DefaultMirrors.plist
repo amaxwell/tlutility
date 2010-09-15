@@ -7,6 +7,8 @@
       since TLU goes to some lengths to make multiplexer usage more consistent
       by updating/installing from the same mirror that was used for listing.
     */
+    2008 = "ftp://ftp.tug.org/historic//systems//texlive//2008//tlnet";
+    2009 = "ftp://ftp.tug.org/historic//systems//texlive//2009//tlnet";
     "tlnet" = (
         /* Multiplexer */
         "http://mirror.ctan.org/systems/texlive/tlnet",

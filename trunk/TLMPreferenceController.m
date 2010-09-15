@@ -44,6 +44,7 @@
 #import "TLMDownload.h"
 #import "TLMReadWriteOperationQueue.h"
 #import "TLMOptionOperation.h"
+#import "TLMDatabase.h"
 
 NSString * const TLMTexBinPathPreferenceKey = @"TLMTexBinPathPreferenceKey";       /* /usr/texbin                      */
 NSString * const TLMUseRootHomePreferenceKey = @"TLMUseRootHomePreferenceKey";     /* YES                              */
@@ -63,6 +64,13 @@ NSString * const TLMTLCriticalRepository = @"TLMTLCriticalRepository";          
 #define KPSEWHICH_CMD @"kpsewhich"
 #define URL_TIMEOUT 30.0
 
+@interface TLMPreferenceController ()
+
+@property (readwrite, copy) NSURL *legacyRepositoryURL;
+
+@end
+
+
 @implementation TLMPreferenceController
 
 @synthesize _texbinPathControl;
@@ -76,6 +84,7 @@ NSString * const TLMTLCriticalRepository = @"TLMTLCriticalRepository";          
 @synthesize _autoremoveCheckBox;
 @synthesize _autoinstallCheckBox;
 @synthesize defaultServers = _servers;
+@synthesize legacyRepositoryURL = _legacyRepositoryURL;
 
 + (TLMPreferenceController *)sharedPreferenceController;
 {
@@ -555,12 +564,40 @@ static NSURL * __TLMParseLocationOption(NSString *location)
 
 - (NSString *)windowNibName { return @"Preferences"; }
 
-- (NSURL *)defaultServerURL
+- (NSURL *)_defaultServerURL
 {
     NSString *location = [[NSUserDefaults standardUserDefaults] objectForKey:TLMFullServerURLPreferenceKey];
     while ([location hasSuffix:@"/"])
         location = [location substringToIndex:([location length] - 1)];
-    return [NSURL URLWithString:location];
+    return [NSURL URLWithString:location];    
+}
+
+- (void)_checkRepositoryVersion
+{
+    @synchronized(self) {
+        if (_repositoryYear <= 0 || _installedYear <= 0 && ([self legacyRepositoryURL] == nil)) {
+            _repositoryYear = [TLMDatabase yearForMirrorURL:[self _defaultServerURL]];
+            _installedYear = [TLMAppController texliveYear];
+            if (_repositoryYear != _installedYear) {
+                
+                NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"DefaultMirrors" ofType:@"plist"];
+                NSDictionary *mirrorsByYear = nil;
+                if (plistPath)
+                    mirrorsByYear = [NSDictionary dictionaryWithContentsOfFile:plistPath];
+                NSString *location = [mirrorsByYear objectForKey:[[NSNumber numberWithShort:_installedYear] stringValue]];
+                if (location) {
+                    TLMLog(__func__, @"Version mismatch detected.  Trying to fall back to %@", location);
+                    [self setLegacyRepositoryURL:[NSURL URLWithString:location]];
+                }
+            }
+        }
+    }
+}
+
+- (NSURL *)defaultServerURL
+{
+    [self _checkRepositoryVersion];
+    return [self legacyRepositoryURL] != nil ? [self legacyRepositoryURL] : [self _defaultServerURL];
 }
 
 - (NSString *)tlmgrAbsolutePath
