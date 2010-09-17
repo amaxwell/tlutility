@@ -41,5 +41,6 @@
 @interface TLMDatabase : NSObject
 
 + (int16_t)yearForMirrorURL:(NSURL *)aURL;
++ (int16_t)yearForMirrorURL:(NSURL *)aURL usedURL:(NSURL **)usedURL;
 
 @end

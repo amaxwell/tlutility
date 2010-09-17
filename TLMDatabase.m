@@ -44,31 +44,61 @@
 @interface _TLMDatabase : NSObject {
     NSURL           *_tlpdbURL;
     NSMutableData   *_tlpdbData;
-    NSURLConnection *_connection;
     BOOL             _failed;
+    NSURL           *_actualURL;
 }
 
 - (id)initWithURL:(NSURL *)tlpdbURL;
 - (int16_t)versionNumber;
+@property (nonatomic, copy) NSURL *actualURL;
 
 @end
 
 @implementation TLMDatabase
 
+static NSMutableDictionary *_databases = nil;
+
++ (void)initialize
+{
+    if (nil == _databases)
+        _databases = [NSMutableDictionary new];
+}
+
 + (int16_t)yearForMirrorURL:(NSURL *)aURL;
 {
-    if (nil == aURL)
-        aURL = [[TLMPreferenceController sharedPreferenceController] defaultServerURL];
-    NSURL *tlpdbURL = [NSURL URLWithString:[[aURL absoluteString] stringByAppendingPathComponent:@"tlpkg/texlive.tlpdb"]];
-    _TLMDatabase *db = [[_TLMDatabase alloc] initWithURL:tlpdbURL];
-    int16_t version = [db versionNumber];
-    [db release];
+    return [self yearForMirrorURL:aURL usedURL:NULL];
+}
+
++ (int16_t)yearForMirrorURL:(NSURL *)aURL usedURL:(NSURL **)usedURL;
+{
+    int16_t version = -1;
+    @synchronized(self) {
+        if (nil == aURL)
+            aURL = [[TLMPreferenceController sharedPreferenceController] defaultServerURL];
+        NSURL *tlpdbURL = [NSURL URLWithString:[[aURL absoluteString] stringByAppendingPathComponent:@"tlpkg/texlive.tlpdb"]];
+        _TLMDatabase *db = [_databases objectForKey:tlpdbURL];
+        if (nil == db) {
+            db = [[_TLMDatabase alloc] initWithURL:tlpdbURL];
+            [_databases setObject:db forKey:tlpdbURL];
+            [db release];
+        }
+        version = [db versionNumber];
+        if (usedURL) *usedURL = [[[db actualURL] retain] autorelease];
+        // if redirected (e.g., from mirror.ctan.org), don't cache by the original host
+        if ([[db actualURL] isEqual:tlpdbURL] == NO) {
+            TLMLog(__func__, @"Recaching database under redirected URL");
+            [_databases setObject:db forKey:[db actualURL]];
+            [_databases removeObjectForKey:tlpdbURL];
+        }
+    }
     return version;
 }
 
 @end
 
 @implementation _TLMDatabase
+
+@synthesize actualURL = _actualURL;
 
 #define MIN_DATA_LENGTH 2048
 
@@ -85,9 +115,9 @@
 
 - (void)dealloc
 {
-    [_connection release];
     [_tlpdbURL release];
     [_tlpdbData release];
+    [_actualURL release];
     [super dealloc];
 }
 
@@ -97,26 +127,33 @@
     TLMLog(__func__, @"Failed to download tlpdb: %@", error);
 }
 
+- (NSURLRequest *)connection:(NSURLConnection *)connection willSendRequest:(NSURLRequest *)request redirectResponse:(NSURLResponse *)response;
+{
+    if (response) {
+        TLMLog(__func__, @"redirected request to %@", [[request URL] absoluteString]);
+        [self setActualURL:[request URL]];
+    }
+    return request;
+}
+
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data;
 {
     [_tlpdbData appendData:data];
-    TLMLog(__func__, @"%d bytes", [_tlpdbData length]);
-    if ([_tlpdbData length] >= MIN_DATA_LENGTH)
-        [connection cancel];
 }
 
 - (void)_downloadDatabaseHead
 {
     if ([_tlpdbData length] == 0) {
-        NSParameterAssert(nil == _connection);
         NSURLRequest *request = [NSURLRequest requestWithURL:_tlpdbURL];
         _failed = NO;
         TLMLog(__func__, @"Downloading tlpdb%C", 0x2026);
-        _connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+        NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
         do {
             CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0.5, TRUE);
         } while ([_tlpdbData length] < MIN_DATA_LENGTH && NO == _failed);
         TLMLog(__func__, @"Downloaded %lu bytes", (unsigned long)[_tlpdbData length]);
+        [connection cancel];
+        [connection release];
     }
 }
 
@@ -161,7 +198,7 @@
         else if (0 == (err = regexec(&regex, tlpdb_str, 2, match, 0))) {
             size_t matchLength = match[1].rm_eo - match[1].rm_so;
             char *year = NSZoneMalloc(NSDefaultMallocZone(), matchLength + 1);
-            memset(year, 0, matchLength + 1);
+            memset(year, '\0', matchLength + 1);
             memcpy(year, &tlpdb_str[match[1].rm_so], matchLength);
             version = strtol(year, NULL, 0);
             NSZoneFree(NSDefaultMallocZone(), year);
