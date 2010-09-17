@@ -575,7 +575,7 @@ static NSURL * __TLMParseLocationOption(NSString *location)
 - (void)_checkRepositoryVersion
 {
     @synchronized(self) {
-        if (_repositoryYear <= 0 || _installedYear <= 0 && ([self legacyRepositoryURL] == nil)) {
+        if ((_repositoryYear <= 0 || _installedYear <= 0) && [self legacyRepositoryURL] == nil) {
             _repositoryYear = [TLMDatabase yearForMirrorURL:[self _defaultServerURL]];
             _installedYear = [TLMAppController texliveYear];
             if (_repositoryYear != _installedYear) {
