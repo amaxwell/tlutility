@@ -68,8 +68,12 @@ extern NSString * const TLMTLCriticalRepository;
     BOOL                 _hasPendingServerEdit;
     NSUInteger           _pendingOptionChangeCount;
     NSURL               *_legacyRepositoryURL;
-    int16_t              _repositoryYear;
-    int16_t              _installedYear;
+    struct __versions {
+        int16_t   repositoryYear;
+        int16_t   installedYear;
+        NSInteger tlmgrVersion;
+        BOOL      isDevelopment;
+    } _versions;
 }
 
 + (TLMPreferenceController *)sharedPreferenceController;
