@@ -195,9 +195,7 @@ static char _TLMOperationQueueOperationContext;
     [self refreshUpdatedPackageList];
     
     // checkbox in IB doesn't work?
-    [[[self window] toolbar] setAutosavesConfiguration:YES];
-    
-    [[NSApp delegate] checkVersionConsistency];
+    [[[self window] toolbar] setAutosavesConfiguration:YES];    
 }
 
 - (NSString *)windowNibName { return @"MainWindow"; }
@@ -286,7 +284,7 @@ static char _TLMOperationQueueOperationContext;
 {
     NSURL *aURL = [_currentListDataSource lastUpdateURL];
     if (nil == aURL)
-        aURL = [[TLMPreferenceController sharedPreferenceController] defaultServerURL];
+        aURL = [[TLMPreferenceController sharedPreferenceController] validServerURL];
     NSParameterAssert(aURL);
     return aURL;
 }
@@ -358,7 +356,8 @@ static char _TLMOperationQueueOperationContext;
             
             [self _insertDataSourceInResponderChain:_updateListDataSource];   
             _currentListDataSource = _updateListDataSource;
-            [self _updateURLView];
+            if ([_currentListDataSource lastUpdateURL])
+                [self _updateURLView];
             [[_currentListDataSource statusWindow] fadeIn];
 
             if ([[_updateListDataSource allPackages] count])
@@ -368,7 +367,8 @@ static char _TLMOperationQueueOperationContext;
             
             [self _insertDataSourceInResponderChain:_packageListDataSource];   
             _currentListDataSource = _packageListDataSource;
-            [self _updateURLView];
+            if ([_currentListDataSource lastUpdateURL])
+                [self _updateURLView];
             [[_currentListDataSource statusWindow] fadeIn];
 
             // we load the update list on launch, so load this one on first access of the tab
@@ -383,7 +383,8 @@ static char _TLMOperationQueueOperationContext;
         case 2:
             [self _insertDataSourceInResponderChain:_installDataSource];
             _currentListDataSource = _installDataSource;
-            [self _updateURLView];
+            if ([_currentListDataSource lastUpdateURL])
+                [self _updateURLView];
             [[_currentListDataSource statusWindow] fadeIn];
             
             break;
@@ -862,7 +863,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 
 - (void)refreshFullPackageList
 {
-    NSURL *serverURL = [[TLMPreferenceController sharedPreferenceController] defaultServerURL];
+    NSURL *serverURL = [[TLMPreferenceController sharedPreferenceController] validServerURL];
     
     /* 
      If the network is not available, read the local package db so that show info still works.
@@ -887,7 +888,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 
 - (void)refreshUpdatedPackageList
 {
-    [self _refreshUpdatedPackageListFromLocation:[[TLMPreferenceController sharedPreferenceController] defaultServerURL]];
+    [self _refreshUpdatedPackageListFromLocation:[[TLMPreferenceController sharedPreferenceController] validServerURL]];
 }
 
 - (void)updateAllPackages;

@@ -364,11 +364,25 @@ static void __TLMProxyManagerInit() { _sharedManager = [TLMProxyManager new]; }
     return _sharedManager;
 }
 
+static NSURL * __TLMProxyDefaultServerURL()
+{
+    /*
+     Start with the URL directly from preferences, rather than doing through the redirect/legacy checks.
+     This isn't always correct, but it's generally correct enough; if mirror.ctan.org requires a proxy,
+     chances are pretty good that any host will require a proxy.  If the user has set a specific host,
+     this will also be correct, unless we're going to legacy mode (in which case I don't care if it breaks).
+     The main thing is to avoid a download here, since this is called very early, and could cause a delay
+     in showing the main window.
+     */
+    return [[TLMPreferenceController sharedPreferenceController] defaultServerURL];
+}
+
 - (id)init
 {
     self = [super init];
     if (self) {
-        _targetURL = [[[TLMPreferenceController sharedPreferenceController] defaultServerURL] copy];
+
+        _targetURL = [__TLMProxyDefaultServerURL() copy];  
         
         // NULL retain/release to avoid a retain cycle
         SCDynamicStoreContext ctxt = { 0, self, NULL, NULL, CFCopyDescription }; 
@@ -399,7 +413,7 @@ static void __TLMProxyManagerInit() { _sharedManager = [TLMProxyManager new]; }
 
 - (void)updateProxyEnvironmentForURL:(NSURL *)aURL;
 {
-    [self setTargetURL:(aURL ? aURL : [[TLMPreferenceController sharedPreferenceController] defaultServerURL])];    
+    [self setTargetURL:(aURL ? aURL : __TLMProxyDefaultServerURL())];    
     __TLMProxySettingsChanged(_dynamicStore, NULL, self);
 }
 

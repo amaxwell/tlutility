@@ -103,6 +103,7 @@ extern NSString * const TLMTLCriticalRepository;
 
 // composes the URL as needed
 @property (readonly) NSURL *defaultServerURL;
+@property (readonly) NSURL *validServerURL;
 
 // returns the local installation directory (/usr/local/texlive/2009)
 @property (readonly) NSURL *installDirectory;
@@ -119,5 +120,8 @@ extern NSString * const TLMTLCriticalRepository;
 // tlmgr 2009 modifiers to update action
 @property (readonly) BOOL autoInstall;
 @property (readonly) BOOL autoRemove;
+
+@property (readonly) BOOL tlmgrSupportsPersistentDownloads;
+@property (readonly) int16_t texliveYear;
 
 @end

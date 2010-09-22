@@ -41,6 +41,8 @@
 #import "TLMLogServer.h"
 #import "TLMPreferenceController.h"
 
+#define TLPDB_PATH @"tlpkg/texlive.tlpdb"
+
 @interface _TLMDatabase : NSObject {
     NSURL           *_tlpdbURL;
     NSMutableData   *_tlpdbData;
@@ -51,6 +53,7 @@
 - (id)initWithURL:(NSURL *)tlpdbURL;
 - (int16_t)versionNumber;
 @property (nonatomic, copy) NSURL *actualURL;
+@property (readonly) BOOL failed;
 
 @end
 
@@ -75,15 +78,27 @@ static NSMutableDictionary *_databases = nil;
     @synchronized(self) {
         if (nil == aURL)
             aURL = [[TLMPreferenceController sharedPreferenceController] defaultServerURL];
-        NSURL *tlpdbURL = [NSURL URLWithString:[[aURL absoluteString] stringByAppendingPathComponent:@"tlpkg/texlive.tlpdb"]];
+        
+        // cache under the full tlpdb URL
+        NSURL *tlpdbURL = [NSURL URLWithString:[[aURL absoluteString] stringByAppendingPathComponent:TLPDB_PATH]];
         _TLMDatabase *db = [_databases objectForKey:tlpdbURL];
         if (nil == db) {
             db = [[_TLMDatabase alloc] initWithURL:tlpdbURL];
             [_databases setObject:db forKey:tlpdbURL];
-            [db release];
+            [db autorelease];
         }
+#warning check failed state
+
+        // force a download if necessary
         version = [db versionNumber];
-        if (usedURL) *usedURL = [[[db actualURL] retain] autorelease];
+        
+        // now see if we redirected at some point...we don't want to return the tlpdb path
+        NSString *actualURLString = [[db actualURL] absoluteString];
+        // delete "tlpkg/texlive.tlpdb"
+        actualURLString = [[actualURLString stringByDeletingLastPathComponent] stringByDeletingLastPathComponent];
+        NSURL *actualURL = [NSURL URLWithString:actualURLString];
+        if (usedURL) *usedURL = actualURL;
+        
         // if redirected (e.g., from mirror.ctan.org), don't cache by the original host
         if ([[db actualURL] isEqual:tlpdbURL] == NO) {
             TLMLog(__func__, @"Recaching database under redirected URL");
@@ -99,6 +114,7 @@ static NSMutableDictionary *_databases = nil;
 @implementation _TLMDatabase
 
 @synthesize actualURL = _actualURL;
+@synthesize failed = _failed;
 
 #define MIN_DATA_LENGTH 2048
 
