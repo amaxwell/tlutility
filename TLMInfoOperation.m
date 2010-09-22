@@ -53,7 +53,7 @@
 - (id)initWithPackageName:(NSString *)packageName
 {
     NSParameterAssert(packageName);
-    NSString *location = [[[TLMPreferenceController sharedPreferenceController] defaultServerURL] absoluteString];
+    NSString *location = [[[TLMPreferenceController sharedPreferenceController] validServerURL] absoluteString];
     NSArray *options = [NSArray arrayWithObjects:@"--repository", location, @"show", @"--list", packageName, nil];
     NSString *cmd = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath];
     self = [self initWithCommand:cmd options:options];

@@ -52,7 +52,7 @@
     NSMutableArray *options = [NSMutableArray arrayWithObjects:@"--machine-readable", @"--repository", locationString, nil];
     
     // added after TL 2009 release
-    if ([TLMAppController tlmgrSupportsPersistentDownloads])
+    if ([[TLMPreferenceController sharedPreferenceController] tlmgrSupportsPersistentDownloads])
         [options addObject:@"--persistent-downloads"];
     
     [options addObject:@"install"];

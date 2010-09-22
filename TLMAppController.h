@@ -49,11 +49,7 @@
 // update $PATH from NSUserDefaults
 + (void)updatePathEnvironment;
 
-// see if tlmgr version matches TeX Live mirror URL (heuristic)
-- (void)checkVersionConsistency;
-+ (NSInteger)texliveYear;
-
-+ (BOOL)tlmgrSupportsPersistentDownloads;
+@property (readonly) TLMMainWindowController *mainWindowController;
 
 - (IBAction)showPreferences:(id)sender;
 - (IBAction)openDisasterRecoveryPage:(id)sender;
