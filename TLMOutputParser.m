@@ -531,7 +531,7 @@ static bool hasKeyPrefix(NSString *line)
 + (NSArray *)nodesWithListLines:(NSArray *)listLines;
 {    
     NSMutableArray *nodes = [NSMutableArray array];
-    
+    NSMutableArray *orphans = [NSMutableArray array];
     for (NSString *line in listLines) {
         
         line = [line stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
@@ -543,16 +543,33 @@ static bool hasKeyPrefix(NSString *line)
                     [last addChild:node];
                 }
                 else {
-                    // change to full name, add to the flattened list, and log
-                    [node setName:[node fullName]];
-                    [nodes addObject:node];
-                    TLMLog(__func__, @"Package \"%@\" has no parent", [node fullName]);
+                    [orphans addObject:node];
                 }
             }
             else {
                 [nodes addObject:node];
             }
             [node release];
+        }
+    }
+    
+    for (TLMPackageNode *node in orphans) {
+        
+        TLMPackageNode *parent = nil;
+        
+        for (parent in nodes) {
+            
+            if ([[node fullName] hasPrefix:[parent fullName]]) {
+                [parent addChild:node];
+                break;
+            }
+        }
+     
+        if (nil == parent) {
+            // change to full name, add to the flattened list, and log
+            [node setName:[node fullName]];
+            [nodes addObject:node];
+            TLMLog(__func__, @"Package \"%@\" has no parent", [node fullName]);                        
         }
     }
     
