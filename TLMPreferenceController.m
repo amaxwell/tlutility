@@ -360,7 +360,9 @@ static NSURL * __TLMParseLocationOption(NSString *location)
     [_texbinPathControl setURL:aURL];
     [[NSUserDefaults standardUserDefaults] setObject:[aURL path] forKey:TLMTexBinPathPreferenceKey];
         
-    _versions.installedYear = [self _texliveYear:NULL isDevelopmentVersion:&_versions.isDevelopment tlmgrVersion:&_versions.tlmgrVersion];
+    @synchronized(self) {
+        _versions.installedYear = [self _texliveYear:NULL isDevelopmentVersion:&_versions.isDevelopment tlmgrVersion:&_versions.tlmgrVersion];
+    }
     
     // update environment, or tlmgr will be non-functional
     [TLMAppController updatePathEnvironment];
@@ -616,7 +618,9 @@ static NSURL * __TLMParseLocationOption(NSString *location)
         [self _syncCommandLineServerOption];
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:TLMDisableVersionMismatchWarningKey];
         
-        _versions.installedYear = [self _texliveYear:NULL isDevelopmentVersion:&_versions.isDevelopment tlmgrVersion:&_versions.tlmgrVersion];
+        @synchronized(self) {
+            _versions.installedYear = [self _texliveYear:NULL isDevelopmentVersion:&_versions.isDevelopment tlmgrVersion:&_versions.tlmgrVersion];
+        }
         
         /*
          Allow changes to the combo box list to persist in the session, but not across launches 
@@ -643,17 +647,60 @@ static NSURL * __TLMParseLocationOption(NSString *location)
     return [NSURL URLWithString:location];    
 }
 
+- (void)versionWarningDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
+{
+    if ([[alert suppressionButton] state] == NSOnState)
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:TLMDisableVersionMismatchWarningKey];
+}
+
+- (void)_displayFallbackServerAlert
+{
+    /*
+     Formerly logged that the URL was okay, but that was only correct for the transition from TL 2008 to 2009.
+     However, tlmgr itself will perform that check and log if it fails, so logging that it's okay was just
+     confusing pretest users.
+     */
+    uint16_t remoteVersion, localVersion;
+    @synchronized(self) {
+        remoteVersion = _versions.repositoryYear;
+        localVersion = _versions.installedYear;
+    }
+    
+    NSAlert *alert = [[NSAlert new] autorelease];
+    [alert setMessageText:NSLocalizedString(@"Mirror URL has a newer TeX Live version", @"")];
+    [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"Your TeX Live version is %d, but your mirror URL appears to be for TeX Live %d.  You need to manually upgrade to a newer version of TeX Live, as there will be no further updates for your version.", @"single integer specifier"), localVersion, remoteVersion]];
+
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:TLMDisableVersionMismatchWarningKey] == NO) {
+        
+        SEL endSel = @selector(versionWarningDidEnd:returnCode:contextInfo:);
+        [alert setShowsSuppressionButton:YES];
+        
+        // always show on the main window
+        [alert beginSheetModalForWindow:[[[NSApp delegate] mainWindowController] window] 
+                          modalDelegate:self 
+                         didEndSelector:endSel 
+                            contextInfo:NULL];            
+    }
+}
+
 - (NSURL *)validServerURL
 {
     NSURL *validURL = nil;
     @synchronized(self) {
+        
+        /*
+         Recomputing installedYear and repositoryYear is expensive, and only problematic
+         if the user switches the TeXDist prefpane while running TLU.  I did that for
+         testing, but I really can't see anyone doing it for real.  Consequently, we'll
+         just store these away until the next relaunch or change in mirror prefs.
+         */
         if (_versions.installedYear <= 0)
             _versions.installedYear = [self _texliveYear:NULL isDevelopmentVersion:&_versions.isDevelopment tlmgrVersion:&_versions.tlmgrVersion];
 
         if (_versions.repositoryYear <= 0)
             _versions.repositoryYear = [TLMDatabase yearForMirrorURL:[self defaultServerURL] usedURL:&validURL];
         
-        if (_versions.repositoryYear != _versions.installedYear) {
+        if (_versions.repositoryYear != _versions.installedYear && [self legacyRepositoryURL] == nil) {
             
             NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"DefaultMirrors" ofType:@"plist"];
             NSDictionary *mirrorsByYear = nil;
@@ -668,6 +715,9 @@ static NSURL * __TLMParseLocationOption(NSString *location)
                 TLMLog(__func__, @"Version mismatch detected, but no fallback URL was found.");
                 [self setLegacyRepositoryURL:nil];
             }
+            
+            // async sheet with no user interaction, so no point in waiting...
+            [self performSelectorOnMainThread:@selector(_displayFallbackServerAlert) withObject:nil waitUntilDone:NO];
             
             validURL = [self legacyRepositoryURL];
         }
@@ -758,102 +808,6 @@ static NSURL * __TLMParseLocationOption(NSString *location)
 - (BOOL)tlmgrSupportsPersistentDownloads;
 {
     return (_versions.tlmgrVersion >= 16424);
-}
-
-- (void)versionWarningDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
-{
-    if ([[alert suppressionButton] state] == NSOnState)
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:TLMDisableVersionMismatchWarningKey];
-}
-
-- (void)checkVersionConsistency
-{    
-    NSString *versionString;
-    BOOL isDev;
-    int16_t texliveYear = [self _texliveYear:&versionString isDevelopmentVersion:&isDev tlmgrVersion:NULL];
-    
-    if (texliveYear ) {
-        
-        TLMLog(__func__, @"Looks like you're using TeX Live %d%C", (int)texliveYear, 0x2026);
-        
-        NSString *URLString = [[[TLMPreferenceController sharedPreferenceController] defaultServerURL] absoluteString];
-        
-        /*
-         Currently we only have two actual cases to be concerned with, so there's no point in overgeneralizing here.
-         TL 2008 appended the year to the URL, but 2009 (and presumably following) releases do not.  Unfortunately,
-         tlmgr handles the multiplexer URLs specially, and if someone uses a 2009 pretest tlmgr with a 2008 URL,
-         tlmgr converts it to a 2009 URL and you get a 404 page instead of an error about a version mismatch.  This
-         may or may not be an issue with later releases, so it's something of a special case for now.
-         */
-        
-        NSAlert *alert = nil;
-        BOOL allowSuppression = YES;
-        
-        if (2008 == texliveYear) {
-            
-            alert = [[NSAlert new] autorelease];
-            [alert setMessageText:NSLocalizedString(@"Unsupported TeX Live version", @"")];
-            [alert setInformativeText:NSLocalizedString(@"This version of TeX Live Utility requires TeX Live 2009 or later.  You need TeX Live Utility 0.74 or earlier in order to use TeX Live 2008.", @"")];
-            
-            // disable alert suppression on this path, since the user has made an unfortunate choice...
-            allowSuppression = NO;
-        }
-        else if (texliveYear > 2008 && [URLString hasSuffix:@"2008"]) {
-            
-            alert = [[NSAlert new] autorelease];
-            [alert setMessageText:NSLocalizedString(@"Mirror URL may not match TeX Live version", @"")];
-            [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"Your TeX Live version is %d, but your mirror URL appears to be for TeX Live 2008.  If any operations fail, you may need to adjust your mirror URL in the preferences.", @"single integer specifier"), (int)texliveYear]];
-        }
-        // this check is not sufficient, but users who edit preferences and run a development version should be able to cope
-        else if (isDev && [[[TLMPreferenceController sharedPreferenceController] defaultServers] containsObject:URLString]) {
-            
-            alert = [[NSAlert new] autorelease];
-            [alert setMessageText:NSLocalizedString(@"Mirror URL may not match TeX Live version", @"")];
-            [alert setInformativeText:NSLocalizedString(@"You appear to be using a development version of TeX Live, which may not be supported by your current mirror URL in the preference setttings.", @"alert text")];
-        }
-        else {
-            /*
-             Formerly logged that the URL was okay, but that was only correct for the transition from TL 2008 to 2009.
-             However, tlmgr itself will perform that check and log if it fails, so logging that it's okay was just
-             confusing pretest users.
-             */
-            NSInteger remoteVersion = [TLMDatabase yearForMirrorURL:nil];
-            if (remoteVersion > texliveYear) {
-                alert = [[NSAlert new] autorelease];
-                [alert setMessageText:NSLocalizedString(@"Mirror URL has a newer TeX Live version", @"")];
-                [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"Your TeX Live version is %d, but your mirror URL appears to be for TeX Live %d.  You may need to manually upgrade to a newer version of TeX Live.", @"single integer specifier"), (int)texliveYear, (int)remoteVersion]];
-            }
-            else if (remoteVersion < texliveYear) {
-                alert = [[NSAlert new] autorelease];
-                [alert setMessageText:NSLocalizedString(@"Mirror URL has an older TeX Live version", @"")];
-                [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"Your TeX Live version is %d, but your mirror URL appears to be for TeX Live %d.  You may need to manually switch to a mirror with the newer version.", @"single integer specifier"), (int)texliveYear, (int)remoteVersion]];
-            }
-            allowSuppression = NO;
-            TLMLog(__func__, @"Remote version is %d", remoteVersion);
-        }
-        
-        // always log a message in case the user turned off the warning, so there is no plausible deniability when things fail...
-        if (alert)
-            TLMLog(__func__, @"*** WARNING *** Potential version mismatch between tlmgr and mirror URL %@", URLString);
-        
-        if (alert && (NO == allowSuppression || [[NSUserDefaults standardUserDefaults] boolForKey:TLMDisableVersionMismatchWarningKey] == NO)) {
-            
-            SEL endSel = NULL;
-            if (allowSuppression) {
-                [alert setShowsSuppressionButton:YES];
-                endSel = @selector(versionWarningDidEnd:returnCode:contextInfo:);
-            }
-            
-            // always show on the main window
-            [alert beginSheetModalForWindow:[[[NSApp delegate] mainWindowController] window] 
-                              modalDelegate:self 
-                             didEndSelector:endSel 
-                                contextInfo:NULL];            
-        }
-    }
-    else if (versionString) {
-        TLMLog(__func__, @"Unable to determine TeX Live year from tlmgr --version: %@", versionString);
-    }
 }
 
 #pragma mark Server combo box datasource
