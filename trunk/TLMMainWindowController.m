@@ -291,7 +291,10 @@ static char _TLMOperationQueueOperationContext;
 
 - (void)_updateURLView
 {
-    NSURL *aURL = [self _lastUpdateURL];
+    NSURL *aURL = [_currentListDataSource lastUpdateURL];
+    // use defaultServerURL if we haven't previously contacted a host; -validServerURL does network ops
+    if (nil == aURL)
+        aURL = [[TLMPreferenceController sharedPreferenceController] defaultServerURL];
     NSTextStorage *ts = [_hostnameView textStorage];
     [[ts mutableString] setString:[aURL absoluteString]];
     [ts addAttribute:NSFontAttributeName value:[NSFont labelFontOfSize:0] range:NSMakeRange(0, [ts length])];
@@ -356,8 +359,7 @@ static char _TLMOperationQueueOperationContext;
             
             [self _insertDataSourceInResponderChain:_updateListDataSource];   
             _currentListDataSource = _updateListDataSource;
-            if ([_currentListDataSource lastUpdateURL])
-                [self _updateURLView];
+            [self _updateURLView];
             [[_currentListDataSource statusWindow] fadeIn];
 
             if ([[_updateListDataSource allPackages] count])
@@ -367,8 +369,7 @@ static char _TLMOperationQueueOperationContext;
             
             [self _insertDataSourceInResponderChain:_packageListDataSource];   
             _currentListDataSource = _packageListDataSource;
-            if ([_currentListDataSource lastUpdateURL])
-                [self _updateURLView];
+            [self _updateURLView];
             [[_currentListDataSource statusWindow] fadeIn];
 
             // we load the update list on launch, so load this one on first access of the tab
@@ -383,8 +384,7 @@ static char _TLMOperationQueueOperationContext;
         case 2:
             [self _insertDataSourceInResponderChain:_installDataSource];
             _currentListDataSource = _installDataSource;
-            if ([_currentListDataSource lastUpdateURL])
-                [self _updateURLView];
+            [self _updateURLView];
             [[_currentListDataSource statusWindow] fadeIn];
             
             break;
