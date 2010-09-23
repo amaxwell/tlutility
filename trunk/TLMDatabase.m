@@ -163,9 +163,12 @@ static NSMutableDictionary *_databases = nil;
         NSURLRequest *request = [NSURLRequest requestWithURL:_tlpdbURL];
         _failed = NO;
         TLMLog(__func__, @"Downloading tlpdb%C", 0x2026);
-        NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+        NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
+        NSString *rlmode = @"__TLMDatabaseDownloadRunLoopMode";
+        [connection scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:rlmode];
+        [connection start];
         do {
-            CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0.5, TRUE);
+            CFRunLoopRunInMode((CFStringRef)rlmode, 0.1, TRUE);
         } while ([_tlpdbData length] < MIN_DATA_LENGTH && NO == _failed);
         TLMLog(__func__, @"Downloaded %lu bytes", (unsigned long)[_tlpdbData length]);
         [connection cancel];
