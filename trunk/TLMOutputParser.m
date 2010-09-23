@@ -553,10 +553,17 @@ static bool hasKeyPrefix(NSString *line)
         }
     }
     
+    /*
+     The code above assumes that a parent comes immediately before its children.
+     This turns out not to be the case for several packages, including context
+     and xetex.  Here we clean any of those up; this is an obscenely slow loop,
+     but the arrays are so small that it's not worth optimizing.
+     */
     for (TLMPackageNode *node in orphans) {
         
         TLMPackageNode *parent = nil;
         
+        // linear search through all nodes; could sort and use binary search
         for (parent in nodes) {
             
             if ([[node fullName] hasPrefix:[parent fullName]]) {
@@ -569,7 +576,9 @@ static bool hasKeyPrefix(NSString *line)
             // change to full name, add to the flattened list, and log
             [node setName:[node fullName]];
             [nodes addObject:node];
-            TLMLog(__func__, @"Package \"%@\" has no parent", [node fullName]);                        
+            // ignore the special TL nodes and the win32 junk
+            if ([[node fullName] hasPrefix:@"00texlive"] == NO && [[node fullName] hasSuffix:@".win32"] == NO)
+                TLMLog(__func__, @"Package \"%@\" has no parent", [node fullName]);                        
         }
     }
     
