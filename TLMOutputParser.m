@@ -539,10 +539,15 @@ static bool hasKeyPrefix(NSString *line)
             TLMPackageNode *node = [self _newPackageNodeWithOutputLine:line];
             if ([node hasParent]) {
                 TLMPackageNode *last = [nodes lastObject];
-                if ([[node fullName] hasPrefix:[node fullName]])
+                if (last && [[node fullName] hasPrefix:[last fullName]]) {
                     [last addChild:node];
-                else
-                    TLMLog(__func__, @"Child node named \"%@\" follows node named \"%@\"", [node fullName], [node fullName]);
+                }
+                else {
+                    // change to full name, add to the flattened list, and log
+                    [node setName:[node fullName]];
+                    [nodes addObject:node];
+                    TLMLog(__func__, @"Package \"%@\" has no parent", [node fullName]);
+                }
             }
             else {
                 [nodes addObject:node];
