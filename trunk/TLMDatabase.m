@@ -43,7 +43,7 @@
 
 #define TLPDB_PATH      @"tlpkg/texlive.tlpdb"
 #define MIN_DATA_LENGTH 2048
-#define URL_TIMEOUT     5
+#define URL_TIMEOUT     10
 
 const int16_t TLMDatabaseUnknownYear = -1;
 
