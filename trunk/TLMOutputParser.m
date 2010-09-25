@@ -484,15 +484,20 @@ static bool hasKeyPrefix(NSString *line)
     
     TLMPackageNode *node = [TLMPackageNode new];
     
+    // mustn't trim whitespace beforehand, or this will screw up any package starting with 'i'
     if ([line characterAtIndex:0] == 'i')
         [node setInstalled:YES];
     
+    // skip the leading space or i; recall that NSScanner will skip whitespace, also
+    if ([line length])
+        line = [line substringFromIndex:1];
+    
     NSScanner *scanner = [[NSScanner alloc] initWithString:line];
-    if ([node isInstalled])
-        [scanner scanString:@"i" intoString:NULL];
     
     NSString *name;
     if ([scanner scanUpToString:@":" intoString:&name]) {
+        
+        fprintf(stderr, "\"%s\"\n", [name UTF8String]);
         
         // e.g. bin-amstex.universal.darwin
         [node setFullName:name];
@@ -534,8 +539,8 @@ static bool hasKeyPrefix(NSString *line)
     NSMutableArray *orphans = [NSMutableArray array];
     for (NSString *line in listLines) {
         
-        line = [line stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-        if (NO == [line isEqualToString:@""]) {
+        // don't trim whitespace before passing to the parser, since it needs leading whitespace
+        if (NO == [[line stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] isEqualToString:@""]) {
             TLMPackageNode *node = [self _newPackageNodeWithOutputLine:line];
             if ([node hasParent]) {
                 TLMPackageNode *last = [nodes lastObject];
