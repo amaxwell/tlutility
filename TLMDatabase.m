@@ -94,10 +94,16 @@ static NSMutableDictionary *_databases = nil;
         
         // now see if we redirected at some point...we don't want to return the tlpdb path
         NSString *actualURLString = [[db actualURL] absoluteString];
-        // delete "tlpkg/texlive.tlpdb"
-        actualURLString = [[actualURLString stringByDeletingLastPathComponent] stringByDeletingLastPathComponent];
-        NSURL *actualURL = [NSURL URLWithString:actualURLString];
-        if (usedURL) *usedURL = actualURL;
+        if (actualURLString) {
+            // delete "tlpkg/texlive.tlpdb"
+            actualURLString = [[actualURLString stringByDeletingLastPathComponent] stringByDeletingLastPathComponent];
+            NSURL *actualURL = [NSURL URLWithString:actualURLString];
+            if (usedURL) *usedURL = actualURL;
+        }
+        else if (usedURL) {
+            *usedURL = aURL;
+        }
+
         
         // if redirected (e.g., from mirror.ctan.org), don't cache by the original host
         if ([[db actualURL] isEqual:tlpdbURL] == NO) {
@@ -147,8 +153,8 @@ static NSMutableDictionary *_databases = nil;
 {
     if (response) {
         TLMLog(__func__, @"redirected request to %@", [[request URL] absoluteString]);
-        [self setActualURL:[request URL]];
     }
+    [self setActualURL:[request URL]];
     return request;
 }
 
