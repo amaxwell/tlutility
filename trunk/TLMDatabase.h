@@ -38,9 +38,15 @@
 
 #import <Cocoa/Cocoa.h>
 
+// returned as the year in case of an error
+extern const int16_t TLMDatabaseUnknownYear;
+
 @interface TLMDatabase : NSObject
 
+// returns the release year for the given mirror
 + (int16_t)yearForMirrorURL:(NSURL *)aURL;
+
+// returns the release year for the given mirror, and the redirected URL by reference
 + (int16_t)yearForMirrorURL:(NSURL *)aURL usedURL:(NSURL **)usedURL;
 
 @end

@@ -41,7 +41,11 @@
 #import "TLMLogServer.h"
 #import "TLMPreferenceController.h"
 
-#define TLPDB_PATH @"tlpkg/texlive.tlpdb"
+#define TLPDB_PATH      @"tlpkg/texlive.tlpdb"
+#define MIN_DATA_LENGTH 2048
+#define URL_TIMEOUT     5
+
+const int16_t TLMDatabaseUnknownYear = -1;
 
 @interface _TLMDatabase : NSObject {
     NSURL           *_tlpdbURL;
@@ -74,7 +78,7 @@ static NSMutableDictionary *_databases = nil;
 
 + (int16_t)yearForMirrorURL:(NSURL *)aURL usedURL:(NSURL **)usedURL;
 {
-    int16_t version = -1;
+    int16_t version = TLMDatabaseUnknownYear;
     @synchronized(self) {
         if (nil == aURL)
             aURL = [[TLMPreferenceController sharedPreferenceController] defaultServerURL];
@@ -87,7 +91,6 @@ static NSMutableDictionary *_databases = nil;
             [_databases setObject:db forKey:tlpdbURL];
             [db autorelease];
         }
-#warning check failed state
 
         // force a download if necessary
         version = [db versionNumber];
@@ -107,7 +110,7 @@ static NSMutableDictionary *_databases = nil;
         
         // if redirected (e.g., from mirror.ctan.org), don't cache by the original host
         if ([[db actualURL] isEqual:tlpdbURL] == NO) {
-            TLMLog(__func__, @"Recaching database under redirected URL");
+            TLMLog(__func__, @"Recaching database under redirected URL: %@ --> %@", [tlpdbURL absoluteString], [[db actualURL] absoluteString]);
             [_databases setObject:db forKey:[db actualURL]];
             [_databases removeObjectForKey:tlpdbURL];
         }
@@ -121,8 +124,6 @@ static NSMutableDictionary *_databases = nil;
 
 @synthesize actualURL = _actualURL;
 @synthesize failed = _failed;
-
-#define MIN_DATA_LENGTH 2048
 
 - (id)initWithURL:(NSURL *)tlpdbURL;
 {
@@ -165,8 +166,9 @@ static NSMutableDictionary *_databases = nil;
 
 - (void)_downloadDatabaseHead
 {
+    // retry a download if _failed was previously set
     if ([_tlpdbData length] == 0) {
-        NSURLRequest *request = [NSURLRequest requestWithURL:_tlpdbURL];
+        NSURLRequest *request = [NSURLRequest requestWithURL:_tlpdbURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:URL_TIMEOUT];
         _failed = NO;
         TLMLog(__func__, @"Downloading tlpdb%C", 0x2026);
         NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
@@ -185,8 +187,8 @@ static NSMutableDictionary *_databases = nil;
 - (int16_t)versionNumber;
 {
     [self _downloadDatabaseHead];
-    int16_t version = -1;
-    if ([_tlpdbData length] >= MIN_DATA_LENGTH) {
+    int16_t version = TLMDatabaseUnknownYear;
+    if (NO == [self failed] && [_tlpdbData length] >= MIN_DATA_LENGTH) {
         /*
          name 00texlive.config
          category TLCore

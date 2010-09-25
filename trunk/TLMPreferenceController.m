@@ -116,8 +116,8 @@ NSString * const TLMTLCriticalRepository = @"TLMTLCriticalRepository";          
         
         _servers = [servers copy];
         
-        _versions.repositoryYear = -1;
-        _versions.installedYear = -1;
+        _versions.repositoryYear = TLMDatabaseUnknownYear;
+        _versions.installedYear = TLMDatabaseUnknownYear;
         _versions.tlmgrVersion = -1;
         _versions.isDevelopment = NO;
     }
@@ -609,18 +609,18 @@ static NSURL * __TLMParseLocationOption(NSString *location)
         // reset since it's either accepted or reverted at this point
         _hasPendingServerEdit = NO;
     }
-    
-    // always reset these, so we have a known state
-    [self setLegacyRepositoryURL:nil];
-    
+        
     // reset the pref if things have changed
     if ([oldValue isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:TLMFullServerURLPreferenceKey]] == NO) {
+        
+        // always reset these, so we have a known state
+        [self setLegacyRepositoryURL:nil];
+        @synchronized(self) {
+            _versions.repositoryYear = TLMDatabaseUnknownYear;
+        }
+        
         [self _syncCommandLineServerOption];
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:TLMDisableVersionMismatchWarningKey];
-        
-        @synchronized(self) {
-            _versions.installedYear = [self _texliveYear:NULL isDevelopmentVersion:&_versions.isDevelopment tlmgrVersion:&_versions.tlmgrVersion];
-        }
         
         /*
          Allow changes to the combo box list to persist in the session, but not across launches 
@@ -694,13 +694,18 @@ static NSURL * __TLMParseLocationOption(NSString *location)
          testing, but I really can't see anyone doing it for real.  Consequently, we'll
          just store these away until the next relaunch or change in mirror prefs.
          */
-        if (_versions.installedYear <= 0)
+        if (_versions.installedYear == TLMDatabaseUnknownYear)
             _versions.installedYear = [self _texliveYear:NULL isDevelopmentVersion:&_versions.isDevelopment tlmgrVersion:&_versions.tlmgrVersion];
 
-        if (_versions.repositoryYear <= 0)
+        if (_versions.repositoryYear == TLMDatabaseUnknownYear)
             _versions.repositoryYear = [TLMDatabase yearForMirrorURL:[self defaultServerURL] usedURL:&validURL];
         
-        if (_versions.repositoryYear != _versions.installedYear && [self legacyRepositoryURL] == nil) {
+        // handled as a separate condition so we can log it for sure
+        if (_versions.repositoryYear == TLMDatabaseUnknownYear) {
+            TLMLog(__func__, @"Failed to determine the TeX Live version of the repository, so we'll just use the default");
+            validURL = [self defaultServerURL];
+        }
+        else if (_versions.repositoryYear != _versions.installedYear && [self legacyRepositoryURL] == nil) {
             
             NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"DefaultMirrors" ofType:@"plist"];
             NSDictionary *mirrorsByYear = nil;
@@ -713,7 +718,8 @@ static NSURL * __TLMParseLocationOption(NSString *location)
             }
             else {
                 TLMLog(__func__, @"Version mismatch detected, but no fallback URL was found.");
-                [self setLegacyRepositoryURL:nil];
+                // ??? avoid using a nil URL for validURL...is this what I want to do?
+                [self setLegacyRepositoryURL:[self defaultServerURL]];
             }
             
             // async sheet with no user interaction, so no point in waiting...
