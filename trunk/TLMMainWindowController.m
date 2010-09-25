@@ -302,6 +302,15 @@ static char _TLMOperationQueueOperationContext;
     [ts addAttributes:[_hostnameView linkTextAttributes] range:NSMakeRange(0, [ts length])];
 }
 
+- (NSRect)window:(NSWindow *)window willPositionSheet:(NSWindow *)sheet usingRect:(NSRect)rect
+{
+    // avoid showing the overlay window on top of a sheet
+    if ([_currentListDataSource statusWindow]) {
+        [sheet setLevel:NSFloatingWindowLevel];
+    }
+    return rect;
+}
+
 // pass nil for status to clear the view and remove it
 - (void)_displayStatusString:(NSString *)statusString dataSource:(id <TLMListDataSource>)dataSource
 {
@@ -316,6 +325,7 @@ static char _TLMOperationQueueOperationContext;
         // only display now if this datasource is current
         if ([_currentListDataSource isEqual:dataSource]) {
             [[self window] addChildWindow:[_currentListDataSource statusWindow] ordered:NSWindowAbove];
+            [[[self window] attachedSheet] setLevel:NSFloatingWindowLevel];
             [[dataSource statusWindow] fadeIn];
         }
     }
