@@ -41,7 +41,7 @@
 #import "TLMLogServer.h"
 #import "TLMPreferenceController.h"
 
-#define TLPDB_PATH      @"tlpkg/texlive.tlpdb"
+#define TLPDB_PATH      CFSTR("tlpkg/texlive.tlpdb")
 #define MIN_DATA_LENGTH 2048
 #define URL_TIMEOUT     10
 
@@ -83,8 +83,10 @@ static NSMutableDictionary *_databases = nil;
         if (nil == aURL)
             aURL = [[TLMPreferenceController sharedPreferenceController] defaultServerURL];
         
+        CFAllocatorRef alloc = CFGetAllocator((CFURLRef)aURL);
+        
         // cache under the full tlpdb URL
-        NSURL *tlpdbURL = [NSURL URLWithString:[[aURL absoluteString] stringByAppendingPathComponent:TLPDB_PATH]];
+        NSURL *tlpdbURL = [(id)CFURLCreateCopyAppendingPathComponent(alloc, (CFURLRef)aURL, TLPDB_PATH, FALSE) autorelease];        
         _TLMDatabase *db = [_databases objectForKey:tlpdbURL];
         if (nil == db) {
             db = [[_TLMDatabase alloc] initWithURL:tlpdbURL];
@@ -96,11 +98,14 @@ static NSMutableDictionary *_databases = nil;
         version = [db versionNumber];
         
         // now see if we redirected at some point...we don't want to return the tlpdb path
-        NSString *actualURLString = [[db actualURL] absoluteString];
-        if (actualURLString) {
+        NSURL *actualURL = [db actualURL];
+        if (actualURL) {
             // delete "tlpkg/texlive.tlpdb"
-            actualURLString = [[actualURLString stringByDeletingLastPathComponent] stringByDeletingLastPathComponent];
-            NSURL *actualURL = [NSURL URLWithString:actualURLString];
+            CFURLRef tmpURL = CFURLCreateCopyDeletingLastPathComponent(alloc, (CFURLRef)actualURL);
+            if (tmpURL) {
+                actualURL = [(id)CFURLCreateCopyDeletingLastPathComponent(alloc, tmpURL) autorelease];
+                CFRelease(tmpURL);
+            }
             if (usedURL) *usedURL = actualURL;
         }
         else if (usedURL) {
