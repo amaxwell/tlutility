@@ -496,9 +496,7 @@ static bool hasKeyPrefix(NSString *line)
     
     NSString *name;
     if ([scanner scanUpToString:@":" intoString:&name]) {
-        
-        fprintf(stderr, "\"%s\"\n", [name UTF8String]);
-        
+                
         // e.g. bin-amstex.universal.darwin
         [node setFullName:name];
         
