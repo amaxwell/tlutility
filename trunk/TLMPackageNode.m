@@ -112,8 +112,8 @@ static NSString *_separatorString = nil;
     if (nil == _children) _children = [NSMutableArray new];
     [_children addObject:aChild];
     
-    // many of the bin packages have multiple architectures
-    if ([aChild isInstalled] == NO)
+    // many of the bin packages have multiple architectures, so default to uninstalled
+    if ([aChild isInstalled])
         _hasMixedStatus = YES;
 }
 
