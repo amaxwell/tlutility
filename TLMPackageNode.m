@@ -112,9 +112,26 @@ static NSString *_separatorString = nil;
     if (nil == _children) _children = [NSMutableArray new];
     [_children addObject:aChild];
     
-    // many of the bin packages have multiple architectures, so default to uninstalled
-    if ([aChild isInstalled])
+    // many of the bin packages have multiple architectures, so only one may be installed
+    NSUInteger installCount = 0;
+    for (id child in _children) {
+        if ([child isInstalled])
+            installCount++;
+    }
+    
+    if ([_children count] == installCount) {
+        [self setInstalled:YES];
+        _hasMixedStatus = NO;
+    }
+    else if (installCount) {
+        [self setInstalled:NO];
         _hasMixedStatus = YES;
+    }
+    else {
+        [self setInstalled:NO];
+        _hasMixedStatus = NO;
+    }
+
 }
 
 - (NSString *)status
