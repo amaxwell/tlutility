@@ -132,8 +132,10 @@
         CGContextMoveToPoint(context, ctr.x, ctr.y);
         const CGPoint arcStart = CGPointMake(CGRectGetMaxY(progressRect), CGRectGetMidX(progressRect));
         CGContextAddLineToPoint(context, arcStart.x, arcStart.y);
-        const CGFloat angle = - 2 * M_PI * _currentProgress;
-        CGContextAddArc(context, ctr.x, ctr.y, radius, 0, angle, false);    
+        
+        // absolute angle, relative to horizontal axis of right-hand coordinate system
+        const CGFloat angle = M_PI_2 - 2 * M_PI * _currentProgress;
+        CGContextAddArc(context, ctr.x, ctr.y, radius, M_PI_2, angle, true);    
         CGContextClosePath(context);
         CGContextDrawPath(context, kCGPathFillStroke);
         
