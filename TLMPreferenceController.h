@@ -68,6 +68,7 @@ extern NSString * const TLMTLCriticalRepository;
     BOOL                 _hasPendingServerEdit;
     NSUInteger           _pendingOptionChangeCount;
     NSURL               *_legacyRepositoryURL;
+    FSEventStreamRef     _fseventStream;
     struct __versions {
         int16_t   repositoryYear;
         int16_t   installedYear;

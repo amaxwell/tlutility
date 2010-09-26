@@ -61,10 +61,11 @@ NSString * const TLMNetInstallerPathPreferenceKey = @"TLMNetInstallerPathPrefere
 NSString * const TLMShouldListTLCritical = @"TLMShouldListTLCritical";             /* NO                               */
 NSString * const TLMTLCriticalRepository = @"TLMTLCriticalRepository";             /* ftp://tug.org/texlive/tlcritical */
 
-#define TLMGR_CMD @"tlmgr"
-#define TEXDOC_CMD @"texdoc"
+#define TLMGR_CMD     @"tlmgr"
+#define TEXDOC_CMD    @"texdoc"
 #define KPSEWHICH_CMD @"kpsewhich"
-#define URL_TIMEOUT 30.0
+#define URL_TIMEOUT   30.0
+#define TEXDIST_PATH  @"/Library/TeX"
 
 @interface TLMPreferenceController ()
 
@@ -149,16 +150,27 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
         _versions.tlmgrVersion = -1;
         _versions.isDevelopment = NO;
         
-        FSEventStreamContext ctxt = { 0, self, CFRetain, CFRelease, CFCopyDescription };
-        FSEventStreamRef strm = FSEventStreamCreate(NULL, __TLMTeXDistChanged, &ctxt, (CFArrayRef)[NSArray arrayWithObject:@"/Library/TeX"], kFSEventStreamEventIdSinceNow, 0.1, kFSEventStreamCreateFlagUseCFTypes|kFSEventStreamCreateFlagNoDefer);
-        FSEventStreamScheduleWithRunLoop(strm, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
-        FSEventStreamStart(strm);        
+        if ([[NSFileManager defaultManager] fileExistsAtPath:TEXDIST_PATH]) {
+            FSEventStreamContext ctxt = { 0, self, CFRetain, CFRelease, CFCopyDescription };
+            CFArrayRef paths = (CFArrayRef)[NSArray arrayWithObject:TEXDIST_PATH];
+            FSEventStreamCreateFlags flags = kFSEventStreamCreateFlagUseCFTypes|kFSEventStreamCreateFlagNoDefer;
+            _fseventStream = FSEventStreamCreate(NULL, __TLMTeXDistChanged, &ctxt, paths, kFSEventStreamEventIdSinceNow, 0.1, flags);
+            if (_fseventStream) {
+                FSEventStreamScheduleWithRunLoop(_fseventStream, CFRunLoopGetMain(), kCFRunLoopDefaultMode);
+                FSEventStreamStart(_fseventStream);
+            }
+        }
     }
     return self;
 }
 
 - (void)dealloc
 {
+    if (_fseventStream) {
+        FSEventStreamStop(_fseventStream);
+        FSEventStreamUnscheduleFromRunLoop(_fseventStream, CFRunLoopGetMain(), kCFRunLoopDefaultMode);
+        FSEventStreamRelease(_fseventStream);
+    }
     [_texbinPathControl release];
     [_serverComboBox release];
     [_rootHomeCheckBox release];
