@@ -120,19 +120,31 @@ static NSString *__TLMGetTemporaryDirectory()
 - (void)download:(NSURLDownload *)download didReceiveResponse:(NSURLResponse *)response;
 {
     _expectedLength = [response expectedContentLength];    
-    if (NSURLResponseUnknownLength != _expectedLength)
+    if (NSURLResponseUnknownLength != _expectedLength) {
         TLMLog(__func__, @"Will download %lld bytes%C", _expectedLength, 0x2026);
+        NSDictionary *userInfo = [NSDictionary dictionaryWithObject:[NSNumber numberWithLongLong:_expectedLength] forKey:TLMLogSize];
+        NSNotification *note = [NSNotification notificationWithName:TLMLogTotalProgressNotification
+                                                             object:self
+                                                           userInfo:userInfo];
+        [[NSNotificationCenter defaultCenter] performSelectorOnMainThread:@selector(postNotification:) withObject:note waitUntilDone:NO];
+    }
 }
 
 - (void)download:(NSURLDownload *)download didReceiveDataOfLength:(NSUInteger)length
 {
     _receivedLength += length;
     if (NSURLResponseUnknownLength != _expectedLength) {
+        // throttle our log messages
         if ((CGFloat)(_receivedLength - _lastLoggedLength) / _expectedLength >= 0.20) {
             CGFloat pct = (CGFloat)_receivedLength / _expectedLength * 100;
             _lastLoggedLength = _receivedLength;
             TLMLog(__func__, @"Received %.0f%% of %lld bytes%C", pct, _expectedLength, 0x2026);
         }
+        NSDictionary *userInfo = [NSDictionary dictionaryWithObject:[NSNumber numberWithUnsignedInteger:length] forKey:TLMLogSize];
+        NSNotification *note = [NSNotification notificationWithName:TLMLogIncrementalProgressNotification
+                                                             object:self
+                                                           userInfo:userInfo];
+        [[NSNotificationCenter defaultCenter] performSelectorOnMainThread:@selector(postNotification:) withObject:note waitUntilDone:NO];
     }
 }
 
@@ -147,12 +159,20 @@ static NSString *__TLMGetTemporaryDirectory()
     // should already be NO, but make sure...
     _downloadComplete = NO;
     TLMLog(__func__, @"Download failed: %@\nFailed URL was: %@", error, [[download request] URL]);
+    NSNotification *note = [NSNotification notificationWithName:TLMLogFinishedProgressNotification
+                                                         object:self
+                                                       userInfo:nil];
+    [[NSNotificationCenter defaultCenter] performSelectorOnMainThread:@selector(postNotification:) withObject:note waitUntilDone:NO];
 }
 
 - (void)downloadDidFinish:(NSURLDownload *)download
 {
     _downloadComplete = YES;
     TLMLog(__func__, @"Download of %lld bytes complete", _receivedLength);
+    NSNotification *note = [NSNotification notificationWithName:TLMLogFinishedProgressNotification
+                                                         object:self
+                                                       userInfo:nil];
+    [[NSNotificationCenter defaultCenter] performSelectorOnMainThread:@selector(postNotification:) withObject:note waitUntilDone:NO];            
 }
 
 - (void)_synchronouslyDownloadURL:(NSURL *)aURL toPath:(NSString *)absolutePath
