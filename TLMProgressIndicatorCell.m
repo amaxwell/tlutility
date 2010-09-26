@@ -110,8 +110,8 @@
 {
     CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];
     CGContextSaveGState(context);
-    CGRect progressRect = NSRectToCGRect(aRect);    
-    CGPoint ctr = CGPointMake(CGRectGetMidX(progressRect), CGRectGetMidY(progressRect));
+    const CGRect progressRect = NSRectToCGRect(aRect);    
+    const CGPoint ctr = CGPointMake(CGRectGetMidX(progressRect), CGRectGetMidY(progressRect));
     
     // indeterminate download length
     if (_style == TLMProgressIndicatorIndeterminate) {
@@ -128,11 +128,11 @@
         CGContextSetFillColorWithColor(context, _fillColor);
         CGContextSetStrokeColorWithColor(context, _strokeColor);
         CGContextBeginPath(context);
-        CGFloat radius = CGRectGetWidth(progressRect) / 2;
+        const CGFloat radius = CGRectGetWidth(progressRect) / 2;
         CGContextMoveToPoint(context, ctr.x, ctr.y);
-        CGPoint arcStart = CGPointMake(CGRectGetMaxX(progressRect), CGRectGetMidY(progressRect));
+        const CGPoint arcStart = CGPointMake(CGRectGetMaxY(progressRect), CGRectGetMidX(progressRect));
         CGContextAddLineToPoint(context, arcStart.x, arcStart.y);
-        CGFloat angle = 2 * M_PI * _currentProgress;
+        const CGFloat angle = - 2 * M_PI * _currentProgress;
         CGContextAddArc(context, ctr.x, ctr.y, radius, 0, angle, false);    
         CGContextClosePath(context);
         CGContextDrawPath(context, kCGPathFillStroke);
