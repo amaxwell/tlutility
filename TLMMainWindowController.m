@@ -155,8 +155,19 @@ static char _TLMOperationQueueOperationContext;
                                                object:nil];
 }
 
+- (void)_stopProgressBar:(NSNotification *)aNote
+{
+    // we're done with the progress bar now, so set it to maxValue to keep it from using CPU while hidden (seen on 10.6.3)
+    [[self _progressBar] setDoubleValue:[[self _progressBar] maxValue]];
+    [[self _progressBar] setHidden:YES];
+    [NSApp setApplicationIconImage:nil];
+}
+
 - (void)_startProgressBar:(NSNotification *)aNote
 {
+    // just in case it's still running, though that should never happen with the read/write queue...
+    [self _stopProgressBar:nil];
+    
     // hack from BibDesk: progress bars may not work correctly after the first time they're used, due to an AppKit bug
     NSProgressIndicator *pb = [NSKeyedUnarchiver unarchiveObjectWithData:[NSKeyedArchiver archivedDataWithRootObject:[self _progressBar]]];
     [[[self _progressBar] superview] replaceSubview:[self _progressBar] with:pb];
@@ -167,14 +178,6 @@ static char _TLMOperationQueueOperationContext;
     [[self _progressBar] setDoubleValue:0.5];
     [[self _progressBar] setHidden:NO];
     [[self _progressBar] display];
-}
-
-- (void)_stopProgressBar:(NSNotification *)aNote
-{
-    // we're done with the progress bar now, so set it to maxValue to keep it from using CPU while hidden (seen on 10.6.3)
-    [[self _progressBar] setDoubleValue:[[self _progressBar] maxValue]];
-    [[self _progressBar] setHidden:YES];
-    [NSApp setApplicationIconImage:nil];
 }
 
 - (void)_updateProgressBar:(NSNotification *)aNote
