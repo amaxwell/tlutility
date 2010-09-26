@@ -46,6 +46,8 @@
 #import "TLMOptionOperation.h"
 #import "TLMDatabase.h"
 
+#import <pthread.h>
+
 NSString * const TLMTexBinPathPreferenceKey = @"TLMTexBinPathPreferenceKey";       /* /usr/texbin                      */
 NSString * const TLMUseRootHomePreferenceKey = @"TLMUseRootHomePreferenceKey";     /* YES                              */
 NSString * const TLMInfraPathPreferenceKey = @"TLMInfraPathPreferenceKey";         /* update-tlmgr-latest.sh           */
@@ -86,12 +88,38 @@ NSString * const TLMTLCriticalRepository = @"TLMTLCriticalRepository";          
 @synthesize defaultServers = _servers;
 @synthesize legacyRepositoryURL = _legacyRepositoryURL;
 
+// Do not use directly!  File scope only because pthread_once doesn't take an argument.
+static id _sharedInstance = nil;
+static void __TLMPrefControllerInit() { _sharedInstance = [TLMPreferenceController new]; }
+
 + (TLMPreferenceController *)sharedPreferenceController;
 {
-    static id sharedInstance = nil;
-    if (nil == sharedInstance)
-        sharedInstance = [self new];
-    return sharedInstance;
+    static pthread_once_t once = PTHREAD_ONCE_INIT;
+    (void) pthread_once(&once, __TLMPrefControllerInit);
+    return _sharedInstance;
+}
+
+- (void)_resetVersions
+{
+    @synchronized(self) {
+        TLMLog(__func__, @"Resetting cached version info");
+        _versions.repositoryYear = TLMDatabaseUnknownYear;
+        _versions.installedYear = TLMDatabaseUnknownYear;
+        _versions.tlmgrVersion = -1;
+        _versions.isDevelopment = NO;
+        [self setLegacyRepositoryURL:nil];
+    }    
+}
+
+static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_t numEvents, void *eventPaths, const FSEventStreamEventFlags eventFlags[], const FSEventStreamEventId eventIds[])
+{
+    for (NSUInteger i = 0; i < numEvents; i++) {
+        if (eventFlags[i] == kFSEventStreamEventFlagNone) {
+            TLMLog(__func__, @"TeX distribution path changed");
+            [(TLMPreferenceController *)context _resetVersions];
+            break;
+        }
+    }
 }
 
 - (id)init
@@ -120,6 +148,11 @@ NSString * const TLMTLCriticalRepository = @"TLMTLCriticalRepository";          
         _versions.installedYear = TLMDatabaseUnknownYear;
         _versions.tlmgrVersion = -1;
         _versions.isDevelopment = NO;
+        
+        FSEventStreamContext ctxt = { 0, self, CFRetain, CFRelease, CFCopyDescription };
+        FSEventStreamRef strm = FSEventStreamCreate(NULL, __TLMTeXDistChanged, &ctxt, (CFArrayRef)[NSArray arrayWithObject:@"/Library/TeX"], kFSEventStreamEventIdSinceNow, 0.1, kFSEventStreamCreateFlagUseCFTypes|kFSEventStreamCreateFlagNoDefer);
+        FSEventStreamScheduleWithRunLoop(strm, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
+        FSEventStreamStart(strm);        
     }
     return self;
 }
@@ -209,7 +242,7 @@ static NSURL * __TLMParseLocationOption(NSString *location)
                                                  name:NSTaskDidTerminateNotification 
                                                object:checkTask];
     [checkTask launch];
-    [self updateUI];
+    [self updateUI];    
 }
 
 - (IBAction)toggleUseRootHome:(id)sender;
@@ -352,6 +385,9 @@ static NSURL * __TLMParseLocationOption(NSString *location)
     }
     if (versionStr)
         *versionStr = versionString;
+    
+    TLMLog(__func__, @"Looks like you're using TeX Live %d", texliveYear);
+    
     return texliveYear;
 }
 
@@ -360,9 +396,7 @@ static NSURL * __TLMParseLocationOption(NSString *location)
     [_texbinPathControl setURL:aURL];
     [[NSUserDefaults standardUserDefaults] setObject:[aURL path] forKey:TLMTexBinPathPreferenceKey];
         
-    @synchronized(self) {
-        _versions.installedYear = [self _texliveYear:NULL isDevelopmentVersion:&_versions.isDevelopment tlmgrVersion:&_versions.tlmgrVersion];
-    }
+    [self _resetVersions];
     
     // update environment, or tlmgr will be non-functional
     [TLMAppController updatePathEnvironment];
@@ -615,9 +649,7 @@ static NSURL * __TLMParseLocationOption(NSString *location)
         
         // always reset these, so we have a known state
         [self setLegacyRepositoryURL:nil];
-        @synchronized(self) {
-            _versions.repositoryYear = TLMDatabaseUnknownYear;
-        }
+        [self _resetVersions];
         
         [self _syncCommandLineServerOption];
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:TLMDisableVersionMismatchWarningKey];
