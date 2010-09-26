@@ -395,8 +395,6 @@
 				F9F1C11210C5ABA300D32C17 /* NSMenu_TLMExtensions.m */,
 				F9999F9A10D1C33800F594CB /* TLMProxyManager.h */,
 				F9999F9B10D1C33800F594CB /* TLMProxyManager.m */,
-				F9FE58B2123EB80800B6008F /* TLMDatabase.h */,
-				F9FE58B3123EB80800B6008F /* TLMDatabase.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -558,6 +556,8 @@
 				F9B1347C0EEB208C007C0046 /* TLMOutputParser.m */,
 				F9A4A091105CA67100F5AC62 /* TLMProfileNode.h */,
 				F9A4A092105CA67100F5AC62 /* TLMProfileNode.m */,
+				F9FE58B2123EB80800B6008F /* TLMDatabase.h */,
+				F9FE58B3123EB80800B6008F /* TLMDatabase.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -717,7 +717,12 @@
 					ProjectRef = F9DCD3590F06F08C00600DD2 /* Sparkle.xcodeproj */;
 				},
 			);
-			projectRoot = "";
+			projectRoots = (
+				"",
+				"DVI-qlgenerator",
+				DVIImporter,
+				vendorsrc/FileView,
+			);
 			targets = (
 				8D1107260486CEB800E47090 /* TeX Live Utility */,
 				F9B139CA0EECBDFE007C0046 /* tlu_ipctask */,
