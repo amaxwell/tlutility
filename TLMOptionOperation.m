@@ -46,7 +46,8 @@
     NSParameterAssert(key);
     NSParameterAssert(value);
     NSString *cmd = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath];
-    return [self initWithCommand:cmd options:[NSArray arrayWithObjects:@"option", key, value, nil]];
+    // insert -- in arguments to keep tlmgr from further parsing (allows passing -1 for autobackup)
+    return [self initWithCommand:cmd options:[NSArray arrayWithObjects:@"option", @"--", key, value, nil]];
 }
 
 @end
