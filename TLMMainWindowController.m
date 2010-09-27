@@ -307,13 +307,21 @@ static char _TLMOperationQueueOperationContext;
     [ts addAttributes:[_hostnameView linkTextAttributes] range:NSMakeRange(0, [ts length])];
 }
 
+- (void)_fixOverlayWindowOrder
+{
+    /*
+     To avoid showing the overlay window on top of a sheet, call this on a delay
+     after showing a sheet or status window.  NB: changing the window level here
+     will screw things up; the sheet needs to be at NSNormalWindowLevel.
+     */
+    TLMStatusWindow *statusWindow = [_currentListDataSource statusWindow];
+    if (statusWindow)
+        [[[self window] attachedSheet] orderWindow:NSWindowAbove relativeTo:[statusWindow windowNumber]];
+}
+
 - (NSRect)window:(NSWindow *)window willPositionSheet:(NSWindow *)sheet usingRect:(NSRect)rect
 {
-    // avoid showing the overlay window on top of a sheet
-    if ([_currentListDataSource statusWindow]) {
-        [sheet setLevel:NSFloatingWindowLevel];
-        [window orderWindow:NSWindowAbove relativeTo:[[_currentListDataSource statusWindow] windowNumber]];
-    }
+    [self performSelector:@selector(_fixOverlayWindowOrder) withObject:nil afterDelay:0];
     return rect;
 }
 
@@ -331,8 +339,8 @@ static char _TLMOperationQueueOperationContext;
         // only display now if this datasource is current
         if ([_currentListDataSource isEqual:dataSource]) {
             [[self window] addChildWindow:[_currentListDataSource statusWindow] ordered:NSWindowAbove];
-            [[[self window] attachedSheet] orderWindow:NSWindowAbove relativeTo:[[_currentListDataSource statusWindow] windowNumber]];
             [[dataSource statusWindow] fadeIn];
+            [self performSelector:@selector(_fixOverlayWindowOrder) withObject:nil afterDelay:0];
         }
     }
 }    
