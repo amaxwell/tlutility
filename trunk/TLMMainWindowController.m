@@ -312,6 +312,7 @@ static char _TLMOperationQueueOperationContext;
     // avoid showing the overlay window on top of a sheet
     if ([_currentListDataSource statusWindow]) {
         [sheet setLevel:NSFloatingWindowLevel];
+        [window orderWindow:NSWindowAbove relativeTo:[[_currentListDataSource statusWindow] windowNumber]];
     }
     return rect;
 }
@@ -330,7 +331,7 @@ static char _TLMOperationQueueOperationContext;
         // only display now if this datasource is current
         if ([_currentListDataSource isEqual:dataSource]) {
             [[self window] addChildWindow:[_currentListDataSource statusWindow] ordered:NSWindowAbove];
-            [[[self window] attachedSheet] setLevel:NSFloatingWindowLevel];
+            [[[self window] attachedSheet] orderWindow:NSWindowAbove relativeTo:[[_currentListDataSource statusWindow] windowNumber]];
             [[dataSource statusWindow] fadeIn];
         }
     }
