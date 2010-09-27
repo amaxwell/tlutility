@@ -26,6 +26,8 @@
 		F97A7E500F13067C008EBCEA /* TLMTask.m in Sources */ = {isa = PBXBuildFile; fileRef = F97A7E4F0F13067C008EBCEA /* TLMTask.m */; };
 		F97E85740EFA18F400862882 /* TeXDistTool.icns in Resources */ = {isa = PBXBuildFile; fileRef = F97E85730EFA18F400862882 /* TeXDistTool.icns */; };
 		F97E860C0EFA3BFD00862882 /* TeXDistDocument.icns in Resources */ = {isa = PBXBuildFile; fileRef = F97E860B0EFA3BFD00862882 /* TeXDistDocument.icns */; };
+		F9825520125045980018CB73 /* TLMAutobackupController.m in Sources */ = {isa = PBXBuildFile; fileRef = F982551F125045980018CB73 /* TLMAutobackupController.m */; };
+		F982553F12504E210018CB73 /* AutobackupSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = F982553E12504E210018CB73 /* AutobackupSheet.xib */; };
 		F98FADA910672943002C1972 /* TLMNetInstallOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F98FADA810672943002C1972 /* TLMNetInstallOperation.m */; };
 		F9963EC50F0490E9005F0174 /* TLMRemoveOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F9963EC40F0490E9005F0174 /* TLMRemoveOperation.m */; };
 		F9963FEF0F054999005F0174 /* TLMInstallOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F9963FEE0F054999005F0174 /* TLMInstallOperation.m */; };
@@ -266,6 +268,9 @@
 		F97A7E4F0F13067C008EBCEA /* TLMTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMTask.m; sourceTree = "<group>"; };
 		F97E85730EFA18F400862882 /* TeXDistTool.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = TeXDistTool.icns; sourceTree = "<group>"; };
 		F97E860B0EFA3BFD00862882 /* TeXDistDocument.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = TeXDistDocument.icns; sourceTree = "<group>"; };
+		F982551E125045980018CB73 /* TLMAutobackupController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMAutobackupController.h; sourceTree = "<group>"; };
+		F982551F125045980018CB73 /* TLMAutobackupController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMAutobackupController.m; sourceTree = "<group>"; };
+		F982553C12504E040018CB73 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/AutobackupSheet.xib; sourceTree = "<group>"; };
 		F98FADA710672943002C1972 /* TLMNetInstallOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMNetInstallOperation.h; sourceTree = "<group>"; };
 		F98FADA810672943002C1972 /* TLMNetInstallOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMNetInstallOperation.m; sourceTree = "<group>"; };
 		F9963EC30F0490E9005F0174 /* TLMRemoveOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMRemoveOperation.h; sourceTree = "<group>"; };
@@ -456,6 +461,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				F982553E12504E210018CB73 /* AutobackupSheet.xib */,
 				F9A4A105105D736B00F5AC62 /* texlive.profile.plist */,
 				F9B061FF0F0F388500BB03D3 /* Localizable.strings */,
 				F9DCD43E0F06F76F00600DD2 /* dsa_pub.pem */,
@@ -523,6 +529,8 @@
 		F98FAB3E105DF112002C1972 /* Window controllers */ = {
 			isa = PBXGroup;
 			children = (
+				F982551E125045980018CB73 /* TLMAutobackupController.h */,
+				F982551F125045980018CB73 /* TLMAutobackupController.m */,
 				F9B134660EEB19CB007C0046 /* TLMMainWindowController.h */,
 				F9B134670EEB19CB007C0046 /* TLMMainWindowController.m */,
 				F9B13B160EECE5AE007C0046 /* TLMInfoController.h */,
@@ -815,6 +823,7 @@
 				F9B062000F0F388500BB03D3 /* Localizable.strings in Resources */,
 				F96249D50F1C516F007F3D70 /* ReleaseNotes.xib in Resources */,
 				F9A4A106105D736B00F5AC62 /* texlive.profile.plist in Resources */,
+				F982553F12504E210018CB73 /* AutobackupSheet.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -900,6 +909,7 @@
 				F9F1C11310C5ABA300D32C17 /* NSMenu_TLMExtensions.m in Sources */,
 				F9999F9C10D1C33800F594CB /* TLMProxyManager.m in Sources */,
 				F9FE58B4123EB80800B6008F /* TLMDatabase.m in Sources */,
+				F9825520125045980018CB73 /* TLMAutobackupController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -957,6 +967,14 @@
 				1DDD58150DA1D0A300B32029 /* English */,
 			);
 			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+		F982553E12504E210018CB73 /* AutobackupSheet.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F982553C12504E040018CB73 /* English */,
+			);
+			name = AutobackupSheet.xib;
 			sourceTree = "<group>";
 		};
 		F9999FE410D2AAFF00F594CB /* PapersizeSheet.xib */ = {

@@ -51,6 +51,7 @@
 #import "TLMRemoveOperation.h"
 #import "TLMInstallOperation.h"
 #import "TLMNetInstallOperation.h"
+#import "TLMOptionOperation.h"
 
 #import "TLMSplitView.h"
 #import "TLMStatusWindow.h"
@@ -64,6 +65,7 @@
 #import "TLMSizeFormatter.h"
 #import "TLMTask.h"
 #import "TLMProgressIndicatorCell.h"
+#import "TLMAutobackupController.h"
 
 static char _TLMOperationQueueOperationContext;
 
@@ -692,6 +694,28 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 
 }
 
+- (void)_handleAutobackupOptionFinishedNotification:(NSNotification *)aNote
+{
+    TLMOptionOperation *op = [aNote object];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:TLMOperationFinishedNotification object:op];
+    if ([op failed]) {
+        TLMLog(__func__, @"Failed to change autobackup option.  Error was: %@", [op errorMessages]);
+    }
+}
+
+- (void)autobackupSheetDidEnd:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)context
+{
+    [sheet orderOut:self];
+    TLMAutobackupController *abc = context;
+    [abc autorelease];
+    if (TLMAutobackupChanged == returnCode) {
+        TLMOptionOperation *op = [[TLMOptionOperation alloc] initWithKey:@"autobackup" value:[NSString stringWithFormat:@"%ld", (long)[abc backupCount]]];
+        [self _addOperation:op selector:@selector(_handleAutobackupOptionFinishedNotification:)];
+        [op release];
+        TLMLog(__func__, @"Setting autobackup to %ld", (long)[abc backupCount]);
+    }
+}
+
 - (void)_handleListFinishedNotification:(NSNotification *)aNote
 {
     TLMListOperation *op = [aNote object];
@@ -843,6 +867,19 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
             modalDelegate:self 
            didEndSelector:@selector(papersizeSheetDidEnd:returnCode:contextInfo:) 
               contextInfo:psc];
+    }
+}
+
+- (IBAction)changeAutobackup:(id)sender;
+{
+    // sheet asserts and runs tlmgr, so make sure it exists
+    if ([self _checkCommandPathAndWarn:YES]) {
+        TLMAutobackupController *abc = [TLMAutobackupController new];
+        [NSApp beginSheet:[abc window] 
+           modalForWindow:[self window] 
+            modalDelegate:self 
+           didEndSelector:@selector(autobackupSheetDidEnd:returnCode:contextInfo:) 
+              contextInfo:abc];
     }
 }
 
