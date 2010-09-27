@@ -76,6 +76,7 @@
 
 // IB 3.2 is losing the first @property declaration unless I move this ahead of it
 - (IBAction)changePapersize:(id)sender;
+- (IBAction)changeAutobackup:(id)sender;
 - (IBAction)cancelAllOperations:(id)sender;
 
 @property (nonatomic, retain) IBOutlet NSProgressIndicator *_progressIndicator;
