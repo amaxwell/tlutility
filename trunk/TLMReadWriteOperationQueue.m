@@ -123,7 +123,7 @@ static bool _suddenTerminationSupported = false;
     for (TLMOperation *op in _pendingOperations) {
         if ([op isWriter]) {
             // only add a single writer, and never add it alongside another operation
-            if ([toAdd count] == 0 && [[_operationQueue operations] count] == 0)
+            if ([toAdd count] == 0 && [self operationCount] == 0)
                 [toAdd addObject:op];            
             break;
         }
