@@ -47,4 +47,10 @@
     return [[self alloc] initWithCommand:cmd options:[NSArray arrayWithObjects:@"backup", @"--clean", @"--all", nil]];
 }
 
++ (TLMBackupOperation *)newDeepCleanOperation
+{
+    NSString *cmd = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath];
+    return [[self alloc] initWithCommand:cmd options:[NSArray arrayWithObjects:@"backup", @"--clean=0", @"--all", nil]];
+}
+
 @end

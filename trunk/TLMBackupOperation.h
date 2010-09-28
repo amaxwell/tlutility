@@ -41,5 +41,6 @@
 @interface TLMBackupOperation : TLMAuthorizedOperation
 
 + (TLMBackupOperation *)newCleanOperation;
++ (TLMBackupOperation *)newDeepCleanOperation;
 
 @end
