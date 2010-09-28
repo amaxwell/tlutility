@@ -185,7 +185,10 @@ int main(int argc, char *argv[]) {
         
     /* this call was the original purpose of the program */
     /* http://www.cocoabuilder.com/archive/message/cocoa/2001/6/15/21704 */
-    setuid(geteuid());
+    if (setuid(geteuid()) != 0) {
+        log_error(@"setuid failed");
+        exit(1);
+    }
     
     if (argc < ARG_CMD_ARGS) {
         log_error(@"insufficient arguments");
