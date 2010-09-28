@@ -44,7 +44,8 @@ enum {
     TLMAutobackupChanged   = (1 << 1),
     TLMAutobackupIncreased = (1 << 2),
     TLMAutobackupDecreased = (1 << 3),
-    TLMAutobackupPrune     = (1 << 4)
+    TLMAutobackupPrune     = (1 << 4),
+    TLMAutobackupDisabled  = (1 << 5)
 };
 typedef NSInteger TLMAutobackupReturnCode;
 

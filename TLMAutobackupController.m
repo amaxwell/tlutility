@@ -74,13 +74,10 @@
     if ([self backupCount] != 0) {
         [_enableCheckbox setState:NSOnState];
         [_countField setEnabled:YES];
-        [_pruneCheckbox setEnabled:YES];
     }
     else {
         [_enableCheckbox setState:NSOffState];
         [_countField setEnabled:NO];
-        [_pruneCheckbox setEnabled:NO];
-        [_pruneCheckbox setState:NSOffState];
     }
 }
 
@@ -169,6 +166,9 @@
             ret |= TLMAutobackupIncreased;
         else if ([self backupCount] < [self initialBackupCount])
             ret |= TLMAutobackupDecreased;
+        
+        if ([self backupCount] == 0)
+            ret |= TLMAutobackupDisabled;
         
         if ([_pruneCheckbox state] == NSOnState)
             ret |= TLMAutobackupPrune;

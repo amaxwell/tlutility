@@ -733,7 +733,10 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
         }
         
         if (returnCode & TLMAutobackupPrune) {
-            TLMBackupOperation *cleaner = [TLMBackupOperation newCleanOperation];
+            // if autobackup is set to zero, --clean needs an explicit N argument or it returns an error
+            TLMBackupOperation *cleaner;
+            cleaner = returnCode & TLMAutobackupDisabled ? [TLMBackupOperation newDeepCleanOperation] : [TLMBackupOperation newCleanOperation];
+            
             if (change)
                 [cleaner addDependency:change];
             [self _addOperation:cleaner selector:@selector(_handleAutobackupOptionFinishedNotification:)];
