@@ -45,7 +45,9 @@
 
 @synthesize _enableCheckbox;
 @synthesize _countField;
+@synthesize _pruneCheckbox;
 @synthesize backupCount = _backupCount;
+@synthesize initialBackupCount = _initialBackupCount;
 
 - (id)init
 {
@@ -59,6 +61,7 @@
 {
     [_enableCheckbox release];
     [_countField release];
+    [_pruneCheckbox release];
     [super dealloc];
 }
 
@@ -103,7 +106,11 @@
         [self setBackupCount:0];
     }
 
-    TLMLog(__func__, @"Set to keep %ld backups", (long)_backupCount);
+    TLMLog(__func__, @"Old autobackup setting: keep %ld backups", (long)_backupCount);
+    _initialBackupCount = [self backupCount];
+    
+    // always off; see message from Karl Berry on 27 Sept 2010 (MacTeX mailing list)
+    [_pruneCheckbox setState:NSOffState];
 
     [_countField setObjectValue:[NSNumber numberWithInteger:[self backupCount]]];
     
@@ -146,8 +153,23 @@
 
 - (IBAction)accept:(id)sender;
 {
+    TLMAutobackupReturnCode ret = TLMAutobackupUnchanged;
+    
+    // change is a change in count or requirement to prune
+    if ([self backupCount] != [self initialBackupCount] || [_pruneCheckbox state] == NSOnState) {
+        ret = TLMAutobackupChanged;
+        
+        if ([self backupCount] > [self initialBackupCount])
+            ret |= TLMAutobackupIncreased;
+        else if ([self backupCount] < [self initialBackupCount])
+            ret |= TLMAutobackupDecreased;
+        
+        if ([_pruneCheckbox state] == NSOnState)
+            ret |= TLMAutobackupPrune;
+    }    
+    
     if ([[self window] makeFirstResponder:nil])
-        [NSApp endSheet:[self window] returnCode:TLMAutobackupChanged];
+        [NSApp endSheet:[self window] returnCode:ret];
     else
         NSBeep();
 }
