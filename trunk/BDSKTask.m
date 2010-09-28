@@ -247,7 +247,7 @@ static void __BDSKTaskNotify(void *info)
     id fh = nil;
     
     // the end of a pipe passed to the child needs to be closed in the parent process
-    NSMutableSet *handlesToClose = [NSMutableSet new];
+    NSMutableSet *handlesToClose = [NSMutableSet set];
     
     fh = [self standardInput];
     if ([fh isKindOfClass:[NSPipe class]]) {
@@ -378,7 +378,6 @@ static void __BDSKTaskNotify(void *info)
     }
     
     // executed by child and parent
-    [handlesToClose release];
     NSZoneFree(NSZoneFromPointer(args), args);
     if (*nsEnvironment != env) NSZoneFree(NSZoneFromPointer(env), env);
 }
