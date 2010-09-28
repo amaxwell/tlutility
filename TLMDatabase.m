@@ -52,6 +52,7 @@ const int16_t TLMDatabaseUnknownYear = -1;
     NSMutableData   *_tlpdbData;
     BOOL             _failed;
     NSURL           *_actualURL;
+    int16_t          _version;
 }
 
 - (id)initWithURL:(NSURL *)tlpdbURL;
@@ -139,6 +140,7 @@ static NSMutableDictionary *_databases = nil;
     if (self) {
         _tlpdbURL = [tlpdbURL copy];
         _tlpdbData = [NSMutableData new];
+        _version = TLMDatabaseUnknownYear;
     }
     return self;
 }
@@ -154,7 +156,7 @@ static NSMutableDictionary *_databases = nil;
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
     _failed = YES;
-    TLMLog(__func__, @"Failed to download tlpdb: %@", error);
+    TLMLog(__func__, @"Failed to download tlpdb %@ : %@", _tlpdbURL, error);
 }
 
 - (NSURLRequest *)connection:(NSURLConnection *)connection willSendRequest:(NSURLRequest *)request redirectResponse:(NSURLResponse *)response;
@@ -177,8 +179,11 @@ static NSMutableDictionary *_databases = nil;
     if ([_tlpdbData length] == 0) {
         NSURLRequest *request = [NSURLRequest requestWithURL:_tlpdbURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:URL_TIMEOUT];
         _failed = NO;
+        TLMLog(__func__, @"Checking the repository version.  Please be patient.");
         TLMLog(__func__, @"Downloading tlpdb%C", 0x2026);
         NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
+        
+        // private runloop mode so we beachball if needed (since this is synchronous and likely on the main thread)
         NSString *rlmode = @"__TLMDatabaseDownloadRunLoopMode";
         [connection scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:rlmode];
         [connection start];
@@ -193,8 +198,12 @@ static NSMutableDictionary *_databases = nil;
 
 - (int16_t)versionNumber;
 {
+    // !!! early return if it's already copmuted
+    if (TLMDatabaseUnknownYear != _version)
+        return _version;
+    
     [self _downloadDatabaseHead];
-    int16_t version = TLMDatabaseUnknownYear;
+
     if (NO == [self failed] && [_tlpdbData length] >= MIN_DATA_LENGTH) {
         /*
          name 00texlive.config
@@ -234,7 +243,7 @@ static NSMutableDictionary *_databases = nil;
             char *year = NSZoneMalloc(NSDefaultMallocZone(), matchLength + 1);
             memset(year, '\0', matchLength + 1);
             memcpy(year, &tlpdb_str[match[1].rm_so], matchLength);
-            version = strtol(year, NULL, 0);
+            _version = strtol(year, NULL, 0);
             NSZoneFree(NSDefaultMallocZone(), year);
         }
         else {
@@ -245,7 +254,7 @@ static NSMutableDictionary *_databases = nil;
         regfree(&regex);
 
     }
-    return version;
+    return _version;
 }
 
 @end
