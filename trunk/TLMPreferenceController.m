@@ -712,7 +712,7 @@ static NSURL * __TLMParseLocationOption(NSString *location)
     
     NSAlert *alert = [[NSAlert new] autorelease];
     [alert setMessageText:NSLocalizedString(@"Mirror URL has a newer TeX Live version", @"")];
-    [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"Your TeX Live version is %d, but your mirror URL appears to be for TeX Live %d.  You need to manually upgrade to a newer version of TeX Live, as there will be no further updates for your version.", @"single integer specifier"), localVersion, remoteVersion]];
+    [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"Your TeX Live version is %d, but your default mirror URL appears to be for TeX Live %d.  You need to manually upgrade to a newer version of TeX Live, as there will be no further updates for your version.", @"single integer specifier"), localVersion, remoteVersion]];
 
     if ([[NSUserDefaults standardUserDefaults] boolForKey:TLMDisableVersionMismatchWarningKey] == NO) {
         
@@ -749,34 +749,31 @@ static NSURL * __TLMParseLocationOption(NSString *location)
             TLMLog(__func__, @"Failed to determine the TeX Live version of the repository, so we'll just use the default");
             validURL = [self defaultServerURL];
         }
-        else if (_versions.repositoryYear != _versions.installedYear && [self legacyRepositoryURL] == nil) {
+        else if (_versions.repositoryYear != _versions.installedYear) {
             
-            NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"DefaultMirrors" ofType:@"plist"];
-            NSDictionary *mirrorsByYear = nil;
-            if (plistPath)
-                mirrorsByYear = [NSDictionary dictionaryWithContentsOfFile:plistPath];
-            NSString *location = [mirrorsByYear objectForKey:[[NSNumber numberWithShort:_versions.installedYear] stringValue]];
-            if (location) {
-                TLMLog(__func__, @"Version mismatch detected.  Trying to fall back to %@", location);
-                [self setLegacyRepositoryURL:[NSURL URLWithString:location]];
+            if ([self legacyRepositoryURL] == nil) {
+                NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"DefaultMirrors" ofType:@"plist"];
+                NSDictionary *mirrorsByYear = nil;
+                if (plistPath)
+                    mirrorsByYear = [NSDictionary dictionaryWithContentsOfFile:plistPath];
+                NSString *location = [mirrorsByYear objectForKey:[[NSNumber numberWithShort:_versions.installedYear] stringValue]];
+                if (location) {
+                    TLMLog(__func__, @"Version mismatch detected.  Trying to fall back to %@", location);
+                    [self setLegacyRepositoryURL:[NSURL URLWithString:location]];
+                }
+                else {
+                    TLMLog(__func__, @"Version mismatch detected, but no fallback URL was found.");
+                    // ??? avoid using a nil URL for validURL...is this what I want to do?
+                    [self setLegacyRepositoryURL:[self defaultServerURL]];
+                }
+                
+                // async sheet with no user interaction, so no point in waiting...
+                [self performSelectorOnMainThread:@selector(_displayFallbackServerAlert) withObject:nil waitUntilDone:NO];
             }
-            else {
-                TLMLog(__func__, @"Version mismatch detected, but no fallback URL was found.");
-                // ??? avoid using a nil URL for validURL...is this what I want to do?
-                [self setLegacyRepositoryURL:[self defaultServerURL]];
-            }
-            
-            // async sheet with no user interaction, so no point in waiting...
-            [self performSelectorOnMainThread:@selector(_displayFallbackServerAlert) withObject:nil waitUntilDone:NO];
             
             validURL = [self legacyRepositoryURL];
         }
-        else if ([self legacyRepositoryURL] != nil) {
-            validURL = [self legacyRepositoryURL];
-        }
-        else {
-            validURL = [self defaultServerURL];
-        }
+
     }
     return validURL;
 }
