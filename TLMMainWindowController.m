@@ -52,6 +52,7 @@
 #import "TLMInstallOperation.h"
 #import "TLMNetInstallOperation.h"
 #import "TLMOptionOperation.h"
+#import "TLMBackupOperation.h"
 
 #import "TLMSplitView.h"
 #import "TLMStatusWindow.h"
@@ -481,20 +482,24 @@ static char _TLMOperationQueueOperationContext;
     }
 }
 
-- (void)_updateAllPackages
+- (void)_updateAllPackagesFromRepository:(NSURL *)repository
 {
     TLMUpdateOperation *op = nil;
-    NSURL *currentURL = [self _lastUpdateURL];
     if (_updateInfrastructure) {
-        op = [[TLMInfraUpdateOperation alloc] initWithLocation:currentURL];
-        TLMLog(__func__, @"Beginning infrastructure update from %@", [currentURL absoluteString]);
+        op = [[TLMInfraUpdateOperation alloc] initWithLocation:repository];
+        TLMLog(__func__, @"Beginning infrastructure update from %@", [repository absoluteString]);
     }
     else {
-        op = [[TLMUpdateOperation alloc] initWithPackageNames:nil location:currentURL];
-        TLMLog(__func__, @"Beginning update of all packages from %@", [currentURL absoluteString]);
+        op = [[TLMUpdateOperation alloc] initWithPackageNames:nil location:repository];
+        TLMLog(__func__, @"Beginning update of all packages from %@", [repository absoluteString]);
     }
     [self _addOperation:op selector:@selector(_handleUpdateFinishedNotification:)];
     [op release];
+}
+
+- (void)_updateAllPackages
+{
+    [self _updateAllPackagesFromRepository:[self _lastUpdateURL]];
 }
 
 static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
@@ -708,7 +713,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     TLMOptionOperation *op = [aNote object];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:TLMOperationFinishedNotification object:op];
     if ([op failed]) {
-        TLMLog(__func__, @"Failed to change autobackup option.  Error was: %@", [op errorMessages]);
+        TLMLog(__func__, @"Autobackup change failed.  Error was: %@", [op errorMessages]);
     }
 }
 
@@ -717,11 +722,24 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     [sheet orderOut:self];
     TLMAutobackupController *abc = context;
     [abc autorelease];
-    if (TLMAutobackupChanged == returnCode) {
-        TLMOptionOperation *op = [[TLMOptionOperation alloc] initWithKey:@"autobackup" value:[NSString stringWithFormat:@"%ld", (long)[abc backupCount]]];
-        [self _addOperation:op selector:@selector(_handleAutobackupOptionFinishedNotification:)];
-        [op release];
-        TLMLog(__func__, @"Setting autobackup to %ld", (long)[abc backupCount]);
+    if (returnCode & TLMAutobackupChanged) {
+        
+        TLMOptionOperation *change = nil;
+        if ((returnCode & TLMAutobackupIncreased) || (returnCode & TLMAutobackupDecreased)) {
+            change = [[TLMOptionOperation alloc] initWithKey:@"autobackup" value:[NSString stringWithFormat:@"%ld", (long)[abc backupCount]]];
+            [self _addOperation:change selector:@selector(_handleAutobackupOptionFinishedNotification:)];
+            [change autorelease];         
+            TLMLog(__func__, @"Setting autobackup to %ld", (long)[abc backupCount]);
+        }
+        
+        if (returnCode & TLMAutobackupPrune) {
+            TLMBackupOperation *cleaner = [TLMBackupOperation newCleanOperation];
+            if (change)
+                [cleaner addDependency:change];
+            [self _addOperation:cleaner selector:@selector(_handleAutobackupOptionFinishedNotification:)];
+            [cleaner release];
+            TLMLog(__func__, @"Pruning autobackup sets to the last %ld", (long)[abc backupCount]);
+        }
     }
 }
 
@@ -916,6 +934,14 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     TLMLog(__func__, @"Beginning user-requested infrastructure update%C", 0x2026);
     _updateInfrastructure = YES;
     [self _updateAllPackages];
+}
+
+- (void)updateInfrastructureFromCriticalRepository:(id)sender
+{
+    TLMLog(__func__, @"Beginning user-requested infrastructure update from tlcritical repo%C", 0x2026);
+    _updateInfrastructure = YES;
+    NSURL *repo = [NSURL URLWithString:[[NSUserDefaults standardUserDefaults] objectForKey:TLMTLCriticalRepository]];
+    [self _updateAllPackagesFromRepository:repo];
 }
 
 #pragma mark API

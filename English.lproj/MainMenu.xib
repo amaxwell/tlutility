@@ -2,9 +2,9 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="7.10">
 	<data>
 		<int key="IBDocument.SystemTarget">1050</int>
-		<string key="IBDocument.SystemVersion">10H535</string>
+		<string key="IBDocument.SystemVersion">10F569</string>
 		<string key="IBDocument.InterfaceBuilderVersion">788</string>
-		<string key="IBDocument.AppKitVersion">1038.35</string>
+		<string key="IBDocument.AppKitVersion">1038.29</string>
 		<string key="IBDocument.HIToolboxVersion">461.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1015,6 +1015,16 @@
 									<reference key="NSOnImage" ref="35465992"/>
 									<reference key="NSMixedImage" ref="502551668"/>
 								</object>
+								<object class="NSMenuItem" id="46715306">
+									<reference key="NSMenu" ref="245101568"/>
+									<bool key="NSIsAlternate">YES</bool>
+									<string key="NSTitle">Install TeX Live Manager From Critical Repository</string>
+									<string key="NSKeyEquiv"/>
+									<int key="NSKeyEquivModMask">524288</int>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="35465992"/>
+									<reference key="NSMixedImage" ref="502551668"/>
+								</object>
 								<object class="NSMenuItem" id="157001887">
 									<reference key="NSMenu" ref="245101568"/>
 									<bool key="NSIsDisabled">YES</bool>
@@ -1915,6 +1925,14 @@
 					</object>
 					<int key="connectionID">583</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">updateInfrastructureFromCriticalRepository:</string>
+						<reference key="source" ref="1014"/>
+						<reference key="destination" ref="46715306"/>
+					</object>
+					<int key="connectionID">586</int>
+				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<object class="NSArray" key="orderedObjects">
@@ -2481,6 +2499,7 @@
 							<reference ref="538192449"/>
 							<reference ref="217991234"/>
 							<reference ref="575087273"/>
+							<reference ref="46715306"/>
 						</object>
 						<reference key="parent" ref="84169623"/>
 					</object>
@@ -2885,6 +2904,11 @@
 						<reference key="object" ref="575087273"/>
 						<reference key="parent" ref="245101568"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">584</int>
+						<reference key="object" ref="46715306"/>
+						<reference key="parent" ref="245101568"/>
+					</object>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="flattenedProperties">
@@ -3110,6 +3134,8 @@
 					<string>58.IBPluginDependency</string>
 					<string>58.ImportedFromIB2</string>
 					<string>582.IBPluginDependency</string>
+					<string>584.IBAttributePlaceholdersKey</string>
+					<string>584.IBPluginDependency</string>
 					<string>73.IBPluginDependency</string>
 					<string>73.ImportedFromIB2</string>
 					<string>74.IBPluginDependency</string>
@@ -3258,7 +3284,7 @@
 					<integer value="1"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{250, 477}, {328, 263}}</string>
+					<string>{{250, 457}, {422, 283}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<object class="NSMutableDictionary">
 						<string key="NS.key.0">ToolTip</string>
@@ -3413,6 +3439,15 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<object class="NSMutableDictionary">
+						<string key="NS.key.0">ToolTip</string>
+						<object class="IBToolTipAttribute" key="NS.object.0">
+							<string key="name">ToolTip</string>
+							<reference key="object" ref="46715306"/>
+							<string key="toolTip">Reinstall the underlying tlmgr program, using the prerelease version from the tlcritical repository.</string>
+						</object>
+					</object>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3449,7 +3484,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">583</int>
+			<int key="maxID">586</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -3641,9 +3676,11 @@
 							<string>changeAutobackup:</string>
 							<string>changePapersize:</string>
 							<string>updateInfrastructure:</string>
+							<string>updateInfrastructureFromCriticalRepository:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -3658,6 +3695,7 @@
 							<string>changeAutobackup:</string>
 							<string>changePapersize:</string>
 							<string>updateInfrastructure:</string>
+							<string>updateInfrastructureFromCriticalRepository:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
@@ -3675,6 +3713,10 @@
 							</object>
 							<object class="IBActionInfo">
 								<string key="name">updateInfrastructure:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">updateInfrastructureFromCriticalRepository:</string>
 								<string key="candidateClassName">id</string>
 							</object>
 						</object>

@@ -100,6 +100,9 @@
 // action to manually reinstall tlmgr itself
 - (void)updateInfrastructure:(id)sender;
 
+// alternate action to manually install tlmgr from tlcritical repo
+- (void)updateInfrastructureFromCriticalRepository:(id)sender;
+
 - (void)removePackagesWithNames:(NSArray *)packageNames force:(BOOL)force;
 
 // both of these will use the default server URL
