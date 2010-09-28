@@ -79,10 +79,12 @@ static NSMutableDictionary *_databases = nil;
 + (int16_t)yearForMirrorURL:(NSURL *)aURL usedURL:(NSURL **)usedURL;
 {
     int16_t version = TLMDatabaseUnknownYear;
-    @synchronized(self) {
+    @synchronized(_databases) {
+        
         if (nil == aURL)
             aURL = [[TLMPreferenceController sharedPreferenceController] defaultServerURL];
         
+        NSParameterAssert(aURL != nil);
         CFAllocatorRef alloc = CFGetAllocator((CFURLRef)aURL);
         
         // cache under the full tlpdb URL
@@ -107,11 +109,11 @@ static NSMutableDictionary *_databases = nil;
                 CFRelease(tmpURL);
             }
             if (usedURL) *usedURL = actualURL;
+            NSParameterAssert(actualURL != nil);
         }
         else if (usedURL) {
             *usedURL = aURL;
         }
-
         
         // if redirected (e.g., from mirror.ctan.org), don't cache by the original host
         if ([[db actualURL] isEqual:tlpdbURL] == NO) {
