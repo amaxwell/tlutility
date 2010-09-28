@@ -67,6 +67,22 @@
 
 - (NSString *)windowNibName { return @"AutobackupSheet"; }
 
+- (void)updateUI
+{
+    [_countField setObjectValue:[NSNumber numberWithInteger:[self backupCount]]];    
+        
+    if ([self backupCount] != 0) {
+        [_enableCheckbox setState:NSOnState];
+        [_countField setEnabled:YES];
+        [_pruneCheckbox setEnabled:YES];
+    }
+    else {
+        [_enableCheckbox setState:NSOffState];
+        [_countField setEnabled:NO];
+        [_pruneCheckbox setEnabled:NO];
+        [_pruneCheckbox setState:NSOffState];
+    }
+}
 
 - (void)awakeFromNib
 {
@@ -111,17 +127,9 @@
     
     // always off; see message from Karl Berry on 27 Sept 2010 (MacTeX mailing list)
     [_pruneCheckbox setState:NSOffState];
-
-    [_countField setObjectValue:[NSNumber numberWithInteger:[self backupCount]]];
     
-    if ([self backupCount] != 0) {
-        [_enableCheckbox setState:NSOnState];
-        [_countField setEnabled:YES];
-    }
-    else {
-        [_enableCheckbox setState:NSOffState];
-        [_countField setEnabled:NO];
-    }
+    [self updateUI];
+
 }
 
 - (IBAction)enableAction:(id)sender;
@@ -129,16 +137,14 @@
     switch ([sender state]) {
         case NSOnState:
             [self setBackupCount:1];
-            [_countField setEnabled:YES];
             break;
         case NSOffState:
             [self setBackupCount:0];
-            [_countField setEnabled:NO];
             break;
         default:
             break;
     }
-    [_countField setObjectValue:[NSNumber numberWithInteger:[self backupCount]]];    
+    [self updateUI];
 }
 
 - (IBAction)changeCount:(id)sender;
