@@ -1,8 +1,8 @@
 //
-//  TLMAutobackupController.h
+//  TLMBackupOperation.h
 //  TeX Live Manager
 //
-//  Created by Adam R. Maxwell on 09/26/10.
+//  Created by Adam R. Maxwell on 09/27/10.
 /*
  This software is Copyright (c) 2010
  Adam Maxwell. All rights reserved.
@@ -36,41 +36,10 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import <Cocoa/Cocoa.h>
+#import "TLMAuthorizedOperation.h"
 
-enum {
-    TLMAutobackupCancelled = 0,
-    TLMAutobackupUnchanged = 1,
-    TLMAutobackupChanged   = (1 << 1),
-    TLMAutobackupIncreased = (1 << 2),
-    TLMAutobackupDecreased = (1 << 3),
-    TLMAutobackupPrune     = (1 << 4)
-};
-typedef NSInteger TLMAutobackupReturnCode;
+@interface TLMBackupOperation : TLMAuthorizedOperation
 
-@interface TLMAutobackupController : NSWindowController 
-{
-@private
-    NSButton    *_enableCheckbox;
-    NSTextField *_countField;
-    NSButton    *_pruneCheckbox;
-    NSInteger    _initialBackupCount;
-    NSInteger    _backupCount;
-}
-
-- (IBAction)enableAction:(id)sender;
-- (IBAction)changeCount:(id)sender;
-- (IBAction)cancel:(id)sender;
-- (IBAction)accept:(id)sender;
-
-@property (nonatomic, retain) IBOutlet NSButton *_enableCheckbox;
-@property (nonatomic, retain) IBOutlet NSTextField *_countField;
-@property (nonatomic, retain) IBOutlet NSButton *_pruneCheckbox;
-@property (nonatomic) NSInteger backupCount;
-@property (nonatomic, readonly) NSInteger initialBackupCount;
++ (TLMBackupOperation *)newCleanOperation;
 
 @end
-
-@interface TLMBackupCountFormatter : NSNumberFormatter
-@end
-
