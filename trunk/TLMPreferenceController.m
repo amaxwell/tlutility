@@ -733,21 +733,23 @@ static NSURL * __TLMParseLocationOption(NSString *location)
     @synchronized(self) {
         
         /*
-         Recomputing installedYear and repositoryYear is expensive, and only problematic
-         if the user switches the TeXDist prefpane while running TLU.  I did that for
-         testing, but I really can't see anyone doing it for real.  Consequently, we'll
-         just store these away until the next relaunch or change in mirror prefs.
+         Recomputing installedYear and repositoryYear is expensive.
          */
         if (_versions.installedYear == TLMDatabaseUnknownYear)
             _versions.installedYear = [self _texliveYear:NULL isDevelopmentVersion:&_versions.isDevelopment tlmgrVersion:&_versions.tlmgrVersion];
 
-        if (_versions.repositoryYear == TLMDatabaseUnknownYear)
-            _versions.repositoryYear = [TLMDatabase yearForMirrorURL:[self defaultServerURL] usedURL:&validURL];
+        /*
+         Always recompute this, because if we're using the multiplexer, it's going to redirect to
+         some other URL.  Eventually we'll get a few of them cached in the TLMDatabase, but this
+         is a slowdown if you use mirror.ctan.org.
+         */
+        _versions.repositoryYear = [TLMDatabase yearForMirrorURL:[self defaultServerURL] usedURL:&validURL];
         
         // handled as a separate condition so we can log it for sure
         if (_versions.repositoryYear == TLMDatabaseUnknownYear) {
             TLMLog(__func__, @"Failed to determine the TeX Live version of the repository, so we'll just use the default");
             validURL = [self defaultServerURL];
+            NSParameterAssert(validURL != nil);
         }
         else if (_versions.repositoryYear != _versions.installedYear) {
             
@@ -772,9 +774,11 @@ static NSURL * __TLMParseLocationOption(NSString *location)
             }
             
             validURL = [self legacyRepositoryURL];
+            NSParameterAssert(validURL != nil);
         }
-
+        NSParameterAssert(validURL != nil);
     }
+
     return validURL;
 }
 
