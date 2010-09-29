@@ -51,7 +51,11 @@
         [[NSNotificationCenter defaultCenter] addObserver:self 
                                                  selector:@selector(_handleLogServerUpdateNotification:) 
                                                      name:TLMLogServerUpdateNotification 
-                                                   object:[TLMLogServer sharedServer]];       
+                                                   object:[TLMLogServer sharedServer]];     
+        [[NSNotificationCenter defaultCenter] addObserver:self 
+                                                 selector:@selector(_handleSyncNotification:) 
+                                                     name:TLMLogServerSyncNotification 
+                                                   object:[TLMLogServer sharedServer]];  
         _messages = [NSMutableArray new];
         
         // pointer equality dictionary, non-copying (since TLMLogMessage is technically mutable)
@@ -79,7 +83,12 @@
     // timer does not repeat
     _updateScheduled = NO;
     
-    [_messages addObjectsFromArray:[[TLMLogServer sharedServer] messagesFromIndex:[_messages count]]];
+    NSArray *toAdd = [[TLMLogServer sharedServer] messagesFromIndex:[_messages count]];
+    // nothing to do; may happen if the delayed perform arrives just before a sync notification
+    if ([toAdd count] == 0)
+        return;
+    
+    [_messages addObjectsFromArray:toAdd];
     
     BOOL shouldScroll = NO;
     NSUInteger rowCount = [_tableView numberOfRows];
@@ -107,6 +116,12 @@
     if (NO == _updateScheduled)
         [self _scheduleUpdate];
 }    
+
+- (void)_handleSyncNotification:(NSNotification *)aNote
+{
+    [[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(_update) object:nil];
+    [self _update];
+}
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView;
 {
