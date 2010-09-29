@@ -711,13 +711,35 @@ static NSURL * __TLMParseLocationOption(NSString *location)
     }
     
     NSAlert *alert = [[NSAlert new] autorelease];
-    [alert setMessageText:NSLocalizedString(@"Mirror URL has a newer TeX Live version", @"")];
-    [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"Your TeX Live version is %d, but your default mirror URL appears to be for TeX Live %d.  You need to manually upgrade to a newer version of TeX Live, as there will be no further updates for your version.", @"single integer specifier"), localVersion, remoteVersion]];
+    BOOL allowSuppression;
+    if (localVersion == 2008) {
+        [alert setMessageText:NSLocalizedString(@"TeX Live 2008 is not supported", @"")];
+        [alert setInformativeText:NSLocalizedString(@"This version of TeX Live Utility will not work correctly with TeX Live 2008.  You need to download TeX Live Utility version 0.74 or earlier, or upgrade to a newer TeX Live.  I recommend the latter.", @"")];
+        // non-functional, so no point in hiding this alert
+        allowSuppression = NO;
+    }
+    else if (remoteVersion > localVersion) {
+        [alert setMessageText:NSLocalizedString(@"Mirror URL has a newer TeX Live version", @"")];
+        [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"Your TeX Live version is %d, but your default mirror URL appears to be for TeX Live %d.  You need to manually upgrade to a newer version of TeX Live, as there will be no further updates for your version.", @"two integer specifiers"), localVersion, remoteVersion]];
+        // nag users into upgrading, to keep them from using ftp.tug.org willy-nilly
+        allowSuppression = NO;
+    }
+    else {
+        [alert setMessageText:NSLocalizedString(@"Mirror URL has an older TeX Live version", @"")];
+        [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"Your TeX Live version is %d, but your default mirror URL appears to be for TeX Live %d.  You need to choose an appropriate mirror.", @"two integer specifiers"), localVersion, remoteVersion]];
+        // may come up during pretest
+        allowSuppression = YES;
+    }
 
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:TLMDisableVersionMismatchWarningKey] == NO) {
+
+    if (NO == allowSuppression || [[NSUserDefaults standardUserDefaults] boolForKey:TLMDisableVersionMismatchWarningKey] == NO) {
         
-        SEL endSel = @selector(versionWarningDidEnd:returnCode:contextInfo:);
-        [alert setShowsSuppressionButton:YES];
+        SEL endSel = NULL;
+        
+        if (allowSuppression) {
+            endSel = @selector(versionWarningDidEnd:returnCode:contextInfo:);
+            [alert setShowsSuppressionButton:YES];
+        }
         
         // always show on the main window
         [alert beginSheetModalForWindow:[[[NSApp delegate] mainWindowController] window] 
