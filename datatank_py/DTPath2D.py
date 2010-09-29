@@ -27,9 +27,6 @@ class DTPath2D(object):
         xvalues -- array of x values
         yvalues -- array of y values
         
-        Pass empty arrays for points to get an empty collection
-        that can be added to with add_point().
-        
         """
         
         # A polygon class.  The data array has one of two formats
@@ -43,6 +40,8 @@ class DTPath2D(object):
         
         assert xvalues != None and yvalues != None, "both x and y arrays are required"
         assert len(xvalues) == len(yvalues), "inconsistent lengths"   
+        assert len(xvalues) > 0, "empty arrays are not allowed"
+        
         xvalues = np.array(xvalues).astype(np.double)
         yvalues = np.array(yvalues).astype(np.double)
         self._bounding_box = _bounding_box(xvalues, yvalues)
