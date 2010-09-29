@@ -43,7 +43,7 @@
 
 #define TLPDB_PATH      CFSTR("tlpkg/texlive.tlpdb")
 #define MIN_DATA_LENGTH 2048
-#define URL_TIMEOUT     20
+#define URL_TIMEOUT     30
 
 const int16_t TLMDatabaseUnknownYear = -1;
 
@@ -118,7 +118,6 @@ static NSMutableDictionary *_databases = nil;
         
         // if redirected (e.g., from mirror.ctan.org), don't cache by the original host
         if ([[db actualURL] isEqual:tlpdbURL] == NO) {
-            TLMLog(__func__, @"Recaching database under redirected URL: %@ --> %@", [tlpdbURL absoluteString], [[db actualURL] absoluteString]);
             [_databases setObject:db forKey:[db actualURL]];
             [_databases removeObjectForKey:tlpdbURL];
         }
@@ -163,6 +162,7 @@ static NSMutableDictionary *_databases = nil;
 {
     if (response) {
         TLMLog(__func__, @"redirected request to %@", [[request URL] absoluteString]);
+        TLMLogServerSync();
     }
     [self setActualURL:[request URL]];
     return request;
@@ -181,14 +181,21 @@ static NSMutableDictionary *_databases = nil;
         _failed = NO;
         TLMLog(__func__, @"Checking the repository version.  Please be patient.");
         TLMLog(__func__, @"Downloading tlpdb%C", 0x2026);
+        TLMLogServerSync();
+
         NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
         
-        // private runloop mode so we beachball if needed (since this is synchronous and likely on the main thread)
+        /*
+         Private runloop mode so we beachball if needed (since this is synchronous and likely on the main thread).
+         Typical download times under "normal" circumstances are < 1 second on a DSL connection, which is not
+         too noticeable.  However, some .edu servers seem to time out for no apparent reason, and that's going
+         to seem like a hang on startup.
+         */
         NSString *rlmode = @"__TLMDatabaseDownloadRunLoopMode";
         [connection scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:rlmode];
         [connection start];
         do {
-            CFRunLoopRunInMode((CFStringRef)rlmode, 0.1, TRUE);
+            CFRunLoopRunInMode((CFStringRef)rlmode, 0.3, TRUE);
         } while ([_tlpdbData length] < MIN_DATA_LENGTH && NO == _failed);
         TLMLog(__func__, @"Downloaded %lu bytes", (unsigned long)[_tlpdbData length]);
         [connection cancel];

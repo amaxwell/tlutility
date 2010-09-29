@@ -550,6 +550,7 @@ static NSURL * __TLMParseLocationOption(NSString *location)
     NSString *URLString = [[self defaultServerURL] absoluteString];
     
     TLMLog(__func__, @"Checking for a connection to %@%C", URLString, 0x2026);
+    TLMLogServerSync();
     
     // CFNetDiagnostic crashes with nil URL
     NSParameterAssert([self defaultServerURL]);
