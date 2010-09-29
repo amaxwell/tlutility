@@ -6,11 +6,14 @@
 import numpy as np
 
 def _max_bounding_box(a, b):
-    (xmin_a, xmax_a, ymin_a, ymax_b) = a
+    (xmin_a, xmax_a, ymin_a, ymax_a) = a
     (xmin_b, xmax_b, ymin_b, ymax_b) = b
-    return (np.nanmin(xmin_a, xmin_b), np.nanmax(xmax_a, xmax_b), np.nanmin(ymin_a, ymin_b), np.nanmax(ymax_a, ymax_b))
+    return (np.nanmin((xmin_a, xmin_b)), np.nanmax((xmax_a, xmax_b)), np.nanmin((ymin_a, ymin_b)), np.nanmax((ymax_a, ymax_b)))
     
 def _bounding_box(xvalues, yvalues):        
+    assert len(xvalues) == len(yvalues), "inconsistent lengths"
+    if len(xvalues) == 0:
+        return (0, 0, 0, 0)
     return (np.nanmin(xvalues), np.nanmax(xvalues), np.nanmin(yvalues), np.nanmax(yvalues))
 
 class DTPath2D(object):
@@ -24,7 +27,7 @@ class DTPath2D(object):
         xvalues -- array of x values
         yvalues -- array of y values
         
-        Pass None or an empty array for points to get an empty collection
+        Pass empty arrays for points to get an empty collection
         that can be added to with add_point().
         
         """
@@ -39,21 +42,26 @@ class DTPath2D(object):
         # This allows multiple loops to be saved in a single array.
         
         assert xvalues != None and yvalues != None, "both x and y arrays are required"
-        assert len(xvalues) == len(yvalues), "inconsistent lengths"        
+        assert len(xvalues) == len(yvalues), "inconsistent lengths"   
+        xvalues = np.array(xvalues).astype(np.double)
+        yvalues = np.array(yvalues).astype(np.double)
         self._bounding_box = _bounding_box(xvalues, yvalues)
-        self._xvalues = np.insert(np.array(xvalues).astype(np.double), 0, 0)
-        self._yvalues = np.insert(np.array(yvalues).astype(np.double), 0, len(yvalues))
+        self._xvalues = np.insert(xvalues, 0, 0)
+        self._yvalues = np.insert(yvalues, 0, len(yvalues))
             
     def bounding_box(self):
         return self._bounding_box
     
     def add_loop(self, xvalues, yvalues):
         assert len(xvalues) == len(yvalues), "inconsistent lengths"
-        self._bounding_box = _max_bounding_box(self._bounding_box, _bounding_box(xvalues, yvalues))
-        xvalues = np.insert(xvalues, 0, 0)
-        yvalues = np.insert(yvalues, 0, len(yvalues))
-        self._xvalues = np.append(self._xvalues, xvalues)
-        self._yvalues = np.append(self._yvalues, yvalues)
+        xvalues = np.array(xvalues).astype(np.double)
+        yvalues = np.array(yvalues).astype(np.double)
+        if len(xvalues) > 0:
+            self._bounding_box = _max_bounding_box(self._bounding_box, _bounding_box(xvalues, yvalues))
+            xvalues = np.insert(xvalues, 0, 0)
+            yvalues = np.insert(yvalues, 0, len(yvalues))
+            self._xvalues = np.append(self._xvalues, xvalues)
+            self._yvalues = np.append(self._yvalues, yvalues)
         
     def __str__(self):
         s = "{\n"
