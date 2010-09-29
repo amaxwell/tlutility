@@ -289,6 +289,7 @@ static void __TLMProxySettingsChanged(SCDynamicStoreRef store, CFArrayRef change
             NSCParameterAssert(mirrorURL);
             
             TLMLog(__func__, @"Trying to find a proxy for %@ using PAC %@%C", [mirrorURL absoluteString], proxy, 0x2026);
+            TLMLogServerSync();
             
             // NB: CFNetworkExecuteProxyAutoConfigurationURL crashes if you pass a NULL context
             bool finished = false;
