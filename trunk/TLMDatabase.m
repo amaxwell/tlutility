@@ -156,7 +156,7 @@ static NSMutableDictionary *_databases = nil;
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
     _failed = YES;
-    TLMLog(__func__, @"Failed to download tlpdb %@ : %@", _tlpdbURL, error);
+    TLMLog(__func__, @"Failed to download tlpdb %@ : %@", (_actualURL ? _actualURL : _tlpdbURL), error);
 }
 
 - (NSURLRequest *)connection:(NSURLConnection *)connection willSendRequest:(NSURLRequest *)request redirectResponse:(NSURLResponse *)response;
