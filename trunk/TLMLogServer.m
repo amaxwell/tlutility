@@ -46,6 +46,7 @@ NSString * const TLMLogServerUpdateNotification = @"TLMLogServerUpdateNotificati
 NSString * const TLMLogTotalProgressNotification = @"TLMLogTotalProgressNotification";
 NSString * const TLMLogFinishedProgressNotification = @"TLMLogFinishedProgressNotification";
 NSString * const TLMLogIncrementalProgressNotification = @"TLMLogIncrementalProgressNotification";
+NSString * const TLMLogServerSyncNotification = @"TLMLogServerSyncNotification";
 NSString * const TLMLogSize = @"TLMLogSize";
 NSString * const TLMLogPackageName = @"TLMLogPackageName";
 
@@ -312,6 +313,14 @@ static NSConnection * __TLMLSCreateAndRegisterConnectionForServer(TLMLogServer *
         asl_log(NULL, NULL, ASL_LEVEL_NOTICE, "%s", [[message message] UTF8String]);
 }
 
+- (void)_postSync
+{
+    NSParameterAssert([[NSThread currentThread] isMainThread]);
+    [[NSNotificationCenter defaultCenter] postNotificationName:TLMLogServerSyncNotification object:self];
+    // tickle the runloop so we can (hopefully) get the event loop to redisplay windows
+    [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantPast]];
+}
+
 @end
 
 void TLMLog(const char *sender, NSString *format, ...)
@@ -341,4 +350,12 @@ void TLMLog(const char *sender, NSString *format, ...)
     [[TLMLogServer sharedServer] logMessage:msg];
     [msg release];
     
+}
+
+void TLMLogServerSync()
+{
+    if ([[NSThread currentThread] isMainThread])
+        [[TLMLogServer sharedServer] _postSync];
+    else
+        [[TLMLogServer sharedServer] performSelectorOnMainThread:@selector(_postSync) withObject:nil waitUntilDone:YES];
 }

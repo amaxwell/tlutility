@@ -41,6 +41,9 @@
 // posted on the main thread
 extern NSString * const TLMLogServerUpdateNotification;
 
+// posted on the main thread; request to immediately update log display services
+extern NSString * const TLMLogServerSyncNotification;
+
 // progress notifications posted on the main thread
 extern NSString * const TLMLogTotalProgressNotification;       // posted to begin deterministic progress updates
 extern NSString * const TLMLogIncrementalProgressNotification; // posted with number of bytes since previous update
@@ -70,5 +73,7 @@ extern NSString * const TLMLogPackageName;
 
 __BEGIN_DECLS
 extern void TLMLog(const char *sender, NSString *format, ...);
+// force an update of the log display clients; use sparingly
+extern void TLMLogServerSync();
 __END_DECLS
 
