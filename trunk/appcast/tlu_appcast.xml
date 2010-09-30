@@ -354,5 +354,30 @@
             <pubDate>Fri, 11 Jun 2010 15:19:04 -0700</pubDate>
             <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20100611.tgz" sparkle:version="0.88" length="1598518" type="application/octet-stream" sparkle:dsaSignature="MCwCFBt+3TfTe1ZbeRU45tRtBCZ7uUU5AhR9bgqQ9sZpar5kYD1OPX1tlv7buA=="></enclosure>
         </item>
+        <item>
+            <title>Version 0.89</title>
+            <description>
+                <h3>Changes Since 0.88</h3>
+                <h3>Changes Since 0.88</h3>
+                <li>Command-line location checkbox is now unchecked if it is changed externally</li>
+                <li>Proxy check has an absolute timeout, so it does not hang indefinitely</li>
+                <li>Mirror version is now checked, for more accurate warning messages</li>
+                <li>Added support for TeX Live 2009 via a legacy archive</li>
+                <li>Packages listed with unexpected order by tlmgr list now show up under the correct heading</li>
+                <li>Package names beginning with "i" are no longer truncated in the package list</li>
+                <li>Mixed install status is now handled more correctly</li>
+                <li>Status overlay window no longer draws on top of a sheet</li>
+                <li>Changes to the TeXDist system preference pane are now noticed, for better version checking</li>
+                <li>Dock progress indicator now starts at the vertical position and moves clockwise</li>
+                <li>Progress indicators are now shown for infrastructure downloads</li>
+                <li>Added an option sheet for configuring automatic backup</li>
+                <li>Work around a recent tlmgr bug that prevents updates from being listed</li>
+                <li>Added an alternate menu item (hold down option key) for installing tlmgr from tlcritical repo</li>
+                <li>Check the return value from the setuid(2) syscall</li>
+                <li>Some log messages are displayed immediately, in order to warn of slow network operations</li>
+            </description>
+            <pubDate>Wed, 29 Sep 2010 19:39:54 -0700</pubDate>
+            <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20100929.tgz" sparkle:version="0.89" length="1649927" type="application/octet-stream" sparkle:dsaSignature="MCwCFEg4DNmSJkSzQ+yDsVdoXyfgwTjPAhQbArRa3fozk2CIg4/JytbJ/7PzZg=="></enclosure>
+        </item>
     </channel>
 </rss>
