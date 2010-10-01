@@ -44,6 +44,7 @@
 {
 @private
     TLMMainWindowController *_mainWindowController;
+    NSConnection            *_connection;
 }
 
 // update $PATH from NSUserDefaults

@@ -46,6 +46,16 @@
 #import "TLMProxyManager.h"
 #import "TLMDatabase.h"
 
+#define CONNECTION_NAME @"com.googlecode.mactlmgr.tlu.doconnection"
+
+@protocol TLMAppProtocol
+
+- (void)displayUpdates;
+- (void)orderFront;
+- (void)hide;
+
+@end
+
 @implementation TLMAppController
 
 static void __TLMMigrateBundleIdentifier()
@@ -217,12 +227,36 @@ static void __TLMMigrateBundleIdentifier()
 - (void)dealloc
 {
     [_mainWindowController release];
+    [_connection release];
     [super dealloc];
+}
+
+- (void)applicationWillTerminate:(NSNotification *)notification;
+{
+    [_connection registerName:nil];
+    [[_connection receivePort] invalidate];
+    [[_connection sendPort] invalidate];
+    [_connection invalidate];
 }
 
 - (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender
 {
     return ([[self mainWindowController] windowShouldClose:sender]) ? NSTerminateNow : NSTerminateCancel;
+}
+
+- (void)displayUpdates;
+{
+    [[self mainWindowController] refreshUpdatedPackageList];
+}
+
+- (void)orderFront;
+{
+    [NSApp activateIgnoringOtherApps:YES];
+}
+
+- (void)hide;
+{
+    [NSApp hide:nil];
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)notification;
@@ -234,6 +268,10 @@ static void __TLMMigrateBundleIdentifier()
     [[self class] updatePathEnvironment]; 
 
     [[self mainWindowController] showWindow:nil];
+    
+    _connection = [[NSConnection alloc] initWithReceivePort:[NSPort port] sendPort:nil];
+    [_connection setRootObject:[NSProtocolChecker protocolCheckerWithTarget:self protocol:@protocol(TLMAppProtocol)]];
+    [_connection registerName:CONNECTION_NAME];
 }
 
 - (TLMMainWindowController *)mainWindowController { 
