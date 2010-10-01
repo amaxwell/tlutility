@@ -358,7 +358,6 @@
             <title>Version 0.89</title>
             <description>
                 <h3>Changes Since 0.88</h3>
-                <h3>Changes Since 0.88</h3>
                 <li>Command-line location checkbox is now unchecked if it is changed externally</li>
                 <li>Proxy check has an absolute timeout, so it does not hang indefinitely</li>
                 <li>Mirror version is now checked, for more accurate warning messages</li>
