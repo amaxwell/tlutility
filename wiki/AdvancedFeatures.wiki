@@ -1,0 +1,14 @@
+#labels Featured
+TeX Live Utility is intended to have very few advanced features, and be as basic as possible.  So-called power users are advised to use the command line interface.  However, there are a few features that are not for everyday usage.
+
+= Reinstall TeX Live Manager =
+
+The *Actions->Reinstall TeX Live Manager* menu item allows you to reinstall the TeX Live infrastructure, including the tlmgr tool.  There are rare cases where this may be useful.
+
+= Force Remove =
+
+If you hold down the option key (alt on some keyboards) while the Action menu is active, you'll see an option to *Forcibly Remove Selected Packages*.  In general, this is a really bad idea.  If you break your TeX Live system by doing this, it's your own fault.
+
+= TeX Live Critical Repository =
+
+If you hold down the option key (alt on some keyboards) while the Action menu is active, you'll see an option to *Install TeX Live Manager From Critical Repository*.  This peculiar-sounding item allows you to install the TeX Live Manager (tlmgr) tool from the TeX Live testing repository at ftp://tug.org/texlive/tlcritical.  If you do this, please report any problems encountered to the TeX Live team via an appropriate [http://tug.org/texlive/lists.html mailing list].  In addition, you can revert to a non-beta version of tlmgr by using the *Actions->Reinstall TeX Live Manager* menu item noted above.
