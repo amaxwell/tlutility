@@ -26,6 +26,14 @@ Note that some packages have multiple architectures, and you generally only want
 
 Use the Actions menu to change paper size.  The current paper size is given by pdftex, but changing paper size will change it for _all_ TeX programs.  If you want to change paper size for a single program, e.g. dvips, use the tlmgr command-line tool.
 
+= Autobackup =
+
+Use the Actions menu to change automatic backup settings (only tested with TeX Live 2010).  If you want to keep all backups, enter ∞ for the number to keep.  If the "Prune backups" box is checked, old backups will be removed, excluding the number specified for keeping.
+
+http://mactlmgr.googlecode.com/svn/wiki/images/AutobackupSheet.png
+
+Restoring backups currently requires use of the tlmgr command in Terminal.  Refer to the [http://tug.org/texlive/doc/tlmgr.html tlmgr manual] for more details.
+
 = Show Info =
 
 You can display detailed information for a specific package in an inspector panel:
