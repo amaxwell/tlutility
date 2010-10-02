@@ -1,4 +1,5 @@
 #summary Basic features of TeX Live Utility.
+#labels Featured
 
 = Introduction =
 
