@@ -8,7 +8,7 @@ If you download TeX Live Utility, the DVI Quick Look plugin is already installed
 
 = Usage =
 
-DVI files will now have a thumbnail icon available in Finder, and in TeX Live Utility's documentation file view (and BibDesk's linked file view).
+DVI files will now have a thumbnail icon available in Finder, and in TeX Live Utility's documentation file view (and [http://bibdesk.sourceforge.net/ BibDesk's] linked file view).
 
 = Configuration =
 
