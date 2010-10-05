@@ -235,8 +235,19 @@ static NSMutableDictionary *_databases = nil;
          depend release/2010
          depend revision/19668
          */
-        [_tlpdbData appendBytes:"\0" length:1];
-        const char *tlpdb_str = [_tlpdbData bytes];
+        char *tlpdb_str = [_tlpdbData mutableBytes];
+        
+        // FIXME: NUL terminate the data, since it's arbitrary; better to look for a newline
+        if (tlpdb_str[[_tlpdbData length] - 1] != '\0')
+            [_tlpdbData appendBytes:"\0" length:1];
+        
+        // !!! early return if there's no texlive.config package
+        const char *head_str = "name 00texlive.config";
+        if (strncmp(head_str, tlpdb_str, sizeof(head_str)) != 0) {
+            TLMLog(__func__, @"No 00texlive.config package present in tlpdb");
+            return _version;
+        }
+        
         regex_t regex;
         regmatch_t match[3];
         int err = regcomp(&regex, "^depend release\\/([0-9]{4})$", REG_NEWLINE|REG_EXTENDED);
