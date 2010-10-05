@@ -45,8 +45,8 @@
     NSRect              _stringRect;
 }
 
-@property(readwrite, copy) NSString *statusString;
-@property(readwrite, copy) NSAttributedString *attributedStatusString;
+@property(nonatomic, readwrite, copy) NSString *statusString;
+@property(nonatomic, readwrite, copy) NSAttributedString *attributedStatusString;
 
 @end
 
