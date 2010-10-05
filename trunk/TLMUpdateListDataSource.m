@@ -103,7 +103,18 @@
         if (NSNotFound != idx)
             [indexes addIndex:idx];
     }
+    
+    /*
+     Workaround for http://code.google.com/p/mactlmgr/issues/detail?id=30
+     This is still problematic, as you can select a package just before it's updated,
+     but the info panel updates just before it disappears.  Or something like that.
+     Anyway, you end up with a package displayed in the info panel, but nothing selected
+     in the tableview.
+     */
+    if ([indexes count] == [packages count])
+        _ignoreSelectionChanges = YES;
     [_tableView selectRowIndexes:indexes byExtendingSelection:NO];
+    _ignoreSelectionChanges = NO;
 }
 
 - (void)_selectPackagesNamed:(NSArray *)names
@@ -360,7 +371,7 @@
 
 - (void)tableViewSelectionDidChange:(NSNotification *)notification;
 {
-    if ([[[TLMInfoController sharedInstance] window] isVisible]) {
+    if ([[[TLMInfoController sharedInstance] window] isVisible] && NO == _ignoreSelectionChanges) {
         // reset for multiple selection or empty selection
         if ([_tableView numberOfSelectedRows] != 1)
             [[TLMInfoController sharedInstance] showInfoForPackage:nil];
