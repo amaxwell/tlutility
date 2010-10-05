@@ -55,6 +55,7 @@
     NSURL                   *_lastUpdateURL;
     TLMStatusWindow         *_statusWindow;
     BOOL                     _refreshing;
+    BOOL                     _ignoreSelectionChanges;
 }
 
 @property (nonatomic, retain) IBOutlet TLMTableView *tableView;
