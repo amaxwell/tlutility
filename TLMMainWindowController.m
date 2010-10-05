@@ -666,6 +666,10 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
              mirror is used, so results are consistent.
              */
             [self _refreshUpdatedPackageListFromLocation:[self _lastUpdateURL]];
+            
+            // if previously loaded, this may be stale due to autoinstall/autoremove of packages
+            if ([[_packageListDataSource packageNodes] count] && [_packageListDataSource isRefreshing] == NO)
+                [self refreshFullPackageList];
         }
     }
 }
@@ -790,7 +794,10 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     }
     else if ([op isCancelled] == NO) {
         
-        // This is slow, but if a package installed other dependencies, we have no way of manually removing from the list.  We also need to ensure that the same mirror is used, so results are consistent.
+        /*
+         This is slow, but if a package installed other dependencies, we have no way of manually removing 
+         from the list.  We also need to ensure that the same mirror is used, so results are consistent.
+         */
         [self _refreshFullPackageListFromLocation:[op updateURL] offline:NO];
         
         // this is always displayed, so should always be updated as well
