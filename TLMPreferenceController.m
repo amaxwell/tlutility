@@ -799,6 +799,10 @@ static NSURL * __TLMParseLocationOption(NSString *location)
             validURL = [self legacyRepositoryURL];
             NSParameterAssert(validURL != nil);
         }
+        else {
+            TLMLog(__func__, @"Mirror version appears to be %d, a good year for TeX Live", _versions.repositoryYear);
+        }
+
         NSParameterAssert(validURL != nil);
     }
 
