@@ -270,6 +270,18 @@ static bool hasKeyPrefix(NSString *line)
     return dict;
 }
 
+static NSArray * __TLMCheckFileExistence(NSArray *inputURLs)
+{
+    NSFileManager *fileManager = [NSFileManager new];
+    NSMutableArray *validURLs = [NSMutableArray arrayWithCapacity:[inputURLs count]];
+    for (NSURL *aURL in inputURLs) {
+        if ([aURL isFileURL] == NO || [fileManager fileExistsAtPath:[aURL path]])
+            [validURLs addObject:aURL];
+    }
+    [fileManager release];
+    return validURLs;
+}
+
 + (id <TLMInfoOutput>)outputWithInfoString:(NSString *)infoString docURLs:(NSArray *)docURLs;
 {
     NSDictionary *info = [self _infoDictionaryWithString:infoString];
@@ -363,6 +375,8 @@ static bool hasKeyPrefix(NSString *line)
         [attrString addAttribute:NSFontAttributeName value:userFont range:NSMakeRange(previousLength, [attrString length] - previousLength)];
     }
     
+    docURLs = __TLMCheckFileExistence(docURLs);
+    
     // documentation from texdoc
     if ([docURLs count]) {
         previousLength = [attrString length];
@@ -382,7 +396,7 @@ static bool hasKeyPrefix(NSString *line)
         }        
     }
     
-    NSArray *runURLs = [info objectForKey:RUN_FILE_KEY];
+    NSArray *runURLs = __TLMCheckFileExistence([info objectForKey:RUN_FILE_KEY]);
     if ([runURLs count]) {
         previousLength = [attrString length];
         [[attrString mutableString] appendString:NSLocalizedString(@"\nRun Files:\n", @"heading in info panel")];
@@ -401,7 +415,7 @@ static bool hasKeyPrefix(NSString *line)
         }        
     }
     
-    NSArray *sourceURLs = [info objectForKey:SOURCE_FILE_KEY];
+    NSArray *sourceURLs = __TLMCheckFileExistence([info objectForKey:SOURCE_FILE_KEY]);
     if ([sourceURLs count]) {
         previousLength = [attrString length];
         [[attrString mutableString] appendString:NSLocalizedString(@"\nSource Files:\n", @"heading in info panel")];
@@ -420,7 +434,7 @@ static bool hasKeyPrefix(NSString *line)
         }        
     }
     
-    docURLs = [info objectForKey:SOURCE_FILE_KEY];
+    docURLs = __TLMCheckFileExistence([info objectForKey:DOC_FILE_KEY]);
     if ([docURLs count]) {
         previousLength = [attrString length];
         [[attrString mutableString] appendString:NSLocalizedString(@"\nDoc Files:\n", @"heading in info panel")];
@@ -441,9 +455,9 @@ static bool hasKeyPrefix(NSString *line)
     
     [output setAttributedString:attrString];
     [attrString release];
-    [output setRunfiles:[info objectForKey:RUN_FILE_KEY]];
-    [output setSourcefiles:[info objectForKey:SOURCE_FILE_KEY]];
-    [output setDocfiles:[info objectForKey:SOURCE_FILE_KEY]];
+    [output setRunfiles:runURLs];
+    [output setSourcefiles:sourceURLs];
+    [output setDocfiles:docURLs];
         
     return output;
 }

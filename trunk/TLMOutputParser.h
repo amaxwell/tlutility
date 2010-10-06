@@ -42,6 +42,8 @@
 @protocol TLMInfoOutput
 
 - (NSAttributedString *)attributedString;
+
+// arrays of NSURL objects; only files which exist are returned
 - (NSArray *)runfiles;
 - (NSArray *)sourcefiles;
 - (NSArray *)docfiles;
