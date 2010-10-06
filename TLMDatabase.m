@@ -45,20 +45,22 @@
 #define MIN_DATA_LENGTH 2048
 #define URL_TIMEOUT     30
 
-const int16_t TLMDatabaseUnknownYear = -1;
+const TLMDatabaseYear TLMDatabaseUnknownYear = -1;
 
 @interface _TLMDatabase : NSObject {
     NSURL           *_tlpdbURL;
     NSMutableData   *_tlpdbData;
     BOOL             _failed;
     NSURL           *_actualURL;
-    int16_t          _version;
+    TLMDatabaseYear  _version;
+    BOOL             _isOfficial;
 }
 
 - (id)initWithURL:(NSURL *)tlpdbURL;
-- (int16_t)versionNumber;
+- (TLMDatabaseYear)versionNumber;
 @property (nonatomic, copy) NSURL *actualURL;
 @property (readonly) BOOL failed;
+@property (readonly) BOOL isOfficial;
 
 @end
 
@@ -72,14 +74,9 @@ static NSMutableDictionary *_databases = nil;
         _databases = [NSMutableDictionary new];
 }
 
-+ (int16_t)yearForMirrorURL:(NSURL *)aURL;
++ (TLMDatabaseVersion)versionForMirrorURL:(NSURL *)aURL;
 {
-    return [self yearForMirrorURL:aURL usedURL:NULL];
-}
-
-+ (int16_t)yearForMirrorURL:(NSURL *)aURL usedURL:(NSURL **)usedURL;
-{
-    int16_t version = TLMDatabaseUnknownYear;
+    TLMDatabaseVersion version =  { TLMDatabaseUnknownYear, false, [[aURL retain] autorelease] };
     @synchronized(_databases) {
         
         if (nil == aURL)
@@ -98,7 +95,8 @@ static NSMutableDictionary *_databases = nil;
         }
 
         // force a download if necessary
-        version = [db versionNumber];
+        version.year = [db versionNumber];
+        version.isOfficial = [db isOfficial];
         
         // now see if we redirected at some point...we don't want to return the tlpdb path
         NSURL *actualURL = [db actualURL];
@@ -109,11 +107,8 @@ static NSMutableDictionary *_databases = nil;
                 actualURL = [(id)CFURLCreateCopyDeletingLastPathComponent(alloc, tmpURL) autorelease];
                 CFRelease(tmpURL);
             }
-            if (usedURL) *usedURL = actualURL;
+            version.usedURL = [[actualURL retain] autorelease];
             NSParameterAssert(actualURL != nil);
-        }
-        else if (usedURL) {
-            *usedURL = aURL;
         }
         
         // if redirected (e.g., from mirror.ctan.org), don't cache by the original host
@@ -131,6 +126,7 @@ static NSMutableDictionary *_databases = nil;
 
 @synthesize actualURL = _actualURL;
 @synthesize failed = _failed;
+@synthesize isOfficial = _isOfficial;
 
 - (id)initWithURL:(NSURL *)tlpdbURL;
 {
@@ -140,6 +136,7 @@ static NSMutableDictionary *_databases = nil;
         _tlpdbURL = [tlpdbURL copy];
         _tlpdbData = [NSMutableData new];
         _version = TLMDatabaseUnknownYear;
+        _isOfficial = YES;
     }
     return self;
 }
@@ -203,7 +200,7 @@ static NSMutableDictionary *_databases = nil;
     }
 }
 
-- (int16_t)versionNumber;
+- (TLMDatabaseYear)versionNumber;
 {
     // !!! early return if it's already copmuted
     if (TLMDatabaseUnknownYear != _version)
@@ -256,19 +253,23 @@ static NSMutableDictionary *_databases = nil;
          May be other characters after the 4 digit year, so ignore those; see e-mail from
          Norbert on 5 Oct 2010.  ConTeXt repo uses depend release/2010-tlcontrib.
          */
-        int err = regcomp(&regex, "^depend release\\/([0-9]{4})", REG_NEWLINE|REG_EXTENDED);
+        int err = regcomp(&regex, "^depend release\\/([0-9]{4})(.*)$", REG_NEWLINE|REG_EXTENDED);
         if (err) {
             char err_msg[1024] = {'\0'};
             regerror(err, &regex, err_msg, sizeof(err_msg));
             TLMLog(__func__, @"Unable to compile regex: %s", err_msg);
         }
-        else if (0 == (err = regexec(&regex, tlpdb_str, 2, match, 0))) {
+        else if (0 == (err = regexec(&regex, tlpdb_str, 3, match, 0))) {
             size_t matchLength = match[1].rm_eo - match[1].rm_so;
             char *year = NSZoneMalloc(NSDefaultMallocZone(), matchLength + 1);
             memset(year, '\0', matchLength + 1);
             memcpy(year, &tlpdb_str[match[1].rm_so], matchLength);
             _version = strtol(year, NULL, 0);
             NSZoneFree(NSDefaultMallocZone(), year);
+            
+            if ((match[2].rm_eo - match[2].rm_so) > 0)
+                _isOfficial = NO;
+            
         }
         else {
             char err_msg[1024] = {'\0'};

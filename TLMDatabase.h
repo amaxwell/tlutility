@@ -38,15 +38,19 @@
 
 #import <Cocoa/Cocoa.h>
 
+typedef int16_t TLMDatabaseYear;
+
 // returned as the year in case of an error
-extern const int16_t TLMDatabaseUnknownYear;
+extern const TLMDatabaseYear TLMDatabaseUnknownYear;
+
+typedef struct _TLMDatabaseVersion {
+    TLMDatabaseYear  year;       // release year from the tlpdb
+    BOOL             isOfficial; // whether this is a TL or 3rd party repo
+    NSURL           *usedURL;    // actual URL used (may be redirected)
+} TLMDatabaseVersion;
 
 @interface TLMDatabase : NSObject
 
-// returns the release year for the given mirror
-+ (int16_t)yearForMirrorURL:(NSURL *)aURL;
-
-// returns the release year for the given mirror, and the redirected URL by reference
-+ (int16_t)yearForMirrorURL:(NSURL *)aURL usedURL:(NSURL **)usedURL;
++ (TLMDatabaseVersion)versionForMirrorURL:(NSURL *)aURL;
 
 @end

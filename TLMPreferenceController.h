@@ -37,6 +37,7 @@
  */
 
 #import <Cocoa/Cocoa.h>
+#import "TLMDatabase.h"
 
 extern NSString * const TLMTexBinPathPreferenceKey;
 extern NSString * const TLMUseRootHomePreferenceKey;
@@ -70,10 +71,10 @@ extern NSString * const TLMTLCriticalRepository;
     NSURL               *_legacyRepositoryURL;
     FSEventStreamRef     _fseventStream;
     struct __versions {
-        int16_t   repositoryYear;
-        int16_t   installedYear;
-        NSInteger tlmgrVersion;
-        BOOL      isDevelopment;
+        TLMDatabaseYear repositoryYear;
+        TLMDatabaseYear installedYear;
+        NSInteger       tlmgrVersion;
+        BOOL            isDevelopment;
     } _versions;
 }
 
@@ -127,6 +128,6 @@ extern NSString * const TLMTLCriticalRepository;
 @property (readonly) BOOL autoRemove;
 
 @property (readonly) BOOL tlmgrSupportsPersistentDownloads;
-@property (readonly) int16_t texliveYear;
+@property (readonly) TLMDatabaseYear texliveYear;
 
 @end
