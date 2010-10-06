@@ -237,7 +237,8 @@ static NSMutableDictionary *_databases = nil;
          */
         char *tlpdb_str = [_tlpdbData mutableBytes];
         
-        // FIXME: NUL terminate the data, since it's arbitrary; better to look for a newline
+        // NUL terminate the data, since it's arbitrary
+        // FIXME: better to look for a newline and create NSString?
         if (tlpdb_str[[_tlpdbData length] - 1] != '\0')
             [_tlpdbData appendBytes:"\0" length:1];
         
@@ -250,7 +251,12 @@ static NSMutableDictionary *_databases = nil;
         
         regex_t regex;
         regmatch_t match[3];
-        int err = regcomp(&regex, "^depend release\\/([0-9]{4})$", REG_NEWLINE|REG_EXTENDED);
+        
+        /*
+         May be other characters after the 4 digit year, so ignore those; see e-mail from
+         Norbert on 5 Oct 2010.  ConTeXt repo uses depend release/2010-tlcontrib.
+         */
+        int err = regcomp(&regex, "^depend release\\/([0-9]{4})", REG_NEWLINE|REG_EXTENDED);
         if (err) {
             char err_msg[1024] = {'\0'};
             regerror(err, &regex, err_msg, sizeof(err_msg));
