@@ -339,7 +339,7 @@ static NSURL * __TLMParseLocationOption(NSString *location)
     [[NSUserDefaults standardUserDefaults] setBool:([sender state] == NSOnState) forKey:TLMAutoRemovePreferenceKey];
 }
 
-- (int16_t)_texliveYear:(NSString **)versionStr isDevelopmentVersion:(BOOL *)isDev tlmgrVersion:(NSInteger *)tlmgrVersion
+- (TLMDatabaseYear)_texliveYear:(NSString **)versionStr isDevelopmentVersion:(BOOL *)isDev tlmgrVersion:(NSInteger *)tlmgrVersion
 {
     // always run the check and log the result
     TLMTask *tlmgrTask = [[TLMTask new] autorelease];
@@ -705,7 +705,7 @@ static NSURL * __TLMParseLocationOption(NSString *location)
      However, tlmgr itself will perform that check and log if it fails, so logging that it's okay was just
      confusing pretest users.
      */
-    uint16_t remoteVersion, localVersion;
+    TLMDatabaseYear remoteVersion, localVersion;
     @synchronized(self) {
         remoteVersion = _versions.repositoryYear;
         localVersion = _versions.installedYear;
@@ -766,7 +766,9 @@ static NSURL * __TLMParseLocationOption(NSString *location)
          some other URL.  Eventually we'll get a few of them cached in the TLMDatabase, but this
          is a slowdown if you use mirror.ctan.org.
          */
-        _versions.repositoryYear = [TLMDatabase yearForMirrorURL:[self defaultServerURL] usedURL:&validURL];
+        TLMDatabaseVersion version = [TLMDatabase versionForMirrorURL:[self defaultServerURL]];
+        _versions.repositoryYear = version.year;
+        validURL = version.usedURL;
         
         // handled as a separate condition so we can log it for sure
         if (_versions.repositoryYear == TLMDatabaseUnknownYear) {
@@ -774,7 +776,7 @@ static NSURL * __TLMParseLocationOption(NSString *location)
             validURL = [self defaultServerURL];
             NSParameterAssert(validURL != nil);
         }
-        else if (_versions.repositoryYear != _versions.installedYear) {
+        else if (_versions.repositoryYear != _versions.installedYear && version.isOfficial) {
             
             if ([self legacyRepositoryURL] == nil) {
                 NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"DefaultMirrors" ofType:@"plist"];
@@ -801,6 +803,8 @@ static NSURL * __TLMParseLocationOption(NSString *location)
         }
         else {
             TLMLog(__func__, @"Mirror version appears to be %d, a good year for TeX Live", _versions.repositoryYear);
+            if (version.isOfficial == false)
+                TLMLog(__func__, @"This appears to be a 3rd party TeX Live repository");
         }
 
         NSParameterAssert(validURL != nil);
@@ -878,7 +882,7 @@ static NSURL * __TLMParseLocationOption(NSString *location)
 
 - (BOOL)autoRemove { return [[NSUserDefaults standardUserDefaults] boolForKey:TLMAutoRemovePreferenceKey]; }
 
-- (int16_t)texliveYear
+- (TLMDatabaseYear)texliveYear
 {
     return _versions.installedYear;
 }
