@@ -50,7 +50,7 @@ static NSString *__CopyDviPDFmxPathForBundleID(CFStringRef bundleIdentifier)
     return (NSString *)path;
 }
 
-static NSString *__CreateTemporaryFile()
+static NSString *__CreateTemporaryFile(int *fd)
 {
     NSString *tempDir = NSTemporaryDirectory();
     if (nil == tempDir)
@@ -61,7 +61,7 @@ static NSString *__CreateTemporaryFile()
     // mktemp needs a writable string
     char *tempName = strdup(tmpPath);
     
-    tempName = mktemp(tempName);
+    *fd = mkstemp(tempName);
     assert(tempName);
     
     NSString *tempFile = (NSString *)CFStringCreateWithFileSystemRepresentation(CFAllocatorGetDefault(), tempName);
@@ -85,7 +85,8 @@ CFDataRef DVICreatePDFDataFromFile(CFURLRef fileURL, bool allPages, CFBundleRef 
         [task setStandardError:[NSFileHandle fileHandleWithNullDevice]];
         [task setStandardOutput:[NSFileHandle fileHandleWithNullDevice]];
         
-        NSString *outputPath = __CreateTemporaryFile();
+        int fd;
+        NSString *outputPath = __CreateTemporaryFile(&fd);
         NSMutableArray *args = [[NSMutableArray alloc] initWithObjects:@"-o", outputPath, @"-q", nil];
         if (false == allPages) {
             [args addObject:@"-s"];
@@ -100,6 +101,7 @@ CFDataRef DVICreatePDFDataFromFile(CFURLRef fileURL, bool allPages, CFBundleRef 
         
         @try {
             [task launch];
+            close(fd);
             [task waitUntilExit];
             status = [task terminationStatus];
         }
