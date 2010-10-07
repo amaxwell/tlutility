@@ -4,6 +4,8 @@
 from CoreFoundation import CFUserNotificationDisplayNotice, CFUserNotificationDisplayAlert, CFBundleCreate, CFBundleCopyResourceURL, CFPreferencesCopyAppValue
 from CoreFoundation import kCFUserNotificationNoteAlertLevel, kCFUserNotificationAlternateResponse
 
+from Quartz import CGMainDisplayID, CGDisplayIsCaptured
+
 from LaunchServices import LSFindApplicationForInfo, LSOpenCFURLRef
 from LaunchServices import kLSUnknownCreator
 
@@ -45,6 +47,11 @@ if __name__ == '__main__':
     update_count = check_for_updates()
     if update_count == 0:
         log_message("no updates available at this time")
+        exit(0)
+     
+    # doesn't help with Skim's full screen mode
+    if CGDisplayIsCaptured(CGMainDisplayID()):
+        log_message("not displaying update alert because main display is captured")
         exit(0)
     
     title = "TeX Live updates available"
