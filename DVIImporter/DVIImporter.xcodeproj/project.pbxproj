@@ -487,6 +487,9 @@
 		F976620D0861BEF900829F8B /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(NATIVE_ARCH_ACTUAL)";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				RUN_CLANG_STATIC_ANALYZER = YES;
 				SDKROOT = macosx10.6;
 			};
 			name = Development;
