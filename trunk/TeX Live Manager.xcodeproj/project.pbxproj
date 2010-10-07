@@ -68,6 +68,9 @@
 		F9D37C9A0F01A80800FB755E /* TLMGradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D37C990F01A80800FB755E /* TLMGradientView.m */; };
 		F9D37D640F01EA8900FB755E /* TLMUpdateListDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D37D630F01EA8900FB755E /* TLMUpdateListDataSource.m */; };
 		F9D37E7B0F02B5F700FB755E /* TLMOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D37E7A0F02B5F700FB755E /* TLMOutlineView.m */; };
+		F9D85F79125E863C00C0FEC5 /* install_agent.sh in copy tlmgr_cwrapper */ = {isa = PBXBuildFile; fileRef = F9D85F74125E85FD00C0FEC5 /* install_agent.sh */; };
+		F9D85F7A125E865E00C0FEC5 /* update_check.py in Resources */ = {isa = PBXBuildFile; fileRef = F9D85F75125E85FD00C0FEC5 /* update_check.py */; };
+		F9D85F7B125E866100C0FEC5 /* com.googlecode.mactlmgr.update_check.plist in Resources */ = {isa = PBXBuildFile; fileRef = F9D85F73125E85FD00C0FEC5 /* com.googlecode.mactlmgr.update_check.plist */; };
 		F9DCD36C0F06F0A200600DD2 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9DCD3650F06F08C00600DD2 /* Sparkle.framework */; };
 		F9DCD3700F06F0F400600DD2 /* Sparkle.framework in copy frameworks */ = {isa = PBXBuildFile; fileRef = F9DCD3650F06F08C00600DD2 /* Sparkle.framework */; };
 		F9DCD43F0F06F76F00600DD2 /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = F9DCD43E0F06F76F00600DD2 /* dsa_pub.pem */; };
@@ -202,6 +205,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 6;
 			files = (
+				F9D85F79125E863C00C0FEC5 /* install_agent.sh in copy tlmgr_cwrapper */,
 				F9B139DA0EECBECD007C0046 /* tlu_ipctask in copy tlmgr_cwrapper */,
 			);
 			name = "copy tlmgr_cwrapper";
@@ -333,6 +337,9 @@
 		F9D37D630F01EA8900FB755E /* TLMUpdateListDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMUpdateListDataSource.m; sourceTree = "<group>"; };
 		F9D37E790F02B5F700FB755E /* TLMOutlineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMOutlineView.h; sourceTree = "<group>"; };
 		F9D37E7A0F02B5F700FB755E /* TLMOutlineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMOutlineView.m; sourceTree = "<group>"; };
+		F9D85F73125E85FD00C0FEC5 /* com.googlecode.mactlmgr.update_check.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = com.googlecode.mactlmgr.update_check.plist; sourceTree = "<group>"; };
+		F9D85F74125E85FD00C0FEC5 /* install_agent.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = install_agent.sh; sourceTree = "<group>"; };
+		F9D85F75125E85FD00C0FEC5 /* update_check.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = update_check.py; sourceTree = "<group>"; };
 		F9D9AEB60F0D7EED00CB1A2F /* tlu_ipctask-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "tlu_ipctask-Info.plist"; sourceTree = "<group>"; };
 		F9DCD3590F06F08C00600DD2 /* Sparkle.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Sparkle.xcodeproj; path = Sparkle/Sparkle.xcodeproj; sourceTree = "<group>"; };
 		F9DCD43E0F06F76F00600DD2 /* dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dsa_pub.pem; sourceTree = "<group>"; };
@@ -439,6 +446,7 @@
 				F9DCD4A10F07126F00600DD2 /* tlu_appcast.xml */,
 				080E96DDFE201D6D7F000001 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
+				F9D85F72125E85FD00C0FEC5 /* agent */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
@@ -620,6 +628,16 @@
 				F957A4E212514B040079E07F /* TLMBackupOperation.m */,
 			);
 			name = Operations;
+			sourceTree = "<group>";
+		};
+		F9D85F72125E85FD00C0FEC5 /* agent */ = {
+			isa = PBXGroup;
+			children = (
+				F9D85F73125E85FD00C0FEC5 /* com.googlecode.mactlmgr.update_check.plist */,
+				F9D85F74125E85FD00C0FEC5 /* install_agent.sh */,
+				F9D85F75125E85FD00C0FEC5 /* update_check.py */,
+			);
+			path = agent;
 			sourceTree = "<group>";
 		};
 		F9DCD35A0F06F08C00600DD2 /* Products */ = {
@@ -814,6 +832,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F9D85F7B125E866100C0FEC5 /* com.googlecode.mactlmgr.update_check.plist in Resources */,
+				F9D85F7A125E865E00C0FEC5 /* update_check.py in Resources */,
 				F99CCDE70F0EB56E00D67ED0 /* DefaultMirrors.plist in Resources */,
 				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
 				1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */,
@@ -1059,7 +1079,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_VERSION = 4.2;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_MISSING_FIELD_INITIALIZERS = YES;
 				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -1076,6 +1096,7 @@
 					__info_plist,
 					"\"$(SRCROOT)/$(INFOPLIST_FILE)\"",
 				);
+				RUN_CLANG_STATIC_ANALYZER = YES;
 				SDKROOT = macosx10.6;
 				WARNING_CFLAGS = "-Wall";
 			};
