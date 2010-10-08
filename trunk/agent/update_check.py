@@ -23,9 +23,13 @@ def log_message(msg):
 def check_for_updates():
     
     location = CFPreferencesCopyAppValue("TLMFullServerURLPreferenceKey", BUNDLE_ID)
-    log_message("tlmgr will use %s" % (location))
-    
-    tlmgr = Popen(("/usr/texbin/tlmgr", "update", "--list", "--machine-readable", "--location", location), stdout=PIPE, universal_newlines=True)
+
+    cmd = ["/usr/texbin/tlmgr", "update", "--list", "--machine-readable"]
+    if location:
+        log_message("tlmgr will use %s" % (location))
+        cmd += ("--location", location)
+        
+    tlmgr = Popen(cmd, stdout=PIPE, universal_newlines=True)
     (stdout, stderr) = tlmgr.communicate()
     
     output = "".join([c for c in stdout])
@@ -44,16 +48,17 @@ def check_for_updates():
 
 if __name__ == '__main__':
     
+    # check this first; no point in continuing if we can't show the alert
+    # note: this doesn't help with Skim's full screen mode
+    if CGDisplayIsCaptured(CGMainDisplayID()):
+        log_message("main display not available for update alert")
+        exit(0)
+    
     update_count = check_for_updates()
     if update_count == 0:
         log_message("no updates available at this time")
         exit(0)
      
-    # doesn't help with Skim's full screen mode
-    if CGDisplayIsCaptured(CGMainDisplayID()):
-        log_message("not displaying update alert because main display is captured")
-        exit(0)
-    
     title = "TeX Live updates available"
     msg = "Updates for %d %s are available for TeX Live.  Would you like to update with TeX Live Utility now, or at a later time?" % (update_count, "packages" if update_count > 1 else "package")
     
