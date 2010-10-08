@@ -22,9 +22,15 @@ def log_message(msg):
 
 def check_for_updates():
     
+    # if this hasn't been set, bail out, as this user likely won't care
+    texbin_path = CFPreferencesCopyAppValue("TLMTexBinPathPreferenceKey", BUNDLE_ID)
+    if texbin_path == None:
+        log_message("no tlmgr path set; TeX Live update check will not proceed")
+        return 0
+        
+    cmd = [os.path.join(texbin_path, "tlmgr"), "update", "--list", "--machine-readable"]
+    
     location = CFPreferencesCopyAppValue("TLMFullServerURLPreferenceKey", BUNDLE_ID)
-
-    cmd = ["/usr/texbin/tlmgr", "update", "--list", "--machine-readable"]
     if location:
         log_message("tlmgr will use %s" % (location))
         cmd += ("--location", location)
@@ -56,7 +62,6 @@ if __name__ == '__main__':
     
     update_count = check_for_updates()
     if update_count == 0:
-        log_message("no updates available at this time")
         exit(0)
      
     title = "TeX Live updates available"
