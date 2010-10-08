@@ -38,12 +38,16 @@
 
 #import "TLMLaunchAgentController.h"
 
+@interface TLMLaunchAgentController ()
+@property (nonatomic, copy) NSString *propertyListPath;
+@end
 
 @implementation TLMLaunchAgentController
 
 @synthesize _enableCheckbox;
 @synthesize _allUsersCheckbox;
 @synthesize _datePicker;
+@synthesize propertyListPath =_propertyListPath;
 
 #define PLIST_NAME @"com.googlecode.mactlmgr.update_check"
 
@@ -53,21 +57,52 @@ static NSString *__TLMPlistPath(NSSearchPathDomainMask domain)
     return [[[baseDir stringByAppendingPathComponent:@"LaunchAgents"] stringByAppendingPathComponent:PLIST_NAME] stringByAppendingPathExtension:@"plist"];
 }
 
-static NSDictionary * __TLMGetPlist(BOOL *isInstalled, BOOL *allUsers)
+static NSDictionary * __TLMGetPlist(BOOL *isInstalled, BOOL *allUsers, NSString **outPath)
 {
+    NSString *plistPath;
     if ([[NSFileManager defaultManager] fileExistsAtPath:__TLMPlistPath(NSLocalDomainMask)]) {
         if (isInstalled) *isInstalled = YES;
         if (allUsers) *allUsers = YES;
-        return [NSDictionary dictionaryWithContentsOfFile:__TLMPlistPath(NSLocalDomainMask)];
+        plistPath = __TLMPlistPath(NSLocalDomainMask);
     }
     else if ([[NSFileManager defaultManager] fileExistsAtPath:__TLMPlistPath(NSUserDomainMask)]) {
         if (isInstalled) *isInstalled = YES;
         if (allUsers) *allUsers = NO;
-        return [NSDictionary dictionaryWithContentsOfFile:__TLMPlistPath(NSUserDomainMask)];
+        plistPath = __TLMPlistPath(NSUserDomainMask);
     }
-    if (isInstalled) *isInstalled = NO;
-    if (allUsers) *allUsers = NO;
-    return [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:PLIST_NAME ofType:@"plist"]];
+    else {
+        if (isInstalled) *isInstalled = NO;
+        if (allUsers) *allUsers = NO;
+        plistPath = [[NSBundle mainBundle] pathForResource:PLIST_NAME ofType:@"plist"];
+    }
+    
+    if (outPath) *outPath = plistPath;
+    return [NSDictionary dictionaryWithContentsOfFile:plistPath];
+}
+
+static NSString * __TLMGetTemporaryDirectory()
+{
+    static NSString *tmpDir = nil;
+    if (nil == tmpDir)
+        tmpDir = [[NSTemporaryDirectory() stringByAppendingPathComponent:@"TLMLaunchAgentController"] copy];
+    return tmpDir;
+}
+
++ (void)_removeTemporaryDirectory:(NSNotification *)aNote
+{
+    BOOL isDir;
+    if ([[NSFileManager defaultManager] fileExistsAtPath:__TLMGetTemporaryDirectory() isDirectory:&isDir] && isDir)
+        [[NSFileManager defaultManager] removeItemAtPath:__TLMGetTemporaryDirectory() error:NULL];
+}
+
++ (void)initialize
+{
+    if (self == [TLMLaunchAgentController class]) {
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(_removeTemporaryDirectory:)
+                                                     name:NSApplicationWillTerminateNotification
+                                                   object:nil];
+    }
 }
 
 - (id)init { return [self initWithWindowNibName:[self windowNibName]]; }
@@ -77,6 +112,7 @@ static NSDictionary * __TLMGetPlist(BOOL *isInstalled, BOOL *allUsers)
     [_enableCheckbox release];
     [_allUsersCheckbox release];
     [_datePicker release];
+    [_propertyListPath release];
     [super dealloc];
 }
 
@@ -93,15 +129,18 @@ static NSDictionary * __TLMGetPlist(BOOL *isInstalled, BOOL *allUsers)
 - (void)awakeFromNib
 {
     BOOL isInstalled, allUsers;
-    NSDictionary *plist = __TLMGetPlist(&isInstalled, &allUsers);
+    NSString *plistPath;
+    NSDictionary *plist = __TLMGetPlist(&isInstalled, &allUsers, &plistPath);
     // user could have disabled with launchctl, but that's not my problem (yet)
     if (isInstalled) _status |= TLMLaunchAgentEnabled;
     if (allUsers) _status |= TLMLaunchAgentAllUsers;
-    
+        
     NSDateComponents *comps = [[NSDateComponents new] autorelease];
     [comps setHour:[[[plist objectForKey:@"StartCalendarInterval"] objectForKey:@"Hour"] integerValue]];
     [comps setMinute:[[[plist objectForKey:@"StartCalendarInterval"] objectForKey:@"Minute"] integerValue]];
     [_datePicker setDateValue:[[NSCalendar currentCalendar] dateFromComponents:comps]];
+    
+    [self setPropertyListPath:plistPath];
     
     [self _updateUI];
 }
@@ -140,7 +179,23 @@ static NSDictionary * __TLMGetPlist(BOOL *isInstalled, BOOL *allUsers)
 
 - (IBAction)changeDate:(id)sender;
 {
-    _status |= TLMLaunchAgentChanged;    
+    _status |= TLMLaunchAgentChanged;
+    if ([[NSFileManager defaultManager] fileExistsAtPath:__TLMGetTemporaryDirectory()] == NO)
+        [[NSFileManager defaultManager] createDirectoryAtPath:__TLMGetTemporaryDirectory() withIntermediateDirectories:YES attributes:nil error:NULL];
+    
+    // write to a temporary file, and then set that as the property list path
+    NSString *plistPath = [[__TLMGetTemporaryDirectory() stringByAppendingPathComponent:PLIST_NAME] stringByAppendingPathExtension:@"plist"];
+    NSMutableDictionary *plist = [NSMutableDictionary dictionary];
+    [plist addEntriesFromDictionary:__TLMGetPlist(NULL, NULL, NULL)];
+        
+    NSDateComponents *comps = [[NSCalendar currentCalendar] components:NSHourCalendarUnit|NSMinuteCalendarUnit fromDate:[_datePicker dateValue]];
+    NSMutableDictionary *interval = [NSMutableDictionary dictionary];
+    [interval setObject:[NSNumber numberWithInteger:[comps hour]] forKey:@"Hour"];
+    [interval setObject:[NSNumber numberWithInteger:[comps minute]] forKey:@"Minute"];
+    
+    [plist setObject:interval forKey:@"StartCalendarInterval"];
+    if ([[NSPropertyListSerialization dataWithPropertyList:plist format:NSPropertyListXMLFormat_v1_0 options:0 error:NULL] writeToFile:plistPath atomically:NO])
+        [self setPropertyListPath:plistPath];
 }
 
 - (IBAction)cancel:(id)sender;

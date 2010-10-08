@@ -785,7 +785,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
             }
             
             [options addObject:@"-p"];
-            [options addObject:[[NSBundle mainBundle] pathForResource:@"com.googlecode.mactlmgr.update_check" ofType:@"plist"]];
+            [options addObject:[lac propertyListPath]];
             
             [options addObject:@"-b"];
             [options addObject:[[NSBundle mainBundle] pathForResource:@"update_check" ofType:@"py"]];
