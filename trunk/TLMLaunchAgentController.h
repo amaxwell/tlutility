@@ -39,10 +39,10 @@
 #import <Cocoa/Cocoa.h>
 
 enum {
-    TLMLaunchAgentCancelled = 0,
-    TLMLaunchAgentChanged   = (1 << 1),
-    TLMLaunchAgentAllUsers  = (1 << 2),
-    TLMLaunchAgentEnabled   = (1 << 3)
+    TLMLaunchAgentCancelled   = 0,
+    TLMLaunchAgentChanged     = (1 << 1),
+    TLMLaunchAgentAllUsers    = (1 << 2),
+    TLMLaunchAgentEnabled     = (1 << 3)
 };
 typedef NSInteger TLMLaunchAgentReturnCode;
 
@@ -52,11 +52,14 @@ typedef NSInteger TLMLaunchAgentReturnCode;
     NSButton                 *_allUsersCheckbox;
     NSDatePicker             *_datePicker;
     TLMLaunchAgentReturnCode  _status;
+    NSString                 *_propertyListPath;
 }
 
 @property (nonatomic, retain) IBOutlet NSButton *_enableCheckbox;
 @property (nonatomic, retain) IBOutlet NSButton *_allUsersCheckbox;
 @property (nonatomic, retain) IBOutlet NSDatePicker *_datePicker;
+
+@property (nonatomic, readonly, copy) NSString *propertyListPath;
 
 - (IBAction)enableAction:(id)sender;
 - (IBAction)allUsersAction:(id)sender;
