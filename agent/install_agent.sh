@@ -1,11 +1,18 @@
 #!/bin/sh
 
-BIN_DIR='/Library/Application Support/TeX Live Utility'
-PLIST_DIR='/Library/LaunchAgents'
+# always install here, since it's useful for any user
+BIN_DIR="/Library/Application Support/TeX Live Utility"
 
-PLIST_PATH="$PLIST_DIR/com.googlecode.mactlmgr.update_check.plist"
+# will install to one of these, depending on the -a flag
+USER_PLIST_DIR="$HOME/Library/LaunchAgents"
+LOCAL_PLIST_DIR="/Library/LaunchAgents"
+
+# default to per-user install
+PLIST_DIR="$USER_PLIST_DIR"
+
 BIN_PATH="$BIN_DIR/update_check.py"
 
+# passed in as arguments; should be absolute paths inside the app bundle
 SRC_BIN_PATH=""
 SRC_PLIST_PATH=""
 DO_UNINSTALL=0
@@ -22,7 +29,7 @@ DO_UNINSTALL=0
 
 usage()
 {
-    echo 'usage: install_agent -b binary_src_path -p plist_src_path [-u]'
+    echo 'usage: install_agent -b binary_src_path -p plist_src_path [-ua]'
 }
 
 #
@@ -30,11 +37,12 @@ usage()
 # -p: absolute path to the launchd plist in the application bundle
 # -u: uninstall launchd plist and update_check.py
 # 
-while getopts ":ub:p:" opt; do
+while getopts ":uab:p:" opt; do
     case $opt in
         b   )   SRC_BIN_PATH="$OPTARG" ;;
         p   )   SRC_PLIST_PATH="$OPTARG" ;;
         u   )   DO_UNINSTALL=1 ;;
+        a   )   PLIST_DIR="$LOCAL_PLIST_DIR" ;;
         \?  )   usage
                 exit 1 ;;
                 
@@ -49,28 +57,36 @@ do_uninstall_and_exit()
     # try to unload the launchd plist if it exists; this fails if it's not loaded
     # no action is taken if none of the files exist, and this is not an error
     
-    if [ -f "$PLIST_PATH" ]; then
-        /bin/launchctl unload -w "$PLIST_PATH"
-        if [ $? != 0 ]; then
-            echo "$0: unable to unload $PLIST_PATH"
-            exit_status=10
+    plist_dirs=("$USER_PLIST_DIR" "$LOCAL_PLIST_DIR")
+    for plist_dir in "${plist_dirs[@]}"; do
+
+        plist_path="$plist_dir/com.googlecode.mactlmgr.update_check.plist"
+
+        if [ -f "$plist_path" ]; then
+            
+            # try to unload with launchctl
+            /bin/launchctl unload -w "$plist_path"
+            if [ $? != 0 ]; then
+                echo "$0: unable to unload $plist_path"
+                exit_status=10
+            else
+                echo "$0: unloaded launchd agent $plist_path"
+            fi
+            
+            # remove the launchd plist
+            /bin/rm "$plist_path"
+            if [ $? != 0 ]; then
+                echo "$0: unable to remove $plist_path"
+                exit_status=11
+            else
+                echo "$0: removed $plist_path"
+            fi
+            
         else
-            echo "$0: unloaded launchd agent $PLIST_PATH"
+            echo "$0: $plist_path not installed"
         fi
-    else
-        echo "$0: $PLIST_PATH not installed"
-    fi
-    
-    # remove the launchd plist
-    if [ -f "$PLIST_PATH" ]; then
-        /bin/rm "$PLIST_PATH"
-        if [ $? != 0 ]; then
-            echo "$0: unable to remove $PLIST_PATH"
-            exit_status=11
-        else
-            echo "$0: removed $PLIST_PATH"
-        fi
-    fi
+
+    done
     
     # remove the Python script
     if [ -f "$BIN_PATH" ]; then
@@ -132,7 +148,7 @@ do_install_and_exit()
     
     /bin/cp "$SRC_BIN_PATH" "$BIN_DIR"
     if [ $? != 0 ]; then
-        echo "$0: unable to create $SRC_BIN_PATH to $BIN_DIR"
+        echo "$0: unable to copy $SRC_BIN_PATH to $BIN_DIR"
         exit 6
     fi
 
@@ -143,9 +159,10 @@ do_install_and_exit()
     fi
     
     # try to load the plist; fails for the loginwindow and/or aqua contexts
-    /bin/launchctl load -w "$PLIST_PATH"
+    plist_path="$PLIST_DIR/com.googlecode.mactlmgr.update_check.plist"
+    /bin/launchctl load -w "$plist_path"
     if [ $? != 0 ]; then
-        echo "$0: unable to load $PLIST_PATH"
+        echo "$0: unable to load $plist_path"
         exit 8
     fi
     
