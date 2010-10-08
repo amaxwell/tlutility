@@ -65,6 +65,8 @@
 		F9B6B5630EF460A400CF767F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 29B97325FDCFA39411CA2CEA /* Foundation.framework */; };
 		F9B6B5EB0EF4647400CF767F /* TLMLogMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F56B4B0EF31F8800E934A9 /* TLMLogMessage.m */; };
 		F9B6B5F80EF469A600CF767F /* TLMLogServer.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B6B5F70EF469A600CF767F /* TLMLogServer.m */; };
+		F9C0D3CB125ECCE600B1FBE5 /* TLMLaunchAgentController.m in Sources */ = {isa = PBXBuildFile; fileRef = F9C0D3CA125ECCE600B1FBE5 /* TLMLaunchAgentController.m */; };
+		F9C0D3E7125ECF3700B1FBE5 /* LaunchAgentSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = F9C0D3E6125ECF3700B1FBE5 /* LaunchAgentSheet.xib */; };
 		F9D37C9A0F01A80800FB755E /* TLMGradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D37C990F01A80800FB755E /* TLMGradientView.m */; };
 		F9D37D640F01EA8900FB755E /* TLMUpdateListDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D37D630F01EA8900FB755E /* TLMUpdateListDataSource.m */; };
 		F9D37E7B0F02B5F700FB755E /* TLMOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D37E7A0F02B5F700FB755E /* TLMOutlineView.m */; };
@@ -331,6 +333,9 @@
 		F9B396090F340A71007F95E9 /* FileView.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FileView.xcodeproj; path = vendorsrc/FileView/FileView.xcodeproj; sourceTree = "<group>"; };
 		F9B6B5F60EF469A600CF767F /* TLMLogServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMLogServer.h; sourceTree = "<group>"; };
 		F9B6B5F70EF469A600CF767F /* TLMLogServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMLogServer.m; sourceTree = "<group>"; };
+		F9C0D3C9125ECCE500B1FBE5 /* TLMLaunchAgentController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMLaunchAgentController.h; sourceTree = "<group>"; };
+		F9C0D3CA125ECCE600B1FBE5 /* TLMLaunchAgentController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMLaunchAgentController.m; sourceTree = "<group>"; };
+		F9C0D3D1125ECEDB00B1FBE5 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/LaunchAgentSheet.xib; sourceTree = "<group>"; };
 		F9D37C980F01A80800FB755E /* TLMGradientView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMGradientView.h; sourceTree = "<group>"; };
 		F9D37C990F01A80800FB755E /* TLMGradientView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMGradientView.m; sourceTree = "<group>"; };
 		F9D37D620F01EA8900FB755E /* TLMUpdateListDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMUpdateListDataSource.h; sourceTree = "<group>"; };
@@ -472,6 +477,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				F9C0D3E6125ECF3700B1FBE5 /* LaunchAgentSheet.xib */,
 				F982553E12504E210018CB73 /* AutobackupSheet.xib */,
 				F9A4A105105D736B00F5AC62 /* texlive.profile.plist */,
 				F9B061FF0F0F388500BB03D3 /* Localizable.strings */,
@@ -552,6 +558,8 @@
 				F9FAA44D0EFCBECD0040EAB2 /* TLMPapersizeController.m */,
 				F96249CF0F1C453B007F3D70 /* TLMReleaseNotesController.h */,
 				F96249D00F1C453B007F3D70 /* TLMReleaseNotesController.m */,
+				F9C0D3C9125ECCE500B1FBE5 /* TLMLaunchAgentController.h */,
+				F9C0D3CA125ECCE600B1FBE5 /* TLMLaunchAgentController.m */,
 			);
 			name = "Window controllers";
 			sourceTree = "<group>";
@@ -727,7 +735,14 @@
 			isa = PBXProject;
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "TeX Live Manager" */;
 			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
 			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* TeX Live Manager */;
 			projectDirPath = "";
 			projectReferences = (
@@ -849,6 +864,7 @@
 				F96249D50F1C516F007F3D70 /* ReleaseNotes.xib in Resources */,
 				F9A4A106105D736B00F5AC62 /* texlive.profile.plist in Resources */,
 				F982553F12504E210018CB73 /* AutobackupSheet.xib in Resources */,
+				F9C0D3E7125ECF3700B1FBE5 /* LaunchAgentSheet.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -936,6 +952,7 @@
 				F9FE58B4123EB80800B6008F /* TLMDatabase.m in Sources */,
 				F9825520125045980018CB73 /* TLMAutobackupController.m in Sources */,
 				F957A4E312514B040079E07F /* TLMBackupOperation.m in Sources */,
+				F9C0D3CB125ECCE600B1FBE5 /* TLMLaunchAgentController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1025,6 +1042,14 @@
 				F9B1346D0EEB1AFE007C0046 /* English */,
 			);
 			name = MainWindow.xib;
+			sourceTree = "<group>";
+		};
+		F9C0D3E6125ECF3700B1FBE5 /* LaunchAgentSheet.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F9C0D3D1125ECEDB00B1FBE5 /* English */,
+			);
+			name = LaunchAgentSheet.xib;
 			sourceTree = "<group>";
 		};
 		F9F130550EED94D800D9968D /* Preferences.xib */ = {
