@@ -4,11 +4,11 @@
 BIN_DIR="/Library/Application Support/TeX Live Utility"
 
 # will install to one of these, depending on the -a flag
-USER_PLIST_DIR="$HOME/Library/LaunchAgents"
+USER_PLIST_DIR=""
 LOCAL_PLIST_DIR="/Library/LaunchAgents"
 
-# default to per-user install
-PLIST_DIR="$USER_PLIST_DIR"
+# default to local install
+PLIST_DIR="$LOCAL_PLIST_DIR"
 
 BIN_PATH="$BIN_DIR/update_check.py"
 
@@ -16,6 +16,8 @@ BIN_PATH="$BIN_DIR/update_check.py"
 SRC_BIN_PATH=""
 SRC_PLIST_PATH=""
 DO_UNINSTALL=0
+
+SCRIPT_NAME=$(basename "$0")
 
 #
 # Three ways to set a time in the plist:
@@ -29,7 +31,7 @@ DO_UNINSTALL=0
 
 usage()
 {
-    echo 'usage: install_agent -b binary_src_path -p plist_src_path [-ua]'
+    echo 'usage: install_agent -b binary_src_path -p plist_src_path [-h home_dir] [-u]' >&2
 }
 
 #
@@ -37,18 +39,27 @@ usage()
 # -p: absolute path to the launchd plist in the application bundle
 # -u: uninstall launchd plist and update_check.py
 # 
-while getopts ":uab:p:" opt; do
+while getopts ":uh:b:p:" opt; do
     case $opt in
         b   )   SRC_BIN_PATH="$OPTARG" ;;
         p   )   SRC_PLIST_PATH="$OPTARG" ;;
         u   )   DO_UNINSTALL=1 ;;
-        a   )   PLIST_DIR="$LOCAL_PLIST_DIR" ;;
+        h   )   USER_PLIST_DIR="$OPTARG/$LOCAL_PLIST_DIR" ;;
         \?  )   usage
                 exit 1 ;;
                 
     esac
 done
 shift $(($OPTIND - 1))
+
+if [ "$USER_PLIST_DIR" != "" ]; then
+    PLIST_DIR="$USER_PLIST_DIR"
+fi
+
+function log_message
+{
+    echo "$SCRIPT_NAME: $1" >&2
+}
 
 do_uninstall_and_exit()
 {
@@ -67,36 +78,38 @@ do_uninstall_and_exit()
             # try to unload with launchctl
             /bin/launchctl unload -w "$plist_path"
             if [ $? != 0 ]; then
-                echo "$0: unable to unload $plist_path"
+                log_message "unable to unload $plist_path"
                 exit_status=10
             else
-                echo "$0: unloaded launchd agent $plist_path"
+                log_message "unloaded launchd agent $plist_path"
             fi
             
             # remove the launchd plist
-            /bin/rm "$plist_path"
+            /bin/rm -f "$plist_path"
             if [ $? != 0 ]; then
-                echo "$0: unable to remove $plist_path"
+                log_message "unable to remove $plist_path"
                 exit_status=11
             else
-                echo "$0: removed $plist_path"
+                log_message "removed $plist_path"
             fi
             
         else
-            echo "$0: $plist_path not installed"
+            log_message "$plist_path not installed"
         fi
 
     done
     
     # remove the Python script
     if [ -f "$BIN_PATH" ]; then
-        /bin/rm "$BIN_PATH"
+        /bin/rm -f "$BIN_PATH"
         if [ $? != 0 ]; then
-            echo "$0: unable to remove $BIN_PATH"
+            log_message "unable to remove $BIN_PATH"
             exit_status=12
         else
-            echo "$0: removed $BIN_PATH"
+            log_message "removed $BIN_PATH"
         fi
+    else
+        log_message "$BIN_PATH not installed"
     fi
     
     exit $exit_status
@@ -128,7 +141,7 @@ do_install_and_exit()
     if [ ! -d "$BIN_DIR" ]; then
         /bin/mkdir -p "$BIN_DIR"
         if [ $? != 0 ]; then
-            echo "$0: unable to create $BIN_DIR"
+            log_message "unable to create $BIN_DIR"
             exit 4
         fi
     fi
@@ -137,7 +150,7 @@ do_install_and_exit()
     if [ ! -d "$PLIST_DIR" ]; then
         /bin/mkdir -p "$PLIST_DIR"
         if [ $? != 0 ]; then
-            echo "$0: unable to create $PLIST_DIR"
+            log_message "unable to create $PLIST_DIR"
             exit 5
         fi
     fi
@@ -148,13 +161,13 @@ do_install_and_exit()
     
     /bin/cp "$SRC_BIN_PATH" "$BIN_DIR"
     if [ $? != 0 ]; then
-        echo "$0: unable to copy $SRC_BIN_PATH to $BIN_DIR"
+        log_message "unable to copy $SRC_BIN_PATH to $BIN_DIR"
         exit 6
     fi
 
     /bin/cp "$SRC_PLIST_PATH" "$PLIST_DIR"
     if [ $? != 0 ]; then
-        echo "$0: unable to copy $SRC_PLIST_PATH to $PLIST_DIR"
+        log_message "unable to copy $SRC_PLIST_PATH to $PLIST_DIR"
         exit 7
     fi
     
@@ -162,7 +175,7 @@ do_install_and_exit()
     plist_path="$PLIST_DIR/com.googlecode.mactlmgr.update_check.plist"
     /bin/launchctl load -w "$plist_path"
     if [ $? != 0 ]; then
-        echo "$0: unable to load $plist_path"
+        log_message "unable to load $plist_path"
         exit 8
     fi
     
