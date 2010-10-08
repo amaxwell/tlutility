@@ -2,30 +2,30 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-  <key>AbandonProcessGroup</key>
-  <true/>
-  <key>Label</key>
-  <string>com.googlecode.mactlmgr.update_check</string>
-  <key>LimitLoadToSessionType</key>
-  <array>
-      <string>Aqua</string>
-      <string>LoginWindow</string>
-  </array>
-  <key>LowPriorityIO</key>
-  <true/>
-  <key>Nice</key>
-  <integer>5</integer>
-  <key>ProgramArguments</key>
-  <array>
-      <string>/usr/bin/python</string>
-      <string>/Library/Application Support/TeX Live Utility/update_check.py</string>
-  </array>
-  <key>StartCalendarInterval</key>
-  <dict>
-      <key>Hour</key>
-      <integer>8</integer>
-      <key>Minute</key>
-      <integer>15</integer>
-  </dict>
+	<key>AbandonProcessGroup</key>
+	<true/>
+	<key>Label</key>
+	<string>com.googlecode.mactlmgr.update_check</string>
+	<key>LimitLoadToSessionType</key>
+	<array>
+		<string>Aqua</string>
+		<string>LoginWindow</string>
+	</array>
+	<key>LowPriorityIO</key>
+	<true/>
+	<key>Nice</key>
+	<integer>5</integer>
+	<key>ProgramArguments</key>
+	<array>
+		<string>/usr/bin/python</string>
+		<string>/Library/Application Support/TeX Live Utility/update_check.py</string>
+	</array>
+	<key>StartCalendarInterval</key>
+	<dict>
+		<key>Hour</key>
+		<integer>8</integer>
+		<key>Minute</key>
+		<integer>15</integer>
+	</dict>
 </dict>
 </plist>
