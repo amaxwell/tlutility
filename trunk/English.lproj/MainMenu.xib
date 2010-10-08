@@ -979,6 +979,14 @@
 									<reference key="NSOnImage" ref="35465992"/>
 									<reference key="NSMixedImage" ref="502551668"/>
 								</object>
+								<object class="NSMenuItem" id="713278735">
+									<reference key="NSMenu" ref="245101568"/>
+									<string key="NSTitle">Schedule TeX Live Update Checks…</string>
+									<string key="NSKeyEquiv"/>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="35465992"/>
+									<reference key="NSMixedImage" ref="502551668"/>
+								</object>
 								<object class="NSMenuItem" id="1044328505">
 									<reference key="NSMenu" ref="245101568"/>
 									<bool key="NSIsDisabled">YES</bool>
@@ -1933,6 +1941,14 @@
 					</object>
 					<int key="connectionID">586</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">automaticUpdateCheck:</string>
+						<reference key="source" ref="1014"/>
+						<reference key="destination" ref="713278735"/>
+					</object>
+					<int key="connectionID">588</int>
+				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<object class="NSArray" key="orderedObjects">
@@ -2500,6 +2516,7 @@
 							<reference ref="217991234"/>
 							<reference ref="575087273"/>
 							<reference ref="46715306"/>
+							<reference ref="713278735"/>
 						</object>
 						<reference key="parent" ref="84169623"/>
 					</object>
@@ -2909,6 +2926,11 @@
 						<reference key="object" ref="46715306"/>
 						<reference key="parent" ref="245101568"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">587</int>
+						<reference key="object" ref="713278735"/>
+						<reference key="parent" ref="245101568"/>
+					</object>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="flattenedProperties">
@@ -3136,6 +3158,7 @@
 					<string>582.IBPluginDependency</string>
 					<string>584.IBAttributePlaceholdersKey</string>
 					<string>584.IBPluginDependency</string>
+					<string>587.IBPluginDependency</string>
 					<string>73.IBPluginDependency</string>
 					<string>73.ImportedFromIB2</string>
 					<string>74.IBPluginDependency</string>
@@ -3284,7 +3307,7 @@
 					<integer value="1"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{250, 457}, {422, 283}}</string>
+					<string>{{250, 437}, {422, 303}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<object class="NSMutableDictionary">
 						<string key="NS.key.0">ToolTip</string>
@@ -3449,6 +3472,7 @@
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
@@ -3484,7 +3508,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">586</int>
+			<int key="maxID">588</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -3672,6 +3696,7 @@
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>automaticUpdateCheck:</string>
 							<string>cancelAllOperations:</string>
 							<string>changeAutobackup:</string>
 							<string>changePapersize:</string>
@@ -3680,6 +3705,7 @@
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -3691,6 +3717,7 @@
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>automaticUpdateCheck:</string>
 							<string>cancelAllOperations:</string>
 							<string>changeAutobackup:</string>
 							<string>changePapersize:</string>
@@ -3699,6 +3726,10 @@
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<object class="IBActionInfo">
+								<string key="name">automaticUpdateCheck:</string>
+								<string key="candidateClassName">id</string>
+							</object>
 							<object class="IBActionInfo">
 								<string key="name">cancelAllOperations:</string>
 								<string key="candidateClassName">id</string>

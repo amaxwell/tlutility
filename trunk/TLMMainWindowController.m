@@ -67,6 +67,7 @@
 #import "TLMTask.h"
 #import "TLMProgressIndicatorCell.h"
 #import "TLMAutobackupController.h"
+#import "TLMLaunchAgentController.h"
 
 static char _TLMOperationQueueOperationContext;
 
@@ -750,6 +751,14 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     }
 }
 
+- (void)launchAgentControllerSheetDidEnd:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)context
+{
+    [sheet orderOut:self];
+    TLMLaunchAgentController *lac = context;
+    [lac autorelease];
+    TLMLog(__func__, @"ret = %d", returnCode);
+}
+
 - (void)_handleListFinishedNotification:(NSNotification *)aNote
 {
     TLMListOperation *op = [aNote object];
@@ -918,6 +927,16 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
            didEndSelector:@selector(autobackupSheetDidEnd:returnCode:contextInfo:) 
               contextInfo:abc];
     }
+}
+
+- (IBAction)automaticUpdateCheck:(id)sender;
+{
+    TLMLaunchAgentController *lac = [TLMLaunchAgentController new];
+    [NSApp beginSheet:[lac window] 
+       modalForWindow:[self window] 
+        modalDelegate:self 
+       didEndSelector:@selector(launchAgentControllerSheetDidEnd:returnCode:contextInfo:) 
+          contextInfo:lac];
 }
 
 - (IBAction)cancelAllOperations:(id)sender;
