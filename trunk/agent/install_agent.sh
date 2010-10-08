@@ -10,6 +10,16 @@ SRC_BIN_PATH=""
 SRC_PLIST_PATH=""
 DO_UNINSTALL=0
 
+#
+# Three ways to set a time in the plist:
+#
+# /usr/libexec/PlistBuddy -c "Set :StartCalendarInterval:Hour 9 real" com.googlecode.mactlmgr.update_check.plist
+#
+# python -c 'from Foundation import NSDictionary; d=NSDictionary.dictionaryWithContentsOfFile_("com.googlecode.mactlmgr.update_check.plist"); d["StartCalendarInterval"]["Hour"]=9;d.writeToFile_atomically_("com.googlecode.mactlmgr.update_check.plist",True)'
+#
+# python -c 'from plistlib import readPlist, writePlist; plname="com.googlecode.mactlmgr.update_check.plist"; pl=readPlist(plname); pl["StartCalendarInterval"]["Hour"]=9;writePlist(pl, plname)'
+#
+
 usage()
 {
     echo 'usage: install_agent -b binary_src_path -p plist_src_path [-u]'
