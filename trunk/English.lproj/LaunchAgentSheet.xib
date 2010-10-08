@@ -192,7 +192,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 							<object class="NSButtonCell" key="NSCell" id="951366211">
 								<int key="NSCellFlags">-2080244224</int>
 								<int key="NSCellFlags2">0</int>
-								<string key="NSContents">Schedule only for the current user</string>
+								<string key="NSContents">Show alerts for all users</string>
 								<reference key="NSSupport" ref="768757395"/>
 								<reference key="NSControlView" ref="605718842"/>
 								<int key="NSButtonFlags">1211912703</int>

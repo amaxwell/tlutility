@@ -84,8 +84,8 @@ static NSDictionary * __TLMGetPlist(BOOL *isInstalled, BOOL *allUsers)
 
 - (void)_updateUI
 {
-    [_enableCheckbox setState:((_status & TLMLaunchAgentEnabled) != 0)];
-    [_allUsersCheckbox setState:((_status & TLMLaunchAgentAllUsers) != 0)];
+    [_enableCheckbox setState:((_status & TLMLaunchAgentEnabled) != 0 ? NSOnState : NSOffState)];
+    [_allUsersCheckbox setState:((_status & TLMLaunchAgentAllUsers) != 0 ? NSOnState : NSOffState)];
     [_allUsersCheckbox setEnabled:((_status & TLMLaunchAgentEnabled) != 0)];
     [_datePicker setEnabled:((_status & TLMLaunchAgentEnabled) != 0)];
 }

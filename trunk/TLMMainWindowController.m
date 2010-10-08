@@ -751,12 +751,51 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     }
 }
 
+- (void)_handleLaunchAgentInstallFinishedNotification:(NSNotification *)aNote
+{
+    TLMAuthorizedOperation *op = [aNote object];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:TLMOperationFinishedNotification object:op];
+    if ([op isCancelled] == NO)
+        TLMLog(__func__, @"Finished running launchd agent installer script");
+}
+
 - (void)launchAgentControllerSheetDidEnd:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)context
 {
     [sheet orderOut:self];
     TLMLaunchAgentController *lac = context;
     [lac autorelease];
-    TLMLog(__func__, @"ret = %d", returnCode);
+    if (returnCode & TLMLaunchAgentChanged) {
+        
+        NSMutableArray *options = [NSMutableArray array];
+        if ((returnCode & TLMLaunchAgentEnabled) == 0) {
+            
+            [options addObject:@"-u"];
+            
+            // need to pass this so it cleans up ~/Library/LaunchAgents
+            [options addObject:@"-h"];
+            [options addObject:NSHomeDirectory()];
+            
+        }
+        else {
+            
+            // for install, this signals intent to install in ~/Library instead of /Library
+            if ((returnCode & TLMLaunchAgentAllUsers) == 0) {
+                [options addObject:@"-h"];
+                [options addObject:NSHomeDirectory()];
+            }
+            
+            [options addObject:@"-p"];
+            [options addObject:[[NSBundle mainBundle] pathForResource:@"com.googlecode.mactlmgr.update_check" ofType:@"plist"]];
+            
+            [options addObject:@"-b"];
+            [options addObject:[[NSBundle mainBundle] pathForResource:@"update_check" ofType:@"py"]];
+        }       
+        
+        NSString *installScriptPath = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"install_agent.sh"];
+        TLMAuthorizedOperation *op = [[TLMAuthorizedOperation alloc] initWithCommand:installScriptPath options:options];
+        [self _addOperation:op selector:@selector(_handleLaunchAgentInstallFinishedNotification:)];
+        [op release];
+    }
 }
 
 - (void)_handleListFinishedNotification:(NSNotification *)aNote
