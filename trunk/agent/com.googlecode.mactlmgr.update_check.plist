@@ -6,11 +6,13 @@
 	<true/>
 	<key>Label</key>
 	<string>com.googlecode.mactlmgr.update_check</string>
+	<!--
 	<key>LimitLoadToSessionType</key>
 	<array>
 		<string>Aqua</string>
 		<string>LoginWindow</string>
 	</array>
+	-->
 	<key>LowPriorityIO</key>
 	<true/>
 	<key>Nice</key>
