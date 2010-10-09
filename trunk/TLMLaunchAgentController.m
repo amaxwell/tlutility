@@ -37,6 +37,13 @@
  */
 
 #import "TLMLaunchAgentController.h"
+#import "TLMLogServer.h"
+
+enum {
+    TLMScheduleMatrixNever  = 0,
+    TLMScheduleMatrixWeekly = 1,
+    TLMScheduleMatrixDaily  = 2
+};
 
 @interface TLMLaunchAgentController ()
 @property (nonatomic, copy) NSString *propertyListPath;
@@ -44,8 +51,9 @@
 
 @implementation TLMLaunchAgentController
 
-@synthesize _enableCheckbox;
+@synthesize _scheduleMatrix;
 @synthesize _allUsersCheckbox;
+@synthesize _dayField;
 @synthesize _datePicker;
 @synthesize propertyListPath =_propertyListPath;
 
@@ -109,10 +117,12 @@ static NSString * __TLMGetTemporaryDirectory()
 
 - (void)dealloc
 {
-    [_enableCheckbox release];
+    [_scheduleMatrix release];
     [_allUsersCheckbox release];
+    [_dayField release];
     [_datePicker release];
     [_propertyListPath release];
+    [_gregorianCalendar release];
     [super dealloc];
 }
 
@@ -120,44 +130,117 @@ static NSString * __TLMGetTemporaryDirectory()
 
 - (void)_updateUI
 {
-    [_enableCheckbox setState:((_status & TLMLaunchAgentEnabled) != 0 ? NSOnState : NSOffState)];
+    if ((_status & TLMLaunchAgentEnabled) == 0) {
+        [_scheduleMatrix selectCellWithTag:TLMScheduleMatrixNever];
+        [_allUsersCheckbox setEnabled:NO];
+        [_dayField setEnabled:NO];
+        [_datePicker setEnabled:NO];
+    }
+    else {
+        
+        [_allUsersCheckbox setEnabled:YES];
+        [_dayField setEnabled:YES];
+        [_datePicker setEnabled:YES];
+
+        if ((_status & TLMLaunchAgentDaily) == 0) {
+            [_scheduleMatrix selectCellWithTag:TLMScheduleMatrixWeekly];
+        }
+        else {
+            [_scheduleMatrix selectCellWithTag:TLMScheduleMatrixDaily];
+        }
+        
+    }
+    
     [_allUsersCheckbox setState:((_status & TLMLaunchAgentAllUsers) != 0 ? NSOnState : NSOffState)];
-    [_allUsersCheckbox setEnabled:((_status & TLMLaunchAgentEnabled) != 0)];
-    [_datePicker setEnabled:((_status & TLMLaunchAgentEnabled) != 0)];
 }
 
 - (void)awakeFromNib
 {
+    if (nil == _gregorianCalendar) {
+        _gregorianCalendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+        [_gregorianCalendar setTimeZone:[NSTimeZone localTimeZone]];
+    }
+    [[_dayField formatter] setTimeZone:[NSTimeZone localTimeZone]];
+    
     BOOL isInstalled, allUsers;
     NSString *plistPath;
     NSDictionary *plist = __TLMGetPlist(&isInstalled, &allUsers, &plistPath);
     // user could have disabled with launchctl, but that's not my problem (yet)
     if (isInstalled) _status |= TLMLaunchAgentEnabled;
     if (allUsers) _status |= TLMLaunchAgentAllUsers;
-        
-    NSDateComponents *comps = [[NSDateComponents new] autorelease];
-    [comps setHour:[[[plist objectForKey:@"StartCalendarInterval"] objectForKey:@"Hour"] integerValue]];
-    [comps setMinute:[[[plist objectForKey:@"StartCalendarInterval"] objectForKey:@"Minute"] integerValue]];
-    [_datePicker setDateValue:[[NSCalendar currentCalendar] dateFromComponents:comps]];
+    
+    // need to set from a full date, or the day of week ends up being off by one
+    NSDateComponents *comps = [_gregorianCalendar components:NSWeekdayCalendarUnit|NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit fromDate:[NSDate date]];
+    
+    NSDictionary *intervalDict = [plist objectForKey:@"StartCalendarInterval"];
+    [comps setHour:[[intervalDict objectForKey:@"Hour"] integerValue]];
+    [comps setMinute:[[intervalDict objectForKey:@"Minute"] integerValue]];
+    if ([[plist objectForKey:@"StartCalendarInterval"] objectForKey:@"Weekday"]) {
+        // 0 and 7 are Sunday, according to launchd.plist(5)
+        NSInteger launchdWeekday = [[intervalDict objectForKey:@"Weekday"] integerValue];
+        // NSDateComponents thinks that 1 is Sunday, in the Gregorian calendar
+        [comps setWeekday:(launchdWeekday + 1)];
+    }
+
+    NSDate *displayDate = [_gregorianCalendar dateFromComponents:comps];
+    [_datePicker setDateValue:displayDate];
+    [_dayField setObjectValue:displayDate];
+    
+    [_datePicker sizeToFit];
     
     [self setPropertyListPath:plistPath];
     
     [self _updateUI];
 }
 
+- (void)_savePropertyList
+{
+    if ([[NSFileManager defaultManager] fileExistsAtPath:__TLMGetTemporaryDirectory()] == NO)
+        [[NSFileManager defaultManager] createDirectoryAtPath:__TLMGetTemporaryDirectory() withIntermediateDirectories:YES attributes:nil error:NULL];
+    
+    // write to a temporary file, and then set that as the property list path
+    NSString *plistPath = [[__TLMGetTemporaryDirectory() stringByAppendingPathComponent:PLIST_NAME] stringByAppendingPathExtension:@"plist"];
+    NSMutableDictionary *plist = [NSMutableDictionary dictionary];
+    [plist addEntriesFromDictionary:__TLMGetPlist(NULL, NULL, NULL)];
+    
+    NSDateComponents *comps = [_gregorianCalendar components:NSHourCalendarUnit|NSMinuteCalendarUnit fromDate:[_datePicker dateValue]];
+    NSMutableDictionary *interval = [NSMutableDictionary dictionary];
+    [interval setObject:[NSNumber numberWithInteger:[comps hour]] forKey:@"Hour"];
+    [interval setObject:[NSNumber numberWithInteger:[comps minute]] forKey:@"Minute"];
+    
+    if ((_status & TLMLaunchAgentDaily) == 0) {
+        comps = [_gregorianCalendar components:NSWeekdayCalendarUnit fromDate:[_dayField objectValue]];
+        NSInteger launchdWeekday = [comps weekday] - 1;
+        [interval setObject:[NSNumber numberWithInteger:launchdWeekday] forKey:@"Weekday"];
+    }
+    
+    [plist setObject:interval forKey:@"StartCalendarInterval"];
+    if ([[NSPropertyListSerialization dataWithPropertyList:plist format:NSPropertyListXMLFormat_v1_0 options:0 error:NULL] writeToFile:plistPath atomically:NO])
+        [self setPropertyListPath:plistPath];    
+}
+
 - (IBAction)enableAction:(id)sender;
 {
     _status |= TLMLaunchAgentChanged;
-    switch ([_enableCheckbox state]) {
-        case NSOnState:
+    switch ([[_scheduleMatrix selectedCell] tag]) {
+        case TLMScheduleMatrixNever:
+            _status &= ~TLMLaunchAgentEnabled;
+            break;
+        case TLMScheduleMatrixWeekly:
+            _status &= ~TLMLaunchAgentDaily;
             _status |= TLMLaunchAgentEnabled;
             break;
-        case NSOffState:
-            _status &= ~TLMLaunchAgentEnabled;
+        case TLMScheduleMatrixDaily:
+            _status |= TLMLaunchAgentDaily;
+            _status |= TLMLaunchAgentEnabled;
             break;
         default:
             break;
     }
+    
+    if (_status & TLMLaunchAgentEnabled)
+        [self _savePropertyList];
+
     [self _updateUI];
 }
 
@@ -177,25 +260,16 @@ static NSString * __TLMGetTemporaryDirectory()
     [self _updateUI];
 }
 
-- (IBAction)changeDate:(id)sender;
+- (IBAction)changeDay:(id)sender;
 {
     _status |= TLMLaunchAgentChanged;
-    if ([[NSFileManager defaultManager] fileExistsAtPath:__TLMGetTemporaryDirectory()] == NO)
-        [[NSFileManager defaultManager] createDirectoryAtPath:__TLMGetTemporaryDirectory() withIntermediateDirectories:YES attributes:nil error:NULL];
-    
-    // write to a temporary file, and then set that as the property list path
-    NSString *plistPath = [[__TLMGetTemporaryDirectory() stringByAppendingPathComponent:PLIST_NAME] stringByAppendingPathExtension:@"plist"];
-    NSMutableDictionary *plist = [NSMutableDictionary dictionary];
-    [plist addEntriesFromDictionary:__TLMGetPlist(NULL, NULL, NULL)];
-        
-    NSDateComponents *comps = [[NSCalendar currentCalendar] components:NSHourCalendarUnit|NSMinuteCalendarUnit fromDate:[_datePicker dateValue]];
-    NSMutableDictionary *interval = [NSMutableDictionary dictionary];
-    [interval setObject:[NSNumber numberWithInteger:[comps hour]] forKey:@"Hour"];
-    [interval setObject:[NSNumber numberWithInteger:[comps minute]] forKey:@"Minute"];
-    
-    [plist setObject:interval forKey:@"StartCalendarInterval"];
-    if ([[NSPropertyListSerialization dataWithPropertyList:plist format:NSPropertyListXMLFormat_v1_0 options:0 error:NULL] writeToFile:plistPath atomically:NO])
-        [self setPropertyListPath:plistPath];
+    [self _savePropertyList];
+}
+
+- (IBAction)changeTime:(id)sender;
+{
+    _status |= TLMLaunchAgentChanged;
+    [self _savePropertyList];
 }
 
 - (IBAction)cancel:(id)sender;
