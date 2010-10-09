@@ -24,6 +24,9 @@ def check_for_updates():
     
     # if this hasn't been set, bail out, as this user likely won't care
     texbin_path = CFPreferencesCopyAppValue("TLMTexBinPathPreferenceKey", BUNDLE_ID)
+    if texbin_path == None and os.path.exists("/usr/texbin"):
+        texbin_path = "/usr/texbin"
+        
     if texbin_path == None:
         log_message("no tlmgr path set; TeX Live update check will not proceed")
         return 0
