@@ -199,7 +199,7 @@ static char _TLMOperationQueueOperationContext;
     [super windowDidLoad];
     
     // may as well populate the list immediately; by now we should have the window to display a warning sheet
-    [self refreshUpdatedPackageList];
+    [self refreshUpdatedPackageList];    
     
     // checkbox in IB doesn't work?
     [[[self window] toolbar] setAutosavesConfiguration:YES];    
@@ -767,18 +767,20 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     if (returnCode & TLMLaunchAgentChanged) {
         
         NSMutableArray *options = [NSMutableArray array];
+        NSString *installScriptPath = nil;
+        
         if ((returnCode & TLMLaunchAgentEnabled) == 0) {
-            
-            [options addObject:@"-u"];
-            
+                        
             // need to pass this so it cleans up ~/Library/LaunchAgents
             [options addObject:@"-h"];
             [options addObject:NSHomeDirectory()];
             
+            installScriptPath = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"uninstall_agent.sh"];
+            
         }
         else {
             
-            // for install, this signals intent to install in ~/Library instead of /Library
+            // this signals intent to install in ~/Library instead of /Library
             if ((returnCode & TLMLaunchAgentAllUsers) == 0) {
                 [options addObject:@"-h"];
                 [options addObject:NSHomeDirectory()];
@@ -792,12 +794,14 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
             
             [options addObject:@"-b"];
             [options addObject:[[NSBundle mainBundle] pathForResource:@"update_check" ofType:@"py"]];
-        }       
+            
+            installScriptPath = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"install_agent.sh"];
+        }  
         
-        NSString *installScriptPath = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"install_agent.sh"];
         TLMAuthorizedOperation *op = [[TLMAuthorizedOperation alloc] initWithCommand:installScriptPath options:options];
         [self _addOperation:op selector:@selector(_handleLaunchAgentInstallFinishedNotification:)];
         [op release];
+        
     }
 }
 

@@ -30,6 +30,8 @@
 		F9825520125045980018CB73 /* TLMAutobackupController.m in Sources */ = {isa = PBXBuildFile; fileRef = F982551F125045980018CB73 /* TLMAutobackupController.m */; };
 		F982553F12504E210018CB73 /* AutobackupSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = F982553E12504E210018CB73 /* AutobackupSheet.xib */; };
 		F98FADA910672943002C1972 /* TLMNetInstallOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F98FADA810672943002C1972 /* TLMNetInstallOperation.m */; };
+		F994A52412612623007EF95F /* uninstall_agent.sh in Resources */ = {isa = PBXBuildFile; fileRef = F994A52312612623007EF95F /* uninstall_agent.sh */; };
+		F994A52512612636007EF95F /* uninstall_agent.sh in Copy aux executables */ = {isa = PBXBuildFile; fileRef = F994A52312612623007EF95F /* uninstall_agent.sh */; };
 		F9963EC50F0490E9005F0174 /* TLMRemoveOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F9963EC40F0490E9005F0174 /* TLMRemoveOperation.m */; };
 		F9963FEF0F054999005F0174 /* TLMInstallOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F9963FEE0F054999005F0174 /* TLMInstallOperation.m */; };
 		F9999F9C10D1C33800F594CB /* TLMProxyManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F9999F9B10D1C33800F594CB /* TLMProxyManager.m */; };
@@ -55,7 +57,7 @@
 		F9B137200EEC4A92007C0046 /* TLMUpdateOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B1371F0EEC4A92007C0046 /* TLMUpdateOperation.m */; };
 		F9B137330EEC4C6A007C0046 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9B137320EEC4C6A007C0046 /* Security.framework */; };
 		F9B139D40EECBE23007C0046 /* tlu_ipctask.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B139D30EECBE23007C0046 /* tlu_ipctask.m */; };
-		F9B139DA0EECBECD007C0046 /* tlu_ipctask in copy tlmgr_cwrapper */ = {isa = PBXBuildFile; fileRef = F9B139CB0EECBDFE007C0046 /* tlu_ipctask */; };
+		F9B139DA0EECBECD007C0046 /* tlu_ipctask in Copy aux executables */ = {isa = PBXBuildFile; fileRef = F9B139CB0EECBDFE007C0046 /* tlu_ipctask */; };
 		F9B13ADE0EECDAC8007C0046 /* TLMSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B13ADB0EECD9DA007C0046 /* TLMSplitView.m */; };
 		F9B13B1D0EECE7F3007C0046 /* TLMInfoOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B13B1C0EECE7F3007C0046 /* TLMInfoOperation.m */; };
 		F9B13B240EECEA73007C0046 /* TLMInfoController.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B13B170EECE5AE007C0046 /* TLMInfoController.m */; };
@@ -70,7 +72,7 @@
 		F9D37C9A0F01A80800FB755E /* TLMGradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D37C990F01A80800FB755E /* TLMGradientView.m */; };
 		F9D37D640F01EA8900FB755E /* TLMUpdateListDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D37D630F01EA8900FB755E /* TLMUpdateListDataSource.m */; };
 		F9D37E7B0F02B5F700FB755E /* TLMOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D37E7A0F02B5F700FB755E /* TLMOutlineView.m */; };
-		F9D85F79125E863C00C0FEC5 /* install_agent.sh in copy tlmgr_cwrapper */ = {isa = PBXBuildFile; fileRef = F9D85F74125E85FD00C0FEC5 /* install_agent.sh */; };
+		F9D85F79125E863C00C0FEC5 /* install_agent.sh in Copy aux executables */ = {isa = PBXBuildFile; fileRef = F9D85F74125E85FD00C0FEC5 /* install_agent.sh */; };
 		F9D85F7A125E865E00C0FEC5 /* update_check.py in Resources */ = {isa = PBXBuildFile; fileRef = F9D85F75125E85FD00C0FEC5 /* update_check.py */; };
 		F9D85F7B125E866100C0FEC5 /* com.googlecode.mactlmgr.update_check.plist in Resources */ = {isa = PBXBuildFile; fileRef = F9D85F73125E85FD00C0FEC5 /* com.googlecode.mactlmgr.update_check.plist */; };
 		F9DCD36C0F06F0A200600DD2 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9DCD3650F06F08C00600DD2 /* Sparkle.framework */; };
@@ -201,16 +203,17 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		F9B139DD0EECBEEB007C0046 /* copy tlmgr_cwrapper */ = {
+		F9B139DD0EECBEEB007C0046 /* Copy aux executables */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 6;
 			files = (
-				F9D85F79125E863C00C0FEC5 /* install_agent.sh in copy tlmgr_cwrapper */,
-				F9B139DA0EECBECD007C0046 /* tlu_ipctask in copy tlmgr_cwrapper */,
+				F994A52512612636007EF95F /* uninstall_agent.sh in Copy aux executables */,
+				F9D85F79125E863C00C0FEC5 /* install_agent.sh in Copy aux executables */,
+				F9B139DA0EECBECD007C0046 /* tlu_ipctask in Copy aux executables */,
 			);
-			name = "copy tlmgr_cwrapper";
+			name = "Copy aux executables";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		F9DCD37C0F06F11300600DD2 /* copy frameworks */ = {
@@ -282,6 +285,7 @@
 		F982553C12504E040018CB73 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/AutobackupSheet.xib; sourceTree = "<group>"; };
 		F98FADA710672943002C1972 /* TLMNetInstallOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMNetInstallOperation.h; sourceTree = "<group>"; };
 		F98FADA810672943002C1972 /* TLMNetInstallOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMNetInstallOperation.m; sourceTree = "<group>"; };
+		F994A52312612623007EF95F /* uninstall_agent.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = uninstall_agent.sh; sourceTree = "<group>"; };
 		F9963EC30F0490E9005F0174 /* TLMRemoveOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMRemoveOperation.h; sourceTree = "<group>"; };
 		F9963EC40F0490E9005F0174 /* TLMRemoveOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMRemoveOperation.m; sourceTree = "<group>"; };
 		F9963FED0F054999005F0174 /* TLMInstallOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMInstallOperation.h; sourceTree = "<group>"; };
@@ -641,6 +645,7 @@
 		F9D85F72125E85FD00C0FEC5 /* agent */ = {
 			isa = PBXGroup;
 			children = (
+				F994A52312612623007EF95F /* uninstall_agent.sh */,
 				F9D85F73125E85FD00C0FEC5 /* com.googlecode.mactlmgr.update_check.plist */,
 				F9D85F74125E85FD00C0FEC5 /* install_agent.sh */,
 				F9D85F75125E85FD00C0FEC5 /* update_check.py */,
@@ -691,7 +696,7 @@
 				8D1107290486CEB800E47090 /* Resources */,
 				8D11072C0486CEB800E47090 /* Sources */,
 				8D11072E0486CEB800E47090 /* Frameworks */,
-				F9B139DD0EECBEEB007C0046 /* copy tlmgr_cwrapper */,
+				F9B139DD0EECBEEB007C0046 /* Copy aux executables */,
 				F9DCD37C0F06F11300600DD2 /* copy frameworks */,
 				F9E2C9BE0F3C00EE00D5EC49 /* CopyFiles */,
 				F9A057B70F507642008C804E /* CopyFiles */,
@@ -865,6 +870,7 @@
 				F9A4A106105D736B00F5AC62 /* texlive.profile.plist in Resources */,
 				F982553F12504E210018CB73 /* AutobackupSheet.xib in Resources */,
 				F9C0D3E7125ECF3700B1FBE5 /* LaunchAgentSheet.xib in Resources */,
+				F994A52412612623007EF95F /* uninstall_agent.sh in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
