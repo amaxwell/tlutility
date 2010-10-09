@@ -17,6 +17,8 @@ SRC_BIN_PATH=""
 SRC_PLIST_PATH=""
 DO_UNINSTALL=0
 
+OWNER_ID="0"
+
 SCRIPT_NAME=$(basename "$0")
 
 #
@@ -31,7 +33,7 @@ SCRIPT_NAME=$(basename "$0")
 
 usage()
 {
-    echo 'usage: install_agent -b binary_src_path -p plist_src_path [-h home_dir] [-u]' >&2
+    echo 'usage: install_agent -b binary_src_path -p plist_src_path [-h home_dir -o uid] [-u]' >&2
 }
 
 #
@@ -39,12 +41,13 @@ usage()
 # -p: absolute path to the launchd plist in the application bundle
 # -u: uninstall launchd plist and update_check.py
 # 
-while getopts ":uh:b:p:" opt; do
+while getopts ":uh:b:p:o:" opt; do
     case $opt in
         b   )   SRC_BIN_PATH="$OPTARG" ;;
         p   )   SRC_PLIST_PATH="$OPTARG" ;;
         u   )   DO_UNINSTALL=1 ;;
         h   )   USER_PLIST_DIR="$OPTARG/$LOCAL_PLIST_DIR" ;;
+        o   )   OWNER_ID="$OPTARG" ;;
         \?  )   usage
                 exit 1 ;;
                 
@@ -52,14 +55,18 @@ while getopts ":uh:b:p:" opt; do
 done
 shift $(($OPTIND - 1))
 
-if [ "$USER_PLIST_DIR" != "" ]; then
-    PLIST_DIR="$USER_PLIST_DIR"
-fi
-
 function log_message
 {
     echo "$SCRIPT_NAME: $1" >&2
 }
+
+if [ "$USER_PLIST_DIR" != "" ]; then
+    PLIST_DIR="$USER_PLIST_DIR"
+    if [ "$DO_UNINSTALL" = 0 ] && [ "$OWNER_ID" = "0" ]; then
+        log_message "Owner ID not set, which is unsafe."
+        exit 1
+    fi
+fi
 
 do_uninstall_and_exit()
 {
@@ -75,22 +82,26 @@ do_uninstall_and_exit()
 
         if [ -f "$plist_path" ]; then
             
-            # try to unload with launchctl
-            /bin/launchctl unload -w "$plist_path"
+            # Unload with launchctl, which doesn't like running as root to unload a non-root plist.
+            # Since this tries to unload any plist that exists, use stat to figure
+            # out the owner and ignore OWNER_ID since it will be wrong.
+            
+            owner_uid=$(/usr/bin/stat -f "%Uu" $plist_path)
+            /usr/bin/sudo "-u#$owner_uid" /bin/launchctl unload -w "$plist_path"
             if [ $? != 0 ]; then
                 log_message "unable to unload $plist_path"
                 exit_status=10
-            else
-                log_message "unloaded launchd agent $plist_path"
             fi
             
-            # remove the launchd plist
-            /bin/rm -f "$plist_path"
-            if [ $? != 0 ]; then
-                log_message "unable to remove $plist_path"
-                exit_status=11
-            else
-                log_message "removed $plist_path"
+            # remove the launchd plist only if it could be unloaded
+            if [ $exit_status = 0 ]; then
+                /bin/rm -f "$plist_path"
+                if [ $? != 0 ]; then
+                    log_message "unable to remove $plist_path"
+                    exit_status=11
+                else
+                    log_message "removed $plist_path"
+                fi
             fi
             
         else
@@ -148,17 +159,20 @@ do_install_and_exit()
 
     # the OS should have created this already
     if [ ! -d "$PLIST_DIR" ]; then
-        /bin/mkdir -p "$PLIST_DIR"
+        # don't create this as root in a user's directory
+        /usr/bin/sudo "-u#$OWNER_ID" /bin/mkdir -p "$PLIST_DIR"
         if [ $? != 0 ]; then
-            log_message "unable to create $PLIST_DIR"
+            log_message "unable to create $PLIST_DIR as UID $OWNER_ID"
             exit 5
+        else
+            log_message "created $PLIST_DIR as UID $OWNER_ID"
         fi
     fi
 
     #
     # only copy if all else succeeded
     #
-    
+
     /bin/cp "$SRC_BIN_PATH" "$BIN_DIR"
     if [ $? != 0 ]; then
         log_message "unable to copy $SRC_BIN_PATH to $BIN_DIR"
@@ -171,12 +185,20 @@ do_install_and_exit()
         exit 7
     fi
     
-    # try to load the plist; fails for the loginwindow and/or aqua contexts
     plist_path="$PLIST_DIR/com.googlecode.mactlmgr.update_check.plist"
-    /bin/launchctl load -w "$plist_path"
+            
+    # set the plist owner    
+    log_message "changing ownership of $plist_path to $OWNER_ID"
+    /usr/sbin/chown -v $OWNER_ID "$plist_path"
+    if [ $? != 0 ]; then
+        exit 8
+    fi
+    
+    /usr/bin/sudo "-u#$OWNER_ID" /bin/launchctl unload -w "$plist_path" 2>/dev/null
+    /usr/bin/sudo "-u#$OWNER_ID" /bin/launchctl load -w "$plist_path"
     if [ $? != 0 ]; then
         log_message "unable to load $plist_path"
-        exit 8
+        exit 9
     fi
     
     exit 0

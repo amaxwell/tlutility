@@ -782,6 +782,9 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
             if ((returnCode & TLMLaunchAgentAllUsers) == 0) {
                 [options addObject:@"-h"];
                 [options addObject:NSHomeDirectory()];
+                
+                [options addObject:@"-o"];
+                [options addObject:[NSString stringWithFormat:@"%d", getuid()]];
             }
             
             [options addObject:@"-p"];
