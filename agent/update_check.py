@@ -51,7 +51,18 @@ def check_for_updates():
         elif line == "end-of-updates":
             should_count = False
         elif should_count:
-            count += 1
+            comps = line.split()
+            #
+            # d = deleted on server
+            # u = updated on server
+            # a = added on server
+            # f = forcibly removed
+            # r = reverse update
+            #
+            
+            # ignore anything that's not an update or addition
+            if len(comps) >= 2 and comps[1] in ("a", "u"):
+                count += 1
     
     return count
 
