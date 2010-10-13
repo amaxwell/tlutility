@@ -178,18 +178,26 @@ static NSString * __TLMGetTemporaryDirectory()
 
     // only shows hour and minute
     [_datePicker setDateValue:[_gregorianCalendar dateFromComponents:comps]];
-    
+    [_dayField setObjectValue:[_gregorianCalendar dateFromComponents:comps]];
+
     if ([[plist objectForKey:@"StartCalendarInterval"] objectForKey:@"Weekday"]) {
         // 0 and 7 are Sunday, according to launchd.plist(5)
         NSInteger launchdWeekday = [[intervalDict objectForKey:@"Weekday"] integerValue];
-        // need new components without day unit, which overrides weekday unit, but now it's returning a random date
-#warning this is broken
-        comps = [_gregorianCalendar components:NSYearCalendarUnit|NSMonthCalendarUnit fromDate:[NSDate date]];
         // NSDateComponents thinks that 1 is Sunday, in the Gregorian calendar
-        [comps setWeekday:(launchdWeekday + 1)];
+        NSInteger nsdcWeekday = launchdWeekday + 1;
+        
+        /*
+         Compute the offset manually, since NSCalendar returns a crap date if NSDateComponents is specified
+         with year/month/weekday.  I could file a bug report with Apple, but it'll either be "works as designed"
+         or ignored until NSCalendar is deprecated in favor of something else...
+         */
+        NSInteger currentWeekday = [comps weekday];
+        NSDateComponents *offsetComponents = [[NSDateComponents new] autorelease];
+        [offsetComponents setWeekday:(nsdcWeekday - currentWeekday)];
+        NSDate *weekdayDate = [_gregorianCalendar dateByAddingComponents:offsetComponents toDate:[NSDate date] options:0];
+        [_dayField setObjectValue:weekdayDate];
     }
 
-    [_dayField setObjectValue:[_gregorianCalendar dateFromComponents:comps]];
     
     [_datePicker sizeToFit];
     
