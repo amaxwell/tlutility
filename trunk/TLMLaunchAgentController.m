@@ -128,9 +128,14 @@ static NSString * __TLMGetTemporaryDirectory()
 
 - (NSString *)windowNibName { return @"LaunchAgentSheet"; }
 
+#define AGENT_DISABLED ((_status & TLMLaunchAgentEnabled) == 0)
+#define AGENT_ENABLED  ((_status & TLMLaunchAgentEnabled) != 0)
+#define CHECK_WEEKLY   ((_status & TLMLaunchAgentDaily) == 0)
+#define ALL_USERS      ((_status & TLMLaunchAgentAllUsers) != 0)
+
 - (void)_updateUI
 {
-    if ((_status & TLMLaunchAgentEnabled) == 0) {
+    if (AGENT_DISABLED) {
         [_scheduleMatrix selectCellWithTag:TLMScheduleMatrixNever];
         [_allUsersCheckbox setEnabled:NO];
         [_dayField setEnabled:NO];
@@ -139,19 +144,20 @@ static NSString * __TLMGetTemporaryDirectory()
     else {
         
         [_allUsersCheckbox setEnabled:YES];
-        [_dayField setEnabled:YES];
         [_datePicker setEnabled:YES];
 
-        if ((_status & TLMLaunchAgentDaily) == 0) {
+        if (CHECK_WEEKLY) {
             [_scheduleMatrix selectCellWithTag:TLMScheduleMatrixWeekly];
+            [_dayField setEnabled:YES];
         }
         else {
             [_scheduleMatrix selectCellWithTag:TLMScheduleMatrixDaily];
+            [_dayField setEnabled:NO];
         }
         
     }
     
-    [_allUsersCheckbox setState:((_status & TLMLaunchAgentAllUsers) != 0 ? NSOnState : NSOffState)];
+    [_allUsersCheckbox setState:(ALL_USERS ? NSOnState : NSOffState)];
 }
 
 - (void)awakeFromNib
@@ -196,13 +202,15 @@ static NSString * __TLMGetTemporaryDirectory()
         [offsetComponents setWeekday:(nsdcWeekday - currentWeekday)];
         NSDate *weekdayDate = [_gregorianCalendar dateByAddingComponents:offsetComponents toDate:[NSDate date] options:0];
         [_dayField setObjectValue:weekdayDate];
+        
+        _status &= ~TLMLaunchAgentDaily;
     }
-
+    else {
+        _status |= TLMLaunchAgentDaily;
+    }
     
     [_datePicker sizeToFit];
-    
     [self setPropertyListPath:plistPath];
-    
     [self _updateUI];
 }
 
@@ -221,7 +229,7 @@ static NSString * __TLMGetTemporaryDirectory()
     [interval setObject:[NSNumber numberWithInteger:[comps hour]] forKey:@"Hour"];
     [interval setObject:[NSNumber numberWithInteger:[comps minute]] forKey:@"Minute"];
     
-    if ((_status & TLMLaunchAgentDaily) == 0) {
+    if (CHECK_WEEKLY) {
         comps = [_gregorianCalendar components:NSWeekdayCalendarUnit fromDate:[_dayField objectValue]];
         NSInteger launchdWeekday = [comps weekday] - 1;
         [interval setObject:[NSNumber numberWithInteger:launchdWeekday] forKey:@"Weekday"];
@@ -251,7 +259,7 @@ static NSString * __TLMGetTemporaryDirectory()
             break;
     }
     
-    if (_status & TLMLaunchAgentEnabled)
+    if (AGENT_ENABLED)
         [self _savePropertyList];
 
     [self _updateUI];
