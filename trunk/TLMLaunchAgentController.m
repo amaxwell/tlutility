@@ -175,16 +175,21 @@ static NSString * __TLMGetTemporaryDirectory()
     NSDictionary *intervalDict = [plist objectForKey:@"StartCalendarInterval"];
     [comps setHour:[[intervalDict objectForKey:@"Hour"] integerValue]];
     [comps setMinute:[[intervalDict objectForKey:@"Minute"] integerValue]];
+
+    // only shows hour and minute
+    [_datePicker setDateValue:[_gregorianCalendar dateFromComponents:comps]];
+    
     if ([[plist objectForKey:@"StartCalendarInterval"] objectForKey:@"Weekday"]) {
         // 0 and 7 are Sunday, according to launchd.plist(5)
         NSInteger launchdWeekday = [[intervalDict objectForKey:@"Weekday"] integerValue];
+        // need new components without day unit, which overrides weekday unit, but now it's returning a random date
+#warning this is broken
+        comps = [_gregorianCalendar components:NSYearCalendarUnit|NSMonthCalendarUnit fromDate:[NSDate date]];
         // NSDateComponents thinks that 1 is Sunday, in the Gregorian calendar
         [comps setWeekday:(launchdWeekday + 1)];
     }
 
-    NSDate *displayDate = [_gregorianCalendar dateFromComponents:comps];
-    [_datePicker setDateValue:displayDate];
-    [_dayField setObjectValue:displayDate];
+    [_dayField setObjectValue:[_gregorianCalendar dateFromComponents:comps]];
     
     [_datePicker sizeToFit];
     
