@@ -65,4 +65,6 @@
 // for output of `tlmgr list`
 + (NSArray *)nodesWithListLines:(NSArray *)listLines;
 
++ (NSArray *)backupNodesWithListLines:(NSArray *)listLines;
+
 @end
