@@ -58,6 +58,6 @@
 - (NSString *)currentProfile;
 
 @property (nonatomic, retain) IBOutlet TLMOutlineView *outlineView;
-@property (nonatomic, retain) IBOutlet TLMMainWindowController *_controller;
+@property (nonatomic, assign) IBOutlet TLMMainWindowController *_controller;
 
 @end

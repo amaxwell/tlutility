@@ -64,7 +64,6 @@
     [_archivePath release];
     [_outlineView release];
     [_rootNode release];
-    [_controller release];
     [_lastUpdateURL release];
     [_statusWindow release];
     [_checkboxCell release];
