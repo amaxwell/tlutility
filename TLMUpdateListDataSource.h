@@ -38,11 +38,11 @@
 
 #import <Cocoa/Cocoa.h>
 #import "TLMMainWindowController.h"
+#import "TLMTableView.h"
 
-@class TLMTableView;
 @class TLMStatusWindow;
 
-@interface TLMUpdateListDataSource : NSResponder <TLMListDataSource>
+@interface TLMUpdateListDataSource : NSResponder <TLMListDataSource, TLMTableDataSource>
 {
 @private
     TLMTableView            *_tableView;
