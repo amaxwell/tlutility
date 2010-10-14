@@ -602,6 +602,31 @@ static NSArray * __TLMCheckFileExistence(NSArray *inputURLs)
     return nodes;
 }
 
+#pragma mark Backup parsing
+
++ (NSArray *)backupNodesWithListLines:(NSArray *)listLines;
+{
+    /*
+     $ tlmgr restore 2>/dev/null
+     Available backups:
+     Asana-Math: 18651
+     achemso: 19689
+     adforn: 19877
+     animate: 19764
+     answers: 16805
+     antp: 15878
+     arabi: 15878
+     bayer: 15878
+     beebe: 19862
+     bera: 15878
+     berenisadf: 19812
+     biblatex: 19592
+     biblatex-apa: 19938 19814
+     */
+    
+    return [NSArray array];
+}
+
 @end
 
 
