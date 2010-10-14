@@ -168,18 +168,18 @@ static char _TLMOperationQueueOperationContext;
 }
 
 - (void)_startProgressBar:(NSNotification *)aNote
-{
-    // just in case it's still running, though that should never happen with the read/write queue...
-    [self _stopProgressBar:nil];
-    
-    // hack from BibDesk: progress bars may not work correctly after the first time they're used, due to an AppKit bug
+{    
+    /*
+     - calling [self _stopProgressBar:nil] here will keep the bar from being displayed during the first item of a download
+     - use a hack from BibDesk: progress bars may not work correctly after the first time they're used, due to an AppKit bug
+     */
     NSProgressIndicator *pb = [NSKeyedUnarchiver unarchiveObjectWithData:[NSKeyedArchiver archivedDataWithRootObject:[self _progressBar]]];
     [[[self _progressBar] superview] replaceSubview:[self _progressBar] with:pb];
     [self set_progressBar:pb];
     [[self _progressBar] setMinValue:0.0];
     [[self _progressBar] setMaxValue:[[[aNote userInfo] objectForKey:TLMLogSize] doubleValue]];
     // we always have an integral number of bytes >> 1, so set a fake value here so it draws immediately
-    [[self _progressBar] setDoubleValue:0.5];
+    [[self _progressBar] setDoubleValue:1];
     [[self _progressBar] setHidden:NO];
     [[self _progressBar] display];
 }
