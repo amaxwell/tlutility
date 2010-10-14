@@ -41,6 +41,7 @@
 #import "TLMPackageListDataSource.h"
 #import "TLMUpdateListDataSource.h"
 #import "TLMInstallDataSource.h"
+#import "TLMBackupDataSource.h"
 
 #import "TLMListUpdatesOperation.h"
 #import "TLMUpdateOperation.h"
@@ -84,6 +85,7 @@ static char _TLMOperationQueueOperationContext;
 @synthesize _updateListDataSource;
 @synthesize _installDataSource;
 @synthesize infrastructureNeedsUpdate = _updateInfrastructure;
+@synthesize _backupDataSource;
 
 #define ENABLE_INSTALL 0
 
@@ -138,6 +140,8 @@ static char _TLMOperationQueueOperationContext;
     [_tabView setDelegate:self];
     [_tabView addTabNamed:NSLocalizedString(@"Manage Updates", @"tab title") withView:[[_updateListDataSource tableView]  enclosingScrollView]];
     [_tabView addTabNamed:NSLocalizedString(@"Manage Packages", @"tab title") withView:[[_packageListDataSource outlineView] enclosingScrollView]];
+    [_tabView addTabNamed:NSLocalizedString(@"Backups", @"tab title") withView:[[_backupDataSource outlineView] enclosingScrollView]];
+
 #if ENABLE_INSTALL
     [_tabView addTabNamed:NSLocalizedString(@"Install", @"tab title") withView:[[_installDataSource outlineView] enclosingScrollView]];
 #endif
@@ -351,9 +355,9 @@ static char _TLMOperationQueueOperationContext;
 {
     NSResponder *next = [self nextResponder];
 #if ENABLE_INSTALL
-    if ([next isEqual:_updateListDataSource] || [next isEqual:_packageListDataSource] || [next isEqual:_installDataSource])
+    if ([next isEqual:_updateListDataSource] || [next isEqual:_packageListDataSource] || [next isEqual:_backupDataSource] || [next isEqual:_installDataSource])
 #else
-    if ([next isEqual:_updateListDataSource] || [next isEqual:_packageListDataSource])
+    if ([next isEqual:_updateListDataSource] || [next isEqual:_packageListDataSource] || [next isEqual:_backupDataSource])
 #endif
     {
         [self setNextResponder:[next nextResponder]];
@@ -366,6 +370,7 @@ static char _TLMOperationQueueOperationContext;
     NSResponder *next = [self nextResponder];
     NSParameterAssert([next isEqual:_updateListDataSource] == NO);
     NSParameterAssert([next isEqual:_packageListDataSource] == NO);
+    NSParameterAssert([next isEqual:_backupDataSource] == NO);
 #if ENABLE_INSTALL
     NSParameterAssert([next isEqual:_installDataSource] == NO);
 #endif
@@ -406,8 +411,21 @@ static char _TLMOperationQueueOperationContext;
                 [self refreshFullPackageList];
 
             break;
-#if ENABLE_INSTALL
         case 2:
+            
+            [self _insertDataSourceInResponderChain:_backupDataSource];
+            _currentListDataSource = _backupDataSource;
+            [self _updateURLView];
+            [[_currentListDataSource statusWindow] fadeIn];
+            
+            if ([[_backupDataSource backupNodes] count])
+                [_backupDataSource search:nil];
+            else
+                [self refreshBackupList];
+            
+            break;            
+#if ENABLE_INSTALL
+        case 3:
             [self _insertDataSourceInResponderChain:_installDataSource];
             _currentListDataSource = _installDataSource;
             [self _updateURLView];
@@ -1135,6 +1153,11 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
         [op release];
         TLMLog(__func__, @"Beginning removal of\n%@", packageNames); 
     }
+}
+
+- (void)refreshBackupList
+{
+    
 }
 
 @end

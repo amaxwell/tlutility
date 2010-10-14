@@ -46,6 +46,7 @@
 @class TLMUpdateListDataSource;
 @class TLMInstallDataSource;
 @class TLMGradientView;
+@class TLMBackupDataSource;
 
 @protocol TLMListDataSource <NSObject>
 @property (nonatomic, copy) NSURL *lastUpdateURL;
@@ -71,6 +72,7 @@
     TLMUpdateListDataSource  *_updateListDataSource;
     TLMPackageListDataSource *_packageListDataSource;
     TLMInstallDataSource     *_installDataSource;
+    TLMBackupDataSource      *_backupDataSource;
     id <TLMListDataSource>    _currentListDataSource;
 }
 
@@ -88,6 +90,7 @@
 @property (nonatomic, retain) IBOutlet TLMPackageListDataSource *_packageListDataSource;
 @property (nonatomic, retain) IBOutlet TLMUpdateListDataSource *_updateListDataSource;
 @property (nonatomic, retain) IBOutlet TLMInstallDataSource *_installDataSource;
+@property (nonatomic, retain) IBOutlet TLMBackupDataSource *_backupDataSource;
 @property (nonatomic, retain) IBOutlet TLMTabView *_tabView;
 @property (nonatomic, retain) IBOutlet TLMGradientView *_statusBarView;
 @property (nonatomic, readonly) BOOL infrastructureNeedsUpdate;
