@@ -38,11 +38,11 @@
 
 #import <Cocoa/Cocoa.h>
 #import "TLMMainWindowController.h"
+#import "TLMOutlineView.h"
 
-@class TLMOutlineView;
 @class TLMStatusWindow;
 
-@interface TLMPackageListDataSource : NSResponder <TLMListDataSource>
+@interface TLMPackageListDataSource : NSResponder <TLMListDataSource, TLMOutlineViewDataSource>
 {
 @private
     TLMOutlineView          *_outlineView;

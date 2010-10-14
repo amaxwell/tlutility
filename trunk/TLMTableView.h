@@ -51,7 +51,7 @@
 
 @end
 
-@protocol TLMTableDataSource <NSObject>
+@protocol TLMTableDataSource <NSTableViewDataSource>
 @optional
 - (void)tableView:(TLMTableView *)tableView writeSelectedRowsToPasteboard:(NSPasteboard *)pboard;
 @end

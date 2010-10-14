@@ -54,7 +54,7 @@
 
 @end
 
-@protocol TLMOutlineViewDataSource <NSObject>
+@protocol TLMOutlineViewDataSource <NSOutlineViewDataSource>
 @optional
 - (void)outlineView:(TLMOutlineView *)outlineView writeSelectedRowsToPasteboard:(NSPasteboard *)pboard;
 @end
