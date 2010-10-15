@@ -33,7 +33,7 @@ while getopts ":h:b:p:o:" opt; do
     case $opt in
         b   )   SRC_BIN_PATH="$OPTARG" ;;
         p   )   SRC_PLIST_PATH="$OPTARG" ;;
-        h   )   USER_PLIST_DIR="$OPTARG/$LOCAL_PLIST_DIR" ;;
+        h   )   USER_PLIST_DIR="$OPTARG$LOCAL_PLIST_DIR" ;;
         o   )   OWNER_ID="$OPTARG" ;;
         \?  )   usage
                 exit 1 ;;
