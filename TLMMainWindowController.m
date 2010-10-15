@@ -421,7 +421,7 @@ static char _TLMOperationQueueOperationContext;
             
             if ([[_backupDataSource backupNodes] count])
                 [_backupDataSource search:nil];
-            else
+            else if ([_backupDataSource isRefreshing] == NO)
                 [self refreshBackupList];
             
             break;            
@@ -687,9 +687,11 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
              */
             [self _refreshUpdatedPackageListFromLocation:[self _lastUpdateURL]];
             
-            // if previously loaded, this may be stale due to autoinstall/autoremove of packages
-            if ([[_packageListDataSource packageNodes] count] && [_packageListDataSource isRefreshing] == NO)
+            if ([_currentListDataSource isEqual:_backupDataSource])
+                [self refreshBackupList];
+            else if ([_currentListDataSource isEqual:_packageListDataSource])
                 [self refreshFullPackageList];
+
         }
     }
 }
@@ -857,10 +859,14 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
         statusString = NSLocalizedString(@"Backup Listing Cancelled", @"main window status string");
     else if ([op failed])
         statusString = NSLocalizedString(@"Backup Listing Failed", @"main window status string");
-    
+    else if ([[op backupNodes] count] ==0)
+        statusString = NSLocalizedString(@"No Backups Available", @"main window status string");
+        
     [self _displayStatusString:statusString dataSource:_backupDataSource];
     [_backupDataSource setLastUpdateURL:nil];
     [self _updateURLView];
+    
+    [_backupDataSource setRefreshing:NO];
 }
 
 - (void)_refreshFullPackageListFromLocation:(NSURL *)location offline:(BOOL)offline
@@ -894,6 +900,9 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
          */
         [self _refreshFullPackageListFromLocation:[op updateURL] offline:NO];
         
+        if ([_currentListDataSource isEqual:_backupDataSource])
+            [self refreshBackupList];
+        
         // this is always displayed, so should always be updated as well
         [self _refreshUpdatedPackageListFromLocation:[op updateURL]];
     }    
@@ -921,8 +930,14 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     }
     else if ([op isCancelled] == NO) {
         
-        // This is slow, but if a package removed other dependencies, we have no way of manually removing from the list.  We also need to ensure that the same mirror is used, so results are consistent.
+        /*
+         This is slow, but if a package removed other dependencies, we have no way of manually removing 
+         from the list.  We also need to ensure that the same mirror is used, so results are consistent.
+         */
         [self _refreshFullPackageListFromLocation:[_packageListDataSource lastUpdateURL] offline:NO];
+        
+        if ([_currentListDataSource isEqual:_backupDataSource])
+            [self refreshBackupList];
         
         // this is always displayed, so should always be updated as well
         [self _refreshUpdatedPackageListFromLocation:[_packageListDataSource lastUpdateURL]];
@@ -1179,6 +1194,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 - (void)refreshBackupList
 {
     TLMBackupListOperation *op = [TLMBackupListOperation new];
+    [_backupDataSource setRefreshing:YES];
     [self _addOperation:op selector:@selector(_handleListBackupsFinishedNotification:)];
     [op release];
 }

@@ -52,6 +52,7 @@
     TLMStatusWindow         *_statusWindow;
     TLMOutlineView          *_outlineView;
     NSURL                   *_lastUpdateURL;
+    BOOL                     _refreshing;
 }
 
 - (IBAction)search:(id)sender;
@@ -62,6 +63,7 @@
 @property (nonatomic, retain) IBOutlet TLMOutlineView *outlineView;
 @property (nonatomic, assign) IBOutlet TLMMainWindowController *_controller;
 @property (nonatomic, copy) NSArray *backupNodes;
+@property (nonatomic, getter = isRefreshing) BOOL refreshing;
 
 
 @end

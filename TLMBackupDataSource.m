@@ -37,6 +37,7 @@
 
 #import "TLMBackupDataSource.h"
 #import "TLMBackupNode.h"
+#import "TLMInfoController.h"
 
 @implementation TLMBackupDataSource
 
@@ -46,6 +47,7 @@
 @synthesize lastUpdateURL = _lastUpdateURL;
 @synthesize backupNodes = _backupNodes;
 @synthesize _searchField;
+@synthesize refreshing = _refreshing;
 
 - (id)init
 {
@@ -85,6 +87,17 @@
     [self search:nil];
 }
 
+- (BOOL)validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem>)anItem;
+{
+    SEL action = [anItem action];
+    if (@selector(showInfo:) == action)
+        return [[[TLMInfoController sharedInstance] window] isVisible] == NO;
+    else if (@selector(refreshList:) == action)
+        return NO == _refreshing;
+    else
+        return YES;
+}
+
 - (IBAction)search:(id)sender;
 {
     NSString *searchString = [_searchField stringValue];
@@ -113,14 +126,30 @@
     [_outlineView selectRowIndexes:indexes byExtendingSelection:NO];    
 }
 
+- (id)selectedItem
+{
+    id selectedItem = nil;
+    if ([_outlineView selectedRow] != -1) {
+        selectedItem = [_outlineView itemAtRow:[_outlineView selectedRow]];
+        if ([_outlineView parentForItem:selectedItem])
+            selectedItem = [_outlineView parentForItem:selectedItem];
+    }
+    return selectedItem;
+}
+
 - (IBAction)showInfo:(id)sender;
 {
-    
+    if ([self selectedItem] != nil)
+        [[TLMInfoController sharedInstance] showInfoForPackage:[self selectedItem]];
+    else if ([[[TLMInfoController sharedInstance] window] isVisible] == NO) {
+        [[TLMInfoController sharedInstance] showInfoForPackage:nil];
+        [[TLMInfoController sharedInstance] showWindow:nil];
+    }
 }
 
 - (IBAction)refreshList:(id)sender;
 {
-    
+    [_controller refreshBackupList];
 }
 
 static inline BOOL __TLMIsBackupNode(id obj)
@@ -146,6 +175,60 @@ static inline BOOL __TLMIsBackupNode(id obj)
 - (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item;
 {
     return __TLMIsBackupNode(item) ? [item name] : item;
+}
+
+#pragma mark NSOutlineView delegate
+
+- (void)outlineView:(NSOutlineView *)outlineView didClickTableColumn:(NSTableColumn *)tableColumn;
+{
+    /*
+     Copied from TLMPackageListDataSource, and is currently overkill since we
+     only have a single table column here.
+     */
+    _sortAscending = !_sortAscending;
+    
+    for (NSTableColumn *col in [outlineView tableColumns])
+        [outlineView setIndicatorImage:nil inTableColumn:col];
+    NSImage *image = _sortAscending ? [NSImage imageNamed:@"NSAscendingSortIndicator"] : [NSImage imageNamed:@"NSDescendingSortIndicator"];
+    [outlineView setIndicatorImage:image inTableColumn:tableColumn];
+    
+    NSString *key = [tableColumn identifier];
+    NSSortDescriptor *sort = nil;
+    
+    // all string keys, so do a simple comparison
+    sort = [[NSSortDescriptor alloc] initWithKey:key ascending:_sortAscending selector:@selector(localizedCaseInsensitiveCompare:)];
+    [sort autorelease];
+    
+    // make sure we're not duplicating any descriptors (possibly with reversed order)
+    NSUInteger cnt = [_sortDescriptors count];
+    while (cnt--) {
+        if ([[[_sortDescriptors objectAtIndex:cnt] key] isEqualToString:key])
+            [_sortDescriptors removeObjectAtIndex:cnt];
+    }
+    
+    // push the new sort descriptor, which is correctly ascending/descending
+    if (sort) [_sortDescriptors insertObject:sort atIndex:0];
+    
+    // pop the last sort descriptor, if we have more sort descriptors than table columns
+    while ((NSInteger)[_sortDescriptors count] > [outlineView numberOfColumns])
+        [_sortDescriptors removeLastObject];
+    
+    [_displayedBackupNodes sortUsingDescriptors:_sortDescriptors];
+    [outlineView reloadData];
+}
+
+- (void)outlineViewSelectionDidChange:(NSNotification *)notification;
+{
+    if ([[[TLMInfoController sharedInstance] window] isVisible]) {
+        // reset for multiple selection or empty selection
+        if ([_outlineView numberOfSelectedRows] != 1)
+            [[TLMInfoController sharedInstance] showInfoForPackage:nil];
+        else
+            [self showInfo:nil];
+    }
+    
+    // toolbar updating is somewhat erratic, so force it to validate here
+    [[[_controller window] toolbar] validateVisibleItems];
 }
 
 @end
