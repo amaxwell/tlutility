@@ -54,6 +54,7 @@
 #import "TLMNetInstallOperation.h"
 #import "TLMOptionOperation.h"
 #import "TLMBackupOperation.h"
+#import "TLMBackupListOperation.h"
 
 #import "TLMSplitView.h"
 #import "TLMStatusWindow.h"
@@ -842,6 +843,24 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     [self _updateURLView];
 }
 
+- (void)_handleListBackupsFinishedNotification:(NSNotification *)aNote
+{
+    TLMBackupListOperation *op = [aNote object];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:TLMOperationFinishedNotification object:op];
+    [_backupDataSource setBackupNodes:[op backupNodes]];
+    
+    NSString *statusString = nil;
+    
+    if ([op isCancelled])
+        statusString = NSLocalizedString(@"Backup Listing Cancelled", @"main window status string");
+    else if ([op failed])
+        statusString = NSLocalizedString(@"Backup Listing Failed", @"main window status string");
+    
+    [self _displayStatusString:statusString dataSource:_backupDataSource];
+    [_backupDataSource setLastUpdateURL:nil];
+    [self _updateURLView];
+}
+
 - (void)_refreshFullPackageListFromLocation:(NSURL *)location offline:(BOOL)offline
 {
     [self _displayStatusString:nil dataSource:_packageListDataSource];
@@ -1157,7 +1176,9 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 
 - (void)refreshBackupList
 {
-    
+    TLMBackupListOperation *op = [TLMBackupListOperation new];
+    [self _addOperation:op selector:@selector(_handleListBackupsFinishedNotification:)];
+    [op release];
 }
 
 @end

@@ -32,6 +32,7 @@
 		F98FADA910672943002C1972 /* TLMNetInstallOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F98FADA810672943002C1972 /* TLMNetInstallOperation.m */; };
 		F994A52412612623007EF95F /* uninstall_agent.sh in Resources */ = {isa = PBXBuildFile; fileRef = F994A52312612623007EF95F /* uninstall_agent.sh */; };
 		F994A52512612636007EF95F /* uninstall_agent.sh in Copy aux executables */ = {isa = PBXBuildFile; fileRef = F994A52312612623007EF95F /* uninstall_agent.sh */; };
+		F994A5AB1267E97F007EF95F /* TLMBackupListOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F994A5AA1267E97F007EF95F /* TLMBackupListOperation.m */; };
 		F9963EC50F0490E9005F0174 /* TLMRemoveOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F9963EC40F0490E9005F0174 /* TLMRemoveOperation.m */; };
 		F9963FEF0F054999005F0174 /* TLMInstallOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F9963FEE0F054999005F0174 /* TLMInstallOperation.m */; };
 		F9999F9C10D1C33800F594CB /* TLMProxyManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F9999F9B10D1C33800F594CB /* TLMProxyManager.m */; };
@@ -288,6 +289,8 @@
 		F98FADA710672943002C1972 /* TLMNetInstallOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMNetInstallOperation.h; sourceTree = "<group>"; };
 		F98FADA810672943002C1972 /* TLMNetInstallOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMNetInstallOperation.m; sourceTree = "<group>"; };
 		F994A52312612623007EF95F /* uninstall_agent.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = uninstall_agent.sh; sourceTree = "<group>"; };
+		F994A5A91267E97F007EF95F /* TLMBackupListOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMBackupListOperation.h; sourceTree = "<group>"; };
+		F994A5AA1267E97F007EF95F /* TLMBackupListOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMBackupListOperation.m; sourceTree = "<group>"; };
 		F9963EC30F0490E9005F0174 /* TLMRemoveOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMRemoveOperation.h; sourceTree = "<group>"; };
 		F9963EC40F0490E9005F0174 /* TLMRemoveOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMRemoveOperation.m; sourceTree = "<group>"; };
 		F9963FED0F054999005F0174 /* TLMInstallOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMInstallOperation.h; sourceTree = "<group>"; };
@@ -648,6 +651,8 @@
 				F98FADA810672943002C1972 /* TLMNetInstallOperation.m */,
 				F957A4E112514B040079E07F /* TLMBackupOperation.h */,
 				F957A4E212514B040079E07F /* TLMBackupOperation.m */,
+				F994A5A91267E97F007EF95F /* TLMBackupListOperation.h */,
+				F994A5AA1267E97F007EF95F /* TLMBackupListOperation.m */,
 			);
 			name = Operations;
 			sourceTree = "<group>";
@@ -750,6 +755,7 @@
 			isa = PBXProject;
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "TeX Live Manager" */;
 			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				English,
@@ -970,6 +976,7 @@
 				F9C0D3CB125ECCE600B1FBE5 /* TLMLaunchAgentController.m in Sources */,
 				F9AAC10F12679785003D665F /* TLMBackupDataSource.m in Sources */,
 				F9AAC11D126798F6003D665F /* TLMBackupNode.m in Sources */,
+				F994A5AB1267E97F007EF95F /* TLMBackupListOperation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

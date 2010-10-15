@@ -72,9 +72,45 @@
     [super dealloc];
 }
 
+- (void)awakeFromNib
+{
+    [_outlineView setFontNamePreferenceKey:@"TLMBackupListTableFontName" 
+                         sizePreferenceKey:@"TLMBackupListTableFontSize"];
+}
+
+- (void)setBackupNodes:(NSArray *)nodes
+{
+    [_backupNodes autorelease];
+    _backupNodes = [nodes copy];
+    [self search:nil];
+}
+
 - (IBAction)search:(id)sender;
 {
+    NSString *searchString = [_searchField stringValue];
+    NSArray *selectedItems = [_outlineView selectedItems];
     
+    if (nil == searchString || [searchString isEqualToString:@""]) {
+        [_displayedBackupNodes setArray:_backupNodes];
+    }
+    else {
+        [_displayedBackupNodes removeAllObjects];
+        for (TLMBackupNode *node in _backupNodes) {
+            if ([node matchesSearchString:searchString])
+                [_displayedBackupNodes addObject:node];
+        }
+    }
+    [_displayedBackupNodes sortUsingDescriptors:_sortDescriptors];    
+    [_outlineView reloadData];
+    
+    // restore previously selected packages, if possible
+    NSMutableIndexSet *indexes = [NSMutableIndexSet indexSet];
+    for (id item in selectedItems) {
+        NSInteger idx = [_outlineView rowForItem:item];
+        if (-1 != idx)
+            [indexes addIndex:idx];
+    }
+    [_outlineView selectRowIndexes:indexes byExtendingSelection:NO];    
 }
 
 - (IBAction)showInfo:(id)sender;
@@ -87,24 +123,29 @@
     
 }
 
+static inline BOOL __TLMIsBackupNode(id obj)
+{
+    return [obj isKindOfClass:[TLMBackupNode class]];
+}
+
 - (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)anIndex ofItem:(TLMBackupNode *)item;
 {
-    return (nil == item) ? [_displayedBackupNodes objectAtIndex:anIndex] : [item childAtIndex:anIndex];
+    return (nil == item) ? [_displayedBackupNodes objectAtIndex:anIndex] : [item versionAtIndex:anIndex];
 }
 
 - (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(TLMBackupNode *)item;
 {
-    return (nil == item) ? YES : [item numberOfChildren];
+    return __TLMIsBackupNode(item);
 }
 
 - (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(TLMBackupNode *)item;
 {
-    return (nil == item) ? [_displayedBackupNodes count] : [item numberOfChildren];
+    return (nil == item) ? [_displayedBackupNodes count] : (__TLMIsBackupNode(item) ? [item numberOfVersions] : 0);
 }
 
 - (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item;
 {
-    return [item valueForKey:[tableColumn identifier]];
+    return __TLMIsBackupNode(item) ? [item name] : item;
 }
 
 @end

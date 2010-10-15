@@ -42,56 +42,44 @@
 @implementation TLMBackupNode
 
 @synthesize name = _name;
-@synthesize version = _version;
 
-static NSString *_separatorString = nil;
-
-+ (void)initialize
+- (id)init
 {
-    if (nil == _separatorString)
-        _separatorString = [[NSString alloc] initWithFormat:@"%C", 0x271D];
-}
-
-- (BOOL)matchesSearchString:(NSString *)searchTerm
-{
-    NSMutableString *string = [NSMutableString new];
-    [string appendString:_name];
-    [string appendString:_separatorString];
-    
-    for (TLMBackupNode *child in _children) {
-        [string appendString:_separatorString];
-        [string appendString:[child name]];
+    self = [super init];
+    if (self) {
+        _versions = [NSMutableArray new];
     }
-    
-    BOOL matches = [string rangeOfString:searchTerm options:NSCaseInsensitiveSearch].length > 0;
-    [string release];
-    return matches;
+    return self;
 }
 
 - (void)dealloc
 {
     [_name release];
-    [_children release];
+    [_versions release];
     [super dealloc];
+}
+
+- (BOOL)matchesSearchString:(NSString *)searchTerm
+{
+    return [[self name] rangeOfString:searchTerm options:NSCaseInsensitiveSearch].length > 0;
 }
 
 - (NSString *)infoName { return [self name]; }
 
-- (NSUInteger)numberOfChildren;
+- (NSUInteger)numberOfVersions;
 {
-    return [_children count];
+    return [_versions count];
 }
 
-- (id)childAtIndex:(NSUInteger)anIndex;
+- (id)versionAtIndex:(NSUInteger)anIndex;
 {
-    return [_children objectAtIndex:anIndex];
+    return [_versions objectAtIndex:anIndex];
 }
 
-- (void)addChild:(id)aChild;
+- (void)addVersion:(NSNumber *)aVersion;
 {
-    NSParameterAssert(aChild);
-    if (nil == _children) _children = [NSMutableArray new];
-    [_children addObject:aChild];
+    NSParameterAssert(aVersion);
+    [_versions addObject:aVersion];
 }
 
 @end

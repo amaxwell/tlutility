@@ -40,6 +40,7 @@
 #import "TLMPackageNode.h"
 #import "TLMLogServer.h"
 #import "TLMPreferenceController.h"
+#import "TLMBackupNode.h"
 
 @interface _TLMInfoOutput : NSObject <TLMInfoOutput>
 {
@@ -624,7 +625,29 @@ static NSArray * __TLMCheckFileExistence(NSArray *inputURLs)
      biblatex-apa: 19938 19814
      */
     
-    return [NSArray array];
+    NSMutableArray *nodes = [NSMutableArray arrayWithCapacity:[listLines count]];
+    
+    for (NSString *line in listLines) {
+        NSScanner *scanner = [[NSScanner alloc] initWithString:line];
+        NSString *name;
+        if ([scanner scanUpToString:@":" intoString:&name]) {
+            [scanner scanString:@":" intoString:NULL];
+            TLMBackupNode *node = [TLMBackupNode new];
+            [node setName:name];
+            NSInteger version;
+            while ([scanner isAtEnd] == NO && [scanner scanInteger:&version]) {
+                NSNumber *versionNumber = [[NSNumber alloc] initWithInteger:version];
+                [node addVersion:versionNumber];
+                [versionNumber release];
+            }
+            if ([node numberOfVersions])
+                [nodes addObject:node];
+            [node release];
+        }
+        [scanner release];
+    }
+    
+    return nodes;
 }
 
 @end

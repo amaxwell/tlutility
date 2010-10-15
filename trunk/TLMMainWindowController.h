@@ -113,4 +113,6 @@
 - (void)refreshFullPackageList;
 - (void)refreshUpdatedPackageList;
 
+- (void)refreshBackupList;
+
 @end
