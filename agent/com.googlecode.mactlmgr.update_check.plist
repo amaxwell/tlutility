@@ -2,21 +2,13 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>AbandonProcessGroup</key>
-	<true/>
 	<key>Label</key>
 	<string>com.googlecode.mactlmgr.update_check</string>
-	<!--
+	<!-- http://developer.apple.com/library/mac/#technotes/tn2005/tn2083.html -->
 	<key>LimitLoadToSessionType</key>
-	<array>
-		<string>Aqua</string>
-		<string>LoginWindow</string>
-	</array>
-	-->
+	<string>Aqua</string>
 	<key>LowPriorityIO</key>
 	<true/>
-	<key>Nice</key>
-	<integer>5</integer>
 	<key>ProgramArguments</key>
 	<array>
 		<string>/usr/bin/python</string>
