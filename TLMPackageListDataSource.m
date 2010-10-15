@@ -92,9 +92,9 @@
 - (IBAction)showInfo:(id)sender;
 {
     if ([self selectedItem] != nil)
-        [[TLMInfoController sharedInstance] showInfoForPackage:[self selectedItem]];
+        [[TLMInfoController sharedInstance] showInfoForPackage:[self selectedItem] location:[self lastUpdateURL]];
     else if ([[[TLMInfoController sharedInstance] window] isVisible] == NO) {
-        [[TLMInfoController sharedInstance] showInfoForPackage:nil];
+        [[TLMInfoController sharedInstance] showInfoForPackage:nil location:[self lastUpdateURL]];
         [[TLMInfoController sharedInstance] showWindow:nil];
     }
 }
@@ -272,7 +272,7 @@
     if ([[[TLMInfoController sharedInstance] window] isVisible]) {
         // reset for multiple selection or empty selection
         if ([_outlineView numberOfSelectedRows] != 1)
-            [[TLMInfoController sharedInstance] showInfoForPackage:nil];
+            [[TLMInfoController sharedInstance] showInfoForPackage:nil location:[self lastUpdateURL]];
         else
             [self showInfo:nil];
     }

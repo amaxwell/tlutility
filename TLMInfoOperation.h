@@ -46,7 +46,7 @@
     NSArray  *_documentationURLs;
 }
 
-- (id)initWithPackageName:(NSString *)packageName;
+- (id)initWithPackageName:(NSString *)packageName location:(NSURL *)locationURL;
 
 @property (readonly, copy) NSString *infoString;
 @property (readonly, copy) NSString *packageName;

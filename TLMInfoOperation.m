@@ -50,11 +50,11 @@
 @synthesize packageName = _packageName;
 @synthesize documentationURLs = _documentationURLs;
 
-- (id)initWithPackageName:(NSString *)packageName
+- (id)initWithPackageName:(NSString *)packageName location:(NSURL *)locationURL
 {
     NSParameterAssert(packageName);
-    NSString *location = [[[TLMPreferenceController sharedPreferenceController] validServerURL] absoluteString];
-    NSArray *options = [NSArray arrayWithObjects:@"--repository", location, @"show", @"--list", packageName, nil];
+    NSParameterAssert(locationURL);
+    NSArray *options = [NSArray arrayWithObjects:@"--repository", [locationURL absoluteString], @"show", @"--list", packageName, nil];
     NSString *cmd = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath];
     self = [self initWithCommand:cmd options:options];
     if (self) {

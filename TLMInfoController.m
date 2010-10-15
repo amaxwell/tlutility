@@ -218,14 +218,14 @@ static NSString * const TLMInfoFileViewIconScaleKey = @"TLMInfoFileViewIconScale
     }
 }
 
-- (void)showInfoForPackage:(id <TLMInfo>)package
+- (void)showInfoForPackage:(id <TLMInfo>)package location:(NSURL *)mirrorURL
 {
     // always clear the queue; this will trigger notifications for any cancelled operations
     [_infoQueue cancelAllOperations]; 
     
     if (nil != package) {
         
-        TLMInfoOperation *op = [[TLMInfoOperation alloc] initWithPackageName:[package infoName]];
+        TLMInfoOperation *op = [[TLMInfoOperation alloc] initWithPackageName:[package infoName] location:mirrorURL];
         if (op) {
             
             // clear previous title and file proxy icon

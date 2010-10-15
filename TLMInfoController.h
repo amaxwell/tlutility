@@ -58,7 +58,7 @@
 }
 
 + (TLMInfoController *)sharedInstance;
-- (void)showInfoForPackage:(id <TLMInfo>)package;
+- (void)showInfoForPackage:(id <TLMInfo>)package location:(NSURL *)mirrorURL;
 - (void)cancel;
 
 @property (nonatomic, retain) IBOutlet NSTextView *_textView;
