@@ -863,7 +863,8 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
         statusString = NSLocalizedString(@"No Backups Available", @"main window status string");
         
     [self _displayStatusString:statusString dataSource:_backupDataSource];
-    [_backupDataSource setLastUpdateURL:nil];
+    // should always be a valid URL; mainly useful for TLMInfoController
+    [_backupDataSource setLastUpdateURL:[_updateListDataSource lastUpdateURL]];
     [self _updateURLView];
     
     [_backupDataSource setRefreshing:NO];
