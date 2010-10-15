@@ -1,7 +1,8 @@
 //
-//  TLMBackupNode.h
+//  TLMBackupListOperation.m
 //  TeX Live Manager
 //
+//  Created by Adam R. Maxwell on 10/14/10.
 /*
  This software is Copyright (c) 2010
  Adam Maxwell. All rights reserved.
@@ -35,21 +36,45 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import <Cocoa/Cocoa.h>
-#import "TLMPackage.h"
+#import "TLMBackupListOperation.h"
+#import "TLMPreferenceController.h"
+#import "TLMOutputParser.h"
+#import "TLMLogServer.h"
 
-@interface TLMBackupNode : NSObject <TLMInfo>
+@implementation TLMBackupListOperation
+
+@synthesize backupNodes = _backupNodes;
+
+- (id)init
 {
-@private
-    NSString       *_name;
-    NSMutableArray *_versions;
+    NSString *tlmgrPath = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath];
+    return [self initWithCommand:tlmgrPath options:[NSArray arrayWithObject:@"restore"]];
 }
 
-- (BOOL)matchesSearchString:(NSString *)searchTerm;
-- (NSUInteger)numberOfVersions;
-- (id)versionAtIndex:(NSUInteger)anIndex;
-- (void)addVersion:(NSNumber *)aVersion;
+- (void)dealloc
+{
+    [_backupNodes release];
+    [super dealloc];
+}
 
-@property (readwrite, copy) NSString *name;
+- (NSArray *)backupNodes
+{
+    // return nil for cancelled or failed operations (prevents logging error messages)
+    if (nil == _backupNodes && [self isFinished] && NO == [self isCancelled] && NO == [self failed]) {
+        if ([[self outputData] length]) {
+            NSString *outputString = [[NSString alloc] initWithData:[self outputData] encoding:NSUTF8StringEncoding];        
+            NSArray *lines = [outputString componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+            if ([lines count] > 1) {
+                lines = [lines subarrayWithRange:NSMakeRange(1, [lines count] - 1)];
+                _backupNodes = [[TLMOutputParser backupNodesWithListLines:lines] copy];
+            }
+            [outputString release];
+        }   
+        else {
+            TLMLog(__func__, @"No data read from standard output stream.");
+        }
+    }
+    return _backupNodes;
+}
 
 @end

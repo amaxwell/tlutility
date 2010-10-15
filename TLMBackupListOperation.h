@@ -1,7 +1,8 @@
 //
-//  TLMBackupNode.h
+//  TLMBackupListOperation.h
 //  TeX Live Manager
 //
+//  Created by Adam R. Maxwell on 10/14/10.
 /*
  This software is Copyright (c) 2010
  Adam Maxwell. All rights reserved.
@@ -36,20 +37,15 @@
  */
 
 #import <Cocoa/Cocoa.h>
-#import "TLMPackage.h"
+#import "TLMOperation.h"
 
-@interface TLMBackupNode : NSObject <TLMInfo>
+@interface TLMBackupListOperation : TLMOperation 
 {
 @private
-    NSString       *_name;
-    NSMutableArray *_versions;
+    NSArray *_backupNodes;
 }
 
-- (BOOL)matchesSearchString:(NSString *)searchTerm;
-- (NSUInteger)numberOfVersions;
-- (id)versionAtIndex:(NSUInteger)anIndex;
-- (void)addVersion:(NSNumber *)aVersion;
-
-@property (readwrite, copy) NSString *name;
+// array of TLMBackupNode objects
+@property (readonly) NSArray *backupNodes;
 
 @end
