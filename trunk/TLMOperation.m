@@ -51,12 +51,17 @@ static char _TLMOperationFinishedContext;
 @synthesize errorData = _errorData;
 @synthesize failed = _failed;
 
+- (void)_commonInit
+{
+    [self setFailed:NO];
+    [self addObserver:self forKeyPath:@"isFinished" options:0 context:&_TLMOperationFinishedContext];
+}
+
 - (id)init
 {
     self = [super init];
     if (self) {
-        [self setFailed:NO];
-        [self addObserver:self forKeyPath:@"isFinished" options:0 context:&_TLMOperationFinishedContext];
+        [self _commonInit];
     }
     return self;
 }
@@ -66,8 +71,10 @@ static char _TLMOperationFinishedContext;
     NSParameterAssert(absolutePath);
     NSParameterAssert(options);
     
-    self = [self init];
+    // call super init, or subclasses can't override init and call this initWithCommand:options:
+    self = [super init];
     if (self) {
+        [self _commonInit];
         _task = [TLMTask new];
         [_task setLaunchPath:absolutePath];
         [_task setArguments:options];
