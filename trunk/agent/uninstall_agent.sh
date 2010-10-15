@@ -60,18 +60,17 @@ for plist_dir in "${plist_dirs[@]}"; do
         /usr/bin/sudo "-u#$owner_uid" /bin/launchctl unload -w "$plist_path"
         if [ $? != 0 ]; then
             log_message "unable to unload $plist_path"
+            log_message "changes may not be effective until next login"
             exit_status=10
         fi
         
-        # remove the launchd plist only if it could be unloaded
-        if [ $exit_status = 0 ]; then
-            /bin/rm -f "$plist_path"
-            if [ $? != 0 ]; then
-                log_message "unable to remove $plist_path"
-                exit_status=11
-            else
-                log_message "removed $plist_path"
-            fi
+        # Note: can still unload jobs by label, even if the plist is now gone
+        /bin/rm -f "$plist_path"
+        if [ $? != 0 ]; then
+            log_message "unable to remove $plist_path"
+            exit_status=11
+        else
+            log_message "removed $plist_path"
         fi
         
     else
