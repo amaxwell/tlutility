@@ -785,20 +785,23 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     [lac autorelease];
     if (returnCode & TLMLaunchAgentChanged) {
         
+        // always uninstall, since this may be changing from ~/Library to /Library or vice-versa
         NSMutableArray *options = [NSMutableArray array];
-        NSString *installScriptPath = nil;
+        NSString *removeScriptPath = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"uninstall_agent.sh"];
         
-        if ((returnCode & TLMLaunchAgentEnabled) == 0) {
-                        
-            // need to pass this so it cleans up ~/Library/LaunchAgents
-            [options addObject:@"-h"];
-            [options addObject:NSHomeDirectory()];
+        // need to pass this so it cleans up ~/Library/LaunchAgents
+        [options addObject:@"-h"];
+        [options addObject:NSHomeDirectory()];
+        
+        TLMAuthorizedOperation *uninstallOp = [[TLMAuthorizedOperation alloc] initWithCommand:removeScriptPath options:options];
+        [self _addOperation:uninstallOp selector:@selector(_handleLaunchAgentInstallFinishedNotification:)];
+        [uninstallOp autorelease];
+        
+        if ((returnCode & TLMLaunchAgentEnabled) != 0) {
             
-            installScriptPath = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"uninstall_agent.sh"];
-            
-        }
-        else {
-            
+            options = [NSMutableArray array];
+            NSString *installScriptPath = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"install_agent.sh"];
+
             // this signals intent to install in ~/Library instead of /Library
             if ((returnCode & TLMLaunchAgentAllUsers) == 0) {
                 [options addObject:@"-h"];
@@ -813,13 +816,12 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
             
             [options addObject:@"-b"];
             [options addObject:[[NSBundle mainBundle] pathForResource:@"update_check" ofType:@"py"]];
-            
-            installScriptPath = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"install_agent.sh"];
+                        
+            TLMAuthorizedOperation *installOp = [[TLMAuthorizedOperation alloc] initWithCommand:installScriptPath options:options];
+            [installOp addDependency:uninstallOp];
+            [self _addOperation:installOp selector:@selector(_handleLaunchAgentInstallFinishedNotification:)];
+            [installOp release];
         }  
-        
-        TLMAuthorizedOperation *op = [[TLMAuthorizedOperation alloc] initWithCommand:installScriptPath options:options];
-        [self _addOperation:op selector:@selector(_handleLaunchAgentInstallFinishedNotification:)];
-        [op release];
         
     }
 }
