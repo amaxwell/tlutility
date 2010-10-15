@@ -4,7 +4,8 @@
 from CoreFoundation import CFUserNotificationDisplayNotice, CFUserNotificationDisplayAlert, CFBundleCreate, CFBundleCopyResourceURL, CFPreferencesCopyAppValue
 from CoreFoundation import kCFUserNotificationNoteAlertLevel, kCFUserNotificationAlternateResponse
 
-from Quartz import CGMainDisplayID, CGDisplayIsCaptured
+from Quartz import CGMainDisplayID, CGDisplayIsCaptured, CGSessionCopyCurrentDictionary
+from Quartz import kCGSessionOnConsoleKey, kCGSessionLoginDoneKey
 
 from LaunchServices import LSFindApplicationForInfo, LSOpenCFURLRef
 from LaunchServices import kLSUnknownCreator
@@ -68,6 +69,20 @@ def check_for_updates():
 
 if __name__ == '__main__':
     
+    # http://developer.apple.com/library/mac/#documentation/MacOSX/Conceptual/BPMultipleUsers/BPMultipleUsers.html
+    sessionInfo = CGSessionCopyCurrentDictionary()
+    if sessionInfo == None:
+        log_message("unable to get session dictionary")
+        exit(1)
+        
+    if sessionInfo[kCGSessionOnConsoleKey] is False:
+        log_message("not running as console user; skipping update check")
+        exit(1)
+        
+    if sessionInfo[kCGSessionLoginDoneKey] is False:
+        log_message("login incomplete; skipping update check")
+        exit(1)
+            
     # check this first; no point in continuing if we can't show the alert
     # note: this doesn't help with Skim's full screen mode
     if CGDisplayIsCaptured(CGMainDisplayID()):
