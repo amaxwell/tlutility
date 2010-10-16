@@ -38,6 +38,8 @@
 #import "TLMBackupDataSource.h"
 #import "TLMBackupNode.h"
 #import "TLMInfoController.h"
+#import "TLMLogServer.h"
+#import "TLMBackupCell.h"
 
 @implementation TLMBackupDataSource
 
@@ -157,6 +159,13 @@ static inline BOOL __TLMIsBackupNode(id obj)
     return [obj isKindOfClass:[TLMBackupNode class]];
 }
 
+- (void)restoreAction:(id)sender
+{
+    TLMLog(__func__, @"%@", [_outlineView parentForItem:[_outlineView itemAtRow:[_outlineView clickedRow]]]);
+}
+
+#pragma mark NSOutlineView datasource
+
 - (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)anIndex ofItem:(TLMBackupNode *)item;
 {
     return (nil == item) ? [_displayedBackupNodes objectAtIndex:anIndex] : [item versionAtIndex:anIndex];
@@ -178,6 +187,26 @@ static inline BOOL __TLMIsBackupNode(id obj)
 }
 
 #pragma mark NSOutlineView delegate
+
+- (NSCell *)outlineView:(NSOutlineView *)outlineView dataCellForTableColumn:(NSTableColumn *)tableColumn item:(id)item
+{
+    id cell = [tableColumn dataCellForRow:[outlineView rowForItem:item]];
+    if (cell && __TLMIsBackupNode(item) == NO && tableColumn) {
+        TLMBackupCell *backupCell = [[[TLMBackupCell alloc] initTextCell:@""] autorelease];
+        [backupCell setTarget:self];
+        [backupCell setAction:@selector(restoreAction:)];
+        [backupCell setFont:[outlineView font]];
+        [backupCell setBackgroundStyle:[cell backgroundStyle]];
+        [backupCell setLineBreakMode:[cell lineBreakMode]];
+        [backupCell setWraps:[cell wraps]];
+        [backupCell setAlignment:[cell alignment]];
+        [backupCell setScrollable:[cell isScrollable]];
+        [backupCell setControlSize:[cell controlSize]];
+        [backupCell setTruncatesLastVisibleLine:[cell truncatesLastVisibleLine]];
+        cell = backupCell;
+    }
+    return cell;
+}
 
 - (void)outlineView:(NSOutlineView *)outlineView didClickTableColumn:(NSTableColumn *)tableColumn;
 {
