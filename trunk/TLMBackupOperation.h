@@ -42,5 +42,6 @@
 
 + (TLMBackupOperation *)newCleanOperation;
 + (TLMBackupOperation *)newDeepCleanOperation;
++ (TLMBackupOperation *)newRestoreOperationWithPackage:(NSString *)packageName version:(NSNumber *)version;
 
 @end

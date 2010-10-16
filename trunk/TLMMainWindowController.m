@@ -945,6 +945,34 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     }    
 }
 
+- (void)_handleRestoreFinishedNotification:(NSNotification *)aNote
+{
+    TLMRemoveOperation *op = [aNote object];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:TLMOperationFinishedNotification object:op];
+    
+    // ignore operations that failed or were explicitly cancelled
+    if ([op failed]) {
+        NSAlert *alert = [[NSAlert new] autorelease];
+        [alert setMessageText:NSLocalizedString(@"Restore failed.", @"alert title")];
+        [alert setInformativeText:NSLocalizedString(@"The restore process appears to have failed.  Please check the log display below for details.", @"alert message text")];
+        [alert beginSheetModalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];                    
+    }
+    else if ([op isCancelled] == NO) {
+        
+        /*
+         This is slow, but if a package removed other dependencies, we have no way of manually removing 
+         from the list.  We also need to ensure that the same mirror is used, so results are consistent.
+         */
+        [self _refreshFullPackageListFromLocation:[_updateListDataSource lastUpdateURL] offline:NO];
+        
+        if ([_currentListDataSource isEqual:_backupDataSource])
+            [self refreshBackupList];
+        
+        // this is always displayed, so should always be updated as well
+        [self _refreshUpdatedPackageListFromLocation:[_updateListDataSource lastUpdateURL]];
+    }        
+}
+
 - (void)_handleNetInstallFinishedNotification:(NSNotification *)aNote
 {
     [self _handleInstallFinishedNotification:aNote];
@@ -1198,6 +1226,14 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     [_backupDataSource setRefreshing:YES];
     [self _addOperation:op selector:@selector(_handleListBackupsFinishedNotification:)];
     [op release];
+}
+
+- (void)restorePackage:(NSString *)packageName version:(NSNumber *)version;
+{
+    TLMBackupOperation *op = [TLMBackupOperation newRestoreOperationWithPackage:packageName version:version];
+    TLMLog(__func__, @"Restoring version %@ of %@", version, packageName);
+    [self _addOperation:op selector:@selector(_handleRestoreFinishedNotification:)];
+    [op release];    
 }
 
 @end
