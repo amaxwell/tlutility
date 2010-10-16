@@ -53,4 +53,12 @@
     return [[self alloc] initWithCommand:cmd options:[NSArray arrayWithObjects:@"backup", @"--clean=0", @"--all", nil]];
 }
 
++ (TLMBackupOperation *)newRestoreOperationWithPackage:(NSString *)packageName version:(NSNumber *)version;
+{
+    NSParameterAssert(packageName);
+    NSParameterAssert(version);
+    NSString *cmd = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath];
+    return [[self alloc] initWithCommand:cmd options:[NSArray arrayWithObjects:@"restore", packageName, [version stringValue], nil]];
+}
+
 @end

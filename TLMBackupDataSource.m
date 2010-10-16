@@ -161,7 +161,9 @@ static inline BOOL __TLMIsBackupNode(id obj)
 
 - (void)restoreAction:(id)sender
 {
-    TLMLog(__func__, @"%@", [_outlineView parentForItem:[_outlineView itemAtRow:[_outlineView clickedRow]]]);
+    NSNumber *version = [_outlineView itemAtRow:[_outlineView clickedRow]];
+    NSString *name = [[_outlineView parentForItem:version] name];
+    [_controller restorePackage:name version:version];
 }
 
 #pragma mark NSOutlineView datasource

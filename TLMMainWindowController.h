@@ -109,6 +109,8 @@
 
 - (void)removePackagesWithNames:(NSArray *)packageNames force:(BOOL)force;
 
+- (void)restorePackage:(NSString *)packageName version:(NSNumber *)version;
+
 // both of these will use the default server URL
 - (void)refreshFullPackageList;
 - (void)refreshUpdatedPackageList;
