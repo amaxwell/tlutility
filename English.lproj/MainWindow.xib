@@ -2,7 +2,7 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="7.10">
 	<data>
 		<int key="IBDocument.SystemTarget">1050</int>
-		<string key="IBDocument.SystemVersion">10H548</string>
+		<string key="IBDocument.SystemVersion">10H555</string>
 		<string key="IBDocument.InterfaceBuilderVersion">804</string>
 		<string key="IBDocument.AppKitVersion">1038.35</string>
 		<string key="IBDocument.HIToolboxVersion">461.00</string>
@@ -13,7 +13,8 @@
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
 			<integer value="1"/>
-			<integer value="217"/>
+			<integer value="120"/>
+			<integer value="214"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -929,7 +930,7 @@
 				<string key="NSClassName">TLMLogDataSource</string>
 			</object>
 			<object class="NSScrollView" id="663681183">
-				<nil key="NSNextResponder"/>
+				<reference key="NSNextResponder"/>
 				<int key="NSvFlags">274</int>
 				<object class="NSMutableArray" key="NSSubviews">
 					<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1101,6 +1102,7 @@
 					<reference ref="230585190"/>
 				</object>
 				<string key="NSFrameSize">{601, 151}</string>
+				<reference key="NSSuperview"/>
 				<reference key="NSNextKeyView" ref="595916662"/>
 				<int key="NSsFlags">562</int>
 				<reference key="NSVScroller" ref="314316527"/>
@@ -1569,11 +1571,11 @@
 								<reference key="NSBackgroundColor" ref="839407202"/>
 								<reference key="NSGridColor" ref="951091772"/>
 								<double key="NSRowHeight">17</double>
-								<int key="NSTvFlags">-769654784</int>
+								<int key="NSTvFlags">-618659840</int>
 								<reference key="NSDelegate"/>
 								<reference key="NSDataSource"/>
 								<string key="NSAutosaveName">Backup outline view</string>
-								<int key="NSColumnAutoresizingStyle">4</int>
+								<int key="NSColumnAutoresizingStyle">3</int>
 								<int key="NSDraggingSourceMaskForLocal">15</int>
 								<int key="NSDraggingSourceMaskForNonLocal">0</int>
 								<bool key="NSAllowsTypeSelect">YES</bool>
@@ -2856,7 +2858,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">226</int>
+			<int key="maxID">228</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">

@@ -204,7 +204,7 @@ static char _TLMOperationQueueOperationContext;
     [super windowDidLoad];
     
     // may as well populate the list immediately; by now we should have the window to display a warning sheet
-    [self refreshUpdatedPackageList];    
+    //[self refreshUpdatedPackageList];    
     
     // checkbox in IB doesn't work?
     [[[self window] toolbar] setAutosavesConfiguration:YES];    

@@ -18,6 +18,7 @@
 		F922D79E1038B1E1004E9B12 /* TLMDownload.m in Sources */ = {isa = PBXBuildFile; fileRef = F922D79D1038B1E1004E9B12 /* TLMDownload.m */; };
 		F94E74A20EF4965100E0B78F /* TLMTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = F94E74A10EF4965100E0B78F /* TLMTableView.m */; };
 		F957A4E312514B040079E07F /* TLMBackupOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F957A4E212514B040079E07F /* TLMBackupOperation.m */; };
+		F958309812695A0800DB997C /* TLMBackupCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F958309712695A0800DB997C /* TLMBackupCell.m */; };
 		F96249D10F1C453B007F3D70 /* TLMReleaseNotesController.m in Sources */ = {isa = PBXBuildFile; fileRef = F96249D00F1C453B007F3D70 /* TLMReleaseNotesController.m */; };
 		F96249D50F1C516F007F3D70 /* ReleaseNotes.xib in Resources */ = {isa = PBXBuildFile; fileRef = F96249D40F1C516F007F3D70 /* ReleaseNotes.xib */; };
 		F964A3350EFEFBCC0006868B /* TLMStatusWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = F964A3340EFEFBCC0006868B /* TLMStatusWindow.m */; };
@@ -268,6 +269,8 @@
 		F94E74A10EF4965100E0B78F /* TLMTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMTableView.m; sourceTree = "<group>"; };
 		F957A4E112514B040079E07F /* TLMBackupOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMBackupOperation.h; sourceTree = "<group>"; };
 		F957A4E212514B040079E07F /* TLMBackupOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMBackupOperation.m; sourceTree = "<group>"; };
+		F958309612695A0800DB997C /* TLMBackupCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMBackupCell.h; sourceTree = "<group>"; };
+		F958309712695A0800DB997C /* TLMBackupCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMBackupCell.m; sourceTree = "<group>"; };
 		F96249CF0F1C453B007F3D70 /* TLMReleaseNotesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMReleaseNotesController.h; sourceTree = "<group>"; };
 		F96249D00F1C453B007F3D70 /* TLMReleaseNotesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMReleaseNotesController.m; sourceTree = "<group>"; };
 		F96249D40F1C516F007F3D70 /* ReleaseNotes.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ReleaseNotes.xib; sourceTree = "<group>"; };
@@ -539,6 +542,8 @@
 				F9D37C990F01A80800FB755E /* TLMGradientView.m */,
 				F9D37E790F02B5F700FB755E /* TLMOutlineView.h */,
 				F9D37E7A0F02B5F700FB755E /* TLMOutlineView.m */,
+				F958309612695A0800DB997C /* TLMBackupCell.h */,
+				F958309712695A0800DB997C /* TLMBackupCell.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -977,6 +982,7 @@
 				F9AAC10F12679785003D665F /* TLMBackupDataSource.m in Sources */,
 				F9AAC11D126798F6003D665F /* TLMBackupNode.m in Sources */,
 				F994A5AB1267E97F007EF95F /* TLMBackupListOperation.m in Sources */,
+				F958309812695A0800DB997C /* TLMBackupCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
