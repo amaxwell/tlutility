@@ -46,12 +46,11 @@
 {
     self = [super initTextCell:aString];
     if (self) {
-        NSImage *img = [NSImage imageNamed:NSImageNameFollowLinkFreestandingTemplate];
-        _buttonCell = [[NSButtonCell alloc] initImageCell:img];
-        [_buttonCell setButtonType:NSMomentaryChangeButton];
-        [_buttonCell setBordered:NO];
-        [_buttonCell setImagePosition:NSImageOnly];
-        [_buttonCell setImageScaling:NSImageScaleProportionallyUpOrDown];
+        _buttonCell = [[NSButtonCell alloc] initTextCell:NSLocalizedString(@"Restore", @"small button title")];
+        [_buttonCell setControlSize:NSMiniControlSize];
+        [_buttonCell setButtonType:NSMomentaryLightButton];
+        [_buttonCell setBordered:YES];
+        [_buttonCell setBezelStyle:NSTexturedRoundedBezelStyle];
     }
     return self;
 }
@@ -75,12 +74,6 @@
     [_buttonCell setControlView:view];
 }
 
-- (void)setControlSize:(NSControlSize)size
-{
-    [super setControlSize:size];
-    [_buttonCell setControlSize:size];
-}
-
 - (void)setAction:(SEL)aSelector
 {
     [_buttonCell setAction:aSelector];
@@ -97,17 +90,16 @@
     [_buttonCell setBackgroundStyle:style];
 }
 
-
-#define BUTTON_MARGIN 2.0
+#define BUTTON_MARGIN 10.0
 #define BUTTON_FRACTION 0.6
 
 - (NSRect)buttonRectForBounds:(NSRect)theRect 
 {
 	NSRect buttonRect = NSZeroRect;    
-    NSSize size = NSMakeSize(BUTTON_FRACTION * NSHeight(theRect), BUTTON_FRACTION * NSHeight(theRect));
-    buttonRect.origin.x = NSMaxX(theRect) - size.width - BUTTON_MARGIN;
-    buttonRect.origin.y = ceil(NSMidY(theRect) - BUTTON_FRACTION * size.height);
-    buttonRect.size = size;
+    buttonRect.size = [_buttonCell cellSize];
+    buttonRect.size.height = NSHeight(theRect) * BUTTON_FRACTION;
+    buttonRect.origin.x = NSMinX(theRect);
+    buttonRect.origin.y = NSMidY(theRect) - BUTTON_FRACTION * buttonRect.size.height;
     return buttonRect;
 }
 
@@ -149,25 +141,13 @@
     return hit;
 }
 
-- (NSRect)drawingRectForBounds:(NSRect)theRect 
-{
-    NSRect ignored;
-    NSSize size = [self buttonRectForBounds:theRect].size;
-    NSDivideRect(theRect, &ignored, &theRect, size.width + BUTTON_MARGIN, NSMaxXEdge);
-    return [super drawingRectForBounds:theRect];
-}
-
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView;
 {
-    [super drawInteriorWithFrame:cellFrame inView:controlView];
-    [_buttonCell drawWithFrame:[self buttonRectForBounds:cellFrame] inView:controlView];
-}
-
-- (NSSize)cellSize
-{
-    NSSize cellSize = [super cellSize];
-    cellSize.width += (cellSize.height + BUTTON_MARGIN);
-    return cellSize;
+    NSRect interiorFrame = cellFrame;
+    NSRect buttonFrame = [self buttonRectForBounds:cellFrame];
+    interiorFrame.origin.x = NSMaxX(buttonFrame) + BUTTON_MARGIN;
+    [super drawInteriorWithFrame:interiorFrame inView:controlView];
+    [_buttonCell drawWithFrame:buttonFrame inView:controlView];
 }
 
 @end
