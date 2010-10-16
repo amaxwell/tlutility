@@ -40,6 +40,7 @@
 #import "TLMInfoController.h"
 #import "TLMLogServer.h"
 #import "TLMBackupCell.h"
+#import "TLMPreferenceController.h"
 
 @implementation TLMBackupDataSource
 
@@ -82,10 +83,25 @@
                          sizePreferenceKey:@"TLMBackupListTableFontSize"];
 }
 
+- (NSDate *)_dateForName:(NSString *)name version:(NSNumber *)version backupDir:(NSString *)backupDir
+{
+    NSFileManager *dfm = [NSFileManager defaultManager];
+    NSString *fileName = [NSString stringWithFormat:@"%@.r%@.tar.xz", name, version];
+    fileName = [backupDir stringByAppendingPathComponent:fileName];
+    return [[dfm attributesOfItemAtPath:fileName error:NULL] fileModificationDate];
+}
+
 - (void)setBackupNodes:(NSArray *)nodes
 {
     [_backupNodes autorelease];
     _backupNodes = [nodes copy];
+    NSString *backupDir = [[[TLMPreferenceController sharedPreferenceController] backupDirectory] path];
+    for (TLMBackupNode *node in _backupNodes) {
+        for (NSUInteger i = 0; i < [node numberOfVersions]; i++) {
+            TLMBackupNode *child = [node versionAtIndex:i];
+            [child setDate:[self _dateForName:[child name] version:[child version] backupDir:backupDir]];
+        }
+    }
     [self search:nil];
 }
 
@@ -154,16 +170,15 @@
     [_controller refreshBackupList];
 }
 
-static inline BOOL __TLMIsBackupNode(id obj)
+static inline BOOL __TLMIsParentNode(id obj)
 {
-    return [obj isKindOfClass:[TLMBackupNode class]];
+    return [(TLMBackupNode *)obj version] == nil;
 }
 
 - (void)restoreAction:(id)sender
 {
-    NSNumber *version = [_outlineView itemAtRow:[_outlineView clickedRow]];
-    NSString *name = [[_outlineView parentForItem:version] name];
-    [_controller restorePackage:name version:version];
+    TLMBackupNode *clickedNode = [_outlineView itemAtRow:[_outlineView clickedRow]];
+    [_controller restorePackage:[clickedNode name] version:[clickedNode version]];
 }
 
 #pragma mark NSOutlineView datasource
@@ -175,17 +190,22 @@ static inline BOOL __TLMIsBackupNode(id obj)
 
 - (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(TLMBackupNode *)item;
 {
-    return __TLMIsBackupNode(item);
+    return __TLMIsParentNode(item);
 }
 
 - (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(TLMBackupNode *)item;
 {
-    return (nil == item) ? [_displayedBackupNodes count] : (__TLMIsBackupNode(item) ? [item numberOfVersions] : 0);
+    return (nil == item) ? [_displayedBackupNodes count] : [item numberOfVersions];
 }
 
 - (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item;
 {
-    return __TLMIsBackupNode(item) ? [item name] : item;
+    NSString *colName = [tableColumn identifier];
+    if ([colName isEqualToString:@"name"])
+        return __TLMIsParentNode(item) ? [(TLMBackupNode *)item name] : [(TLMBackupNode *)item version];
+    else if ([colName isEqualToString:@"date"])
+        return [item date];
+    return nil;
 }
 
 #pragma mark NSOutlineView delegate
@@ -193,7 +213,7 @@ static inline BOOL __TLMIsBackupNode(id obj)
 - (NSCell *)outlineView:(NSOutlineView *)outlineView dataCellForTableColumn:(NSTableColumn *)tableColumn item:(id)item
 {
     id cell = [tableColumn dataCellForRow:[outlineView rowForItem:item]];
-    if (cell && __TLMIsBackupNode(item) == NO && tableColumn) {
+    if (cell && __TLMIsParentNode(item) == NO && [[tableColumn identifier] isEqualToString:@"name"]) {
         TLMBackupCell *backupCell = [[[TLMBackupCell alloc] initTextCell:@""] autorelease];
         [backupCell setTarget:self];
         [backupCell setAction:@selector(restoreAction:)];

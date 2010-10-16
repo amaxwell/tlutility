@@ -637,7 +637,7 @@ static NSArray * __TLMCheckFileExistence(NSArray *inputURLs)
             NSInteger version;
             while ([scanner isAtEnd] == NO && [scanner scanInteger:&version]) {
                 NSNumber *versionNumber = [[NSNumber alloc] initWithInteger:version];
-                [node addVersion:versionNumber];
+                [node addChildWithVersion:versionNumber];
                 [versionNumber release];
             }
             if ([node numberOfVersions])

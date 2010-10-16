@@ -42,14 +42,18 @@
 {
 @private
     NSString       *_name;
-    NSMutableArray *_versions;
+    NSNumber       *_version;
+    NSDate         *_date;
+    NSMutableArray *_children;
 }
 
 - (BOOL)matchesSearchString:(NSString *)searchTerm;
 - (NSUInteger)numberOfVersions;
-- (id)versionAtIndex:(NSUInteger)anIndex;
-- (void)addVersion:(NSNumber *)aVersion;
+- (TLMBackupNode *)versionAtIndex:(NSUInteger)anIndex;
+- (void)addChildWithVersion:(NSNumber *)aVersion;
 
 @property (readwrite, copy) NSString *name;
+@property (readwrite, copy) NSNumber *version;
+@property (readwrite, copy) NSDate *date;
 
 @end
