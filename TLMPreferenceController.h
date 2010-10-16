@@ -117,6 +117,9 @@ extern NSString * const TLMTLCriticalRepository;
 // adds tlmgr to TLMTexBinPathPreferenceKey, standardizes path
 @property (readonly) NSString *tlmgrAbsolutePath;
 
+// absolute URL to backupdir option
+@property (readonly) NSURL *backupDirectory;
+
 // adds texdoc to TLMTexBinPathPreferenceKey, standardizes path
 @property (readonly) NSString *texdocAbsolutePath;
 
