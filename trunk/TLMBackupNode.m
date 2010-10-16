@@ -38,16 +38,17 @@
 
 #import "TLMBackupNode.h"
 
-
 @implementation TLMBackupNode
 
 @synthesize name = _name;
+@synthesize version = _version;
+@synthesize date = _date;
 
 - (id)init
 {
     self = [super init];
     if (self) {
-        _versions = [NSMutableArray new];
+        _children = [NSMutableArray new];
     }
     return self;
 }
@@ -55,7 +56,9 @@
 - (void)dealloc
 {
     [_name release];
-    [_versions release];
+    [_children release];
+    [_version release];
+    [_date release];
     [super dealloc];
 }
 
@@ -68,18 +71,22 @@
 
 - (NSUInteger)numberOfVersions;
 {
-    return [_versions count];
+    return [_children count];
 }
 
 - (id)versionAtIndex:(NSUInteger)anIndex;
 {
-    return [_versions objectAtIndex:anIndex];
+    return [_children objectAtIndex:anIndex];
 }
 
-- (void)addVersion:(NSNumber *)aVersion;
+- (void)addChildWithVersion:(NSNumber *)aVersion;
 {
     NSParameterAssert(aVersion);
-    [_versions addObject:aVersion];
+    TLMBackupNode *child = [TLMBackupNode new];
+    [child setName:[self name]];
+    [child setVersion:aVersion];
+    [_children addObject:child];
+    [child release];
 }
 
 @end

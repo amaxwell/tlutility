@@ -12,9 +12,9 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
+			<integer value="230"/>
 			<integer value="1"/>
 			<integer value="120"/>
-			<integer value="214"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1565,6 +1565,52 @@
 										<bool key="NSIsResizeable">YES</bool>
 										<reference key="NSTableView" ref="97543439"/>
 									</object>
+									<object class="NSTableColumn" id="288438298">
+										<string key="NSIdentifier">date</string>
+										<double key="NSWidth">64</double>
+										<double key="NSMinWidth">10</double>
+										<double key="NSMaxWidth">3.4028234663852886e+38</double>
+										<object class="NSTableHeaderCell" key="NSHeaderCell">
+											<int key="NSCellFlags">75628096</int>
+											<int key="NSCellFlags2">2048</int>
+											<string key="NSContents">Date</string>
+											<reference key="NSSupport" ref="26"/>
+											<reference key="NSBackgroundColor" ref="256625896"/>
+											<reference key="NSTextColor" ref="1006614932"/>
+										</object>
+										<object class="NSTextFieldCell" key="NSDataCell" id="1064875389">
+											<int key="NSCellFlags">337772096</int>
+											<int key="NSCellFlags2">-2147481600</int>
+											<string key="NSContents">Text Cell</string>
+											<reference key="NSSupport" ref="350031159"/>
+											<object class="NSDateFormatter" key="NSFormatter" id="105522437">
+												<object class="NSMutableDictionary" key="NS.attributes">
+													<bool key="EncodedWithXMLCoder">YES</bool>
+													<object class="NSArray" key="dict.sortedKeys">
+														<bool key="EncodedWithXMLCoder">YES</bool>
+														<string>dateStyle</string>
+														<string>formatterBehavior</string>
+														<string>timeStyle</string>
+													</object>
+													<object class="NSMutableArray" key="dict.values">
+														<bool key="EncodedWithXMLCoder">YES</bool>
+														<integer value="2"/>
+														<integer value="1040"/>
+														<integer value="2"/>
+													</object>
+												</object>
+												<string key="NS.format">MMM d, yyyy HH:mm:ss </string>
+												<bool key="NS.natural">NO</bool>
+											</object>
+											<reference key="NSControlView" ref="97543439"/>
+											<reference key="NSBackgroundColor" ref="739807809"/>
+											<reference key="NSTextColor" ref="651245384"/>
+										</object>
+										<int key="NSResizingMask">3</int>
+										<bool key="NSIsResizeable">YES</bool>
+										<bool key="NSIsEditable">YES</bool>
+										<reference key="NSTableView" ref="97543439"/>
+									</object>
 								</object>
 								<double key="NSIntercellSpacingWidth">3</double>
 								<double key="NSIntercellSpacingHeight">2</double>
@@ -2623,6 +2669,7 @@
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<reference ref="161151285"/>
+							<reference ref="288438298"/>
 						</object>
 						<reference key="parent" ref="511105161"/>
 					</object>
@@ -2644,6 +2691,29 @@
 						<int key="objectID">222</int>
 						<reference key="object" ref="405480435"/>
 						<reference key="parent" ref="161151285"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">229</int>
+						<reference key="object" ref="288438298"/>
+						<object class="NSMutableArray" key="children">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<reference ref="1064875389"/>
+						</object>
+						<reference key="parent" ref="97543439"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">230</int>
+						<reference key="object" ref="1064875389"/>
+						<object class="NSMutableArray" key="children">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<reference ref="105522437"/>
+						</object>
+						<reference key="parent" ref="288438298"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">231</int>
+						<reference key="object" ref="105522437"/>
+						<reference key="parent" ref="1064875389"/>
 					</object>
 				</object>
 			</object>
@@ -2714,6 +2784,8 @@
 					<string>218.IBPluginDependency</string>
 					<string>219.IBPluginDependency</string>
 					<string>222.IBPluginDependency</string>
+					<string>231.IBDateFormatterBehaviorMetadataKey</string>
+					<string>231.IBPluginDependency</string>
 					<string>5.IBEditorWindowLastContentRect</string>
 					<string>5.IBPluginDependency</string>
 					<string>50.IBEditorWindowLastContentRect</string>
@@ -2801,7 +2873,7 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{157, 413}, {604, 370}}</string>
+					<string>{{98, 413}, {604, 370}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2809,6 +2881,8 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<integer value="1"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>{{103, 504}, {600, 162}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2858,7 +2932,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">228</int>
+			<int key="maxID">231</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
