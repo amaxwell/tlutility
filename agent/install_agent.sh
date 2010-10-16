@@ -124,7 +124,7 @@ if [ $? != 0 ]; then
 fi
 
 /usr/bin/sudo "-u#$OWNER_ID" /bin/launchctl unload -w "$plist_path" 2>/dev/null
-/usr/bin/sudo "-u#$OWNER_ID" /bin/launchctl load -w "$plist_path"
+/usr/bin/sudo "-u#$OWNER_ID" /bin/launchctl load -S Aqua -w "$plist_path"
 if [ $? != 0 ]; then
     log_message "unable to load $plist_path"
     exit 9
