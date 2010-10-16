@@ -857,6 +857,42 @@ static NSURL * __TLMParseLocationOption(NSString *location)
     return serverURL;
 }
 
+- (NSString *)_backupDirOption
+{
+    // kpsewhich -var-value=SELFAUTOPARENT
+    NSString *tlmgrPath = [self tlmgrAbsolutePath];
+    NSString *backupDir = nil;
+    if ([[NSFileManager defaultManager] isExecutableFileAtPath:tlmgrPath]) {
+        TLMTask *task = [TLMTask new];
+        [task setLaunchPath:tlmgrPath];
+        [task setArguments:[NSArray arrayWithObjects:@"option", @"backupdir", nil]];
+        [task launch];
+        [task waitUntilExit];
+        if ([task terminationStatus] == 0 && [task outputString]) {
+            NSString *str = [[task outputString] stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+            NSRange r = [str rangeOfString:@": " options:NSLiteralSearch];
+            if (r.length)
+                backupDir = [[str substringFromIndex:NSMaxRange(r)] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+        }
+        else {
+            TLMLog(__func__, @"tlmgr returned an error: %@", [task errorString]);
+        }
+        [task release];
+    }
+    else {
+        TLMLog(__func__, @"no tlmgr executable at %@", tlmgrPath);
+    }
+    return backupDir;
+}
+
+- (NSURL *)backupDirectory
+{
+    NSString *backupDir = [self _backupDirOption];
+    if ([backupDir isAbsolutePath] == NO)
+        backupDir = [[[self installDirectory] path] stringByAppendingPathComponent:backupDir];
+    return backupDir ? [NSURL fileURLWithPath:backupDir] : nil;
+}
+
 - (BOOL)installRequiresRootPrivileges
 {
     // this option requires you to run as root
