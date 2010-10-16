@@ -57,7 +57,7 @@ for plist_dir in "${plist_dirs[@]}"; do
         # out the owner and ignore OWNER_ID since it will be wrong.
         
         owner_uid=$(/usr/bin/stat -f "%Uu" $plist_path)
-        /usr/bin/sudo "-u#$owner_uid" /bin/launchctl unload -w "$plist_path"
+        /usr/bin/sudo "-u#$owner_uid" /bin/launchctl unload -w -S Aqua "$plist_path"
         if [ $? != 0 ]; then
             log_message "unable to unload $plist_path"
             log_message "changes may not be effective until next login"
