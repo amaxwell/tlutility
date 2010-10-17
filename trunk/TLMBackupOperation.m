@@ -58,7 +58,8 @@
     NSParameterAssert(packageName);
     NSParameterAssert(version);
     NSString *cmd = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath];
-    return [[self alloc] initWithCommand:cmd options:[NSArray arrayWithObjects:@"restore", packageName, [version stringValue], nil]];
+    // --force is not documented, but according to Norbert will keep tlmgr from prompting y/n
+    return [[self alloc] initWithCommand:cmd options:[NSArray arrayWithObjects:@"restore", @"--force", packageName, [version stringValue], nil]];
 }
 
 @end
