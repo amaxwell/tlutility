@@ -795,6 +795,10 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
         [options addObject:@"-h"];
         [options addObject:NSHomeDirectory()];
         
+        // this is the user ID under which to load the agent
+        [options addObject:@"-u"];
+        [options addObject:[NSString stringWithFormat:@"%d", getuid()]];
+        
         TLMAuthorizedOperation *uninstallOp = [[TLMAuthorizedOperation alloc] initWithCommand:removeScriptPath options:options];
         [self _addOperation:uninstallOp selector:@selector(_handleLaunchAgentInstallFinishedNotification:)];
         [uninstallOp autorelease];
@@ -812,6 +816,10 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
                 [options addObject:@"-o"];
                 [options addObject:[NSString stringWithFormat:@"%d", getuid()]];
             }
+            
+            // this is the user ID under which to load the agent
+            [options addObject:@"-u"];
+            [options addObject:[NSString stringWithFormat:@"%d", getuid()]];
             
             [options addObject:@"-p"];
             [options addObject:[lac propertyListPath]];
