@@ -795,7 +795,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
         [options addObject:@"-h"];
         [options addObject:NSHomeDirectory()];
         
-        // this is the user ID under which to load the agent
+        // this is the user ID under which to unload the agent
         [options addObject:@"-u"];
         [options addObject:[NSString stringWithFormat:@"%d", getuid()]];
         
