@@ -11,17 +11,19 @@ LOCAL_PLIST_DIR="/Library/LaunchAgents"
 PLIST_DIR="$LOCAL_PLIST_DIR"
 
 BIN_PATH="$BIN_DIR/update_check.py"
+USER_ID=""
 
 SCRIPT_NAME=$(basename "$0")
 
 usage()
 {
-    echo 'usage: uninstall_agent -h home_dir' >&2
+    echo 'usage: uninstall_agent -h home_dir -u uid' >&2
 }
 
-while getopts ":h:" opt; do
+while getopts ":h:u:" opt; do
     case $opt in
         h   )   USER_PLIST_DIR="$OPTARG/$LOCAL_PLIST_DIR" ;;
+        u   )   USER_ID="$OPTARG" ;;
         \?  )   usage
                 exit 1 ;;
                 
@@ -40,6 +42,12 @@ if [ "$USER_PLIST_DIR" = "" ]; then
     exit 1
 fi
 
+# need to run launchctl as currently logged-in user
+if [ "$USER_ID" == "" ]; then
+    log_message "User id to unload agent is not set."
+    exit 1
+fi
+
 exit_status=0
 
 # try to unload the launchd plist if it exists; this fails if it's not loaded
@@ -52,19 +60,15 @@ for plist_dir in "${plist_dirs[@]}"; do
 
     if [ -f "$plist_path" ]; then
         
-        # Unload with launchctl, which doesn't like running as root to unload a non-root plist.
-        # Since this tries to unload any plist that exists, use stat to figure
-        # out the owner and ignore OWNER_ID since it will be wrong.
-        
-        owner_uid=$(/usr/bin/stat -f "%Uu" $plist_path)
-        /usr/bin/sudo "-u#$owner_uid" /bin/launchctl unload -w -S Aqua "$plist_path"
+        # Unload with launchctl, which doesn't like running as root to unload a non-root plist.        
+        /usr/bin/sudo "-u#$USER_ID" /bin/launchctl unload -w -S Aqua "$plist_path"
         if [ $? != 0 ]; then
             log_message "unable to unload $plist_path"
             log_message "changes may not be effective until next login"
             exit_status=10
         fi
         
-        # Note: can still unload jobs by label, even if the plist is now gone
+        # Note: user can still unload jobs by label, even if the plist is now gone
         /bin/rm -f "$plist_path"
         if [ $? != 0 ]; then
             log_message "unable to remove $plist_path"

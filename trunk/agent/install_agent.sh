@@ -17,24 +17,26 @@ SRC_BIN_PATH=""
 SRC_PLIST_PATH=""
 
 OWNER_ID="0"
+USER_ID=""
 
 SCRIPT_NAME=$(basename "$0")
 
 usage()
 {
-    echo 'usage: install_agent -b binary_src_path -p plist_src_path [-h home_dir -o uid]' >&2
+    echo 'usage: install_agent -b binary_src_path -p plist_src_path [-h home_dir -o uid] -u uid' >&2
 }
 
 #
 # -b: absolute path to update_check.py in the application bundle
 # -p: absolute path to the launchd plist in the application bundle
 # 
-while getopts ":h:b:p:o:" opt; do
+while getopts ":h:b:p:o:u:" opt; do
     case $opt in
         b   )   SRC_BIN_PATH="$OPTARG" ;;
         p   )   SRC_PLIST_PATH="$OPTARG" ;;
         h   )   USER_PLIST_DIR="$OPTARG$LOCAL_PLIST_DIR" ;;
         o   )   OWNER_ID="$OPTARG" ;;
+        u   )   USER_ID="$OPTARG" ;;
         \?  )   usage
                 exit 1 ;;
                 
@@ -46,6 +48,12 @@ function log_message
 {
     echo "$SCRIPT_NAME: $1" >&2
 }
+
+# need to run launchctl as currently logged-in user
+if [ "$USER_ID" == "" ]; then
+    log_message "User id to load agent is not set."
+    exit 1
+fi
 
 # if installing as a user, we have to make sure the owner is set also
 if [ "$USER_PLIST_DIR" != "" ]; then
@@ -123,8 +131,9 @@ if [ $? != 0 ]; then
     exit 8
 fi
 
-/usr/bin/sudo "-u#$OWNER_ID" /bin/launchctl unload -w "$plist_path" 2>/dev/null
-/usr/bin/sudo "-u#$OWNER_ID" /bin/launchctl load -S Aqua -w "$plist_path"
+# execute as user, not necessarily as owner in case of /Library/LaunchAgents
+/usr/bin/sudo "-u#$USER_ID" /bin/launchctl unload -w "$plist_path" 2>/dev/null
+/usr/bin/sudo "-u#$USER_ID" /bin/launchctl load -S Aqua -w "$plist_path"
 if [ $? != 0 ]; then
     log_message "unable to load $plist_path"
     exit 9
