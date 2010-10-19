@@ -14,6 +14,7 @@ except Exception, e:
     pass
 import numpy as np
 import sys
+from DTProgress import DTProgress
 
 class _DTBitmap2D(object):
     """Base implementation for DTBitmap2D.
@@ -99,9 +100,43 @@ class _DTGDALBitmap2D(_DTBitmap2D):
                 setattr(self, name_map[idx], channel)
 
         elif len(mesh.shape) == 2:
+            
+            mesh = np.flipud(mesh)
 
-            # Gray (tested with int16)
-            self.gray = np.flipud(mesh)
+            # we only have one band anyway on this path, so see if we have an indexed image,
+            band = dataset.GetRasterBand(1)
+            ctab = band.GetRasterColorTable()
+            if ctab != None:
+                                
+                # indexed images have to be expanded to RGB, and this is pretty slow
+                progress = DTProgress()
+                
+                red = np.zeros(mesh.size, dtype=np.uint8)
+                green = np.zeros(mesh.size, dtype=np.uint8)
+                blue = np.zeros(mesh.size, dtype=np.uint8)
+                
+                # hash lookup is faster than array lookup by index and
+                # faster than calling GetColorEntry for each pixel
+                cmap = {}
+                for color_index in xrange(min(256, ctab.GetCount())):
+                    cmap[int(color_index)] = [np.uint8(x) for x in ctab.GetColorEntry(int(color_index))]
+                
+                for raster_index, color_index in enumerate(mesh.flatten()):
+                    try:
+                        (red[raster_index], green[raster_index], blue[raster_index], ignored) = cmap[int(color_index)]
+                    except Exception, e:
+                        # if not in table, leave as zero
+                        pass
+                    progress.update_percentage(raster_index / float(mesh.size))
+
+                self.red = np.reshape(red, mesh.shape)
+                self.green = np.reshape(green, mesh.shape)
+                self.blue = np.reshape(blue, mesh.shape)
+
+                    
+            else:
+                # Gray (tested with int16)
+                self.gray = mesh
             
         del dataset
 
