@@ -212,23 +212,18 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
     
-    /* If yes, do what sudo -H does: read root's passwd entry and change HOME. */
+    /* If yes, do what sudo -H does: change HOME. */
     if ('y' == *c) {    
-                
-        /* note that getuid() may no longer return 0 */
-        struct passwd *pw = getpwuid(0);
-        if (NULL == pw) {
-            log_error(@"getpwuid failed in tlu_ipctask");
-            exit(1);
-        }
         
-        /* The point of this is to write to root's home directory, so make we are root */
-        if (setuid(0) != 0) {
-            log_error(@"UID %d cannot write to %s\n", getuid(), pw->pw_dir);
-            exit(1);
-        }
-        
-        setenv("HOME", pw->pw_dir, 1);
+        /* 
+         Formerly read root's passwd entry and used that directory.
+         What we really want to do, however, is just change it
+         to anything other than the console users's home directory,
+         so fonts won't be picked up there.  In order to enable
+         non-root usage, then, we can use a temp directory that is
+         guaranteed writeable by this process/user.
+         */
+        setenv("HOME", [NSTemporaryDirectory() fileSystemRepresentation], 1);
     }
     
     /* copy this for later logging */
