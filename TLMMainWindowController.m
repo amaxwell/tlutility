@@ -1178,7 +1178,9 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 
 - (void)refreshUpdatedPackageList
 {
-    [self _refreshUpdatedPackageListFromLocation:[[TLMPreferenceController sharedPreferenceController] validServerURL]];
+    // check refresh flag since this may be called from DO
+    if ([_updateListDataSource isRefreshing] == NO)
+        [self _refreshUpdatedPackageListFromLocation:[[TLMPreferenceController sharedPreferenceController] validServerURL]];
 }
 
 - (void)updateAllPackages;
