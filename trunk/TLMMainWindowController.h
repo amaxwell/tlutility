@@ -51,6 +51,7 @@
 @protocol TLMListDataSource <NSObject>
 @property (nonatomic, copy) NSURL *lastUpdateURL;
 @property (nonatomic, retain) TLMStatusWindow *statusWindow;
+@property (nonatomic) BOOL needsUpdate;
 @end
 
 @interface TLMMainWindowController : NSWindowController <TLMTabViewDelegate, NSWindowDelegate>

@@ -56,6 +56,7 @@
     TLMStatusWindow         *_statusWindow;
     BOOL                     _refreshing;
     BOOL                     _ignoreSelectionChanges;
+    BOOL                     _needsUpdate;
 }
 
 @property (nonatomic, retain) IBOutlet TLMTableView *tableView;

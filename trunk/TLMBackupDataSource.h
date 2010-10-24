@@ -53,6 +53,7 @@
     TLMOutlineView          *_outlineView;
     NSURL                   *_lastUpdateURL;
     BOOL                     _refreshing;
+    BOOL                     _needsUpdate;
 }
 
 - (IBAction)search:(id)sender;

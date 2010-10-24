@@ -52,6 +52,7 @@
     NSURL                   *_lastUpdateURL;
     TLMStatusWindow         *_statusWindow;
     NSButtonCell            *_checkboxCell;
+    BOOL                     _needsUpdate;
 }
 
 - (IBAction)installSelectedRows:(id)sender;

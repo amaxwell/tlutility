@@ -52,6 +52,7 @@
 @synthesize lastUpdateURL = _lastUpdateURL;
 @synthesize statusWindow = _statusWindow;
 @synthesize refreshing = _refreshing;
+@synthesize needsUpdate = _needsUpdate;
 
 - (id)init
 {

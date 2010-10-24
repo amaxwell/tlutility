@@ -51,6 +51,7 @@
 @synthesize backupNodes = _backupNodes;
 @synthesize _searchField;
 @synthesize refreshing = _refreshing;
+@synthesize needsUpdate = _needsUpdate;
 
 - (id)init
 {
