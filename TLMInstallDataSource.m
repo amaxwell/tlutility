@@ -45,6 +45,7 @@
 @synthesize statusWindow = _statusWindow;
 @synthesize outlineView = _outlineView;
 @synthesize _controller;
+@synthesize needsUpdate = _needsUpdate;
 
 - (id)init
 {

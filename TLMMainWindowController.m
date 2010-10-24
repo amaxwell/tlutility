@@ -71,6 +71,12 @@
 #import "TLMAutobackupController.h"
 #import "TLMLaunchAgentController.h"
 
+@interface TLMMainWindowController (Private)
+// only declare here if reorganizing the implementation isn't practical
+- (void)_refreshCurrentDataSourceIfNeeded;
+@end
+
+
 static char _TLMOperationQueueOperationContext;
 
 @implementation TLMMainWindowController
@@ -203,8 +209,14 @@ static char _TLMOperationQueueOperationContext;
 {
     [super windowDidLoad];
     
+    // set the dirty bit on all datasources
+    [_updateListDataSource setNeedsUpdate:YES];
+    [_packageListDataSource setNeedsUpdate:YES];
+    [_backupDataSource setNeedsUpdate:YES];
+    [_installDataSource setNeedsUpdate:YES];
+    
     // may as well populate the list immediately; by now we should have the window to display a warning sheet
-    [self refreshUpdatedPackageList];    
+    [self _refreshCurrentDataSourceIfNeeded];
     
     // checkbox in IB doesn't work?
     [[[self window] toolbar] setAutosavesConfiguration:YES];    
@@ -393,7 +405,7 @@ static char _TLMOperationQueueOperationContext;
             _currentListDataSource = _updateListDataSource;
             [self _updateURLView];
             [[_currentListDataSource statusWindow] fadeIn];
-
+            [self _refreshCurrentDataSourceIfNeeded];
             if ([[_updateListDataSource allPackages] count])
                 [_updateListDataSource search:nil];
             break;
@@ -403,13 +415,11 @@ static char _TLMOperationQueueOperationContext;
             _currentListDataSource = _packageListDataSource;
             [self _updateURLView];
             [[_currentListDataSource statusWindow] fadeIn];
-
-            // we load the update list on launch, so load this one on first access of the tab
+            
+            [self _refreshCurrentDataSourceIfNeeded];
 
             if ([[_packageListDataSource packageNodes] count])
                 [_packageListDataSource search:nil];
-            else if ([_packageListDataSource isRefreshing] == NO)
-                [self refreshFullPackageList];
 
             break;
         case 2:
@@ -419,10 +429,10 @@ static char _TLMOperationQueueOperationContext;
             [self _updateURLView];
             [[_currentListDataSource statusWindow] fadeIn];
             
+            [self _refreshCurrentDataSourceIfNeeded];
+
             if ([[_backupDataSource backupNodes] count])
                 [_backupDataSource search:nil];
-            else if ([_backupDataSource isRefreshing] == NO)
-                [self refreshBackupList];
             
             break;            
 #if ENABLE_INSTALL
@@ -432,6 +442,8 @@ static char _TLMOperationQueueOperationContext;
             [self _updateURLView];
             [[_currentListDataSource statusWindow] fadeIn];
             
+            [self _refreshCurrentDataSourceIfNeeded];
+
             break;
 #endif
         default:
@@ -601,6 +613,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     [_updateListDataSource setAllPackages:packages];
     [_updateListDataSource setRefreshing:NO];
     [_updateListDataSource setLastUpdateURL:[op updateURL]];
+    [_updateListDataSource setNeedsUpdate:NO];
     [self _updateURLView];
     
     NSString *statusString = nil;
@@ -680,17 +693,15 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
         }
         else {
             
-            /*
-             This is slow, but if infrastructure was updated or a package installed other dependencies, 
-             we have no way of manually removing from the list.  We also need to ensure that the same 
-             mirror is used, so results are consistent.
-             */
-            [self _refreshUpdatedPackageListFromLocation:[self _lastUpdateURL]];
+            [_updateListDataSource setNeedsUpdate:YES];
+            [_packageListDataSource setNeedsUpdate:YES];
+            [_backupDataSource setNeedsUpdate:YES];
             
-            if ([_currentListDataSource isEqual:_backupDataSource])
-                [self refreshBackupList];
-            else if ([_currentListDataSource isEqual:_packageListDataSource])
-                [self refreshFullPackageList];
+            [_updateListDataSource setLastUpdateURL:[op updateURL]];
+            [_packageListDataSource setLastUpdateURL:[op updateURL]];
+            [_backupDataSource setLastUpdateURL:[op updateURL]];
+            
+            [self _refreshCurrentDataSourceIfNeeded];
 
         }
     }
@@ -842,6 +853,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     [[NSNotificationCenter defaultCenter] removeObserver:self name:TLMOperationFinishedNotification object:op];
     [_packageListDataSource setPackageNodes:[op packageNodes]];
     [_packageListDataSource setRefreshing:NO];
+    [_packageListDataSource setNeedsUpdate:NO];
     
     NSString *statusString = nil;
     
@@ -860,6 +872,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     TLMBackupListOperation *op = [aNote object];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:TLMOperationFinishedNotification object:op];
     [_backupDataSource setBackupNodes:[op backupNodes]];
+    [_backupDataSource setNeedsUpdate:NO];
     
     NSString *statusString = nil;
     
@@ -903,17 +916,15 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     }
     else if ([op isCancelled] == NO) {
         
-        /*
-         This is slow, but if a package installed other dependencies, we have no way of manually removing 
-         from the list.  We also need to ensure that the same mirror is used, so results are consistent.
-         */
-        [self _refreshFullPackageListFromLocation:[op updateURL] offline:NO];
+        [_updateListDataSource setNeedsUpdate:YES];
+        [_packageListDataSource setNeedsUpdate:YES];
+        [_backupDataSource setNeedsUpdate:YES];
         
-        if ([_currentListDataSource isEqual:_backupDataSource])
-            [self refreshBackupList];
+        [_updateListDataSource setLastUpdateURL:[op updateURL]];
+        [_packageListDataSource setLastUpdateURL:[op updateURL]];
+        [_backupDataSource setLastUpdateURL:[op updateURL]];
         
-        // this is always displayed, so should always be updated as well
-        [self _refreshUpdatedPackageListFromLocation:[op updateURL]];
+        [self _refreshCurrentDataSourceIfNeeded];
     }    
 }
 
@@ -939,17 +950,16 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     }
     else if ([op isCancelled] == NO) {
         
-        /*
-         This is slow, but if a package removed other dependencies, we have no way of manually removing 
-         from the list.  We also need to ensure that the same mirror is used, so results are consistent.
-         */
-        [self _refreshFullPackageListFromLocation:[_packageListDataSource lastUpdateURL] offline:NO];
+        [_updateListDataSource setNeedsUpdate:YES];
+        [_packageListDataSource setNeedsUpdate:YES];
+        [_backupDataSource setNeedsUpdate:YES];
         
-        if ([_currentListDataSource isEqual:_backupDataSource])
-            [self refreshBackupList];
+        [_updateListDataSource setLastUpdateURL:[_packageListDataSource lastUpdateURL]];
+        [_packageListDataSource setLastUpdateURL:[_packageListDataSource lastUpdateURL]];
+        [_backupDataSource setLastUpdateURL:[_packageListDataSource lastUpdateURL]];
         
-        // this is always displayed, so should always be updated as well
-        [self _refreshUpdatedPackageListFromLocation:[_packageListDataSource lastUpdateURL]];
+        [self _refreshCurrentDataSourceIfNeeded];
+
     }    
 }
 
@@ -967,17 +977,16 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     }
     else if ([op isCancelled] == NO) {
         
-        /*
-         This is slow, but if a package removed other dependencies, we have no way of manually removing 
-         from the list.  We also need to ensure that the same mirror is used, so results are consistent.
-         */
-        [self _refreshFullPackageListFromLocation:[_updateListDataSource lastUpdateURL] offline:NO];
+        [_updateListDataSource setNeedsUpdate:YES];
+        [_packageListDataSource setNeedsUpdate:YES];
+        [_backupDataSource setNeedsUpdate:YES];
         
-        if ([_currentListDataSource isEqual:_backupDataSource])
-            [self refreshBackupList];
+        [_updateListDataSource setLastUpdateURL:[_updateListDataSource lastUpdateURL]];
+        [_packageListDataSource setLastUpdateURL:[_updateListDataSource lastUpdateURL]];
+        [_backupDataSource setLastUpdateURL:[_updateListDataSource lastUpdateURL]];
         
-        // this is always displayed, so should always be updated as well
-        [self _refreshUpdatedPackageListFromLocation:[_updateListDataSource lastUpdateURL]];
+        [self _refreshCurrentDataSourceIfNeeded];
+
     }        
 }
 
@@ -993,6 +1002,36 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     TLMNetInstallOperation *op = [[TLMNetInstallOperation alloc] initWithProfile:profile location:[self _lastUpdateURL]];
     [self _addOperation:op selector:@selector(_handleNetInstallFinishedNotification:)];
     [op release];
+}
+
+- (void)_refreshCurrentDataSourceIfNeeded
+{
+    
+    /*
+     This is slow, but if infrastructure was updated or a package installed other dependencies, 
+     we have no way of manually removing from the list.  We also need to ensure that the same 
+     mirror is used, so results are consistent.
+     */
+    
+    // !!! early return if the data source is up to date
+    if ([_currentListDataSource needsUpdate] == NO)
+        return;
+    
+    if ([_currentListDataSource isEqual:_updateListDataSource] && [_updateListDataSource isRefreshing] == NO) {
+        if ([_updateListDataSource lastUpdateURL])
+            [self _refreshUpdatedPackageListFromLocation:[_updateListDataSource lastUpdateURL]];
+        else
+            [self refreshUpdatedPackageList];
+    }
+    else if ([_currentListDataSource isEqual:_backupDataSource] && [_backupDataSource isRefreshing] == NO) {
+        [self refreshBackupList];
+    }
+    else if ([_currentListDataSource isEqual:_packageListDataSource] && [_packageListDataSource isRefreshing] == NO) {
+        if ([_packageListDataSource lastUpdateURL])
+            [self _refreshFullPackageListFromLocation:[_packageListDataSource lastUpdateURL] offline:NO];
+        else
+            [self refreshFullPackageList];
+    }
 }
 
 #pragma mark Alert callbacks
