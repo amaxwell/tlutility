@@ -61,9 +61,10 @@ struct TLMAOInternal {
     int              _kqueue;
     pid_t            _cwrapper_pid;
     struct kevent    _cwrapper_event;
-    pid_t            _underlying_pid;   /* tlmgr or update script  */
-    struct kevent    _underlying_event; /* tlmgr or update script  */
-    BOOL             _childFinished;    /* tlu_ipctask finished */
+    pid_t            _underlying_pid;   /* tlmgr or update script     */
+    struct kevent    _underlying_event; /* tlmgr or update script     */
+    BOOL             _childFinished;    /* tlu_ipctask finished       */
+    TLMTask         *_task;             /* authorization not required */
     BOOL             _authorizationRequired;
     AuthorizationRef _authorization;
 };    
@@ -103,6 +104,7 @@ struct TLMAOInternal {
 {
     [_internal->_options release];
     if (_internal->_authorization) AuthorizationFree(_internal->_authorization, kAuthorizationFlagDestroyRights);
+    [_internal->_task release];
     NSZoneFree([self zone], _internal);
     _internal = NULL;    
     [super dealloc];
@@ -272,15 +274,25 @@ static NSArray * __TLMOptionArrayFromArguments(char **nullTerminatedArguments)
                         
             if ((pid_t)event.ident == _internal->_cwrapper_pid) {
                 
-                // set the finished bit when cwrapper exits
+                // set the finished bit when ipctask exits
                 _internal->_childFinished = YES;
                 
                 // get the exit status of our child process (which is based on exit status of the tlmgr process)
                 int ret, wstatus;
-                ret = waitpid(event.ident, &wstatus, WNOHANG | WUNTRACED);
-                ret = (ret != 0 && WIFEXITED(wstatus)) ? WEXITSTATUS(wstatus) : EXIT_FAILURE;                
-                                    
-                // set failure flag if cwrapper failed
+                if (_internal->_task) {
+                    /*
+                     Calling waitpid(2) here interferes with the call in BDSKTask,
+                     so it returns -1 and sets errno to ECHLD.  To avoid that,
+                     use the NSTask API to get exit status.
+                     */
+                    [_internal->_task waitUntilExit];
+                    ret = [_internal->_task terminationStatus];
+                }
+                else {
+                    ret = waitpid(event.ident, &wstatus, WNOHANG | WUNTRACED);
+                    ret = (ret != 0 && WIFEXITED(wstatus)) ? WEXITSTATUS(wstatus) : EXIT_FAILURE;                
+                }
+                // set failure flag if ipctask failed
                 [self setFailed:(EXIT_SUCCESS != ret)];
                 TLMLog(__func__, @"kqueue noted that tlu_ipctask (pid = %d) exited with status %d", event.ident, ret);
             }
@@ -438,7 +450,6 @@ static BOOL __TLMCheckSignature()
          This allows us to pass the child PID back via IPC (DO at present), then monitor the process and check -isCancelled.
          */
         OSStatus status;
-        TLMTask *task = nil;
         
         if (_internal->_authorizationRequired) {
             
@@ -446,9 +457,12 @@ static BOOL __TLMCheckSignature()
         }
         else {
             
-            task = [TLMTask launchedTaskWithLaunchPath:__TLMCwrapperPath() arguments:__TLMOptionArrayFromArguments(args)];
+            _internal->_task = [TLMTask new]; 
+            [_internal->_task setLaunchPath:__TLMCwrapperPath()];
+            [_internal->_task setArguments:__TLMOptionArrayFromArguments(args)];
+            [_internal->_task launch];
             // set to nonzero if the task failed to launch
-            status = [task isRunning] ? errAuthorizationSuccess : coreFoundationUnknownErr;
+            status = [_internal->_task isRunning] ? errAuthorizationSuccess : coreFoundationUnknownErr;
         }
 
         
@@ -466,15 +480,11 @@ static BOOL __TLMCheckSignature()
             errStr = [NSString stringWithFormat:@"AuthorizationExecuteWithPrivileges error: %d (%s)", status, GetMacOSStatusErrorString(status)];
             [self _appendStringToErrorData:errStr];
             [self setFailed:YES];
-        } 
-
-        // unprivileged path; get the error from NSTask
-        if (task && [task isRunning] == NO && [task terminationStatus] != 0) {
-            if ([task errorString])
-                [self _appendStringToErrorData:[task errorString]];
-            [self setFailed:YES];
         }
-
+        
+        // exit status already set in _runUntilChildExit
+        if ([_internal->_task errorString])
+            [self _appendStringToErrorData:[_internal->_task errorString]];
         
         // child has exited at this point
         if (connection) {
