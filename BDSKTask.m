@@ -532,6 +532,10 @@ static void __BDSKTaskNotify(void *info)
     while (-1 == ret && EINTR == errno)
         ret = waitpid(_processIdentifier, &status, wait_flags);
     
+    // happens if you call waitpid() on the child process elsewhere; don't do that
+    if (-1 == ret)
+        perror(__func__);
+    
     if (0 == ret)
         NSLog(@"*** ERROR *** task %@ (child pid = %d) still running", self, _processIdentifier);
     
