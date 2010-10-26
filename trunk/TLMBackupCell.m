@@ -50,7 +50,7 @@
         [_buttonCell setControlSize:NSMiniControlSize];
         [_buttonCell setButtonType:NSMomentaryLightButton];
         [_buttonCell setBordered:YES];
-        [_buttonCell setBezelStyle:NSTexturedRoundedBezelStyle];
+        [_buttonCell setBezelStyle:NSRoundRectBezelStyle];
     }
     return self;
 }
