@@ -608,6 +608,8 @@ static NSArray * __TLMCheckFileExistence(NSArray *inputURLs)
 + (NSArray *)backupNodesWithListLines:(NSArray *)listLines;
 {
     /*
+     For tlmgr as shipped with TL 2010:
+     
      $ tlmgr restore 2>/dev/null
      Available backups:
      Asana-Math: 18651
@@ -623,6 +625,14 @@ static NSArray * __TLMCheckFileExistence(NSArray *inputURLs)
      berenisadf: 19812
      biblatex: 19592
      biblatex-apa: 19938 19814
+     
+     After I suggested that date would be useful, Norbert and Karl changed the format to this:
+     
+     dictsym: 18947 (2010-10-25 08:12) 
+     dvipdfm: 19985 (2010-10-26 10:33) 19892 (2010-10-25 08:12) 19985 (2010-10-26 10:33) 19892 (2010-10-25 08:12) 
+     dvipdfmx: 18835 (2010-10-25 08:12) 
+     dvips: 19985 (2010-10-26 10:33) 19892 (2010-10-25 08:12) 19985 (2010-10-26 10:33) 19892 (2010-10-25 08:12)
+     
      */
     
     NSMutableArray *nodes = [NSMutableArray arrayWithCapacity:[listLines count]];
@@ -635,11 +645,18 @@ static NSArray * __TLMCheckFileExistence(NSArray *inputURLs)
             TLMBackupNode *node = [TLMBackupNode new];
             [node setName:name];
             NSInteger version;
-            while ([scanner isAtEnd] == NO && [scanner scanInteger:&version]) {
-                NSNumber *versionNumber = [[NSNumber alloc] initWithInteger:version];
-                [node addChildWithVersion:versionNumber];
-                [versionNumber release];
+            while ([scanner isAtEnd] == NO) {
+                if ([scanner scanInteger:&version]) {
+                    NSNumber *versionNumber = [[NSNumber alloc] initWithInteger:version];
+                    [node addChildWithVersion:versionNumber];
+                    [versionNumber release];
+                }
+                // skip the date string, if it's present
+                if ([scanner scanString:@"(" intoString:NULL] && [scanner scanUpToString:@")" intoString:NULL]) {
+                    [scanner scanString:@")" intoString:NULL];
+                }
             }
+            // this check is to deal with the first line
             if ([node numberOfVersions])
                 [nodes addObject:node];
             [node release];
