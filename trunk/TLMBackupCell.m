@@ -51,6 +51,7 @@
         [_buttonCell setButtonType:NSMomentaryLightButton];
         [_buttonCell setBordered:YES];
         [_buttonCell setBezelStyle:NSRoundRectBezelStyle];
+        [_buttonCell setFont:[NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:[_buttonCell controlSize]]]];
     }
     return self;
 }
@@ -90,8 +91,8 @@
     [_buttonCell setBackgroundStyle:style];
 }
 
-#define BUTTON_MARGIN 10.0
-#define BUTTON_FRACTION 0.6
+#define BUTTON_MARGIN   10.0
+#define BUTTON_FRACTION  0.3
 
 - (NSRect)buttonRectForBounds:(NSRect)theRect 
 {
@@ -99,7 +100,7 @@
     buttonRect.size = [_buttonCell cellSize];
     buttonRect.size.height = NSHeight(theRect) * BUTTON_FRACTION;
     buttonRect.origin.x = NSMinX(theRect);
-    buttonRect.origin.y = NSMidY(theRect) - BUTTON_FRACTION * buttonRect.size.height;
+    buttonRect.origin.y = NSMidY(theRect) - 0.5 * buttonRect.size.height;
     return buttonRect;
 }
 

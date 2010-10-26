@@ -82,6 +82,7 @@
 {
     [_outlineView setFontNamePreferenceKey:@"TLMBackupListTableFontName" 
                          sizePreferenceKey:@"TLMBackupListTableFontSize"];
+    [_outlineView disableOutlineCells];
 }
 
 - (NSDate *)_dateForName:(NSString *)name version:(NSNumber *)version backupDir:(NSString *)backupDir
@@ -211,14 +212,25 @@ static inline BOOL __TLMIsParentNode(id obj)
 
 #pragma mark NSOutlineView delegate
 
-- (NSCell *)outlineView:(NSOutlineView *)outlineView dataCellForTableColumn:(NSTableColumn *)tableColumn item:(id)item
+- (void)outlineView:(TLMOutlineView *)outlineView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(TLMBackupNode *)item;
+{
+    NSFont *defaultFont = [outlineView defaultFont];
+    
+    if (__TLMIsParentNode(item)) {
+        [cell setFont:[NSFont boldSystemFontOfSize:[defaultFont pointSize]]];
+    }
+    else if (defaultFont) {
+        [cell setFont:defaultFont];
+    }
+}
+
+- (NSCell *)outlineView:(TLMOutlineView *)outlineView dataCellForTableColumn:(NSTableColumn *)tableColumn item:(id)item
 {
     id cell = [tableColumn dataCellForRow:[outlineView rowForItem:item]];
     if (cell && __TLMIsParentNode(item) == NO && [[tableColumn identifier] isEqualToString:@"name"]) {
         TLMBackupCell *backupCell = [[[TLMBackupCell alloc] initTextCell:@""] autorelease];
         [backupCell setTarget:self];
         [backupCell setAction:@selector(restoreAction:)];
-        [backupCell setFont:[outlineView font]];
         [backupCell setBackgroundStyle:[cell backgroundStyle]];
         [backupCell setLineBreakMode:[cell lineBreakMode]];
         [backupCell setWraps:[cell wraps]];
