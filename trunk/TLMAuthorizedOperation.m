@@ -71,6 +71,15 @@ struct TLMAOInternal {
 
 @implementation TLMAuthorizedOperation
 
+- (id)initWithAuthorizedCommand:(NSString *)absolutePath options:(NSArray *)options;
+{
+    self = [self initWithCommand:absolutePath options:options];
+    if (self) {
+        _internal->_authorizationRequired = YES;
+    }
+    return self;
+}
+
 - (id)initWithCommand:(NSString *)absolutePath options:(NSArray *)options;
 {
     NSParameterAssert(absolutePath);
