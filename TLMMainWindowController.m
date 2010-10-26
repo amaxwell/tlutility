@@ -810,7 +810,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
         [options addObject:@"-u"];
         [options addObject:[NSString stringWithFormat:@"%d", getuid()]];
         
-        TLMAuthorizedOperation *uninstallOp = [[TLMAuthorizedOperation alloc] initWithCommand:removeScriptPath options:options];
+        TLMAuthorizedOperation *uninstallOp = [[TLMAuthorizedOperation alloc] initWithAuthorizedCommand:removeScriptPath options:options];
         [self _addOperation:uninstallOp selector:@selector(_handleLaunchAgentInstallFinishedNotification:)];
         [uninstallOp autorelease];
         
@@ -838,7 +838,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
             [options addObject:@"-b"];
             [options addObject:[[NSBundle mainBundle] pathForResource:@"update_check" ofType:@"py"]];
                         
-            TLMAuthorizedOperation *installOp = [[TLMAuthorizedOperation alloc] initWithCommand:installScriptPath options:options];
+            TLMAuthorizedOperation *installOp = [[TLMAuthorizedOperation alloc] initWithAuthorizedCommand:installScriptPath options:options];
             [installOp addDependency:uninstallOp];
             [self _addOperation:installOp selector:@selector(_handleLaunchAgentInstallFinishedNotification:)];
             [installOp release];
