@@ -54,12 +54,33 @@
 {
     [_fontNamePreferenceKey release];
     [_fontSizePreferenceKey release];
+    [_defaultFont release];
     [super dealloc];
 }
 
 - (BOOL)dataSourceAllowsCopying
 {
     return [[self dataSource] respondsToSelector:@selector(outlineView:writeSelectedRowsToPasteboard:)];
+}
+
+- (void)disableOutlineCells;
+{
+    _disableOutlineCells = YES;
+    [self setNeedsDisplay:YES];
+}
+
+- (void)reloadData
+{
+    [super reloadData];
+    if (_disableOutlineCells) {
+        for (NSInteger row = 0; row < [self numberOfRows]; row++)
+            [self expandItem:[self itemAtRow:row] expandChildren:YES];
+    }
+}
+
+- (NSRect)frameOfOutlineCellAtRow:(NSInteger)row
+{
+    return _disableOutlineCells ? NSZeroRect : [super frameOfOutlineCellAtRow:row];
 }
 
 - (BOOL)validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem>)anItem;
@@ -94,13 +115,10 @@
     [self reloadData];     
 }
 
-- (NSFont *)font
+- (NSFont *)defaultFont;
 {
-    return [[[[self tableColumns] lastObject] dataCell] font];
-}
-
-- (void)updateFontFromPreferences
-{
+    NSFont *font = nil;
+    
     if ([self fontNamePreferenceKey] && [self fontSizePreferenceKey]) {
         
         NSString *fontName = [[NSUserDefaults standardUserDefaults] objectForKey:[self fontNamePreferenceKey]];
@@ -108,11 +126,21 @@
         
         // if not set, use the font from the nib
         if (fontName) {
-            NSFont *font = [NSFont fontWithName:fontName size:fontSize];
-            if (font) 
-                [self setFont:font];
-        }        
+            font = [NSFont fontWithName:fontName size:fontSize];
+        }  
     }
+    return font ? font : _defaultFont;
+}
+
+- (NSFont *)font
+{
+    return [[[[self tableColumns] lastObject] dataCell] font];
+}
+
+- (void)updateFontFromPreferences
+{
+    NSFont *font = [self defaultFont];
+    if (font) [self setFont:font];
 }
 
 - (void)changeFont:(id)sender 
@@ -138,6 +166,8 @@
 {
     [super viewDidMoveToWindow];
     [self updateFontFromPreferences];
+    if (nil == _defaultFont)
+        _defaultFont = [[self font] retain];
 }
 
 - (NSArray *)selectedItems

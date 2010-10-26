@@ -45,12 +45,16 @@
 @private
     NSString *_fontNamePreferenceKey;
     NSString *_fontSizePreferenceKey;
+    NSFont   *_defaultFont;
+    BOOL      _disableOutlineCells;
 }
 
 - (IBAction)copy:(id)sender;
 - (void)setFontNamePreferenceKey:(NSString *)name sizePreferenceKey:(NSString *)size;
+- (void)disableOutlineCells;
 
-@property (readonly, copy) NSArray *selectedItems;
+@property (nonatomic, readonly) NSFont *defaultFont;
+@property (nonatomic, readonly, copy) NSArray *selectedItems;
 
 @end
 
