@@ -982,6 +982,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 
 - (void)_handleNetInstallFinishedNotification:(NSNotification *)aNote
 {
+    [_installDataSource setLastUpdateURL:[[aNote object] updateURL]];
     [self _handleInstallFinishedNotification:aNote];
 }
     
@@ -989,7 +990,12 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 {
     NSParameterAssert([_currentListDataSource isEqual:_installDataSource]);
     NSString *profile = [_installDataSource currentProfile];
-    TLMNetInstallOperation *op = [[TLMNetInstallOperation alloc] initWithProfile:profile location:[self _lastUpdateURL]];
+    /*
+     Use the URL set in preferences, in case the currently installed TL is from the previous year,
+     and we munged it to point at the TUG archived versions.
+     */
+    NSURL *installURL = [[TLMPreferenceController sharedPreferenceController] defaultServerURL];
+    TLMNetInstallOperation *op = [[TLMNetInstallOperation alloc] initWithProfile:profile location:installURL];
     [self _addOperation:op selector:@selector(_handleNetInstallFinishedNotification:)];
     [op release];
 }
