@@ -286,6 +286,16 @@
 		</dict>
 		<dict>
 			<key>key</key>
+			<string>collection-texworks</string>
+			<key>name</key>
+			<string>texworks</string>
+			<key>type</key>
+			<string>collection</string>
+			<key>value</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>key</key>
 			<string>collection-xetex</string>
 			<key>name</key>
 			<string>xetex</string>
@@ -297,6 +307,16 @@
 	</array>
 	<key>documentation</key>
 	<array>
+		<dict>
+			<key>key</key>
+			<string>collection-documentation-arabic</string>
+			<key>name</key>
+			<string>Arabic</string>
+			<key>type</key>
+			<string>documentation</string>
+			<key>value</key>
+			<true/>
+		</dict>
 		<dict>
 			<key>key</key>
 			<string>collection-documentation-base</string>
@@ -389,16 +409,6 @@
 		</dict>
 		<dict>
 			<key>key</key>
-			<string>collection-documentation-greek</string>
-			<key>name</key>
-			<string>Greek</string>
-			<key>type</key>
-			<string>documentation</string>
-			<key>value</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>key</key>
 			<string>collection-documentation-italian</string>
 			<key>name</key>
 			<string>Italian</string>
@@ -462,6 +472,16 @@
 			<string>collection-documentation-russian</string>
 			<key>name</key>
 			<string>Russian</string>
+			<key>type</key>
+			<string>documentation</string>
+			<key>value</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>key</key>
+			<string>collection-documentation-serbian</string>
+			<key>name</key>
+			<string>Serbian</string>
 			<key>type</key>
 			<string>documentation</string>
 			<key>value</key>
@@ -542,9 +562,9 @@
 		</dict>
 		<dict>
 			<key>key</key>
-			<string>collection-langarab</string>
+			<string>collection-langarabic</string>
 			<key>name</key>
-			<string>Arab</string>
+			<string>Arabic</string>
 			<key>type</key>
 			<string>language</string>
 			<key>value</key>
@@ -615,6 +635,16 @@
 			<string>collection-langdutch</string>
 			<key>name</key>
 			<string>Dutch</string>
+			<key>type</key>
+			<string>language</string>
+			<key>value</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>key</key>
+			<string>collection-langenglish</string>
+			<key>name</key>
+			<string>English</string>
 			<key>type</key>
 			<string>language</string>
 			<key>value</key>
@@ -812,9 +842,9 @@
 		</dict>
 		<dict>
 			<key>key</key>
-			<string>collection-langukenglish</string>
+			<string>collection-langturkmen</string>
 			<key>name</key>
-			<string>Ukenglish</string>
+			<string>Turkmen</string>
 			<key>type</key>
 			<string>language</string>
 			<key>value</key>
@@ -833,6 +863,26 @@
 	</array>
 	<key>options</key>
 	<array>
+		<dict>
+			<key>key</key>
+			<string>option_autobackup</string>
+			<key>name</key>
+			<string>option_autobackup</string>
+			<key>type</key>
+			<string>option</string>
+			<key>value</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>key</key>
+			<string>option_backupdir</string>
+			<key>name</key>
+			<string>option_backupdir</string>
+			<key>type</key>
+			<string>option</string>
+			<key>value</key>
+			<string>tlpkg/backups</string>
+		</dict>
 		<dict>
 			<key>key</key>
 			<string>option_desktop_integration</string>
@@ -953,6 +1003,16 @@
 			<key>value</key>
 			<true/>
 		</dict>
+		<dict>
+			<key>key</key>
+			<string>option_write18_restricted</string>
+			<key>name</key>
+			<string>option_write18_restricted</string>
+			<key>type</key>
+			<string>option</string>
+			<key>value</key>
+			<true/>
+		</dict>
 	</array>
 	<key>other</key>
 	<array>
@@ -976,6 +1036,36 @@
 			<key>value</key>
 			<true/>
 		</dict>
+		<dict>
+			<key>key</key>
+			<string>binary_x86_64-darwin</string>
+			<key>name</key>
+			<string>binary_x86_64-darwin</string>
+			<key>type</key>
+			<string>unknown</string>
+			<key>value</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>key</key>
+			<string>from_dvd</string>
+			<key>name</key>
+			<string>from_dvd</string>
+			<key>type</key>
+			<string>unknown</string>
+			<key>value</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>key</key>
+			<string>portable</string>
+			<key>name</key>
+			<string>portable</string>
+			<key>type</key>
+			<string>unknown</string>
+			<key>value</key>
+			<true/>
+		</dict>
 	</array>
 	<key>variables</key>
 	<array>
@@ -987,7 +1077,7 @@
 			<key>type</key>
 			<string>variable</string>
 			<key>value</key>
-			<string>/usr/local/texlive/2009</string>
+			<string>/usr/local/texlive/2010</string>
 		</dict>
 		<dict>
 			<key>key</key>
@@ -997,7 +1087,17 @@
 			<key>type</key>
 			<string>variable</string>
 			<key>value</key>
-			<string>/usr/local/texlive/2009</string>
+			<string>/usr/local/texlive/2010</string>
+		</dict>
+		<dict>
+			<key>key</key>
+			<string>TEXMFCONFIG</string>
+			<key>name</key>
+			<string>TEXMFCONFIG</string>
+			<key>type</key>
+			<string>variable</string>
+			<key>value</key>
+			<string>~/Library/texlive/2010/texmf-config</string>
 		</dict>
 		<dict>
 			<key>key</key>
@@ -1007,7 +1107,7 @@
 			<key>type</key>
 			<string>variable</string>
 			<key>value</key>
-			<string>/Users/koch/Library/texmf</string>
+			<string>~/Library/texmf</string>
 		</dict>
 		<dict>
 			<key>key</key>
@@ -1027,7 +1127,7 @@
 			<key>type</key>
 			<string>variable</string>
 			<key>value</key>
-			<string>/usr/local/texlive/2009/texmf-config</string>
+			<string>/usr/local/texlive/2010/texmf-config</string>
 		</dict>
 		<dict>
 			<key>key</key>
@@ -1037,7 +1137,17 @@
 			<key>type</key>
 			<string>variable</string>
 			<key>value</key>
-			<string>/usr/local/texlive/2009/texmf-var</string>
+			<string>/usr/local/texlive/2010/texmf-var</string>
+		</dict>
+		<dict>
+			<key>key</key>
+			<string>TEXMFVAR</string>
+			<key>name</key>
+			<string>TEXMFVAR</string>
+			<key>type</key>
+			<string>variable</string>
+			<key>value</key>
+			<string>~/Library/texlive/2010/texmf-var</string>
 		</dict>
 	</array>
 </dict>
