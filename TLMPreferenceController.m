@@ -58,8 +58,9 @@ NSString * const TLMAutoInstallPreferenceKey = @"TLMAutoInstallPreferenceKey";  
 NSString * const TLMAutoRemovePreferenceKey = @"TLMAutoRemovePreferenceKey";       /* YES (2009 only)                  */
 NSString * const TLMSetCommandLineServerPreferenceKey = @"TLMSetCommandLineServerPreferenceKey"; /* NO                 */
 NSString * const TLMNetInstallerPathPreferenceKey = @"TLMNetInstallerPathPreferenceKey"; /* install-tl-unx.tar.gz      */
-NSString * const TLMShouldListTLCritical = @"TLMShouldListTLCritical";             /* NO                               */
+NSString * const TLMShouldListTLCritical = @"TLMShouldListTLCritical";             /* NO (obsolete)                    */
 NSString * const TLMTLCriticalRepository = @"TLMTLCriticalRepository";             /* ftp://tug.org/texlive/tlcritical */
+NSString * const TLMEnableNetInstall = @"TLMEnableNetInstall";                     /* NO                               */
 
 #define TLMGR_CMD     @"tlmgr"
 #define TEXDOC_CMD    @"texdoc"

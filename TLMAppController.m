@@ -144,6 +144,9 @@ static void __TLMMigrateBundleIdentifier()
     [defaults setObject:[NSNumber numberWithBool:NO] forKey:TLMShouldListTLCritical];
     [defaults setObject:@"ftp://tug.org/texlive/tlcritical" forKey:TLMTLCriticalRepository];
     
+    // no UI for this at present
+    [defaults setObject:[NSNumber numberWithBool:NO] forKey:TLMEnableNetInstall];
+    
     [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];   
 }
 

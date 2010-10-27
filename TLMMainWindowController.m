@@ -94,8 +94,6 @@ static char _TLMOperationQueueOperationContext;
 @synthesize infrastructureNeedsUpdate = _updateInfrastructure;
 @synthesize _backupDataSource;
 
-#define ENABLE_INSTALL 0
-
 - (id)init
 {
     return [self initWithWindowNibName:[self windowNibName]];
@@ -148,10 +146,9 @@ static char _TLMOperationQueueOperationContext;
     [_tabView addTabNamed:NSLocalizedString(@"Manage Updates", @"tab title") withView:[[_updateListDataSource tableView]  enclosingScrollView]];
     [_tabView addTabNamed:NSLocalizedString(@"Manage Packages", @"tab title") withView:[[_packageListDataSource outlineView] enclosingScrollView]];
     [_tabView addTabNamed:NSLocalizedString(@"Backups", @"tab title") withView:[[_backupDataSource outlineView] enclosingScrollView]];
-
-#if ENABLE_INSTALL
-    [_tabView addTabNamed:NSLocalizedString(@"Install", @"tab title") withView:[[_installDataSource outlineView] enclosingScrollView]];
-#endif
+    
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:TLMEnableNetInstall])
+        [_tabView addTabNamed:NSLocalizedString(@"Install", @"tab title") withView:[[_installDataSource outlineView] enclosingScrollView]];
     
     // 10.5 release notes say this is enabled by default, but it returns NO
     [_progressIndicator setUsesThreadedAnimation:YES];
@@ -367,11 +364,7 @@ static char _TLMOperationQueueOperationContext;
 - (void)_removeDataSourceFromResponderChain:(id)dataSource
 {
     NSResponder *next = [self nextResponder];
-#if ENABLE_INSTALL
     if ([next isEqual:_updateListDataSource] || [next isEqual:_packageListDataSource] || [next isEqual:_backupDataSource] || [next isEqual:_installDataSource])
-#else
-    if ([next isEqual:_updateListDataSource] || [next isEqual:_packageListDataSource] || [next isEqual:_backupDataSource])
-#endif
     {
         [self setNextResponder:[next nextResponder]];
         [next setNextResponder:nil];
@@ -384,9 +377,7 @@ static char _TLMOperationQueueOperationContext;
     NSParameterAssert([next isEqual:_updateListDataSource] == NO);
     NSParameterAssert([next isEqual:_packageListDataSource] == NO);
     NSParameterAssert([next isEqual:_backupDataSource] == NO);
-#if ENABLE_INSTALL
     NSParameterAssert([next isEqual:_installDataSource] == NO);
-#endif
     
     [self setNextResponder:dataSource];
     [dataSource setNextResponder:next];
@@ -435,8 +426,8 @@ static char _TLMOperationQueueOperationContext;
                 [_backupDataSource search:nil];
             
             break;            
-#if ENABLE_INSTALL
         case 3:
+            
             [self _insertDataSourceInResponderChain:_installDataSource];
             _currentListDataSource = _installDataSource;
             [self _updateURLView];
@@ -445,7 +436,6 @@ static char _TLMOperationQueueOperationContext;
             [self _refreshCurrentDataSourceIfNeeded];
 
             break;
-#endif
         default:
             break;
     }
