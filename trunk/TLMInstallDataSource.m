@@ -149,13 +149,25 @@
     return value;
 }
 
+- (void)outlineView:(TLMOutlineView *)outlineView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(TLMProfileNode *)item;
+{
+    NSFont *defaultFont = [outlineView defaultFont];
+    
+    if (([item type] & TLMProfileRoot) != 0) {
+        [cell setFont:[NSFont boldSystemFontOfSize:[defaultFont pointSize]]];
+    }
+    else if (defaultFont) {
+        [cell setFont:defaultFont];
+    }
+}
+
 - (NSCell *)outlineView:(NSOutlineView *)outlineView dataCellForTableColumn:(NSTableColumn *)tableColumn item:(id)item
 {
     if (nil == tableColumn) return nil;
     if ([[tableColumn identifier] isEqualToString:@"value"] && [[item value] isKindOfClass:[NSValue class]]) {
         return _checkboxCell;
     }
-    return [tableColumn dataCell];
+    return [[[NSTextFieldCell alloc] initTextCell:@""] autorelease];
 }
 
 - (BOOL)outlineView:(NSOutlineView *)outlineView isGroupItem:(TLMProfileNode *)item
