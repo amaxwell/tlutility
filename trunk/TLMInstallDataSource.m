@@ -38,6 +38,7 @@
 
 #import "TLMInstallDataSource.h"
 #import "TLMProfileNode.h"
+#import "TLMLogServer.h"
 
 @implementation TLMInstallDataSource
 
@@ -56,6 +57,7 @@
         _archivePath = [_archivePath stringByAppendingPathComponent:appname];
         [[NSFileManager defaultManager] createDirectoryAtPath:_archivePath withIntermediateDirectories:YES attributes:nil error:NULL];
         _archivePath = [[_archivePath stringByAppendingPathComponent:@"default.tluprofile"] copyWithZone:[self zone]];
+        _metadata = [NSMutableDictionary new];
     }
     return self;
 }
@@ -68,6 +70,7 @@
     [_lastUpdateURL release];
     [_statusWindow release];
     [_checkboxCell release];
+    [_metadata release];
     [super dealloc];
 }
 
@@ -75,12 +78,43 @@
 {
     if (_rootNode) return;
     
-    if ([[NSFileManager defaultManager] fileExistsAtPath:_archivePath]) {
-        _rootNode = [[NSKeyedUnarchiver unarchiveObjectWithFile:_archivePath] retain];
+    NSDictionary *metadata = nil;
+    TLMProfileNode *newRoot = [TLMProfileNode newDefaultProfileWithMetadata:&metadata];
+    const NSUInteger defaultProfileYear = [[metadata objectForKey:@"texliveyear"] integerValue];
+    
+    NSDictionary *archivedRoot = nil;
+    if ([[NSFileManager defaultManager] fileExistsAtPath:_archivePath])
+        archivedRoot = [NSKeyedUnarchiver unarchiveObjectWithFile:_archivePath];
+    
+    if ([archivedRoot isKindOfClass:[NSDictionary class]]) {
+        
+        TLMProfileNode *oldRoot = [archivedRoot objectForKey:@"_rootNode"];
+        NSDictionary *oldMetadata = [archivedRoot objectForKey:@"_metadata"];
+        const NSUInteger oldYear = [[oldMetadata objectForKey:@"texliveyear"] integerValue];
+        
+        if (oldYear == defaultProfileYear) {
+            _rootNode = [oldRoot retain];
+            [_metadata setDictionary:oldMetadata];
+            TLMLog(__func__, @"Using previous profile for TeX Live %lu from %@", (unsigned long)oldYear, _archivePath);
+        }
+        else {
+            TLMLog(__func__, @"Profile detected from older version; using new defaults instead.");
+        }
+
     }
     else {
-        _rootNode = [TLMProfileNode newDefaultProfile];
+        TLMLog(__func__, @"Profile detected from unreleased version; using new defaults instead.");
     }
+
+
+    if (nil == _rootNode) {
+        _rootNode = newRoot;
+        [_metadata setDictionary:metadata];
+    }
+    
+    if (_rootNode != newRoot)
+        [newRoot release];
+
 }
 
 - (void)awakeFromNib
@@ -179,7 +213,8 @@
 {
     NSParameterAssert([[tableColumn identifier] isEqualToString:@"value"]);
     [item setValue:object];    
-    [NSKeyedArchiver archiveRootObject:_rootNode toFile:_archivePath];
+    NSDictionary *archiveRoot = [NSDictionary dictionaryWithObjectsAndKeys:_rootNode, @"_rootNode", _metadata, @"_metadata", nil];
+    [NSKeyedArchiver archiveRootObject:archiveRoot toFile:_archivePath];
 }
 
 - (id)outlineView:(NSOutlineView *)outlineView itemForPersistentObject:(id)object;

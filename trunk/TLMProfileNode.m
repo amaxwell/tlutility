@@ -87,14 +87,24 @@
     return node;
 }
 
-+ (TLMProfileNode *)newDefaultProfile;
++ (TLMProfileNode *)newDefaultProfileWithMetadata:(NSDictionary **)metadata;
 {
     NSDictionary *profile = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"texlive.profile" ofType:@"plist"]];
+    if (metadata) *metadata = NULL;
     
     TLMProfileNode *rootNode = [TLMProfileNode new];
     [rootNode setType:TLMProfileRoot];
     NSMutableArray *groups = [NSMutableArray arrayWithCapacity:[profile count]];
     for (NSString *key in profile) {
+        
+        if ([key hasPrefix:@"com.googlecode.mactlmgr"]) {
+            
+            if (metadata)
+                *metadata = [[[profile objectForKey:key] retain] autorelease];
+            
+            // don't add a node for this
+            continue;
+        }
         
         TLMProfileNode *groupNode = [TLMProfileNode new];
         [groupNode setName:key];

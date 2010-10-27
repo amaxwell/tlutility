@@ -10,7 +10,9 @@ lang = []
 collections = []
 other = []
 
-for line in open("/usr/local/texlive/2010/tlpkg/texlive.profile", "r"):
+TEXLIVE_YEAR = 2010
+
+for line in open("/usr/local/texlive/%d/tlpkg/texlive.profile" % (TEXLIVE_YEAR), "r"):
     
     if line.startswith("#"):
         continue
@@ -57,6 +59,9 @@ for line in open("/usr/local/texlive/2010/tlpkg/texlive.profile", "r"):
         other.append(profileDictionary)
                 
 profileValues = { "options" : options, "variables" : variables, "documentation" : docs, "languages" : lang, "collections" : collections, "other" : other }
+
+# add another dictionary for my metadata
+profileValues["com.googlecode.mactlmgr"] = { "texliveyear" : TEXLIVE_YEAR }
     
 plist, error = NSPropertyListSerialization.dataFromPropertyList_format_errorDescription_(profileValues, NSPropertyListXMLFormat_v1_0, None)
 

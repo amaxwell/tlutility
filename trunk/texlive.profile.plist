@@ -305,6 +305,11 @@
 			<true/>
 		</dict>
 	</array>
+	<key>com.googlecode.mactlmgr</key>
+	<dict>
+		<key>texliveyear</key>
+		<integer>2010</integer>
+	</dict>
 	<key>documentation</key>
 	<array>
 		<dict>
