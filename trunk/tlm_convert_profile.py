@@ -3,8 +3,6 @@
 
 from Foundation import *
 
-profile = open("/usr/local/texlive/2009/tlpkg/texlive.profile")
-
 options = []
 variables = []
 docs = []
@@ -12,7 +10,7 @@ lang = []
 collections = []
 other = []
 
-for line in profile:
+for line in open("/usr/local/texlive/2010/tlpkg/texlive.profile", "r"):
     
     if line.startswith("#"):
         continue
