@@ -53,6 +53,7 @@
     TLMStatusWindow         *_statusWindow;
     NSButtonCell            *_checkboxCell;
     BOOL                     _needsUpdate;
+    NSMutableDictionary     *_metadata;
 }
 
 - (IBAction)installSelectedRows:(id)sender;

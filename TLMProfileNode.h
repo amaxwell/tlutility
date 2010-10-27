@@ -59,7 +59,7 @@ typedef NSUInteger TLMProfileType;
     id              _value;
 }
 
-+ (TLMProfileNode *)newDefaultProfile;
++ (TLMProfileNode *)newDefaultProfileWithMetadata:(NSDictionary **)metadata;
 + (NSString *)profileStringWithRoot:(TLMProfileNode *)rootNode;
 
 - (NSUInteger)numberOfChildren;
