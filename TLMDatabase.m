@@ -195,7 +195,7 @@ static NSMutableDictionary *_databases = nil;
         do {
             const SInt32 ret = CFRunLoopRunInMode((CFStringRef)rlmode, 0.3, TRUE);
             
-            if (kCFRunLoopRunFinished == ret || kCFRunLoopRunStopped)
+            if (kCFRunLoopRunFinished == ret || kCFRunLoopRunStopped == ret)
                 break;
             
             if (CFAbsoluteTimeGetCurrent() >= stopTime)
