@@ -191,9 +191,20 @@ static NSMutableDictionary *_databases = nil;
         NSString *rlmode = @"__TLMDatabaseDownloadRunLoopMode";
         [connection scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:rlmode];
         [connection start];
+        const CFAbsoluteTime stopTime = CFAbsoluteTimeGetCurrent() + URL_TIMEOUT;
         do {
-            CFRunLoopRunInMode((CFStringRef)rlmode, 0.3, TRUE);
-        } while ([_tlpdbData length] < MIN_DATA_LENGTH && NO == _failed);
+            const SInt32 ret = CFRunLoopRunInMode((CFStringRef)rlmode, 0.3, TRUE);
+            
+            if (kCFRunLoopRunFinished == ret || kCFRunLoopRunStopped)
+                break;
+            
+            if (CFAbsoluteTimeGetCurrent() >= stopTime)
+                break;
+            
+            if (_failed)
+                break;
+            
+        } while ([_tlpdbData length] < MIN_DATA_LENGTH);
         TLMLog(__func__, @"Downloaded %lu bytes", (unsigned long)[_tlpdbData length]);
         [connection cancel];
         [connection release];
