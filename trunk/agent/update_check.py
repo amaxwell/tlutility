@@ -18,6 +18,9 @@ import os, sys
 BUNDLE_ID = "com.googlecode.mactlmgr.tlu"
 CONN_NAME = "com.googlecode.mactlmgr.tlu.doconnection"
 
+# dismiss alert after 12 hours of ignoring it (i.e., work computer running over the weekend)
+TIMEOUT = 3600 * 12
+
 def log_message(msg):
     sys.stderr.write("%s: %s\n" % (os.path.basename(sys.argv[0]), msg))
 
@@ -101,7 +104,7 @@ if __name__ == '__main__':
     bundle = CFBundleCreate(None, tlu_url) if ret == 0 else None
     icon_url = CFBundleCopyResourceURL(bundle, "TeXDistTool", "icns", None) if bundle else None
     
-    cancel, response = CFUserNotificationDisplayAlert(0, kCFUserNotificationNoteAlertLevel, icon_url, None, None, title, msg, "Later", "Update", None, None)    
+    cancel, response = CFUserNotificationDisplayAlert(TIMEOUT, kCFUserNotificationNoteAlertLevel, icon_url, None, None, title, msg, "Later", "Update", None, None)    
     if kCFUserNotificationAlternateResponse == response:
         
         connection = NSConnection.connectionWithRegisteredName_host_(CONN_NAME, None)
