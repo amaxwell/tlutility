@@ -7,16 +7,16 @@ from CoreFoundation import kCFUserNotificationNoteAlertLevel, kCFUserNotificatio
 from Quartz import CGMainDisplayID, CGDisplayIsCaptured, CGSessionCopyCurrentDictionary
 from Quartz import kCGSessionOnConsoleKey, kCGSessionLoginDoneKey
 
-from LaunchServices import LSFindApplicationForInfo, LSOpenCFURLRef
-from LaunchServices import kLSUnknownCreator
+from LaunchServices import LSFindApplicationForInfo, LSOpenFromURLSpec
+from LaunchServices import kLSUnknownCreator, LSLaunchURLSpec
 
-from Foundation import NSConnection, NSURL
+from Foundation import NSURL
 
 from subprocess import Popen, PIPE
 import os, sys
+from time import sleep
 
 _BUNDLE_ID = "com.googlecode.mactlmgr.tlu"
-_CONN_NAME = "com.googlecode.mactlmgr.tlu.doconnection"
 
 # dismiss alert after 12 hours of ignoring it (i.e., work computer running over the weekend)
 _ALERT_TIMEOUT = 3600 * 12
@@ -114,16 +114,11 @@ if __name__ == '__main__':
     cancel, response = CFUserNotificationDisplayAlert(_ALERT_TIMEOUT, kCFUserNotificationNoteAlertLevel, icon_url, None, None, title, msg, "Later", "Update", None, None)    
     if kCFUserNotificationAlternateResponse == response:
         
-        connection = NSConnection.connectionWithRegisteredName_host_(_CONN_NAME, None)
-        if connection != None:
-            log_message("TeX Live Utility is running; refreshing package list")
-            tlu = connection.rootProxy()
-            tlu.orderFront()
-            update_url = NSURL.URLWithString_(actual_location) if actual_location else None
-            tlu.displayUpdatesWithURL_(update_url)  
-        elif tlu_url != None:
-            log_message("launching TeX Live Utility")
-            LSOpenCFURLRef(tlu_url, None)
+        spec = LSLaunchURLSpec()
+        spec.appURL = tlu_url
+        spec.itemURLs = [NSURL.URLWithString_(actual_location)] if actual_location else None
+        ret, launchedURL = LSOpenFromURLSpec(spec, None)
+
     else:
         log_message("user postponed TeX Live updates")
         

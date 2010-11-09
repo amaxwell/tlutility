@@ -46,16 +46,6 @@
 #import "TLMProxyManager.h"
 #import "TLMDatabase.h"
 
-#define CONNECTION_NAME @"com.googlecode.mactlmgr.tlu.doconnection"
-
-@protocol TLMAppProtocol
-
-- (void)displayUpdatesWithURL:(NSURL *)aURL;
-- (void)orderFront;
-- (void)hide;
-
-@end
-
 @implementation TLMAppController
 
 static void __TLMMigrateBundleIdentifier()
@@ -232,16 +222,8 @@ static void __TLMMigrateBundleIdentifier()
 - (void)dealloc
 {
     [_mainWindowController release];
-    [_connection release];
+    [_updateURL release];
     [super dealloc];
-}
-
-- (void)applicationWillTerminate:(NSNotification *)notification;
-{
-    [_connection registerName:nil];
-    [[_connection receivePort] invalidate];
-    [[_connection sendPort] invalidate];
-    [_connection invalidate];
 }
 
 - (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender
@@ -249,19 +231,22 @@ static void __TLMMigrateBundleIdentifier()
     return ([[self mainWindowController] windowShouldClose:sender]) ? NSTerminateNow : NSTerminateCancel;
 }
 
-- (void)displayUpdatesWithURL:(NSURL *)aURL;
+- (void)handleGetURLEvent:(NSAppleEventDescriptor *)event withReplyEvent:(NSAppleEventDescriptor *)replyEvent
 {
-    [[self mainWindowController] refreshUpdatedPackageListWithURL:aURL];
+    [_updateURL autorelease];
+    NSAppleEventDescriptor *desc = [event numberOfItems] ? [event descriptorAtIndex:1] : nil;
+    _updateURL = [desc stringValue] ? [[NSURL alloc] initWithString:[desc stringValue]] : nil;
+    TLMLog(__func__, @"Requesting listing from location %@", [_updateURL absoluteString]);
+    [[self mainWindowController] showWindow:nil];
+    [[self mainWindowController] refreshUpdatedPackageListWithURL:_updateURL];
 }
 
-- (void)orderFront;
+- (void)applicationWillFinishLaunching:(NSNotification *)notification;
 {
-    [NSApp activateIgnoringOtherApps:YES];
-}
-
-- (void)hide;
-{
-    [NSApp hide:nil];
+    [[NSAppleEventManager sharedAppleEventManager] setEventHandler:self
+                                                       andSelector:@selector(handleGetURLEvent:withReplyEvent:)
+                                                     forEventClass:kInternetEventClass
+                                                        andEventID:kAEGetURL];
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)notification;
@@ -272,11 +257,10 @@ static void __TLMMigrateBundleIdentifier()
     // make sure this is set up early enough to use tasks anywhere
     [[self class] updatePathEnvironment]; 
 
-    [[self mainWindowController] showWindow:nil];
-    
-    _connection = [[NSConnection alloc] initWithReceivePort:[NSPort port] sendPort:nil];
-    [_connection setRootObject:[NSProtocolChecker protocolCheckerWithTarget:self protocol:@protocol(TLMAppProtocol)]];
-    [_connection registerName:CONNECTION_NAME];
+    if (nil == _updateURL) {
+        [[self mainWindowController] showWindow:nil];
+        [[self mainWindowController] refreshUpdatedPackageList];
+    }
 }
 
 - (TLMMainWindowController *)mainWindowController { 

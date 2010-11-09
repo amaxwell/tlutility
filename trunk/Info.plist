@@ -26,6 +26,33 @@
 	<string>10.5.7</string>
 	<key>NSAppleScriptEnabled</key>
 	<string>YES</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>http URL</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>http</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>https URL</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>https</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>ftp URL</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>ftp</string>
+			</array>
+		</dict>
+	</array>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2008-2010, Adam R. Maxwell.
 All Rights Reserved.</string>
