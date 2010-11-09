@@ -50,7 +50,7 @@
 
 @protocol TLMAppProtocol
 
-- (void)displayUpdates;
+- (void)displayUpdatesWithURL:(NSURL *)aURL;
 - (void)orderFront;
 - (void)hide;
 
@@ -249,9 +249,9 @@ static void __TLMMigrateBundleIdentifier()
     return ([[self mainWindowController] windowShouldClose:sender]) ? NSTerminateNow : NSTerminateCancel;
 }
 
-- (void)displayUpdates;
+- (void)displayUpdatesWithURL:(NSURL *)aURL;
 {
-    [[self mainWindowController] refreshUpdatedPackageList];
+    [[self mainWindowController] refreshUpdatedPackageListWithURL:aURL];
 }
 
 - (void)orderFront;
