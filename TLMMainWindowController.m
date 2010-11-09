@@ -212,9 +212,6 @@ static char _TLMOperationQueueOperationContext;
     [_backupDataSource setNeedsUpdate:YES];
     [_installDataSource setNeedsUpdate:YES];
     
-    // may as well populate the list immediately; by now we should have the window to display a warning sheet
-    [self _refreshCurrentDataSourceIfNeeded];
-    
     // checkbox in IB doesn't work?
     [[[self window] toolbar] setAutosavesConfiguration:YES];    
 }
