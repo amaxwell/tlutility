@@ -116,6 +116,9 @@
 - (void)refreshFullPackageList;
 - (void)refreshUpdatedPackageList;
 
+// pass in a URL or nil to use default
+- (void)refreshUpdatedPackageListWithURL:(NSURL *)aURL;
+
 - (void)refreshBackupList;
 
 @end

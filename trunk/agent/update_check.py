@@ -10,7 +10,7 @@ from Quartz import kCGSessionOnConsoleKey, kCGSessionLoginDoneKey
 from LaunchServices import LSFindApplicationForInfo, LSOpenCFURLRef
 from LaunchServices import kLSUnknownCreator
 
-from Foundation import NSConnection
+from Foundation import NSConnection, NSURL
 
 from subprocess import Popen, PIPE
 import os, sys
@@ -50,15 +50,16 @@ def check_for_updates():
     (stdout, stderr) = tlmgr.communicate()
     
     output = "".join([c for c in stdout])
-    should_count = 0
+    is_list_line = False
     count = 0
+    actual_location = None
     for line in output.split("\n"):
         
         if line == "end-of-header":
-            should_count = True
+            is_list_line = True
         elif line == "end-of-updates":
-            should_count = False
-        elif should_count:
+            is_list_line = False
+        elif is_list_line:
             comps = line.split()
             #
             # d = deleted on server
@@ -71,8 +72,10 @@ def check_for_updates():
             # ignore anything that's not an update or addition
             if len(comps) >= 2 and comps[1] in ("a", "u"):
                 count += 1
+        elif line.startswith("location-url"):
+            actual_location = line.strip().split()[-1]
     
-    return count
+    return count, actual_location
 
 if __name__ == '__main__':
     
@@ -96,7 +99,7 @@ if __name__ == '__main__':
         log_message("main display not available for update alert")
         exit(0)
     
-    update_count = check_for_updates()
+    update_count, actual_location = check_for_updates()
     if update_count == 0:
         exit(0)
      
@@ -116,7 +119,8 @@ if __name__ == '__main__':
             log_message("TeX Live Utility is running; refreshing package list")
             tlu = connection.rootProxy()
             tlu.orderFront()
-            tlu.displayUpdates()  
+            update_url = NSURL.URLWithString_(actual_location) if actual_location else None
+            tlu.displayUpdatesWithURL_(update_url)  
         elif tlu_url != None:
             log_message("launching TeX Live Utility")
             LSOpenCFURLRef(tlu_url, None)
