@@ -116,8 +116,9 @@
     [_lock lockWhenCondition:TLM_KQ_WAITING];
 
     struct timespec ts;
-    ts.tv_sec = 0;
-    ts.tv_nsec = 100000000;
+    // 1 second timeout
+    ts.tv_sec = 1;
+    ts.tv_nsec = 0;
     
     struct kevent event;
     
@@ -125,33 +126,64 @@
     NSMutableData *outBuffer = [NSMutableData data];
     
     int eventCount;
+    bool errEOF = false, outEOF = false;
     
     // most of this code is copied directly from tlu_ipctask
     while ((eventCount = kevent(kq_fd, NULL, 0, &event, 1, &ts)) != -1) {
-                
-        // if this was a timeout, don't read anything
-        if (0 == eventCount)
+                        
+        /*
+         If still running, wait for the next timeout; this is basically insurance,
+         since it's not clear if EV_EOF is always set.
+         */
+        if (0 == eventCount && [self isRunning])
             continue;
         
         size_t len = event.data;
-        char sbuf[2048];
-        char *buf = (len > sizeof(sbuf)) ? malloc(len) : sbuf;
-        len = read(event.ident, buf, len);
-                
-        if (event.ident == (unsigned)fdo) {
-            [outBuffer appendBytes:buf length:len];
-        }
-        else if (event.ident == (unsigned)fde) {
-            [errBuffer appendBytes:buf length:len];
-        }
+        
+        /*
+         Receive zero-length on the last (non-timeout) pass, but it's not clear
+         if this is sufficient cause to bail out of the loop.  It's safer to
+         rely on EV_EOF and -isRunning, and just skip the read(2).  There actually
+         is a flood of zero-length reads that was causing 100% CPU usage, before
+         I added the EV_EOF check.
+         */
+        
+        if (len > 0) {
 
-        if (buf != sbuf) free(buf);
+            char sbuf[2048];
+            char *buf = (len > sizeof(sbuf)) ? malloc(len) : sbuf;
+            len = read(event.ident, buf, len);
+                    
+            if (event.ident == (unsigned)fdo) {
+                [outBuffer appendBytes:buf length:len];
+            }
+            else if (event.ident == (unsigned)fde) {
+                [errBuffer appendBytes:buf length:len];
+            }
+
+            if (buf != sbuf) free(buf);
+        }
         
-        // if not running, bail out
-        if ([self isRunning] == NO)
+        // received independently for each descriptor
+        if (event.flags & EV_EOF) {
+            
+            // tried modifying the event list here, but didn't do much
+            if (event.ident == (unsigned)fdo) {
+                outEOF = true;
+            }
+            else if (event.ident == (unsigned)fde) {
+                errEOF = true;
+            }
+        }
+                
+        // if not running or both pipes are widowed, bail out
+        if ((outEOF && errEOF) || [self isRunning] == NO)
             break;
-        
+                
     }
+    
+    if (-1 == eventCount)
+        perror(__func__);
     
     events[0].flags = EV_DELETE;
     events[1].flags = EV_DELETE;

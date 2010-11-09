@@ -366,8 +366,8 @@ int main(int argc, char *argv[]) {
         close(waitpipe[0]);
         
         struct timespec ts;
-        ts.tv_sec = 0;
-        ts.tv_nsec = 100000000;
+        ts.tv_sec = 1;
+        ts.tv_nsec = 0;
         
         bool stillRunning = true;        
         struct kevent event;
@@ -390,27 +390,33 @@ int main(int argc, char *argv[]) {
                 stillRunning = false;
                 log_error(@"child process pid = %d exited", child);
             }
-            else if (event.filter == EVFILT_READ && event.ident == (unsigned)outpipe[0]) {
+            else if (event.filter == EVFILT_READ && event.data) {
                 
                 size_t len = event.data;
                 char sbuf[2048];
                 char *buf = (len > sizeof(sbuf)) ? buf = malloc(len) : sbuf;
                 len = read(event.ident, buf, len);
-                [outBuffer appendBytes:buf length:len];
-                if (buf != sbuf) free(buf);
-                log_lines_and_clear(outBuffer, false);
-            }
-            else if (event.filter == EVFILT_READ && event.ident == (unsigned)errpipe[0]) {
                 
-                size_t len = event.data;
-                char sbuf[2048];
-                char *buf = (len > sizeof(sbuf)) ? buf = malloc(len) : sbuf;
-                len = read(event.ident, buf, len);
-                [errBuffer appendBytes:buf length:len];
+                if (event.ident == (unsigned)outpipe[0]) {
+                
+                    [outBuffer appendBytes:buf length:len];
+                    log_lines_and_clear(outBuffer, false);
+                }
+                else if (event.ident == (unsigned)errpipe[0]) {
+                    
+                    [errBuffer appendBytes:buf length:len];
+                    log_lines_and_clear(errBuffer, true);
+                }
+                else {
+                    
+                    log_error(@"unhandled kevent with filter = %d", event.filter);
+                }
+
+                
                 if (buf != sbuf) free(buf);
-                log_lines_and_clear(errBuffer, true);
+
             }
-            else {
+            else if (event.data) {
                 
                 log_error(@"unhandled kevent with filter = %d", event.filter);
             }
