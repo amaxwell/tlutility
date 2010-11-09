@@ -257,7 +257,9 @@ static void __TLMPacCallback(void *info, CFArrayRef proxyList, CFErrorRef error)
          work in most common cases.
          */
         __TLMSetProxyEnvironment("http_proxy", proxy, [port intValue]);
-        __TLMSetProxyEnvironment("ftp_proxy", proxy, [port intValue]);
+        
+        // was setting ftp_proxy here, but that doesn't seem right
+        TLMLog(__func__, @"Only setting http_proxy from PAC; ftp mirrors may not work.");
     }
     else if (proxyType) {
         TLMLog(__func__, @"No proxy required for URL");
@@ -265,8 +267,20 @@ static void __TLMPacCallback(void *info, CFArrayRef proxyList, CFErrorRef error)
     // nil proxyType is an error
 }
 
+static void __TLMCheckWgetrc()
+{
+    if ([[NSFileManager defaultManager] fileExistsAtPath:[@"~/.wgetrc" stringByStandardizingPath]])
+        TLMLog(__func__, @"*** WARNING *** ~/.wgetrc exists. If you encounter problems, ensure that it does not conflict with system proxy settings.");
+    
+    // tlmgr may fall back to wget at any time, and as of v20243, it appears to be defaulting to wget
+    if (getenv("WGETRC") != NULL)
+        TLMLog(__func__, @"*** WARNING *** $WGETRC is set. If you encounter problems, ensure that it does not conflict with system proxy settings.");
+}
+
 static void __TLMProxySettingsChanged(SCDynamicStoreRef store, CFArrayRef changedKeys, void *info)
 {
+    __TLMCheckWgetrc();
+    
     /*
      Attempt to handle kSCPropNetProxiesExceptionsList?  Probably not worth it...
      */

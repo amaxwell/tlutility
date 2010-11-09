@@ -195,10 +195,12 @@ static void __TLMMigrateBundleIdentifier()
     NSDictionary *env = [NSDictionary dictionaryWithContentsOfFile:[@"~/.MacOSX/environment.plist" stringByStandardizingPath]];
     if (env) {
         
-        // look for path, or something possibly TeX related like TEXINPUTS/BIBINPUTS
+        // look for path, something possibly TeX related like TEXINPUTS/BIBINPUTS, or one of the proxy-related variables
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(SELF contains[cd] 'PATH') OR "
                                                                   @"(SELF contains[cd] 'TEX') OR "
-                                                                  @"(SELF contains 'INPUTS')"];
+                                                                  @"(SELF contains 'INPUTS') OR "
+                                                                  @"(SELF contains[cd] '_proxy') OR "
+                                                                  @"(SELF contains 'WGETRC')"];
         NSArray *keys = [[env allKeys] filteredArrayUsingPredicate:predicate];
         if ([keys count]) {
             TLMLog(__func__, @"*** WARNING *** ~/.MacOSX/environment.plist alters critical variables; ignoring PATH if present in %@", keys);
