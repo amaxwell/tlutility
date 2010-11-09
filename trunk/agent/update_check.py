@@ -15,11 +15,15 @@ from Foundation import NSConnection
 from subprocess import Popen, PIPE
 import os, sys
 
-BUNDLE_ID = "com.googlecode.mactlmgr.tlu"
-CONN_NAME = "com.googlecode.mactlmgr.tlu.doconnection"
+_BUNDLE_ID = "com.googlecode.mactlmgr.tlu"
+_CONN_NAME = "com.googlecode.mactlmgr.tlu.doconnection"
 
 # dismiss alert after 12 hours of ignoring it (i.e., work computer running over the weekend)
-TIMEOUT = 3600 * 12
+_ALERT_TIMEOUT = 3600 * 12
+
+# public attribute; can be checked from the shell with something like
+# python -c 'import sys; sys.path.append("/Library/Application Support/TeX Live Utility"); import update_check as uc; sys.stdout.write("%s\n" % (uc.VERSION))'
+VERSION = 0.1
 
 def log_message(msg):
     sys.stderr.write("%s: %s\n" % (os.path.basename(sys.argv[0]), msg))
@@ -27,7 +31,7 @@ def log_message(msg):
 def check_for_updates():
     
     # if this hasn't been set, bail out, as this user likely won't care
-    texbin_path = CFPreferencesCopyAppValue("TLMTexBinPathPreferenceKey", BUNDLE_ID)
+    texbin_path = CFPreferencesCopyAppValue("TLMTexBinPathPreferenceKey", _BUNDLE_ID)
     if texbin_path == None and os.path.exists("/usr/texbin"):
         texbin_path = "/usr/texbin"
         
@@ -37,7 +41,7 @@ def check_for_updates():
         
     cmd = [os.path.join(texbin_path, "tlmgr"), "update", "--list", "--machine-readable"]
     
-    location = CFPreferencesCopyAppValue("TLMFullServerURLPreferenceKey", BUNDLE_ID)
+    location = CFPreferencesCopyAppValue("TLMFullServerURLPreferenceKey", _BUNDLE_ID)
     if location:
         log_message("tlmgr will use %s" % (location))
         cmd += ("--location", location)
@@ -99,15 +103,15 @@ if __name__ == '__main__':
     title = "TeX Live updates available"
     msg = "Updates for %d %s are available for TeX Live.  Would you like to update with TeX Live Utility now, or at a later time?" % (update_count, "packages" if update_count > 1 else "package")
     
-    ret, tlu_fsref, tlu_url = LSFindApplicationForInfo(kLSUnknownCreator, BUNDLE_ID, None, None, None)
+    ret, tlu_fsref, tlu_url = LSFindApplicationForInfo(kLSUnknownCreator, _BUNDLE_ID, None, None, None)
             
     bundle = CFBundleCreate(None, tlu_url) if ret == 0 else None
     icon_url = CFBundleCopyResourceURL(bundle, "TeXDistTool", "icns", None) if bundle else None
     
-    cancel, response = CFUserNotificationDisplayAlert(TIMEOUT, kCFUserNotificationNoteAlertLevel, icon_url, None, None, title, msg, "Later", "Update", None, None)    
+    cancel, response = CFUserNotificationDisplayAlert(_ALERT_TIMEOUT, kCFUserNotificationNoteAlertLevel, icon_url, None, None, title, msg, "Later", "Update", None, None)    
     if kCFUserNotificationAlternateResponse == response:
         
-        connection = NSConnection.connectionWithRegisteredName_host_(CONN_NAME, None)
+        connection = NSConnection.connectionWithRegisteredName_host_(_CONN_NAME, None)
         if connection != None:
             log_message("TeX Live Utility is running; refreshing package list")
             tlu = connection.rootProxy()
