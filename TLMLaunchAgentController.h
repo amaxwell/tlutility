@@ -58,6 +58,8 @@ typedef NSInteger TLMLaunchAgentReturnCode;
     NSCalendar               *_gregorianCalendar;
 }
 
++ (BOOL)agentInstalled:(NSSearchPathDomainMask *)domains;
+
 @property (nonatomic, retain) IBOutlet NSMatrix *_scheduleMatrix;
 @property (nonatomic, retain) IBOutlet NSButton *_allUsersCheckbox;
 @property (nonatomic, retain) IBOutlet NSTextField *_dayField;

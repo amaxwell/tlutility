@@ -113,6 +113,18 @@ static NSString * __TLMGetTemporaryDirectory()
     }
 }
 
++ (BOOL)agentInstalled:(NSSearchPathDomainMask *)domains;
+{
+    *domains = 0;
+    if ([[NSFileManager defaultManager] fileExistsAtPath:__TLMPlistPath(NSLocalDomainMask)]) {
+        *domains |= NSLocalDomainMask;
+    }
+    if ([[NSFileManager defaultManager] fileExistsAtPath:__TLMPlistPath(NSUserDomainMask)]) {
+        *domains |= NSUserDomainMask;
+    }
+    return (*domains != 0);
+}
+
 - (id)init { return [self initWithWindowNibName:[self windowNibName]]; }
 
 - (void)dealloc

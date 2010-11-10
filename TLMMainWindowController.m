@@ -805,13 +805,22 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
             [options addObject:@"--remove"];
         }
         
+        NSSearchPathDomainMask domains;
+        BOOL installed = [TLMLaunchAgentController agentInstalled:&domains];
+        
         if ((returnCode & TLMLaunchAgentAllUsers) != 0) {
             // ??? how about uninstalling or unloading from ~/Library?
             installOp = [[TLMAuthorizedOperation alloc] initWithAuthorizedCommand:@"/usr/bin/python" options:options];
+            if (installed && (domains & NSUserDomainMask) != 0) {
+                TLMLog(__func__, @"*** WARNING *** agent is also installed in ~/Library/LaunchAgents");
+            }
         }
         else {
             // ??? how about uninstalling or unloading from /Library?
             installOp = [[TLMOperation alloc] initWithCommand:@"/usr/bin/python" options:options];
+            if (installed && (domains & NSLocalDomainMask) != 0) {
+                TLMLog(__func__, @"*** WARNING *** agent is also installed in /Library/LaunchAgents");
+            }
         }                      
         
         [self _addOperation:installOp selector:@selector(_handleLaunchAgentInstallFinishedNotification:)];
