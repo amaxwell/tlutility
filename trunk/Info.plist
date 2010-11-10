@@ -30,25 +30,11 @@
 	<array>
 		<dict>
 			<key>CFBundleURLName</key>
-			<string>http URL</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>http</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleURLName</key>
-			<string>https URL</string>
+			<string>Mirror URL</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>https</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleURLName</key>
-			<string>ftp URL</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
+				<string>http</string>
 				<string>ftp</string>
 			</array>
 		</dict>
