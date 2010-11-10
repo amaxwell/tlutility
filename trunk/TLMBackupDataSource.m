@@ -177,10 +177,38 @@ static inline BOOL __TLMIsParentNode(id obj)
     return [(TLMBackupNode *)obj version] == nil;
 }
 
+- (void)restoreAlertDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
+{
+    TLMBackupNode *node = [(id)contextInfo autorelease];
+    if (NSAlertFirstButtonReturn == returnCode) {
+        [_controller restorePackage:[node name] version:[node version]];
+    }
+    else {
+        TLMLog(__func__, @"User cancelled restore action of %@", [node name]);
+    }
+}
+
 - (void)restoreAction:(id)sender
 {
+
     TLMBackupNode *clickedNode = [_outlineView itemAtRow:[_outlineView clickedRow]];
-    [_controller restorePackage:[clickedNode name] version:[clickedNode version]];
+    
+    // mainly for my own testing
+    if ([[NSApp currentEvent] modifierFlags] & NSAlternateKeyMask) {
+        TLMLog(__func__, @"User bypassed restore alert for %@", [clickedNode name]);
+        [_controller restorePackage:[clickedNode name] version:[clickedNode version]];
+    }
+    else {
+        NSAlert *alert = [[NSAlert new] autorelease];
+        [alert setMessageText:[NSString stringWithFormat:NSLocalizedString(@"Are you sure you want to restore %@ from backup?", @"alert title"), [clickedNode name]]];
+        [alert setInformativeText:NSLocalizedString(@"You can always update to the latest version or restore a different one to undo this change.", @"alert message")];
+        [alert addButtonWithTitle:NSLocalizedString(@"Restore", @"button title")];
+        [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"button title")];
+        [alert beginSheetModalForWindow:[_outlineView window]
+                          modalDelegate:self
+                         didEndSelector:@selector(restoreAlertDidEnd:returnCode:contextInfo:)
+                            contextInfo:[clickedNode retain]];
+    }
 }
 
 #pragma mark NSOutlineView datasource
