@@ -74,6 +74,11 @@
     return [_children count];
 }
 
+- (NSComparisonResult)compareVersions:(TLMBackupNode *)other
+{
+    return [[self version] compare:[other version]];
+}
+
 - (id)versionAtIndex:(NSUInteger)anIndex;
 {
     return [_children objectAtIndex:anIndex];
@@ -82,10 +87,22 @@
 - (void)addChildWithVersion:(NSNumber *)aVersion;
 {
     NSParameterAssert(aVersion);
+    /*
+     Some versions of tlmgr repeat the available backup version numbers, so check
+     for duplicates here and bail out if this version already exists.
+     */
+    for (TLMBackupNode *child in _children) {
+        // !!! early return
+        if ([[child version] isEqualToNumber:aVersion])
+            return;
+    }
+    
     TLMBackupNode *child = [TLMBackupNode new];
     [child setName:[self name]];
     [child setVersion:aVersion];
     [_children addObject:child];
+    // maintain strict sorting by version, which is a proxy for date
+    [_children sortUsingSelector:@selector(compareVersions:)];
     [child release];
 }
 

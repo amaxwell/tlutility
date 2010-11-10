@@ -246,9 +246,14 @@ static inline BOOL __TLMIsParentNode(id obj)
 - (void)outlineView:(NSOutlineView *)outlineView didClickTableColumn:(NSTableColumn *)tableColumn;
 {
     /*
-     Copied from TLMPackageListDataSource, and is currently overkill since we
-     only have a single table column here.
+     Keep versions sorted in ascending order, and only allow sorting by name.  This code
+     was copied from another datasource, so it's overly general in multiple column support,
+     but not general enough in object support (uses localizedCaseInsensitiveCompare:).
+     That could be changed, but who wants to change the backup sort order, anyway?
      */
+    if ([[tableColumn identifier] isEqualToString:@"name"] == NO)
+        return;
+    
     _sortAscending = !_sortAscending;
     
     for (NSTableColumn *col in [outlineView tableColumns])
@@ -259,7 +264,7 @@ static inline BOOL __TLMIsParentNode(id obj)
     NSString *key = [tableColumn identifier];
     NSSortDescriptor *sort = nil;
     
-    // all string keys, so do a simple comparison
+    // names are all string keys, so do a simple comparison
     sort = [[NSSortDescriptor alloc] initWithKey:key ascending:_sortAscending selector:@selector(localizedCaseInsensitiveCompare:)];
     [sort autorelease];
     
