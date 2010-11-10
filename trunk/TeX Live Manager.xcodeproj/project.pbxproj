@@ -26,13 +26,13 @@
 		F964A63B0F0071920006868B /* TLMPackageNode.m in Sources */ = {isa = PBXBuildFile; fileRef = F964A63A0F0071920006868B /* TLMPackageNode.m */; };
 		F964A6660F009B1F0006868B /* TLMListOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F964A6650F009B1F0006868B /* TLMListOperation.m */; };
 		F97A7E500F13067C008EBCEA /* TLMTask.m in Sources */ = {isa = PBXBuildFile; fileRef = F97A7E4F0F13067C008EBCEA /* TLMTask.m */; };
+		F97B37B1128B4FCC00B49CA7 /* agent_installer.py in Resources */ = {isa = PBXBuildFile; fileRef = F97B37B0128B4FCC00B49CA7 /* agent_installer.py */; };
+		F97B37B2128B4FE600B49CA7 /* agent_installer.py in Copy aux executables */ = {isa = PBXBuildFile; fileRef = F97B37B0128B4FCC00B49CA7 /* agent_installer.py */; };
 		F97E85740EFA18F400862882 /* TeXDistTool.icns in Resources */ = {isa = PBXBuildFile; fileRef = F97E85730EFA18F400862882 /* TeXDistTool.icns */; };
 		F97E860C0EFA3BFD00862882 /* TeXDistDocument.icns in Resources */ = {isa = PBXBuildFile; fileRef = F97E860B0EFA3BFD00862882 /* TeXDistDocument.icns */; };
 		F9825520125045980018CB73 /* TLMAutobackupController.m in Sources */ = {isa = PBXBuildFile; fileRef = F982551F125045980018CB73 /* TLMAutobackupController.m */; };
 		F982553F12504E210018CB73 /* AutobackupSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = F982553E12504E210018CB73 /* AutobackupSheet.xib */; };
 		F98FADA910672943002C1972 /* TLMNetInstallOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F98FADA810672943002C1972 /* TLMNetInstallOperation.m */; };
-		F994A52412612623007EF95F /* uninstall_agent.sh in Resources */ = {isa = PBXBuildFile; fileRef = F994A52312612623007EF95F /* uninstall_agent.sh */; };
-		F994A52512612636007EF95F /* uninstall_agent.sh in Copy aux executables */ = {isa = PBXBuildFile; fileRef = F994A52312612623007EF95F /* uninstall_agent.sh */; };
 		F994A5AB1267E97F007EF95F /* TLMBackupListOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F994A5AA1267E97F007EF95F /* TLMBackupListOperation.m */; };
 		F9963EC50F0490E9005F0174 /* TLMRemoveOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F9963EC40F0490E9005F0174 /* TLMRemoveOperation.m */; };
 		F9963FEF0F054999005F0174 /* TLMInstallOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F9963FEE0F054999005F0174 /* TLMInstallOperation.m */; };
@@ -76,7 +76,6 @@
 		F9D37C9A0F01A80800FB755E /* TLMGradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D37C990F01A80800FB755E /* TLMGradientView.m */; };
 		F9D37D640F01EA8900FB755E /* TLMUpdateListDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D37D630F01EA8900FB755E /* TLMUpdateListDataSource.m */; };
 		F9D37E7B0F02B5F700FB755E /* TLMOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D37E7A0F02B5F700FB755E /* TLMOutlineView.m */; };
-		F9D85F79125E863C00C0FEC5 /* install_agent.sh in Copy aux executables */ = {isa = PBXBuildFile; fileRef = F9D85F74125E85FD00C0FEC5 /* install_agent.sh */; };
 		F9D85F7A125E865E00C0FEC5 /* update_check.py in Resources */ = {isa = PBXBuildFile; fileRef = F9D85F75125E85FD00C0FEC5 /* update_check.py */; };
 		F9D85F7B125E866100C0FEC5 /* com.googlecode.mactlmgr.update_check.plist in Resources */ = {isa = PBXBuildFile; fileRef = F9D85F73125E85FD00C0FEC5 /* com.googlecode.mactlmgr.update_check.plist */; };
 		F9DCD36C0F06F0A200600DD2 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9DCD3650F06F08C00600DD2 /* Sparkle.framework */; };
@@ -213,8 +212,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 6;
 			files = (
-				F994A52512612636007EF95F /* uninstall_agent.sh in Copy aux executables */,
-				F9D85F79125E863C00C0FEC5 /* install_agent.sh in Copy aux executables */,
+				F97B37B2128B4FE600B49CA7 /* agent_installer.py in Copy aux executables */,
 				F9B139DA0EECBECD007C0046 /* tlu_ipctask in Copy aux executables */,
 			);
 			name = "Copy aux executables";
@@ -284,6 +282,7 @@
 		F964A6650F009B1F0006868B /* TLMListOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMListOperation.m; sourceTree = "<group>"; };
 		F97A7E4E0F13067C008EBCEA /* TLMTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMTask.h; sourceTree = "<group>"; };
 		F97A7E4F0F13067C008EBCEA /* TLMTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMTask.m; sourceTree = "<group>"; };
+		F97B37B0128B4FCC00B49CA7 /* agent_installer.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = agent_installer.py; sourceTree = "<group>"; };
 		F97E85730EFA18F400862882 /* TeXDistTool.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = TeXDistTool.icns; sourceTree = "<group>"; };
 		F97E860B0EFA3BFD00862882 /* TeXDistDocument.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = TeXDistDocument.icns; sourceTree = "<group>"; };
 		F982551E125045980018CB73 /* TLMAutobackupController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMAutobackupController.h; sourceTree = "<group>"; };
@@ -291,7 +290,6 @@
 		F982553C12504E040018CB73 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/AutobackupSheet.xib; sourceTree = "<group>"; };
 		F98FADA710672943002C1972 /* TLMNetInstallOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMNetInstallOperation.h; sourceTree = "<group>"; };
 		F98FADA810672943002C1972 /* TLMNetInstallOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMNetInstallOperation.m; sourceTree = "<group>"; };
-		F994A52312612623007EF95F /* uninstall_agent.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = uninstall_agent.sh; sourceTree = "<group>"; };
 		F994A5A91267E97F007EF95F /* TLMBackupListOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMBackupListOperation.h; sourceTree = "<group>"; };
 		F994A5AA1267E97F007EF95F /* TLMBackupListOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMBackupListOperation.m; sourceTree = "<group>"; };
 		F9963EC30F0490E9005F0174 /* TLMRemoveOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMRemoveOperation.h; sourceTree = "<group>"; };
@@ -359,7 +357,6 @@
 		F9D37E790F02B5F700FB755E /* TLMOutlineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMOutlineView.h; sourceTree = "<group>"; };
 		F9D37E7A0F02B5F700FB755E /* TLMOutlineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMOutlineView.m; sourceTree = "<group>"; };
 		F9D85F73125E85FD00C0FEC5 /* com.googlecode.mactlmgr.update_check.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = com.googlecode.mactlmgr.update_check.plist; sourceTree = "<group>"; };
-		F9D85F74125E85FD00C0FEC5 /* install_agent.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = install_agent.sh; sourceTree = "<group>"; };
 		F9D85F75125E85FD00C0FEC5 /* update_check.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = update_check.py; sourceTree = "<group>"; };
 		F9D9AEB60F0D7EED00CB1A2F /* tlu_ipctask-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "tlu_ipctask-Info.plist"; sourceTree = "<group>"; };
 		F9DCD3590F06F08C00600DD2 /* Sparkle.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Sparkle.xcodeproj; path = Sparkle/Sparkle.xcodeproj; sourceTree = "<group>"; };
@@ -665,9 +662,8 @@
 		F9D85F72125E85FD00C0FEC5 /* agent */ = {
 			isa = PBXGroup;
 			children = (
-				F994A52312612623007EF95F /* uninstall_agent.sh */,
+				F97B37B0128B4FCC00B49CA7 /* agent_installer.py */,
 				F9D85F73125E85FD00C0FEC5 /* com.googlecode.mactlmgr.update_check.plist */,
-				F9D85F74125E85FD00C0FEC5 /* install_agent.sh */,
 				F9D85F75125E85FD00C0FEC5 /* update_check.py */,
 			);
 			path = agent;
@@ -890,7 +886,7 @@
 				F9A4A106105D736B00F5AC62 /* texlive.profile.plist in Resources */,
 				F982553F12504E210018CB73 /* AutobackupSheet.xib in Resources */,
 				F9C0D3E7125ECF3700B1FBE5 /* LaunchAgentSheet.xib in Resources */,
-				F994A52412612623007EF95F /* uninstall_agent.sh in Resources */,
+				F97B37B1128B4FCC00B49CA7 /* agent_installer.py in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
