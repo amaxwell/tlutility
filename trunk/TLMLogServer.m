@@ -255,8 +255,12 @@ static NSConnection * __TLMLSCreateAndRegisterConnectionForServer(TLMLogServer *
                                                                  object:self
                                                                userInfo:userInfo];
             
-            // main thread perform is expensive, but this occurs only once per update
-            [[NSNotificationCenter defaultCenter] performSelectorOnMainThread:@selector(postNotification:) withObject:note waitUntilDone:NO];
+            /*
+             Again, main thread perform is expensive, but this occurs only once per update.
+             This one is synchronous, so the progress indicator can be started immediately;
+             otherwise, sometimes the log messages are displayed before the progress bar starts.
+             */
+            [[NSNotificationCenter defaultCenter] performSelectorOnMainThread:@selector(postNotification:) withObject:note waitUntilDone:YES];
         }
         else if ([msg hasPrefix:@"end-of-header"]) {
             
