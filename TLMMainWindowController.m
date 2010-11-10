@@ -786,51 +786,36 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     [lac autorelease];
     if (returnCode & TLMLaunchAgentChanged) {
         
-        // always uninstall, since this may be changing from ~/Library to /Library or vice-versa
-        NSMutableArray *options = [NSMutableArray array];
-        NSString *removeScriptPath = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"uninstall_agent.sh"];
-        
-        // need to pass this so it cleans up ~/Library/LaunchAgents
-        [options addObject:@"-h"];
-        [options addObject:NSHomeDirectory()];
-        
-        // this is the user ID under which to unload the agent
-        [options addObject:@"-u"];
-        [options addObject:[NSString stringWithFormat:@"%d", getuid()]];
-        
-        TLMAuthorizedOperation *uninstallOp = [[TLMAuthorizedOperation alloc] initWithAuthorizedCommand:removeScriptPath options:options];
-        [self _addOperation:uninstallOp selector:@selector(_handleLaunchAgentInstallFinishedNotification:)];
-        [uninstallOp autorelease];
+        NSMutableArray *options = [NSMutableArray arrayWithObject:[[NSBundle mainBundle] pathForAuxiliaryExecutable:@"agent_installer.py"]];
+                
+        TLMOperation *installOp = nil;
         
         if ((returnCode & TLMLaunchAgentEnabled) != 0) {
             
-            options = [NSMutableArray array];
-            NSString *installScriptPath = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"install_agent.sh"];
-
-            // this signals intent to install in ~/Library instead of /Library
-            if ((returnCode & TLMLaunchAgentAllUsers) == 0) {
-                [options addObject:@"-h"];
-                [options addObject:NSHomeDirectory()];
-                
-                [options addObject:@"-o"];
-                [options addObject:[NSString stringWithFormat:@"%d", getuid()]];
-            }
+            [options addObject:@"--install"];
             
-            // this is the user ID under which to load the agent
-            [options addObject:@"-u"];
-            [options addObject:[NSString stringWithFormat:@"%d", getuid()]];
-            
-            [options addObject:@"-p"];
+            [options addObject:@"--plist"];
             [options addObject:[lac propertyListPath]];
             
-            [options addObject:@"-b"];
-            [options addObject:[[NSBundle mainBundle] pathForResource:@"update_check" ofType:@"py"]];
-                        
-            TLMAuthorizedOperation *installOp = [[TLMAuthorizedOperation alloc] initWithAuthorizedCommand:installScriptPath options:options];
-            [installOp addDependency:uninstallOp];
-            [self _addOperation:installOp selector:@selector(_handleLaunchAgentInstallFinishedNotification:)];
-            [installOp release];
-        }  
+            [options addObject:@"--script"];
+            [options addObject:[[NSBundle mainBundle] pathForResource:@"update_check" ofType:@"py"]];            
+
+        }
+        else {
+            [options addObject:@"--remove"];
+        }
+        
+        if ((returnCode & TLMLaunchAgentAllUsers) != 0) {
+            // ??? how about uninstalling or unloading from ~/Library?
+            installOp = [[TLMAuthorizedOperation alloc] initWithAuthorizedCommand:@"/usr/bin/python" options:options];
+        }
+        else {
+            // ??? how about uninstalling or unloading from /Library?
+            installOp = [[TLMOperation alloc] initWithCommand:@"/usr/bin/python" options:options];
+        }                      
+        
+        [self _addOperation:installOp selector:@selector(_handleLaunchAgentInstallFinishedNotification:)];
+        [installOp release];
         
     }
 }

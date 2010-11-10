@@ -12,7 +12,8 @@
 	<key>ProgramArguments</key>
 	<array>
 		<string>/usr/bin/python</string>
-		<string>/Library/Application Support/TeX Live Utility/update_check.py</string>
+		<!-- last arg will be replaced by the installer script -->
+		<string>-c ""</string>
 	</array>
 	<key>StartCalendarInterval</key>
 	<dict>
