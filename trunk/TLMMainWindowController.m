@@ -184,10 +184,11 @@ static char _TLMOperationQueueOperationContext;
     NSProgressIndicator *pb = [NSKeyedUnarchiver unarchiveObjectWithData:[NSKeyedArchiver archivedDataWithRootObject:[self _progressBar]]];
     [[[self _progressBar] superview] replaceSubview:[self _progressBar] with:pb];
     [self set_progressBar:pb];
-    [[self _progressBar] setMinValue:0.0];
-    [[self _progressBar] setMaxValue:[[[aNote userInfo] objectForKey:TLMLogSize] doubleValue]];
     // we always have an integral number of bytes >> 1, so set a fake value here so it draws immediately
-    [[self _progressBar] setDoubleValue:1];
+    const double initialValue = 1.0;
+    [[self _progressBar] setMinValue:0.0];
+    [[self _progressBar] setMaxValue:([[[aNote userInfo] objectForKey:TLMLogSize] doubleValue] + initialValue)];
+    [[self _progressBar] setDoubleValue:initialValue];
     [[self _progressBar] setHidden:NO];
     [[self _progressBar] display];
 }
