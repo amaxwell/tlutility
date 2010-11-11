@@ -196,9 +196,11 @@ static char _TLMOperationQueueOperationContext;
 - (void)_updateProgressBar:(NSNotification *)aNote
 {
     [[self _progressBar] incrementBy:[[[aNote userInfo] objectForKey:TLMLogSize] doubleValue]];
-    // make sure it displays immediately
-    [[self _progressBar] display];
-    
+    /*
+     Formerly called -[[self _progressBar] display] here.  That was killing performance after I
+     added progress updates to the infra operation; drawing basically stalled, since the
+     window had to synchronize too frequently.  All this to say...don't do that again.
+     */
     CGFloat p = [[self _progressBar] doubleValue] / [[self _progressBar] maxValue];
     [NSApp setApplicationIconImage:[TLMProgressIndicatorCell applicationIconBadgedWithProgress:p]];
 }
