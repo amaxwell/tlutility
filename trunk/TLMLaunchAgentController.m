@@ -149,13 +149,11 @@ static NSString * __TLMGetTemporaryDirectory()
 {
     if (AGENT_DISABLED) {
         [_scheduleMatrix selectCellWithTag:TLMScheduleMatrixNever];
-        [_allUsersCheckbox setEnabled:NO];
         [_dayField setEnabled:NO];
         [_datePicker setEnabled:NO];
     }
     else {
         
-        [_allUsersCheckbox setEnabled:YES];
         [_datePicker setEnabled:YES];
 
         if (CHECK_WEEKLY) {
