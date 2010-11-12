@@ -378,5 +378,32 @@
             <pubDate>Wed, 29 Sep 2010 19:39:54 -0700</pubDate>
             <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20100929.tgz" sparkle:version="0.89" length="1649927" type="application/octet-stream" sparkle:dsaSignature="MCwCFEg4DNmSJkSzQ+yDsVdoXyfgwTjPAhQbArRa3fozk2CIg4/JytbJ/7PzZg=="></enclosure>
         </item>
+        <item>
+            <title>Version 0.90</title>
+            <description>
+                <h3>Changes Since 0.89</h3>
+                <li>Avoid constant refreshing of Info panel while an item is selected while updating; bug #30</li>
+                <li>Restore logging of the mirror version</li>
+                <li>Make mirror version checking more robust; deal with missing 00texlive.config in tlpdb</li>
+                <li>Reloading lists after a change should happen consistently now, and also lazily</li>
+                <li>Do not show links to nonexistent files in the Info panel</li>
+                <li>Ignore characters after the year in mirror version checking, which fixes an issue with tlcontrib</li>
+                <li>Avoid doing legacy mirror checks for unofficial repositories</li>
+                <li>Added a launchd agent for scheduled TeX Live update checking (Actions menu); bug #48</li>
+                <li>Progress bar should now be displayed for single-item updates</li>
+                <li>Added a backup listing, with capability to restore individual backups</li>
+                <li>Info panel no longer does network operations to find a mirror URL</li>
+                <li>Authentication is no longer necessary if you have write access to the install directory, even if the any user box in preferences is checked</li>
+                <li>Fixed spurious falure alerts when installing from tlcritical as an unprivileged user, due to a race between kqueues</li>
+                <li>Net installer can be enabled via the TLMEnableNetInstall preference in Terminal, but is not fully tested</li>
+                <li>Use a hard timeout when checking for a correct mirror version</li>
+                <li>Fixed a major performance issue when running non-root tasks, by more carefully checking kqueue events for EV_EOF instead of blindly calling read(2)</li>
+                <li>Added some proxy environment variable checks to help debug problems for overly-clever users</li>
+                <li>Dropping a tlnet mirror URL on the application icon will cause it to use that mirror for updates</li>
+                <li>Allow AppKit to update the progress bar, rather than forcing it, which caused a serious performance problem when downloading the infrastructure updates</li>
+            </description>
+            <pubDate>Fri, 12 Nov 2010 08:36:09 -0800</pubDate>
+            <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20101112.tgz" sparkle:version="0.90" length="1741133" type="application/octet-stream" sparkle:dsaSignature="MCwCFFHdERFDG2EsgZ/hhLyIryZERG6pAhQ10pW6k2MrUB5g2H2kPRNAfIs7vA=="></enclosure>
+        </item>
     </channel>
 </rss>
