@@ -17,15 +17,9 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.89</string>
+	<string>0.90</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
-	<key>CFBundleVersion</key>
-	<string>0.89</string>
-	<key>LSMinimumSystemVersion</key>
-	<string>10.5.7</string>
-	<key>NSAppleScriptEnabled</key>
-	<string>YES</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -39,6 +33,12 @@
 			</array>
 		</dict>
 	</array>
+	<key>CFBundleVersion</key>
+	<string>0.90</string>
+	<key>LSMinimumSystemVersion</key>
+	<string>10.5.7</string>
+	<key>NSAppleScriptEnabled</key>
+	<string>YES</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2008-2010, Adam R. Maxwell.
 All Rights Reserved.</string>
