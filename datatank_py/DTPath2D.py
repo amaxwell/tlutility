@@ -61,11 +61,37 @@ class DTPath2D(object):
             yvalues = np.insert(yvalues, 0, len(yvalues))
             self._xvalues = np.append(self._xvalues, xvalues)
             self._yvalues = np.append(self._yvalues, yvalues)
+    
+    def _offsets(self):
+        """List of starting index and length of each subpath element"""        
+        
+        offsets = []
+        # (start, length)
+        offset = (1, self._yvalues[0])
+        offsets.append(offset)
+        next = offset[0] + offset[1]
+        
+        while (next + 1) < len(self._yvalues):
+            # next is index of the length; start is the index after that
+            offset = (next + 1, self._yvalues[next])
+            offsets.append(offset)
+            next += offset[1] + len(offsets)            
+                
+        return offsets
+        
+    def __iter__(self):
+        """Iterate subpaths in order of addition as DTPath2D objects"""
+        
+        for offset in self._offsets():
+            start, length = offset
+            yield (DTPath2D(self._xvalues[start:start + length], self._yvalues[start:start + length]))
         
     def __str__(self):
-        s = "{\n"
-        for x, y in zip(self._xvalues, self._yvalues):
-            s += "(%s, %s)\n" % (x, y)
+        s = super(DTPath2D, self).__str__() + " {\n"
+        for idx, subpath in enumerate(self):
+            s += "\n  Subpath %d (%d elements)\n" % (idx, len(subpath._xvalues - 1))
+            for x, y in zip(subpath._xvalues[1:], subpath._yvalues[1:]):
+                s += "    (%s, %s)\n" % (x, y)
         s += "}\n"
         return s
     
@@ -98,5 +124,16 @@ if __name__ == '__main__':
         yvalues = np.append(yvalues, -yvalues)
         yvalues = np.append(yvalues, yvalues[0])
         df["Path 3"] = DTPath2D(xvalues, yvalues)
+        
+        xvalues = np.array((-1, -1, 1, 1, -1))
+        yvalues = np.array((-1, 1, 1, -1, -1))
+        path = DTPath2D(xvalues, yvalues)
+        xvalues = xvalues * 0.5
+        yvalues = yvalues * 0.5
+        path.add_loop(xvalues, yvalues)
+        df["Path 4"] = path
+        
+        for idx, subpath in enumerate(path):
+            df["Subpath %d" % (idx)] = path
         
         
