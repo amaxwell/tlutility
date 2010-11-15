@@ -102,7 +102,7 @@
         }
 
     }
-    else {
+    else if (archivedRoot) {
         TLMLog(__func__, @"Profile detected from unreleased version; using new defaults instead.");
     }
 
