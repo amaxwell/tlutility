@@ -111,17 +111,10 @@ static NSMutableDictionary *_databases = nil;
             NSParameterAssert(actualURL != nil);
         }
         
-        // if redirected (e.g., from mirror.ctan.org), don't cache by the original host
-        if ([[db actualURL] isEqual:tlpdbURL] == NO) {
-            
-            if ([db actualURL]) {
-                [_databases setObject:db forKey:[db actualURL]];
-            }
-            else {
-                // should never happen... http://email.esm.psu.edu/pipermail/macosx-tex/2010-November/045760.html
-                TLMLog(__func__, @"Actual URL was nil.  Please copy the output of this view and send it to the maintainer of TeX Live Utility.");
-            }
-
+        // if redirected (e.g., from mirror.ctan.org), actualURL is non-nil
+        if ([db actualURL] && [[db actualURL] isEqual:tlpdbURL] == NO) {            
+            [_databases setObject:db forKey:[db actualURL]];
+            // don't cache by the original host
             [_databases removeObjectForKey:tlpdbURL];
         }
     }
@@ -165,11 +158,12 @@ static NSMutableDictionary *_databases = nil;
 
 - (NSURLRequest *)connection:(NSURLConnection *)connection willSendRequest:(NSURLRequest *)request redirectResponse:(NSURLResponse *)response;
 {
+    // response is nil if we are not processing a redirect
     if (response) {
         TLMLog(__func__, @"redirected request to %@", [[request URL] absoluteString]);
         TLMLogServerSync();
+        [self setActualURL:[request URL]];
     }
-    [self setActualURL:[request URL]];
     return request;
 }
 
