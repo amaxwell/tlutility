@@ -11,7 +11,7 @@ def _max_bounding_box(a, b):
     return (np.nanmin((xmin_a, xmin_b)), np.nanmax((xmax_a, xmax_b)), np.nanmin((ymin_a, ymin_b)), np.nanmax((ymax_a, ymax_b)))
     
 def _bounding_box(xvalues, yvalues):        
-    assert len(xvalues) == len(yvalues), "inconsistent lengths"
+    assert len(xvalues) == len(yvalues), "DTPath2D: inconsistent lengths for bbox"
     if len(xvalues) == 0:
         return (0, 0, 0, 0)
     return (np.nanmin(xvalues), np.nanmax(xvalues), np.nanmin(yvalues), np.nanmax(yvalues))
@@ -29,6 +29,9 @@ class DTPath2D(object):
         points_only -- boolean indicating whether shape information is included
         
         Discussion:
+        The input arrays must have the same length, and not be empty.  DataTank
+        refuses to read an empty path, so there's no point in creating one.
+        
         If points_only is set to False, xvalues and yvalues are assumed to have the
         correct packed array format for a DTPath2D, including all subpaths.  Otherwise,
         they are assumed to define points of a single path, and the necessary subpath
@@ -51,9 +54,9 @@ class DTPath2D(object):
         
         """
         
-        assert xvalues != None and yvalues != None, "both x and y arrays are required"
-        assert len(xvalues) == len(yvalues), "inconsistent lengths"   
-        assert len(xvalues) > 0, "empty arrays are not allowed"
+        assert xvalues != None and yvalues != None, "DTPath2D: both x and y arrays are required"
+        assert len(xvalues) == len(yvalues), "DTPath2D: inconsistent lengths"   
+        assert len(xvalues) > 0, "DTPath2D: empty arrays are not allowed"
         
         xvalues = np.array(xvalues).astype(np.double)
         yvalues = np.array(yvalues).astype(np.double)
@@ -70,7 +73,7 @@ class DTPath2D(object):
         return self._bounding_box
     
     def add_loop(self, xvalues, yvalues):
-        assert len(xvalues) == len(yvalues), "inconsistent lengths"
+        assert len(xvalues) == len(yvalues), "DTPath2D: inconsistent lengths"
         xvalues = np.array(xvalues).astype(np.double)
         yvalues = np.array(yvalues).astype(np.double)
         if len(xvalues) > 0:
@@ -104,7 +107,7 @@ class DTPath2D(object):
             xvals = xvals[indices]
             yvals = yvals[indices]            
             
-            assert len(xvals) > 1, "A valid path requires at least two points."
+            assert len(xvals) > 1, "DTPath2D: A valid path requires at least two points."
             
             def _is_subpath_closed(path):
                 first_x, first_y = path._xvalues[1], path._yvalues[1]
@@ -117,6 +120,7 @@ class DTPath2D(object):
                     first_x, first_y = path._xvalues[1], path._yvalues[1]
                     path._xvalues = np.append(path._xvalues, (first_x,))
                     path._yvalues = np.append(path._yvalues, (first_y,))
+                    # update length metadata for this subpath!
                     path._yvalues[0] += 1
             
             if sparse_path == None:
@@ -135,14 +139,15 @@ class DTPath2D(object):
         # (start, length)
         offset = (1, self._yvalues[0])
         offsets.append(offset)
-        next = offset[0] + offset[1]
+        next = offset[1] + 1
         
         while (next + 1) < len(self._yvalues):
             # next is index of the length; start is the index after that
+            assert self._yvalues[next] > 0, "DTPath2D: negative index in offset computation"
             offset = (next + 1, self._yvalues[next])
             offsets.append(offset)
-            next += offset[1] + len(offsets)            
-                
+            next += offset[1] + 1
+                            
         return offsets
         
     def __iter__(self):
