@@ -34,22 +34,9 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 # 
 
-from CoreFoundation import CFUserNotificationDisplayNotice, CFUserNotificationDisplayAlert, CFBundleCreate, CFBundleCopyResourceURL, CFPreferencesCopyAppValue
-from CoreFoundation import kCFUserNotificationNoteAlertLevel, kCFUserNotificationAlternateResponse
-
-from Quartz import CGMainDisplayID, CGDisplayIsCaptured, CGSessionCopyCurrentDictionary
-from Quartz import kCGSessionOnConsoleKey, kCGSessionLoginDoneKey
-
-from LaunchServices import LSFindApplicationForInfo, LSOpenFromURLSpec
-from LaunchServices import kLSUnknownCreator, LSLaunchURLSpec
-
-from Foundation import NSURL
-
 from subprocess import Popen, PIPE
 import os, sys
 from time import sleep
-
-_BUNDLE_ID = "com.googlecode.mactlmgr.tlu"
 
 # dismiss alert after 12 hours of ignoring it (i.e., work computer running over the weekend)
 _ALERT_TIMEOUT = 3600 * 12
@@ -59,25 +46,34 @@ _ALERT_TIMEOUT = 3600 * 12
 VERSION = 0.1
 
 def log_message(msg):
+    """Writes to standard error, prepending the calling program name."""
     sys.stderr.write("%s: %s\n" % (os.path.basename(sys.argv[0]), msg))
 
-def check_for_updates():
+def check_for_updates(tlmgr_path, repository=None):
+    """Check for updates using TeX Live Manager.
     
-    # if this hasn't been set, bail out, as this user likely won't care
-    texbin_path = CFPreferencesCopyAppValue("TLMTexBinPathPreferenceKey", _BUNDLE_ID)
-    if texbin_path == None and os.path.exists("/usr/texbin"):
-        texbin_path = "/usr/texbin"
-        
-    if texbin_path == None:
-        log_message("no tlmgr path set; TeX Live update check will not proceed")
-        return 0
-        
-    cmd = [os.path.join(texbin_path, "tlmgr"), "update", "--list", "--machine-readable"]
+    Arguments:
+    tlmgr_path -- absolute path to tlmgr executable
+    repository -- optional URL to be passed as the --repository argument to tlmgr
     
-    location = CFPreferencesCopyAppValue("TLMFullServerURLPreferenceKey", _BUNDLE_ID)
-    if location:
-        log_message("tlmgr will use %s" % (location))
-        cmd += ("--location", location)
+    Returns:
+    Two-tuple with number of available updates and the actual repository used.
+    
+    Discussion:
+    Launches the tlmgr executable and parses its machine-readable output.  Only
+    updates and additions are counted towards the number of available updates
+    returned.
+    
+    """
+    
+    assert os.path.isabs(tlmgr_path), "tlmgr_path must be absolute"
+    assert os.path.exists(tlmgr_path), "%s does not exist" % (tlmgr_path)
+    
+    cmd = [tlmgr_path, "update", "--list", "--machine-readable"]
+    
+    if repository:
+        log_message("tlmgr will use %s" % (repository))
+        cmd += ("--repository", repository)
         
     tlmgr = Popen(cmd, stdout=PIPE, universal_newlines=True)
     (stdout, stderr) = tlmgr.communicate()
@@ -85,7 +81,7 @@ def check_for_updates():
     output = "".join([c for c in stdout])
     is_list_line = False
     count = 0
-    actual_location = None
+    actual_repository = None
     for line in output.split("\n"):
         
         if line == "end-of-header":
@@ -106,54 +102,111 @@ def check_for_updates():
             if len(comps) >= 2 and comps[1] in ("a", "u"):
                 count += 1
         elif line.startswith("location-url"):
-            actual_location = line.strip().split()[-1]
+            actual_repository = line.strip().split()[-1]
     
-    return count, actual_location
+    return count, actual_repository
+    
+def macosx_update_check():
+    """Check for updates on Mac OS X.  Returns zero on success.
+    
+    Discussion:
+    Requires PyObjC bindings for Python.  Works on Mac OS X 10.5 and later, only, unless
+    the necessary PyObjC components can be installed manually on earlier systems.  An
+    alert is displayed if updates are available, and the user is given an option to
+    ignore it or launch TeX Live Utility to handle the updates.
+    
+    Some sanity checks are present to ensure a login session that can display the alert.
+    They may not be sufficient to avoid showing the alert over a full-screen window,
+    unless an application has captured the display.
+    
+    """
+    
+    assert sys.platform == "darwin", "incorrect platform"
+    
+    from CoreFoundation import CFUserNotificationDisplayNotice, CFUserNotificationDisplayAlert, CFBundleCreate, CFBundleCopyResourceURL, CFPreferencesCopyAppValue
+    from CoreFoundation import kCFUserNotificationNoteAlertLevel, kCFUserNotificationAlternateResponse
 
-if __name__ == '__main__':
+    from Quartz import CGMainDisplayID, CGDisplayIsCaptured, CGSessionCopyCurrentDictionary
+    from Quartz import kCGSessionOnConsoleKey, kCGSessionLoginDoneKey
+
+    from LaunchServices import LSFindApplicationForInfo, LSOpenFromURLSpec
+    from LaunchServices import kLSUnknownCreator, LSLaunchURLSpec
+
+    from Foundation import NSURL
     
     # http://developer.apple.com/library/mac/#documentation/MacOSX/Conceptual/BPMultipleUsers/BPMultipleUsers.html
     sessionInfo = CGSessionCopyCurrentDictionary()
     if sessionInfo == None:
         log_message("unable to get session dictionary")
-        exit(1)
+        return 0
         
     if sessionInfo[kCGSessionOnConsoleKey] is False:
         log_message("not running as console user; skipping update check")
-        exit(1)
+        return 0
         
     if sessionInfo[kCGSessionLoginDoneKey] is False:
         log_message("login incomplete; skipping update check")
-        exit(1)
+        return 0
             
     # check this first; no point in continuing if we can't show the alert
     # note: this doesn't help with Skim's full screen mode
     if CGDisplayIsCaptured(CGMainDisplayID()):
         log_message("main display not available for update alert")
-        exit(0)
+        return 0
+
+    # TeX Live Utility bundle identifier
+    bundle_id = "com.googlecode.mactlmgr.tlu"
     
-    update_count, actual_location = check_for_updates()
+    # if this hasn't been set, try the default path
+    texbin_path = CFPreferencesCopyAppValue("TLMTexBinPathPreferenceKey", bundle_id)
+    if texbin_path == None and os.path.exists("/usr/texbin"):
+        texbin_path = "/usr/texbin"
+        
+    if texbin_path == None:
+        log_message("no tlmgr path set; TeX Live update check will not proceed")
+        return 1
+        
+    repository = CFPreferencesCopyAppValue("TLMFullServerURLPreferenceKey", bundle_id)
+    update_count, actual_repository = check_for_updates(os.path.join(texbin_path, "tlmgr"), repository=repository)
+
     if update_count == 0:
-        exit(0)
+        return 0
      
     title = "TeX Live updates available"
     msg = "Updates for %d %s are available for TeX Live.  Would you like to update with TeX Live Utility now, or at a later time?" % (update_count, "packages" if update_count > 1 else "package")
     
-    ret, tlu_fsref, tlu_url = LSFindApplicationForInfo(kLSUnknownCreator, _BUNDLE_ID, None, None, None)
+    # see if we can find TeX Live Utility...hopefully LaunchServices is working today
+    ret, tlu_fsref, tlu_url = LSFindApplicationForInfo(kLSUnknownCreator, bundle_id, None, None, None)
             
     bundle = CFBundleCreate(None, tlu_url) if ret == 0 else None
     icon_url = CFBundleCopyResourceURL(bundle, "TeXDistTool", "icns", None) if bundle else None
     
+    # show a modal alert, with options to update now or later
     cancel, response = CFUserNotificationDisplayAlert(_ALERT_TIMEOUT, kCFUserNotificationNoteAlertLevel, icon_url, None, None, title, msg, "Later", "Update", None, None)    
     if kCFUserNotificationAlternateResponse == response:
         
+        # launch TeX Live Utility, passing the URL as an odoc Apple Event
         spec = LSLaunchURLSpec()
         spec.appURL = tlu_url
-        spec.itemURLs = [NSURL.URLWithString_(actual_location)] if actual_location else None
+        spec.itemURLs = [NSURL.URLWithString_(actual_repository)] if actual_repository else None
         ret, launchedURL = LSOpenFromURLSpec(spec, None)
 
     else:
         log_message("user postponed TeX Live updates")
         
-            
+    return 0
+
+if __name__ == '__main__':
+    
+    status = 0
+    
+    if sys.platform == "darwin":
+        status = macosx_update_check()
+    else:
+        log_message("unhandled platform %s" % (sys.platform))
+        tlmgr_path = "/usr/texbin/tlmgr"
+        update_count, actual_repository = check_for_updates(tlmgr_path)
+        log_message("%d updates available from %s" % (update_count, actual_repository))
+        
+    exit(status)      
      
