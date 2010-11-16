@@ -113,7 +113,15 @@ static NSMutableDictionary *_databases = nil;
         
         // if redirected (e.g., from mirror.ctan.org), don't cache by the original host
         if ([[db actualURL] isEqual:tlpdbURL] == NO) {
-            [_databases setObject:db forKey:[db actualURL]];
+            
+            if ([db actualURL]) {
+                [_databases setObject:db forKey:[db actualURL]];
+            }
+            else {
+                // should never happen... http://email.esm.psu.edu/pipermail/macosx-tex/2010-November/045760.html
+                TLMLog(__func__, @"Actual URL was nil.  Please copy the output of this view and send it to the maintainer of TeX Live Utility.");
+            }
+
             [_databases removeObjectForKey:tlpdbURL];
         }
     }
