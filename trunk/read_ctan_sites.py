@@ -35,6 +35,8 @@
 
 from plistlib import writePlist
 from urllib import urlretrieve
+from calendar import timegm
+from datetime import datetime
 
 SITES_URL = "http://www.tex.ac.uk/tex-archive/CTAN.sites"
 
@@ -132,14 +134,15 @@ if __name__ == '__main__':
             
             saved_line = line
         
-        plist = {}    
+        plist = { "sites" : {}, "timestamp" : timegm(datetime.utcnow().timetuple()) }
+        sites_dict = plist["sites"]
         for continent in continents:
             
             # keep a list of all mirrors for a given continent
-            plist[continent.name] = []
+            sites_dict[continent.name] = []
             
             for mirror in continent:
-                clist = plist[continent.name]
+                clist = sites_dict[continent.name]
                 mdict = {}
                 mdict["name"] = mirror.mirror_name()
                 mdict["country"] = mirror.country()
