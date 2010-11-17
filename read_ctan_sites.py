@@ -34,6 +34,9 @@
 #
 
 from plistlib import writePlist
+from urllib import urlretrieve
+
+SITES_URL = "http://www.tex.ac.uk/tex-archive/CTAN.sites"
 
 JUNK    = 0 << 1
 COUNTRY = 1 << 2
@@ -86,7 +89,9 @@ class Continent(object):
 
 if __name__ == '__main__':
     
-    with open("CTAN.sites", "rb") as sites_file:
+    (sites_path, headers) = urlretrieve(SITES_URL)
+    
+    with open(sites_path, "rb") as sites_file:
         
         state = 0
         state |= JUNK
@@ -130,11 +135,10 @@ if __name__ == '__main__':
         plist = {}    
         for continent in continents:
             
-            #print "*** %s ***" % (continent.name)
+            # keep a list of all mirrors for a given continent
             plist[continent.name] = []
             
             for mirror in continent:
-                
                 clist = plist[continent.name]
                 mdict = {}
                 mdict["name"] = mirror.mirror_name()
@@ -142,6 +146,4 @@ if __name__ == '__main__':
                 mdict["urls"] = mirror.urls
                 clist.append(mdict)
 
-                #print mirror
-
-        writePlist(plist, "/tmp/ctan_sites.plist")
+        writePlist(plist, "CTAN.sites.plist")
