@@ -898,17 +898,57 @@ static NSURL * __TLMParseLocationOption(NSString *location)
 {    
     NSString *path = [[self installDirectory] path];
     
-    // will fail regardless...
+    // things are going to fail regardless...
     if (nil == path)
         return NO;
     
-    if ([NSThread isMainThread])
-        return (NO == [[NSFileManager defaultManager] isWritableFileAtPath:path]);
+    NSFileManager *fm = [[NSFileManager new] autorelease];
     
-    NSFileManager *fm = [NSFileManager new];
-    BOOL ret = [fm isWritableFileAtPath:path];
-    [fm release];
-    return (NO == ret);
+    // !!! early return; check top level first, which is the common case
+    if ([fm isWritableFileAtPath:path] == NO)
+        return YES;
+    
+    /*
+     In older versions, this method considered TLMUseRootHomePreferenceKey and the top level dir.
+     This could result in requiring root privileges even if the user had write permission to the
+     tree, which caused root-owned files to also be created in the tree.  Consequently, we need
+     to do a deep directory traversal for the first check; this takes < 3 seconds on my Mac Pro
+     with TL 2010.
+     
+     By doing this once, I assume that the situation won't change during the lifetime of this 
+     process.  I think that's reasonable, so will wait to hear otherwise before monitoring it 
+     with FSEventStream or similar madness.
+     */
+    static NSNumber *recursiveRootRequired = nil;
+    @synchronized(self) {
+        if (nil == recursiveRootRequired) {
+            
+            TLMLog(__func__, @"Beginning one-time recursive check of install directory privileges.");
+            TLMLog(__func__, @"Please be patient.  This will be especially slow if %@ is on a network filesystem%C", path, 0x2026);
+            CFAbsoluteTime start = CFAbsoluteTimeGetCurrent();
+            
+            NSDirectoryEnumerator *dirEnum = [fm enumeratorAtPath:path];
+            BOOL rootRequired = NO;
+            for (NSString *subpath in dirEnum) {
+                
+                subpath = [path stringByAppendingPathComponent:subpath];
+                if ([fm fileExistsAtPath:subpath]) {
+                    if ([fm isWritableFileAtPath:subpath] == NO) {
+                        rootRequired = YES;
+                        break;
+                    }
+                }
+                else {
+                    // I have a bad symlink at /usr/local/texlive/2010/texmf/doc/man/man
+                    TLMLog(__func__, @"%@ does not exist; ignoring permissions", subpath);
+                }
+            }
+            recursiveRootRequired = [[NSNumber alloc] initWithBool:rootRequired];
+            TLMLog(__func__, @"Recursive check completed in %.1f seconds.  Root privileges %@ required.", CFAbsoluteTimeGetCurrent() - start, rootRequired ? @"are" : @"not");
+        }
+    }
+    
+    return [recursiveRootRequired boolValue];
 }
 
 - (BOOL)autoInstall { return [[NSUserDefaults standardUserDefaults] boolForKey:TLMAutoInstallPreferenceKey]; }
