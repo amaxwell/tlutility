@@ -18,6 +18,7 @@
 		F922D79E1038B1E1004E9B12 /* TLMDownload.m in Sources */ = {isa = PBXBuildFile; fileRef = F922D79D1038B1E1004E9B12 /* TLMDownload.m */; };
 		F925D1AB12957B1800D75BB4 /* TLMMirrorController.m in Sources */ = {isa = PBXBuildFile; fileRef = F925D1AA12957B1800D75BB4 /* TLMMirrorController.m */; };
 		F925D1B112957B5600D75BB4 /* Mirrors.xib in Resources */ = {isa = PBXBuildFile; fileRef = F925D1B012957B5600D75BB4 /* Mirrors.xib */; };
+		F925D1BB12957C1B00D75BB4 /* CTAN.sites.plist in Resources */ = {isa = PBXBuildFile; fileRef = F925D1BA12957C1B00D75BB4 /* CTAN.sites.plist */; };
 		F94E74A20EF4965100E0B78F /* TLMTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = F94E74A10EF4965100E0B78F /* TLMTableView.m */; };
 		F957A4E312514B040079E07F /* TLMBackupOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F957A4E212514B040079E07F /* TLMBackupOperation.m */; };
 		F958309812695A0800DB997C /* TLMBackupCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F958309712695A0800DB997C /* TLMBackupCell.m */; };
@@ -268,6 +269,7 @@
 		F925D1A912957B1800D75BB4 /* TLMMirrorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMMirrorController.h; sourceTree = "<group>"; };
 		F925D1AA12957B1800D75BB4 /* TLMMirrorController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMMirrorController.m; sourceTree = "<group>"; };
 		F925D1AE12957B4C00D75BB4 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/Mirrors.xib; sourceTree = "<group>"; };
+		F925D1BA12957C1B00D75BB4 /* CTAN.sites.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = CTAN.sites.plist; sourceTree = "<group>"; };
 		F94E74A00EF4965100E0B78F /* TLMTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMTableView.h; sourceTree = "<group>"; };
 		F94E74A10EF4965100E0B78F /* TLMTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMTableView.m; sourceTree = "<group>"; };
 		F957A4E112514B040079E07F /* TLMBackupOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMBackupOperation.h; sourceTree = "<group>"; };
@@ -495,6 +497,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				F925D1BA12957C1B00D75BB4 /* CTAN.sites.plist */,
 				F9C0D3E6125ECF3700B1FBE5 /* LaunchAgentSheet.xib */,
 				F982553E12504E210018CB73 /* AutobackupSheet.xib */,
 				F9A4A105105D736B00F5AC62 /* texlive.profile.plist */,
@@ -896,6 +899,7 @@
 				F9C0D3E7125ECF3700B1FBE5 /* LaunchAgentSheet.xib in Resources */,
 				F97B37B1128B4FCC00B49CA7 /* agent_installer.py in Resources */,
 				F925D1B112957B5600D75BB4 /* Mirrors.xib in Resources */,
+				F925D1BB12957C1B00D75BB4 /* CTAN.sites.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
