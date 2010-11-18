@@ -35,8 +35,7 @@
 
 from plistlib import writePlist
 from urllib import urlretrieve
-from calendar import timegm
-from datetime import datetime
+from time import time
 
 SITES_URL = "http://www.tex.ac.uk/tex-archive/CTAN.sites"
 
@@ -134,7 +133,7 @@ if __name__ == '__main__':
             
             saved_line = line
         
-        plist = { "sites" : {}, "timestamp" : timegm(datetime.utcnow().timetuple()) }
+        plist = { "sites" : {}, "timestamp" : time() }
         sites_dict = plist["sites"]
         for continent in continents:
             
