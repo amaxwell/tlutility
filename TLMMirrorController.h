@@ -37,10 +37,12 @@
  */
 
 #import <Cocoa/Cocoa.h>
+#import "TLMOutlineView.h"
 
-
-@interface TLMMirrorController : NSWindowController {
-
+@interface TLMMirrorController : NSWindowController <TLMOutlineViewDataSource>
+{
+@private
+    NSMutableArray *_mirrors;
 }
 
 @end
