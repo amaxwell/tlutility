@@ -405,5 +405,16 @@
             <pubDate>Fri, 12 Nov 2010 08:36:09 -0800</pubDate>
             <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20101112.tgz" sparkle:version="0.90" length="1741133" type="application/octet-stream" sparkle:dsaSignature="MCwCFFHdERFDG2EsgZ/hhLyIryZERG6pAhQ10pW6k2MrUB5g2H2kPRNAfIs7vA=="></enclosure>
         </item>
+        <item>
+            <title>Version 0.91</title>
+            <description>
+                <h3>Changes Since 0.90</h3>
+                <li>Remove spurious installer log message</li>
+                <li>Fix caching of database versions for ftp URLs</li>
+                <li>Walk the install directory to determine permissions, instead of looking only at the top level</li>
+            </description>
+            <pubDate>Thu, 18 Nov 2010 18:33:30 -0800</pubDate>
+            <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20101118.tgz" sparkle:version="0.91" length="1750388" type="application/octet-stream" sparkle:dsaSignature="MCwCFDY4ZjRzdya7cE6MstRjdjT8hUIQAhQpbteUM8H11CawXu/haeMfeCIHJQ=="></enclosure>
+        </item>
     </channel>
 </rss>
