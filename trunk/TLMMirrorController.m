@@ -38,7 +38,114 @@
 
 #import "TLMMirrorController.h"
 
+enum  {
+    TLMMirrorNodeContinent = 0,
+    TLMMirrorNodeCountry   = 1,
+    TLMMirrorNodeURL       = 2
+};
+typedef NSInteger TLMMirrorNodeType;
+
+@interface TLMMirrorNode : NSObject
+{
+@private
+    TLMMirrorNodeType  _type;
+    NSString          *_name;
+    NSMutableArray    *_children;
+}
+
+@property (nonatomic, readwrite) NSString *name;
+@property (nonatomic, readwrite) TLMMirrorNodeType *type;
+
+- (void)addChild:(id)child;
+- (id)childAtIndex:(NSUInteger)idx;
+
+
+@end
+
+
 
 @implementation TLMMirrorController
+
+- (void)awakeFromNib
+{
+    
+}
+
+#pragma mark NSOutlineView datasource
+
+- (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)anIndex ofItem:(TLMProfileNode *)item;
+{
+    return nil == item ? [_rootNode childAtIndex:anIndex] : [item childAtIndex:anIndex];
+}
+
+- (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(TLMProfileNode *)item;
+{
+    return [item type] & TLMProfileRoot && [item numberOfChildren];
+}
+
+- (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(TLMProfileNode *)item;
+{
+    return nil == item ? [_rootNode numberOfChildren] : [item numberOfChildren];
+}
+
+- (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(TLMProfileNode *)item;
+{
+    id value = [item valueForKey:[tableColumn identifier]];
+    if ([item type] & TLMProfileRoot) {
+        value = [value uppercaseString];
+    }
+    return value;
+}
+/*
+- (void)outlineView:(TLMOutlineView *)outlineView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(TLMProfileNode *)item;
+{
+    NSFont *defaultFont = [outlineView defaultFont];
+    
+    if (([item type] & TLMProfileRoot) != 0) {
+        [cell setFont:[NSFont boldSystemFontOfSize:[defaultFont pointSize]]];
+    }
+    else if (defaultFont) {
+        [cell setFont:defaultFont];
+    }
+}
+
+- (NSCell *)outlineView:(NSOutlineView *)outlineView dataCellForTableColumn:(NSTableColumn *)tableColumn item:(id)item
+{
+    if (nil == tableColumn) return nil;
+    if ([[tableColumn identifier] isEqualToString:@"value"] && [[item value] isKindOfClass:[NSValue class]]) {
+        return _checkboxCell;
+    }
+    return [[[NSTextFieldCell alloc] initTextCell:@""] autorelease];
+}
+
+- (BOOL)outlineView:(NSOutlineView *)outlineView isGroupItem:(TLMProfileNode *)item
+{
+    return [item type] & TLMProfileRoot;
+}
+*/
+
+- (id)outlineView:(NSOutlineView *)outlineView itemForPersistentObject:(id)object;
+{
+    [self _loadRootNode];
+    for (NSUInteger r = 0; r < [_rootNode numberOfChildren]; r++)
+        if ([[[_rootNode childAtIndex:r] name] isEqualToString:object])
+            return [_rootNode childAtIndex:r];
+    return nil;
+}
+
+- (id)outlineView:(NSOutlineView *)outlineView persistentObjectForItem:(TLMProfileNode *)item;
+{
+    return [item name];
+}
+
+- (void)outlineView:(TLMOutlineView *)outlineView writeSelectedRowsToPasteboard:(NSPasteboard *)pboard;
+{
+    if ([outlineView numberOfRows] != [outlineView numberOfSelectedRows])
+        return NSBeep();
+    
+    NSString *profileString = [TLMProfileNode profileStringWithRoot:_rootNode];
+    [pboard declareTypes:[NSArray arrayWithObject:NSStringPboardType] owner:nil];
+    [pboard setString:profileString forType:NSStringPboardType];
+}
 
 @end
