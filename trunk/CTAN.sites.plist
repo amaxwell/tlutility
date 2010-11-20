@@ -13,9 +13,9 @@
 				<string>ftp.leg.uct.ac.za</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://ftp.leg.uct.ac.za/pub/packages/ctan/</string>
-					<string> http://ftp.leg.uct.ac.za/pub/packages/ctan/</string>
-					<string> rsync://ftp.leg.uct.ac.za/pub/packages/ctan/</string>
+					<string>ftp://ftp.leg.uct.ac.za/pub/packages/ctan/</string>
+					<string>http://ftp.leg.uct.ac.za/pub/packages/ctan/</string>
+					<string>rsync://ftp.leg.uct.ac.za/pub/packages/ctan/</string>
 				</array>
 			</dict>
 			<dict>
@@ -25,7 +25,7 @@
 				<string>ftp.sun.ac.za</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://ftp.sun.ac.za/CTAN</string>
+					<string>ftp://ftp.sun.ac.za/CTAN</string>
 				</array>
 			</dict>
 		</array>
@@ -38,9 +38,9 @@
 				<string>ftp.ctex.org</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://ftp.ctex.org/mirrors/CTAN/</string>
-					<string> http://ftp.ctex.org/mirrors/CTAN/</string>
-					<string> rsync://ftp.ctex.org/mirrors/CTAN/</string>
+					<string>ftp://ftp.ctex.org/mirrors/CTAN/</string>
+					<string>http://ftp.ctex.org/mirrors/CTAN/</string>
+					<string>rsync://ftp.ctex.org/mirrors/CTAN/</string>
 				</array>
 			</dict>
 			<dict>
@@ -50,8 +50,8 @@
 				<string>mirror.bjtu.edu.cn</string>
 				<key>urls</key>
 				<array>
-					<string> http://mirror.bjtu.edu.cn/CTAN/</string>
-					<string> rsync://mirror.bjtu.edu.cn/CTAN/</string>
+					<string>http://mirror.bjtu.edu.cn/CTAN/</string>
+					<string>rsync://mirror.bjtu.edu.cn/CTAN/</string>
 				</array>
 			</dict>
 			<dict>
@@ -61,9 +61,9 @@
 				<string>mirrors.xmu.edu.cn</string>
 				<key>urls</key>
 				<array>
-					<string> http://mirrors.xmu.edu.cn/CTAN/</string>
-					<string> ftp://mirrors.xmu.edu.cn/CTAN/</string>
-					<string> rsync://mirrors.xmu.edu.cn/CTAN/</string>
+					<string>http://mirrors.xmu.edu.cn/CTAN/</string>
+					<string>ftp://mirrors.xmu.edu.cn/CTAN/</string>
+					<string>rsync://mirrors.xmu.edu.cn/CTAN/</string>
 				</array>
 			</dict>
 			<dict>
@@ -73,7 +73,7 @@
 				<string>ftp.comp.hkbu.edu.hk</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://ftp.comp.hkbu.edu.hk/pub/TeX/CTAN</string>
+					<string>ftp://ftp.comp.hkbu.edu.hk/pub/TeX/CTAN</string>
 				</array>
 			</dict>
 			<dict>
@@ -83,9 +83,9 @@
 				<string>ctan.cermin.lipi.go.id</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://cermin.lipi.go.id/pub/tex-archive/</string>
-					<string> http://ctan.cermin.lipi.go.id/</string>
-					<string> rsync://cermin.lipi.go.id/CTAN/</string>
+					<string>ftp://cermin.lipi.go.id/pub/tex-archive/</string>
+					<string>http://ctan.cermin.lipi.go.id/</string>
+					<string>rsync://cermin.lipi.go.id/CTAN/</string>
 				</array>
 			</dict>
 			<dict>
@@ -95,9 +95,9 @@
 				<string>ftp.itb.ac.id</string>
 				<key>urls</key>
 				<array>
-					<string> http://ftp.itb.ac.id/pub/CTAN/</string>
-					<string> ftp://ftp.itb.ac.id/pub/CTAN/</string>
-					<string> rsync://ftp.itb.ac.id/CTAN/</string>
+					<string>http://ftp.itb.ac.id/pub/CTAN/</string>
+					<string>ftp://ftp.itb.ac.id/pub/CTAN/</string>
+					<string>rsync://ftp.itb.ac.id/CTAN/</string>
 				</array>
 			</dict>
 			<dict>
@@ -107,9 +107,9 @@
 				<string>kambing.ui.ac.id</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://kambing.ui.ac.id/ctan/</string>
-					<string> http://kambing.ui.ac.id/ctan/</string>
-					<string> rsync://kambing.ui.ac.id/CTAN/</string>
+					<string>ftp://kambing.ui.ac.id/ctan/</string>
+					<string>http://kambing.ui.ac.id/ctan/</string>
+					<string>rsync://kambing.ui.ac.id/CTAN/</string>
 				</array>
 			</dict>
 			<dict>
@@ -119,9 +119,9 @@
 				<string>kebo.vlsm.org</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://kebo.vlsm.org/CTAN/</string>
-					<string> http://kebo.vlsm.org/CTAN/</string>
-					<string> rsync://kebo.vlsm.org/CTAN/</string>
+					<string>ftp://kebo.vlsm.org/CTAN/</string>
+					<string>http://kebo.vlsm.org/CTAN/</string>
+					<string>rsync://kebo.vlsm.org/CTAN/</string>
 				</array>
 			</dict>
 			<dict>
@@ -131,7 +131,7 @@
 				<string>ctan.um.ac.ir</string>
 				<key>urls</key>
 				<array>
-					<string> http://ctan.um.ac.ir/</string>
+					<string>http://ctan.um.ac.ir/</string>
 				</array>
 			</dict>
 			<dict>
@@ -141,9 +141,9 @@
 				<string>ftp.jaist.ac.jp</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://ftp.jaist.ac.jp/pub/CTAN</string>
-					<string> http://ftp.jaist.ac.jp/pub/CTAN/</string>
-					<string> rsync://ftp.jaist.ac.jp/pub/CTAN/</string>
+					<string>ftp://ftp.jaist.ac.jp/pub/CTAN</string>
+					<string>http://ftp.jaist.ac.jp/pub/CTAN/</string>
+					<string>rsync://ftp.jaist.ac.jp/pub/CTAN/</string>
 				</array>
 			</dict>
 			<dict>
@@ -153,7 +153,7 @@
 				<string>ftp.kddilabs.jp</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://ftp.kddilabs.jp/CTAN</string>
+					<string>ftp://ftp.kddilabs.jp/CTAN</string>
 				</array>
 			</dict>
 			<dict>
@@ -163,7 +163,7 @@
 				<string>ftp.riken.go.jp</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://ftp.riken.go.jp/pub/tex-archive</string>
+					<string>ftp://ftp.riken.go.jp/pub/tex-archive</string>
 				</array>
 			</dict>
 			<dict>
@@ -173,7 +173,7 @@
 				<string>ftp.u-aizu.ac.jp</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://ftp.u-aizu.ac.jp/pub/tex/CTAN</string>
+					<string>ftp://ftp.u-aizu.ac.jp/pub/tex/CTAN</string>
 				</array>
 			</dict>
 			<dict>
@@ -183,8 +183,8 @@
 				<string>ftp.yz.yamagata-u.ac.jp</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://ftp.yz.yamagata-u.ac.jp/pub/CTAN</string>
-					<string> http://ftp.yz.yamagata-u.ac.jp/pub/CTAN</string>
+					<string>ftp://ftp.yz.yamagata-u.ac.jp/pub/CTAN</string>
+					<string>http://ftp.yz.yamagata-u.ac.jp/pub/CTAN</string>
 				</array>
 			</dict>
 			<dict>
@@ -194,9 +194,9 @@
 				<string>ftp.kaist.ac.kr</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://ftp.kaist.ac.kr/tex-archive/</string>
-					<string> rsync://ftp.kaist.ac.kr/ctan/</string>
-					<string> http://ftp.kaist.ac.kr/pub/tex-archive/</string>
+					<string>ftp://ftp.kaist.ac.kr/tex-archive/</string>
+					<string>rsync://ftp.kaist.ac.kr/ctan/</string>
+					<string>http://ftp.kaist.ac.kr/pub/tex-archive/</string>
 				</array>
 			</dict>
 			<dict>
@@ -206,8 +206,8 @@
 				<string>ftp.ktug.or.kr</string>
 				<key>urls</key>
 				<array>
-					<string> http://ftp.ktug.org.kr/tex-archive/</string>
-					<string> rsync://rsync.ktug.or.kr/CTAN/</string>
+					<string>http://ftp.ktug.org.kr/tex-archive/</string>
+					<string>rsync://rsync.ktug.or.kr/CTAN/</string>
 				</array>
 			</dict>
 			<dict>
@@ -217,7 +217,7 @@
 				<string>mirror.upm.edu.my</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://mirror.upm.edu.my/ctan/</string>
+					<string>ftp://mirror.upm.edu.my/ctan/</string>
 				</array>
 			</dict>
 			<dict>
@@ -227,8 +227,8 @@
 				<string>mirror.lums.edu.pk</string>
 				<key>urls</key>
 				<array>
-					<string> http://mirror.lums.edu.pk/pub/ctan/</string>
-					<string> ftp://mirror.lums.edu.pk/pub/ctan/</string>
+					<string>http://mirror.lums.edu.pk/pub/ctan/</string>
+					<string>ftp://mirror.lums.edu.pk/pub/ctan/</string>
 				</array>
 			</dict>
 			<dict>
@@ -238,9 +238,9 @@
 				<string>ctan.cdpa.nsysu.edu.tw</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://ctan.cdpa.nsysu.edu.tw/Unix/TeX/CTAN</string>
-					<string> http://ctan.cdpa.nsysu.edu.tw/</string>
-					<string> rsync://ctan.cdpa.nsysu.edu.tw/CTAN/</string>
+					<string>ftp://ctan.cdpa.nsysu.edu.tw/Unix/TeX/CTAN</string>
+					<string>http://ctan.cdpa.nsysu.edu.tw/</string>
+					<string>rsync://ctan.cdpa.nsysu.edu.tw/CTAN/</string>
 				</array>
 			</dict>
 			<dict>
@@ -250,7 +250,7 @@
 				<string>ftp.ccu.edu.tw</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://ftp.ccu.edu.tw/pub/tex</string>
+					<string>ftp://ftp.ccu.edu.tw/pub/tex</string>
 				</array>
 			</dict>
 			<dict>
@@ -260,9 +260,9 @@
 				<string>shadow.ind.ntou.edu.tw</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://shadow.ind.ntou.edu.tw/ctan/</string>
-					<string> http://shadow.ind.ntou.edu.tw/ctan/</string>
-					<string> rsync://shadow.ind.ntou.edu.tw/ctan/</string>
+					<string>ftp://shadow.ind.ntou.edu.tw/ctan/</string>
+					<string>http://shadow.ind.ntou.edu.tw/ctan/</string>
+					<string>rsync://shadow.ind.ntou.edu.tw/ctan/</string>
 				</array>
 			</dict>
 		</array>
@@ -275,8 +275,8 @@
 				<string>ctan.unsw.edu.au</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://ctan.unsw.edu.au/tex-archive</string>
-					<string> http://ctan.unsw.edu.au/</string>
+					<string>ftp://ctan.unsw.edu.au/tex-archive</string>
+					<string>http://ctan.unsw.edu.au/</string>
 				</array>
 			</dict>
 			<dict>
@@ -286,8 +286,8 @@
 				<string>elena.aut.ac.nz</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://elena.aut.ac.nz/pub/ctan</string>
-					<string> http://elena.aut.ac.nz/ctan/</string>
+					<string>ftp://elena.aut.ac.nz/pub/ctan</string>
+					<string>http://elena.aut.ac.nz/ctan/</string>
 				</array>
 			</dict>
 		</array>
@@ -300,7 +300,7 @@
 				<string>ftp.univie.ac.at</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://ftp.univie.ac.at/packages/tex</string>
+					<string>ftp://ftp.univie.ac.at/packages/tex</string>
 				</array>
 			</dict>
 			<dict>
@@ -310,8 +310,8 @@
 				<string>mirrors.dotsrc.org</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://mirrors.dotsrc.org/ctan</string>
-					<string> http://mirrors.dotsrc.org/ctan/</string>
+					<string>ftp://mirrors.dotsrc.org/ctan</string>
+					<string>http://mirrors.dotsrc.org/ctan/</string>
 				</array>
 			</dict>
 			<dict>
@@ -321,7 +321,7 @@
 				<string>ftp.linux.ee</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://ftp.linux.ee/pub/tex-archive</string>
+					<string>ftp://ftp.linux.ee/pub/tex-archive</string>
 				</array>
 			</dict>
 			<dict>
@@ -331,7 +331,7 @@
 				<string>ftp.funet.fi</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://ftp.funet.fi/pub/TeX/CTAN</string>
+					<string>ftp://ftp.funet.fi/pub/TeX/CTAN</string>
 				</array>
 			</dict>
 			<dict>
@@ -341,7 +341,7 @@
 				<string>ctan.mines-albi.fr</string>
 				<key>urls</key>
 				<array>
-					<string> http://ctan.mines-albi.fr/</string>
+					<string>http://ctan.mines-albi.fr/</string>
 				</array>
 			</dict>
 			<dict>
@@ -351,9 +351,9 @@
 				<string>distrib-coffee.ipsl.jussieu.fr</string>
 				<key>urls</key>
 				<array>
-					<string> http://distrib-coffee.ipsl.jussieu.fr/pub/mirrors/ctan/</string>
-					<string> ftp://distrib-coffee.ipsl.jussieu.fr/pub/mirrors/ctan/</string>
-					<string> rsync://distrib-coffee.ipsl.jussieu.fr/pub/mirrors/ctan/</string>
+					<string>http://distrib-coffee.ipsl.jussieu.fr/pub/mirrors/ctan/</string>
+					<string>ftp://distrib-coffee.ipsl.jussieu.fr/pub/mirrors/ctan/</string>
+					<string>rsync://distrib-coffee.ipsl.jussieu.fr/pub/mirrors/ctan/</string>
 				</array>
 			</dict>
 			<dict>
@@ -363,8 +363,8 @@
 				<string>ftp.inria.fr</string>
 				<key>urls</key>
 				<array>
-					<string> http://ftp.inria.fr/pub/TeX/CTAN/</string>
-					<string> ftp://ftp.inria.fr/pub/TeX/CTAN/</string>
+					<string>http://ftp.inria.fr/pub/TeX/CTAN/</string>
+					<string>ftp://ftp.inria.fr/pub/TeX/CTAN/</string>
 				</array>
 			</dict>
 			<dict>
@@ -374,8 +374,8 @@
 				<string>ftp.oleane.net</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://ftp.oleane.net/pub/CTAN/</string>
-					<string> http://ftp.oleane.net/pub/CTAN/</string>
+					<string>ftp://ftp.oleane.net/pub/CTAN/</string>
+					<string>http://ftp.oleane.net/pub/CTAN/</string>
 				</array>
 			</dict>
 			<dict>
@@ -385,7 +385,7 @@
 				<string>mirror.ibcp.fr</string>
 				<key>urls</key>
 				<array>
-					<string> http://mirror.ibcp.fr/pub/CTAN/</string>
+					<string>http://mirror.ibcp.fr/pub/CTAN/</string>
 				</array>
 			</dict>
 			<dict>
@@ -395,8 +395,8 @@
 				<string>mirrors.ircam.fr</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://mirrors.ircam.fr/pub/CTAN</string>
-					<string> http://mirrors.ircam.fr/pub/CTAN/</string>
+					<string>ftp://mirrors.ircam.fr/pub/CTAN</string>
+					<string>http://mirrors.ircam.fr/pub/CTAN/</string>
 				</array>
 			</dict>
 			<dict>
@@ -406,9 +406,9 @@
 				<string>ftp.fernuni-hagen.de</string>
 				<key>urls</key>
 				<array>
-					<string> http://ftp.fernuni-hagen.de/ftp-dir/pub/mirrors/www.ctan.org/</string>
-					<string> ftp://ftp.fernuni-hagen.de/pub/mirrors/www.ctan.org/</string>
-					<string> rsync://ftp.fernuni-hagen.de/ctan/</string>
+					<string>http://ftp.fernuni-hagen.de/ftp-dir/pub/mirrors/www.ctan.org/</string>
+					<string>ftp://ftp.fernuni-hagen.de/pub/mirrors/www.ctan.org/</string>
+					<string>rsync://ftp.fernuni-hagen.de/ctan/</string>
 				</array>
 			</dict>
 			<dict>
@@ -418,7 +418,7 @@
 				<string>ftp.fu-berlin.de</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://ftp.fu-berlin.de/tex/CTAN</string>
+					<string>ftp://ftp.fu-berlin.de/tex/CTAN</string>
 				</array>
 			</dict>
 			<dict>
@@ -428,7 +428,7 @@
 				<string>ftp.gwdg.de</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://ftp.gwdg.de/pub/dante</string>
+					<string>ftp://ftp.gwdg.de/pub/dante</string>
 				</array>
 			</dict>
 			<dict>
@@ -438,7 +438,7 @@
 				<string>ftp.mpi-sb.mpg.de</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://ftp.mpi-sb.mpg.de/pub/tex/mirror/ftp.dante.de/pub/tex</string>
+					<string>ftp://ftp.mpi-sb.mpg.de/pub/tex/mirror/ftp.dante.de/pub/tex</string>
 				</array>
 			</dict>
 			<dict>
@@ -448,7 +448,7 @@
 				<string>ftp.rrzn.uni-hannover.de</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://ftp.rrzn.uni-hannover.de/pub/mirror/tex-archive/</string>
+					<string>ftp://ftp.rrzn.uni-hannover.de/pub/mirror/tex-archive/</string>
 				</array>
 			</dict>
 			<dict>
@@ -458,7 +458,7 @@
 				<string>ftp.tu-chemnitz.de</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://ftp.tu-chemnitz.de/pub/tex</string>
+					<string>ftp://ftp.tu-chemnitz.de/pub/tex</string>
 				</array>
 			</dict>
 			<dict>
@@ -468,8 +468,8 @@
 				<string>ftp.uni-erlangen.de</string>
 				<key>urls</key>
 				<array>
-					<string> http://ftp.uni-erlangen.de/mirrors/CTAN/</string>
-					<string> ftp://ftp.uni-erlangen.de/mirrors/CTAN/</string>
+					<string>http://ftp.uni-erlangen.de/mirrors/CTAN/</string>
+					<string>ftp://ftp.uni-erlangen.de/mirrors/CTAN/</string>
 				</array>
 			</dict>
 			<dict>
@@ -479,8 +479,8 @@
 				<string>mirror.informatik.uni-mannheim.de</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://mirror.informatik.uni-mannheim.de/pub/mirrors/tex-archive/</string>
-					<string> http://mirror.informatik.uni-mannheim.de/pub/mirrors/tex-archive/</string>
+					<string>ftp://mirror.informatik.uni-mannheim.de/pub/mirrors/tex-archive/</string>
+					<string>http://mirror.informatik.uni-mannheim.de/pub/mirrors/tex-archive/</string>
 				</array>
 			</dict>
 			<dict>
@@ -490,8 +490,8 @@
 				<string>sunsite.informatik.rwth-aachen.de</string>
 				<key>urls</key>
 				<array>
-					<string> http://sunsite.informatik.rwth-aachen.de/ftp/pub/mirror/ctan/</string>
-					<string> ftp://sunsite.informatik.rwth-aachen.de/pub/mirror/ctan/</string>
+					<string>http://sunsite.informatik.rwth-aachen.de/ftp/pub/mirror/ctan/</string>
+					<string>ftp://sunsite.informatik.rwth-aachen.de/pub/mirror/ctan/</string>
 				</array>
 			</dict>
 			<dict>
@@ -501,8 +501,8 @@
 				<string>ftpcc.uoc.gr</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://ftp.cc.uoc.gr/mirrors/CTAN/</string>
-					<string> http://ftp.cc.uoc.gr/mirrors/CTAN/</string>
+					<string>ftp://ftp.cc.uoc.gr/mirrors/CTAN/</string>
+					<string>http://ftp.cc.uoc.gr/mirrors/CTAN/</string>
 				</array>
 			</dict>
 			<dict>
@@ -512,7 +512,7 @@
 				<string>ftp.ntua.gr</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://ftp.ntua.gr/mirror/ctan</string>
+					<string>ftp://ftp.ntua.gr/mirror/ctan</string>
 				</array>
 			</dict>
 			<dict>
@@ -522,8 +522,8 @@
 				<string>ftp.uoi.gr</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://ftp.uoi.gr/pub/tex/</string>
-					<string> http://ftp.uoi.gr/pub/tex/</string>
+					<string>ftp://ftp.uoi.gr/pub/tex/</string>
+					<string>http://ftp.uoi.gr/pub/tex/</string>
 				</array>
 			</dict>
 			<dict>
@@ -533,7 +533,7 @@
 				<string>ftp.sztaki.hu</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://ftp.sztaki.hu/pub/tex</string>
+					<string>ftp://ftp.sztaki.hu/pub/tex</string>
 				</array>
 			</dict>
 			<dict>
@@ -543,9 +543,9 @@
 				<string>ftp.heanet.ie</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://ftp.heanet.ie/pub/ctan/tex</string>
-					<string> http://ftp.heanet.ie/mirrors/ctan.org/tex/</string>
-					<string> rsync://ftp.heanet.ie/mirrors/ctan.org/tex/</string>
+					<string>ftp://ftp.heanet.ie/pub/ctan/tex</string>
+					<string>http://ftp.heanet.ie/mirrors/ctan.org/tex/</string>
+					<string>rsync://ftp.heanet.ie/mirrors/ctan.org/tex/</string>
 				</array>
 			</dict>
 			<dict>
@@ -555,8 +555,8 @@
 				<string>cis.uniRoma2.it</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://ftp.uniRoma2.it/TeX</string>
-					<string> http://ftp.uniRoma2.it/TeX/</string>
+					<string>ftp://ftp.uniRoma2.it/TeX</string>
+					<string>http://ftp.uniRoma2.it/TeX/</string>
 				</array>
 			</dict>
 			<dict>
@@ -566,9 +566,9 @@
 				<string>ctan.uib.no</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://ctan.uib.no/pub/CTAN/</string>
-					<string> http://ctan.uib.no/</string>
-					<string> rsync://ctan.uib.no/ctan/</string>
+					<string>ftp://ctan.uib.no/pub/CTAN/</string>
+					<string>http://ctan.uib.no/</string>
+					<string>rsync://ctan.uib.no/ctan/</string>
 				</array>
 			</dict>
 			<dict>
@@ -578,8 +578,8 @@
 				<string>ftp.fagskolen.gjovik.no</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://ftp.fagskolen.gjovik.no/pub/tex-archive/</string>
-					<string> http://ftp.fagskolen.gjovik.no/pub/tex-archive/</string>
+					<string>ftp://ftp.fagskolen.gjovik.no/pub/tex-archive/</string>
+					<string>http://ftp.fagskolen.gjovik.no/pub/tex-archive/</string>
 				</array>
 			</dict>
 			<dict>
@@ -589,7 +589,7 @@
 				<string>ftp.gust.org.pl</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://ftp.gust.org.pl/TeX</string>
+					<string>ftp://ftp.gust.org.pl/TeX</string>
 				</array>
 			</dict>
 			<dict>
@@ -599,8 +599,8 @@
 				<string>ftp.tpnet.pl</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://ftp.tpnet.pl/pub/CTAN/</string>
-					<string> rsync://ftp.tpnet.pl/pub/CTAN/</string>
+					<string>ftp://ftp.tpnet.pl/pub/CTAN/</string>
+					<string>rsync://ftp.tpnet.pl/pub/CTAN/</string>
 				</array>
 			</dict>
 			<dict>
@@ -610,9 +610,9 @@
 				<string>piotrkosoft.net</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://ftp.piotrkosoft.net/pub/mirrors/CTAN</string>
-					<string> http://piotrkosoft.net/pub/mirrors/CTAN/</string>
-					<string> rsync://ftp.piotrkosoft.net/mirrors/CTAN/</string>
+					<string>ftp://ftp.piotrkosoft.net/pub/mirrors/CTAN</string>
+					<string>http://piotrkosoft.net/pub/mirrors/CTAN/</string>
+					<string>rsync://ftp.piotrkosoft.net/mirrors/CTAN/</string>
 				</array>
 			</dict>
 			<dict>
@@ -622,7 +622,7 @@
 				<string>sunsite.icm.edu.pl</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://sunsite.icm.edu.pl/pub/CTAN</string>
+					<string>ftp://sunsite.icm.edu.pl/pub/CTAN</string>
 				</array>
 			</dict>
 			<dict>
@@ -632,7 +632,7 @@
 				<string>ftp.di.uminho.pt</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://ftp.di.uminho.pt/pub/ctan</string>
+					<string>ftp://ftp.di.uminho.pt/pub/ctan</string>
 				</array>
 			</dict>
 			<dict>
@@ -642,8 +642,8 @@
 				<string>ftp.eq.uc.pt</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://ftp.eq.uc.pt/pub/software/TeX</string>
-					<string> http://ftp.eq.uc.pt/software/TeX/</string>
+					<string>ftp://ftp.eq.uc.pt/pub/software/TeX</string>
+					<string>http://ftp.eq.uc.pt/software/TeX/</string>
 				</array>
 			</dict>
 			<dict>
@@ -653,7 +653,7 @@
 				<string>ftp.ist.utl.pt</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://ftp.ist.utl.pt/pub/ctan</string>
+					<string>ftp://ftp.ist.utl.pt/pub/ctan</string>
 				</array>
 			</dict>
 			<dict>
@@ -663,8 +663,8 @@
 				<string>neacm.fe.up.pt</string>
 				<key>urls</key>
 				<array>
-					<string> http://mirrors.fe.up.pt/pub/CTAN</string>
-					<string> ftp://mirrors.fe.up.pt/pub/CTAN</string>
+					<string>http://mirrors.fe.up.pt/pub/CTAN</string>
+					<string>ftp://mirrors.fe.up.pt/pub/CTAN</string>
 				</array>
 			</dict>
 			<dict>
@@ -674,9 +674,9 @@
 				<string>ftp.roedu.net</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://ftp.roedu.net/mirrors/ctan.org/</string>
-					<string> http://ftp.roedu.net/mirrors/ctan.org/</string>
-					<string> rsync://ftp.roedu.net/mirrors/ctan.org/</string>
+					<string>ftp://ftp.roedu.net/mirrors/ctan.org/</string>
+					<string>http://ftp.roedu.net/mirrors/ctan.org/</string>
+					<string>rsync://ftp.roedu.net/mirrors/ctan.org/</string>
 				</array>
 			</dict>
 			<dict>
@@ -686,7 +686,7 @@
 				<string>ctan.uni-altai.ru</string>
 				<key>urls</key>
 				<array>
-					<string> http://ctan.uni-altai.ru/</string>
+					<string>http://ctan.uni-altai.ru/</string>
 				</array>
 			</dict>
 			<dict>
@@ -696,8 +696,8 @@
 				<string>ftp.chg.ru</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://ftp.chg.ru/pub/TeX/CTAN</string>
-					<string> http://ftp.chg.ru/</string>
+					<string>ftp://ftp.chg.ru/pub/TeX/CTAN</string>
+					<string>http://ftp.chg.ru/</string>
 				</array>
 			</dict>
 			<dict>
@@ -707,7 +707,7 @@
 				<string>ftp.vsu.ru</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://ftp.vsu.ru/pub/CTAN/</string>
+					<string>ftp://ftp.vsu.ru/pub/CTAN/</string>
 				</array>
 			</dict>
 			<dict>
@@ -717,9 +717,9 @@
 				<string>mirror.macomnet.net</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://mirror.macomnet.net/pub/CTAN/</string>
-					<string> http://mirror.macomnet.net/pub/CTAN/</string>
-					<string> rsync://mirror.macomnet.net/pub/CTAN/</string>
+					<string>ftp://mirror.macomnet.net/pub/CTAN/</string>
+					<string>http://mirror.macomnet.net/pub/CTAN/</string>
+					<string>rsync://mirror.macomnet.net/pub/CTAN/</string>
 				</array>
 			</dict>
 			<dict>
@@ -729,8 +729,8 @@
 				<string>tex.ihep.su</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://tex.ihep.su/pub/TeX/CTAN</string>
-					<string> http://tex.ihep.su/</string>
+					<string>ftp://tex.ihep.su/pub/TeX/CTAN</string>
+					<string>http://tex.ihep.su/</string>
 				</array>
 			</dict>
 			<dict>
@@ -740,7 +740,7 @@
 				<string>rpm.scl.rs</string>
 				<key>urls</key>
 				<array>
-					<string> http://rpm.scl.rs/CTAN/</string>
+					<string>http://rpm.scl.rs/CTAN/</string>
 				</array>
 			</dict>
 			<dict>
@@ -750,8 +750,8 @@
 				<string>ftp.gui.uva.es</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://ftp.gui.uva.es/sites/ctan.org/</string>
-					<string> http://ftp.gui.uva.es/sites/ctan.org/</string>
+					<string>ftp://ftp.gui.uva.es/sites/ctan.org/</string>
+					<string>http://ftp.gui.uva.es/sites/ctan.org/</string>
 				</array>
 			</dict>
 			<dict>
@@ -761,7 +761,7 @@
 				<string>ftp.rediris.es</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://ftp.rediris.es/mirror/tex-archive</string>
+					<string>ftp://ftp.rediris.es/mirror/tex-archive</string>
 				</array>
 			</dict>
 			<dict>
@@ -771,9 +771,9 @@
 				<string>ftp.udc.es</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://ftp.udc.es/CTAN/</string>
-					<string> http://ftp.udc.es/CTAN/</string>
-					<string> rsync://rsync.udc.es/CTAN/</string>
+					<string>ftp://ftp.udc.es/CTAN/</string>
+					<string>http://ftp.udc.es/CTAN/</string>
+					<string>rsync://rsync.udc.es/CTAN/</string>
 				</array>
 			</dict>
 			<dict>
@@ -783,7 +783,7 @@
 				<string>mirror.switch.ch</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://mirror.switch.ch/mirror/tex</string>
+					<string>ftp://mirror.switch.ch/mirror/tex</string>
 				</array>
 			</dict>
 			<dict>
@@ -793,8 +793,8 @@
 				<string>ftp.cstug.cz</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://ftp.cstug.cz/pub/tex/CTAN</string>
-					<string> http://www.cstug.cz/ctan/index.html</string>
+					<string>ftp://ftp.cstug.cz/pub/tex/CTAN</string>
+					<string>http://www.cstug.cz/ctan/index.html</string>
 				</array>
 			</dict>
 			<dict>
@@ -804,8 +804,8 @@
 				<string>ftp.cvut.cz</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://ftp.cvut.cz/tex-archive/</string>
-					<string> http://ftp.cvut.cz/tex-archive/</string>
+					<string>ftp://ftp.cvut.cz/tex-archive/</string>
+					<string>http://ftp.cvut.cz/tex-archive/</string>
 				</array>
 			</dict>
 			<dict>
@@ -815,8 +815,8 @@
 				<string>ftp.ntg.nl</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://ftp.ntg.nl/mirror/tex-archive</string>
-					<string> http://www.cs.ruu.nl/pub/tex-archive/</string>
+					<string>ftp://ftp.ntg.nl/mirror/tex-archive</string>
+					<string>http://www.cs.ruu.nl/pub/tex-archive/</string>
 				</array>
 			</dict>
 			<dict>
@@ -826,8 +826,8 @@
 				<string>ftp.snt.utwente.nl</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://ftp.snt.utwente.nl/pub/software/tex/</string>
-					<string> http://ftp.snt.utwente.nl/pub/software/tex/</string>
+					<string>ftp://ftp.snt.utwente.nl/pub/software/tex/</string>
+					<string>http://ftp.snt.utwente.nl/pub/software/tex/</string>
 				</array>
 			</dict>
 			<dict>
@@ -837,8 +837,8 @@
 				<string>anorien.csc.warwick.ac.uk</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://anorien.csc.warwick.ac.uk/CTAN/</string>
-					<string> http://anorien.csc.warwick.ac.uk/mirrors/CTAN/</string>
+					<string>ftp://anorien.csc.warwick.ac.uk/CTAN/</string>
+					<string>http://anorien.csc.warwick.ac.uk/mirrors/CTAN/</string>
 				</array>
 			</dict>
 			<dict>
@@ -848,8 +848,8 @@
 				<string>ctan.sqsol.co.uk</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://ctan.sqsol.co.uk/pub/CTAN/</string>
-					<string> http://ctan.sqsol.co.uk/</string>
+					<string>ftp://ctan.sqsol.co.uk/pub/CTAN/</string>
+					<string>http://ctan.sqsol.co.uk/</string>
 				</array>
 			</dict>
 			<dict>
@@ -859,8 +859,8 @@
 				<string>mirror.ox.ac.uk</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://mirror.ox.ac.uk/sites/ctan.org/</string>
-					<string> http://mirror.ox.ac.uk/sites/ctan.org/</string>
+					<string>ftp://mirror.ox.ac.uk/sites/ctan.org/</string>
+					<string>http://mirror.ox.ac.uk/sites/ctan.org/</string>
 				</array>
 			</dict>
 		</array>
@@ -873,8 +873,8 @@
 				<string>ctan.cms.math.ca</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://ctan.cms.math.ca/tex-archive</string>
-					<string> http://ctan.math.ca/</string>
+					<string>ftp://ctan.cms.math.ca/tex-archive</string>
+					<string>http://ctan.math.ca/</string>
 				</array>
 			</dict>
 			<dict>
@@ -884,9 +884,9 @@
 				<string>ctan.mirror.rafal.ca</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://ctan.mirror.rafal.ca/pub/CTAN/</string>
-					<string> http://ctan.mirror.rafal.ca/</string>
-					<string> rsync://ctan.mirror.rafal.ca/CTAN/</string>
+					<string>ftp://ctan.mirror.rafal.ca/pub/CTAN/</string>
+					<string>http://ctan.mirror.rafal.ca/</string>
+					<string>rsync://ctan.mirror.rafal.ca/CTAN/</string>
 				</array>
 			</dict>
 			<dict>
@@ -896,9 +896,9 @@
 				<string>mirror.csclub.uwaterloo.ca</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://mirror.csclub.uwaterloo.ca/CTAN/</string>
-					<string> http://mirror.csclub.uwaterloo.ca/CTAN/</string>
-					<string> rsync://mirror.csclub.uwaterloo.ca/CTAN/</string>
+					<string>ftp://mirror.csclub.uwaterloo.ca/CTAN/</string>
+					<string>http://mirror.csclub.uwaterloo.ca/CTAN/</string>
+					<string>rsync://mirror.csclub.uwaterloo.ca/CTAN/</string>
 				</array>
 			</dict>
 			<dict>
@@ -908,9 +908,9 @@
 				<string>mirror.its.da.ca</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://mirror.its.dal.ca/ctan/</string>
-					<string> http://mirror.its.dal.ca/ctan/</string>
-					<string> rsync://mirror.its.dal.ca/ctan/</string>
+					<string>ftp://mirror.its.dal.ca/ctan/</string>
+					<string>http://mirror.its.dal.ca/ctan/</string>
+					<string>rsync://mirror.its.dal.ca/ctan/</string>
 				</array>
 			</dict>
 			<dict>
@@ -920,8 +920,8 @@
 				<string>tezcatl.fciencias.unam.mx</string>
 				<key>urls</key>
 				<array>
-					<string> http://tezcatl.fciencias.unam.mx/tex-archive/</string>
-					<string> ftp://tezcatl.fciencias.unam.mx/tex-archive/</string>
+					<string>http://tezcatl.fciencias.unam.mx/tex-archive/</string>
+					<string>ftp://tezcatl.fciencias.unam.mx/tex-archive/</string>
 				</array>
 			</dict>
 			<dict>
@@ -931,7 +931,7 @@
 				<string>carroll.aset.psu.edu</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://carroll.aset.psu.edu/pub/CTAN</string>
+					<string>ftp://carroll.aset.psu.edu/pub/CTAN</string>
 				</array>
 			</dict>
 			<dict>
@@ -941,8 +941,8 @@
 				<string>ctan.math.utah.edu</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://ctan.math.utah.edu/tex-archive</string>
-					<string> http://www.math.utah.edu/pub/ctan/</string>
+					<string>ftp://ctan.math.utah.edu/tex-archive</string>
+					<string>http://www.math.utah.edu/pub/ctan/</string>
 				</array>
 			</dict>
 			<dict>
@@ -952,7 +952,7 @@
 				<string>ctan.unixbrain.com</string>
 				<key>urls</key>
 				<array>
-					<string> http://ctan.unixbrain.com/</string>
+					<string>http://ctan.unixbrain.com/</string>
 				</array>
 			</dict>
 			<dict>
@@ -962,8 +962,8 @@
 				<string>ftp.math.purdue.edu</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://ftp.math.purdue.edu/mirrors/ctan.org/</string>
-					<string> http://ftp.math.purdue.edu/mirrors/ctan.org/</string>
+					<string>ftp://ftp.math.purdue.edu/mirrors/ctan.org/</string>
+					<string>http://ftp.math.purdue.edu/mirrors/ctan.org/</string>
 				</array>
 			</dict>
 			<dict>
@@ -973,7 +973,7 @@
 				<string>ibiblio.org</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://ibiblio.org/pub/packages/TeX</string>
+					<string>ftp://ibiblio.org/pub/packages/TeX</string>
 				</array>
 			</dict>
 			<dict>
@@ -983,7 +983,7 @@
 				<string>indian.cse.msu.edu</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://indian.cse.msu.edu/pub/mirrors/CTAN</string>
+					<string>ftp://indian.cse.msu.edu/pub/mirrors/CTAN</string>
 				</array>
 			</dict>
 			<dict>
@@ -993,7 +993,7 @@
 				<string>mirror.hmc.edu</string>
 				<key>urls</key>
 				<array>
-					<string> http://mirror.hmc.edu/ctan/</string>
+					<string>http://mirror.hmc.edu/ctan/</string>
 				</array>
 			</dict>
 			<dict>
@@ -1003,9 +1003,9 @@
 				<string>mirror.its.uidaho.edu</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://mirror.its.uidaho.edu/tex-archive/</string>
-					<string> http://mirror.its.uidaho.edu/pub/tex-archive/</string>
-					<string> rsync://mirror.its.uidaho.edu/ctan/</string>
+					<string>ftp://mirror.its.uidaho.edu/tex-archive/</string>
+					<string>http://mirror.its.uidaho.edu/pub/tex-archive/</string>
+					<string>rsync://mirror.its.uidaho.edu/ctan/</string>
 				</array>
 			</dict>
 			<dict>
@@ -1015,7 +1015,7 @@
 				<string>mirror.math.ku.edu</string>
 				<key>urls</key>
 				<array>
-					<string> http://mirror.math.ku.edu/tex-archive/</string>
+					<string>http://mirror.math.ku.edu/tex-archive/</string>
 				</array>
 			</dict>
 			<dict>
@@ -1025,7 +1025,7 @@
 				<string>mirrors.med.harvard.edu</string>
 				<key>urls</key>
 				<array>
-					<string> http://mirrors.med.harvard.edu/ctan/</string>
+					<string>http://mirrors.med.harvard.edu/ctan/</string>
 				</array>
 			</dict>
 			<dict>
@@ -1035,8 +1035,8 @@
 				<string>mirror.unl.edu</string>
 				<key>urls</key>
 				<array>
-					<string> http://mirror.unl.edu/ctan/</string>
-					<string> rsync://mirror.unl.edu/ctan/</string>
+					<string>http://mirror.unl.edu/ctan/</string>
+					<string>rsync://mirror.unl.edu/ctan/</string>
 				</array>
 			</dict>
 			<dict>
@@ -1046,8 +1046,8 @@
 				<string>sunsite.utk.edu</string>
 				<key>urls</key>
 				<array>
-					<string> http://mira.sunsite.utk.edu/CTAN/</string>
-					<string> rsync://mira.sunsite.utk.edu/CTAN/</string>
+					<string>http://mira.sunsite.utk.edu/CTAN/</string>
+					<string>rsync://mira.sunsite.utk.edu/CTAN/</string>
 				</array>
 			</dict>
 		</array>
@@ -1060,8 +1060,8 @@
 				<string>www.localhost.net.ar</string>
 				<key>urls</key>
 				<array>
-					<string> http://ctan.localhost.net.ar/</string>
-					<string> ftp://mirrors.localhost.net.ar/pub/mirrors/ctan</string>
+					<string>http://ctan.localhost.net.ar/</string>
+					<string>ftp://mirrors.localhost.net.ar/pub/mirrors/ctan</string>
 				</array>
 			</dict>
 			<dict>
@@ -1071,8 +1071,8 @@
 				<string>ceres.cisc.usp.br</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://ceres.cisc.usp.br/CTAN/</string>
-					<string> http://ceres.cisc.usp.br/CTAN/</string>
+					<string>ftp://ceres.cisc.usp.br/CTAN/</string>
+					<string>http://ceres.cisc.usp.br/CTAN/</string>
 				</array>
 			</dict>
 			<dict>
@@ -1082,8 +1082,8 @@
 				<string>ctan.tche.br</string>
 				<key>urls</key>
 				<array>
-					<string> http://ctan.tche.br/</string>
-					<string> ftp://ctan.tche.br/pub/ctan/</string>
+					<string>http://ctan.tche.br/</string>
+					<string>ftp://ctan.tche.br/pub/ctan/</string>
 				</array>
 			</dict>
 			<dict>
@@ -1093,8 +1093,8 @@
 				<string>linorg.usp.br</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://linorg.usp.br/CTAN</string>
-					<string> http://linorg.usp.br/CTAN/</string>
+					<string>ftp://linorg.usp.br/CTAN</string>
+					<string>http://linorg.usp.br/CTAN/</string>
 				</array>
 			</dict>
 			<dict>
@@ -1104,7 +1104,7 @@
 				<string>mirror.softwarelivre.ufsc.br</string>
 				<key>urls</key>
 				<array>
-					<string> http://mirror.softwarelivre.ufsc.br/pub/ctan/</string>
+					<string>http://mirror.softwarelivre.ufsc.br/pub/ctan/</string>
 				</array>
 			</dict>
 			<dict>
@@ -1114,7 +1114,7 @@
 				<string>ctan.dcc.uchile.cl</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://ctan.dcc.uchile.cl/pub/lang/ctan/tex-archive</string>
+					<string>ftp://ctan.dcc.uchile.cl/pub/lang/ctan/tex-archive</string>
 				</array>
 			</dict>
 			<dict>
@@ -1124,9 +1124,9 @@
 				<string>ftp.inf.utfsm.cl</string>
 				<key>urls</key>
 				<array>
-					<string> ftp://ftp.inf.utfsm.cl/pub/tex-archive/</string>
-					<string> http://ftp.inf.utfsm.cl/pub/tex-archive/</string>
-					<string> rsync://ftp.inf.utfsm.cl/pub/tex-archive/</string>
+					<string>ftp://ftp.inf.utfsm.cl/pub/tex-archive/</string>
+					<string>http://ftp.inf.utfsm.cl/pub/tex-archive/</string>
+					<string>rsync://ftp.inf.utfsm.cl/pub/tex-archive/</string>
 				</array>
 			</dict>
 			<dict>
@@ -1136,13 +1136,13 @@
 				<string>www.laqee.unal.edu.co</string>
 				<key>urls</key>
 				<array>
-					<string> http://www.laqee.unal.edu.co/tex-archive/</string>
-					<string> rsync://www.laqee.unal.edu.co/CTAN/</string>
+					<string>http://www.laqee.unal.edu.co/tex-archive/</string>
+					<string>rsync://www.laqee.unal.edu.co/CTAN/</string>
 				</array>
 			</dict>
 		</array>
 	</dict>
 	<key>timestamp</key>
-	<real>1290113586.482127</real>
+	<real>1290225745.6279061</real>
 </dict>
 </plist>
