@@ -39,6 +39,7 @@
 #import "TLMMirrorController.h"
 #import "TLMMirrorNode.h"
 #import "TLMMirrorCell.h"
+#import "TLMLogServer.h"
 
 @implementation TLMMirrorController
 
@@ -176,6 +177,59 @@
 {
     return [NSKeyedArchiver archivedDataWithRootObject:item];
 }
+
+- (BOOL)outlineView:(NSOutlineView *)outlineView writeItems:(NSArray *)items toPasteboard:(NSPasteboard *)pasteboard;
+{
+    OSStatus err;
+        
+    PasteboardRef carbonPboard;
+    err = PasteboardCreate((CFStringRef)[pasteboard name], &carbonPboard);
+    
+    if (noErr == err)
+        err = PasteboardClear(carbonPboard);
+    
+    if (noErr == err)
+        (void)PasteboardSynchronize(carbonPboard);
+    
+    if (noErr != err) {
+        TLMLog(__func__, @"failed to setup pboard %@: %s", [pasteboard name], GetMacOSStatusErrorString(err));
+        return NO;
+    }
+        
+    for (TLMMirrorNode *node in items) {
+        
+        if ([node type] != TLMMirrorNodeURL)
+            continue;
+        
+        NSString *string = [[node value] absoluteString];
+        CFDataRef utf8Data = (CFDataRef)[string dataUsingEncoding:NSUTF8StringEncoding];
+        
+        // any pointer type; private to the creating application
+        PasteboardItemID itemID = (void *)node;
+        
+        // Finder adds a file URL and destination URL for weblocs, but only a file URL for regular files
+        // could also put a string representation of the URL, but Finder doesn't do that
+        
+        if ([[node value] isFileURL]) {
+            err = PasteboardPutItemFlavor(carbonPboard, itemID, kUTTypeFileURL, utf8Data, kPasteboardFlavorNoFlags);
+        }
+        else {
+            err = PasteboardPutItemFlavor(carbonPboard, itemID, kUTTypeURL, utf8Data, kPasteboardFlavorNoFlags);
+        }
+        
+        if (noErr != err)
+            TLMLog(__func__, @"failed to write to pboard %@: %s", [pasteboard name], GetMacOSStatusErrorString(err));
+    }
+    
+    ItemCount itemCount;
+    err = PasteboardGetItemCount(carbonPboard, &itemCount);
+    
+    if (carbonPboard) 
+        CFRelease(carbonPboard);
+
+    return noErr == err && itemCount > 0;
+}
+
 /*
 - (void)outlineView:(TLMOutlineView *)outlineView writeSelectedRowsToPasteboard:(NSPasteboard *)pboard;
 {
