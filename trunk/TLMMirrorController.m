@@ -82,25 +82,19 @@
             if (nil == countryNode) {
                 countryNode = [TLMMirrorNode new];
                 [countryNode setType:TLMMirrorNodeCountry];
-                [countryNode setValue:[mirrorInfo objectForKey:@"country"]];
+                [countryNode setValue:countryName];
                 [countryNodes setObject:countryNode forKey:countryName];
                 [countryNode release];
             }
             
-            TLMMirrorNode *mirrorSite = [TLMMirrorNode new];
-            [mirrorSite setValue:[mirrorInfo objectForKey:@"name"]];
-            [mirrorSite setType:TLMMirrorNodeSite];
             for (NSString *URLString in [mirrorInfo objectForKey:@"urls"]) {
                 TLMMirrorNode *URLNode = [TLMMirrorNode new];
                 [URLNode setValue:[NSURL URLWithString:URLString]];
                 [URLNode setType:TLMMirrorNodeURL];
-                [mirrorSite addChild:URLNode];
+                [countryNode addChild:URLNode];
                 [URLNode release];
             }
-            
-            [countryNode addChild:mirrorSite];
-            [mirrorSite release];
-            
+                        
         }
         
         for (NSString *countryName in countryNodes)
