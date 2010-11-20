@@ -54,7 +54,7 @@ typedef NSInteger TLMMirrorNodeType;
     NSMutableArray    *_children;
 }
 
-@property (nonatomic, copy) NSString *value;
+@property (nonatomic, copy) id value;
 @property (nonatomic, readwrite) TLMMirrorNodeType type;
 
 - (NSUInteger)numberOfChildren;
