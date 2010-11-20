@@ -44,9 +44,10 @@
 @interface TLMMirrorController : NSWindowController <TLMOutlineViewDataSource>
 {
 @private
-    NSMutableArray *_mirrors;
-    TLMOutlineView *_outlineView;
-    TLMMirrorCell  *_mirrorCell;
+    NSMutableArray  *_mirrors;
+    TLMOutlineView  *_outlineView;
+    TLMMirrorCell   *_mirrorCell;
+    NSTextFieldCell *_textFieldCell;
 }
 
 @property (nonatomic, retain) IBOutlet NSOutlineView *_outlineView;
