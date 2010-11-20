@@ -122,7 +122,7 @@ if __name__ == '__main__':
                     continents[-1].add_mirror(current_mirror)
 
                 assert state & MIRROR != 0, "corrupt state"
-                current_mirror.add_url(line[4:])
+                current_mirror.add_url(line[4:].strip())
                 state |= URL
                     
             elif state & URL:
