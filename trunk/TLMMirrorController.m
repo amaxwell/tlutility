@@ -37,111 +37,20 @@
  */
 
 #import "TLMMirrorController.h"
-
-enum  {
-    TLMMirrorNodeContinent = 0,
-    TLMMirrorNodeCountry   = 1,
-    TLMMirrorNodeSite      = 2,
-    TLMMirrorNodeURL       = 3
-};
-typedef NSInteger TLMMirrorNodeType;
-
-@interface TLMMirrorNode : NSObject <NSCoding>
-{
-@private
-    TLMMirrorNodeType  _type;
-    id                 _value;
-    NSMutableArray    *_children;
-}
-
-@property (nonatomic, copy) NSString *value;
-@property (nonatomic, readwrite) TLMMirrorNodeType type;
-
-- (NSUInteger)numberOfChildren;
-- (void)addChild:(id)child;
-- (id)childAtIndex:(NSUInteger)idx;
-
-
-@end
-
-@implementation TLMMirrorNode
-
-@synthesize value = _value;
-@synthesize type = _type;
-
-- (void)dealloc
-{
-    [_value release];
-    [_children release];
-    [super dealloc];
-}
-
-- (NSUInteger)hash { return [_value hash]; }
-
-- (BOOL)isEqual:(id)object
-{
-    if ([object isKindOfClass:[self class]] == NO)
-        return NO;
-    
-    TLMMirrorNode *other = object;
-    
-    if (_type != other->_type)
-        return NO;
-    
-    if (_value && [_value isEqual:other->_value] == NO)
-        return NO;
-    
-    if (_children && [_children isEqualToArray:other->_children] == NO)
-        return NO;
-    
-    return YES;
-}
-
-- (void)encodeWithCoder:(NSCoder *)aCoder
-{
-    [aCoder encodeObject:_value forKey:@"_value"];
-    [aCoder encodeInteger:_type forKey:@"_type"];
-    [aCoder encodeObject:_children forKey:@"_children"];
-}
-
-- (id)initWithCoder:(NSCoder *)aDecoder
-{
-    self = [super init];
-    if (self) {
-        _value = [[aDecoder decodeObjectForKey:@"_value"] retain];
-        _type = [aDecoder decodeIntegerForKey:@"_type"];
-        _children = [[aDecoder decodeObjectForKey:@"_children"] retain];
-    }
-    return self;
-}
-
-- (NSUInteger)numberOfChildren
-{
-    return [_children count];
-}
-
-- (void)addChild:(id)child
-{
-    NSParameterAssert(child);
-    if (nil == _children)
-        _children = [NSMutableArray new];
-    [_children addObject:child];
-}
-
-- (id)childAtIndex:(NSUInteger)idx
-{
-    return [_children objectAtIndex:idx];
-}
-
-@end
-
-
+#import "TLMMirrorNode.h"
 
 @implementation TLMMirrorController
 
 @synthesize _outlineView;
 
 - (id)init { return [self initWithWindowNibName:[self windowNibName]]; }
+
+- (void)dealloc
+{
+    [_mirrors release];
+    [_outlineView release];
+    [super dealloc];
+}
 
 - (NSString *)windowNibName { return @"Mirrors"; }
 
@@ -203,13 +112,6 @@ typedef NSInteger TLMMirrorNodeType;
 - (void)awakeFromNib
 {        
     [self _loadDefaultSites];
-}
-
-- (void)dealloc
-{
-    [_mirrors release];
-    [_outlineView release];
-    [super dealloc];
 }
 
 #pragma mark NSOutlineView datasource
