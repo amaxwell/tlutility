@@ -63,6 +63,11 @@
     return [[self dataSource] respondsToSelector:@selector(outlineView:writeSelectedRowsToPasteboard:)];
 }
 
+- (NSDragOperation)draggingSourceOperationMaskForLocal:(BOOL)isLocal
+{
+    return isLocal ? NSDragOperationEvery : NSDragOperationCopy;
+}
+
 - (void)disableOutlineCells;
 {
     _disableOutlineCells = YES;
