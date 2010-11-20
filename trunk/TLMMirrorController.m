@@ -41,24 +41,97 @@
 enum  {
     TLMMirrorNodeContinent = 0,
     TLMMirrorNodeCountry   = 1,
-    TLMMirrorNodeURL       = 2
+    TLMMirrorNodeSite      = 2,
+    TLMMirrorNodeURL       = 3
 };
 typedef NSInteger TLMMirrorNodeType;
 
-@interface TLMMirrorNode : NSObject
+@interface TLMMirrorNode : NSObject <NSCoding>
 {
 @private
     TLMMirrorNodeType  _type;
-    NSString          *_name;
+    id                 _value;
     NSMutableArray    *_children;
 }
 
-@property (nonatomic, readwrite) NSString *name;
-@property (nonatomic, readwrite) TLMMirrorNodeType *type;
+@property (nonatomic, copy) NSString *value;
+@property (nonatomic, readwrite) TLMMirrorNodeType type;
 
+- (NSUInteger)numberOfChildren;
 - (void)addChild:(id)child;
 - (id)childAtIndex:(NSUInteger)idx;
 
+
+@end
+
+@implementation TLMMirrorNode
+
+@synthesize value = _value;
+@synthesize type = _type;
+
+- (void)dealloc
+{
+    [_value release];
+    [_children release];
+    [super dealloc];
+}
+
+- (NSUInteger)hash { return [_value hash]; }
+
+- (BOOL)isEqual:(id)object
+{
+    if ([object isKindOfClass:[self class]] == NO)
+        return NO;
+    
+    TLMMirrorNode *other = object;
+    
+    if (_type != other->_type)
+        return NO;
+    
+    if (_value && [_value isEqual:other->_value] == NO)
+        return NO;
+    
+    if (_children && [_children isEqualToArray:other->_children] == NO)
+        return NO;
+    
+    return YES;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    [aCoder encodeObject:_value forKey:@"_value"];
+    [aCoder encodeInteger:_type forKey:@"_type"];
+    [aCoder encodeObject:_children forKey:@"_children"];
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super init];
+    if (self) {
+        _value = [[aDecoder decodeObjectForKey:@"_value"] retain];
+        _type = [aDecoder decodeIntegerForKey:@"_type"];
+        _children = [[aDecoder decodeObjectForKey:@"_children"] retain];
+    }
+    return self;
+}
+
+- (NSUInteger)numberOfChildren
+{
+    return [_children count];
+}
+
+- (void)addChild:(id)child
+{
+    NSParameterAssert(child);
+    if (nil == _children)
+        _children = [NSMutableArray new];
+    [_children addObject:child];
+}
+
+- (id)childAtIndex:(NSUInteger)idx
+{
+    return [_children objectAtIndex:idx];
+}
 
 @end
 
@@ -66,49 +139,113 @@ typedef NSInteger TLMMirrorNodeType;
 
 @implementation TLMMirrorController
 
-- (void)awakeFromNib
+@synthesize _outlineView;
+
+- (id)init { return [self initWithWindowNibName:[self windowNibName]]; }
+
+- (NSString *)windowNibName { return @"Mirrors"; }
+
+- (void)_loadDefaultSites
 {
+    if ([_mirrors count])
+        return;
     
+    NSString *sitesFile = [[NSBundle mainBundle] pathForResource:@"CTAN.sites" ofType:@"plist"];
+    NSDictionary *sites = [[NSDictionary dictionaryWithContentsOfFile:sitesFile] objectForKey:@"sites"];
+    
+    [_mirrors autorelease];
+    _mirrors = [NSMutableArray new];
+    
+    for (NSString *continent in sites) {
+        
+        TLMMirrorNode *continentNode = [TLMMirrorNode new];
+        [continentNode setValue:continent];
+        [continentNode setType:TLMMirrorNodeContinent];
+        
+        NSMutableDictionary *countryNodes = [NSMutableDictionary dictionary];
+        
+        for (NSDictionary *mirrorInfo in [sites objectForKey:continent]) {
+            
+            NSString *countryName = [mirrorInfo objectForKey:@"country"];
+            TLMMirrorNode *countryNode = [countryNodes objectForKey:countryName];
+            if (nil == countryNode) {
+                countryNode = [TLMMirrorNode new];
+                [countryNode setType:TLMMirrorNodeCountry];
+                [countryNode setValue:[mirrorInfo objectForKey:@"country"]];
+                [countryNodes setObject:countryNode forKey:countryName];
+                [countryNode release];
+            }
+            
+            TLMMirrorNode *mirrorSite = [TLMMirrorNode new];
+            [mirrorSite setValue:[mirrorInfo objectForKey:@"name"]];
+            [mirrorSite setType:TLMMirrorNodeSite];
+            for (NSString *URLString in [mirrorInfo objectForKey:@"urls"]) {
+                TLMMirrorNode *URLNode = [TLMMirrorNode new];
+                [URLNode setValue:URLString];
+                [URLNode setType:TLMMirrorNodeURL];
+                [mirrorSite addChild:URLNode];
+                [URLNode release];
+            }
+            
+            [countryNode addChild:mirrorSite];
+            [mirrorSite release];
+            
+        }
+        
+        for (NSString *countryName in countryNodes)
+            [continentNode addChild:[countryNodes objectForKey:countryName]];
+        
+        [_mirrors addObject:continentNode];
+        [continentNode release];
+    }    
+}
+
+- (void)awakeFromNib
+{        
+    [self _loadDefaultSites];
+}
+
+- (void)dealloc
+{
+    [_mirrors release];
+    [_outlineView release];
+    [super dealloc];
 }
 
 #pragma mark NSOutlineView datasource
 
-- (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)anIndex ofItem:(TLMProfileNode *)item;
+- (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)anIndex ofItem:(TLMMirrorNode *)item;
 {
-    return nil == item ? [_rootNode childAtIndex:anIndex] : [item childAtIndex:anIndex];
+    return nil == item ? [_mirrors objectAtIndex:anIndex] : [item childAtIndex:anIndex];
 }
 
-- (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(TLMProfileNode *)item;
+- (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(TLMMirrorNode *)item;
 {
-    return [item type] & TLMProfileRoot && [item numberOfChildren];
+    return [item numberOfChildren];
 }
 
-- (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(TLMProfileNode *)item;
+- (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(TLMMirrorNode *)item;
 {
-    return nil == item ? [_rootNode numberOfChildren] : [item numberOfChildren];
+    return nil == item ? [_mirrors count] : [item numberOfChildren];
 }
 
-- (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(TLMProfileNode *)item;
+- (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(TLMMirrorNode *)item;
 {
-    id value = [item valueForKey:[tableColumn identifier]];
-    if ([item type] & TLMProfileRoot) {
-        value = [value uppercaseString];
-    }
-    return value;
+    return [item valueForKey:[tableColumn identifier]];
 }
-/*
-- (void)outlineView:(TLMOutlineView *)outlineView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(TLMProfileNode *)item;
+
+- (void)outlineView:(TLMOutlineView *)outlineView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(TLMMirrorNode *)item;
 {
     NSFont *defaultFont = [outlineView defaultFont];
     
-    if (([item type] & TLMProfileRoot) != 0) {
+    if ([item type] == TLMMirrorNodeCountry) {
         [cell setFont:[NSFont boldSystemFontOfSize:[defaultFont pointSize]]];
     }
     else if (defaultFont) {
         [cell setFont:defaultFont];
     }
 }
-
+/*
 - (NSCell *)outlineView:(NSOutlineView *)outlineView dataCellForTableColumn:(NSTableColumn *)tableColumn item:(id)item
 {
     if (nil == tableColumn) return nil;
@@ -117,35 +254,33 @@ typedef NSInteger TLMMirrorNodeType;
     }
     return [[[NSTextFieldCell alloc] initTextCell:@""] autorelease];
 }
-
-- (BOOL)outlineView:(NSOutlineView *)outlineView isGroupItem:(TLMProfileNode *)item
-{
-    return [item type] & TLMProfileRoot;
-}
 */
+- (BOOL)outlineView:(NSOutlineView *)outlineView isGroupItem:(TLMMirrorNode *)item
+{
+    return [item type] == TLMMirrorNodeContinent;
+}
 
 - (id)outlineView:(NSOutlineView *)outlineView itemForPersistentObject:(id)object;
 {
-    [self _loadRootNode];
-    for (NSUInteger r = 0; r < [_rootNode numberOfChildren]; r++)
-        if ([[[_rootNode childAtIndex:r] name] isEqualToString:object])
-            return [_rootNode childAtIndex:r];
-    return nil;
+    [self _loadDefaultSites];
+    return [NSKeyedUnarchiver unarchiveObjectWithData:object];
 }
 
-- (id)outlineView:(NSOutlineView *)outlineView persistentObjectForItem:(TLMProfileNode *)item;
+- (id)outlineView:(NSOutlineView *)outlineView persistentObjectForItem:(TLMMirrorNode *)item;
 {
-    return [item name];
+    return [NSKeyedArchiver archivedDataWithRootObject:item];
 }
-
+/*
 - (void)outlineView:(TLMOutlineView *)outlineView writeSelectedRowsToPasteboard:(NSPasteboard *)pboard;
 {
     if ([outlineView numberOfRows] != [outlineView numberOfSelectedRows])
         return NSBeep();
     
-    NSString *profileString = [TLMProfileNode profileStringWithRoot:_rootNode];
+    NSString *profileString = [TLMMirrorNode profileStringWithRoot:_rootNode];
     [pboard declareTypes:[NSArray arrayWithObject:NSStringPboardType] owner:nil];
     [pboard setString:profileString forType:NSStringPboardType];
 }
+ 
+ */
 
 @end

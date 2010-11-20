@@ -43,6 +43,9 @@
 {
 @private
     NSMutableArray *_mirrors;
+    TLMOutlineView *_outlineView;
 }
+
+@property (nonatomic, retain) IBOutlet NSOutlineView *_outlineView;
 
 @end

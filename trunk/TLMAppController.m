@@ -45,6 +45,7 @@
 #import <Sparkle/Sparkle.h>
 #import "TLMProxyManager.h"
 #import "TLMDatabase.h"
+#import "TLMMirrorController.h"
 
 @implementation TLMAppController
 
@@ -259,7 +260,7 @@ static void __TLMMigrateBundleIdentifier()
 
     if (nil == _updateURL) {
         [[self mainWindowController] showWindow:nil];
-        [[self mainWindowController] refreshUpdatedPackageList];
+        //[[self mainWindowController] refreshUpdatedPackageList];
     }
 }
 
@@ -277,6 +278,13 @@ static void __TLMMigrateBundleIdentifier()
 - (IBAction)showPreferences:(id)sender
 {
     [[TLMPreferenceController sharedPreferenceController] showWindow:nil];
+}
+
+- (IBAction)manageMirrors:(id)sender
+{
+    if (nil == _mirrorController)
+        _mirrorController = [TLMMirrorController new];
+    [_mirrorController showWindow:nil];
 }
 
 #pragma mark Help Menu
