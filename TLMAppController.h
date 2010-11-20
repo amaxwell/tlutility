@@ -39,11 +39,13 @@
 #import <Cocoa/Cocoa.h>
 
 @class TLMMainWindowController;
+@class TLMMirrorController;
 
 @interface TLMAppController : NSObject 
 {
 @private
     TLMMainWindowController *_mainWindowController;
+    TLMMirrorController     *_mirrorController;
     NSURL                   *_updateURL;
 }
 
@@ -58,5 +60,6 @@
 - (IBAction)openMacTeXWiki:(id)sender;
 - (IBAction)openTracker:(id)sender;
 - (IBAction)openReleaseNotes:(id)sender;
+- (IBAction)manageMirrors:(id)sender;
 
 @end
