@@ -90,7 +90,7 @@
             [mirrorSite setType:TLMMirrorNodeSite];
             for (NSString *URLString in [mirrorInfo objectForKey:@"urls"]) {
                 TLMMirrorNode *URLNode = [TLMMirrorNode new];
-                [URLNode setValue:URLString];
+                [URLNode setValue:[NSURL URLWithString:URLString]];
                 [URLNode setType:TLMMirrorNodeURL];
                 [mirrorSite addChild:URLNode];
                 [URLNode release];
