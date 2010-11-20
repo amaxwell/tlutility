@@ -50,6 +50,16 @@ static NSMutableDictionary *_iconsByURLScheme = nil;
 
 @synthesize icon = _icon;
 
+- (id)initTextCell:(NSString *)aString
+{
+    self = [super initTextCell:aString];
+    if (self) {
+        [self setScrollable:YES];
+        [self setLineBreakMode:NSLineBreakByTruncatingTail];
+    }
+    return self;
+}
+
 - (id)copyWithZone:(NSZone *)zone
 {
     self = [super copyWithZone:zone];
@@ -72,12 +82,19 @@ static NSMutableDictionary *_iconsByURLScheme = nil;
         OSType iconType = kInternetLocationGenericIcon;
         if ([scheme hasPrefix:@"http"])
             iconType = kInternetLocationHTTPIcon;
-        else if ([scheme hasPrefix:@"ftp"])
+        else if ([scheme isEqualToString:@"ftp"])
             iconType = kInternetLocationFTPIcon;
-        else if ([scheme hasPrefix:@"file"])
+        else if ([scheme isEqualToString:@"file"])
             iconType = kInternetLocationFileIcon;
+        else if ([scheme isEqualToString:@"afp"])
+            iconType = kInternetLocationAppleShareIcon;
         
-        icon = [[NSWorkspace sharedWorkspace] iconForFileType:NSFileTypeForHFSTypeCode(iconType)];
+        IconRef iconRef;
+        if (noErr == GetIconRef(kOnSystemDisk, kSystemIconsCreator, iconType, &iconRef)) {
+            icon = [[[NSImage alloc] initWithIconRef:iconRef] autorelease];
+            ReleaseIconRef(iconRef);
+        }
+
         [_iconsByURLScheme setObject:icon forKey:scheme];
     }
     return icon;
@@ -88,6 +105,20 @@ static NSMutableDictionary *_iconsByURLScheme = nil;
     NSImage *icon = [obj respondsToSelector:@selector(scheme)] ? [self _iconForURL:obj] : nil;
     [self setIcon:icon];
     [super setObjectValue:obj];
+}
+
+- (NSRect)drawingRectForBounds:(NSRect)theRect
+{
+    NSRect drawingRect = [super drawingRectForBounds:theRect];
+    NSSize cellSize = [self cellSizeForBounds:theRect];
+        
+    CGFloat offset = NSHeight(drawingRect) - cellSize.height;      
+    if (offset > 0.5) {
+        drawingRect.size.height -= offset;
+        drawingRect.origin.y += (offset / 2);
+    }
+    
+    return drawingRect;
 }
 
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
