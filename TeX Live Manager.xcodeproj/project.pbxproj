@@ -79,6 +79,7 @@
 		F9D37C9A0F01A80800FB755E /* TLMGradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D37C990F01A80800FB755E /* TLMGradientView.m */; };
 		F9D37D640F01EA8900FB755E /* TLMUpdateListDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D37D630F01EA8900FB755E /* TLMUpdateListDataSource.m */; };
 		F9D37E7B0F02B5F700FB755E /* TLMOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D37E7A0F02B5F700FB755E /* TLMOutlineView.m */; };
+		F9D5CCB912977D8C00AEEDCB /* TLMMirrorNode.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D5CCB812977D8C00AEEDCB /* TLMMirrorNode.m */; };
 		F9D85F7A125E865E00C0FEC5 /* update_check.py in Resources */ = {isa = PBXBuildFile; fileRef = F9D85F75125E85FD00C0FEC5 /* update_check.py */; };
 		F9D85F7B125E866100C0FEC5 /* com.googlecode.mactlmgr.update_check.plist in Resources */ = {isa = PBXBuildFile; fileRef = F9D85F73125E85FD00C0FEC5 /* com.googlecode.mactlmgr.update_check.plist */; };
 		F9DCD36C0F06F0A200600DD2 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9DCD3650F06F08C00600DD2 /* Sparkle.framework */; };
@@ -363,6 +364,8 @@
 		F9D37D630F01EA8900FB755E /* TLMUpdateListDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMUpdateListDataSource.m; sourceTree = "<group>"; };
 		F9D37E790F02B5F700FB755E /* TLMOutlineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMOutlineView.h; sourceTree = "<group>"; };
 		F9D37E7A0F02B5F700FB755E /* TLMOutlineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMOutlineView.m; sourceTree = "<group>"; };
+		F9D5CCB712977D8C00AEEDCB /* TLMMirrorNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMMirrorNode.h; sourceTree = "<group>"; };
+		F9D5CCB812977D8C00AEEDCB /* TLMMirrorNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMMirrorNode.m; sourceTree = "<group>"; };
 		F9D85F73125E85FD00C0FEC5 /* com.googlecode.mactlmgr.update_check.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = com.googlecode.mactlmgr.update_check.plist; sourceTree = "<group>"; };
 		F9D85F75125E85FD00C0FEC5 /* update_check.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = update_check.py; sourceTree = "<group>"; };
 		F9D9AEB60F0D7EED00CB1A2F /* tlu_ipctask-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "tlu_ipctask-Info.plist"; sourceTree = "<group>"; };
@@ -615,6 +618,8 @@
 				F9A4A092105CA67100F5AC62 /* TLMProfileNode.m */,
 				F9FE58B2123EB80800B6008F /* TLMDatabase.h */,
 				F9FE58B3123EB80800B6008F /* TLMDatabase.m */,
+				F9D5CCB712977D8C00AEEDCB /* TLMMirrorNode.h */,
+				F9D5CCB812977D8C00AEEDCB /* TLMMirrorNode.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -993,6 +998,7 @@
 				F994A5AB1267E97F007EF95F /* TLMBackupListOperation.m in Sources */,
 				F958309812695A0800DB997C /* TLMBackupCell.m in Sources */,
 				F925D1AB12957B1800D75BB4 /* TLMMirrorController.m in Sources */,
+				F9D5CCB912977D8C00AEEDCB /* TLMMirrorNode.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
