@@ -39,11 +39,14 @@
 #import <Cocoa/Cocoa.h>
 #import "TLMOutlineView.h"
 
+@class TLMMirrorCell;
+
 @interface TLMMirrorController : NSWindowController <TLMOutlineViewDataSource>
 {
 @private
     NSMutableArray *_mirrors;
     TLMOutlineView *_outlineView;
+    TLMMirrorCell  *_mirrorCell;
 }
 
 @property (nonatomic, retain) IBOutlet NSOutlineView *_outlineView;
