@@ -52,8 +52,10 @@ typedef NSInteger TLMMirrorNodeType;
     TLMMirrorNodeType  _type;
     id                 _value;
     NSMutableArray    *_children;
+    id                 _status;
 }
 
+@property (nonatomic, retain) id status;
 @property (nonatomic, copy) id value;
 @property (nonatomic, readwrite) TLMMirrorNodeType type;
 

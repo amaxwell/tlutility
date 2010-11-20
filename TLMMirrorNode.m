@@ -43,6 +43,16 @@
 
 @synthesize value = _value;
 @synthesize type = _type;
+@synthesize status = _status;
+
+- (id)init
+{
+    self = [super init];
+    if (self) {
+        _type = -1;
+    }
+    return self;
+}
 
 - (void)dealloc
 {
@@ -63,10 +73,10 @@
     if (_type != other->_type)
         return NO;
     
-    if (_value && [_value isEqual:other->_value] == NO)
+    if ((_value != other->_value) && [_value isEqual:other->_value] == NO)
         return NO;
-    
-    if (_children && [_children isEqualToArray:other->_children] == NO)
+
+    if ((_children != other->_children) && [_children isEqualToArray:other->_children] == NO)
         return NO;
     
     return YES;
