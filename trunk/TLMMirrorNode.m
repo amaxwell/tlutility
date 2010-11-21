@@ -61,6 +61,16 @@
     [super dealloc];
 }
 
+- (NSString *)description
+{
+    // ASCII plist description
+    NSMutableString *desc = [NSMutableString string];
+    [desc appendFormat:@"{\n\ttype = %d;\n\tvalue = \"%@\";", _type, _value];
+    if (_children) [desc appendFormat:@"\n\tchildren = %@", _children];
+    [desc appendString:@"\n}"];
+    return desc;
+}
+
 - (NSUInteger)hash { return [_value hash]; }
 
 - (BOOL)isEqual:(id)object
