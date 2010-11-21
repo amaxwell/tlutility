@@ -38,6 +38,7 @@ from urllib import urlretrieve
 from time import time
 
 SITES_URL = "http://www.tex.ac.uk/tex-archive/CTAN.sites"
+SITES_URL = "ftp://tug.ctan.org/pub/tex-archive/CTAN.sites"
 
 JUNK    = 0 << 1
 COUNTRY = 1 << 2
