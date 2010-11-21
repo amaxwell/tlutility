@@ -40,6 +40,7 @@
 #import "TLMMirrorNode.h"
 #import "TLMMirrorCell.h"
 #import "TLMLogServer.h"
+#import "TLMDatabase.h"
 
 @interface TLMMirrorController (Private)
 - (void)_loadDefaultSites;
@@ -57,12 +58,17 @@
         _textFieldCell = [[NSTextFieldCell alloc] initTextCell:@""];
         _mirrorCell = [[TLMMirrorCell alloc] initTextCell:@""];
         [self _loadDefaultSites];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(_handleVersionCheckNotification:)
+                                                     name:TLMDatabaseVersionCheckComplete
+                                                   object:nil];
     }
     return self;
 }
 
 - (void)dealloc
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [_mirrors release];
     [_outlineView release];
     [_mirrorCell release];
@@ -71,6 +77,13 @@
 }
 
 - (NSString *)windowNibName { return @"Mirrors"; }
+
+static NSURL *__TLMTLNetURL(NSString *mirrorURLString)
+{
+#define TL_PATH      CFSTR("systems/texlive/tlnet")
+    NSURL *aURL = [NSURL URLWithString:mirrorURLString];
+    return [(id)CFURLCreateCopyAppendingPathComponent(CFAllocatorGetDefault(), (CFURLRef)aURL, TL_PATH, TRUE) autorelease];     
+}
 
 - (void)_loadDefaultSites
 {
@@ -105,7 +118,7 @@
             
             for (NSString *URLString in [mirrorInfo objectForKey:@"urls"]) {
                 TLMMirrorNode *URLNode = [TLMMirrorNode new];
-                [URLNode setValue:[NSURL URLWithString:URLString]];
+                [URLNode setValue:__TLMTLNetURL(URLString)];
                 [URLNode setType:TLMMirrorNodeURL];
                 [countryNode addChild:URLNode];
                 [URLNode release];
@@ -124,6 +137,29 @@
 - (void)awakeFromNib
 {        
     [_outlineView reloadData];
+}
+
+- (TLMMirrorNode *)_mirrorForURL:(NSURL *)aURL
+{
+    for (TLMMirrorNode *continentNode in _mirrors) {
+        
+        for (TLMMirrorNode *countryNode in continentNode) {
+            
+            for (TLMMirrorNode *URLNode in countryNode) {
+                
+                NSParameterAssert([URLNode type] == TLMMirrorNodeURL);
+                if ([[URLNode value] isEqual:aURL])
+                    return URLNode;
+            }
+        }
+    }
+    return nil;
+}
+
+- (void)_handleVersionCheckNotification:(NSNotification *)aNote
+{
+    TLMLog(__func__, @"%@", [aNote userInfo]);
+    TLMLog(__func__, @"mirror = %@", [self _mirrorForURL:[[aNote userInfo] objectForKey:@"URL"]]);
 }
 
 #pragma mark NSOutlineView datasource
