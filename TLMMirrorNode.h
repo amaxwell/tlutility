@@ -46,7 +46,7 @@ enum  {
 };
 typedef NSInteger TLMMirrorNodeType;
 
-@interface TLMMirrorNode : NSObject <NSCoding>
+@interface TLMMirrorNode : NSObject <NSCoding, NSFastEnumeration>
 {
 @private
     TLMMirrorNodeType  _type;

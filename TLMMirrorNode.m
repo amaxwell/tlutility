@@ -118,4 +118,9 @@
     return [_children objectAtIndex:idx];
 }
 
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state objects:(id *)stackbuf count:(NSUInteger)len;
+{
+    return [_children countByEnumeratingWithState:state objects:stackbuf count:len];
+}   
+
 @end
