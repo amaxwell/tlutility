@@ -43,6 +43,8 @@ typedef int16_t TLMDatabaseYear;
 // returned as the year in case of an error
 extern const TLMDatabaseYear TLMDatabaseUnknownYear;
 
+extern NSString * const TLMDatabaseVersionCheckComplete;
+
 typedef struct _TLMDatabaseVersion {
     TLMDatabaseYear  year;       // release year from the tlpdb
     BOOL             isOfficial; // whether this is a TL or 3rd party repo

@@ -47,6 +47,8 @@
 
 const TLMDatabaseYear TLMDatabaseUnknownYear = -1;
 
+NSString * const TLMDatabaseVersionCheckComplete = @"TLMDatabaseVersionCheckComplete";
+
 @interface _TLMDatabase : NSObject {
     NSURL           *_tlpdbURL;
     NSMutableData   *_tlpdbData;
@@ -117,6 +119,12 @@ static NSMutableDictionary *_databases = nil;
             // don't cache by the original host
             [_databases removeObjectForKey:tlpdbURL];
         }
+        
+        NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithCapacity:3];
+        [userInfo setObject:version.usedURL forKey:@"URL"];
+        [userInfo setObject:[NSNumber numberWithShort:version.year] forKey:@"year"];
+        NSNotification *note = [NSNotification notificationWithName:TLMDatabaseVersionCheckComplete object:self userInfo:userInfo];
+        [[NSNotificationCenter defaultCenter] performSelectorOnMainThread:@selector(postNotification:) withObject:note waitUntilDone:NO];
     }
     return version;
 }
