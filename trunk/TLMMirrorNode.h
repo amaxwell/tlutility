@@ -60,8 +60,8 @@ typedef NSInteger TLMMirrorNodeType;
 @property (nonatomic, readwrite) TLMMirrorNodeType type;
 
 - (NSUInteger)numberOfChildren;
-- (void)addChild:(id)child;
-- (id)childAtIndex:(NSUInteger)idx;
+- (void)addChild:(TLMMirrorNode *)child;
+- (TLMMirrorNode *)childAtIndex:(NSUInteger)idx;
 
 
 @end

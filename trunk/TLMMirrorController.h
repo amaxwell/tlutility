@@ -40,11 +40,12 @@
 #import "TLMOutlineView.h"
 
 @class TLMMirrorCell;
+@class TLMMirrorNode;
 
 @interface TLMMirrorController : NSWindowController <TLMOutlineViewDataSource>
 {
 @private
-    NSMutableArray  *_mirrors;
+    TLMMirrorNode   *_mirrorRoot;
     TLMOutlineView  *_outlineView;
     TLMMirrorCell   *_mirrorCell;
     NSTextFieldCell *_textFieldCell;

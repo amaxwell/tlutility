@@ -69,7 +69,7 @@
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [_mirrors release];
+    [_mirrorRoot release];
     [_outlineView release];
     [_mirrorCell release];
     [_textFieldCell release];
@@ -87,14 +87,14 @@ static NSURL *__TLMTLNetURL(NSString *mirrorURLString)
 
 - (void)_loadDefaultSites
 {
-    if ([_mirrors count])
+    if (_mirrorRoot)
         return;
     
     NSString *sitesFile = [[NSBundle mainBundle] pathForResource:@"CTAN.sites" ofType:@"plist"];
     NSDictionary *sites = [[NSDictionary dictionaryWithContentsOfFile:sitesFile] objectForKey:@"sites"];
     
-    [_mirrors autorelease];
-    _mirrors = [NSMutableArray new];
+    [_mirrorRoot autorelease];
+    _mirrorRoot = [TLMMirrorNode new];
     
     for (NSString *continent in sites) {
         
@@ -129,7 +129,7 @@ static NSURL *__TLMTLNetURL(NSString *mirrorURLString)
         for (NSString *countryName in countryNodes)
             [continentNode addChild:[countryNodes objectForKey:countryName]];
         
-        [_mirrors addObject:continentNode];
+        [_mirrorRoot addChild:continentNode];
         [continentNode release];
     }    
 }
@@ -141,7 +141,7 @@ static NSURL *__TLMTLNetURL(NSString *mirrorURLString)
 
 - (TLMMirrorNode *)_mirrorForURL:(NSURL *)aURL
 {
-    for (TLMMirrorNode *continentNode in _mirrors) {
+    for (TLMMirrorNode *continentNode in _mirrorRoot) {
         
         for (TLMMirrorNode *countryNode in continentNode) {
             
@@ -166,7 +166,7 @@ static NSURL *__TLMTLNetURL(NSString *mirrorURLString)
 
 - (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)anIndex ofItem:(TLMMirrorNode *)item;
 {
-    return nil == item ? [_mirrors objectAtIndex:anIndex] : [item childAtIndex:anIndex];
+    return nil == item ? [_mirrorRoot childAtIndex:anIndex] : [item childAtIndex:anIndex];
 }
 
 - (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(TLMMirrorNode *)item;
@@ -176,7 +176,7 @@ static NSURL *__TLMTLNetURL(NSString *mirrorURLString)
 
 - (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(TLMMirrorNode *)item;
 {
-    return nil == item ? [_mirrors count] : [item numberOfChildren];
+    return nil == item ? [_mirrorRoot numberOfChildren] : [item numberOfChildren];
 }
 
 - (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(TLMMirrorNode *)item;
