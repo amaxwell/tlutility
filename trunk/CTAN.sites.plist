@@ -233,6 +233,16 @@
 			</dict>
 			<dict>
 				<key>country</key>
+				<string>Singapore</string>
+				<key>name</key>
+				<string>raffles.nus.edu.sg</string>
+				<key>urls</key>
+				<array>
+					<string>http://raffles.nus.edu.sg/mirror/tex-archive/</string>
+				</array>
+			</dict>
+			<dict>
+				<key>country</key>
 				<string>Taiwan</string>
 				<key>name</key>
 				<string>ctan.cdpa.nsysu.edu.tw</string>
@@ -973,7 +983,8 @@
 				<string>ibiblio.org</string>
 				<key>urls</key>
 				<array>
-					<string>ftp://ibiblio.org/pub/packages/TeX</string>
+					<string>ftp://ibiblio.org/pub/mirrors/CTAN/</string>
+					<string>http://mirrors.ibiblio.org/pub/mirrors/CTAN/</string>
 				</array>
 			</dict>
 			<dict>
@@ -1143,6 +1154,6 @@
 		</array>
 	</dict>
 	<key>timestamp</key>
-	<real>1290225745.6279061</real>
+	<real>1290357619.1311071</real>
 </dict>
 </plist>
