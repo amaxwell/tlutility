@@ -37,6 +37,10 @@ from plistlib import writePlist
 from urllib import urlretrieve
 from time import time
 
+from tempfile import NamedTemporaryFile
+from subprocess import call as launch_task
+from urlparse import urlsplit
+
 SITES_URL = "http://www.tex.ac.uk/tex-archive/CTAN.sites"
 SITES_URL = "ftp://tug.ctan.org/pub/tex-archive/CTAN.sites"
 
@@ -88,9 +92,54 @@ class Continent(object):
     def __iter__(self):
         return self.mirrors.__iter__()
         
-
-if __name__ == '__main__':
+def mirmon_sites():
     
+    from datetime import datetime
+    
+    dst = NamedTemporaryFile(delete=False)
+    dst.close()
+    
+    outname = dst.name
+    outname = "/Volumes/Local/Users/amaxwell/mirmon.state"
+    
+    ret = 0#launch_task(["/usr/bin/rsync", "rsync://comedy.dante.de/MirMon/mirmon.state", dst.name])
+    
+    if ret:
+        return None
+    
+    mirror_urls = []
+    
+    with open(outname) as mirmon_file:
+        
+        for line in mirmon_file:
+            
+            """
+            http://people.cs.uu.nl/henkp/mirmon/svn/trunk/mirmon.html#state_file_format
+            The state file consists of lines; one line per site. Each line consists of white space separated fields. The seven fields are :
+
+            field 1 : url
+            The url as given in the mirror list.
+            field 2 : age
+            The mirror's timestamp found by the last succesful probe, or 'undef' if no probe was ever successful.
+            field 3 : status last probe
+            The status of the last probe, or 'undef' if the mirror was never probed.
+            field 4 : time last succesful probe
+            The timestamp of the last succesful probe or 'undef' if the mirror was never successfully probed.
+            field 5 : probe history
+            The probe history is a list of 's' (for success) and 'f' (for failure) characters indicating the result of the probe. New results are appended whenever the mirror is probed.
+            field 6 : state history
+            The state history consists of a timestamp, a '-' char, and a list of chars indicating a past status: 's' (fresh), 'b' (oldish), 'f' (old), 'z' (bad) or 'x' (skip). The timestamp indicates when the state history was last updated. The current status of the mirror is determined by the mirror's age and a few configuration parameters (min_sync, max_sync, max_poll). The state history is updated when the mirror is probed. If the last update of the history was less than 24 hours ago, the last status is replaced by the current status. If the last update of the history was more than 24 hours ago, the current status is appended to the history. One or more 'skip's is inserted, if the timestamp is two or more days old (when mirmon hasn't run for more than two days).
+            field 7 : last probe
+            The timestamp of the last probe, or 'undef' if the mirror was never probed.
+            """
+            line = line.strip()
+            (url, age, status, probe_time, probe_history, state_history, last_probe) = line.split()            
+            mirror_urls.append(url)
+
+    return mirror_urls
+    
+if __name__ == '__main__':
+     
     (sites_path, headers) = urlretrieve(SITES_URL)
     
     with open(sites_path, "rb") as sites_file:
@@ -133,6 +182,28 @@ if __name__ == '__main__':
                 state &= ~MIRROR
             
             saved_line = line
+            
+            
+        mirmon_urls = mirmon_sites()
+        mirmon_hosts = set([urlsplit(url).hostname for url in mirmon_urls])
+        site_hosts = set()
+        
+        for continent in continents:
+            
+            for mirror in continent:
+                
+                hosts = [urlsplit(url).hostname for url in mirror.urls]
+                site_hosts = site_hosts.union(set(hosts))
+
+        print site_hosts - mirmon_hosts
+        print mirmon_hosts - site_hosts
+        #print mirmon_hosts
+        #print site_hosts
+        
+        
+
+        #urlcomps = urlsplit(url)
+        #print urlcomps.hostname  
         
         plist = { "sites" : {}, "timestamp" : time() }
         sites_dict = plist["sites"]
