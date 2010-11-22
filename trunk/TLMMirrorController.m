@@ -96,10 +96,22 @@ static NSURL *__TLMTLNetURL(NSString *mirrorURLString)
     [_mirrorRoot autorelease];
     _mirrorRoot = [TLMMirrorNode new];
     
+    TLMMirrorNode *customNode = [TLMMirrorNode new];
+    [customNode setValue:[NSLocalizedString(@"Other Mirrors", @"mirror group title") uppercaseString]];
+    [customNode setType:TLMMirrorNodeContinent];
+    [_mirrorRoot addChild:customNode];
+    [customNode release];
+    
+    TLMMirrorNode *multiplexorNode = [TLMMirrorNode new];
+    [multiplexorNode setType:TLMMirrorNodeURL];
+    [multiplexorNode setValue:__TLMTLNetURL(@"http://mirror.ctan.org/")];
+    [customNode addChild:multiplexorNode];
+    [multiplexorNode release];
+    
     for (NSString *continent in sites) {
         
         TLMMirrorNode *continentNode = [TLMMirrorNode new];
-        [continentNode setValue:continent];
+        [continentNode setValue:[continent uppercaseString]];
         [continentNode setType:TLMMirrorNodeContinent];
         
         NSMutableDictionary *countryNodes = [NSMutableDictionary dictionary];
