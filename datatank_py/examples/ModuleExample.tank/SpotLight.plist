@@ -3,7 +3,8 @@
 <plist version="1.0">
 <dict>
 	<key>Comment</key>
-	<string>This will ensure that we pass an absolute path, since CWD is different</string>
+	<string>This will ensure that we pass an absolute path, since CWD is different
+Save as module twice, once with image path checked, once with image file checked</string>
 	<key>String</key>
 	<string>int16.tiff
 rgb_geo.tiff</string>

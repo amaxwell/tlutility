@@ -8,6 +8,7 @@ import numpy as np
 from datatank_py.DTDataFile import DTDataFile
 from datatank_py.DTBitmap2D import DTBitmap2D
 from time import clock
+from syslog import syslog, LOG_WARNING
 
 if __name__ == '__main__':
     
@@ -23,7 +24,17 @@ if __name__ == '__main__':
     #
     
     input_file = DTDataFile("Input.dtbin")
-    image_path = input_file["Image Path"]
+    
+    # DT creates this hard link in the working directory, if passed a file
+    # this is preferred, as it's fewer variables in DataTank, but if you
+    # have a world file, GDAL needs to be able to find it in the original
+    # directory.
+    image_path = "Image File"
+        
+    # if no path set, then use the file itself (preferable)
+    if os.path.exists(image_path) == False:
+        image_path = input_file["Image Path"]
+    
     input_file.close()
     
     start_time = clock()

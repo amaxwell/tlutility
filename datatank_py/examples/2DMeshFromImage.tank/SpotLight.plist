@@ -3,7 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>Comment</key>
-	<string>This will ensure that we pass an absolute path, since CWD is different</string>
+	<string>This will ensure that we pass an absolute path, since CWD is different
+Prefer to pass a file, but path can be used if you have a world (e.g., .tfw) file
+Save as module twice, once with path checked, once with file checked (so 2 modules)</string>
 	<key>String</key>
 	<string>~/Desktop/00164658/00164658_int16.tiff</string>
 </dict>

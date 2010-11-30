@@ -386,7 +386,7 @@
 			<key>WindowPos</key>
 			<array>
 				<real>766</real>
-				<real>0.0</real>
+				<real>70</real>
 				<real>618</real>
 				<real>878</real>
 			</array>
@@ -698,7 +698,7 @@
 			<key>ViewSizeSeparated</key>
 			<string></string>
 			<key>Visible</key>
-			<string>NO</string>
+			<string>YES</string>
 			<key>WindowName</key>
 			<string>2D Bitmap RGB</string>
 			<key>WindowPos</key>
@@ -709,11 +709,6 @@
 				<real>621</real>
 			</array>
 		</dict>
-	</array>
-	<key>InformationSize</key>
-	<array>
-		<real>400</real>
-		<real>811</real>
 	</array>
 	<key>Time</key>
 	<dict>
@@ -811,6 +806,14 @@
 			<string>String</string>
 		</dict>
 		<dict>
+			<key>Comment</key>
+			<string>Save as module twice, once with image path checked, once with image file checked</string>
+			<key>VariableName</key>
+			<string>DAComment - 2</string>
+			<key>VariableType</key>
+			<string>Comment</string>
+		</dict>
+		<dict>
 			<key>Content</key>
 			<dict>
 				<key>Application</key>
@@ -823,6 +826,8 @@
 				<string>Input.dtbin</string>
 				<key>LastInput</key>
 				<string>/Volumes/Local/Users/amaxwell/Desktop</string>
+				<key>ModuleName</key>
+				<string>2D Bitmap From Registered Image as File</string>
 				<key>Output</key>
 				<string>Output.dtbin</string>
 				<key>Project</key>
@@ -831,7 +836,7 @@
 				<array>
 					<dict>
 						<key>Include</key>
-						<string>On</string>
+						<string>Off</string>
 						<key>Name</key>
 						<string>Image Path</string>
 						<key>Type</key>
@@ -845,6 +850,19 @@
 							</dict>
 							<key>Selected</key>
 							<string>Name of Gray File</string>
+						</dict>
+					</dict>
+					<dict>
+						<key>Include</key>
+						<string>On</string>
+						<key>Name</key>
+						<string>Image File</string>
+						<key>Type</key>
+						<string>FileName</string>
+						<key>Var</key>
+						<dict>
+							<key>Selected</key>
+							<string>Gray File</string>
 						</dict>
 					</dict>
 				</array>
@@ -948,6 +966,19 @@
 							<string>Name of RGB File</string>
 						</dict>
 					</dict>
+					<dict>
+						<key>Include</key>
+						<string>On</string>
+						<key>Name</key>
+						<string>Image File</string>
+						<key>Type</key>
+						<string>FileName</string>
+						<key>Var</key>
+						<dict>
+							<key>Selected</key>
+							<string>RGB File</string>
+						</dict>
+					</dict>
 				</array>
 			</dict>
 			<key>Selection</key>
@@ -960,12 +991,12 @@
 			<string>Bitmap2D</string>
 		</dict>
 	</array>
-	<key>WindowPos</key>
+	<key>WindowPosition</key>
 	<array>
-		<real>45</real>
-		<real>13</real>
-		<real>512</real>
-		<real>865</real>
+		<real>32</real>
+		<real>188</real>
+		<real>965</real>
+		<real>990</real>
 	</array>
 </dict>
 </plist>

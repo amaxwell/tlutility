@@ -121,7 +121,7 @@
 							<key>Inline</key>
 							<dict>
 								<key>Number</key>
-								<string>10</string>
+								<string>1000</string>
 							</dict>
 							<key>SelectedNumber</key>
 							<integer>0</integer>
@@ -266,17 +266,12 @@
 			<string>2D Mesh</string>
 			<key>WindowPos</key>
 			<array>
-				<real>436</real>
-				<real>145</real>
+				<real>1180</real>
+				<real>445</real>
 				<real>640</real>
 				<real>733</real>
 			</array>
 		</dict>
-	</array>
-	<key>InformationSize</key>
-	<array>
-		<real>400</real>
-		<real>314</real>
 	</array>
 	<key>Time</key>
 	<dict>
@@ -327,7 +322,7 @@
 			<key>MinValue</key>
 			<real>0.0</real>
 			<key>String</key>
-			<string>0</string>
+			<string></string>
 		</dict>
 	</dict>
 	<key>Variables</key>
@@ -374,6 +369,22 @@
 			<string>String</string>
 		</dict>
 		<dict>
+			<key>Comment</key>
+			<string>Prefer to pass a file, but path can be used if you have a world (e.g., .tfw) file</string>
+			<key>VariableName</key>
+			<string>DAComment - 2</string>
+			<key>VariableType</key>
+			<string>Comment</string>
+		</dict>
+		<dict>
+			<key>Comment</key>
+			<string>Save as module twice, once with path checked, once with file checked (so 2 modules)</string>
+			<key>VariableName</key>
+			<string>DAComment - 3</string>
+			<key>VariableType</key>
+			<string>Comment</string>
+		</dict>
+		<dict>
 			<key>Content</key>
 			<dict>
 				<key>Application</key>
@@ -384,6 +395,8 @@
 				<integer>1</integer>
 				<key>Input</key>
 				<string>Input.dtbin</string>
+				<key>ModuleName</key>
+				<string>From Grayscale Image as File</string>
 				<key>Output</key>
 				<string>Output.dtbin</string>
 				<key>Project</key>
@@ -392,7 +405,7 @@
 				<array>
 					<dict>
 						<key>Include</key>
-						<string>On</string>
+						<string>Off</string>
 						<key>Name</key>
 						<string>Image Path</string>
 						<key>Type</key>
@@ -406,6 +419,19 @@
 							</dict>
 							<key>Selected</key>
 							<string>Name of Elevation Raster</string>
+						</dict>
+					</dict>
+					<dict>
+						<key>Include</key>
+						<string>On</string>
+						<key>Name</key>
+						<string>Image File</string>
+						<key>Type</key>
+						<string>FileName</string>
+						<key>Var</key>
+						<dict>
+							<key>Selected</key>
+							<string>Elevation Raster</string>
 						</dict>
 					</dict>
 				</array>
@@ -436,12 +462,12 @@
 			<string>Range</string>
 		</dict>
 	</array>
-	<key>WindowPos</key>
+	<key>WindowPosition</key>
 	<array>
-		<real>24</real>
-		<real>80</real>
-		<real>512</real>
-		<real>798</real>
+		<real>22</real>
+		<real>499</real>
+		<real>941</real>
+		<real>679</real>
 	</array>
 </dict>
 </plist>
