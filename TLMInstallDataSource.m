@@ -79,7 +79,7 @@
     if (_rootNode) return;
     
     NSDictionary *metadata = nil;
-    TLMProfileNode *newRoot = [TLMProfileNode newDefaultProfileWithMetadata:&metadata];
+    TLMProfileNode *newRoot = [[TLMProfileNode newDefaultProfileWithMetadata:&metadata] autorelease];
     const NSUInteger defaultProfileYear = [[metadata objectForKey:@"texliveyear"] integerValue];
     
     NSDictionary *archivedRoot = nil;
@@ -106,15 +106,10 @@
         TLMLog(__func__, @"Profile detected from unreleased version; using new defaults instead.");
     }
 
-
     if (nil == _rootNode) {
-        _rootNode = newRoot;
+        _rootNode = [newRoot retain];
         [_metadata setDictionary:metadata];
     }
-    
-    if (_rootNode != newRoot)
-        [newRoot release];
-
 }
 
 - (void)awakeFromNib
