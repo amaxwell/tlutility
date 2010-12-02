@@ -100,9 +100,9 @@ static NSMutableDictionary *_iconsByURLScheme = nil;
     return icon;
 }
 
-- (void)setObjectValue:(id <NSObject, NSCopying>)obj
+- (void)setObjectValue:(id <NSCopying>)obj
 {
-    NSImage *icon = [obj respondsToSelector:@selector(scheme)] ? [self _iconForURL:obj] : nil;
+    NSImage *icon = [(id)obj respondsToSelector:@selector(scheme)] ? [self _iconForURL:(NSURL *)obj] : nil;
     [self setIcon:icon];
     [super setObjectValue:obj];
 }
