@@ -923,8 +923,9 @@ static NSURL * __TLMParseLocationOption(NSString *location)
     @synchronized(self) {
         if (nil == recursiveRootRequired) {
             
-            TLMLog(__func__, @"Beginning one-time recursive check of install directory privileges.");
+            TLMLog(__func__, @"Beginning recursive check of install directory privileges. This will happen once per launch.");
             TLMLog(__func__, @"Please be patient.  This will be especially slow if %@ is on a network filesystem%C", path, 0x2026);
+            TLMLogServerSync();
             CFAbsoluteTime start = CFAbsoluteTimeGetCurrent();
             
             NSDirectoryEnumerator *dirEnum = [fm enumeratorAtPath:path];
@@ -939,7 +940,7 @@ static NSURL * __TLMParseLocationOption(NSString *location)
                     }
                 }
                 else {
-                    // I have a bad symlink at /usr/local/texlive/2010/texmf/doc/man/man
+                    // I have a bad symlink at /usr/local/texlive/2010/texmf/doc/man/man; this is MacTeX-specific
                     TLMLog(__func__, @"%@ does not exist; ignoring permissions", subpath);
                 }
             }
