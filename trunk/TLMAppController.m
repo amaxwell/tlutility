@@ -260,6 +260,7 @@ static void __TLMMigrateBundleIdentifier()
 
     if (nil == _updateURL) {
         [[self mainWindowController] showWindow:nil];
+#warning FIXME for release
         //[[self mainWindowController] refreshUpdatedPackageList];
     }
 }
