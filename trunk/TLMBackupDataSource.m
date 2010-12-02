@@ -232,7 +232,7 @@ static inline BOOL __TLMIsParentNode(id obj)
 {
     NSString *colName = [tableColumn identifier];
     if ([colName isEqualToString:@"name"])
-        return __TLMIsParentNode(item) ? [(TLMBackupNode *)item name] : [(TLMBackupNode *)item version];
+        return __TLMIsParentNode(item) ? (id)[(TLMBackupNode *)item name] : (id)[(TLMBackupNode *)item version];
     else if ([colName isEqualToString:@"date"])
         return [item date];
     return nil;
