@@ -632,7 +632,7 @@ class DTDataFile(object):
         self._length = self._file.tell()
         self._name_offset_map[name] = block_start  
     
-    def _dt_write(self, obj, name, time, anonymous=False):
+    def _dt_write(self, obj, name, time=None, anonymous=False):
         """Wrapper that calls __dt_write__ on a compound object.
         
         Arguments:
@@ -660,7 +660,7 @@ class DTDataFile(object):
         # caller is responsible for appending _index as needed for time series
         obj.__dt_write__(self, name)
 
-        if time:
+        if time is not None:
             assert name[-1].isdigit(), "time series names must end with a digit"
             self._write_array(np.array((time,), dtype=np.double), name + "_time")
             
