@@ -321,6 +321,8 @@ class DTDataFile(object):
                 break
             
             self._file.seek(next_block)
+        
+        assert self._length == os.path.getsize(self._file_path), "file size = %d, length record = %d" % (os.path.getsize(self._file_path), self._length)
     
     def _reload_content_if_needed(self):
         """Ensures the name-offset dictionary is current.
@@ -329,6 +331,10 @@ class DTDataFile(object):
         a no-op if file size has not changed; any rewrites to content that
         do not change length are ignored, so you can call this as often as
         needed without taking a big hit.
+        
+        I expect the only time self._length and the size from stat are not
+        consistent will be if you're modifying the file from another program,
+        in which case you'd better just be reading it here.
         
         """
         
@@ -517,6 +523,7 @@ class DTDataFile(object):
             assert previous_offset == 0, "file is missing dtbinary header"
             self._file.write(file_header)
             self._file.flush()
+            self._length = self._file.tell()
             # DTDataFileStructure: long long followed by 5 ints
             # http://docs.python.org/library/struct.html
             if sys.byteorder == "little":
@@ -542,6 +549,8 @@ class DTDataFile(object):
 
         assert name not in self._name_offset_map, "variable name already exists"
 
+        # file writes always take place at the end; we can't edit in-place
+        self._file.seek(0, os.SEEK_END)  
         self._check_and_write_header()
         block_start = self._file.tell()
 
@@ -577,7 +586,9 @@ class DTDataFile(object):
 
         assert name not in self._name_offset_map, "variable name already exists"
 
-        self._check_and_write_header()    
+        # file writes always take place at the end; we can't edit in-place
+        self._file.seek(0, os.SEEK_END)  
+        self._check_and_write_header()  
         block_start = self._file.tell()
 
         array = _ensure_array(array)
@@ -637,15 +648,22 @@ class DTDataFile(object):
         
         Arguments:
         obj -- object that implements __dt_write__ and __dt_type__
-        name -- user-visible name of the variable
+        name -- user-visible name of the variable; user is responsible for appending _N if needed
         time -- time value if this variable is time-varying        
         anonymous -- whether to expose the variable name by prefixing with Seq_
+        
+        For time-varying values, an underscore and integer must be appended to the
+        variable name, beginning with zero.  This method will raise if there is no
+        zero time, or if time values are not strictly increasing.
         
         """
         
         # get the type by introspection
         assert dt_writer(obj), "object must implement dt_writer methods"
         dt_type = obj.__dt_type__()
+        
+        # we'll be accessing the variable map
+        self._reload_content_if_needed()
         
         # Expose a time series of type dt_type
         if anonymous == False:
@@ -656,13 +674,30 @@ class DTDataFile(object):
                 self._write_string(dt_type, base_name)
         else:
             assert time == None, "anonymous write cannot save a time variable"
-             
-        # caller is responsible for appending _index as needed for time series
-        obj.__dt_write__(self, name)
-
+        
+        # Write time value before writing the variable, to DataTank doesn't see
+        # an inconsistent file (suggested by an error message in DataTank).
         if time is not None:
-            assert name[-1].isdigit(), "time series names must end with a digit"
+            
+            # The sanity checks here are pretty strict, but should save time in
+            # debugging, since they're confusing or hard to spot in DataTank itself.
+            
+            # ensure that we're following convention for variable naming of time series
+            name_parts = name.split("_")
+            assert name_parts[-1].isdigit(), "time series names must end with an integer"
+            time_index = int(name_parts[-1])
+
+            if time_index > 0:
+                # if you skip the zero time index, DataTank gives you index-based times
+                previous_time_name = "%s_%d_time" % ("_".join(name_parts[0:-1]), time_index - 1)
+                assert previous_time_name in self._name_offset_map, "variable \"%s\" not found in %s" % (previous_time_name, self._name_offset_map.keys())
+                # DataTank enforces this as well, and I'd rather find out about it while creating the file
+                assert self[previous_time_name] < time, "time must be strictly increasing (error in %s at t=%f)" % (name, time)
+        
             self._write_array(np.array((time,), dtype=np.double), name + "_time")
+
+        # caller is responsible for appending _N as needed for time series
+        obj.__dt_write__(self, name)
             
     def write_anonymous(self, obj, name):
         """Write an object that will not be visible in DataTank.
