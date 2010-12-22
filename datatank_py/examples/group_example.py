@@ -51,6 +51,5 @@ if __name__ == '__main__':
         progress.update_percentage(1.)
         
         # save execution time, and errors as a string list
-        df["ExecutionTime"] = clock() - start_time
-        df["ExecutionErrors"] = [""]
-                    
+        df.write_anonymous([""], "ExecutionErrors")
+        df.write_anonymous(clock() - start_time, "ExecutionTime")                    

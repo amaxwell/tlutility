@@ -53,15 +53,15 @@ if __name__ == '__main__':
         # stderr output instead, so print them also
         errors.append("Unable to open as an image file")
         with DTDataFile("Output.dtbin", truncate=True) as output_file:
-            output_file["ExecutionErrors"] = errors
-            output_file["ExecutionTime"] = clock() - start_time
+            output_file.write_anonymous(errors, "ExecutionErrors")
+            output_file.write_anonymous(clock() - start_time, "ExecutionTime")
             exit(1)
                         
     with DTDataFile("Output.dtbin", truncate=True) as output_file:
         
-        output_file["ExecutionTime"] = clock() - start_time
+        output_file.write_anonymous(clock() - start_time, "ExecutionTime")
         output_file["Var"] = img
                         
         # need to save a StringList of execution errors as Seq_ExecutionErrors
         if len(errors):
-            output_file["ExecutionErrors"] = errors
+            output_file.write_anonymous(errors, "ExecutionErrors")
