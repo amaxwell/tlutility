@@ -6,6 +6,8 @@
 import numpy as np
 from datatank_py.DTDataFile import DTDataFile
 from datatank_py.DTMesh2D import DTMesh2D
+from datatank_py.DTStructuredMesh2D import DTStructuredMesh2D
+from datatank_py.DTStructuredGrid2D import DTStructuredGrid2D
         
 if __name__ == '__main__':
     
@@ -29,5 +31,16 @@ if __name__ == '__main__':
         mesh = mesh_function(xx, yy, time)
         dtmesh = DTMesh2D(mesh, grid=grid)
         output_file.write(dtmesh, "Test Mesh_%d" % (idx), time=time)
-        
+    
+    sgrid = DTStructuredGrid2D(np.sin(range(10)), np.cos(range(10)))
+
+    xx, yy = np.meshgrid(range(10), range(10)) 
+    mesh_values = mesh_function(xx, yy, 0)
+
+    print sgrid.shape()
+    print mesh_values.shape
+
+    output_file["sgrid"] = sgrid
+    output_file["smesh"] = DTStructuredMesh2D(mesh, grid=sgrid)
+
     output_file.close()
