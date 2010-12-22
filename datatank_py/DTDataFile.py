@@ -547,7 +547,7 @@ class DTDataFile(object):
 
         """
 
-        assert name not in self._name_offset_map, "variable name already exists"
+        assert name not in self._name_offset_map, "variable name %s already exists" % (name)
 
         # file writes always take place at the end; we can't edit in-place
         self._file.seek(0, os.SEEK_END)  
@@ -741,10 +741,9 @@ class DTDataFile(object):
         dt_type -- string type used by DataTank
         time -- time value if this variable is time-varying
         
-        If this is a time-varying array and no values have been written, this will
-        add a string to expose it in DataTank using the dt_type parameter, which
-        is a DataTank type such as "Array" or "NumberList."  The time parameter is
-        a double-precision floating point value, relative to DataTank's time slider.
+        This will add a string to expose it in DataTank using the dt_type parameter, 
+        which is a DataTank type such as "Array" or "NumberList."  The time parameter 
+        is a double-precision floating point value, relative to DataTank's time slider.
 
         Note that if time dependence is used, the caller is responsible for appending
         "_N" to the variable, where N is an integer >= 0 and strictly increasing 
@@ -769,15 +768,13 @@ class DTDataFile(object):
         
         # Expose the time series; dt_type is something like "Array" or "NumberList"
         base_name = "Seq_" + _basename_of_variable(name)
-        if time and base_name not in self._name_offset_map:
-            self._write_string(dt_type, base_name)
-        elif time is None:
+        if time is None or base_name not in self._name_offset_map:
             self._write_string(dt_type, base_name)
             
         # caller is responsible for appending _index as needed for time series
         self._write_array(array, name)
 
-        if time:
+        if time is not None:
             assert name[-1].isdigit(), "time series names must end with a digit"
             self._write_array(np.array((time,), dtype=np.double), name + "_time")
 
@@ -807,15 +804,13 @@ class DTDataFile(object):
         
         # Expose a time series of type String
         base_name = "Seq_" + _basename_of_variable(name)
-        if time and base_name not in self._name_offset_map:
-            self._write_string("String", base_name)
-        elif time is None:
+        if time is None or base_name not in self._name_offset_map:
             self._write_string("String", base_name)
              
         # caller is responsible for appending _index as needed for time series
         self._write_string(string, name)
 
-        if time:
+        if time is not None:
             assert name[-1].isdigit(), "time series names must end with a digit"
             self._write_array(np.array((time,), dtype=np.double), name + "_time")
 
