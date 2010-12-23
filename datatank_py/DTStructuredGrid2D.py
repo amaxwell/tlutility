@@ -34,11 +34,13 @@ class DTStructuredGrid2D(object):
             
             self._x[0,:] = x
             self._y[:,0] = y
+            self._logical_shape = (len(y), len(x))
             
         else:
             assert np.shape(x) == np.shape(y)
             self._x = np.array(x, dtype=np.float32)
             self._y = np.array(y, dtype=np.float32)
+            self._logical_shape = np.shape(x)
             
         self._mask = mask if mask != None else np.array([], dtype=np.int32)
     
@@ -46,11 +48,30 @@ class DTStructuredGrid2D(object):
         return "2D Structured Grid"
         
     def shape(self):
-        return np.shape(self._x)
+        """Returns the logical grid size (z, y, x), even if stored as vectors."""
+        return self._logical_shape
         
     def bounding_box(self):
         return DTRegion2D(np.nanmin(self._x), np.nanmax(self._x), np.nanmin(self._y), np.nanmax(self._y))
         
+    def full_x(self):
+        if self._logical_shape == np.shape(self._x):
+            return self._x
+
+        full_x = np.zeros(self._logical_shape, dtype=np.float32)
+        for idx in xrange(self._logical_shape[0]):
+            full_x[idx,:] = self._x[0,:]
+        return full_x
+ 
+    def full_y(self):
+        if self._logical_shape == np.shape(self._y):
+            return self._y
+
+        full_y = np.zeros(self._logical_shape, dtype=np.float32)
+        for idx in xrange(self._logical_shape[1]):
+            full_y[:,idx] = self._y[:,0]
+        return full_y
+                   
     def __str__(self):
         return self.__dt_type__() + ": " + str(self.bounding_box())
         
@@ -68,8 +89,6 @@ if __name__ == '__main__':
         grid = DTStructuredGrid2D(range(10), range(20))
         df["grid"] = grid
     
-        print grid
-        #print "x=", grid._x
-        #print "y=", grid._y
-        #print "z=", grid._z
+        assert grid.shape() == grid.full_x().shape, "inconsistent shapes"
+        assert grid.shape() == grid.full_y().shape, "inconsistent shapes"
         

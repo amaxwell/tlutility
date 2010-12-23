@@ -30,7 +30,7 @@ class DTStructuredMesh2D(object):
             if grid == None:
                 grid = DTStructuredGrid2D(range(shape[1]), range(shape[0]))
             
-            #assert shape == grid.shape(), "grid shape %s != value shape %s" % (grid.shape(), shape)
+            assert shape == grid.shape(), "grid shape %s != value shape %s" % (grid.shape(), shape)
             
         self._grid = grid
         self._values = values
@@ -50,16 +50,17 @@ if __name__ == '__main__':
     from DTDataFile import DTDataFile
     with DTDataFile("test/structured_mesh2D.dtbin", truncate=True) as df:
                 
-        grid = DTStructuredGrid2D(range(10), range(20))
-        values = np.zeros(10 * 20)
+        xvals = np.exp(np.array(range(18), dtype=np.float) / 5)
+        yvals = np.exp(np.array(range(20), dtype=np.float) / 5)
+        grid = DTStructuredGrid2D(xvals, yvals)
+        values = np.zeros(len(xvals) * len(yvals))
         for i in xrange(len(values)):
             values[i] = i
             
         # DataTank indexes differently from numpy; the grid is z,y,x ordered
-        values = values.reshape((20, 10))
+        values = values.reshape(grid.shape())
         
         mesh = DTStructuredMesh2D(values, grid=grid)
         df["2D mesh"] = mesh
-    
-        print mesh
+
         
