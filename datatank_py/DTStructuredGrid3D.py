@@ -37,6 +37,7 @@ class DTStructuredGrid3D(object):
             self._x[0,0,:] = x
             self._y[0,:,0] = y
             self._z[:,0,0] = z
+            self._logical_shape = (len(z), len(y), len(x))
             
         else:
             assert np.shape(x) == np.shape(y)
@@ -45,6 +46,7 @@ class DTStructuredGrid3D(object):
             self._x = np.array(x, dtype=np.float32)
             self._y = np.array(y, dtype=np.float32)
             self._z = np.array(z, dtype=np.float32)
+            self._logical_shape = np.shape(x)
             
         self._mask = mask if mask != None else np.array([], dtype=np.int32)
     
@@ -52,10 +54,11 @@ class DTStructuredGrid3D(object):
         return "3D Structured Grid"
         
     def shape(self):
-        return np.shape(self._x)
+        """Returns logical shape of grid, not underlying array or vector"""
+        return self._logical_shape
         
     def bounding_box(self):
-        return DTRegion3D(np.min(self._x), np.max(self._x), np.min(self._y), np.max(self._y), np.min(self._z), np.max(self._z))
+        return DTRegion3D(np.nanmin(self._x), np.nanmax(self._x), np.nanmin(self._y), np.nanmax(self._y), np.nanmin(self._z), np.nanmax(self._z))
         
     def __str__(self):
         return self.__dt_type__() + ": " + str(self.bounding_box())
@@ -76,7 +79,4 @@ if __name__ == '__main__':
         df["grid"] = grid
     
         print grid
-        #print "x=", grid._x
-        #print "y=", grid._y
-        #print "z=", grid._z
         
