@@ -25,22 +25,22 @@ if __name__ == '__main__':
     (y, dy) = np.linspace(-10, 10, 100, retstep=True)
     xx, yy = np.meshgrid(x, y)
     grid = (np.min(x), np.min(y), dx, dy)    
-    
+        
     # time indexes must start at 0
     for idx, time in enumerate(np.arange(0, 20, 2, dtype=np.double)):
         mesh = mesh_function(xx, yy, time)
         dtmesh = DTMesh2D(mesh, grid=grid)
         output_file.write(dtmesh, "Test Mesh_%d" % (idx), time=time)
     
-    sgrid = DTStructuredGrid2D(np.sin(range(10)), np.cos(range(10)))
-
-    xx, yy = np.meshgrid(range(10), range(10)) 
-    mesh_values = mesh_function(xx, yy, 0)
-
-    print sgrid.shape()
-    print mesh_values.shape
-
-    output_file["sgrid"] = sgrid
-    output_file["smesh"] = DTStructuredMesh2D(mesh, grid=sgrid)
+    xvals = np.exp(np.array(range(18), dtype=np.float) / 5)
+    yvals = np.exp(np.array(range(20), dtype=np.float) / 5)
+    grid = DTStructuredGrid2D(xvals, yvals)
+    xvals = grid.full_x()
+    yvals = grid.full_y()
+    
+    for idx, time in enumerate(np.arange(0, 20, 2, dtype=np.double)):
+        mesh = mesh_function(xvals, yvals, time)
+        dtmesh = DTStructuredMesh2D(mesh, grid=grid)
+        output_file.write(dtmesh, "Structured Mesh_%d" % (idx), time=time)
 
     output_file.close()
