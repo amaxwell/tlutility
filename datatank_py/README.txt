@@ -71,7 +71,7 @@ LICENSE
 
 DTDataFile.py and associated scripts are released under the BSD license as follows:
 
-This software is Copyright (c) 2010
+This software is Copyright (c) 2010-2011
 Adam Maxwell. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
