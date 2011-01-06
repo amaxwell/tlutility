@@ -40,5 +40,7 @@
 
 int main(int argc, char *argv[])
 {
+    // http://lists.apple.com/archives/cocoa-dev/2011/Jan/msg00169.html
+    signal(SIGPIPE, SIG_IGN);
     return NSApplicationMain(argc,  (const char **) argv);
 }
