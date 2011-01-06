@@ -179,7 +179,14 @@
 			isa = PBXProject;
 			buildConfigurationList = F976620C0861BEF900829F8B /* Build configuration list for PBXProject "DVIImporter" */;
 			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
 			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
 			mainGroup = 089C166AFE841209C02AAC07 /* DVIImporter */;
 			projectDirPath = "";
 			projectRoot = "";
