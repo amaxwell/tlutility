@@ -130,9 +130,7 @@ static char _TLMOperationFinishedContext;
     NSAutoreleasePool *pool = [NSAutoreleasePool new];
    
     NSAssert(nil != _task, @"No task, probably due to using incorrect initializer");
-    
-    sig_t previousSignalMask = signal(SIGPIPE, SIG_IGN);
-    
+        
     int status = -1;
     [_task launch];
     
@@ -173,9 +171,7 @@ static char _TLMOperationFinishedContext;
      */
     if ([self errorMessages])
         TLMLog(__func__, @"%@", [[self errorMessages] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]);
-    
-    signal(SIGPIPE, previousSignalMask);
-    
+        
     [pool release];
 }
 

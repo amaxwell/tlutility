@@ -229,9 +229,7 @@ static NSArray * __TLMURLsFromTexdocOutput2(NSString *outputString)
     r = [packageName rangeOfString:@"." options:NSBackwardsSearch];
     if (r.length)
         packageName = [packageName substringToIndex:r.location];
-    
-    sig_t previousSignalMask = signal(SIGPIPE, SIG_IGN);
-    
+        
     TLMTask *task = [[TLMTask new] autorelease];
     [task setLaunchPath:cmd];
     
@@ -259,9 +257,7 @@ static NSArray * __TLMURLsFromTexdocOutput2(NSString *outputString)
     
     NSString *errorString = 0 != status ? nil : [task errorString];
     NSString *outputString = 0 != status ? nil : [task outputString];
-    
-    signal(SIGPIPE, previousSignalMask);
-    
+        
     if (outputString) {
         NSArray *docURLs = useMachineReadable ? __TLMURLsFromTexdocOutput2(outputString) : __TLMURLsFromTexdocOutput(outputString);
         if ([docURLs count])
