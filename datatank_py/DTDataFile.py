@@ -874,7 +874,7 @@ class DTDataFile(object):
                 assert obj <= _INT32_MAX and obj >= _INT32_MIN, "integer too large for 32-bit type"
                 array = np.array((obj,), dtype=np.int32)
             self.write_array(array, name, dt_type="Real Number", time=time)
-        elif isinstance(obj, (tuple, list)) and isinstance(obj[0], basestring):
+        elif isinstance(obj, (tuple, list)) and len(obj) and isinstance(obj[0], basestring):
             # this will be a StringList
             offsets = []
             char_list = []
