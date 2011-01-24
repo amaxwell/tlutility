@@ -161,6 +161,9 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
                 FSEventStreamStart(_fseventStream);
             }
         }
+        
+        // spin off a thread to check this lazily, in case a recursive check is required
+        [NSThread detachNewThreadSelector:@selector(installRequiresRootPrivileges) toTarget:self withObject:nil];
     }
     return self;
 }
@@ -895,18 +898,24 @@ static NSURL * __TLMParseLocationOption(NSString *location)
 }
 
 - (BOOL)installRequiresRootPrivileges
-{    
+{
+    NSAutoreleasePool *pool = [NSAutoreleasePool new];
+    
     NSString *path = [[self installDirectory] path];
     
     // things are going to fail regardless...
-    if (nil == path)
+    if (nil == path) {
+        [pool release];
         return NO;
+    }
     
     NSFileManager *fm = [[NSFileManager new] autorelease];
     
     // !!! early return; check top level first, which is the common case
-    if ([fm isWritableFileAtPath:path] == NO)
+    if ([fm isWritableFileAtPath:path] == NO) {
+        [pool release];
         return YES;
+    }
     
     /*
      In older versions, this method considered TLMUseRootHomePreferenceKey and the top level dir.
@@ -923,8 +932,7 @@ static NSURL * __TLMParseLocationOption(NSString *location)
     @synchronized(self) {
         if (nil == recursiveRootRequired) {
             
-            TLMLog(__func__, @"Beginning recursive check of install directory privileges. This will happen once per launch.");
-            TLMLog(__func__, @"Please be patient.  This will be especially slow if %@ is on a network filesystem%C", path, 0x2026);
+            TLMLog(__func__, @"Recursive check of installation privileges. This will happen once per launch, and may be slow if %@ is on a network filesystem%C", path, 0x2026);
             TLMLogServerSync();
             CFAbsoluteTime start = CFAbsoluteTimeGetCurrent();
             
@@ -948,6 +956,8 @@ static NSURL * __TLMParseLocationOption(NSString *location)
             TLMLog(__func__, @"Recursive check completed in %.1f seconds.  Root privileges %@ required.", CFAbsoluteTimeGetCurrent() - start, rootRequired ? @"are" : @"not");
         }
     }
+    
+    [pool release];
     
     return [recursiveRootRequired boolValue];
 }
