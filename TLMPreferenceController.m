@@ -927,9 +927,12 @@ static NSURL * __TLMParseLocationOption(NSString *location)
      By doing this once, I assume that the situation won't change during the lifetime of this 
      process.  I think that's reasonable, so will wait to hear otherwise before monitoring it 
      with FSEventStream or similar madness.
+     
+     NB: synchronizing on self here caused contention with -validServerURL, and it took a while
+     to figure out why it was beachballing on launch after I threaded this check.
      */
     static NSNumber *recursiveRootRequired = nil;
-    @synchronized(self) {
+    @synchronized(recursiveRootRequired) {
         if (nil == recursiveRootRequired) {
             
             TLMLog(__func__, @"Recursive check of installation privileges. This will happen once per launch, and may be slow if %@ is on a network filesystem%C", path, 0x2026);
@@ -940,6 +943,8 @@ static NSURL * __TLMParseLocationOption(NSString *location)
             BOOL rootRequired = NO;
             for (NSString *subpath in dirEnum) {
                 
+                // okay if this doesn't get released on the break; it'll be caught by the top-level pool
+                NSAutoreleasePool *innerPool = [NSAutoreleasePool new];
                 subpath = [path stringByAppendingPathComponent:subpath];
                 if ([fm fileExistsAtPath:subpath]) {
                     if ([fm isWritableFileAtPath:subpath] == NO) {
@@ -951,6 +956,7 @@ static NSURL * __TLMParseLocationOption(NSString *location)
                     // I have a bad symlink at /usr/local/texlive/2010/texmf/doc/man/man; this is MacTeX-specific
                     TLMLog(__func__, @"%@ does not exist; ignoring permissions", subpath);
                 }
+                [innerPool release];
             }
             recursiveRootRequired = [[NSNumber alloc] initWithBool:rootRequired];
             TLMLog(__func__, @"Recursive check completed in %.1f seconds.  Root privileges %@ required.", CFAbsoluteTimeGetCurrent() - start, rootRequired ? @"are" : @"not");
