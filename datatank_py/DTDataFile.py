@@ -725,9 +725,20 @@ class DTDataFile(object):
                 assert obj <= _INT32_MAX and obj >= _INT32_MIN, "integer too large for 32-bit type"
                 array = np.array((obj,), dtype=np.int32)
             self._write_array(array, name)
+        elif isinstance(obj, (tuple, list)) and len(obj) and isinstance(obj[0], basestring):
+            # this will be a StringList
+            offsets = []
+            char_list = []
+            current_offset = 0
+            # flat list of character codes, with each string separated by a null
+            for string in obj:
+                string = (string + "\0").encode("utf-8")
+                char_list += [ord(x) for x in string]
+                offsets.append(current_offset)
+                current_offset += len(string)
+            self._write_array(np.array(offsets, dtype=np.int32), name + "_offs")
+            self._write_array(np.array(char_list, dtype=np.int8), name)
         elif isinstance(obj, (np.ndarray, tuple, list)):  
-            if len(obj):
-                assert isinstance(obj[0], basestring) is False, "anonymous StringList unsupported"
             self._write_array(_ensure_array(obj), name)
         else:
             assert False, "unhandled object type"
