@@ -726,7 +726,8 @@ class DTDataFile(object):
                 array = np.array((obj,), dtype=np.int32)
             self._write_array(array, name)
         elif isinstance(obj, (tuple, list)) and len(obj) and isinstance(obj[0], basestring):
-            # this will be a StringList
+            # this will be a StringList; note that anonymous StringList variables are
+            # used for error lists in DataTank
             offsets = []
             char_list = []
             current_offset = 0
