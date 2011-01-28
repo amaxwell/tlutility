@@ -245,7 +245,7 @@ class _DTPILBitmap2D(_DTBitmap2D):
         
         del image
                 
-def DTBitmap2D(path_or_image):
+def DTBitmap2D(path_or_image=None):
     """Creates a new DTBitmap2D object from a path or PIL image.
     
     Arguments:
@@ -253,6 +253,18 @@ def DTBitmap2D(path_or_image):
     
     Returns:
     A DTBitmap2D object that implements dt_type and dt_write
+    
+    The argument now defaults to None.  In that case, you'll get back
+    an object that implements dt_write, but you are responsible for
+    filling in its attributes.  These are:
+      • grid -- optional, of the form [x0, y0, dx, dy]
+      • red, green, blue -- required for RGB image only
+      • gray -- required for grayscale image only
+      • alpha -- optional
+    Each must be a 2D numpy array, and you are responsible for ensuring
+    a consistent shape and proper dimension.  This is basically 
+    equivalent to the way DTSource constructs a DTBitmap2D.  Note that 
+    DataTank only supports 8 bit and 16 bit images.
     
     If a PIL image is provided, it will be used as-is, and the grid
     will be a unit grid with origin at (0, 0).  If a path is provided,
@@ -277,6 +289,9 @@ def DTBitmap2D(path_or_image):
     will read the entire image into memory as soon as you instantiate it.
         
     """
+    
+    if path_or_image is None:
+        return _DTBitmap2D()
     
     obj = None
     if isinstance(path_or_image, basestring):
