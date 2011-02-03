@@ -6,6 +6,7 @@
 __all__ = ["DTErrorMessage", "DTSaveError"]
 
 import sys
+import os
 
 _errors = []
 
@@ -23,6 +24,9 @@ def DTErrorMessage(fcn, msg):
     should be presented, then call DTSaveError before exiting.
     
     """
+    
+    if fcn == None:
+        fcn = os.path.basename(sys.argv[0])
     
     err_msg = "%s: %s" % (fcn, msg)
     _errors.append(err_msg)
@@ -43,4 +47,4 @@ def DTSaveError(datafile, name="ExecutionErrors"):
     """
     
     if len(_errors):
-        datafile[name] = _errors
+        datafile.write_anonymous(_errors, name)
