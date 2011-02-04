@@ -89,6 +89,47 @@ class DTMask(object):
 
         datafile.write_anonymous(np.array(dims, dtype=np.int32), name + "_dim")
         datafile.write_anonymous(self._intervals, name)
+        
+    def mask_array(self):
+        # DTCharArray DTMask::MaskArray(void) const
+        # {
+        #   if (optional->mask.NotEmpty())
+        #       return optional->mask;
+        # 
+        #     DTMutableCharArray toReturn(m(),n(),o());
+        #     toReturn = 0;
+        #     const int howMany = intervals.n();
+        #     int i,j,start,end;
+        #     for (i=0;i<howMany;i++) {
+        #         start = intervals(0,i);
+        #         end = intervals(1,i);
+        #         for (j=start;j<=end;j++) {
+        #             toReturn(j) = 1;
+        #         }
+        #     }
+        # 
+        #   optional->mask = toReturn;
+        # 
+        #     return toReturn;
+        # }
+        mask_array = np.array((self._m, self._n, self._o), dtype=np.bool).flatten()
+        mask_array = false
+        #for i in xrange(self._n)
+        
+    @classmethod
+    def from_data_file(self, datafile, name):
+        
+        intervals = datafile[name]
+        dims = datafile[name + "_dim"].tolist()
+        if len(dims) == 2:
+            dims.append(0)
+        mask = DTMask(np.array([]))
+        mask._intervals = intervals
+        mask._m = dims[0]
+        mask._n = dims[1]
+        mask._o = dims[2]
+        
+        return mask
 
 if __name__ == '__main__':
     
