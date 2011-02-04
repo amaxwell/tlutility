@@ -25,6 +25,15 @@ class DTMesh2D(object):
         self._values = values
         self._grid = grid if grid != None else (0, 0, 1, 1)
         self._mask = mask
+        
+    def grid(self):
+        return self._grid
+        
+    def values(self):
+        return self._values
+        
+    def mask(self):
+        return self._mask
     
     def __dt_type__(self):
         return "2D Mesh"
@@ -53,3 +62,13 @@ class DTMesh2D(object):
         if self._mask != None:
             datafile.write_anonymous(self._mask, name + "_dom")
         datafile.write_anonymous(self._values, name)
+
+    @classmethod
+    def from_data_file(self, datafile, name):
+        
+        values = datafile[name]
+        grid = datafile[name + "_loc"]
+        mask = datafile[name + "_dom"]
+        assert values != None, "Mesh %s not found in data file" % (name)
+        return DTMesh2D(values, grid=grid, mask=mask)
+        
