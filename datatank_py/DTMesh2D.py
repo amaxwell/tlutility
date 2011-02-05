@@ -4,6 +4,7 @@
 # This software is under a BSD license.  See LICENSE.txt for details.
 
 import numpy as np
+from DTMask import DTMask
 
 class DTMesh2D(object):
     """2D Mesh object."""
@@ -68,7 +69,8 @@ class DTMesh2D(object):
         
         values = datafile[name]
         grid = datafile[name + "_loc"]
-        mask = datafile[name + "_dom"]
+        mask = DTMask.from_data_file(datafile[name + "_dom"]).mask_array()
         assert values != None, "Mesh %s not found in data file" % (name)
         return DTMesh2D(values, grid=grid, mask=mask)
-        
+
+      
