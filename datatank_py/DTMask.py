@@ -91,34 +91,21 @@ class DTMask(object):
         datafile.write_anonymous(self._intervals, name)
         
     def mask_array(self):
-        # DTCharArray DTMask::MaskArray(void) const
-        # {
-        #   if (optional->mask.NotEmpty())
-        #       return optional->mask;
-        # 
-        #     DTMutableCharArray toReturn(m(),n(),o());
-        #     toReturn = 0;
-        #     const int howMany = intervals.n();
-        #     int i,j,start,end;
-        #     for (i=0;i<howMany;i++) {
-        #         start = intervals(0,i);
-        #         end = intervals(1,i);
-        #         for (j=start;j<=end;j++) {
-        #             toReturn(j) = 1;
-        #         }
-        #     }
-        # 
-        #   optional->mask = toReturn;
-        # 
-        #     return toReturn;
-        # }
-        mask_array = np.array((self._m, self._n, self._o), dtype=np.bool).flatten()
-        mask_array = false
-        #for i in xrange(self._n)
+        """Returns a full uint8 mask array in the original mask shape"""
+        dims = [self._m, self._n]
+        if self._o > 1:
+            dims.append(self._o)
+        mask_array = np.zeros(dims, dtype=np.uint8).flatten()
+        for start, end in zip(self._intervals[:,0], self._intervals[:,1]):
+            for j in xrange(start,end + 1):
+                mask_array[j] = True
+
+        dims.reverse()
+        return mask_array.reshape(dims)
         
     @classmethod
     def from_data_file(self, datafile, name):
-        
+        """Instantiates a DTMask from a DTDataFile with the given variable name"""
         intervals = datafile[name]
         dims = datafile[name + "_dim"].tolist()
         if len(dims) == 2:
@@ -155,15 +142,19 @@ if __name__ == '__main__':
         
         # return the step to avoid getting fouled up in computing it
         (x, dx) = np.linspace(-10, 10, 80, retstep=True)
-        (y, dy) = np.linspace(-10, 20, 120, retstep=True)
+        (y, dy) = np.linspace(-20, 20, 120, retstep=True)
         xx, yy = np.meshgrid(x, y)
         mesh = mesh_function(xx, yy)
         
         grid = (np.min(x), np.min(y), dx, dy)
         
-        mask_array = np.zeros(mesh.shape)
+        mask_array = np.zeros(mesh.shape, dtype=np.int8)
         mask_array[np.where(mesh < 1)] = 1
         mask = DTMask(mask_array)
+        
+        new_mask = mask.mask_array()
+        assert new_mask.shape == mask_array.shape, "shape %s != %s" % (new_mask.shape, mask_array.shape)
+        assert np.sum(new_mask - mask_array) == 0, "inconsistent mask array computed"
 
         dtmesh = DTMesh2D(mesh, grid=grid, mask=mask)
         df["Holy mesh"] = dtmesh
@@ -176,6 +167,10 @@ if __name__ == '__main__':
         # mask dimension order should be consistent with array value order
         mask_array = mask_array.reshape((o, n, m))
         mask = DTMask(mask_array)
+        
+        new_mask = mask.mask_array()
+        assert new_mask.shape == mask_array.shape, "shape %s != %s" % (new_mask.shape, mask_array.shape)
+        assert np.sum(new_mask - mask_array) == 0, "inconsistent mask array computed"
         
         grid = DTStructuredGrid3D(range(m), range(n), range(o), mask=mask)
         df["3D grid masked"] = grid
