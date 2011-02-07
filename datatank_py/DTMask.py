@@ -96,6 +96,8 @@ class DTMask(object):
         if self._o > 1:
             dims.append(self._o)
         mask_array = np.zeros(dims, dtype=np.uint8).flatten()
+        if len(mask_array) == 0:
+            return mask_array.reshape(dims)
         for start, end in zip(self._intervals[:,0], self._intervals[:,1]):
             for j in xrange(start,end + 1):
                 mask_array[j] = True
@@ -107,6 +109,11 @@ class DTMask(object):
     def from_data_file(self, datafile, name):
         """Instantiates a DTMask from a DTDataFile with the given variable name"""
         intervals = datafile[name]
+        
+        # return None if there is no mask
+        if intervals == None:
+            return None
+            
         dims = datafile[name + "_dim"].tolist()
         if len(dims) == 2:
             dims.append(0)

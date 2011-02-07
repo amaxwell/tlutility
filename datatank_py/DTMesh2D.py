@@ -70,7 +70,9 @@ class DTMesh2D(object):
         values = datafile[name]
         grid = datafile[name + "_loc"]
         # TODO: make sure this is correct; should be writing a packed array instead in __dt_write__?
-        mask = DTMask.from_data_file(datafile[name + "_dom"]).mask_array()
+        mask = DTMask.from_data_file(datafile, name + "_dom")
+        if mask != None:
+            mask = mask.mask_array()
         assert values != None, "Mesh %s not found in data file" % (name)
         return DTMesh2D(values, grid=grid, mask=mask)
 
