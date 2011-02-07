@@ -143,6 +143,7 @@ static void __TLMMigrateBundleIdentifier()
 
 + (NSMutableArray *)_systemPaths
 {
+    // return nil on failure: http://code.google.com/p/mactlmgr/issues/detail?id=55
     NSString *str = [NSString stringWithContentsOfFile:@"/etc/paths" encoding:NSUTF8StringEncoding error:NULL];
     NSMutableArray *paths = [NSMutableArray array];
     // one path per line, according to man page for path_helper(8)
@@ -153,7 +154,7 @@ static void __TLMMigrateBundleIdentifier()
         if ([path isEqualToString:@""] == NO)
             [paths addObject:path];
     }
-    return paths;
+    return [paths count] ? paths : nil;
 }
 
 + (void)updatePathEnvironment;
@@ -210,6 +211,7 @@ static void __TLMMigrateBundleIdentifier()
         systemPaths = [NSMutableArray arrayWithObjects:@"/usr/bin", @"/bin", @"/usr/sbin", @"/sbin", @"/usr/local/bin", nil];
         TLMLog(__func__, @"*** ERROR *** Unable to read /etc/paths.");
     }
+    NSParameterAssert([systemPaths count]);
     
     NSParameterAssert([[NSUserDefaults standardUserDefaults] objectForKey:TLMTexBinPathPreferenceKey]);
     [systemPaths addObject:[[NSUserDefaults standardUserDefaults] objectForKey:TLMTexBinPathPreferenceKey]];
@@ -260,8 +262,7 @@ static void __TLMMigrateBundleIdentifier()
 
     if (nil == _updateURL) {
         [[self mainWindowController] showWindow:nil];
-#warning FIXME for release
-        //[[self mainWindowController] refreshUpdatedPackageList];
+        [[self mainWindowController] refreshUpdatedPackageList];
     }
 }
 
