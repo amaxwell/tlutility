@@ -110,6 +110,11 @@ class DTBitmap2D(object):
                 return v.dtype
         return None
         
+    def channel_count(self):
+        if self.gray != None:
+            return 2 if self.alpha != None else 1
+        return 4 if self.alpha != None else 3
+        
     def mesh_from_channel(self, channel="gray"):
         import datatank_py.DTMesh2D
         return datatank_py.DTMesh2D.DTMesh2D(getattr(self, channel), grid=self.grid)
@@ -126,6 +131,19 @@ class DTBitmap2D(object):
                 datafile.write_anonymous(values, "_".join((name, channel_name)))
             
         datafile.write_anonymous(self.grid, name)
+        
+    @classmethod
+    def from_data_file(self, datafile, name):
+        
+        bitmap = DTBitmap2D()
+        bitmap.grid = datafile[name]
+        for suffix in ("", "16"):
+            for channel_name in DTBitmap2D.CHANNEL_NAMES:
+                dt_channel_name = "%s_%s%s" % (name, channel_name.capitalize(), suffix)
+                values = datafile[dt_channel_name]
+                if values != None:
+                    setattr(bitmap, channel_name, values)
+        return bitmap
 
 class _DTGDALBitmap2D(DTBitmap2D):
     """Private subclass that wraps up the GDAL logic."""
