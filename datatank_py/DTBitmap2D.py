@@ -6,6 +6,7 @@
 try:
     from PIL import Image
 except Exception, e:
+    Image = None
     pass
 try:
     from osgeo import gdal
@@ -123,46 +124,38 @@ class DTBitmap2D(object):
         return self.channel_count() < 3
         
     def pil_image(self):
-        # #!/usr/bin/env python
-        # 
-        # from datatank_py.DTBitmap2D import DTBitmap2D
-        # from datatank_py.DTDataFile import DTDataFile
-        # 
-        # if __name__ == '__main__':
-        # 
-        #     df = DTDataFile("bitmap.dtbin")
-        #     bitmap = DTBitmap2D.from_data_file(df, "bitmap")
-        #     print bitmap
-        # 
-        #     img = bitmap.pil_image()
-        #     print img
-        #     img.save("bitmaptest.png")
-        def __transform(values):
-            values = np.flipud(values)
-            return values.tostring()
+        """Attempt to convert a raw image to a PIL Image object
+        
+        Returns None if PIL can't be loaded or if the conversion failed.
+        Only tested with 8-bit images, but gray/gray+alpha and RGB/RGBA
+        have all been tested.
+        
+        """
+        
+        if Image == None:
+            return None
+            
         if self.is_gray():
             mode = "L"
-            raw_mode = "L"
-            data = __transform(self.gray)
-            size = np.flipud(self.gray.shape)
+            raw_mode = mode
+            channels = [self.gray]
             if self.has_alpha():
-                raw_mode = "LA"
-                data += __transform(self.alpha)
+                mode = "LA"
+                raw_mode = "LA;L"
+                channels.append(self.alpha)
         else:
             mode = "RGB"
-            raw_mode = "RGB"
-            size = np.flipud(self.red.shape)
-            data = __transform(self.red)
-            data += __transform(self.green)
-            data += __transform(self.blue)
+            raw_mode = mode
+            channels = [self.red, self.green, self.blue]
             if self.has_alpha():
+                mode = "RGBA"
                 raw_mode += "A"
-                data += __transform(self.alpha)
+                channels.append(self.alpha)
             raw_mode += ";L"
-        print "mode=%s, size=%s" % (raw_mode, size)
-        if Image != None:
-            return Image.fromstring(mode, size, data, "raw", raw_mode, 0, -1)
-        return None
+        
+        size = np.flipud(channels[0].shape)
+        data = np.hstack(channels).tostring()
+        return Image.fromstring(mode, size, data, "raw", raw_mode, 0, -1)
         
     def mesh_from_channel(self, channel="gray"):
         import datatank_py.DTMesh2D
