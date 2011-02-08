@@ -9,9 +9,14 @@ except Exception, e:
     Image = None
     pass
 try:
-    from osgeo import gdal
-    from osgeo.gdalconst import GA_ReadOnly
+    from osgeo import gdal, osr
+    # throw instead of printing to stderr
+    gdal.UseExceptions()
+    osr.UseExceptions()
+    from osgeo.gdalconst import GA_ReadOnly, GDT_UInt16, GDT_Byte
 except Exception, e:
+    gdal = None
+    osr = None
     pass
 import numpy as np
 import sys
@@ -103,9 +108,6 @@ class DTBitmap2D(object):
         for n in DTBitmap2D.CHANNEL_NAMES:
             setattr(self, n, None)
     
-    def __dt_type__(self):
-        return "2D Bitmap"
-        
     def dtype(self):
         for x in DTBitmap2D.CHANNEL_NAMES:
             v = getattr(self, x)
@@ -182,6 +184,96 @@ class DTBitmap2D(object):
         import datatank_py.DTMesh2D
         return datatank_py.DTMesh2D.DTMesh2D(getattr(self, channel), grid=self.grid)
         
+    def raster_size(self):
+        """Size in pixels, 2-tuple ordered as (horizontal, vertical)."""
+        shape = self.gray.shape if self.is_gray() else self.red.shape
+        return tuple(reversed(shape))
+        
+    def write_geotiff(self, output_path, projection_name):
+        """Save a DTBitmap2D as a GeoTIFF file.
+        
+        Arguments:
+        output_path -- A file path; all parent directories must exist.
+        projection_name -- The spatial reference system to associate with
+        the file being save.  For example, EPSG:4326 and WGS84 are both
+        valid.  See the documentation for OSRSpatialReference::SetFromUserInput
+        at http://www.gdal.org/ogr/classOGRSpatialReference.html        
+        for more specific details.
+        
+        Returns:
+        Nothing.
+        
+        Note that exceptions will be raised if the DTBitmap2D is not valid
+        (has no data), or if any GDAL functions fail.  This method has only
+        been tested with 8-bit images, but gray/rgb/alpha images work as
+        expected.
+        
+        """
+        
+        assert osr != None and gdal != None, "GDAL not available"
+        
+        # gdal doesn't like unicode objects...
+        output_path = output_path.encode(sys.getfilesystemencoding())
+        projection_name = projection_name.encode("utf-8")
+        
+        channel_names = DTBitmap2D.CHANNEL_NAMES
+        band_count = self.channel_count()
+        assert band_count > 0, "No channels to save"
+
+        (raster_x, raster_y) = self.raster_size()
+
+        # base spatial transform
+        grid = self.grid
+        (xmin, dx, rot1, ymax, rot2, dy) = (0, 0, 0, 0, 0, 0)
+        xmin = grid[0]
+        dx = grid[2]
+        dy = grid[3]
+        ymax = grid[1] + abs(dy) * raster_y
+
+        geotiff = gdal.GetDriverByName("GTiff")
+        assert self.dtype() in (np.uint8, np.uint16), "Unhandled bit depth %s" % (self.dtype())
+        etype = GDT_Byte if self.dtype() == np.uint8 else GDT_UInt16
+        dst = geotiff.Create(output_path, raster_x, raster_y, bands=band_count, eType=etype)
+        assert dst, "Unable to create destination dataset at %s" % (output_path)
+
+        # Recall that dx and dy are signed, with positive upwards;
+        # this is bizarre, but http://www.gdal.org/gdal_tutorial.html
+        # shows it also.
+        dst.SetGeoTransform((xmin, dx, rot1, ymax, rot2, -abs(dy)))
+        dst_srs = osr.SpatialReference()
+        
+        # This accepts a variety of inputs, notably EPSG and PROJ.4,
+        # as well as NAD27, NAD83, WGS84, WGS72.
+        dst_srs.SetFromUserInput(projection_name)
+        dst.SetProjection(dst_srs.ExportToWkt())
+
+        if band_count == 1:
+            name_map = {0:"gray"} 
+        elif band_count == 2:
+            name_map = {0:"gray", 1:"alpha"}
+        elif band_count == 3:
+            name_map = {0:"red", 1:"green", 2:"blue"}
+        else:
+            name_map = {0:"red", 1:"green", 2:"blue", 3:"alpha"}
+
+        for band_index in name_map:
+            band = dst.GetRasterBand(band_index + 1)
+
+            values = getattr(self, name_map[band_index])
+            
+            values = np.flipud(values)
+            # reverse transforms applied in DTDataFile
+            shape = list(values.shape)
+            shape.reverse()
+            data = values.reshape(shape, order="C").tostring()
+            
+            band.WriteRaster(0, 0, dst.RasterXSize, dst.RasterYSize, data, buf_xsize=dst.RasterXSize, buf_ysize=dst.RasterYSize, buf_type=band.DataType)
+        
+        dst = None
+        
+    def __dt_type__(self):
+            return "2D Bitmap"
+
     def __dt_write__(self, datafile, name):
         
         suffix = "16" if self.dtype() in (np.uint16, np.int16) else ""
@@ -225,8 +317,7 @@ class _DTGDALBitmap2D(DTBitmap2D):
         super(_DTGDALBitmap2D, self).__init__()
         
         # NB: GDAL craps out if you pass a unicode object as a path
-        if isinstance(image_path, unicode):
-            image_path = image_path.encode(sys.getfilesystemencoding())
+        image_path = image_path.encode(sys.getfilesystemencoding())
             
         dataset = gdal.Open(image_path, GA_ReadOnly)
         (xmin, dx, rot1, ymax, rot2, dy) = dataset.GetGeoTransform()
@@ -346,14 +437,14 @@ def _array_from_image(image):
         
         dt = _parse_mode(image.mode)
         if dt is None:
-            print "unable to determine image bit depth and byte order for mode \"%s\"" % (image.mode)
+            sys.stderr.write("Warning: DTBitmap2D.py unable to determine image bit depth and byte order for mode \"%s\"\n" % (image.mode))
         else:
             try:
                 # fails for signed int16 images produced by GDAL, but works with unsigned
                 array = np.fromstring(image.tostring(), dtype=dt)
                 array = array.reshape((image.size[1], image.size[0]))
             except Exception, e:
-                print "image.tostring() failed for image with mode \"%s\" (PIL error: %s)" % (image.mode, str(e))
+                sys.stderr.write("Warning: DTBitmap2D.py image.tostring() failed for image with mode \"%s\" (PIL error: %s)\n" % (image.mode, str(e)))
         
     else:    
         # doesn't seem to work reliably for GDAL-produced 16 bit GeoTIFF
@@ -378,7 +469,7 @@ class _DTPILBitmap2D(DTBitmap2D):
             # Convert binary image of dtype=bool to uint8, although this is probably
             # a better candidate for a or use as a mask.
             if image.mode == "1":
-                print "warning: converting binary image to uint8"
+                sys.stderr.write("Warning: DTBitmap2D.py converting binary image to uint8\n")
                 # TODO: this crashes when I test it with a binary TIFF, but it looks like a
                 # bug in numpy or PIL.  Strangely, it doesn't crash if I copy immediately after
                 # calling asarray above.
