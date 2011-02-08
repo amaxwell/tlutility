@@ -27,50 +27,47 @@ if __name__ == '__main__':
     if mesh.mask() != None:
         sys.stderr.write("mesh has a mask")
         exit(1)
-        
-    with DTDataFile("Output.dtbin", truncate=True) as output_file:
+            
+    values = mesh.values().astype(np.float32)
+
+    # transform in DTBitmap2D
+    values = np.flipud(values)
+
+    # transform in DTDataFile
+    shape = list(values.shape)
+    shape.reverse()
+    values = values.reshape(shape, order="C")
     
-        values = mesh.values().astype(np.float32)
+    (raster_x, raster_y) = values.shape
+    
+    # base transform
+    grid = mesh.grid()
+    (xmin, dx, rot1, ymax, rot2, dy) = (0, 0, 0, 0, 0, 0)
+    xmin = grid[0]
+    dx = grid[2]
+    dy = grid[3]
+    ymax = grid[1] + abs(dy) * raster_y
 
-        # transform in DTBitmap2D
-        values = np.flipud(values)
+    # 2D mesh only has a single output band
+    band_count = 1
+    geotiff = gdal.GetDriverByName("GTiff")
 
-        # transform in DTDataFile
-        shape = list(values.shape)
-        shape.reverse()
-        values = values.reshape(shape, order="C")
+    dst = geotiff.Create("Output.tiff", raster_x, raster_y, bands=band_count, eType=GDT_Float32)
+    
+    # Recall that dx and dy are signed, with positive upwards;
+    # this is bizarre, but http://www.gdal.org/gdal_tutorial.html
+    # shows it also.
+    dst.SetGeoTransform((xmin, dx, rot1, ymax, rot2, -abs(dy)))
+    dst_srs = osr.SpatialReference()
+    dst_srs.SetFromUserInput(projection_name)
+    dst.SetProjection(dst_srs.ExportToWkt())
+    
+    band = dst.GetRasterBand(1)
+    
+    # make sure I didn't screw this up somewhere...
+    assert values.dtype == np.float32
+    data = values.tostring()
+    band.WriteRaster(0, 0, dst.RasterXSize, dst.RasterYSize, data, buf_xsize=dst.RasterXSize, buf_ysize=dst.RasterYSize, buf_type=band.DataType)
         
-        (raster_x, raster_y) = values.shape
-        
-        # base transform
-        grid = mesh.grid()
-        (xmin, dx, rot1, ymax, rot2, dy) = (0, 0, 0, 0, 0, 0)
-        xmin = grid[0]
-        dx = grid[2]
-        dy = grid[3]
-        ymax = grid[1] + abs(dy) * raster_y
+    dst = None
 
-        # 2D mesh only has a single output band
-        band_count = 1
-        geotiff = gdal.GetDriverByName("GTiff")
-
-        dst = geotiff.Create("Output.tiff", raster_x, raster_y, bands=band_count, eType=GDT_Float32)
-        
-        # Recall that dx and dy are signed, with positive upwards;
-        # this is bizarre, but http://www.gdal.org/gdal_tutorial.html
-        # shows it also.
-        dst.SetGeoTransform((xmin, dx, rot1, ymax, rot2, -abs(dy)))
-        dst_srs = osr.SpatialReference()
-        dst_srs.SetFromUserInput(projection_name)
-        dst.SetProjection(dst_srs.ExportToWkt())
-        
-        band = dst.GetRasterBand(1)
-        
-        # make sure I didn't screw this up somewhere...
-        assert values.dtype == np.float32
-        data = values.tostring()
-        band.WriteRaster(0, 0, dst.RasterXSize, dst.RasterYSize, data, buf_xsize=dst.RasterXSize, buf_ysize=dst.RasterYSize, buf_type=band.DataType)
-            
-        dst = None
-
-            
