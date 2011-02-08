@@ -115,6 +115,55 @@ class DTBitmap2D(object):
             return 2 if self.alpha != None else 1
         return 4 if self.alpha != None else 3
         
+    def has_alpha(self):
+        nchan = self.channel_count()
+        return nchan == 2 or nchan == 4
+        
+    def is_gray(self):
+        return self.channel_count() < 3
+        
+    def pil_image(self):
+        # #!/usr/bin/env python
+        # 
+        # from datatank_py.DTBitmap2D import DTBitmap2D
+        # from datatank_py.DTDataFile import DTDataFile
+        # 
+        # if __name__ == '__main__':
+        # 
+        #     df = DTDataFile("bitmap.dtbin")
+        #     bitmap = DTBitmap2D.from_data_file(df, "bitmap")
+        #     print bitmap
+        # 
+        #     img = bitmap.pil_image()
+        #     print img
+        #     img.save("bitmaptest.png")
+        def __transform(values):
+            values = np.flipud(values)
+            return values.tostring()
+        if self.is_gray():
+            mode = "L"
+            raw_mode = "L"
+            data = __transform(self.gray)
+            size = np.flipud(self.gray.shape)
+            if self.has_alpha():
+                raw_mode = "LA"
+                data += __transform(self.alpha)
+        else:
+            mode = "RGB"
+            raw_mode = "RGB"
+            size = np.flipud(self.red.shape)
+            data = __transform(self.red)
+            data += __transform(self.green)
+            data += __transform(self.blue)
+            if self.has_alpha():
+                raw_mode += "A"
+                data += __transform(self.alpha)
+            raw_mode += ";L"
+        print "mode=%s, size=%s" % (raw_mode, size)
+        if Image != None:
+            return Image.fromstring(mode, size, data, "raw", raw_mode, 0, -1)
+        return None
+        
     def mesh_from_channel(self, channel="gray"):
         import datatank_py.DTMesh2D
         return datatank_py.DTMesh2D.DTMesh2D(getattr(self, channel), grid=self.grid)
