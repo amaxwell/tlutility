@@ -18,6 +18,11 @@ import sys
 from DTProgress import DTProgress
 
 class _DTBitmap2D(type):
+    """Metaclass of DTBitmap2D which implements __call__ in order to
+    return a private subclass based on input arguments.  First argument 
+    is a path or PIL image, or None.  Returns None if PIL and GDAL fail, 
+    which may or may not be correct.
+    """
     def __call__(cls, *args, **kwargs):
         
         obj = None
@@ -27,6 +32,7 @@ class _DTBitmap2D(type):
             obj = cls.__new__(cls, *args, **kwargs)
             obj.__init__(*args, **kwargs)
         else:
+            # a string must be a path, so try GDAL first
             if isinstance(path_or_image, basestring):
                 try:
                     cls = _DTGDALBitmap2D
@@ -35,7 +41,8 @@ class _DTBitmap2D(type):
                 except Exception, e:
                     sys.stderr.write("Failed to create GDAL representation: %s\n" % (e))
                     obj = None
-
+            
+            # if GDAL failed or we had a PIL image, try PIL
             if obj == None:
                 try:
                     cls = _DTPILBitmap2D
@@ -51,51 +58,46 @@ class _DTBitmap2D(type):
 class DTBitmap2D(object):
     """Base implementation for DTBitmap2D.
         
-    Arguments:
-    path_or_image -- a path to an image file or a PIL image object
-    
-    Returns:
-    A DTBitmap2D object that implements dt_type and dt_write
-    
-    The argument now defaults to None.  In that case, you'll get back
-    an object that implements dt_write, but you are responsible for
-    filling in its attributes.  These are:
-      • grid -- optional, of the form [x0, y0, dx, dy]
-      • red, green, blue -- required for RGB image only
-      • gray -- required for grayscale image only
-      • alpha -- optional
-    Each must be a 2D numpy array, and you are responsible for ensuring
-    a consistent shape and proper dimension.  This is basically 
-    equivalent to the way DTSource constructs a DTBitmap2D.  Note that 
-    DataTank only supports 8 bit and 16 bit images.
-    
-    If a PIL image is provided, it will be used as-is, and the grid
-    will be a unit grid with origin at (0, 0).  If a path is provided,
-    DTBitmap2D will try to use GDAL to load the image and extract its
-    components, as well as any spatial referencing included with the
-    image.  If GDAL fails for any reason, PIL will be used as a fallback.
-    
-    The object returned is actually a private subclass, and should not
-    be relied on.  It will implement the dt_write protocol, so can be
-    saved to a DTDataFile.  It also implements mesh_from_channel, whicn
-    can be used to extract a given bitmap plane as a DTMesh2D object:
-    
-    >>> from datatank_py.DTBitmap2D import DTBitmap2D
-    >>> img = DTBitmap2D("int16.tiff")
-    >>> img.mesh_from_channel()
-    <datatank_py.DTMesh2D.DTMesh2D object at 0x101a7a1d0>
-    >>> img = DTBitmap2D("rgb_geo.tiff")
-    >>> img.mesh_from_channel(channel="red")
-    <datatank_py.DTMesh2D.DTMesh2D object at 0x10049ab90>
-    
-    Note that DTBitmap2D does not attempt to be lazy at loading data; it
-    will read the entire image into memory as soon as you instantiate it.
+    Provides implementation of DTPyWrite for all subclasses, and
+    can be instantiated directly to use as a container.
             
     """
+    
     __metaclass__ = _DTBitmap2D
     CHANNEL_NAMES = ("red", "green", "blue", "alpha", "gray")
             
-    def __init__(self):
+    def __init__(self, path_or_image=None):
+        """Initializes a new DTBitmap2D object.
+        
+        Arguments:
+        path_or_image -- a path to an image file or a PIL image object
+
+        Returns:
+        An object that implements DTPyWrite.  It maybe DTBitmap2D or one
+        of the private subclasses.  Don't rely on the class for anything.
+
+        The argument now defaults to None.  In that case, you'll get back
+        an object that implements dt_write, but you are responsible for
+        filling in its attributes.  These are:
+          • grid -- optional, of the form [x0, y0, dx, dy]
+          • red, green, blue -- required for RGB image only
+          • gray -- required for grayscale image only
+          • alpha -- optional
+        Each must be a 2D numpy array, and you are responsible for ensuring
+        a consistent shape and proper dimension.  This is basically 
+        equivalent to the way DTSource constructs a DTBitmap2D.  Note that 
+        DataTank only supports 8 bit and 16 bit images.
+
+        If a PIL image is provided, it will be used as-is, and the grid
+        will be a unit grid with origin at (0, 0).  If a path is provided,
+        DTBitmap2D will try to use GDAL to load the image and extract its
+        components, as well as any spatial referencing included with the
+        image.  If GDAL fails for any reason, PIL will be used as a fallback.
+
+        Note that DTBitmap2D does not attempt to be lazy at loading data; it
+        will read the entire image into memory as soon as you instantiate it.
+        
+        """
         super(DTBitmap2D, self).__init__()
         self.grid = (0, 0, 1, 1)
         for n in DTBitmap2D.CHANNEL_NAMES:
@@ -126,7 +128,8 @@ class DTBitmap2D(object):
     def pil_image(self):
         """Attempt to convert a raw image to a PIL Image object
         
-        Returns None if PIL can't be loaded or if the conversion failed.
+        Returns:
+        A PIL Image, or None if PIL can't be loaded or if the conversion failed.
         Only tested with 8-bit images, but gray/gray+alpha and RGB/RGBA
         have all been tested.
         
@@ -158,6 +161,24 @@ class DTBitmap2D(object):
         return Image.fromstring(mode, size, data, "raw", raw_mode, 0, -1)
         
     def mesh_from_channel(self, channel="gray"):
+        """Extract a given bitmap plane as a DTMesh2D object.
+        
+        Arguments:
+        channel -- defaults to gray, but may be one of (red, green, blue, gray, alpha)
+        
+        Returns:
+        A 2D Mesh object, which uses the grid of the image.
+
+        >>> from datatank_py.DTBitmap2D import DTBitmap2D
+        >>> img = DTBitmap2D("int16.tiff")
+        >>> img.mesh_from_channel()
+        <datatank_py.DTMesh2D.DTMesh2D object at 0x101a7a1d0>
+        >>> img = DTBitmap2D("rgb_geo.tiff")
+        >>> img.mesh_from_channel(channel="red")
+        <datatank_py.DTMesh2D.DTMesh2D object at 0x10049ab90>
+        
+        """
+        
         import datatank_py.DTMesh2D
         return datatank_py.DTMesh2D.DTMesh2D(getattr(self, channel), grid=self.grid)
         
@@ -176,6 +197,16 @@ class DTBitmap2D(object):
         
     @classmethod
     def from_data_file(self, datafile, name):
+        """Create a new instance from a DTDataFile by name.
+        
+        Arguments:
+        datafile -- An open DTDataFile instance
+        name -- The name of the DTBitmap2D object in the file (including any time index)
+        
+        Returns:
+        A new DTBitmap2D instance.
+        
+        """
         
         bitmap = DTBitmap2D()
         bitmap.grid = datafile[name]
