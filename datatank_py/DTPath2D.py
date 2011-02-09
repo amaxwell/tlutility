@@ -29,8 +29,7 @@ class DTPath2D(object):
         points_only -- boolean indicating whether shape information is included
         
         Discussion:
-        The input arrays must have the same length, and not be empty.  DataTank
-        refuses to read an empty path, so there's no point in creating one.
+        The input arrays must have the same length.
         
         If points_only is set to False, xvalues and yvalues are assumed to have the
         correct packed array format for a DTPath2D, including all subpaths.  Otherwise,
@@ -45,8 +44,8 @@ class DTPath2D(object):
         compatible with DTSource manipulation.
         
         Layout is
-        [ 0 x1 .... xN 0 x1 ... xM ...]
-        [ N y1 .... yN M y1 ... yM ...]
+          DTPath2D._xvalues = [ 0 x1 .... xN 0 x1 ... xM ...]
+          DTPath2D._yvalues = [ N y1 .... yN M y1 ... yM ...]
         This allows multiple loops to be saved in a single array.
         
         DTPath2D allows iteration over subpaths (called "loops" in DTSource),
@@ -56,13 +55,12 @@ class DTPath2D(object):
         
         assert xvalues != None and yvalues != None, "DTPath2D: both x and y arrays are required"
         assert len(xvalues) == len(yvalues), "DTPath2D: inconsistent lengths"   
-        assert len(xvalues) > 0, "DTPath2D: empty arrays are not allowed"
         
         xvalues = np.array(xvalues).astype(np.double)
         yvalues = np.array(yvalues).astype(np.double)
         self._bounding_box = _bounding_box(xvalues, yvalues)
         
-        if points_only:
+        if points_only and len(xvalues):
             xvalues = np.insert(xvalues, 0, 0)
             yvalues = np.insert(yvalues, 0, len(yvalues))
             
@@ -82,6 +80,22 @@ class DTPath2D(object):
             yvalues = np.insert(yvalues, 0, len(yvalues))
             self._xvalues = np.append(self._xvalues, xvalues)
             self._yvalues = np.append(self._yvalues, yvalues)
+    
+    def number_of_loops(self):
+        """Number of subpaths (loops) in this path."""
+        return len(self._offsets())
+        
+    def point_list(self):
+        """Returns a list of DTPoint2D objects.
+        
+        Raises an exception if this path has subpaths, so iterate
+        if you have multiple loops.
+        
+        """
+        
+        from DTPoint2D import DTPoint2D
+        assert self.number_of_loops() == 1, "Point access is only available for single-loop paths"
+        return [DTPoint2D(x, y) for x, y in zip(self._xvalues[1:], self._yvalues[1:])]
             
     def sparsified_path(self, step):
         """Sparsifies by index; no smoothing or distance considerations
@@ -107,16 +121,23 @@ class DTPath2D(object):
             xvals = xvals[indices]
             yvals = yvals[indices]            
             
+            # DTSource doesn't appear to impose this, but DataTank does
             assert len(xvals) > 1, "DTPath2D: A valid path requires at least two points."
             
             def _is_subpath_closed(path):
+                
+                # can't close an empty path or a single point
+                if len(xvals) < 2:
+                    return False
+                    
                 first_x, first_y = path._xvalues[1], path._yvalues[1]
                 last_x, last_y = path._xvalues[-1], path._yvalues[-1]
                 return first_x == last_x and first_y == last_y
                 
             # manipulates the new path in-place
             def _close_subpath(path):
-                if _is_subpath_closed(path) == False:
+                # don't close a path that is already closed
+                if not _is_subpath_closed(path):
                     first_x, first_y = path._xvalues[1], path._yvalues[1]
                     path._xvalues = np.append(path._xvalues, (first_x,))
                     path._yvalues = np.append(path._yvalues, (first_y,))
@@ -172,10 +193,29 @@ class DTPath2D(object):
     def __dt_write__(self, datafile, name):
         datafile.write_anonymous(self.bounding_box(), name + "_bbox2D")
         datafile.write_anonymous(np.dstack((self._xvalues, self._yvalues)), name)
+        
+    @classmethod
+    def from_data_file(self, datafile, name):
+        
+        packed_values = datafile[name]
+        # no bbox in test file saved from DataTank
+        bbox = datafile[name + "_bbox2D"]
+        xvalues = packed_values[:,0]
+        yvalues = packed_values[:,1]
+        path = DTPath2D(xvalues, yvalues, points_only=False)
+        if bbox != None:
+            path._bounding_box = bbox
+            
+        return path
 
 if __name__ == '__main__':
     
     from datatank_py.DTDataFile import DTDataFile
+    
+    with DTDataFile("/tmp/point_path.dtbin", truncate=True) as df:
+        
+        df["Path 1"] = DTPath2D([0], [0])
+        
     
     with DTDataFile("path_2d.dtbin", truncate=True) as df:
         
