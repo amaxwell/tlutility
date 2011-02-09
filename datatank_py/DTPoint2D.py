@@ -18,6 +18,12 @@ class DTPoint2D(object):
                     
         self.x = float(x)
         self.y = float(y)
+        
+    def __str__(self):
+        return "2D Point (%f, %f)" % (self.x, self.y)
+        
+    def __repr__(self):
+        return "(%f, %f)" % (self.x, self.y)
     
     def __dt_type__(self):
         return "2D Point"
