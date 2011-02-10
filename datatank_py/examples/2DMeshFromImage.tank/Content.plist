@@ -461,13 +461,94 @@
 			<key>VariableType</key>
 			<string>Range</string>
 		</dict>
+		<dict>
+			<key>Content</key>
+			<dict>
+				<key>Application</key>
+				<string>geotiff_from_bitmap2d.py</string>
+				<key>Argument</key>
+				<string></string>
+				<key>Communication</key>
+				<integer>1</integer>
+				<key>Input</key>
+				<string>Input.dtbin</string>
+				<key>Output</key>
+				<string>Output.tiff</string>
+				<key>Project</key>
+				<string></string>
+				<key>Variables</key>
+				<array>
+					<dict>
+						<key>Include</key>
+						<string>On</string>
+						<key>Name</key>
+						<string>Mesh</string>
+						<key>Type</key>
+						<string>Mesh2D</string>
+						<key>Var</key>
+						<dict>
+							<key>Selected</key>
+							<string>2D Mesh</string>
+						</dict>
+					</dict>
+					<dict>
+						<key>Include</key>
+						<string>On</string>
+						<key>Name</key>
+						<string>Projection</string>
+						<key>Type</key>
+						<string>String</string>
+						<key>Var</key>
+						<dict>
+							<key>Inline</key>
+							<dict>
+								<key>String</key>
+								<string>EPSG:4326</string>
+							</dict>
+							<key>SelectedNumber</key>
+							<integer>0</integer>
+						</dict>
+					</dict>
+				</array>
+			</dict>
+			<key>Selection</key>
+			<string>External Program</string>
+			<key>ToggleOpen</key>
+			<string>YES</string>
+			<key>VariableName</key>
+			<string>File Name</string>
+			<key>VariableType</key>
+			<string>FileName</string>
+		</dict>
+		<dict>
+			<key>Content</key>
+			<dict>
+				<key>File</key>
+				<dict>
+					<key>Selected</key>
+					<string>File Name</string>
+				</dict>
+				<key>FileName</key>
+				<string>./OutputGeoTIFF</string>
+				<key>UseEnding</key>
+				<string>On</string>
+			</dict>
+			<key>Selection</key>
+			<string>Create File</string>
+			<key>ToggleOpen</key>
+			<string>YES</string>
+			<key>VariableName</key>
+			<string>File Name at this time</string>
+			<key>VariableType</key>
+			<string>Output</string>
+		</dict>
 	</array>
 	<key>WindowPosition</key>
 	<array>
 		<real>22</real>
-		<real>499</real>
-		<real>941</real>
-		<real>679</real>
+		<real>188</real>
+		<real>933</real>
+		<real>990</real>
 	</array>
 </dict>
 </plist>
