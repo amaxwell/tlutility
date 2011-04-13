@@ -103,17 +103,7 @@ static int _kqueue = -1;
 
 - (void)dealloc
 {
-    /*
-     Set _canNotify in case kevent unblocks before we can remove it from the queue,
-     since the event's task pointer is about to become invalid (and it mustn't access
-     the lock after this flag is set).  Lock before entering _disableNotification, so 
-     we can shrink our race window even smaller.
-     */
-    OSAtomicCompareAndSwap32Barrier(1, 0, &_internal->_canNotify);
-    pthread_mutex_lock(&_internal->_lock);
     [self _disableNotification];
-    pthread_mutex_unlock(&_internal->_lock);
-    pthread_mutex_destroy(&_internal->_lock);
     [_launchPath release];
     [_arguments release];
     [_environment release];
@@ -121,11 +111,13 @@ static int _kqueue = -1;
     [_standardInput release];
     [_standardOutput release];
     [_standardError release];
-    // runloop and source are freed in __BDSKTaskNotify or _disableNotification
-    NSParameterAssert(NULL == _internal->_rl);
-    NSParameterAssert(NULL == _internal->_rlsource);
-    NSZoneFree(NSZoneFromPointer(_internal), _internal);
     [super dealloc];
+}
+
+- (void)finalize
+{
+    [self _disableNotification];
+    [super finalize];
 }
 
 - (void)setLaunchPath:(NSString *)path;
@@ -489,7 +481,19 @@ static void __BDSKTaskNotify(void *info)
  thread won't do callout during/after dealloc.
  */
 - (void)_disableNotification
-{        
+{   
+    // should only be called once
+    NSParameterAssert(NULL != _internal);
+    
+    /*
+     Set _canNotify in case kevent unblocks before we can remove it from the queue,
+     since the event's task pointer is about to become invalid (and it mustn't access
+     the lock after this flag is set).  Lock before entering _disableNotification, so 
+     we can shrink our race window even smaller.
+     */
+    OSAtomicCompareAndSwap32Barrier(1, 0, &_internal->_canNotify);
+    pthread_mutex_lock(&_internal->_lock);
+    
     // called unconditionally from -dealloc, so we may have already notified and freed this source
     if (_internal->_rlsource) {
         
@@ -507,6 +511,15 @@ static void __BDSKTaskNotify(void *info)
             _internal->_rl = NULL;
         } 
     }
+    
+    pthread_mutex_unlock(&_internal->_lock);
+    pthread_mutex_destroy(&_internal->_lock);
+    
+    // runloop and source are freed in __BDSKTaskNotify or _disableNotification
+    NSParameterAssert(NULL == _internal->_rl);
+    NSParameterAssert(NULL == _internal->_rlsource);
+    NSZoneFree(NSZoneFromPointer(_internal), _internal);
+    _internal = NULL;
 }
 
 // kevent thread has a retain, so no contention with _disableNotification since we can't dealloc
