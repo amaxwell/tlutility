@@ -48,7 +48,11 @@ class DTStructuredGrid2D(object):
             self._y = np.array(y, dtype=np.float32)
             self._logical_shape = np.shape(x)
             
-        self._mask = mask if mask != None else np.array([], dtype=np.int32)
+        if mask != None:
+            assert self.shape() == (mask.n(), mask.m()) and mask.o() == 1, "Invalid mask"
+            self._mask = mask
+        else:
+            self._mask = np.array([], dtype=np.int32)
     
     def __dt_type__(self):
         return "2D Structured Grid"

@@ -79,6 +79,15 @@ class DTMask(object):
         # ??? not sure if this is correct
         return "Mask"
         
+    def m(self):
+        return self._m
+        
+    def n(self):
+        return self._n
+        
+    def o(self):
+        return self._o
+        
     def __str__(self):
         return super(DTMask, self).__str__()
         
@@ -130,6 +139,8 @@ if __name__ == '__main__':
     from datatank_py.DTDataFile import DTDataFile
     from datatank_py.DTMesh2D import DTMesh2D
     from datatank_py.DTStructuredGrid3D import DTStructuredGrid3D
+    from datatank_py.DTStructuredMesh2D import DTStructuredMesh2D
+    from datatank_py.DTStructuredGrid2D import DTStructuredGrid2D
 
     with DTDataFile("test/mask.dtbin", truncate=True) as df:
         
@@ -154,7 +165,7 @@ if __name__ == '__main__':
         mesh = mesh_function(xx, yy)
         
         grid = (np.min(x), np.min(y), dx, dy)
-        
+                
         mask_array = np.zeros(mesh.shape, dtype=np.int8)
         mask_array[np.where(mesh < 1)] = 1
         mask = DTMask(mask_array)
@@ -162,6 +173,10 @@ if __name__ == '__main__':
         new_mask = mask.mask_array()
         assert new_mask.shape == mask_array.shape, "shape %s != %s" % (new_mask.shape, mask_array.shape)
         assert np.sum(new_mask - mask_array) == 0, "inconsistent mask array computed"
+
+        grid2ds = DTStructuredGrid2D(x, y, mask=mask)
+        df["Holy sgrid"] = grid2ds
+        df["Holy smesh"] = DTStructuredMesh2D(mesh, grid=grid2ds)
 
         dtmesh = DTMesh2D(mesh, grid=grid, mask=mask)
         df["Holy mesh"] = dtmesh
