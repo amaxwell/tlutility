@@ -21,7 +21,13 @@ class DTStructuredGrid2D(object):
         for compatibility with DataTank.  When using vectors, this is handled
         automatically.
                 
-        """                   
+        """            
+        
+        # DataTank saves these with a singleton dimension in y,
+        # so we have a special case for reading those files:
+        # shape x = (290,), shape y = (306, 1)
+        if (len(np.shape(x)) == 1 and len(np.shape(y)) == 2) and np.shape(y)[1] == 1:
+            y = np.squeeze(y)
                    
         if (len(np.shape(x)) == 1 and len(np.shape(y)) == 1):
             
