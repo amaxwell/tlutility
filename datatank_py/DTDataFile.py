@@ -40,6 +40,10 @@ from struct import Struct
 import numpy as np
 from DTPyWrite import dt_writer
 
+def _log_warning(msg):
+    """Write a message to standard error"""
+    sys.stderr.write("DTDataFile: %s\n" % (msg))
+
 # from cProfile, these are surprisingly expensive to get
 try:
     _INT32_MAX = np.iinfo(np.int32).max
@@ -47,7 +51,7 @@ try:
 except AttributeError:
     # These constants don't exist in the ancient version of NumPy included with
     # OS X 10.5.8, so here are the values from NumPy 2.0.0dev8291.
-    print "WARNING: int32 limits not found in NumPy, likely because version %s is too old" % (np.version.version)
+    _log_warning("int32 limits not found in NumPy, likely because version %s is too old" % (np.version.version))
     _INT32_MAX = 2147483647
     _INT32_MIN = -2147483648
     
@@ -82,7 +86,7 @@ def _basename_of_variable(varname):
     
     # this is kind of a heuristic; assume anything that is all digits is a time index
     return "_".join(comps[:-1]) if comps[-1].isdigit() else varname
-
+    
 def _type_string_from_dtarray_type(var_type):
     """Returns an appropriate prefix and width-based type.
     
@@ -166,10 +170,10 @@ def _dtarray_type_and_size_from_object(obj):
         if dt_array_type != None:
             return (dt_array_type, element_size)
         else:
-            print "unsupported ndarray type %s" % (array.dtype)
+            _log_warning("unsupported ndarray type %s" % (array.dtype))
 
     # default case is an error
-    print "unable to determine DT type for object %s" % (type(obj))
+    _log_warning("unable to determine DT type for object %s" % (type(obj)))
     return (None, None)
             
 class DTDataFile(object):
@@ -349,7 +353,7 @@ class DTDataFile(object):
                     reasons.append("Empty offset map (current size = %d)" % (current_size))
                 if self._length != os.path.getsize(self._file_path):
                     reasons.append("length %d != actual size %d" % (self._length, current_size))
-                print "reloading content:", " ".join(reasons)
+                _log_warning("reloading content:", " ".join(reasons))
             self._read_in_content()
     
     def close(self):
@@ -667,11 +671,14 @@ class DTDataFile(object):
         
         # Expose a time series of type dt_type
         if anonymous == False:
-            base_name = "Seq_" + _basename_of_variable(name)
+            bnv = _basename_of_variable(name)
+            base_name = "Seq_" + bnv
             if time and base_name not in self._name_offset_map:
                 self._write_string(dt_type, base_name)
             elif time is None:
                 self._write_string(dt_type, base_name)
+                if bnv != name:
+                    _log_warning("\"%s\" name has implicit time, but no time given" % (name))
         else:
             assert time == None, "anonymous write cannot save a time variable"
         
@@ -779,9 +786,14 @@ class DTDataFile(object):
         assert dt_type, "you must supply a dt_type parameter to write_array"
         
         # Expose the time series; dt_type is something like "Array" or "NumberList"
-        base_name = "Seq_" + _basename_of_variable(name)
-        if time is None or base_name not in self._name_offset_map:
+        bnv = _basename_of_variable(name)
+        base_name = "Seq_" + bnv
+        if time and base_name not in self._name_offset_map:
             self._write_string(dt_type, base_name)
+        elif time is None:
+            self._write_string(dt_type, base_name)
+            if bnv != name:
+                _log_warning("\"%s\" name has implicit time, but no time given" % (name))            
             
         # caller is responsible for appending _index as needed for time series
         self._write_array(array, name)
@@ -815,9 +827,14 @@ class DTDataFile(object):
         """
         
         # Expose a time series of type String
-        base_name = "Seq_" + _basename_of_variable(name)
-        if time is None or base_name not in self._name_offset_map:
-            self._write_string("String", base_name)
+        bnv = _basename_of_variable(name)
+        base_name = "Seq_" + bnv
+        if time and base_name not in self._name_offset_map:
+            self._write_string(dt_type, base_name)
+        elif time is None:
+            self._write_string(dt_type, base_name)
+            if bnv != name:
+                _log_warning("\"%s\" name has implicit time, but no time given" % (name))
              
         # caller is responsible for appending _index as needed for time series
         self._write_string(string, name)
