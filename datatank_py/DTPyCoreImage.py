@@ -112,4 +112,4 @@ def dt_bitmap2d_from_ci_image(ci_image, width, height, grid):
     
 def ci_filter_named(filter_name):
     return CIFilter.filterWithName_(filter_name)
-    
+

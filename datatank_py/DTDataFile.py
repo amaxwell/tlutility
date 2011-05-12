@@ -929,4 +929,4 @@ class DTDataFile(object):
     def __setitem__(self, name, value):
         # support for dictionary-style setting; calls write()
         self.write(value, name)
-    
+

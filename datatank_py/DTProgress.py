@@ -54,3 +54,4 @@ if __name__ == '__main__':
         progress.update_percentage(idx / 300.)
     
     assert os.path.getsize("DTProgress") == 100
+
