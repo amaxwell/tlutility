@@ -353,7 +353,7 @@ class DTDataFile(object):
                     reasons.append("Empty offset map (current size = %d)" % (current_size))
                 if self._length != os.path.getsize(self._file_path):
                     reasons.append("length %d != actual size %d" % (self._length, current_size))
-                _log_warning("reloading content:", " ".join(reasons))
+                _log_warning("reloading content:" + " ".join(reasons))
             self._read_in_content()
     
     def close(self):
