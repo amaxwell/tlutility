@@ -58,7 +58,7 @@ class DTStructuredGrid2D(object):
         return "2D Structured Grid"
         
     def shape(self):
-        """Returns the logical grid size (z, y, x), even if stored as vectors."""
+        """Returns the logical grid size (y, x), even if stored as vectors."""
         return self._logical_shape
         
     def bounding_box(self):
