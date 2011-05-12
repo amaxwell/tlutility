@@ -46,7 +46,7 @@ class DTPyWrite(object):
         
         """
         
-        return "String"
+        raise NotImplementedError("This method is required")
         
     def __dt_write__(self, datafile, name):
         """Write all associated values to a file.
@@ -85,5 +85,27 @@ class DTPyWrite(object):
         
         """
         
-        datafile.write_anonymous("ERROR: forgot to override dt_write", name)
+        raise NotImplementedError("This method is required")        
 
+    @classmethod
+    def from_data_file(self, datafile, name):
+        """Instantiate a datatank_py high-level object from a file.
+        
+        Arguments:
+        datafile -- a DTDataFile instance
+        name -- the name of the variable
+        
+        Returns:
+        An instance of the calling class
+        
+        This class method can be implemented to read necessary components of an object
+        from a datafile.  For instance, DTBitmap2D.from_data_file(df, "My Bitmap") will
+        try to create a DTBitmap2D object from variables named "My Bitmap" in the
+        given data file.  In general, this is the inverse of the __dt_write__ method,
+        but may be slightly more tricky due to naming conventions in DataTank and
+        optional data that DataTank may or may not include.
+        
+        """
+        
+        raise NotImplementedError("Optional read method is not implemented")
+        
