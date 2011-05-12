@@ -830,9 +830,9 @@ class DTDataFile(object):
         bnv = _basename_of_variable(name)
         base_name = "Seq_" + bnv
         if time and base_name not in self._name_offset_map:
-            self._write_string(dt_type, base_name)
+            self._write_string("String", base_name)
         elif time is None:
-            self._write_string(dt_type, base_name)
+            self._write_string("String", base_name)
             if bnv != name:
                 _log_warning("\"%s\" name has implicit time, but no time given" % (name))
              
