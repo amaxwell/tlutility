@@ -18,18 +18,22 @@ if __name__ == '__main__':
     input_file = DTDataFile("Input.dtbin")
     mesh = DTMesh2D.from_data_file(input_file, "Mesh")
     projection_name = input_file["Projection"].encode("utf-8")
+    # may be None if no mask present
+    mask_value = input_file["Mask value"] 
     input_file.close()
     
     if mesh == None or projection_name == None:
         sys.stderr.write("failed to read variables")
         exit(1)
         
-    if mesh.mask() != None:
-        sys.stderr.write("mesh has a mask")
-        exit(1)
-            
     values = mesh.values().astype(np.float32)
 
+    if mesh.mask() != None:
+        if mask_value == None:
+            sys.stderr.write("mesh has a mask")
+            exit(1)
+        values = np.where(mesh.mask() != 0, values, mask_value)
+            
     # transform in DTBitmap2D
     values = np.flipud(values)
 
