@@ -4,6 +4,7 @@
 # This software is under a BSD license.  See LICENSE.txt for details.
 
 from DTRegion2D import DTRegion2D
+from DTMask import DTMask
 import numpy as np
 
 class DTStructuredGrid2D(object):
@@ -16,6 +17,7 @@ class DTStructuredGrid2D(object):
         Arguments:
         x -- vector or 2D array of x values
         y -- vector or 2D array of y values
+        mask -- optional DTMask object
         
         Note: if a full 2D array is passed, it must be ordered as (y, x)
         for compatibility with DataTank.  When using vectors, this is handled
@@ -90,6 +92,14 @@ class DTStructuredGrid2D(object):
         datafile.write_anonymous(self._x, name + "_X")
         datafile.write_anonymous(self._y, name + "_Y")
         datafile.write_anonymous(self._mask, name)
+        
+    @classmethod
+    def from_data_file(self, datafile, name):
+        
+        gridx = datafile[name + "_X"]
+        gridy = datafile[name + "_Y"]
+        mask = DTMask.from_data_file(datafile, name + "_dom")
+        return DTStructuredGrid2D(gridx, gridy, mask=mask)
 
 if __name__ == '__main__':
     

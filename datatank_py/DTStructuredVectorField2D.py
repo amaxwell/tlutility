@@ -37,6 +37,15 @@ class DTStructuredVectorField2D(object):
         self._grid = grid
         self._u = u
         self._v = v
+        
+    def grid(self):
+        return self._grid
+        
+    def u(self):
+        return self._u
+        
+    def v(self):
+        return self._v
     
     def __dt_type__(self):
         return "2D Structured Vector Field"
@@ -48,6 +57,16 @@ class DTStructuredVectorField2D(object):
         datafile.write_anonymous(self._u, name + "_VX")
         datafile.write_anonymous(self._v, name + "_VY")
         datafile.write_anonymous(self._grid, name)
+        
+    @classmethod
+    def from_data_file(self, datafile, name):
+        
+        grid = DTStructuredGrid2D.from_data_file(datafile, name)
+        u = datafile[name + "_VX"]
+        v = datafile[name + "_VY"]
+        assert u != None, "Unable to find %s" (name + "_VX")
+        assert v != None, "Unable to find %s" (name + "_VY")
+        return DTStructuredVectorField2D(u, v, grid=grid)
 
 if __name__ == '__main__':
     
