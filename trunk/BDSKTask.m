@@ -209,13 +209,20 @@ static void __BDSKTaskNotify(void *info)
 {
     ASSERT_NOTLAUNCHED;
     
-    NSUInteger argCount = [_arguments count];
-    const char *workingDir = [_currentDirectoryPath fileSystemRepresentation];
+    /*
+     Copy all -[NSString fileSystemRepresentation] pointers with strdup() to avoid garbage collection
+     issues.  How tedious compared to -autorelease...
+     
+     http://lists.apple.com/archives/objc-language/2011/Mar/msg00122.html
+     
+     */
+    const NSUInteger argCount = [_arguments count];
+    char *workingDir = _currentDirectoryPath ? strdup([_currentDirectoryPath fileSystemRepresentation]) : NULL;
     char **args = NSZoneCalloc([self zone], (argCount + 2), sizeof(char *));
-    NSUInteger i, iMax = argCount;
-    args[0] = (char *)[_launchPath fileSystemRepresentation];
-    for (i = 0; i < iMax; i++) {
-        args[i + 1] = (char *)[[_arguments objectAtIndex:i] fileSystemRepresentation];
+    NSUInteger i;
+    args[0] = strdup([_launchPath fileSystemRepresentation]);
+    for (i = 0; i < argCount; i++) {
+        args[i + 1] = strdup([[_arguments objectAtIndex:i] fileSystemRepresentation]);
     }
     args[argCount + 1] = NULL;
     
@@ -370,8 +377,26 @@ static void __BDSKTaskNotify(void *info)
     }
     
     // executed by child and parent
+    
+    /*
+     Free all the strdup results.  Don't modify the base pointer of args or env, since we have to
+     free those too!
+     */
+    free(workingDir);
+    char **freePtr = args;
+    while (NULL != *freePtr) { 
+        free(*freePtr++);
+    }
+    
     NSZoneFree(NSZoneFromPointer(args), args);
-    if (*nsEnvironment != env) NSZoneFree(NSZoneFromPointer(env), env);
+    if (*nsEnvironment != env) {
+        freePtr = env;
+        while (NULL != *freePtr) { 
+            free(*freePtr++); 
+        }
+        NSZoneFree(NSZoneFromPointer(env), env);
+    }
+    
 }
 
 - (void)interrupt;
