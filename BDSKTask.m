@@ -205,26 +205,44 @@ static void __BDSKTaskNotify(void *info)
     [task release];
 }
 
+/*
+ Undocumented and idiotic behavior of -[NSFileManager fileSystemRepresentationWithPath:]
+ is to raise an exception when passed an empty string.  Since this is called by
+ -[NSString fileSystemRepresentation], use CF, which doesn't inherit that idiocy.
+ 
+ https://bitbucket.org/jfh/machg/issue/244/p1d3-crash-during-view-differences
+ 
+ Have to copy all -[NSString fileSystemRepresentation] pointers to avoid garbage collection
+ issues with -fileSystemRepresentation, anyway.  How tedious compared to -autorelease...
+ 
+ http://lists.apple.com/archives/objc-language/2011/Mar/msg00122.html
+ */
+static char *__BDSKCopyFileSystemRepresentation(NSString *str)
+{
+    if (nil == str) return NULL;
+    
+    CFIndex len = CFStringGetMaximumSizeOfFileSystemRepresentation((CFStringRef)str);
+    char *cstr = NSZoneCalloc(NSDefaultMallocZone(), len, sizeof(char));
+    if (CFStringGetFileSystemRepresentation((CFStringRef)str, cstr, len) == FALSE) {
+        NSZoneFree(NSDefaultMallocZone(), cstr);
+        cstr = NULL;
+    }
+    return cstr;
+}
+
 - (void)launch;
 {
     ASSERT_NOTLAUNCHED;
-    
-    /*
-     Copy all -[NSString fileSystemRepresentation] pointers with strdup() to avoid garbage collection
-     issues.  How tedious compared to -autorelease...
-     
-     http://lists.apple.com/archives/objc-language/2011/Mar/msg00122.html
-     
-     */
+
     const NSUInteger argCount = [_arguments count];
-    char *workingDir = _currentDirectoryPath ? strdup([_currentDirectoryPath fileSystemRepresentation]) : NULL;
+    char *workingDir = __BDSKCopyFileSystemRepresentation(_currentDirectoryPath);
     
     // fill with pointers to copied C strings
     char **args = NSZoneCalloc([self zone], (argCount + 2), sizeof(char *));
     NSUInteger i;
-    args[0] = strdup([_launchPath fileSystemRepresentation]);
+    args[0] = __BDSKCopyFileSystemRepresentation(_launchPath);
     for (i = 0; i < argCount; i++) {
-        args[i + 1] = strdup([[_arguments objectAtIndex:i] fileSystemRepresentation]);
+        args[i + 1] = __BDSKCopyFileSystemRepresentation([_arguments objectAtIndex:i]);
     }
     args[argCount + 1] = NULL;
     
@@ -238,7 +256,7 @@ static void __BDSKTaskNotify(void *info)
         NSString *key;
         NSUInteger envIndex = 0;
         for (key in environment) {
-            env[envIndex++] = strdup([[NSString stringWithFormat:@"%@=%@", key, [environment objectForKey:key]] UTF8String]);        
+            env[envIndex++] = __BDSKCopyFileSystemRepresentation([NSString stringWithFormat:@"%@=%@", key, [environment objectForKey:key]]);        
         }
         env[envIndex] = NULL;
     }
@@ -381,7 +399,7 @@ static void __BDSKTaskNotify(void *info)
     // executed by child and parent
     
     /*
-     Free all the strdup results.  Don't modify the base pointer of args or env, since we have to
+     Free all the copied C strings.  Don't modify the base pointer of args or env, since we have to
      free those too!
      */
     free(workingDir);
@@ -394,7 +412,7 @@ static void __BDSKTaskNotify(void *info)
     if (*nsEnvironment != env) {
         freePtr = env;
         while (NULL != *freePtr) { 
-            free(*freePtr++); 
+            free(*freePtr++);
         }
         NSZoneFree(NSZoneFromPointer(env), env);
     }
