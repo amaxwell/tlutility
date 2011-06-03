@@ -218,6 +218,8 @@ static void __BDSKTaskNotify(void *info)
      */
     const NSUInteger argCount = [_arguments count];
     char *workingDir = _currentDirectoryPath ? strdup([_currentDirectoryPath fileSystemRepresentation]) : NULL;
+    
+    // fill with pointers to copied C strings
     char **args = NSZoneCalloc([self zone], (argCount + 2), sizeof(char *));
     NSUInteger i;
     args[0] = strdup([_launchPath fileSystemRepresentation]);
@@ -231,7 +233,7 @@ static void __BDSKTaskNotify(void *info)
     
     NSDictionary *environment = [self environment];
     if (environment) {
-        // fill with pointers to autoreleased C strings
+        // fill with pointers to copied C strings
         env = NSZoneCalloc([self zone], [environment count] + 1, sizeof(char *));
         NSString *key;
         NSUInteger envIndex = 0;
@@ -313,12 +315,12 @@ static void __BDSKTaskNotify(void *info)
          them.  This was a very confusing race to debug, and it resulted in a bunch of orphaned child
          processes.
          
-         Using a class-scope lock is one possible solution, but NSTask doesn't use that log, and subclasses
+         Using a class-scope lock is one possible solution, but NSTask couldn't use that lock, and subclasses
          that override -launch would also not benefit from locking (e.g., TLMTask).  Since TLMTask sets up
          NSPipes in -launch before calling -[super launch], those pipes and any created by Cocoa would not
-         be protected by that lock.  Closing all remaining file descriptors doesn't break any documented 
-         behavior of NSTask, and it should take care of that problem.  It's not a great solution, since 
-         inheriting other descriptors could possibly be useful, but I don't need to share arbitrary file 
+         be protected by that lock.  Closing all remaining file descriptors in the child doesn't break any 
+         documented behavior of NSTask, and it should take care of that problem.  It's not a great solution,
+         since inheriting other descriptors could possibly be useful, but I don't need to share arbitrary file 
          descriptors, whereas I do need subclassing and threads to work properly.
          */
         rlim_t j;
