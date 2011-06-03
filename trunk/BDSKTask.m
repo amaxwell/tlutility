@@ -503,7 +503,7 @@ static char *__BDSKCopyFileSystemRepresentation(NSString *str)
             }
             
         }
-        [pool release];
+        [pool drain];
         
     } while (1);
 }
