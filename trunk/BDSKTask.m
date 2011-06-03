@@ -236,7 +236,7 @@ static void __BDSKTaskNotify(void *info)
         NSString *key;
         NSUInteger envIndex = 0;
         for (key in environment) {
-            env[envIndex++] = (char *)[[NSString stringWithFormat:@"%@=%@", key, [environment objectForKey:key]] UTF8String];        
+            env[envIndex++] = strdup([[NSString stringWithFormat:@"%@=%@", key, [environment objectForKey:key]] UTF8String]);        
         }
         env[envIndex] = NULL;
     }
