@@ -83,6 +83,8 @@
     [_outlineView setFontNamePreferenceKey:@"TLMBackupListTableFontName" 
                          sizePreferenceKey:@"TLMBackupListTableFontSize"];
     [_outlineView disableOutlineCells];
+    [_outlineView setDoubleAction:@selector(showInfo:)];
+    [_outlineView setTarget:self];
 }
 
 - (NSDate *)_dateForName:(NSString *)name version:(NSNumber *)version backupDir:(NSString *)backupDir

@@ -94,6 +94,8 @@
                                              selector:@selector(_handleProgressNotification:)
                                                  name:TLMLogIncrementalProgressNotification
                                                object:nil];
+    [_tableView setDoubleAction:@selector(showInfo:)];
+    [_tableView setTarget:self];
 }
 
 - (void)_selectPackages:(NSArray *)packages
