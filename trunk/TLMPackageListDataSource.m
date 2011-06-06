@@ -81,6 +81,8 @@
 {
     [_outlineView setFontNamePreferenceKey:@"TLMPackageListTableFontName" 
                          sizePreferenceKey:@"TLMPackageListTableFontSize"];
+    [_outlineView setDoubleAction:@selector(showInfo:)];
+    [_outlineView setTarget:self];
 }
 
 - (void)setPackageNodes:(NSArray *)nodes
