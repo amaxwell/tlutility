@@ -206,9 +206,9 @@ static void __BDSKTaskNotify(void *info)
 }
 
 /*
- Undocumented and idiotic behavior of -[NSFileManager fileSystemRepresentationWithPath:]
+ Undocumented behavior of -[NSFileManager fileSystemRepresentationWithPath:]
  is to raise an exception when passed an empty string.  Since this is called by
- -[NSString fileSystemRepresentation], use CF, which doesn't inherit that idiocy.
+ -[NSString fileSystemRepresentation], use CF.  rdar://problem/9565599
  
  https://bitbucket.org/jfh/machg/issue/244/p1d3-crash-during-view-differences
  
