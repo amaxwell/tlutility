@@ -146,16 +146,6 @@
 		</dict>
 		<dict>
 			<key>key</key>
-			<string>collection-latex3</string>
-			<key>name</key>
-			<string>latex3</string>
-			<key>type</key>
-			<string>collection</string>
-			<key>value</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>key</key>
 			<string>collection-latexextra</string>
 			<key>name</key>
 			<string>latexextra</string>
@@ -308,7 +298,7 @@
 	<key>com.googlecode.mactlmgr</key>
 	<dict>
 		<key>texliveyear</key>
-		<integer>2010</integer>
+		<integer>2011</integer>
 	</dict>
 	<key>documentation</key>
 	<array>
@@ -1053,9 +1043,9 @@
 		</dict>
 		<dict>
 			<key>key</key>
-			<string>from_dvd</string>
+			<string>in_place</string>
 			<key>name</key>
-			<string>from_dvd</string>
+			<string>in_place</string>
 			<key>type</key>
 			<string>unknown</string>
 			<key>value</key>
@@ -1082,17 +1072,7 @@
 			<key>type</key>
 			<string>variable</string>
 			<key>value</key>
-			<string>/usr/local/texlive/2010</string>
-		</dict>
-		<dict>
-			<key>key</key>
-			<string>TEXDIRW</string>
-			<key>name</key>
-			<string>TEXDIRW</string>
-			<key>type</key>
-			<string>variable</string>
-			<key>value</key>
-			<string>/usr/local/texlive/2010</string>
+			<string>/usr/local/texlive/2011</string>
 		</dict>
 		<dict>
 			<key>key</key>
@@ -1102,7 +1082,7 @@
 			<key>type</key>
 			<string>variable</string>
 			<key>value</key>
-			<string>~/Library/texlive/2010/texmf-config</string>
+			<string>~/Library/texlive/2011/texmf-config</string>
 		</dict>
 		<dict>
 			<key>key</key>
@@ -1132,7 +1112,7 @@
 			<key>type</key>
 			<string>variable</string>
 			<key>value</key>
-			<string>/usr/local/texlive/2010/texmf-config</string>
+			<string>/usr/local/texlive/2011/texmf-config</string>
 		</dict>
 		<dict>
 			<key>key</key>
@@ -1142,7 +1122,7 @@
 			<key>type</key>
 			<string>variable</string>
 			<key>value</key>
-			<string>/usr/local/texlive/2010/texmf-var</string>
+			<string>/usr/local/texlive/2011/texmf-var</string>
 		</dict>
 		<dict>
 			<key>key</key>
@@ -1152,7 +1132,7 @@
 			<key>type</key>
 			<string>variable</string>
 			<key>value</key>
-			<string>~/Library/texlive/2010/texmf-var</string>
+			<string>~/Library/texlive/2011/texmf-var</string>
 		</dict>
 	</array>
 </dict>
