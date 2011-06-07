@@ -53,7 +53,7 @@ static NSString *__TLMGetTemporaryDirectory()
     if (nil == tempDir)
         tempDir = @"/tmp";
     
-    const char *tmpPath = [[tempDir stringByAppendingPathComponent:@"TLMNetInstallOperation.XXXXXX"] fileSystemRepresentation];
+    const char *tmpPath = [[tempDir stringByAppendingPathComponent:@"TLMNetInstallOperation.XXXXXX"] saneFileSystemRepresentation];
     
     // mkstemp needs a writable string
     char *tempName = strdup(tmpPath);
@@ -232,7 +232,7 @@ static NSString *__TLMGetTemporaryDirectory()
         
     if (_downloadComplete) {
         
-        const char *fs_path = [_scriptPath fileSystemRepresentation];
+        const char *fs_path = [_scriptPath saneFileSystemRepresentation];
         if (chmod(fs_path, S_IRUSR | S_IXUSR)) {
             const char *s = strerror(errno);
             TLMLog(__func__, @"Failed to set script permissions: %s", s);

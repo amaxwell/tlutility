@@ -170,7 +170,7 @@ static NSArray * __TLMOptionArrayFromArguments(char **nullTerminatedArguments)
     NSMutableArray *options = [NSMutableArray array];
     char **ptr = nullTerminatedArguments;
     while (NULL != *ptr) {
-        [options addObject:[NSString stringWithUTF8String:*ptr++]];
+        [options addObject:[NSString stringWithFileSystemRepresentation:*ptr++]];
     }
     return options;
 }
@@ -197,12 +197,12 @@ static NSArray * __TLMOptionArrayFromArguments(char **nullTerminatedArguments)
      short window for a race between the kevent() call and kill; in practice, that should be a non-issue 
      since PID values are 32 bits, and spawning enough processes to wrap around between these calls should not happen.
      */
-    killargs[1] = (char *)[[NSString stringWithFormat:@"%d", _internal->_cwrapper_pid] fileSystemRepresentation];
+    killargs[1] = (char *)[[NSString stringWithFormat:@"%d", _internal->_cwrapper_pid] saneFileSystemRepresentation];
     
     // possible that tlmgr has exited and tlu_ipctask is hanging, so we only have one process to kill
     if (_internal->_underlying_pid) {
         TLMLog(__func__, @"killing underlying pid = %d", _internal->_underlying_pid);
-        killargs[2] = (char *)[[NSString stringWithFormat:@"%d", _internal->_underlying_pid] fileSystemRepresentation];
+        killargs[2] = (char *)[[NSString stringWithFormat:@"%d", _internal->_underlying_pid] saneFileSystemRepresentation];
     }
 
     // run the task using AEWP if authorization required, or as unprivileged user if not
@@ -416,7 +416,7 @@ static BOOL __TLMCheckSignature()
         if ([connection registerName:serverName] == NO)
             TLMLog(__func__, @"-[TLMAuthorizedOperation init] Failed to register connection named %@", serverName);            
         
-        const char *cmdPath = [__TLMCwrapperPath() fileSystemRepresentation];
+        const char *cmdPath = [__TLMCwrapperPath() saneFileSystemRepresentation];
         
         /*
          *** IMPORTANT: change the arg count offset if tlu_ipctask options change. ***
@@ -428,17 +428,17 @@ static BOOL __TLMCheckSignature()
         int i = 0;
         
         // first argument is the DO server name for IPC
-        args[i++] = (char *)[serverName fileSystemRepresentation];
+        args[i++] = (char *)[serverName saneFileSystemRepresentation];
         
         // second argument is log message flags
-        args[i++] = (char *)[[NSString stringWithFormat:@"%lu", (unsigned long)[self messageFlags]] fileSystemRepresentation];
+        args[i++] = (char *)[[NSString stringWithFormat:@"%lu", (unsigned long)[self messageFlags]] saneFileSystemRepresentation];
         
         // third argument is option for root home
         args[i++] = [self _useRootHome] ? "y" : "n";
         
         // remaining options are the command to execute and its options
         for (NSString *option in _internal->_options) {
-            args[i++] = (char *)[option fileSystemRepresentation];
+            args[i++] = (char *)[option saneFileSystemRepresentation];
         }
                 
         /*

@@ -48,6 +48,7 @@
 
 #import <Foundation/Foundation.h>
 #import "TLMLogMessage.h"
+#import "NSString_TLMExtensions.h"
 #include <asl.h>
 
 #define SENDER_NAME @"tlu_ipctask"
@@ -94,7 +95,7 @@ static void log_message_with_level(const char *level, NSString *message, NSUInte
     [msg setDate:[NSDate date]];
     [msg setMessage:message];
     [msg setSender:SENDER_NAME];
-    [msg setLevel:[NSString stringWithUTF8String:level]];
+    [msg setLevel:[NSString stringWithFileSystemRepresentation:level]];
     [msg setPid:getpid()];
     [msg setFlags:flags];
     
@@ -223,7 +224,7 @@ int main(int argc, char *argv[]) {
          non-root usage, then, we can use a temp directory that is
          guaranteed writeable by this process/user.
          */
-        setenv("HOME", [NSTemporaryDirectory() fileSystemRepresentation], 1);
+        setenv("HOME", [NSTemporaryDirectory() saneFileSystemRepresentation], 1);
     }
     
     /* copy this for later logging */
@@ -324,7 +325,7 @@ int main(int argc, char *argv[]) {
          but waiting to use Foundation until after we drop privileges seems to be worthwhile.  In addition,
          the primary errors to catch prior to fork() are early-exit errors due to programming errors.
          */
-        NSString *parentName = [NSString stringWithUTF8String:argv[ARG_SERVER_NAME]];
+        NSString *parentName = [NSString stringWithFileSystemRepresentation:argv[ARG_SERVER_NAME]];
         id parent = [NSConnection rootProxyForConnectionWithRegisteredName:parentName host:nil];
         [parent setProtocolForProxy:@protocol(TLMAuthOperationProtocol)];
         

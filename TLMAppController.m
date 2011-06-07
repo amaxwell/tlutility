@@ -218,7 +218,7 @@ static void __TLMMigrateBundleIdentifier()
     NSString *newPath = [systemPaths componentsJoinedByString:@":"];
     NSParameterAssert(newPath);
     
-    setenv("PATH", [newPath fileSystemRepresentation], 1);
+    setenv("PATH", [newPath saneFileSystemRepresentation], 1);
     TLMLog(__func__, @"Using PATH = \"%@\"", systemPaths);
 }
 
