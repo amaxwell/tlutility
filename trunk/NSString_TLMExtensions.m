@@ -54,6 +54,7 @@
 
 - (const char *)saneFileSystemRepresentation;
 {    
+    // workaround for rdar://problem/9565599
     CFIndex len = CFStringGetMaximumSizeOfFileSystemRepresentation((CFStringRef)self);
     NSMutableData *mdata = [[[NSMutableData allocWithZone:[self zone]] initWithLength:len] autorelease];
     if (CFStringGetFileSystemRepresentation((CFStringRef)self, [mdata mutableBytes], len) == FALSE) {
