@@ -76,6 +76,8 @@
 		F9B6B5F80EF469A600CF767F /* TLMLogServer.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B6B5F70EF469A600CF767F /* TLMLogServer.m */; };
 		F9C0D3CB125ECCE600B1FBE5 /* TLMLaunchAgentController.m in Sources */ = {isa = PBXBuildFile; fileRef = F9C0D3CA125ECCE600B1FBE5 /* TLMLaunchAgentController.m */; };
 		F9C0D3E7125ECF3700B1FBE5 /* LaunchAgentSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = F9C0D3E6125ECF3700B1FBE5 /* LaunchAgentSheet.xib */; };
+		F9C7F177139E8E550031774F /* NSString_TLMExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = F9C7F176139E8E550031774F /* NSString_TLMExtensions.m */; };
+		F9C7F188139E91E40031774F /* NSString_TLMExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = F9C7F176139E8E550031774F /* NSString_TLMExtensions.m */; };
 		F9D37C9A0F01A80800FB755E /* TLMGradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D37C990F01A80800FB755E /* TLMGradientView.m */; };
 		F9D37D640F01EA8900FB755E /* TLMUpdateListDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D37D630F01EA8900FB755E /* TLMUpdateListDataSource.m */; };
 		F9D37E7B0F02B5F700FB755E /* TLMOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D37E7A0F02B5F700FB755E /* TLMOutlineView.m */; };
@@ -359,6 +361,8 @@
 		F9C0D3C9125ECCE500B1FBE5 /* TLMLaunchAgentController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMLaunchAgentController.h; sourceTree = "<group>"; };
 		F9C0D3CA125ECCE600B1FBE5 /* TLMLaunchAgentController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMLaunchAgentController.m; sourceTree = "<group>"; };
 		F9C0D3D1125ECEDB00B1FBE5 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/LaunchAgentSheet.xib; sourceTree = "<group>"; };
+		F9C7F175139E8E550031774F /* NSString_TLMExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSString_TLMExtensions.h; sourceTree = "<group>"; };
+		F9C7F176139E8E550031774F /* NSString_TLMExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSString_TLMExtensions.m; sourceTree = "<group>"; };
 		F9D37C980F01A80800FB755E /* TLMGradientView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMGradientView.h; sourceTree = "<group>"; };
 		F9D37C990F01A80800FB755E /* TLMGradientView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMGradientView.m; sourceTree = "<group>"; };
 		F9D37D620F01EA8900FB755E /* TLMUpdateListDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMUpdateListDataSource.h; sourceTree = "<group>"; };
@@ -441,6 +445,8 @@
 				F9F1C11210C5ABA300D32C17 /* NSMenu_TLMExtensions.m */,
 				F9999F9A10D1C33800F594CB /* TLMProxyManager.h */,
 				F9999F9B10D1C33800F594CB /* TLMProxyManager.m */,
+				F9C7F175139E8E550031774F /* NSString_TLMExtensions.h */,
+				F9C7F176139E8E550031774F /* NSString_TLMExtensions.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -1005,6 +1011,7 @@
 				F925D1AB12957B1800D75BB4 /* TLMMirrorController.m in Sources */,
 				F9D5CCB912977D8C00AEEDCB /* TLMMirrorNode.m in Sources */,
 				F9D5CD671298454F00AEEDCB /* TLMMirrorCell.m in Sources */,
+				F9C7F177139E8E550031774F /* NSString_TLMExtensions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1012,6 +1019,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F9C7F188139E91E40031774F /* NSString_TLMExtensions.m in Sources */,
 				F9B139D40EECBE23007C0046 /* tlu_ipctask.m in Sources */,
 				F9B6B5EB0EF4647400CF767F /* TLMLogMessage.m in Sources */,
 			);
