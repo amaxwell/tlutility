@@ -250,9 +250,9 @@ static void CenterRectInRect(NSRect *toCenter, NSRect enclosingRect)
     [[self animator] setAlphaValue:1.0];
 }
 
-- (void)fadeOutAndRemove:(BOOL)remove;
+- (void)fadeOutAndRemove:(BOOL)shouldRemove;
 {
-    if (remove) {
+    if (shouldRemove) {
         [[NSNotificationCenter defaultCenter] removeObserver:self];
         [[self parentWindow] removeChildWindow:self];
         // this will orderOut parent as well if attached

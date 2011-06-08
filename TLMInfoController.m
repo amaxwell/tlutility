@@ -271,12 +271,12 @@ static NSString * const TLMInfoFileViewIconScaleKey = @"TLMInfoFileViewIconScale
     }        
 }
 
-- (BOOL)textView:(NSTextView *)aTextView clickedOnLink:(id)link atIndex:(NSUInteger)charIndex
+- (BOOL)textView:(NSTextView *)aTextView clickedOnLink:(id)aLink atIndex:(NSUInteger)charIndex
 {
-    if ([link isKindOfClass:[NSURL class]])
-        return [[NSWorkspace sharedWorkspace] openURL:link];
-    else if ([link isKindOfClass:[NSString class]] && (link = [NSURL URLWithString:link]) != nil)
-        return [[NSWorkspace sharedWorkspace] openURL:link];
+    if ([aLink isKindOfClass:[NSURL class]])
+        return [[NSWorkspace sharedWorkspace] openURL:aLink];
+    else if ([aLink isKindOfClass:[NSString class]] && (aLink = [NSURL URLWithString:aLink]) != nil)
+        return [[NSWorkspace sharedWorkspace] openURL:aLink];
     return NO;
 }
 
@@ -315,10 +315,10 @@ static NSString * const TLMInfoFileViewIconScaleKey = @"TLMInfoFileViewIconScale
  is also fine, again since there are so few nodes to deal with.
  */
 
-- (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)index ofItem:(id)item;
+- (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)idx ofItem:(id)item;
 {
     if (nil == item) {
-         switch (index) {
+         switch (idx) {
              case 0:
                  return _runfiles;
                  break;
@@ -332,7 +332,7 @@ static NSString * const TLMInfoFileViewIconScaleKey = @"TLMInfoFileViewIconScale
                  break;
          }
     }
-    return [item objectAtIndex:index];
+    return [item objectAtIndex:idx];
 }
 
 - (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item { return [item isKindOfClass:[NSURL class]] == NO; }
