@@ -283,16 +283,16 @@ static NSString *__TLMGetTemporaryDirectory()
     BOOL isOkay = NO;
     if (_downloadComplete) {
         
-        const char *path = [_scriptPath saneFileSystemRepresentation];
+        const char *script_path = [_scriptPath saneFileSystemRepresentation];
         
         // guaranteed to be able to open the file here
-        int fd = open(path, O_RDONLY);
+        int fd = open(script_path, O_RDONLY);
         
         int status;
         struct stat sb;
         status = fstat(fd, &sb);
         if (status) {
-            perror(path);
+            perror(script_path);
             close(fd);
             return NO;
         }
