@@ -63,7 +63,7 @@ static NSMutableDictionary *_iconsByURLScheme = nil;
 - (id)copyWithZone:(NSZone *)zone
 {
     self = [super copyWithZone:zone];
-    self->_icon = [self->_icon retain];
+    [self->_icon retain];
     return self;
 }
 
