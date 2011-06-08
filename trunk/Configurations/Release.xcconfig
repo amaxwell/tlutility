@@ -1,0 +1,6 @@
+//
+//  Release.xcconfig
+//  TeX Live Utility
+//
+#include "Common.xcconfig"
+
