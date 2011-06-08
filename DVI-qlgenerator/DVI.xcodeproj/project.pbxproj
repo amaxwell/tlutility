@@ -20,6 +20,9 @@
 		F9A1A75D0F38F63A00232371 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9A1A75C0F38F63A00232371 /* Foundation.framework */; };
 		F9A1A7630F38F69700232371 /* DVIPDFTask.h in Headers */ = {isa = PBXBuildFile; fileRef = F9A1A7610F38F69700232371 /* DVIPDFTask.h */; };
 		F9A1A7640F38F69700232371 /* DVIPDFTask.m in Sources */ = {isa = PBXBuildFile; fileRef = F9A1A7620F38F69700232371 /* DVIPDFTask.m */; };
+		F9C7F24C13A0074A0031774F /* Common.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F9C7F24913A0074A0031774F /* Common.xcconfig */; };
+		F9C7F24D13A0074A0031774F /* Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F9C7F24A13A0074A0031774F /* Debug.xcconfig */; };
+		F9C7F24E13A0074A0031774F /* Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F9C7F24B13A0074A0031774F /* Release.xcconfig */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +41,9 @@
 		F9A1A75C0F38F63A00232371 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		F9A1A7610F38F69700232371 /* DVIPDFTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVIPDFTask.h; sourceTree = "<group>"; };
 		F9A1A7620F38F69700232371 /* DVIPDFTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DVIPDFTask.m; sourceTree = "<group>"; };
+		F9C7F24913A0074A0031774F /* Common.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Common.xcconfig; sourceTree = "<group>"; };
+		F9C7F24A13A0074A0031774F /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
+		F9C7F24B13A0074A0031774F /* Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +65,7 @@
 		089C166AFE841209C02AAC07 /* DVI */ = {
 			isa = PBXGroup;
 			children = (
+				F9C7F24813A0074A0031774F /* Configurations */,
 				08FB77AFFE84173DC02AAC07 /* Source */,
 				089C167CFE841241C02AAC07 /* Resources */,
 				089C1671FE841209C02AAC07 /* External Frameworks and Libraries */,
@@ -109,6 +116,17 @@
 			);
 			name = Products;
 			sourceTree = "<group>";
+		};
+		F9C7F24813A0074A0031774F /* Configurations */ = {
+			isa = PBXGroup;
+			children = (
+				F9C7F24913A0074A0031774F /* Common.xcconfig */,
+				F9C7F24A13A0074A0031774F /* Debug.xcconfig */,
+				F9C7F24B13A0074A0031774F /* Release.xcconfig */,
+			);
+			name = Configurations;
+			path = ../Configurations;
+			sourceTree = SOURCE_ROOT;
 		};
 /* End PBXGroup section */
 
@@ -175,6 +193,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D5B49A804867FD3000E48DA /* InfoPlist.strings in Resources */,
+				F9C7F24C13A0074A0031774F /* Common.xcconfig in Resources */,
+				F9C7F24D13A0074A0031774F /* Debug.xcconfig in Resources */,
+				F9C7F24E13A0074A0031774F /* Release.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -219,21 +240,12 @@
 /* Begin XCBuildConfiguration section */
 		2CA3261F0896AD4900168862 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F9C7F24A13A0074A0031774F /* Debug.xcconfig */;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-					x86_64,
-				);
-				COPY_PHASE_STRIP = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_MODEL_TUNING = G5;
-				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = /Library/QuickLook;
-				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = DVI;
 				WRAPPER_EXTENSION = qlgenerator;
 			};
@@ -241,11 +253,11 @@
 		};
 		2CA326200896AD4900168862 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F9C7F24B13A0074A0031774F /* Release.xcconfig */;
 			buildSettings = {
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DSTROOT = "$(HOME)";
-				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = /Library/QuickLook;
 				PRODUCT_NAME = DVI;
@@ -255,32 +267,17 @@
 		};
 		2CA326230896AD4900168862 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F9C7F24A13A0074A0031774F /* Debug.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(NATIVE_ARCH_ACTUAL)";
-				GCC_C_LANGUAGE_STANDARD = c99;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				ONLY_ACTIVE_ARCH = YES;
-				PREBINDING = NO;
-				RUN_CLANG_STATIC_ANALYZER = YES;
-				SDKROOT = macosx10.6;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 			};
 			name = Debug;
 		};
 		2CA326240896AD4900168862 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F9C7F24B13A0074A0031774F /* Release.xcconfig */;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-					x86_64,
-				);
-				GCC_C_LANGUAGE_STANDARD = c99;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				PREBINDING = NO;
-				SDKROOT = macosx10.6;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 			};
 			name = Release;
 		};
