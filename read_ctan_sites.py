@@ -102,7 +102,7 @@ def mirmon_sites():
     outname = dst.name
     outname = "/Volumes/Local/Users/amaxwell/mirmon.state"
     
-    ret = 0#launch_task(["/usr/bin/rsync", "rsync://comedy.dante.de/MirMon/mirmon.state", dst.name])
+    ret = launch_task(["/usr/bin/rsync", "rsync://comedy.dante.de/MirMon/mirmon.state", outname])
     
     if ret:
         return None
