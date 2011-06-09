@@ -38,20 +38,28 @@
 
 #import "TLMDatabasePackage.h"
 
-static void SubclassResponsibility(id classOrInstance, SEL _cmd) {
-    [NSException raise:@"SubclassResponsibility" 
-                format:@"Must subclass %s and override the method %s.", object_getClassName(classOrInstance), sel_getName(_cmd)];
-}
+/*
+ See http://www.friday.com/bbum/2009/11/21/calling-python-from-objective-c/
+ for the basic pattern of subclassing.
+ */
 
-#define TLM_METHOD(_class_, _mname_) \
-- (_class_ *)_mname_ { SubclassResponsibility(self, _cmd); return nil; }
+#define TLM_METHOD(_rettype_, _mname_) \
+- (_rettype_)_mname_ { \
+    [NSException raise:@"SubclassResponsibility" \
+                format:@"Must subclass %s and override the method %s.", object_getClassName(self), sel_getName(_cmd)]; \
+    return (_rettype_)0; \
+}
 
 @implementation TLMDatabasePackage
 
-TLM_METHOD(NSString, name)
-
-TLM_METHOD(NSString, category)
-
-TLM_METHOD(NSString, shortDescription)
+TLM_METHOD(NSString*, name)
+TLM_METHOD(NSString*, category)
+TLM_METHOD(NSString*, shortDescription)
+TLM_METHOD(NSString*, catalogue)
+TLM_METHOD(NSInteger, relocated)
+TLM_METHOD(NSArray*, runFiles)
+TLM_METHOD(NSArray*, sourceFiles)
+TLM_METHOD(NSArray*, docFiles)
+TLM_METHOD(NSInteger, revision)
 
 @end
