@@ -24,70 +24,75 @@ if not TLMDatabase:
 
 class Package(TLMDatabasePackage):
     """TeX Live Package"""
-    _name = None
-    _category = None
-    _shortdesc = None
-    _longdesc = None
-    _catalogue = None
-    _relocated = 0
     
-    _runfiles = []
-    _runsize = None
+    # subclass of NSObject, so override -[NSObject init]
+    def init(self):
+        self._name = None
+        self._category = None
+        self._shortdesc = None
+        self._longdesc = None
+        self._catalogue = None
+        self._relocated = 0
     
-    _srcfiles = []
-    _srcsize = None
+        self._runfiles = []
+        self._runsize = None
     
-    _docfiles = []
-    _docsize = None
+        self._srcfiles = []
+        self._srcsize = None
     
-    # maps keys (doc filenames) to maps of attributes (details, language)
-    _docfiledata = {}
+        self._docfiles = []
+        self._docsize = None
     
-    _executes = []
-    _postactions = []
+        # maps keys (doc filenames) to maps of attributes (details, language)
+        self._docfiledata = {}
     
-    # maps keys (arch name) to lists of files
-    _binfiles = {}
-    # maps keys (arch name) to integer size
-    _binsize = {}
+        self._executes = []
+        self._postactions = []
     
-    _depends = []
-    _revision = None
+        # maps keys (arch name) to lists of files
+        self._binfiles = {}
+        # maps keys (arch name) to integer size
+        self._binsize = {}
     
-    _cataloguedata = {}
+        self._depends = []
+        self._revision = None
     
-    _extradata = {}
+        self._cataloguedata = {}
     
+        self._extradata = {}
+        
+        return self
+        
     def name(self):
         return self._name
-        
+
     def category(self):
         return self._category
-        
+
     def shortDescription(self):
         return self._shortdesc
-        
+
     def longDescription(self):
         return self._longdesc
-        
+
     def catalogue(self):
         return self._catalogue
-        
+
     def relocated(self):
         return self._relocated
-        
+
     def runFiles(self):
         return self._runfiles
-        
+
     def sourceFiles(self):
         return self._srcfiles
-        
+
     def docFiles(self):
         return self._docfiles
-        
+
     def revision(self):
         return self._revision
-        
+
     def add_pair(self, key, value):
         self._extradata[key] = value
         
