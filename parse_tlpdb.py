@@ -1,64 +1,114 @@
 #!/usr/bin/env python
 
-class Package(object):
+import sys
+import objc
+from Foundation import NSBundle, NSURL
+
+sys.stdout.write("%s\n" % (sys.argv))
+
+bundle_path = sys.argv[3]
+
+bundle = NSBundle.bundleWithPath_(bundle_path)
+if not bundle:
+    sys.stderr.write("Failed to load bundle %s\n" % (bundle_path))
+
+TLMDatabasePackage = objc.lookUpClass("TLMDatabasePackage")
+if not TLMDatabasePackage:
+    sys.stderr.write("Failed to find class TLMDatabasePackage\n")
+    exit(1)
+
+TLMDatabase = objc.lookUpClass("TLMDatabase")
+if not TLMDatabase:
+    sys.stderr.write("Failed to find class TLMDatabase\n")
+    exit(1)
+
+class Package(TLMDatabasePackage):
     """TeX Live Package"""
-    def __init__(self):
-        super(Package, self).__init__()
-        self.name = None
-        self.category = None
-        self.shortdesc = None
-        self.longdesc = None
-        self.catalogue = None
-        self.relocated = 0
+    _name = None
+    _category = None
+    _shortdesc = None
+    _longdesc = None
+    _catalogue = None
+    _relocated = 0
+    
+    _runfiles = []
+    _runsize = None
+    
+    _srcfiles = []
+    _srcsize = None
+    
+    _docfiles = []
+    _docsize = None
+    
+    # maps keys (doc filenames) to maps of attributes (details, language)
+    _docfiledata = {}
+    
+    _executes = []
+    _postactions = []
+    
+    # maps keys (arch name) to lists of files
+    _binfiles = {}
+    # maps keys (arch name) to integer size
+    _binsize = {}
+    
+    _depends = []
+    _revision = None
+    
+    _cataloguedata = {}
+    
+    _extradata = {}
+    
+    def name(self):
+        return self._name
         
-        self.runfiles = []
-        self.runsize = None
+    def category(self):
+        return self._category
         
-        self.srcfiles = []
-        self.srcsize = None
+    def shortDescription(self):
+        return self._shortdesc
         
-        self.docfiles = []
-        self.docsize = None
+    def longDescription(self):
+        return self._longdesc
         
-        # maps keys (doc filenames) to maps of attributes (details, language)
-        self.docfiledata = {}
+    def catalogue(self):
+        return self._catalogue
         
-        self.executes = []
-        self.postactions = []
+    def relocated(self):
+        return self._relocated
         
-        # maps keys (arch name) to lists of files
-        self.binfiles = {}
-        # maps keys (arch name) to integer size
-        self.binsize = {}
+    def runFiles(self):
+        return self._runfiles
         
-        self.depends = []
-        self.revision = None
+    def sourceFiles(self):
+        return self._srcfiles
         
-        self.cataloguedata = {}
+    def docFiles(self):
+        return self._docfiles
         
-        self.extradata = {}
+    def revision(self):
+        return self._revision
         
     def add_pair(self, key, value):
-        self.extradata[key] = value
+        self._extradata[key] = value
         
     def __str__(self):
         return repr(self)
         
     def __repr__(self):
-        s = "%s: %s\n  srcsize=%s\n  srcfiles=%s" % (self.name, self.shortdesc, self.srcsize, self.srcfiles)
-        s += "\n  binsize = %s\n  binfiles = %s" % (self.binsize, self.binfiles)
-        s += "\n  docsize = %s\n  docfiles = %s\n  docfiledata = %s" % (self.docsize, self.docfiles, self.docfiledata)
-        s += "\n  runsize = %s\n  runfiles = %s" % (self.runsize, self.runfiles)
-        s += "\n  depends = %s" % (self.depends)
-        s += "\n  longdesc = %s" % (self.longdesc)
-        s += "\n  cataloguedata = %s" % (self.cataloguedata)
-        for k in self.extradata:
-            s += "\n  %s = %s" % (k, self.extradata[k])
+        s = "%s: %s\n  srcsize=%s\n  srcfiles=%s" % (self._name, self._shortdesc, self._srcsize, self._srcfiles)
+        s += "\n  binsize = %s\n  binfiles = %s" % (self._binsize, self._binfiles)
+        s += "\n  docsize = %s\n  docfiles = %s\n  docfiledata = %s" % (self._docsize, self._docfiles, self._docfiledata)
+        s += "\n  runsize = %s\n  runfiles = %s" % (self._runsize, self._runfiles)
+        s += "\n  depends = %s" % (self._depends)
+        s += "\n  longdesc = %s" % (self._longdesc)
+        s += "\n  cataloguedata = %s" % (self._cataloguedata)
+        for k in self._extradata:
+            s += "\n  %s = %s" % (k, self._extradata[k])
         return s
         
     def insert_in_packages(self, conn):
         c = conn.cursor()
-        c.execute("""INSERT into packages values (?,?,?,?,?,?)""", (self.name, self.category, self.revision, self.shortdesc, self.longdesc, self.runfiles))
+        c.execute("""INSERT into packages values (?,?,?,?,?,?)""", (self._name, self._category, self._revision, self._shortdesc, self._longdesc, self._runfiles))
         conn.commit()
 
 def _attributes_from_line(line):
@@ -122,7 +172,7 @@ def packages_from_tlpdb(flat_tlpdb):
     
         if len(line) == 0:
             all_packages.append(package)
-            index_map[package.name] = package_index
+            index_map[package._name] = package_index
             
             package_index += 1
             package = None
@@ -135,7 +185,7 @@ def packages_from_tlpdb(flat_tlpdb):
                             
             if package == None:
                 assert key == "name", "first line must be a name"
-                package = Package()
+                package = Package.new()
         
             line_has_key = True
             if len(key) == 0:
@@ -143,66 +193,66 @@ def packages_from_tlpdb(flat_tlpdb):
                 line_has_key = False
                         
             if key == "name":
-                package.name = value
+                package._name = value
             elif key == "category":
-                package.category = value
+                package._category = value
             elif key == "revision":
-                package.revision = int(value)
+                package._revision = int(value)
             elif key == "relocated":
-                package.relocated = int(value)
+                package._relocated = int(value)
             elif key == "shortdesc":
-                package.shortdesc = value.decode("utf-8")
+                package._shortdesc = value.decode("utf-8")
             elif key == "longdesc":
-                oldvalue = "" if package.longdesc == None else package.longdesc
-                package.longdesc = oldvalue + " " + value.decode("utf-8")
+                oldvalue = "" if package._longdesc == None else package._longdesc
+                package._longdesc = oldvalue + " " + value.decode("utf-8")
             elif key == "depend":
-                package.depends.append(value)
+                package._depends.append(value)
             elif key == "catalogue":
-                package.catalogue = value
+                package._catalogue = value
             elif key.startswith("catalogue-"):
                 catkey = key[len("catalogue-"):]
-                package.cataloguedata[catkey] = value
+                package._cataloguedata[catkey] = value
             elif key == "srcfiles":
                 if line_has_key:
                     attrs = _attributes_from_line(value)
-                    assert "size" in attrs, "missing size for %s : %s" % (package.name, key)
-                    package.srcsize = int(attrs["size"])
+                    assert "size" in attrs, "missing size for %s : %s" % (package._name, key)
+                    package._srcsize = int(attrs["size"])
                 else:
-                    package.srcfiles.append(value)
+                    package._srcfiles.append(value)
             elif key == "binfiles":
                 if line_has_key:
                     attrs = _attributes_from_line(value)
-                    assert "arch" in attrs, "missing arch for %s : %s" % (package.name, key)
+                    assert "arch" in attrs, "missing arch for %s : %s" % (package._name, key)
                     last_arch = attrs["arch"]
-                    assert "size" in attrs, "missing size for %s : %s" % (package.name, key)
-                    package.binsize[last_arch] = int(attrs["size"])
+                    assert "size" in attrs, "missing size for %s : %s" % (package._name, key)
+                    package._binsize[last_arch] = int(attrs["size"])
                 else:
-                    oldvalue = package.binfiles[last_arch] if last_arch in package.binfiles else []
+                    oldvalue = package._binfiles[last_arch] if last_arch in package._binfiles else []
                     oldvalue.append(value)
-                    package.binfiles[last_arch] = oldvalue
+                    package._binfiles[last_arch] = oldvalue
             elif key == "docfiles":
                 if line_has_key:
                     attrs = _attributes_from_line(value)
-                    assert "size" in attrs, "missing size for %s : %s" % (package.name, key)
-                    package.docsize = int(attrs["size"])
+                    assert "size" in attrs, "missing size for %s : %s" % (package._name, key)
+                    package._docsize = int(attrs["size"])
                 else:
                     values = value.split(" ")
                     if len(values) > 1:
-                        package.docfiledata[values[0]] = _attributes_from_line(" ".join(values[1:]))
-                    package.docfiles.append(values[0])
+                        package._docfiledata[values[0]] = _attributes_from_line(" ".join(values[1:]))
+                    package._docfiles.append(values[0])
             elif key == "runfiles":
                 if line_has_key:
                     attrs = _attributes_from_line(value)
-                    assert "size" in attrs, "missing size for %s : %s" % (package.name, key)
-                    package.runsize = int(attrs["size"])
+                    assert "size" in attrs, "missing size for %s : %s" % (package._name, key)
+                    package._runsize = int(attrs["size"])
                 else:
-                    package.runfiles.append(value)
+                    package._runfiles.append(value)
             elif key == "postaction":
-                package.postactions.append(value)
+                package._postactions.append(value)
             elif key == "execute":
-                package.executes.append(value)
+                package._executes.append(value)
             else:
-                package.add_pair(key, value)
+                package._add_pair(key, value)
                 #assert False, "unhandled line %s" % (line)
                 
             last_key = key
@@ -234,21 +284,23 @@ def convert_to_sqlite(packages):
     for pkg in packages:
         pkg.insert_in_packages(conn)
     
-    conn.close()    
-
+    conn.close()  
+    
 if __name__ == '__main__':
     
-    import os
-    
-    with open("/usr/local/texlive/2011/tlpkg/texlive.tlpdb") as flat_tlpdb:
+    with open(sys.argv[1]) as flat_tlpdb:
         all_packages, index_map = packages_from_tlpdb(flat_tlpdb)
-        
+
         pkg = all_packages[index_map["00texlive.installation"]]
-        for dep in pkg.depends:
+        for dep in pkg._depends:
             if dep.startswith("opt_"):
                 key, ignored, value = dep[4:].partition(":")
-                print "%s = %s" % (key, value)
-        
+                sys.stdout.write("%s = %s\n" % (key, value))
+
+    db = TLMDatabase.alloc().initWithPackages_(all_packages)
+    url = NSURL.URLWithString_(sys.argv[2])
+    TLMDatabase.addDatabase_forURL_(db, url)  
+            
     #exit(0)
 
     # for idx, pkg in enumerate(all_packages):
