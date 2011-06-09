@@ -1,10 +1,10 @@
 //
-//  TLMDatabase.h
-//  TeX Live Manager
+//  TLMDatabasePackage.m
+//  tlpdb_test
 //
-//  Created by Adam R. Maxwell on 09/13/10.
+//  Created by Adam R. Maxwell on 06/08/11.
 /*
- This software is Copyright (c) 2010-2011
+ This software is Copyright (c) 2011
  Adam Maxwell. All rights reserved.
  
  Redistribution and use in source and binary forms, with or without
@@ -36,32 +36,22 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import <Cocoa/Cocoa.h>
+#import "TLMDatabasePackage.h"
 
-typedef int16_t TLMDatabaseYear;
-
-// returned as the year in case of an error
-extern const TLMDatabaseYear TLMDatabaseUnknownYear;
-
-extern NSString * const TLMDatabaseVersionCheckComplete;
-
-typedef struct _TLMDatabaseVersion {
-    TLMDatabaseYear  year;       // release year from the tlpdb
-    BOOL             isOfficial; // whether this is a TL or 3rd party repo
-    NSURL           *usedURL;    // actual URL used (may be redirected)
-} TLMDatabaseVersion;
-
-@interface TLMDatabase : NSObject {
-    NSArray *_packages;
+static void SubclassResponsibility(id classOrInstance, SEL _cmd) {
+    [NSException raise:@"SubclassResponsibility" 
+                format:@"Must subclass %s and override the method %s.", object_getClassName(classOrInstance), sel_getName(_cmd)];
 }
 
-+ (TLMDatabase *)databaseForURL:(NSURL *)aURL;
-+ (void)addDatabase:(TLMDatabase *)db forURL:(NSURL *)aURL;
+#define TLM_METHOD(_class_, _mname_) \
+- (_class_ *)_mname_ { SubclassResponsibility(self, _cmd); return nil; }
 
-- (TLMDatabase *)initWithPackages:(NSArray *)packages;
+@implementation TLMDatabasePackage
 
-+ (TLMDatabaseVersion)versionForMirrorURL:(NSURL *)aURL;
+TLM_METHOD(NSString, name)
 
-@property (nonatomic, readonly) NSArray *packages;
+TLM_METHOD(NSString, category)
+
+TLM_METHOD(NSString, shortDescription)
 
 @end

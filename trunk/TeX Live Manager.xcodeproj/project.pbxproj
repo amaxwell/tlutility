@@ -19,6 +19,8 @@
 		F925D1AB12957B1800D75BB4 /* TLMMirrorController.m in Sources */ = {isa = PBXBuildFile; fileRef = F925D1AA12957B1800D75BB4 /* TLMMirrorController.m */; };
 		F925D1B112957B5600D75BB4 /* Mirrors.xib in Resources */ = {isa = PBXBuildFile; fileRef = F925D1B012957B5600D75BB4 /* Mirrors.xib */; };
 		F925D1BB12957C1B00D75BB4 /* CTAN.sites.plist in Resources */ = {isa = PBXBuildFile; fileRef = F925D1BA12957C1B00D75BB4 /* CTAN.sites.plist */; };
+		F942FFC513A08FD60008D8FD /* TLMDatabasePackage.m in Sources */ = {isa = PBXBuildFile; fileRef = F942FFC413A08FD60008D8FD /* TLMDatabasePackage.m */; };
+		F942FFD413A0909A0008D8FD /* Python.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F942FFD313A0909A0008D8FD /* Python.framework */; };
 		F94E74A20EF4965100E0B78F /* TLMTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = F94E74A10EF4965100E0B78F /* TLMTableView.m */; };
 		F957A4E312514B040079E07F /* TLMBackupOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F957A4E212514B040079E07F /* TLMBackupOperation.m */; };
 		F958309812695A0800DB997C /* TLMBackupCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F958309712695A0800DB997C /* TLMBackupCell.m */; };
@@ -277,6 +279,9 @@
 		F925D1AA12957B1800D75BB4 /* TLMMirrorController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMMirrorController.m; sourceTree = "<group>"; };
 		F925D1AE12957B4C00D75BB4 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/Mirrors.xib; sourceTree = "<group>"; };
 		F925D1BA12957C1B00D75BB4 /* CTAN.sites.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = CTAN.sites.plist; sourceTree = "<group>"; };
+		F942FFC313A08FD60008D8FD /* TLMDatabasePackage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMDatabasePackage.h; sourceTree = "<group>"; };
+		F942FFC413A08FD60008D8FD /* TLMDatabasePackage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMDatabasePackage.m; sourceTree = "<group>"; };
+		F942FFD313A0909A0008D8FD /* Python.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Python.framework; path = /System/Library/Frameworks/Python.framework; sourceTree = "<absolute>"; };
 		F94E74A00EF4965100E0B78F /* TLMTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMTableView.h; sourceTree = "<group>"; };
 		F94E74A10EF4965100E0B78F /* TLMTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMTableView.m; sourceTree = "<group>"; };
 		F957A4E112514B040079E07F /* TLMBackupOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMBackupOperation.h; sourceTree = "<group>"; };
@@ -416,6 +421,7 @@
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
 				F9B137330EEC4C6A007C0046 /* Security.framework in Frameworks */,
 				F9F1C14E10C6EEC200D32C17 /* SystemConfiguration.framework in Frameworks */,
+				F942FFD413A0909A0008D8FD /* Python.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -542,6 +548,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F942FFD313A0909A0008D8FD /* Python.framework */,
 				F9F1C14D10C6EEC200D32C17 /* SystemConfiguration.framework */,
 				F9B137320EEC4C6A007C0046 /* Security.framework */,
 				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
@@ -624,6 +631,8 @@
 		F9A8BA6F0EF7668E00E35DC9 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				F942FFC313A08FD60008D8FD /* TLMDatabasePackage.h */,
+				F942FFC413A08FD60008D8FD /* TLMDatabasePackage.m */,
 				F9AAC11B126798F6003D665F /* TLMBackupNode.h */,
 				F9AAC11C126798F6003D665F /* TLMBackupNode.m */,
 				F964A6390F0071920006868B /* TLMPackageNode.h */,
@@ -1032,6 +1041,7 @@
 				F9D5CCB912977D8C00AEEDCB /* TLMMirrorNode.m in Sources */,
 				F9D5CD671298454F00AEEDCB /* TLMMirrorCell.m in Sources */,
 				F9C7F177139E8E550031774F /* NSString_TLMExtensions.m in Sources */,
+				F942FFC513A08FD60008D8FD /* TLMDatabasePackage.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

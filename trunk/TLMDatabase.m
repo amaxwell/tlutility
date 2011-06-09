@@ -40,6 +40,9 @@
 #import <regex.h>
 #import "TLMLogServer.h"
 #import "TLMPreferenceController.h"
+#import <Python/Python.h>
+#import "TLMDatabasePackage.h"
+#import <crt_externs.h>
 
 #define TLPDB_PATH      CFSTR("tlpkg/texlive.tlpdb")
 #define MIN_DATA_LENGTH 2048
@@ -68,12 +71,67 @@ NSString * const TLMDatabaseVersionCheckComplete = @"TLMDatabaseVersionCheckComp
 
 @implementation TLMDatabase
 
+@synthesize packages = _packages;
+
 static NSMutableDictionary *_databases = nil;
 
 + (void)initialize
 {
     if (nil == _databases)
         _databases = [NSMutableDictionary new];
+}
+
+- (void)loadDatabase
+{
+#warning copied main() from test program
+    NSURL *aURL = [NSURL fileURLWithPath:@"/usr/local/texlive/2011/tlpkg/texlive.tlpdb"];
+    char *url_key = strdup([[aURL absoluteString] fileSystemRepresentation]);
+    
+    NSData *data = [NSData dataWithContentsOfURL:aURL];
+    NSString *tlpdbPath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"tlpdb_test.tlpdb"];
+    [data writeToFile:tlpdbPath atomically:NO];
+    char *tlpdb_path = strdup([tlpdbPath fileSystemRepresentation]);
+    
+    Py_Initialize();
+    char *script_path = strdup("/Volumes/Local/Users/amaxwell/build/mactlmgr/parse_tlpdb.py");
+    char * py_argv[] = { script_path, tlpdb_path, url_key, *(_NSGetArgv())[0] };
+    PySys_SetArgv(sizeof(py_argv) / sizeof(char *), py_argv);
+    PyRun_SimpleFileExFlags(fopen(script_path, "r"), script_path, true, NULL);
+    free(script_path);
+    free(tlpdb_path);
+    free(url_key);
+    
+    TLMDatabase *db = [TLMDatabase databaseForURL:aURL];
+    for (TLMDatabasePackage *pkg in [db packages])
+        fprintf(stderr, "%s\n", [[pkg name] UTF8String]);
+    
+}
+
++ (TLMDatabase *)databaseForURL:(NSURL *)aURL;
+{
+    return [_databases objectForKey:aURL];
+}
+
++ (void)addDatabase:(TLMDatabase *)db forURL:(NSURL *)aURL;
+{
+    NSParameterAssert(db);
+    NSParameterAssert(aURL);
+    [_databases setObject:db forKey:aURL];
+}
+
+- (TLMDatabase *)initWithPackages:(NSArray *)packages;
+{
+    self = [super init];
+    if (self) {
+        _packages = [packages copy];
+    }
+    return self;
+}
+
+- (void)dealloc
+{
+    [_packages release];
+    [super dealloc];
 }
 
 + (TLMDatabaseVersion)versionForMirrorURL:(NSURL *)aURL;

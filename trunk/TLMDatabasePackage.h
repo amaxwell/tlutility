@@ -1,10 +1,10 @@
 //
-//  TLMDatabase.h
-//  TeX Live Manager
+//  TLMDatabasePackage.h
+//  tlpdb_test
 //
-//  Created by Adam R. Maxwell on 09/13/10.
+//  Created by Adam R. Maxwell on 06/08/11.
 /*
- This software is Copyright (c) 2010-2011
+ This software is Copyright (c) 2011
  Adam Maxwell. All rights reserved.
  
  Redistribution and use in source and binary forms, with or without
@@ -38,30 +38,13 @@
 
 #import <Cocoa/Cocoa.h>
 
-typedef int16_t TLMDatabaseYear;
 
-// returned as the year in case of an error
-extern const TLMDatabaseYear TLMDatabaseUnknownYear;
+@interface TLMDatabasePackage : NSObject {
 
-extern NSString * const TLMDatabaseVersionCheckComplete;
-
-typedef struct _TLMDatabaseVersion {
-    TLMDatabaseYear  year;       // release year from the tlpdb
-    BOOL             isOfficial; // whether this is a TL or 3rd party repo
-    NSURL           *usedURL;    // actual URL used (may be redirected)
-} TLMDatabaseVersion;
-
-@interface TLMDatabase : NSObject {
-    NSArray *_packages;
 }
 
-+ (TLMDatabase *)databaseForURL:(NSURL *)aURL;
-+ (void)addDatabase:(TLMDatabase *)db forURL:(NSURL *)aURL;
-
-- (TLMDatabase *)initWithPackages:(NSArray *)packages;
-
-+ (TLMDatabaseVersion)versionForMirrorURL:(NSURL *)aURL;
-
-@property (nonatomic, readonly) NSArray *packages;
+@property (nonatomic, readonly) NSString *name;
+@property (nonatomic, readonly) NSString *category;
+@property (nonatomic, readonly) NSString *shortDescription;
 
 @end
