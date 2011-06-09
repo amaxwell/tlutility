@@ -31,7 +31,6 @@
 		F964A63B0F0071920006868B /* TLMPackageNode.m in Sources */ = {isa = PBXBuildFile; fileRef = F964A63A0F0071920006868B /* TLMPackageNode.m */; };
 		F964A6660F009B1F0006868B /* TLMListOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F964A6650F009B1F0006868B /* TLMListOperation.m */; };
 		F97A7E500F13067C008EBCEA /* TLMTask.m in Sources */ = {isa = PBXBuildFile; fileRef = F97A7E4F0F13067C008EBCEA /* TLMTask.m */; };
-		F97B37B1128B4FCC00B49CA7 /* agent_installer.py in Resources */ = {isa = PBXBuildFile; fileRef = F97B37B0128B4FCC00B49CA7 /* agent_installer.py */; };
 		F97B37B2128B4FE600B49CA7 /* agent_installer.py in Copy aux executables */ = {isa = PBXBuildFile; fileRef = F97B37B0128B4FCC00B49CA7 /* agent_installer.py */; };
 		F97E85740EFA18F400862882 /* TeXDistTool.icns in Resources */ = {isa = PBXBuildFile; fileRef = F97E85730EFA18F400862882 /* TeXDistTool.icns */; };
 		F97E860C0EFA3BFD00862882 /* TeXDistDocument.icns in Resources */ = {isa = PBXBuildFile; fileRef = F97E860B0EFA3BFD00862882 /* TeXDistDocument.icns */; };
@@ -83,6 +82,7 @@
 		F9C7F1F313A003660031774F /* Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F9C7F1F113A003660031774F /* Debug.xcconfig */; };
 		F9C7F1F413A003660031774F /* Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F9C7F1F213A003660031774F /* Release.xcconfig */; };
 		F9C7F23113A0041B0031774F /* Common.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F9C7F23013A0041B0031774F /* Common.xcconfig */; };
+		F9C7F37113A124C30031774F /* parse_tlpdb.py in Copy aux executables */ = {isa = PBXBuildFile; fileRef = F9C7F37013A124B70031774F /* parse_tlpdb.py */; };
 		F9D37C9A0F01A80800FB755E /* TLMGradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D37C990F01A80800FB755E /* TLMGradientView.m */; };
 		F9D37D640F01EA8900FB755E /* TLMUpdateListDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D37D630F01EA8900FB755E /* TLMUpdateListDataSource.m */; };
 		F9D37E7B0F02B5F700FB755E /* TLMOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D37E7A0F02B5F700FB755E /* TLMOutlineView.m */; };
@@ -224,6 +224,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 6;
 			files = (
+				F9C7F37113A124C30031774F /* parse_tlpdb.py in Copy aux executables */,
 				F97B37B2128B4FE600B49CA7 /* agent_installer.py in Copy aux executables */,
 				F9B139DA0EECBECD007C0046 /* tlu_ipctask in Copy aux executables */,
 			);
@@ -374,6 +375,7 @@
 		F9C7F1F113A003660031774F /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
 		F9C7F1F213A003660031774F /* Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
 		F9C7F23013A0041B0031774F /* Common.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Common.xcconfig; sourceTree = "<group>"; };
+		F9C7F37013A124B70031774F /* parse_tlpdb.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = parse_tlpdb.py; sourceTree = "<group>"; };
 		F9D37C980F01A80800FB755E /* TLMGradientView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMGradientView.h; sourceTree = "<group>"; };
 		F9D37C990F01A80800FB755E /* TLMGradientView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMGradientView.m; sourceTree = "<group>"; };
 		F9D37D620F01EA8900FB755E /* TLMUpdateListDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMUpdateListDataSource.h; sourceTree = "<group>"; };
@@ -512,6 +514,7 @@
 		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
+				F9C7F37013A124B70031774F /* parse_tlpdb.py */,
 				F9B139D30EECBE23007C0046 /* tlu_ipctask.m */,
 				32CA4F630368D1EE00C91783 /* TeX Live Manager_Prefix.pch */,
 				29B97316FDCFA39411CA2CEA /* main.m */,
@@ -939,7 +942,6 @@
 				F9A4A106105D736B00F5AC62 /* texlive.profile.plist in Resources */,
 				F982553F12504E210018CB73 /* AutobackupSheet.xib in Resources */,
 				F9C0D3E7125ECF3700B1FBE5 /* LaunchAgentSheet.xib in Resources */,
-				F97B37B1128B4FCC00B49CA7 /* agent_installer.py in Resources */,
 				F925D1B112957B5600D75BB4 /* Mirrors.xib in Resources */,
 				F925D1BB12957C1B00D75BB4 /* CTAN.sites.plist in Resources */,
 				F9C7F1F313A003660031774F /* Debug.xcconfig in Resources */,
