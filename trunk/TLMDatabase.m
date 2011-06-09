@@ -85,21 +85,22 @@ static NSMutableDictionary *_databases = nil;
 {
 #warning copied main() from test program
     NSURL *aURL = [NSURL fileURLWithPath:@"/usr/local/texlive/2011/tlpkg/texlive.tlpdb"];
-    char *url_key = strdup([[aURL absoluteString] fileSystemRepresentation]);
+    char *url_key = strdup([[aURL absoluteString] saneFileSystemRepresentation]);
     
     NSData *data = [NSData dataWithContentsOfURL:aURL];
     NSString *tlpdbPath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"tlpdb_test.tlpdb"];
     [data writeToFile:tlpdbPath atomically:NO];
-    char *tlpdb_path = strdup([tlpdbPath fileSystemRepresentation]);
+    char *temporary_tlpdb_path = strdup([tlpdbPath saneFileSystemRepresentation]);
     
     Py_Initialize();
-    char *script_path = strdup("/Volumes/Local/Users/amaxwell/build/mactlmgr/parse_tlpdb.py");
-    char * py_argv[] = { script_path, tlpdb_path, url_key, *(_NSGetArgv())[0] };
+    char *script_path = strdup([[[NSBundle mainBundle] pathForAuxiliaryExecutable:@"parse_tlpdb.py"] saneFileSystemRepresentation]);
+    char *py_argv[] = { script_path, temporary_tlpdb_path, url_key, *(_NSGetArgv())[0] };
     PySys_SetArgv(sizeof(py_argv) / sizeof(char *), py_argv);
     PyRun_SimpleFileExFlags(fopen(script_path, "r"), script_path, true, NULL);
     free(script_path);
-    free(tlpdb_path);
+    free(temporary_tlpdb_path);
     free(url_key);
+    unlink(temporary_tlpdb_path);
     
     TLMDatabase *db = [TLMDatabase databaseForURL:aURL];
     for (TLMDatabasePackage *pkg in [db packages])
