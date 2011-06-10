@@ -114,13 +114,18 @@ static Class TLMPyDatabasePackage = Nil;
         arguments = [NSArray arrayWithObjects:@"dump-tlpdb", @"--local", nil];
     [localDumpTask setArguments:arguments];
 
-
-    [localDumpTask setStandardOutput:[NSPipe pipe]];
+    CFUUIDRef uuid = CFUUIDCreate(NULL);
+    NSString *temporaryPath = [NSTemporaryDirectory() stringByAppendingPathComponent:[(id)CFUUIDCreateString(NULL, uuid) autorelease]];
+    if (uuid) CFRelease(uuid);
+    // have to touch the file before using fileHandleForWriting:
+    [[NSData data] writeToFile:temporaryPath atomically:NO];
+    NSFileHandle *outputHandle = [NSFileHandle fileHandleForWritingAtPath:temporaryPath];
+    [localDumpTask setStandardOutput:outputHandle];
     [localDumpTask launch];
-    
-    //NSArray *packages = [TLMPyDatabasePackage packagesFromDatabaseAtPath:tlpdbPath];
-    NSArray *packages = [TLMPyDatabasePackage packagesFromDatabaseWithPipe:[localDumpTask standardOutput]];
     [localDumpTask waitUntilExit];
+    
+    NSArray *packages = [TLMPyDatabasePackage packagesFromDatabaseAtPath:temporaryPath];
+    unlink([temporaryPath saneFileSystemRepresentation]);
 
     fprintf(stderr, "%s\n", [[[packages objectAtIndex:0] description] saneFileSystemRepresentation]);
     fprintf(stderr, "%s\n", [[[packages lastObject] description] saneFileSystemRepresentation]);
