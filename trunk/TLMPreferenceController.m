@@ -366,12 +366,18 @@ static NSURL * __TLMParseLocationOption(NSString *location)
     if ([versionLines count]) {
         
         /*
-         froude:~ amaxwell$ tlmgr --version
+         Using an svn version of tlmgr:
+         $ tlmgr --version
+         tlmgr revision unknown ($Date$)
+         tlmgr using installation: /usr/local/texlive/2011
+         TeX Live (http://tug.org/texlive) version 2011
+         
+         $ tlmgr --version
          tlmgr revision 14230 (2009-07-11 14:56:31 +0200)
          tlmgr using installation: /usr/local/texlive/2009
          TeX Live (http://tug.org/texlive) version 2009-dev
          
-         froude:~ amaxwell$ tlmgr --version
+         $ tlmgr --version
          tlmgr revision 12152 (2009-02-12 13:08:37 +0100)
          tlmgr using installation: /usr/local/texlive/2008
          TeX Live (http://tug.org/texlive) version 2008
@@ -395,7 +401,8 @@ static NSURL * __TLMParseLocationOption(NSString *location)
                 
                 NSScanner *scanner = [NSScanner scannerWithString:versionString];
                 [scanner setCharactersToBeSkipped:[[NSCharacterSet decimalDigitCharacterSet] invertedSet]];
-                [scanner scanInteger:tlmgrVersion];
+                if ([scanner scanInteger:tlmgrVersion] == NO)
+                    *tlmgrVersion = -1;
             }
         }
     }
