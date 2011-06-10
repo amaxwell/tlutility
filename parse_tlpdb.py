@@ -4,27 +4,39 @@ import sys
 import objc
 from Foundation import NSBundle, NSURL
 
-sys.stdout.write("%s\n" % (sys.argv))
+if __name__ == '__main__':
 
-bundle_path = sys.argv[3]
+    bundle_path = sys.argv[1]
 
-bundle = NSBundle.bundleWithPath_(bundle_path)
-if not bundle:
-    sys.stderr.write("Failed to load bundle %s\n" % (bundle_path))
+    bundle = NSBundle.bundleWithPath_(bundle_path)
+    if not bundle:
+        sys.stderr.write("Failed to load bundle %s\n" % (bundle_path))
+        exit(1)
 
-TLMDatabasePackage = objc.lookUpClass("TLMDatabasePackage")
-if not TLMDatabasePackage:
-    sys.stderr.write("Failed to find class TLMDatabasePackage\n")
-    exit(1)
+    TLMDatabasePackage = objc.lookUpClass("TLMDatabasePackage")
+    if not TLMDatabasePackage:
+        sys.stderr.write("Failed to find class TLMDatabasePackage\n")
+        exit(1)
 
-TLMDatabase = objc.lookUpClass("TLMDatabase")
-if not TLMDatabase:
-    sys.stderr.write("Failed to find class TLMDatabase\n")
-    exit(1)
+    TLMDatabase = objc.lookUpClass("TLMDatabase")
+    if not TLMDatabase:
+        sys.stderr.write("Failed to find class TLMDatabase\n")
+        exit(1)
 
-class Package(TLMDatabasePackage):
+class TLMPyDatabasePackage(TLMDatabasePackage):
     """TeX Live Package"""
     
+    @classmethod
+    def packagesFromDatabaseAtPath_(self, dbpath):
+        all_packages = None
+        with open(dbpath) as flat_tlpdb:
+            all_packages, index_map = packages_from_tlpdb(flat_tlpdb)
+
+        return all_packages
+        
+    def description(self):
+        return str(self)
+        
     # subclass of NSObject, so override -[NSObject init]
     def init(self):
         self._name = None
@@ -189,8 +201,8 @@ def packages_from_tlpdb(flat_tlpdb):
             key, ignored, value = line.partition(" ")
                             
             if package == None:
-                assert key == "name", "first line must be a name"
-                package = Package.new()
+                assert key == "name", "first line must be a name: %s" % (line)
+                package = TLMPyDatabasePackage.new()
         
             line_has_key = True
             if len(key) == 0:
@@ -257,62 +269,9 @@ def packages_from_tlpdb(flat_tlpdb):
             elif key == "execute":
                 package._executes.append(value)
             else:
-                package._add_pair(key, value)
+                package.add_pair(key, value)
                 #assert False, "unhandled line %s" % (line)
                 
             last_key = key
 
     return all_packages, index_map
-    
-def convert_to_sqlite(packages):
-    
-    import sqlite3
-
-    DB_PATH = "/tmp/texlive.sqlite3"
-
-    def adapt_list(lst):
-        return "\0".join(lst) if lst else None
-
-    def convert_list(s):
-        return s.split("\0") if s else None
-
-    sqlite3.register_adapter(list, adapt_list)
-    sqlite3.register_converter("list", convert_list)
-
-    if os.path.exists(DB_PATH):
-        os.remove(DB_PATH)
-        
-    conn = sqlite3.connect(DB_PATH, detect_types=sqlite3.PARSE_DECLTYPES)
-    c = conn.cursor()
-    c.execute("""CREATE table packages (name text, category text, revision real, shortdesc text, longdesc text, runfiles list)""")
-    
-    for pkg in packages:
-        pkg.insert_in_packages(conn)
-    
-    conn.close()  
-    
-if __name__ == '__main__':
-    
-    with open(sys.argv[1]) as flat_tlpdb:
-        all_packages, index_map = packages_from_tlpdb(flat_tlpdb)
-
-        pkg = all_packages[index_map["00texlive.installation"]]
-        for dep in pkg._depends:
-            if dep.startswith("opt_"):
-                key, ignored, value = dep[4:].partition(":")
-                sys.stdout.write("%s = %s\n" % (key, value))
-
-    db = TLMDatabase.alloc().initWithPackages_(all_packages)
-    url = NSURL.URLWithString_(sys.argv[2])
-    TLMDatabase.addDatabase_forURL_(db, url)  
-            
-    #exit(0)
-
-    # for idx, pkg in enumerate(all_packages):
-    #     
-    #     if pkg.name == "achemso":
-    #         break
-    #     
-    #     if idx % 4 == 0 or pkg.name == "a2ping":
-    #         print pkg
-    #         print ""

@@ -41,6 +41,8 @@
 
 @interface TLMDatabasePackage : NSObject
 
++ (NSArray *)packagesFromDatabaseAtPath:(NSString *)absolutePath;
+
 @property (nonatomic, readonly) NSString *name;
 @property (nonatomic, readonly) NSString *category;
 @property (nonatomic, readonly) NSString *shortDescription;

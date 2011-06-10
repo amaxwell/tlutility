@@ -51,17 +51,21 @@ typedef struct _TLMDatabaseVersion {
     NSURL           *usedURL;    // actual URL used (may be redirected)
 } TLMDatabaseVersion;
 
-@interface TLMDatabase : NSObject {
-    NSArray *_packages;
+@interface TLMDatabase : NSObject 
+{
+    NSArray            *_packages;
+    NSDate             *_loadDate;
+    NSURL              *_mirrorURL;
+    TLMDatabaseVersion  _version;
 }
 
 + (TLMDatabase *)databaseForURL:(NSURL *)aURL;
 + (void)addDatabase:(TLMDatabase *)db forURL:(NSURL *)aURL;
-
-- (TLMDatabase *)initWithPackages:(NSArray *)packages;
-
 + (TLMDatabaseVersion)versionForMirrorURL:(NSURL *)aURL;
+- (void)reloadDatabase;
 
-@property (nonatomic, readonly) NSArray *packages;
+@property (copy) NSArray *packages;
+@property (copy) NSURL *mirrorURL;
+@property (copy) NSDate *loadDate;
 
 @end
