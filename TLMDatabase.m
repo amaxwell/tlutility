@@ -76,15 +76,30 @@ NSString * const TLMDatabaseVersionCheckComplete = @"TLMDatabaseVersionCheckComp
 @synthesize loadDate = _loadDate;
 
 static NSMutableDictionary *_databases = nil;
+static Class TLMPyDatabasePackage = Nil;
+
++ (void)_setupPython
+{
+    Py_Initialize();
+    char *script_path = strdup([[[NSBundle mainBundle] pathForAuxiliaryExecutable:@"parse_tlpdb.py"] saneFileSystemRepresentation]);
+    char *bundle_path = strdup([[[NSBundle mainBundle] bundlePath] saneFileSystemRepresentation]);
+    char *py_argv[] = { script_path, bundle_path };
+    PySys_SetArgv(sizeof(py_argv) / sizeof(char *), py_argv);
+    PyRun_SimpleFileExFlags(fopen(script_path, "r"), script_path, true, NULL);
+    free(script_path);
+    free(bundle_path);
+    TLMPyDatabasePackage = NSClassFromString(@"TLMPyDatabasePackage");
+}
 
 + (void)initialize
 {
     if (nil == _databases) {
         _databases = [NSMutableDictionary new];
-        Py_Initialize();
+        [self _setupPython];
     }
     TLMDatabase *db = [TLMDatabase new];
     [db reloadDatabase];
+    [db release];
 }
 
 - (void)reloadDatabase;
@@ -99,30 +114,19 @@ static NSMutableDictionary *_databases = nil;
         arguments = [NSArray arrayWithObjects:@"dump-tlpdb", @"--local", nil];
     [localDumpTask setArguments:arguments];
 
-    NSString *tlpdbPath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"tlpdb_test.tlpdb"];
-    [[NSData data] writeToFile:tlpdbPath atomically:NO];
-    [localDumpTask setStandardOutput:[NSFileHandle fileHandleForWritingAtPath:tlpdbPath]];
+
+    [localDumpTask setStandardOutput:[NSPipe pipe]];
     [localDumpTask launch];
+    
+    //NSArray *packages = [TLMPyDatabasePackage packagesFromDatabaseAtPath:tlpdbPath];
+    NSArray *packages = [TLMPyDatabasePackage packagesFromDatabaseWithPipe:[localDumpTask standardOutput]];
     [localDumpTask waitUntilExit];
-        
-    char *script_path = strdup([[[NSBundle mainBundle] pathForAuxiliaryExecutable:@"parse_tlpdb.py"] saneFileSystemRepresentation]);
-    char *bundle_path = strdup([[[NSBundle mainBundle] bundlePath] saneFileSystemRepresentation]);
-    char *py_argv[] = { script_path, bundle_path };
-    PySys_SetArgv(sizeof(py_argv) / sizeof(char *), py_argv);
-    PyRun_SimpleFileExFlags(fopen(script_path, "r"), script_path, true, NULL);
-    free(script_path);
-    free(bundle_path);
-    
-    Class Package = NSClassFromString(@"TLMPyDatabasePackage");
-    NSArray *packages = [Package packagesFromDatabaseAtPath:tlpdbPath];
-    
+
     fprintf(stderr, "%s\n", [[[packages objectAtIndex:0] description] saneFileSystemRepresentation]);
     fprintf(stderr, "%s\n", [[[packages lastObject] description] saneFileSystemRepresentation]);
 
 //    for (TLMDatabasePackage *pkg in packages)
 //        fprintf(stderr, "%s\n", [[pkg name] UTF8String]);
-
-    unlink([tlpdbPath saneFileSystemRepresentation]);
     
     [self setPackages:packages];
     [self setLoadDate:[NSDate date]];
