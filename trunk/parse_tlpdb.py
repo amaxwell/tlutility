@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import sys
+import sys, os
 import objc
 from Foundation import NSBundle, NSURL
 
@@ -29,7 +29,15 @@ class TLMPyDatabasePackage(TLMDatabasePackage):
     @classmethod
     def packagesFromDatabaseAtPath_(self, dbpath):
         all_packages = None
-        with open(dbpath) as flat_tlpdb:
+        with open(dbpath, "r") as flat_tlpdb:
+            all_packages, index_map = packages_from_tlpdb(flat_tlpdb)
+
+        return all_packages
+        
+    def packagesFromDatabaseWithPipe_(self, nspipe):
+        all_packages = None
+        
+        with os.fdopen(nspipe.fileHandleForReading().fileDescriptor(), "r") as flat_tlpdb:
             all_packages, index_map = packages_from_tlpdb(flat_tlpdb)
 
         return all_packages
@@ -37,8 +45,14 @@ class TLMPyDatabasePackage(TLMDatabasePackage):
     def description(self):
         return str(self)
         
+    def dealloc(self):
+        sys.stderr.write("dealloc %s\n" % (self._name))
+        
     # subclass of NSObject, so override -[NSObject init]
     def init(self):
+        self = super(TLMPyDatabasePackage, self).init()
+        if self is None: return None
+        
         self._name = None
         self._category = None
         self._shortdesc = None

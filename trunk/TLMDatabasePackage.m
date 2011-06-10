@@ -52,6 +52,13 @@
 
 @implementation TLMDatabasePackage
 
++ (NSArray *)packagesFromDatabaseWithPipe:(NSPipe *)aPipe;
+{
+    [NSException raise:@"SubclassResponsibility"
+                format:@"Must subclass %s and override the method %s.", object_getClassName(self), sel_getName(_cmd)];
+    return nil;    
+}
+
 + (NSArray *)packagesFromDatabaseAtPath:(NSString *)absolutePath;
 {
     [NSException raise:@"SubclassResponsibility"
