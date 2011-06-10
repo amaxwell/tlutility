@@ -60,7 +60,6 @@ typedef struct _TLMDatabaseVersion {
 }
 
 + (TLMDatabase *)databaseForURL:(NSURL *)aURL;
-+ (void)addDatabase:(TLMDatabase *)db forURL:(NSURL *)aURL;
 + (TLMDatabaseVersion)versionForMirrorURL:(NSURL *)aURL;
 - (void)reloadDatabase;
 

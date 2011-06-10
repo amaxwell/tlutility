@@ -48,6 +48,8 @@
 #define MIN_DATA_LENGTH 2048
 #define URL_TIMEOUT     30
 
+#define LOCAL_DB_KEY    @"local tlpdb"
+
 const TLMDatabaseYear TLMDatabaseUnknownYear = -1;
 
 NSString * const TLMDatabaseVersionCheckComplete = @"TLMDatabaseVersionCheckComplete";
@@ -97,9 +99,6 @@ static Class TLMPyDatabasePackage = Nil;
         _databases = [NSMutableDictionary new];
         [self _setupPython];
     }
-    TLMDatabase *db = [TLMDatabase new];
-    [db reloadDatabase];
-    [db release];
 }
 
 - (void)reloadDatabase;
@@ -126,33 +125,32 @@ static Class TLMPyDatabasePackage = Nil;
     
     NSArray *packages = [TLMPyDatabasePackage packagesFromDatabaseAtPath:temporaryPath];
     unlink([temporaryPath saneFileSystemRepresentation]);
-
-    fprintf(stderr, "%s\n", [[[packages objectAtIndex:0] description] saneFileSystemRepresentation]);
-    fprintf(stderr, "%s\n", [[[packages lastObject] description] saneFileSystemRepresentation]);
-
-//    for (TLMDatabasePackage *pkg in packages)
-//        fprintf(stderr, "%s\n", [[pkg name] UTF8String]);
     
     [self setPackages:packages];
     [self setLoadDate:[NSDate date]];
-    
+}
+
++ (TLMDatabase *)_databaseForKey:(id)aKey
+{
+    TLMDatabase *db = [_databases objectForKey:(aKey ? aKey : LOCAL_DB_KEY)];
+    if (nil == db) {
+        db = [TLMDatabase new];
+        [db setMirrorURL:aKey];
+        [db reloadDatabase];
+        [_databases setObject:db forKey:(aKey ? aKey : LOCAL_DB_KEY)];
+        [db release];
+    }
+    return db;
 }
 
 + (TLMDatabase *)localDatabase
 {
-    return nil;
+    return [self _databaseForKey:nil];
 }
 
 + (TLMDatabase *)databaseForURL:(NSURL *)aURL;
 {
-    return [_databases objectForKey:aURL];
-}
-
-+ (void)addDatabase:(TLMDatabase *)db forURL:(NSURL *)aURL;
-{
-    NSParameterAssert(db);
-    NSParameterAssert(aURL);
-    [_databases setObject:db forKey:aURL];
+    return [self _databaseForKey:aURL];
 }
 
 - (void)dealloc
