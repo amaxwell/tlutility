@@ -41,7 +41,6 @@
 #import <regex.h>
 #import "TLMLogServer.h"
 #import "TLMPreferenceController.h"
-#import <Python/Python.h>
 #import "TLMDatabasePackage.h"
 
 #define TLPDB_PATH      CFSTR("tlpkg/texlive.tlpdb")
@@ -78,27 +77,11 @@ NSString * const TLMDatabaseVersionCheckComplete = @"TLMDatabaseVersionCheckComp
 @synthesize loadDate = _loadDate;
 
 static NSMutableDictionary *_databases = nil;
-static Class TLMPyDatabasePackage = Nil;
-
-+ (void)_setupPython
-{
-    Py_Initialize();
-    char *script_path = strdup([[[NSBundle mainBundle] pathForAuxiliaryExecutable:@"parse_tlpdb.py"] saneFileSystemRepresentation]);
-    char *bundle_path = strdup([[[NSBundle mainBundle] bundlePath] saneFileSystemRepresentation]);
-    char *py_argv[] = { script_path, bundle_path };
-    PySys_SetArgv(sizeof(py_argv) / sizeof(char *), py_argv);
-    PyRun_SimpleFileExFlags(fopen(script_path, "r"), script_path, true, NULL);
-    free(script_path);
-    free(bundle_path);
-    TLMPyDatabasePackage = NSClassFromString(@"TLMPyDatabasePackage");
-}
 
 + (void)initialize
 {
-    if (nil == _databases) {
+    if (nil == _databases)
         _databases = [NSMutableDictionary new];
-        [self _setupPython];
-    }
 }
 
 - (void)reloadDatabase;
@@ -124,13 +107,10 @@ static Class TLMPyDatabasePackage = Nil;
     [dumpTask waitUntilExit];
     
     if ([dumpTask terminationStatus] == EXIT_SUCCESS) {
-        @try {
-            NSArray *packages = [TLMPyDatabasePackage packagesFromDatabaseAtPath:temporaryPath];
+        NSArray *packages = [TLMDatabasePackage packagesFromDatabaseAtPath:temporaryPath];
+        if (packages) {
             [self setPackages:packages];
             [self setLoadDate:[NSDate date]];
-        }
-        @catch (NSException *e) {
-            TLMLog(__func__, @"Caught exception while trying to parse tlpdb: %@", e);
         }
     }
     else {

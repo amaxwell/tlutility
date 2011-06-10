@@ -27,14 +27,15 @@ class TLMPyDatabasePackage(TLMDatabasePackage):
     """TeX Live Package"""
     
     @classmethod
-    def packagesFromDatabaseAtPath_(self, dbpath):
+    def _packagesFromDatabaseAtPath_(self, dbpath):
         all_packages = None
         with open(dbpath, "r") as flat_tlpdb:
             all_packages, index_map = packages_from_tlpdb(flat_tlpdb)
 
         return all_packages
-        
-    def packagesFromDatabaseWithPipe_(self, nspipe):
+    
+    @classmethod
+    def _packagesFromDatabaseWithPipe_(self, nspipe):
         all_packages = None
         
         with os.fdopen(nspipe.fileHandleForReading().fileDescriptor(), "r") as flat_tlpdb:
