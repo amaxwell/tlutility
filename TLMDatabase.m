@@ -104,14 +104,14 @@ static Class TLMPyDatabasePackage = Nil;
 - (void)reloadDatabase;
 {    
     NSString *tlmgrPath = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath];
-    BDSKTask *localDumpTask = [[BDSKTask new] autorelease];
-    [localDumpTask setLaunchPath:tlmgrPath];
+    BDSKTask *dumpTask = [[BDSKTask new] autorelease];
+    [dumpTask setLaunchPath:tlmgrPath];
     NSArray *arguments = nil;
     if ([self mirrorURL] != nil)
         arguments = [NSArray arrayWithObjects:@"--repository", [[self mirrorURL] absoluteString], @"dump-tlpdb", @"--remote", nil];
     else
         arguments = [NSArray arrayWithObjects:@"dump-tlpdb", @"--local", nil];
-    [localDumpTask setArguments:arguments];
+    [dumpTask setArguments:arguments];
 
     CFUUIDRef uuid = CFUUIDCreate(NULL);
     NSString *temporaryPath = [NSTemporaryDirectory() stringByAppendingPathComponent:[(id)CFUUIDCreateString(NULL, uuid) autorelease]];
@@ -119,15 +119,25 @@ static Class TLMPyDatabasePackage = Nil;
     // have to touch the file before using fileHandleForWriting:
     [[NSData data] writeToFile:temporaryPath atomically:NO];
     NSFileHandle *outputHandle = [NSFileHandle fileHandleForWritingAtPath:temporaryPath];
-    [localDumpTask setStandardOutput:outputHandle];
-    [localDumpTask launch];
-    [localDumpTask waitUntilExit];
+    [dumpTask setStandardOutput:outputHandle];
+    [dumpTask launch];
+    [dumpTask waitUntilExit];
     
-    NSArray *packages = [TLMPyDatabasePackage packagesFromDatabaseAtPath:temporaryPath];
+    if ([dumpTask terminationStatus] == EXIT_SUCCESS) {
+        @try {
+            NSArray *packages = [TLMPyDatabasePackage packagesFromDatabaseAtPath:temporaryPath];
+            [self setPackages:packages];
+            [self setLoadDate:[NSDate date]];
+        }
+        @catch (NSException *e) {
+            TLMLog(__func__, @"Caught exception while trying to parse tlpdb: %@", e);
+        }
+    }
+    else {
+        TLMLog(__func__, @"Dumping tlpdb from mirror %@ failed", [self mirrorURL]);
+    }
+
     unlink([temporaryPath saneFileSystemRepresentation]);
-    
-    [self setPackages:packages];
-    [self setLoadDate:[NSDate date]];
 }
 
 + (TLMDatabase *)_databaseForKey:(id)aKey
