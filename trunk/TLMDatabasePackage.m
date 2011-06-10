@@ -52,6 +52,13 @@
 
 @implementation TLMDatabasePackage
 
++ (NSArray *)packagesFromDatabaseAtPath:(NSString *)absolutePath;
+{
+    [NSException raise:@"SubclassResponsibility"
+                format:@"Must subclass %s and override the method %s.", object_getClassName(self), sel_getName(_cmd)];
+    return nil;
+}
+
 TLM_METHOD(NSString*, name)
 TLM_METHOD(NSString*, category)
 TLM_METHOD(NSString*, shortDescription)

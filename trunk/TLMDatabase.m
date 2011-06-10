@@ -37,12 +37,12 @@
  */
 
 #import "TLMDatabase.h"
+#import "BDSKTask.h"
 #import <regex.h>
 #import "TLMLogServer.h"
 #import "TLMPreferenceController.h"
 #import <Python/Python.h>
 #import "TLMDatabasePackage.h"
-#import <crt_externs.h>
 
 #define TLPDB_PATH      CFSTR("tlpkg/texlive.tlpdb")
 #define MIN_DATA_LENGTH 2048
@@ -72,40 +72,66 @@ NSString * const TLMDatabaseVersionCheckComplete = @"TLMDatabaseVersionCheckComp
 @implementation TLMDatabase
 
 @synthesize packages = _packages;
+@synthesize mirrorURL = _mirrorURL;
+@synthesize loadDate = _loadDate;
 
 static NSMutableDictionary *_databases = nil;
 
 + (void)initialize
 {
-    if (nil == _databases)
+    if (nil == _databases) {
         _databases = [NSMutableDictionary new];
+        Py_Initialize();
+    }
+    TLMDatabase *db = [TLMDatabase new];
+    [db reloadDatabase];
 }
 
-- (void)loadDatabase
-{
-#warning copied main() from test program
-    NSURL *aURL = [NSURL fileURLWithPath:@"/usr/local/texlive/2011/tlpkg/texlive.tlpdb"];
-    char *url_key = strdup([[aURL absoluteString] saneFileSystemRepresentation]);
-    
-    NSData *data = [NSData dataWithContentsOfURL:aURL];
+- (void)reloadDatabase;
+{    
+    NSString *tlmgrPath = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath];
+    BDSKTask *localDumpTask = [[BDSKTask new] autorelease];
+    [localDumpTask setLaunchPath:tlmgrPath];
+    NSArray *arguments = nil;
+    if ([self mirrorURL] != nil)
+        arguments = [NSArray arrayWithObjects:@"--repository", [[self mirrorURL] absoluteString], @"dump-tlpdb", @"--remote", nil];
+    else
+        arguments = [NSArray arrayWithObjects:@"dump-tlpdb", @"--local", nil];
+    [localDumpTask setArguments:arguments];
+
     NSString *tlpdbPath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"tlpdb_test.tlpdb"];
-    [data writeToFile:tlpdbPath atomically:NO];
-    char *temporary_tlpdb_path = strdup([tlpdbPath saneFileSystemRepresentation]);
-    
-    Py_Initialize();
+    [[NSData data] writeToFile:tlpdbPath atomically:NO];
+    [localDumpTask setStandardOutput:[NSFileHandle fileHandleForWritingAtPath:tlpdbPath]];
+    [localDumpTask launch];
+    [localDumpTask waitUntilExit];
+        
     char *script_path = strdup([[[NSBundle mainBundle] pathForAuxiliaryExecutable:@"parse_tlpdb.py"] saneFileSystemRepresentation]);
-    char *py_argv[] = { script_path, temporary_tlpdb_path, url_key, *(_NSGetArgv())[0] };
+    char *bundle_path = strdup([[[NSBundle mainBundle] bundlePath] saneFileSystemRepresentation]);
+    char *py_argv[] = { script_path, bundle_path };
     PySys_SetArgv(sizeof(py_argv) / sizeof(char *), py_argv);
     PyRun_SimpleFileExFlags(fopen(script_path, "r"), script_path, true, NULL);
     free(script_path);
-    free(temporary_tlpdb_path);
-    free(url_key);
-    unlink(temporary_tlpdb_path);
+    free(bundle_path);
     
-    TLMDatabase *db = [TLMDatabase databaseForURL:aURL];
-    for (TLMDatabasePackage *pkg in [db packages])
-        fprintf(stderr, "%s\n", [[pkg name] UTF8String]);
+    Class Package = NSClassFromString(@"TLMPyDatabasePackage");
+    NSArray *packages = [Package packagesFromDatabaseAtPath:tlpdbPath];
     
+    fprintf(stderr, "%s\n", [[[packages objectAtIndex:0] description] saneFileSystemRepresentation]);
+    fprintf(stderr, "%s\n", [[[packages lastObject] description] saneFileSystemRepresentation]);
+
+//    for (TLMDatabasePackage *pkg in packages)
+//        fprintf(stderr, "%s\n", [[pkg name] UTF8String]);
+
+    unlink([tlpdbPath saneFileSystemRepresentation]);
+    
+    [self setPackages:packages];
+    [self setLoadDate:[NSDate date]];
+    
+}
+
++ (TLMDatabase *)localDatabase
+{
+    return nil;
 }
 
 + (TLMDatabase *)databaseForURL:(NSURL *)aURL;
@@ -120,18 +146,11 @@ static NSMutableDictionary *_databases = nil;
     [_databases setObject:db forKey:aURL];
 }
 
-- (TLMDatabase *)initWithPackages:(NSArray *)packages;
-{
-    self = [super init];
-    if (self) {
-        _packages = [packages copy];
-    }
-    return self;
-}
-
 - (void)dealloc
 {
     [_packages release];
+    [_loadDate release];
+    [_mirrorURL release];
     [super dealloc];
 }
 
