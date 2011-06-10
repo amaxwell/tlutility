@@ -333,7 +333,7 @@ static NSMutableDictionary *_databases = nil;
         // NUL terminate the data, since it's arbitrary
         // FIXME: better to look for a newline and create NSString?
         if (tlpdb_str[[_tlpdbData length] - 1] != '\0')
-            [_tlpdbData appendBytes:"\0" length:1];
+            [_tlpdbData appendBytes:"" length:1];
         
         // !!! early return if there's no texlive.config package
         const char *head_str = "name 00texlive.config";
