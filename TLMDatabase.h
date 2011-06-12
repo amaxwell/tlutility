@@ -59,9 +59,12 @@ typedef struct _TLMDatabaseVersion {
     TLMDatabaseVersion  _version;
 }
 
++ (TLMDatabase *)localDatabase;
 + (TLMDatabase *)databaseForURL:(NSURL *)aURL;
 + (TLMDatabaseVersion)versionForMirrorURL:(NSURL *)aURL;
-- (void)reloadDatabase;
+
++ (NSArray *)packagesByMergingLocalWithMirror:(NSURL *)aURL;
+- (void)reloadDatabaseFromPath:(NSString *)absolutePath;
 
 @property (copy) NSArray *packages;
 @property (copy) NSURL *mirrorURL;
