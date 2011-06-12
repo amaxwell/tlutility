@@ -2,7 +2,7 @@
 
 import sys, os
 import objc
-from Foundation import NSBundle, NSURL
+from Foundation import NSBundle
 
 if __name__ == '__main__':
 
@@ -198,15 +198,23 @@ def packages_from_tlpdb(flat_tlpdb):
     last_key = None
     last_arch = None
 
-    for line in flat_tlpdb:
+    for line_idx, line in enumerate(flat_tlpdb):
                 
         line = line.strip("\r\n")
-    
+        
+        if line_idx == 0 and line.startswith("tlmgr: package repository "):
+            sys.stderr.write("should do something with %s\n" % (line[len("tlmgr: package repository "):]))
+            continue
+        
+        # comment lines; supported, but not currently used
+        if line.startswith("#"):
+            continue
+                
         if len(line) == 0:
-            all_packages.append(package)
-            index_map[package._name] = package_index
-            
-            package_index += 1
+            if package:
+                all_packages.append(package)
+                index_map[package._name] = package_index
+                package_index += 1
             package = None
             last_key = None
             last_arch = None
@@ -288,5 +296,5 @@ def packages_from_tlpdb(flat_tlpdb):
                 #assert False, "unhandled line %s" % (line)
                 
             last_key = key
-
+    
     return all_packages, index_map
