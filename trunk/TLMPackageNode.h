@@ -39,16 +39,19 @@
 #import <Cocoa/Cocoa.h>
 #import "TLMPackage.h"
 
+@class TLMDatabasePackage;
+
 @interface TLMPackageNode : NSObject <TLMInfo>
 {
 @private
-    NSString       *_name;
-    NSString       *_fullName;
-    NSString       *_description;
-    BOOL            _installed;
-    BOOL            _hasParent;
-    BOOL            _hasMixedStatus;
-    NSMutableArray *_children;
+    NSString           *_name;
+    NSString           *_fullName;
+    NSString           *_shortDescription;
+    BOOL                _installed;
+    BOOL                _hasParent;
+    BOOL                _hasMixedStatus;
+    NSMutableArray     *_children;
+    TLMDatabasePackage *_package;
 }
 
 - (BOOL)matchesSearchString:(NSString *)searchTerm;
@@ -62,8 +65,10 @@
 @property (readwrite) BOOL hasParent;
 @property (readonly) NSString *status;
 
+@property (readwrite, retain) TLMDatabasePackage *package;
+
 // returns YES if children have mixed installed/uninstalled status
 @property (readonly) BOOL hasMixedStatus;
-@property (readwrite, getter = isInstalled) BOOL installed;
+@property (readwrite, getter=isInstalled) BOOL installed;
 
 @end

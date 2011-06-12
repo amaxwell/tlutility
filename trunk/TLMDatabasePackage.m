@@ -114,6 +114,14 @@
     return packages;
 }
 
+- (NSUInteger)hash { return [[self name] hash]; }
+
+- (BOOL)isEqual:(id)object
+{
+    if ([object isKindOfClass:[self class]] == NO) return NO;
+    return [[self name] isEqualToString:[object name]];
+}
+
 TLM_METHOD(NSString*, name)
 TLM_METHOD(NSString*, category)
 TLM_METHOD(NSString*, shortDescription)

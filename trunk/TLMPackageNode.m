@@ -37,16 +37,17 @@
  */
 
 #import "TLMPackageNode.h"
-
+#import "TLMDatabasePackage.h"
 
 @implementation TLMPackageNode
 
 @synthesize name = _name;
-@synthesize shortDescription = _description;
+@synthesize fullName = _fullName;
 @synthesize installed = _installed;
 @synthesize hasParent = _hasParent;
-@synthesize fullName = _fullName;
 @synthesize hasMixedStatus = _hasMixedStatus;
+@synthesize package = _package;
+@synthesize shortDescription = _shortDescription;
 
 static NSString *_separatorString = nil;
 
@@ -66,8 +67,8 @@ static NSString *_separatorString = nil;
     NSMutableString *string = [NSMutableString new];
     [string appendString:_name];
     [string appendString:_separatorString];
-    if (_description)
-        [string appendString:_description];
+    if ([self shortDescription])
+        [string appendString:[self shortDescription]];
     
     for (TLMPackageNode *child in _children) {
         [string appendString:_separatorString];
@@ -86,8 +87,9 @@ static NSString *_separatorString = nil;
 {
     [_name release];
     [_fullName release];
-    [_description release];
     [_children release];
+    [_package release];
+    [_shortDescription release];
     [super dealloc];
 }
 

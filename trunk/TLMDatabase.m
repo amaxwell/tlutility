@@ -42,6 +42,7 @@
 #import "TLMLogServer.h"
 #import "TLMPreferenceController.h"
 #import "TLMDatabasePackage.h"
+#import "TLMPackageNode.h"
 
 #define TLPDB_PATH      CFSTR("tlpkg/texlive.tlpdb")
 #define MIN_DATA_LENGTH 2048
@@ -84,40 +85,14 @@ static NSMutableDictionary *_databases = nil;
         _databases = [NSMutableDictionary new];
 }
 
-- (void)reloadDatabase;
+- (void)reloadDatabaseFromPath:(NSString *)absolutePath
 {    
-    NSString *tlmgrPath = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath];
-    BDSKTask *dumpTask = [[BDSKTask new] autorelease];
-    [dumpTask setLaunchPath:tlmgrPath];
-    NSArray *arguments = nil;
-    if ([self mirrorURL] != nil)
-        arguments = [NSArray arrayWithObjects:@"--repository", [[self mirrorURL] absoluteString], @"dump-tlpdb", @"--remote", nil];
-    else
-        arguments = [NSArray arrayWithObjects:@"dump-tlpdb", @"--local", nil];
-    [dumpTask setArguments:arguments];
-
-    CFUUIDRef uuid = CFUUIDCreate(NULL);
-    NSString *temporaryPath = [NSTemporaryDirectory() stringByAppendingPathComponent:[(id)CFUUIDCreateString(NULL, uuid) autorelease]];
-    if (uuid) CFRelease(uuid);
-    // have to touch the file before using fileHandleForWriting:
-    [[NSData data] writeToFile:temporaryPath atomically:NO];
-    NSFileHandle *outputHandle = [NSFileHandle fileHandleForWritingAtPath:temporaryPath];
-    [dumpTask setStandardOutput:outputHandle];
-    [dumpTask launch];
-    [dumpTask waitUntilExit];
-    
-    if ([dumpTask terminationStatus] == EXIT_SUCCESS) {
-        NSArray *packages = [TLMDatabasePackage packagesFromDatabaseAtPath:temporaryPath];
-        if (packages) {
-            [self setPackages:packages];
-            [self setLoadDate:[NSDate date]];
-        }
+    NSParameterAssert([NSThread isMainThread]);
+    NSArray *packages = [TLMDatabasePackage packagesFromDatabaseAtPath:absolutePath];
+    if (packages) {
+        [self setPackages:packages];
+        [self setLoadDate:[NSDate date]];
     }
-    else {
-        TLMLog(__func__, @"Dumping tlpdb from mirror %@ failed", [self mirrorURL]);
-    }
-
-    unlink([temporaryPath saneFileSystemRepresentation]);
 }
 
 + (TLMDatabase *)_databaseForKey:(id)aKey
@@ -126,14 +101,98 @@ static NSMutableDictionary *_databases = nil;
     if (nil == db) {
         db = [TLMDatabase new];
         [db setMirrorURL:aKey];
-        [db reloadDatabase];
         [_databases setObject:db forKey:(aKey ? aKey : LOCAL_DB_KEY)];
         [db release];
     }
     return db;
 }
 
-+ (TLMDatabase *)localDatabase
++ (NSArray *)packagesByMergingLocalWithMirror:(NSURL *)aURL;
+{
+    TLMDatabase *mirror = [self databaseForURL:aURL];
+    NSAssert1([[mirror packages] count], @"No packages in mirror database %@", mirror);
+    TLMDatabase *local = [self localDatabase];
+    NSAssert([[local packages] count], @"No packages in local database");
+    
+    NSSet *localPackageSet = [NSSet setWithArray:[local packages]];
+    NSMutableArray *packageNodes = [NSMutableArray arrayWithCapacity:[localPackageSet count]];
+    
+    NSMutableArray *orphanedNodes = [NSMutableArray array];
+    CFAbsoluteTime t = CFAbsoluteTimeGetCurrent();
+    
+    // these should be new packages or of the wrong binary architecture
+    for (TLMDatabasePackage *pkg in [mirror packages]) {
+        NSString *name = [pkg name];
+        TLMPackageNode *node = [TLMPackageNode new];
+        
+        // needed for performance & backward compatibility
+        [node setFullName:name];
+        
+        // needed for backward compatibility
+        [node setShortDescription:[pkg shortDescription]];
+        
+        if ([localPackageSet containsObject:pkg])
+            [node setInstalled:YES];
+        
+        NSRange r = [name rangeOfString:@"."];
+
+        if (r.length) {
+            [node setName:[name substringFromIndex:NSMaxRange(r)]];
+            [node setHasParent:YES];
+            [node setPackage:pkg];
+            TLMPackageNode *last = [packageNodes lastObject];
+            if (last && [[node fullName] hasPrefix:[last fullName]]) {
+                [last addChild:node];
+            }
+            else {
+                [orphanedNodes addObject:node];
+            }
+            [node release];
+        }
+        else {
+            [node setName:name];
+            [node setPackage:pkg];
+            [packageNodes addObject:node];
+            [node release];
+        }
+
+//        if ([localPackageSet containsObject:pkg] == NO) {
+//            fprintf(stderr, "%s\n", [[pkg name] UTF8String]);
+//        }
+    }
+
+    fprintf(stderr, "took %.2f seconds to create package nodes with %lu orphaned\n", CFAbsoluteTimeGetCurrent() - t, [orphanedNodes count]);
+    t = CFAbsoluteTimeGetCurrent();
+    
+    // this is a lot slower with PyObjC objects if we have to call -package each time
+    for (TLMPackageNode *node in orphanedNodes) {
+        
+        TLMPackageNode *parent = nil;
+        
+        // linear search through all nodes; could sort and use binary search
+        for (parent in packageNodes) {
+            
+            if ([[node fullName] hasPrefix:[parent fullName]]) {
+                [parent addChild:node];
+                break;
+            }
+        }
+        
+        if (nil == parent) {
+            // change to full name, add to the flattened list, and log
+            [node setName:[node fullName]];
+            [packageNodes addObject:node];
+            // ignore the special TL nodes and the win32 junk
+            if ([[node fullName] hasPrefix:@"00texlive"] == NO && [[node fullName] hasSuffix:@".win32"] == NO)
+                TLMLog(__func__, @"Package \"%@\" has no parent", [node fullName]);                        
+        }
+    }
+    fprintf(stderr, "took %.2f seconds to deal with orphans\n", CFAbsoluteTimeGetCurrent() - t);
+    
+    return packageNodes;
+}
+
++ (TLMDatabase *)localDatabase;
 {
     return [self _databaseForKey:nil];
 }

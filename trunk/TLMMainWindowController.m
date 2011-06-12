@@ -55,6 +55,7 @@
 #import "TLMOptionOperation.h"
 #import "TLMBackupOperation.h"
 #import "TLMBackupListOperation.h"
+#import "TLMLoadDatabaseOperation.h"
 
 #import "TLMSplitView.h"
 #import "TLMStatusWindow.h"
@@ -70,6 +71,9 @@
 #import "TLMProgressIndicatorCell.h"
 #import "TLMAutobackupController.h"
 #import "TLMLaunchAgentController.h"
+
+#import "TLMDatabase.h"
+#import "TLMDatabasePackage.h"
 
 @interface TLMMainWindowController (Private)
 // only declare here if reorganizing the implementation isn't practical
@@ -851,6 +855,30 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     [self _updateURLView];
 }
 
+- (void)_handleLoadDatabaseFinishedNotification:(NSNotification *)aNote
+{
+    TLMLoadDatabaseOperation *op = [aNote object];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:TLMOperationFinishedNotification object:op];
+    NSArray *packageNodes = [TLMDatabase packagesByMergingLocalWithMirror:[op updateURL]];
+    
+    [_packageListDataSource setPackageNodes:packageNodes];
+    [_packageListDataSource setRefreshing:NO];
+    [_packageListDataSource setNeedsUpdate:NO];
+    
+    NSString *statusString = nil;
+    
+    if ([op isCancelled])
+        statusString = NSLocalizedString(@"Listing Cancelled", @"main window status string");
+    else if ([op failed])
+        statusString = NSLocalizedString(@"Listing Failed", @"main window status string");
+    
+    [self _displayStatusString:statusString dataSource:_packageListDataSource];
+    [_packageListDataSource setLastUpdateURL:[op updateURL]];
+    [self _updateURLView];
+    
+
+}
+
 - (void)_handleListBackupsFinishedNotification:(NSNotification *)aNote
 {
     TLMBackupListOperation *op = [aNote object];
@@ -879,11 +907,15 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 {
     [self _displayStatusString:nil dataSource:_packageListDataSource];
     // disable refresh action for this view
-    [_packageListDataSource setRefreshing:YES];
-    TLMListOperation *op = [[TLMListOperation alloc] initWithLocation:location offline:offline];
-    [self _addOperation:op selector:@selector(_handleListFinishedNotification:)];
-    [op release];
-    TLMLog(__func__, @"Refreshing list of all packages%C", 0x2026);           
+//    [_packageListDataSource setRefreshing:YES];
+//    TLMListOperation *op = [[TLMListOperation alloc] initWithLocation:location offline:offline];
+//    [self _addOperation:op selector:@selector(_handleListFinishedNotification:)];
+//    [op release];
+    TLMLog(__func__, @"Refreshing list of all packages%C", 0x2026);
+    
+    TLMLoadDatabaseOperation *op2 = [[TLMLoadDatabaseOperation alloc] initWithLocation:location offline:offline];
+    [self _addOperation:op2 selector:@selector(_handleLoadDatabaseFinishedNotification:)];
+    [op2 release];
 }
 
 - (void)_handleInstallFinishedNotification:(NSNotification *)aNote
