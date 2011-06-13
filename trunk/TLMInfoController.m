@@ -45,6 +45,9 @@
 #import "NSMenu_TLMExtensions.h"
 #import "TLMOutlineView.h"
 
+#import "TLMDatabase.h"
+#import "TLMDatabasePackage.h"
+
 @interface _TLMFileObject : NSObject
 {
 @private
@@ -200,9 +203,9 @@ static NSString * const TLMInfoFileViewIconScaleKey = @"TLMInfoFileViewIconScale
             id <TLMInfoOutput> output = [TLMOutputParser outputWithInfoString:result docURLs:docURLs];
             [[_textView textStorage] setAttributedString:[output attributedString]];
             
-            [_runfiles setArray:[output runfiles]];
-            [_sourcefiles setArray:[output sourcefiles]];
-            [_docfiles setArray:[output docfiles]];
+            [_runfiles setArray:[output runFiles]];
+            [_sourcefiles setArray:[output sourceFiles]];
+            [_docfiles setArray:[output docFiles]];
             [_outlineView reloadData];
             [_outlineView expandItem:nil expandChildren:YES];
             
@@ -218,6 +221,24 @@ static NSString * const TLMInfoFileViewIconScaleKey = @"TLMInfoFileViewIconScale
     }
 }
 
+- (void)_updateWithPackage:(TLMDatabasePackage *)package
+{
+    if ([[self window] isVisible] == NO)
+        [self showWindow:self];
+    
+    [[self window] setTitle:[package name]];
+    [_textView setSelectedRange:NSMakeRange(0, 0)];
+    [[_textView textStorage] setAttributedString:[package attributedString]];
+    
+    [_runfiles setArray:[package runFiles]];
+    [_sourcefiles setArray:[package sourceFiles]];
+    [_docfiles setArray:[package docFiles]];
+    
+    [_outlineView reloadData];
+    [_outlineView expandItem:nil expandChildren:YES];
+    
+}
+
 - (void)showInfoForPackage:(id <TLMInfo>)package location:(NSURL *)mirrorURL
 {
     // always clear the queue; this will trigger notifications for any cancelled operations
@@ -225,12 +246,21 @@ static NSString * const TLMInfoFileViewIconScaleKey = @"TLMInfoFileViewIconScale
     
     if (nil != package) {
         
-        TLMInfoOperation *op = [[TLMInfoOperation alloc] initWithPackageName:[package infoName] location:mirrorURL];
+        TLMInfoOperation *op = [[[TLMInfoOperation alloc] initWithPackageName:[package infoName] location:mirrorURL] autorelease];
         if (op) {
             
             // clear previous title and file proxy icon
             [[self window] setTitle:[NSString stringWithFormat:NSLocalizedString(@"Searching%C", @"info panel title"), 0x2026]];
             [[self window] setRepresentedURL:nil];
+            
+            for (TLMDatabasePackage *pkg in [[TLMDatabase databaseForURL:mirrorURL] packages]) {
+                
+                if ([[pkg name] isEqualToString:[package infoName]]) {
+                    [self _updateWithPackage:pkg];
+                    return;
+                }
+            }
+        
             
             [self setFileObjects:nil];
             [_fileView reloadIcons];
@@ -249,7 +279,6 @@ static NSString * const TLMInfoFileViewIconScaleKey = @"TLMInfoFileViewIconScale
                                                          name:TLMOperationFinishedNotification 
                                                        object:op];
             [_infoQueue addOperation:op];
-            [op release];
             
             if ([[self window] isVisible] == NO)
                 [self showWindow:self];

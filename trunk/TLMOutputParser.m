@@ -51,9 +51,9 @@
     NSArray            *_docfiles;
 }
 @property (nonatomic, copy) NSAttributedString *attributedString;
-@property (nonatomic, copy) NSArray *runfiles;
-@property (nonatomic, copy) NSArray *sourcefiles;
-@property (nonatomic, copy) NSArray *docfiles;
+@property (nonatomic, copy) NSArray *runFiles;
+@property (nonatomic, copy) NSArray *sourceFiles;
+@property (nonatomic, copy) NSArray *docFiles;
 @end
 
 
@@ -456,9 +456,9 @@ static NSArray * __TLMCheckFileExistence(NSArray *inputURLs)
     
     [output setAttributedString:attrString];
     [attrString release];
-    [output setRunfiles:runURLs];
-    [output setSourcefiles:sourceURLs];
-    [output setDocfiles:docURLs];
+    [output setRunFiles:runURLs];
+    [output setSourceFiles:sourceURLs];
+    [output setDocFiles:docURLs];
         
     return output;
 }
@@ -673,9 +673,9 @@ static NSArray * __TLMCheckFileExistence(NSArray *inputURLs)
 @implementation _TLMInfoOutput
 
 @synthesize attributedString = _attributedString;
-@synthesize runfiles = _runfiles;
-@synthesize sourcefiles = _sourcefiles;
-@synthesize docfiles = _docfiles;
+@synthesize runFiles = _runfiles;
+@synthesize sourceFiles = _sourcefiles;
+@synthesize docFiles = _docfiles;
 
 - (void)dealloc
 {
