@@ -78,6 +78,7 @@
 @interface TLMMainWindowController (Private)
 // only declare here if reorganizing the implementation isn't practical
 - (void)_refreshCurrentDataSourceIfNeeded;
+- (void)_refreshLocalDatabase;
 @end
 
 
@@ -221,6 +222,9 @@ static char _TLMOperationQueueOperationContext;
     
     // checkbox in IB doesn't work?
     [[[self window] toolbar] setAutosavesConfiguration:YES];    
+    
+    // for info window; TL 2011 and later only
+    [self _refreshLocalDatabase];
 }
 
 - (NSString *)windowNibName { return @"MainWindow"; }
@@ -503,7 +507,8 @@ static char _TLMOperationQueueOperationContext;
 {
     // avoid the tlmgr check when installing
     if (op && ([_currentListDataSource isEqual:_installDataSource] || [self _checkCommandPathAndWarn:YES])) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:sel name:TLMOperationFinishedNotification object:op];
+        if (NULL != sel)
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:sel name:TLMOperationFinishedNotification object:op];
         [[TLMReadWriteOperationQueue defaultQueue] addOperation:op];
     }
 }
@@ -622,6 +627,17 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     [self _displayStatusString:statusString dataSource:_updateListDataSource];
 }
 
+- (void)_refreshLocalDatabase
+{
+    if ([[TLMPreferenceController sharedPreferenceController] texliveYear] < 2011) {
+        TLMLog(__func__, @"Updating local package database");
+        NSURL *mirror = [[TLMPreferenceController sharedPreferenceController] defaultServerURL];
+        TLMLoadDatabaseOperation *op = [[TLMLoadDatabaseOperation alloc] initWithLocation:mirror offline:YES];
+        [self _addOperation:op selector:NULL];
+        [op release];
+    }   
+}
+
 - (void)_refreshUpdatedPackageListFromLocation:(NSURL *)location
 {
     [self _displayStatusString:nil dataSource:_updateListDataSource];
@@ -686,6 +702,8 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
             
         }
         else {
+            
+            [self _refreshLocalDatabase];
             
             [_updateListDataSource setNeedsUpdate:YES];
             [_packageListDataSource setNeedsUpdate:YES];
@@ -859,9 +877,8 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 {
     TLMLoadDatabaseOperation *op = [aNote object];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:TLMOperationFinishedNotification object:op];
-    NSArray *packageNodes = [TLMDatabase packagesByMergingLocalWithMirror:[op updateURL]];
     
-    [_packageListDataSource setPackageNodes:packageNodes];
+    [_packageListDataSource setPackageNodes:[TLMDatabase packagesByMergingLocalWithMirror:[op updateURL]]];
     [_packageListDataSource setRefreshing:NO];
     [_packageListDataSource setNeedsUpdate:NO];
     
@@ -875,8 +892,6 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     [self _displayStatusString:statusString dataSource:_packageListDataSource];
     [_packageListDataSource setLastUpdateURL:[op updateURL]];
     [self _updateURLView];
-    
-
 }
 
 - (void)_handleListBackupsFinishedNotification:(NSNotification *)aNote
@@ -907,15 +922,20 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 {
     [self _displayStatusString:nil dataSource:_packageListDataSource];
     // disable refresh action for this view
-//    [_packageListDataSource setRefreshing:YES];
-//    TLMListOperation *op = [[TLMListOperation alloc] initWithLocation:location offline:offline];
-//    [self _addOperation:op selector:@selector(_handleListFinishedNotification:)];
-//    [op release];
+    [_packageListDataSource setRefreshing:YES];
     TLMLog(__func__, @"Refreshing list of all packages%C", 0x2026);
     
-    TLMLoadDatabaseOperation *op2 = [[TLMLoadDatabaseOperation alloc] initWithLocation:location offline:offline];
-    [self _addOperation:op2 selector:@selector(_handleLoadDatabaseFinishedNotification:)];
-    [op2 release];
+    if ([[TLMPreferenceController sharedPreferenceController] texliveYear] < 2011) {
+        TLMLog(__func__, @"Using legacy code for listing packages.  Hopefully it still works.");
+        TLMListOperation *op = [[TLMListOperation alloc] initWithLocation:location offline:offline];
+        [self _addOperation:op selector:@selector(_handleListFinishedNotification:)];
+        [op release];
+    }
+    else {
+        TLMLoadDatabaseOperation *op = [[TLMLoadDatabaseOperation alloc] initWithLocation:location offline:offline];
+        [self _addOperation:op selector:@selector(_handleLoadDatabaseFinishedNotification:)];
+        [op release];
+    }
 }
 
 - (void)_handleInstallFinishedNotification:(NSNotification *)aNote
@@ -931,6 +951,8 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
         [alert beginSheetModalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];                    
     }
     else if ([op isCancelled] == NO) {
+        
+        [self _refreshLocalDatabase];
         
         [_updateListDataSource setNeedsUpdate:YES];
         [_packageListDataSource setNeedsUpdate:YES];
