@@ -85,7 +85,7 @@
     if (NO == _offline) {
         dumpTask = [[BDSKTask new] autorelease];
         [dumpTask setLaunchPath:tlmgrPath];
-        arguments = arguments = [NSArray arrayWithObjects:@"--repository", [[self updateURL] absoluteString], @"dump-tlpdb", @"--remote", nil];
+        arguments = [NSArray arrayWithObjects:@"--repository", [[self updateURL] absoluteString], @"dump-tlpdb", @"--remote", nil];
         [dumpTask setArguments:arguments];
         [dumpTask setStandardOutput:[NSPipe pipe]];
         [dumpTask launch];

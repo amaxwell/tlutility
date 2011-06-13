@@ -314,7 +314,7 @@ static NSArray * __TLMURLsFromTexdocOutput2(NSString *outputString)
     [task waitUntilExit];
     status = [task terminationStatus];
     
-    return [task outputString] ? __TLMURLsFromTexdocOutput2([task outputString]) : nil;
+    return (status == EXIT_SUCCESS && [task outputString]) ? __TLMURLsFromTexdocOutput2([task outputString]) : nil;
 
 }    
 
