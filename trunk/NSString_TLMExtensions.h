@@ -43,5 +43,6 @@
 
 + (NSString *)stringWithFileSystemRepresentation:(const char *)cstr;
 - (const char *)saneFileSystemRepresentation;
+- (NSComparisonResult)localizedCaseInsensitiveNumericCompare:(NSString *)aStr;
 
 @end
