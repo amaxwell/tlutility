@@ -71,6 +71,7 @@ NSString * const TLMEnableNetInstall = @"TLMEnableNetInstall";                  
 @interface TLMPreferenceController ()
 
 @property (readwrite, copy) NSURL *legacyRepositoryURL;
+@property (readwrite, copy) NSURL *installDirectory;
 
 @end
 
@@ -89,6 +90,7 @@ NSString * const TLMEnableNetInstall = @"TLMEnableNetInstall";                  
 @synthesize _autoinstallCheckBox;
 @synthesize defaultServers = _servers;
 @synthesize legacyRepositoryURL = _legacyRepositoryURL;
+@synthesize installDirectory = _installDirectoryURL;
 
 // Do not use directly!  File scope only because pthread_once doesn't take an argument.
 static id _sharedInstance = nil;
@@ -101,6 +103,32 @@ static void __TLMPrefControllerInit() { _sharedInstance = [TLMPreferenceControll
     return _sharedInstance;
 }
 
+- (NSURL *)_installDirectory
+{    
+    // kpsewhich -var-value=SELFAUTOPARENT
+    NSString *kpsewhichPath = [self kpsewhichAbsolutePath];
+    NSURL *serverURL = nil;
+    if ([[NSFileManager defaultManager] isExecutableFileAtPath:kpsewhichPath]) {
+        TLMTask *task = [TLMTask new];
+        [task setLaunchPath:kpsewhichPath];
+        [task setArguments:[NSArray arrayWithObject:@"-var-value=SELFAUTOPARENT"]];
+        [task launch];
+        [task waitUntilExit];
+        if ([task terminationStatus] == 0 && [task outputString]) {
+            NSString *str = [[task outputString] stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+            serverURL = [NSURL fileURLWithPath:str isDirectory:YES];
+        }
+        else {
+            TLMLog(__func__, @"kpsewhich returned an error: %@", [task errorString]);
+        }
+        [task release];
+    }
+    else {
+        TLMLog(__func__, @"no kpsewhich executable at %@", kpsewhichPath);
+    }
+    return serverURL;
+}
+
 - (void)_resetVersions
 {
     @synchronized(self) {
@@ -110,6 +138,7 @@ static void __TLMPrefControllerInit() { _sharedInstance = [TLMPreferenceControll
         _versions.tlmgrVersion = -1;
         _versions.isDevelopment = NO;
         [self setLegacyRepositoryURL:nil];
+        [self setInstallDirectory:[self _installDirectory]];
     }    
 }
 
@@ -151,6 +180,8 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
         _versions.tlmgrVersion = -1;
         _versions.isDevelopment = NO;
         
+        _installDirectoryURL = [[self _installDirectory] copy];
+        
         if ([[NSFileManager defaultManager] fileExistsAtPath:TEXDIST_PATH]) {
             FSEventStreamContext ctxt = { 0, self, CFRetain, CFRelease, CFCopyDescription };
             CFArrayRef paths = (CFArrayRef)[NSArray arrayWithObject:TEXDIST_PATH];
@@ -186,6 +217,7 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
     [_autoremoveCheckBox release];
     [_autoinstallCheckBox release];
     [_setCommandLineServerCheckbox release];
+    [_installDirectoryURL release];
     [super dealloc];
 }
 
@@ -418,12 +450,12 @@ static NSURL * __TLMParseLocationOption(NSString *location)
 {
     [_texbinPathControl setURL:aURL];
     [[NSUserDefaults standardUserDefaults] setObject:[aURL path] forKey:TLMTexBinPathPreferenceKey];
-        
-    [self _resetVersions];
-    
+            
     // update environment, or tlmgr will be non-functional
     [TLMAppController updatePathEnvironment];
     
+    [self _resetVersions];
+
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:TLMDisableVersionMismatchWarningKey];
     [self updateUI];
 }
@@ -840,32 +872,6 @@ static NSURL * __TLMParseLocationOption(NSString *location)
 {
     NSString *texbinPath = [[NSUserDefaults standardUserDefaults] objectForKey:TLMTexBinPathPreferenceKey];
     return [[texbinPath stringByAppendingPathComponent:KPSEWHICH_CMD] stringByStandardizingPath];
-}
-
-- (NSURL *)installDirectory
-{    
-    // kpsewhich -var-value=SELFAUTOPARENT
-    NSString *kpsewhichPath = [self kpsewhichAbsolutePath];
-    NSURL *serverURL = nil;
-    if ([[NSFileManager defaultManager] isExecutableFileAtPath:kpsewhichPath]) {
-        TLMTask *task = [TLMTask new];
-        [task setLaunchPath:kpsewhichPath];
-        [task setArguments:[NSArray arrayWithObject:@"-var-value=SELFAUTOPARENT"]];
-        [task launch];
-        [task waitUntilExit];
-        if ([task terminationStatus] == 0 && [task outputString]) {
-            NSString *str = [[task outputString] stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]];
-            serverURL = [NSURL fileURLWithPath:str isDirectory:YES];
-        }
-        else {
-            TLMLog(__func__, @"kpsewhich returned an error: %@", [task errorString]);
-        }
-        [task release];
-    }
-    else {
-        TLMLog(__func__, @"no kpsewhich executable at %@", kpsewhichPath);
-    }
-    return serverURL;
 }
 
 - (NSString *)_backupDirOption

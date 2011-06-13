@@ -70,6 +70,7 @@ extern NSString * const TLMEnableNetInstall;
     BOOL                 _hasPendingServerEdit;
     NSUInteger           _pendingOptionChangeCount;
     NSURL               *_legacyRepositoryURL;
+    NSURL               *_installDirectoryURL;
     FSEventStreamRef     _fseventStream;
     struct __versions {
         TLMDatabaseYear repositoryYear;
@@ -113,7 +114,7 @@ extern NSString * const TLMEnableNetInstall;
 @property (readonly) NSURL *validServerURL;
 
 // returns the local installation directory (/usr/local/texlive/2009)
-@property (readonly) NSURL *installDirectory;
+@property (readonly, copy) NSURL *installDirectory;
 
 // adds tlmgr to TLMTexBinPathPreferenceKey, standardizes path
 @property (readonly) NSString *tlmgrAbsolutePath;
@@ -131,6 +132,7 @@ extern NSString * const TLMEnableNetInstall;
 @property (readonly) BOOL autoInstall;
 @property (readonly) BOOL autoRemove;
 
+@property (readonly) NSString *kpsewhichAbsolutePath;
 @property (readonly) BOOL tlmgrSupportsPersistentDownloads;
 @property (readonly) TLMDatabaseYear texliveYear;
 
