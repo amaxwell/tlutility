@@ -42,9 +42,11 @@
 @interface TLMLoadDatabaseOperation : TLMOperation
 {
 @private
-    NSArray *_packageNodes;
-    NSURL   *_updateURL;
-    BOOL     _offline;
+    NSArray       *_packageNodes;
+    NSURL         *_updateURL;
+    BOOL           _offline;
+    NSMutableData *_dumpError;
+    NSMutableData *_parseError;
 }
 
 // location must be non-nil; if offline is YES, only locally installed packages will be shown
