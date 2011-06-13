@@ -318,11 +318,145 @@ static NSArray * __TLMURLsFromTexdocOutput2(NSString *outputString)
 
 }    
 
-- (void)_updateWithPackage:(TLMDatabasePackage *)package
+- (NSAttributedString *)_attributedStringForPackage:(TLMDatabasePackage *)package docURLs:(NSArray *)docURLs
 {
-    if ([[self window] isVisible] == NO)
-        [self showWindow:self];
+    NSMutableAttributedString *attrString = [[[NSMutableAttributedString alloc] init] autorelease];
     
+    NSString *value;
+    NSUInteger previousLength;
+    NSFont *userFont = [NSFont userFontOfSize:0.0];
+    NSFont *boldFont = [[NSFontManager sharedFontManager] convertFont:userFont toHaveTrait:NSBoldFontMask];
+    
+    value = [package name];
+    if (value) {
+        previousLength = [attrString length];
+        [[attrString mutableString] appendString:NSLocalizedString(@"Package:", @"heading in info panel")];
+        [attrString addAttribute:NSFontAttributeName value:boldFont range:NSMakeRange(previousLength, [attrString length] - previousLength)];
+        
+        previousLength = [attrString length];
+        [[attrString mutableString] appendFormat:@" %@\n\n", value];
+        [attrString addAttribute:NSFontAttributeName value:userFont range:NSMakeRange(previousLength, [attrString length] - previousLength)];
+    }
+    
+    value = [package shortDescription];
+    if (value) {
+        previousLength = [attrString length];
+        [[attrString mutableString] appendString:NSLocalizedString(@"Summary:", @"heading in info panel")];
+        [attrString addAttribute:NSFontAttributeName value:boldFont range:NSMakeRange(previousLength, [attrString length] - previousLength)];
+        
+        previousLength = [attrString length];
+        [[attrString mutableString] appendFormat:@" %@\n\n", value];
+        [attrString addAttribute:NSFontAttributeName value:userFont range:NSMakeRange(previousLength, [attrString length] - previousLength)];
+    }
+    
+    value = [[[TLMDatabase localDatabase] packages] containsObject:package] ? @"yes" : @"no";
+    if (value) {
+        previousLength = [attrString length];
+        [[attrString mutableString] appendString:NSLocalizedString(@"Status:", @"heading in info panel")];
+        [attrString addAttribute:NSFontAttributeName value:boldFont range:NSMakeRange(previousLength, [attrString length] - previousLength)];
+        if ([value caseInsensitiveCompare:@"yes"] == NSOrderedSame) {
+            value = NSLocalizedString(@"Installed", @"status for package");
+        }
+        else {
+            value = NSLocalizedString(@"Not installed", @"status for package");
+        }
+        previousLength = [attrString length];
+        [[attrString mutableString] appendFormat:@" %@\n\n", value];
+        [attrString addAttribute:NSFontAttributeName value:userFont range:NSMakeRange(previousLength, [attrString length] - previousLength)];
+    }
+    
+    value = [package longDescription];
+    if (value) {
+        previousLength = [attrString length];
+        [[attrString mutableString] appendString:NSLocalizedString(@"Description:\n", @"heading in info panel")];
+        [attrString addAttribute:NSFontAttributeName value:boldFont range:NSMakeRange(previousLength, [attrString length] - previousLength)];
+        
+        previousLength = [attrString length];
+        [[attrString mutableString] appendFormat:@"%@\n", value];
+        [attrString addAttribute:NSFontAttributeName value:userFont range:NSMakeRange(previousLength, [attrString length] - previousLength)];
+    }
+        
+    // documentation from texdoc
+    if ([docURLs count]) {
+        previousLength = [attrString length];
+        [[attrString mutableString] appendString:NSLocalizedString(@"\nDocumentation:\n", @"heading in info panel")];
+        [attrString addAttribute:NSFontAttributeName value:boldFont range:NSMakeRange(previousLength, [attrString length] - previousLength)];
+        
+        for (NSURL *docURL in docURLs) {
+            previousLength = [attrString length];
+            [[attrString mutableString] appendString:[[docURL path] lastPathComponent]];
+            [attrString addAttribute:NSFontAttributeName value:userFont range:NSMakeRange(previousLength, [attrString length] - previousLength)];
+            [attrString addAttribute:NSLinkAttributeName value:docURL range:NSMakeRange(previousLength, [attrString length] - previousLength)];
+            [attrString addAttribute:NSCursorAttributeName value:[NSCursor pointingHandCursor] range:NSMakeRange(previousLength, [attrString length] - previousLength)];
+            
+            previousLength = [attrString length];
+            [[attrString mutableString] appendString:@"\n"];
+            [attrString removeAttribute:NSLinkAttributeName range:NSMakeRange(previousLength, [attrString length] - previousLength)];
+        }        
+    }
+    
+    NSArray *runURLs = [package runFiles];
+    if ([runURLs count]) {
+        previousLength = [attrString length];
+        [[attrString mutableString] appendString:NSLocalizedString(@"\nRun Files:\n", @"heading in info panel")];
+        [attrString addAttribute:NSFontAttributeName value:boldFont range:NSMakeRange(previousLength, [attrString length] - previousLength)];
+        
+        for (NSURL *aURL in runURLs) {
+            previousLength = [attrString length];
+            [[attrString mutableString] appendString:[[aURL path] lastPathComponent]];
+            [attrString addAttribute:NSFontAttributeName value:userFont range:NSMakeRange(previousLength, [attrString length] - previousLength)];
+            [attrString addAttribute:NSLinkAttributeName value:aURL range:NSMakeRange(previousLength, [attrString length] - previousLength)];
+            [attrString addAttribute:NSCursorAttributeName value:[NSCursor pointingHandCursor] range:NSMakeRange(previousLength, [attrString length] - previousLength)];
+            
+            previousLength = [attrString length];
+            [[attrString mutableString] appendString:@"\n"];
+            [attrString removeAttribute:NSLinkAttributeName range:NSMakeRange(previousLength, [attrString length] - previousLength)];
+        }        
+    }
+    
+    NSArray *sourceURLs = [package sourceFiles];
+    if ([sourceURLs count]) {
+        previousLength = [attrString length];
+        [[attrString mutableString] appendString:NSLocalizedString(@"\nSource Files:\n", @"heading in info panel")];
+        [attrString addAttribute:NSFontAttributeName value:boldFont range:NSMakeRange(previousLength, [attrString length] - previousLength)];
+        
+        for (NSURL *aURL in sourceURLs) {
+            previousLength = [attrString length];
+            [[attrString mutableString] appendString:[[aURL path] lastPathComponent]];
+            [attrString addAttribute:NSFontAttributeName value:userFont range:NSMakeRange(previousLength, [attrString length] - previousLength)];
+            [attrString addAttribute:NSLinkAttributeName value:aURL range:NSMakeRange(previousLength, [attrString length] - previousLength)];
+            [attrString addAttribute:NSCursorAttributeName value:[NSCursor pointingHandCursor] range:NSMakeRange(previousLength, [attrString length] - previousLength)];
+            
+            previousLength = [attrString length];
+            [[attrString mutableString] appendString:@"\n"];
+            [attrString removeAttribute:NSLinkAttributeName range:NSMakeRange(previousLength, [attrString length] - previousLength)];
+        }        
+    }
+    
+    docURLs = [package docFiles];
+    if ([docURLs count]) {
+        previousLength = [attrString length];
+        [[attrString mutableString] appendString:NSLocalizedString(@"\nDoc Files:\n", @"heading in info panel")];
+        [attrString addAttribute:NSFontAttributeName value:boldFont range:NSMakeRange(previousLength, [attrString length] - previousLength)];
+        
+        for (NSURL *aURL in docURLs) {
+            previousLength = [attrString length];
+            [[attrString mutableString] appendString:[[aURL path] lastPathComponent]];
+            [attrString addAttribute:NSFontAttributeName value:userFont range:NSMakeRange(previousLength, [attrString length] - previousLength)];
+            [attrString addAttribute:NSLinkAttributeName value:aURL range:NSMakeRange(previousLength, [attrString length] - previousLength)];
+            [attrString addAttribute:NSCursorAttributeName value:[NSCursor pointingHandCursor] range:NSMakeRange(previousLength, [attrString length] - previousLength)];
+            
+            previousLength = [attrString length];
+            [[attrString mutableString] appendString:@"\n"];
+            [attrString removeAttribute:NSLinkAttributeName range:NSMakeRange(previousLength, [attrString length] - previousLength)];
+        }        
+    }
+    
+    return attrString;
+}
+
+- (void)_updateWithPackage:(TLMDatabasePackage *)package
+{    
     NSArray *docURLs = [self _texdocForPackage:package];
     // let texdoc handle the sort order (if any)
     if ([docURLs count]) [[self window] setRepresentedURL:[docURLs objectAtIndex:0]];
@@ -339,7 +473,7 @@ static NSArray * __TLMURLsFromTexdocOutput2(NSString *outputString)
     
     [[self window] setTitle:[package name]];
     [_textView setSelectedRange:NSMakeRange(0, 0)];
-    [[_textView textStorage] setAttributedString:[package attributedString]];
+    [[_textView textStorage] setAttributedString:[self _attributedStringForPackage:package docURLs:docURLs]];
     
     [_runfiles setArray:[package runFiles]];
     [_sourcefiles setArray:[package sourceFiles]];
@@ -347,6 +481,9 @@ static NSArray * __TLMURLsFromTexdocOutput2(NSString *outputString)
     
     [_outlineView reloadData];
     [_outlineView expandItem:nil expandChildren:YES];
+
+    if ([[self window] isVisible] == NO)
+        [self showWindow:self];
     
 }
 
@@ -364,15 +501,22 @@ static NSArray * __TLMURLsFromTexdocOutput2(NSString *outputString)
             [[self window] setTitle:[NSString stringWithFormat:NSLocalizedString(@"Searching%C", @"info panel title"), 0x2026]];
             [[self window] setRepresentedURL:nil];
             
-            for (TLMDatabasePackage *pkg in [[TLMDatabase databaseForURL:mirrorURL] packages]) {
+            NSMutableSet *packages = [NSMutableSet set];
+            // !!! what to do if the db hasn't been loaded yet for this mirror?
+            [packages addObjectsFromArray:[[TLMDatabase databaseForURL:mirrorURL] packages]];
+            [packages addObjectsFromArray:[[TLMDatabase localDatabase] packages]];
+            
+            for (TLMDatabasePackage *pkg in packages) {
                 
                 if ([[pkg name] isEqualToString:[package infoName]]) {
+                    TLMLog(__func__, @"%@ found in database; bypassing tlmgr.", [pkg name]);
                     [self _updateWithPackage:pkg];
                     return;
                 }
             }
         
-            
+            TLMLog(__func__, @"%@ not found in database; reverting to `tlmgr show`.", [package infoName]);
+
             [self setFileObjects:nil];
             [_fileView reloadIcons];
             
