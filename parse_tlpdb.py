@@ -1,151 +1,142 @@
 #!/usr/bin/env python
 
-import sys, os
-import objc
-from Foundation import NSBundle
-
-if __name__ == '__main__':
-
-    bundle_path = sys.argv[1]
-
-    bundle = NSBundle.bundleWithPath_(bundle_path)
-    if not bundle:
-        sys.stderr.write("Failed to load bundle %s\n" % (bundle_path))
-        exit(1)
-
-    TLMDatabasePackage = objc.lookUpClass("TLMDatabasePackage")
-    if not TLMDatabasePackage:
-        sys.stderr.write("Failed to find class TLMDatabasePackage\n")
-        exit(1)
-
-    TLMDatabase = objc.lookUpClass("TLMDatabase")
-    if not TLMDatabase:
-        sys.stderr.write("Failed to find class TLMDatabase\n")
-        exit(1)
-
-class TLMPyDatabasePackage(TLMDatabasePackage):
-    """TeX Live Package"""
+#
+# This software is Copyright (c) 2010-2011
+# Adam Maxwell. All rights reserved.
+# 
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+# 
+# - Redistributions of source code must retain the above copyright
+# notice, this list of conditions and the following disclaimer.
+# 
+# - Redistributions in binary form must reproduce the above copyright
+# notice, this list of conditions and the following disclaimer in
+# the documentation and/or other materials provided with the
+# distribution.
+# 
+# - Neither the name of Adam Maxwell nor the names of any
+# contributors may be used to endorse or promote products derived
+# from this software without specific prior written permission.
+# 
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+# A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+# OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+# LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+# DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+# THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
     
-    @classmethod
-    def _packagesFromDatabaseAtPath_(self, dbpath):
-        all_packages = None
-        with open(dbpath, "r") as flat_tlpdb:
-            all_packages, index_map = packages_from_tlpdb(flat_tlpdb)
-
-        return all_packages
+class TLPackage(object):
+    """TeX Live Package
     
-    @classmethod
-    def _packagesFromDatabaseWithPipe_(self, nspipe):
-        all_packages = None
+    Conceptually this is nothing more than a dictionary.  It's able to
+    convert itself to an sqlite3 row and a dictionary value.
+    
+    """
+    mirror = None
+    
+    def __init__(self):
+        super(TLPackage, self).__init__()
+        self.name = None
+        self.category = None
+        self.shortdesc = None
+        self.longdesc = None
+        self.catalogue = None
+        self.relocated = 0
         
-        with os.fdopen(nspipe.fileHandleForReading().fileDescriptor(), "r") as flat_tlpdb:
-            all_packages, index_map = packages_from_tlpdb(flat_tlpdb)
-
-        return all_packages
+        self.runfiles = []
+        self.runsize = None
         
-    def description(self):
-        return str(self)
+        self.srcfiles = []
+        self.srcsize = None
         
-    def dealloc(self):
-        sys.stderr.write("dealloc %s\n" % (self._name))
+        self.docfiles = []
+        self.docsize = None
         
-    # subclass of NSObject, so override -[NSObject init]
-    def init(self):
-        self = super(TLMPyDatabasePackage, self).init()
-        if self is None: return None
-        
-        self._name = None
-        self._category = None
-        self._shortdesc = None
-        self._longdesc = None
-        self._catalogue = None
-        self._relocated = 0
-    
-        self._runfiles = []
-        self._runsize = None
-    
-        self._srcfiles = []
-        self._srcsize = None
-    
-        self._docfiles = []
-        self._docsize = None
-    
         # maps keys (doc filenames) to maps of attributes (details, language)
-        self._docfiledata = {}
-    
-        self._executes = []
-        self._postactions = []
-    
+        self.docfiledata = {}
+        
+        self.executes = []
+        self.postactions = []
+        
         # maps keys (arch name) to lists of files
-        self._binfiles = {}
+        self.binfiles = {}
         # maps keys (arch name) to integer size
-        self._binsize = {}
-    
-        self._depends = []
-        self._revision = None
-    
-        self._cataloguedata = {}
-    
-        self._extradata = {}
+        self.binsize = {}
         
-        return self
+        self.depends = []
+        self.revision = None
         
-    def name(self):
-        return self._name
-
-    def category(self):
-        return self._category
-
-    def shortDescription(self):
-        return self._shortdesc
-
-    def longDescription(self):
-        return self._longdesc
-
-    def catalogue(self):
-        return self._catalogue
-
-    def relocated(self):
-        return self._relocated
-
-    def runFiles(self):
-        return self._runfiles
-
-    def sourceFiles(self):
-        return self._srcfiles
-
-    def docFiles(self):
-        return self._docfiles
-
-    def revision(self):
-        return self._revision
-
+        self.cataloguedata = {}
+        
+        self.extradata = {}
+        
     def add_pair(self, key, value):
-        self._extradata[key] = value
+        """For extra data"""
+        self.extradata[key] = value
         
     def __str__(self):
         return repr(self)
         
     def __repr__(self):
-        s = "%s: %s\n  srcsize=%s\n  srcfiles=%s" % (self._name, self._shortdesc, self._srcsize, self._srcfiles)
-        s += "\n  binsize = %s\n  binfiles = %s" % (self._binsize, self._binfiles)
-        s += "\n  docsize = %s\n  docfiles = %s\n  docfiledata = %s" % (self._docsize, self._docfiles, self._docfiledata)
-        s += "\n  runsize = %s\n  runfiles = %s" % (self._runsize, self._runfiles)
-        s += "\n  depends = %s" % (self._depends)
-        s += "\n  longdesc = %s" % (self._longdesc)
-        s += "\n  cataloguedata = %s" % (self._cataloguedata)
-        for k in self._extradata:
-            s += "\n  %s = %s" % (k, self._extradata[k])
+        s = "%s: %s\n  srcsize=%s\n  srcfiles=%s" % (self.name, self.shortdesc, self.srcsize, self.srcfiles)
+        s += "\n  binsize = %s\n  binfiles = %s" % (self.binsize, self.binfiles)
+        s += "\n  docsize = %s\n  docfiles = %s\n  docfiledata = %s" % (self.docsize, self.docfiles, self.docfiledata)
+        s += "\n  runsize = %s\n  runfiles = %s" % (self.runsize, self.runfiles)
+        s += "\n  depends = %s" % (self.depends)
+        s += "\n  longdesc = %s" % (self.longdesc)
+        s += "\n  cataloguedata = %s" % (self.cataloguedata)
+        for k in self.extradata:
+            s += "\n  %s = %s" % (k, self.extradata[k])
         return s
         
+    def dictionary_value(self):
+        """Returns a dictionary with name as key and attributes as key-value pairs."""
+        kv = {}
+        kv["name"] = self.name
+        if self.category: kv["category"] = self.category
+        if self.revision: kv["revision"] = self.revision
+        if self.shortdesc: kv["shortDescription"] = self.shortdesc
+        if self.longdesc: kv["longDescription"] = self.longdesc
+        if self.catalogue: kv["catalogue"] = self.catalogue
+        if self.runfiles: kv["runFiles"] = self.runfiles
+        if self.srcfiles: kv["sourceFiles"] = self.srcfiles
+        if self.binfiles: kv["binFiles"] = self.binfiles
+        if self.docfiles: kv["docFiles"] = self.docfiles
+        if self.extradata: kv["extradata"] = self.extradata
+        if self.docfiledata: kv["docFileData"] = self.docfiledata
+        return kv
+        
     def insert_in_packages(self, conn):
+        """Inserts in an open SQLite3 database.  Limited support."""
+        # c.execute("""CREATE table packages (name text, category text, revision real, shortdesc text, longdesc text, srcfiles blob, binfiles blob, docfiles blob)""")
         c = conn.cursor()
-        c.execute("""INSERT into packages values (?,?,?,?,?,?)""", (self._name, self._category, self._revision, self._shortdesc, self._longdesc, self._runfiles))
+        c.execute("""INSERT into packages values (?,?,?,?,?,?,?,?)""", (self.name, self.category, self.revision, self.shortdesc, self.longdesc, self.runfiles, self.srcfiles, self.docfiles))
         conn.commit()
 
 def _attributes_from_line(line):
-    # arch=x86_64-darwin size=1
-    # details="Package introduction" language="de"
+    """Parse an attribute line.
+    
+    Arguments:
+    line -- a single line from the tlpdb
+    
+    Returns:
+    A dictionary of attributes
+    
+    Example input lines:
+    
+        arch=x86_64-darwin size=1
+        details="Package introduction" language="de"
+    
+    """
+    
     key = None
     value = None
     chars = []
@@ -190,7 +181,16 @@ def _attributes_from_line(line):
     return attrs
 
 def packages_from_tlpdb(flat_tlpdb):
-                
+    """Creates a list of TLPackage objects from the given file-like object.
+    
+    Arguments:
+    flat_tlpdb -- A file or file-like object, open for reading
+    
+    Returns:
+    A list of TLPackage objects
+    
+    """            
+    
     package = None
     package_index = 0
     all_packages = []
@@ -199,22 +199,22 @@ def packages_from_tlpdb(flat_tlpdb):
     last_arch = None
 
     for line_idx, line in enumerate(flat_tlpdb):
-                
-        line = line.strip("\r\n")
-        
+    
         if line_idx == 0 and line.startswith("tlmgr: package repository "):
-            sys.stderr.write("should do something with %s\n" % (line[len("tlmgr: package repository "):]))
+            TLPackage.mirror = line[len("tlmgr: package repository "):].strip()
             continue
-        
+            
         # comment lines; supported, but not currently used
         if line.startswith("#"):
             continue
                 
+        line = line.strip("\r\n")
+    
         if len(line) == 0:
-            if package:
-                all_packages.append(package)
-                index_map[package._name] = package_index
-                package_index += 1
+            all_packages.append(package)
+            index_map[package.name] = package_index
+            
+            package_index += 1
             package = None
             last_key = None
             last_arch = None
@@ -224,8 +224,8 @@ def packages_from_tlpdb(flat_tlpdb):
             key, ignored, value = line.partition(" ")
                             
             if package == None:
-                assert key == "name", "first line must be a name: %s" % (line)
-                package = TLMPyDatabasePackage.new()
+                assert key == "name", "first line must be a name"
+                package = TLPackage()
         
             line_has_key = True
             if len(key) == 0:
@@ -233,68 +233,191 @@ def packages_from_tlpdb(flat_tlpdb):
                 line_has_key = False
                         
             if key == "name":
-                package._name = value
+                package.name = value
             elif key == "category":
-                package._category = value
+                package.category = value
             elif key == "revision":
-                package._revision = int(value)
+                package.revision = int(value)
             elif key == "relocated":
-                package._relocated = int(value)
+                package.relocated = int(value)
             elif key == "shortdesc":
-                package._shortdesc = value.decode("utf-8")
+                package.shortdesc = value.decode("utf-8")
             elif key == "longdesc":
-                oldvalue = "" if package._longdesc == None else package._longdesc
-                package._longdesc = oldvalue + " " + value.decode("utf-8")
+                oldvalue = "" if package.longdesc == None else package.longdesc
+                package.longdesc = oldvalue + " " + value.decode("utf-8")
             elif key == "depend":
-                package._depends.append(value)
+                package.depends.append(value)
             elif key == "catalogue":
-                package._catalogue = value
+                package.catalogue = value
             elif key.startswith("catalogue-"):
                 catkey = key[len("catalogue-"):]
-                package._cataloguedata[catkey] = value
+                package.cataloguedata[catkey] = value
             elif key == "srcfiles":
                 if line_has_key:
                     attrs = _attributes_from_line(value)
-                    assert "size" in attrs, "missing size for %s : %s" % (package._name, key)
-                    package._srcsize = int(attrs["size"])
+                    assert "size" in attrs, "missing size for %s : %s" % (package.name, key)
+                    package.srcsize = int(attrs["size"])
                 else:
-                    package._srcfiles.append(value)
+                    package.srcfiles.append(value)
             elif key == "binfiles":
                 if line_has_key:
                     attrs = _attributes_from_line(value)
-                    assert "arch" in attrs, "missing arch for %s : %s" % (package._name, key)
+                    assert "arch" in attrs, "missing arch for %s : %s" % (package.name, key)
                     last_arch = attrs["arch"]
-                    assert "size" in attrs, "missing size for %s : %s" % (package._name, key)
-                    package._binsize[last_arch] = int(attrs["size"])
+                    assert "size" in attrs, "missing size for %s : %s" % (package.name, key)
+                    package.binsize[last_arch] = int(attrs["size"])
                 else:
-                    oldvalue = package._binfiles[last_arch] if last_arch in package._binfiles else []
+                    oldvalue = package.binfiles[last_arch] if last_arch in package.binfiles else []
                     oldvalue.append(value)
-                    package._binfiles[last_arch] = oldvalue
+                    package.binfiles[last_arch] = oldvalue
             elif key == "docfiles":
                 if line_has_key:
                     attrs = _attributes_from_line(value)
-                    assert "size" in attrs, "missing size for %s : %s" % (package._name, key)
-                    package._docsize = int(attrs["size"])
+                    assert "size" in attrs, "missing size for %s : %s" % (package.name, key)
+                    package.docsize = int(attrs["size"])
                 else:
                     values = value.split(" ")
                     if len(values) > 1:
-                        package._docfiledata[values[0]] = _attributes_from_line(" ".join(values[1:]))
-                    package._docfiles.append(values[0])
+                        package.docfiledata[values[0]] = _attributes_from_line(" ".join(values[1:]))
+                    package.docfiles.append(values[0])
             elif key == "runfiles":
                 if line_has_key:
                     attrs = _attributes_from_line(value)
-                    assert "size" in attrs, "missing size for %s : %s" % (package._name, key)
-                    package._runsize = int(attrs["size"])
+                    assert "size" in attrs, "missing size for %s : %s" % (package.name, key)
+                    package.runsize = int(attrs["size"])
                 else:
-                    package._runfiles.append(value)
+                    package.runfiles.append(value)
             elif key == "postaction":
-                package._postactions.append(value)
+                package.postactions.append(value)
             elif key == "execute":
-                package._executes.append(value)
+                package.executes.append(value)
             else:
                 package.add_pair(key, value)
                 #assert False, "unhandled line %s" % (line)
                 
             last_key = key
-    
+
     return all_packages, index_map
+    
+def _save_as_sqlite(packages, absolute_path):
+    """Save a list of packages as an SQLite3 binary file.
+    
+    Arguments:
+    packages -- a list of TLPackage objects
+    absolute_path -- output path for the database
+    
+    An existing file at this path will be removed before writing, to ensure that
+    you end up with a consistent database.  This is mainly for symmetry with the
+    plist writing method.
+    
+    Not all values are saved to sqlite.  Notably runfiles and other dictionary
+    types are not written at present, since they should probably be in a separate
+    table.
+    
+    """
+    import sqlite3
+    import os
+    import errno
+    
+    def _adapt_list(lst):
+        if lst is None or len(lst) == 0:
+            return None
+        return buffer("\0".join(lst).encode("utf-8"))
+
+    sqlite3.register_adapter(list, _adapt_list)
+    sqlite3.register_adapter(tuple, _adapt_list)
+    
+    # plistlib will overwrite the previous file, so do the same with sqlite
+    # instead of adding rows
+    try:
+        os.remove(absolute_path)
+    except OSError, e:
+        if e.errno != errno.ENOENT:
+            raise e
+            
+    assert os.path.exists(absolute_path) == False, "File exists: %s" % (absolute_path)
+    conn = sqlite3.connect(absolute_path, detect_types=sqlite3.PARSE_DECLTYPES)
+    c = conn.cursor()
+    c.execute("""CREATE table packages (name text, category text, revision real, shortdesc text, longdesc text, runfiles blob, srcfiles blob, docfiles blob)""")
+    for pkg in all_packages:
+        pkg.insert_in_packages(conn)
+    
+    conn.close()
+    
+def _save_as_plist(packages, path_or_file):
+    """Save a list of packages as a Mac OS X property list.
+    
+    Arguments:
+    packages -- a list of TLPackage objects
+    path_or_file -- output file (path or a file-like object) for the database
+    
+    The root object of the output property list is a dictionary.  Keys at
+    present are "mirror" (may not exist) and "packages", which is a list
+    of TLPackage dictionary values.
+    
+    """
+    
+    import plistlib
+    plist = {}
+    if TLPackage.mirror:
+        plist["mirror"] = TLPackage.mirror
+    plist["packages"] = []
+    for pkg in all_packages:
+        plist["packages"].append(pkg.dictionary_value())
+    
+    plistlib.writePlist(plist, path_or_file)
+    
+if __name__ == '__main__':
+    
+    from optparse import OptionParser
+    import sys
+        
+    usage = "usage: %prog [options] [tlpdb_path or stdin]"
+    parser = OptionParser()
+    parser.set_usage(usage)
+    parser.add_option("-o", "--output", dest="output_path", help="write tlpdb to FILE", metavar="FILE", action="store", type="string")
+    parser.add_option("-f", "--format", dest="output_format", help="[sqlite3 | plist] (default is to guess from output file extension)", metavar="FORMAT", action="store", type="string")
+    
+    (options, args) = parser.parse_args(sys.argv[1:])    
+    
+    # can't write sqlite3 to stdout (at least, not easily)
+    if not options.output_path:
+        if options.output_format == "sqlite3":
+            sys.stderr.write("Must supply an output path for SQLite3\n")
+            parser.print_help(file=sys.stderr)
+            exit(1) 
+        else:
+            # either no format given or no output path given; in either case, this requires a plist format
+            options.output_format = "plist"
+            options.output_path = sys.stdout
+
+    if not options.output_format:
+        dot_idx = options.output_path.rfind(".") + 1
+        if dot_idx != -1:
+            options.output_format = options.output_path[dot_idx:]
+            if options.output_format not in ("sqlite3", "plist"):
+                sys.stderr.write("Unable to guess output format from extension .%s\n" % (options.output_format))
+                parser.print_help(file=sys.stderr)
+                exit(1)
+        else:
+            sys.stderr.write("Must supply an output format or known output path extension\n")
+            parser.print_help(file=sys.stderr)
+            exit(1)
+
+    # "/usr/local/texlive/2011/tlpkg/texlive.tlpdb"
+    flat_tlpdb = open(args[0], "r") if len(args) else sys.stdin
+    all_packages, index_map = packages_from_tlpdb(flat_tlpdb)
+        
+    if options.output_format == "sqlite3":
+        _save_as_sqlite(all_packages, options.output_path)
+    elif options.output_format == "plist":
+        _save_as_plist(all_packages, options.output_path)
+        
+    # pkg = all_packages[index_map["00texlive.installation"]]
+    # for dep in pkg.depends:
+    #     if dep.startswith("opt_"):
+    #         key, ignored, value = dep[4:].partition(":")
+    #         print "%s = %s" % (key, value)
+    # 
+
+    

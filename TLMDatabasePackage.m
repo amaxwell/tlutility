@@ -38,80 +38,27 @@
 
 #import "TLMDatabasePackage.h"
 #import "TLMLogServer.h"
-#import <Python/Python.h>
-
-/*
- See http://www.friday.com/bbum/2009/11/21/calling-python-from-objective-c/
- for the basic pattern of subclassing.
- */
-
-#define TLM_METHOD(_rettype_, _mname_) \
-- (_rettype_)_mname_ { \
-    [NSException raise:@"SubclassResponsibility" \
-                format:@"Must subclass %s and override the method %s.", object_getClassName(self), sel_getName(_cmd)]; \
-    return (_rettype_)0; \
-}
 
 @implementation TLMDatabasePackage
 
-+ (Class)_concretePackageClass
-{
-    NSParameterAssert([NSThread isMainThread]);
-    static Class TLMPyDatabasePackage = Nil;
-    if (Nil == TLMPyDatabasePackage) {
-        Py_Initialize();
-        char *script_path = strdup([[[NSBundle mainBundle] pathForAuxiliaryExecutable:@"parse_tlpdb.py"] saneFileSystemRepresentation]);
-        char *bundle_path = strdup([[[NSBundle mainBundle] bundlePath] saneFileSystemRepresentation]);
-        char *py_argv[] = { script_path, bundle_path };
-        PySys_SetArgv(sizeof(py_argv) / sizeof(char *), py_argv);
-        PyRun_SimpleFileExFlags(fopen(script_path, "r"), script_path, true, NULL);
-        free(script_path);
-        free(bundle_path);
-        TLMPyDatabasePackage = NSClassFromString(@"TLMPyDatabasePackage");
-    }
-    return TLMPyDatabasePackage;
+#define TLM_METHOD(_rettype_, _mname_) \
+- (_rettype_)_mname_ { \
+    return [_dictionary objectForKey:@#_mname_]; \
 }
 
-+ (NSArray *)_packagesFromDatabaseWithPipe:(NSPipe *)aPipe;
+- (TLMDatabasePackage *)initWithDictionary:(NSDictionary *)dict;
 {
-    [NSException raise:@"SubclassResponsibility"
-                format:@"Must subclass %s and override the method %s.", object_getClassName(self), sel_getName(_cmd)];
-    return nil;    
+    self = [super init];
+    if (self) {
+        _dictionary = [dict copy];
+    }
+    return self;
 }
 
-+ (NSArray *)_packagesFromDatabaseAtPath:(NSString *)absolutePath;
+- (void)dealloc
 {
-    [NSException raise:@"SubclassResponsibility"
-                format:@"Must subclass %s and override the method %s.", object_getClassName(self), sel_getName(_cmd)];
-    return nil;
-}
-
-+ (NSArray *)packagesFromDatabaseWithPipe:(NSPipe *)aPipe;
-{
-    NSParameterAssert([NSThread isMainThread]);
-    NSArray *packages = nil;
-    @try {
-        packages = [[self _concretePackageClass] _packagesFromDatabaseWithPipe:aPipe];
-    }
-    @catch (NSException *e) {
-        TLMLog(__func__, @"Caught exception while trying to parse tlpdb: %@", e);
-        packages = nil;
-    }
-    return packages;
-}
-
-+ (NSArray *)packagesFromDatabaseAtPath:(NSString *)absolutePath;
-{
-    NSParameterAssert([NSThread isMainThread]);
-    NSArray *packages = nil;
-    @try {
-        packages = [[self _concretePackageClass] _packagesFromDatabaseAtPath:absolutePath];
-    }
-    @catch (NSException *e) {
-        TLMLog(__func__, @"Caught exception while trying to parse tlpdb: %@", e);
-        packages = nil;
-    }
-    return packages;
+    [_dictionary release];
+    [super dealloc];
 }
 
 - (NSUInteger)hash { return [[self name] hash]; }
@@ -126,10 +73,10 @@ TLM_METHOD(NSString*, name)
 TLM_METHOD(NSString*, category)
 TLM_METHOD(NSString*, shortDescription)
 TLM_METHOD(NSString*, catalogue)
-TLM_METHOD(NSInteger, relocated)
+TLM_METHOD(NSNumber*, relocated)
 TLM_METHOD(NSArray*, runFiles)
 TLM_METHOD(NSArray*, sourceFiles)
 TLM_METHOD(NSArray*, docFiles)
-TLM_METHOD(NSInteger, revision)
+TLM_METHOD(NSNumber*, revision)
 
 @end

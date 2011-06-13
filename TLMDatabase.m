@@ -87,8 +87,13 @@ static NSMutableDictionary *_databases = nil;
 
 - (void)reloadDatabaseFromPath:(NSString *)absolutePath
 {    
-    NSParameterAssert([NSThread isMainThread]);
-    NSArray *packages = [TLMDatabasePackage packagesFromDatabaseAtPath:absolutePath];
+    NSArray *packageDictionaries = [[NSDictionary dictionaryWithContentsOfFile:absolutePath] objectForKey:@"packages"];
+    NSMutableArray *packages = [NSMutableArray arrayWithCapacity:[packageDictionaries count]];
+    for (NSDictionary *pkgDict in packageDictionaries) {
+        TLMDatabasePackage *pkg = [[TLMDatabasePackage alloc] initWithDictionary:pkgDict];
+        [packages addObject:pkg];
+        [pkg release];
+    }
     if (packages) {
         [self setPackages:packages];
         [self setLoadDate:[NSDate date]];
@@ -115,17 +120,30 @@ static NSMutableDictionary *_databases = nil;
     NSAssert([[local packages] count], @"No packages in local database");
     
     NSSet *localPackageSet = [NSSet setWithArray:[local packages]];
-    NSMutableArray *packageNodes = [NSMutableArray arrayWithCapacity:[localPackageSet count]];
     
+    /*
+     Treat the mirror as canonical, but add in any local packages we have that are removed
+     or do not exist on this mirror.  May need to revisit with unofficial mirror support.
+     */
+    NSMutableSet *allPackages = [NSMutableSet setWithArray:[mirror packages]];
+    [allPackages unionSet:localPackageSet];
+    
+    NSMutableArray *packageNodes = [NSMutableArray arrayWithCapacity:[allPackages count]];
     NSMutableArray *orphanedNodes = [NSMutableArray array];
-    CFAbsoluteTime t = CFAbsoluteTimeGetCurrent();
+    
+    // need to sort since we may have merged remote/local packages here
+    NSMutableArray *packagesToEnumerate = [NSMutableArray arrayWithArray:[allPackages allObjects]];
+    NSSortDescriptor *sort = [[[NSSortDescriptor alloc] initWithKey:@"name" 
+                                                          ascending:YES 
+                                                           selector:@selector(localizedCaseInsensitiveNumericCompare:)] autorelease];
+    [packagesToEnumerate sortUsingDescriptors:[NSArray arrayWithObject:sort]];
     
     // these should be new packages or of the wrong binary architecture
-    for (TLMDatabasePackage *pkg in [mirror packages]) {
+    for (TLMDatabasePackage *pkg in packagesToEnumerate) {
         NSString *name = [pkg name];
         TLMPackageNode *node = [TLMPackageNode new];
         
-        // needed for performance & backward compatibility
+        // needed for backward compatibility
         [node setFullName:name];
         
         // needed for backward compatibility
@@ -155,16 +173,9 @@ static NSMutableDictionary *_databases = nil;
             [packageNodes addObject:node];
             [node release];
         }
-
-//        if ([localPackageSet containsObject:pkg] == NO) {
-//            fprintf(stderr, "%s\n", [[pkg name] UTF8String]);
-//        }
     }
 
-    fprintf(stderr, "took %.2f seconds to create package nodes with %lu orphaned\n", CFAbsoluteTimeGetCurrent() - t, [orphanedNodes count]);
-    t = CFAbsoluteTimeGetCurrent();
-    
-    // this is a lot slower with PyObjC objects if we have to call -package each time
+    // deal with orphaned nodes that weren't ordered optimally
     for (TLMPackageNode *node in orphanedNodes) {
         
         TLMPackageNode *parent = nil;
@@ -187,7 +198,6 @@ static NSMutableDictionary *_databases = nil;
                 TLMLog(__func__, @"Package \"%@\" has no parent", [node fullName]);                        
         }
     }
-    fprintf(stderr, "took %.2f seconds to deal with orphans\n", CFAbsoluteTimeGetCurrent() - t);
     
     return packageNodes;
 }

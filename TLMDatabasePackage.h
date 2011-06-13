@@ -40,18 +40,21 @@
 
 
 @interface TLMDatabasePackage : NSObject
+{
+@private
+    NSDictionary *_dictionary;
+}
 
-+ (NSArray *)packagesFromDatabaseWithPipe:(NSPipe *)aPipe;
-+ (NSArray *)packagesFromDatabaseAtPath:(NSString *)absolutePath;
+- (TLMDatabasePackage *)initWithDictionary:(NSDictionary *)dict;
 
 @property (nonatomic, readonly) NSString *name;
 @property (nonatomic, readonly) NSString *category;
 @property (nonatomic, readonly) NSString *shortDescription;
 @property (nonatomic, readonly) NSString *catalogue;
-@property (nonatomic, readonly) NSInteger relocated;
+@property (nonatomic, readonly) NSNumber *relocated;
 @property (nonatomic, readonly) NSArray *runFiles;
 @property (nonatomic, readonly) NSArray *sourceFiles;
 @property (nonatomic, readonly) NSArray *docFiles;
-@property (nonatomic, readonly) NSInteger revision;
+@property (nonatomic, readonly) NSNumber *revision;
 
 @end
