@@ -37,12 +37,12 @@
  */
 
 #import <Cocoa/Cocoa.h>
+#import "TLMOutputParser.h"
 
-
-@interface TLMDatabasePackage : NSObject
+@interface TLMDatabasePackage : NSObject <TLMInfoOutput>
 {
 @private
-    NSDictionary *_dictionary;
+    NSMutableDictionary *_dictionary;
 }
 
 - (TLMDatabasePackage *)initWithDictionary:(NSDictionary *)dict;

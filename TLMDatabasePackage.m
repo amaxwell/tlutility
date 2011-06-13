@@ -38,6 +38,7 @@
 
 #import "TLMDatabasePackage.h"
 #import "TLMLogServer.h"
+#import "TLMPreferenceController.h"
 
 @implementation TLMDatabasePackage
 
@@ -50,7 +51,47 @@
 {
     self = [super init];
     if (self) {
-        _dictionary = [dict copy];
+        _dictionary = [dict mutableCopy];
+        NSString *installPath = [[[TLMPreferenceController sharedPreferenceController] installDirectory] path];
+        NSFileManager *fm = [NSFileManager new];
+        NSString *keys[] = { @"runFiles", @"sourceFiles", @"docFiles" };
+        for (NSUInteger i = 0; i < sizeof(keys) / sizeof(NSString *); i++) {
+            NSMutableArray *files = [[dict objectForKey:keys[i]] mutableCopy];
+            
+            // skip this round since we can't add a nil array to the dictionary
+            if (nil == files)
+                continue;
+            
+            // iterate backwards to modify the array in-place
+            NSUInteger fidx = [files count];
+            while (fidx--) {
+                NSString *path = [files objectAtIndex:fidx];
+                
+                // have to munge paths with RELOC from the remote tlpdb
+                if ([path hasPrefix:@"RELOC"])
+                    path = [path stringByReplacingCharactersInRange:NSMakeRange(0, 5) withString:@"texmf-dist"];
+                path = [installPath stringByAppendingPathComponent:path];
+                
+                if ([fm fileExistsAtPath:path]) {
+                    NSURL *furl = [[NSURL alloc] initFileURLWithPath:path];
+                    if (furl) {
+                        [files replaceObjectAtIndex:fidx withObject:furl];
+                        [furl release];
+                    }
+                    else {
+                        // invalid URL
+                        [files removeObjectAtIndex:fidx];
+                    }
+                }
+                else {
+                    // nonexistent file
+                    [files removeObjectAtIndex:fidx];
+                }                    
+            }
+            [_dictionary setObject:files forKey:keys[i]];
+            [files release];
+        }
+        [fm release];
     }
     return self;
 }
@@ -69,14 +110,24 @@
     return [[self name] isEqualToString:[object name]];
 }
 
+- (NSAttributedString *)attributedString;
+{
+    NSString *desc = [_dictionary objectForKey:@"longDescription"] ? [_dictionary objectForKey:@"longDescription"] : [self shortDescription];
+    if (nil == desc)
+        desc = [self name];
+    return [[[NSAttributedString alloc] initWithString:desc attributes:nil] autorelease];
+}
+
 TLM_METHOD(NSString*, name)
 TLM_METHOD(NSString*, category)
 TLM_METHOD(NSString*, shortDescription)
 TLM_METHOD(NSString*, catalogue)
 TLM_METHOD(NSNumber*, relocated)
+TLM_METHOD(NSNumber*, revision)
+
+// override to return arrays of URL objects (only for files that exist on-disk)
 TLM_METHOD(NSArray*, runFiles)
 TLM_METHOD(NSArray*, sourceFiles)
 TLM_METHOD(NSArray*, docFiles)
-TLM_METHOD(NSNumber*, revision)
 
 @end
