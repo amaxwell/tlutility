@@ -115,7 +115,11 @@ static NSMutableDictionary *_databases = nil;
 + (NSArray *)packagesByMergingLocalWithMirror:(NSURL *)aURL;
 {
     TLMDatabase *mirror = [self databaseForURL:aURL];
-    NSAssert1([[mirror packages] count], @"No packages in mirror database %@", mirror);
+ 
+    // was asserting this, but that's not going to work well with offline mode
+    if ([[mirror packages] count] == 0)
+        TLMLog(__func__, @"No packages loaded for mirror %@", mirror);
+
     TLMDatabase *local = [self localDatabase];
     NSAssert([[local packages] count], @"No packages in local database");
     
