@@ -79,7 +79,7 @@ class TLPackage(object):
         self.extradata = {}
         
     def add_pair(self, key, value):
-        """For extra data"""
+        """For data that I don't care about at the moment"""
         self.extradata[key] = value
         
     def __str__(self):
@@ -200,8 +200,8 @@ def packages_from_tlpdb(flat_tlpdb):
 
     for line_idx, line in enumerate(flat_tlpdb):
     
-        if line_idx == 0 and line.startswith("tlmgr: package repository "):
-            TLPackage.mirror = line[len("tlmgr: package repository "):].strip()
+        if line_idx == 0 and line.startswith("location-url\t"):
+            TLPackage.mirror = line[len("location-url\t"):].strip()
             continue
             
         # comment lines; supported, but not currently used
@@ -359,6 +359,7 @@ def _save_as_plist(packages, path_or_file):
     
     import plistlib
     plist = {}
+    # only for remote tlpdb
     if TLPackage.mirror:
         plist["mirror"] = TLPackage.mirror
     plist["packages"] = []
