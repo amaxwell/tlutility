@@ -75,67 +75,65 @@
     NSAutoreleasePool *pool = [NSAutoreleasePool new];
 
     NSString *tlmgrPath = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath];
-    BDSKTask *dumpTask = nil;
+    BDSKTask *dumpTask = nil, *parseTask = nil;
     NSArray *arguments = nil;
-
+    
     CFUUIDRef uuid = CFUUIDCreate(NULL);
     NSString *temporaryPath = [NSTemporaryDirectory() stringByAppendingPathComponent:[(id)CFUUIDCreateString(NULL, uuid) autorelease]];
     if (uuid) CFRelease(uuid);
-    // have to touch the file before using fileHandleForWriting:
-    [[NSData data] writeToFile:temporaryPath atomically:NO];
-    NSFileHandle *outputHandle = [NSFileHandle fileHandleForWritingAtPath:temporaryPath];
-    
+            
     if (NO == _offline) {
         dumpTask = [[BDSKTask new] autorelease];
         [dumpTask setLaunchPath:tlmgrPath];
         arguments = arguments = [NSArray arrayWithObjects:@"--repository", [[self updateURL] absoluteString], @"dump-tlpdb", @"--remote", nil];
         [dumpTask setArguments:arguments];
-        [dumpTask setStandardOutput:outputHandle];
+        [dumpTask setStandardOutput:[NSPipe pipe]];
         [dumpTask launch];
-        [dumpTask waitUntilExit];
         
-        // this is grossly inefficient...check memory usage
-        NSString *content = [NSString stringWithContentsOfFile:temporaryPath encoding:NSUTF8StringEncoding error:NULL];
-        NSMutableArray *lines = [[[content componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]] mutableCopy] autorelease];
-        NSString *installPrefix = @"tlmgr: package repository ";
-        if ([lines count] && [[lines objectAtIndex:0] hasPrefix:installPrefix]) {
-            NSString *urlString = [[lines objectAtIndex:0] stringByReplacingOccurrencesOfString:installPrefix withString:@""];
-            TLMLog(__func__, @"Using mirror at %@", urlString);
-            [self setUpdateURL:[NSURL URLWithString:urlString]];
-            [lines removeObjectAtIndex:0];
-        }
-        [outputHandle truncateFileAtOffset:0];
-        [outputHandle writeData:[[lines componentsJoinedByString:@"\n"] dataUsingEncoding:NSUTF8StringEncoding]];
+        parseTask = [[BDSKTask new] autorelease];
+        [parseTask setLaunchPath:[[NSBundle mainBundle] pathForAuxiliaryExecutable:@"parse_tlpdb.py"]];
+        [parseTask setArguments:[NSArray arrayWithObjects:@"-o", temporaryPath, @"-f", @"plist", nil]];
+        [parseTask setStandardInput:[[dumpTask standardOutput] fileHandleForReading]];
+        [parseTask launch];
+        
+        [parseTask waitUntilExit];
 
-        if ([dumpTask terminationStatus] == EXIT_SUCCESS) {
-            [[TLMDatabase databaseForURL:[self updateURL]] performSelectorOnMainThread:@selector(reloadDatabaseFromPath:) 
-                                                                            withObject:temporaryPath 
-                                                                         waitUntilDone:YES];
+        if ([parseTask terminationStatus] == EXIT_SUCCESS) {
+            NSDictionary *dict = [NSDictionary dictionaryWithContentsOfFile:temporaryPath];
+            NSString *mirror = [dict objectForKey:@"mirror"];
+            if (nil == mirror || [NSURL URLWithString:mirror] == nil)
+                TLMLog(__func__, @"Unable to read mirror from tlpdb property list with keys %@", [dict allKeys]);
+            else
+                [self setUpdateURL:[NSURL URLWithString:mirror]];
+            [[TLMDatabase databaseForURL:[self updateURL]] reloadDatabaseFromPath:temporaryPath];
         }
         else {
             TLMLog(__func__, @"Dumping tlpdb from mirror %@ failed", [self updateURL]);
-        }
+        }        
     }
-    
+        
     dumpTask = [[BDSKTask new] autorelease];
     [dumpTask setLaunchPath:tlmgrPath];
     arguments = [NSArray arrayWithObjects:@"dump-tlpdb", @"--local", nil];
     [dumpTask setArguments:arguments];
-    [outputHandle truncateFileAtOffset:0];
-    [dumpTask setStandardOutput:outputHandle];
+    [dumpTask setStandardOutput:[NSPipe pipe]];
     [dumpTask launch];
-    [dumpTask waitUntilExit];
     
-    if ([dumpTask terminationStatus] == EXIT_SUCCESS) {
-        [[TLMDatabase localDatabase] performSelectorOnMainThread:@selector(reloadDatabaseFromPath:) 
-                                                      withObject:temporaryPath 
-                                                   waitUntilDone:YES];
+    parseTask = [[BDSKTask new] autorelease];
+    [parseTask setLaunchPath:[[NSBundle mainBundle] pathForAuxiliaryExecutable:@"parse_tlpdb.py"]];
+    [parseTask setArguments:[NSArray arrayWithObjects:@"-o", temporaryPath, @"-f", @"plist", nil]];
+    [parseTask setStandardInput:[[dumpTask standardOutput] fileHandleForReading]];
+    [parseTask launch];
+    
+    [parseTask waitUntilExit];
+    
+    if ([parseTask terminationStatus] == EXIT_SUCCESS) {
+        [[TLMDatabase localDatabase] reloadDatabaseFromPath:temporaryPath];
     }
     else {
         TLMLog(__func__, @"Dumping local tlpdb failed");
     }
     
-    [outputHandle closeFile];
     unlink([temporaryPath saneFileSystemRepresentation]);
 
     [pool release];
