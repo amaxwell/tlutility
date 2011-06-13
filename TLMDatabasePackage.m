@@ -118,6 +118,7 @@
 TLM_METHOD(NSString*, name)
 TLM_METHOD(NSString*, category)
 TLM_METHOD(NSString*, shortDescription)
+TLM_METHOD(NSString*, longDescription)
 TLM_METHOD(NSString*, catalogue)
 TLM_METHOD(NSNumber*, relocated)
 TLM_METHOD(NSNumber*, revision)

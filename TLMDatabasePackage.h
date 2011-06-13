@@ -50,11 +50,15 @@
 @property (nonatomic, readonly) NSString *name;
 @property (nonatomic, readonly) NSString *category;
 @property (nonatomic, readonly) NSString *shortDescription;
+@property (nonatomic, readonly) NSString *longDescription;
 @property (nonatomic, readonly) NSString *catalogue;
 @property (nonatomic, readonly) NSNumber *relocated;
+@property (nonatomic, readonly) NSNumber *revision;
+
+// underlying paths are modified to return file URLs
+// only files that exist on disk are returned
 @property (nonatomic, readonly) NSArray *runFiles;
 @property (nonatomic, readonly) NSArray *sourceFiles;
 @property (nonatomic, readonly) NSArray *docFiles;
-@property (nonatomic, readonly) NSNumber *revision;
 
 @end
