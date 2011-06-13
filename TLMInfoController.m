@@ -44,6 +44,8 @@
 #import <FileView/FileView.h>
 #import "NSMenu_TLMExtensions.h"
 #import "TLMOutlineView.h"
+#import "TLMTask.h"
+#import "TLMPreferenceController.h"
 
 #import "TLMDatabase.h"
 #import "TLMDatabasePackage.h"
@@ -221,10 +223,119 @@ static NSString * const TLMInfoFileViewIconScaleKey = @"TLMInfoFileViewIconScale
     }
 }
 
+static NSArray * __TLMURLsFromTexdocOutput2(NSString *outputString)
+{
+    
+    /*
+     http://tug.org/mailman/private/texdoc/2009-November/000120.html
+     
+     Message from mpg:
+     
+     I also made another change, as a preparation for next version. So the
+     final (or so I hope) format is:
+     
+     argument <tab> score <tab> filename
+     
+     as in:
+     
+     foo	1	/path/a
+     foo	0	/path/b
+     bar	1	/path/c
+     
+     Currently the score doesn't mean anything, you can just consider it as
+     dummy values. But in future versions, there should be a scoring system
+     in texdoc, and the score will be a real value. (I intend to use this
+     info in coverage-check scripts, but maybe you'll want to use it in some
+     way too. I'll keep you informed when the score will become meaningful.)
+     
+     stokes:tmp amaxwell$ texdoc --version
+     texdoc 0.60
+     stokes:tmp amaxwell$ texdoc -l -I -M makeindex
+     makeindex	10	/usr/local/texlive/2009/texmf-dist/doc/support/makeindex/makeindex.pdf
+     makeindex	1.5	/usr/local/texlive/2009/texmf-dist/doc/support/makeindex/ind.pdf
+     makeindex	1	/usr/local/texlive/2009/texmf/doc/man/man1/makeindex.man1.pdf
+     makeindex	1	/usr/local/texlive/2009/texmf-dist/doc/generic/FAQ-en/html/FAQ-makeindex.html
+     */
+    
+    NSArray *lines = [outputString componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+    NSMutableArray *docURLs = [NSMutableArray arrayWithCapacity:[lines count]];
+    
+    for (NSString *line in lines) {
+        
+        NSArray *comps = [line componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+        if ([comps count] < 3) continue;
+        
+        NSURL *aURL = [NSURL fileURLWithPath:[comps objectAtIndex:2]];
+        if (aURL) [docURLs addObject:aURL];
+    }
+    
+    return docURLs;
+}
+
+- (NSArray *)_texdocForPackage:(TLMDatabasePackage *)package
+{
+    
+    NSString *cmd = [[TLMPreferenceController sharedPreferenceController] texdocAbsolutePath];
+        
+    // !!! bail out early if the file doesn't exist
+    if ([[NSFileManager defaultManager] isExecutableFileAtPath:cmd] == NO) {
+        TLMLog(__func__, @"%@ does not exist or is not executable", cmd);
+        return nil;
+    }
+    
+    /*
+     The full package name for tlmgr contains names like "bin-dvips.universal-darwin", where
+     the relevant bit as far as texdoc is concerned is "dvips".
+     */
+    NSString *packageName = [package name];
+    
+    // see if we have a "bin-" prefix
+    NSRange r = [packageName rangeOfString:@"bin-"];
+    
+    // not clear if collection names are meaningful to texdoc but try anyway...
+    if (0 == r.length)
+        r = [packageName rangeOfString:@"collection-"];
+    
+    // remove the prefix
+    if (r.length)
+        packageName = [packageName substringFromIndex:NSMaxRange(r)];
+    
+    // now look for architecture and remove e.g. ".universal-darwin"
+    r = [packageName rangeOfString:@"." options:NSBackwardsSearch];
+    if (r.length)
+        packageName = [packageName substringToIndex:r.location];
+    
+    TLMTask *task = [[TLMTask new] autorelease];
+    [task setLaunchPath:cmd];
+    [task setArguments:[NSArray arrayWithObjects:@"--list", @"--nointeract", @"--machine", packageName, nil]];
+    [task launch];
+    
+    int status = -1;
+    [task waitUntilExit];
+    status = [task terminationStatus];
+    
+    return [task outputString] ? __TLMURLsFromTexdocOutput2([task outputString]) : nil;
+
+}    
+
 - (void)_updateWithPackage:(TLMDatabasePackage *)package
 {
     if ([[self window] isVisible] == NO)
         [self showWindow:self];
+    
+    NSArray *docURLs = [self _texdocForPackage:package];
+    // let texdoc handle the sort order (if any)
+    if ([docURLs count]) [[self window] setRepresentedURL:[docURLs objectAtIndex:0]];
+    NSMutableArray *fileObjects = [NSMutableArray array];
+    for (NSURL *aURL in docURLs) {
+        _TLMFileObject *obj = [_TLMFileObject new];
+        [obj setURL:aURL];
+        [obj setName:[package name]];
+        [fileObjects addObject:obj];
+        [obj release];
+    }
+    [self setFileObjects:fileObjects];
+    [_fileView reloadIcons];
     
     [[self window] setTitle:[package name]];
     [_textView setSelectedRange:NSMakeRange(0, 0)];
