@@ -139,6 +139,7 @@ static void __TLMPrefControllerInit() { _sharedInstance = [TLMPreferenceControll
         _versions.tlmgrVersion = -1;
         _versions.isDevelopment = NO;
         [self setLegacyRepositoryURL:nil];
+        [self setInstallDirectory:[self _installDirectory]];
     }    
 }
 
