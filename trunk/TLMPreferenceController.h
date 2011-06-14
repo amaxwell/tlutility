@@ -70,7 +70,8 @@ extern NSString * const TLMEnableNetInstall;
     BOOL                 _hasPendingServerEdit;
     NSUInteger           _pendingOptionChangeCount;
     NSURL               *_legacyRepositoryURL;
-    NSURL               *_installDirectoryURL;
+    NSNumber            *_recursiveRootRequired;
+    NSURL               *_installDirectory;
     FSEventStreamRef     _fseventStream;
     struct __versions {
         TLMDatabaseYear repositoryYear;
@@ -125,6 +126,8 @@ extern NSString * const TLMEnableNetInstall;
 // adds texdoc to TLMTexBinPathPreferenceKey, standardizes path
 @property (readonly) NSString *texdocAbsolutePath;
 
+@property (readonly) NSString *kpsewhichAbsolutePath;
+
 // checks permission on offlineServerURL
 @property (readonly) BOOL installRequiresRootPrivileges;
 
@@ -132,7 +135,6 @@ extern NSString * const TLMEnableNetInstall;
 @property (readonly) BOOL autoInstall;
 @property (readonly) BOOL autoRemove;
 
-@property (readonly) NSString *kpsewhichAbsolutePath;
 @property (readonly) BOOL tlmgrSupportsPersistentDownloads;
 @property (readonly) TLMDatabaseYear texliveYear;
 

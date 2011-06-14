@@ -90,7 +90,7 @@ NSString * const TLMEnableNetInstall = @"TLMEnableNetInstall";                  
 @synthesize _autoinstallCheckBox;
 @synthesize defaultServers = _servers;
 @synthesize legacyRepositoryURL = _legacyRepositoryURL;
-@synthesize installDirectory = _installDirectoryURL;
+@synthesize installDirectory = _installDirectory;
 
 // Do not use directly!  File scope only because pthread_once doesn't take an argument.
 static id _sharedInstance = nil;
@@ -104,11 +104,12 @@ static void __TLMPrefControllerInit() { _sharedInstance = [TLMPreferenceControll
 }
 
 - (NSURL *)_installDirectory
-{    
+{
+    NSURL *installDirectory = nil;
     // kpsewhich -var-value=SELFAUTOPARENT
     NSString *kpsewhichPath = [self kpsewhichAbsolutePath];
-    NSURL *serverURL = nil;
-    if ([[NSFileManager defaultManager] isExecutableFileAtPath:kpsewhichPath]) {
+    NSFileManager *fm = [[NSFileManager new] autorelease];
+    if ([fm isExecutableFileAtPath:kpsewhichPath]) {
         TLMTask *task = [TLMTask new];
         [task setLaunchPath:kpsewhichPath];
         [task setArguments:[NSArray arrayWithObject:@"-var-value=SELFAUTOPARENT"]];
@@ -116,7 +117,7 @@ static void __TLMPrefControllerInit() { _sharedInstance = [TLMPreferenceControll
         [task waitUntilExit];
         if ([task terminationStatus] == 0 && [task outputString]) {
             NSString *str = [[task outputString] stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]];
-            serverURL = [NSURL fileURLWithPath:str isDirectory:YES];
+            installDirectory = [NSURL fileURLWithPath:str isDirectory:YES];
         }
         else {
             TLMLog(__func__, @"kpsewhich returned an error: %@", [task errorString]);
@@ -126,8 +127,8 @@ static void __TLMPrefControllerInit() { _sharedInstance = [TLMPreferenceControll
     else {
         TLMLog(__func__, @"no kpsewhich executable at %@", kpsewhichPath);
     }
-    return serverURL;
-}
+    return installDirectory;
+}    
 
 - (void)_resetVersions
 {
@@ -138,7 +139,6 @@ static void __TLMPrefControllerInit() { _sharedInstance = [TLMPreferenceControll
         _versions.tlmgrVersion = -1;
         _versions.isDevelopment = NO;
         [self setLegacyRepositoryURL:nil];
-        [self setInstallDirectory:[self _installDirectory]];
     }    
 }
 
@@ -160,6 +160,7 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
 
 - (id)initWithWindowNibName:(NSString *)name
 {
+    NSParameterAssert([NSThread isMainThread]);
     self = [super initWithWindowNibName:name];
     if (self) {
         // current server from prefs seems to be added automatically when setting stringValue
@@ -180,7 +181,8 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
         _versions.tlmgrVersion = -1;
         _versions.isDevelopment = NO;
         
-        _installDirectoryURL = [[self _installDirectory] copy];
+        _recursiveRootRequired = (id)[[NSNull null] retain];
+        _installDirectory = [[self _installDirectory] retain];
         
         if ([[NSFileManager defaultManager] fileExistsAtPath:TEXDIST_PATH]) {
             FSEventStreamContext ctxt = { 0, self, CFRetain, CFRelease, CFCopyDescription };
@@ -217,7 +219,9 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
     [_autoremoveCheckBox release];
     [_autoinstallCheckBox release];
     [_setCommandLineServerCheckbox release];
-    [_installDirectoryURL release];
+    [_recursiveRootRequired release];
+    [_legacyRepositoryURL release];
+    [_installDirectory release];
     [super dealloc];
 }
 
@@ -455,6 +459,7 @@ static NSURL * __TLMParseLocationOption(NSString *location)
     [TLMAppController updatePathEnvironment];
     
     [self _resetVersions];
+    [self setInstallDirectory:[self _installDirectory]];
 
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:TLMDisableVersionMismatchWarningKey];
     [self updateUI];
@@ -944,9 +949,8 @@ static NSURL * __TLMParseLocationOption(NSString *location)
      NB: synchronizing on self here caused contention with -validServerURL, and it took a while
      to figure out why it was beachballing on launch after I threaded this check.
      */
-    static NSNumber *recursiveRootRequired = nil;
-    @synchronized(recursiveRootRequired) {
-        if (nil == recursiveRootRequired) {
+    @synchronized(_recursiveRootRequired) {
+        if ((id)[NSNull null] == _recursiveRootRequired) {
             
             TLMLog(__func__, @"Recursive check of installation privileges. This will happen once per launch, and may be slow if %@ is on a network filesystem%C", path, 0x2026);
             TLMLogServerSync();
@@ -962,6 +966,7 @@ static NSURL * __TLMParseLocationOption(NSString *location)
                 if ([fm fileExistsAtPath:subpath]) {
                     if ([fm isWritableFileAtPath:subpath] == NO) {
                         rootRequired = YES;
+                        [innerPool release];
                         break;
                     }
                 }
@@ -971,14 +976,14 @@ static NSURL * __TLMParseLocationOption(NSString *location)
                 }
                 [innerPool release];
             }
-            recursiveRootRequired = [[NSNumber alloc] initWithBool:rootRequired];
+            [_recursiveRootRequired release];
+            _recursiveRootRequired = [[NSNumber alloc] initWithBool:rootRequired];
             TLMLog(__func__, @"Recursive check completed in %.1f seconds.  Root privileges %@ required.", CFAbsoluteTimeGetCurrent() - start, rootRequired ? @"are" : @"not");
         }
     }
-    
     [pool release];
     
-    return [recursiveRootRequired boolValue];
+    return [_recursiveRootRequired boolValue];
 }
 
 - (BOOL)autoInstall { return [[NSUserDefaults standardUserDefaults] boolForKey:TLMAutoInstallPreferenceKey]; }
@@ -1062,6 +1067,5 @@ static NSURL * __TLMParseLocationOption(NSString *location)
     if (dragURL) [self updateTeXBinPathWithURL:dragURL];
     return (nil != dragURL);
 }
-
 
 @end
