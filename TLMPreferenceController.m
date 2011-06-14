@@ -68,10 +68,13 @@ NSString * const TLMEnableNetInstall = @"TLMEnableNetInstall";                  
 #define URL_TIMEOUT   30.0
 #define TEXDIST_PATH  @"/Library/TeX"
 
+static NSString *_permissionCheckLock = @"permissionCheckLockString";
+
 @interface TLMPreferenceController ()
 
 @property (readwrite, copy) NSURL *legacyRepositoryURL;
 @property (readwrite, copy) NSURL *installDirectory;
+@property (readwrite, copy) NSNumber *recursiveRootCheckRequired;
 
 @end
 
@@ -91,6 +94,7 @@ NSString * const TLMEnableNetInstall = @"TLMEnableNetInstall";                  
 @synthesize defaultServers = _servers;
 @synthesize legacyRepositoryURL = _legacyRepositoryURL;
 @synthesize installDirectory = _installDirectory;
+@synthesize recursiveRootCheckRequired = _recursiveRootRequired;
 
 // Do not use directly!  File scope only because pthread_once doesn't take an argument.
 static id _sharedInstance = nil;
@@ -140,6 +144,7 @@ static void __TLMPrefControllerInit() { _sharedInstance = [TLMPreferenceControll
         _versions.isDevelopment = NO;
         [self setLegacyRepositoryURL:nil];
         [self setInstallDirectory:[self _installDirectory]];
+        [self setRecursiveRootCheckRequired:nil];
     }    
 }
 
@@ -182,7 +187,6 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
         _versions.tlmgrVersion = -1;
         _versions.isDevelopment = NO;
         
-        _recursiveRootRequired = (id)[[NSNull null] retain];
         _installDirectory = [[self _installDirectory] retain];
         
         if ([[NSFileManager defaultManager] fileExistsAtPath:TEXDIST_PATH]) {
@@ -460,7 +464,6 @@ static NSURL * __TLMParseLocationOption(NSString *location)
     [TLMAppController updatePathEnvironment];
     
     [self _resetVersions];
-    [self setInstallDirectory:[self _installDirectory]];
 
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:TLMDisableVersionMismatchWarningKey];
     [self updateUI];
@@ -710,7 +713,6 @@ static NSURL * __TLMParseLocationOption(NSString *location)
     if ([oldValue isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:TLMFullServerURLPreferenceKey]] == NO) {
         
         // always reset these, so we have a known state
-        [self setLegacyRepositoryURL:nil];
         [self _resetVersions];
         
         [self _syncCommandLineServerOption];
@@ -950,15 +952,15 @@ static NSURL * __TLMParseLocationOption(NSString *location)
      NB: synchronizing on self here caused contention with -validServerURL, and it took a while
      to figure out why it was beachballing on launch after I threaded this check.
      */
-    @synchronized(_recursiveRootRequired) {
-        if ((id)[NSNull null] == _recursiveRootRequired) {
+    BOOL rootRequired = NO;
+    @synchronized(_permissionCheckLock) {
+        if (nil == _recursiveRootRequired) {
             
             TLMLog(__func__, @"Recursive check of installation privileges. This will happen once per launch, and may be slow if %@ is on a network filesystem%C", path, 0x2026);
             TLMLogServerSync();
             CFAbsoluteTime start = CFAbsoluteTimeGetCurrent();
             
             NSDirectoryEnumerator *dirEnum = [fm enumeratorAtPath:path];
-            BOOL rootRequired = NO;
             for (NSString *subpath in dirEnum) {
                 
                 // okay if this doesn't get released on the break; it'll be caught by the top-level pool
@@ -977,14 +979,14 @@ static NSURL * __TLMParseLocationOption(NSString *location)
                 }
                 [innerPool release];
             }
-            [_recursiveRootRequired release];
             _recursiveRootRequired = [[NSNumber alloc] initWithBool:rootRequired];
             TLMLog(__func__, @"Recursive check completed in %.1f seconds.  Root privileges %@ required.", CFAbsoluteTimeGetCurrent() - start, rootRequired ? @"are" : @"not");
         }
+        rootRequired = [_recursiveRootRequired boolValue];
     }
     [pool release];
     
-    return [_recursiveRootRequired boolValue];
+    return rootRequired;
 }
 
 - (BOOL)autoInstall { return [[NSUserDefaults standardUserDefaults] boolForKey:TLMAutoInstallPreferenceKey]; }
