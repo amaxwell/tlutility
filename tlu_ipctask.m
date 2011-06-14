@@ -72,7 +72,7 @@ static void establish_log_connection()
         [_logServer setProtocolForProxy:@protocol(TLMLogServerProtocol)];
     }
     @catch (id exception) {
-        asl_log(NULL, NULL, ASL_LEVEL_ERR, "tlu_ipctask: caught exception %s connecting to server", [[exception description] UTF8String]);
+        asl_log(NULL, NULL, ASL_LEVEL_ERR, "tlu_ipctask: caught exception \"%s\" connecting to server", [[exception description] UTF8String]);
         _logServer = nil;
     }
 }    
@@ -103,7 +103,7 @@ static void log_message_with_level(const char *level, NSString *message, NSUInte
         [_logServer logMessage:msg];
     }
     @catch (id exception) {
-        asl_log(NULL, NULL, ASL_LEVEL_ERR, "tlu_ipctask: caught exception %s in log_message_with_level", [[exception description] UTF8String]);
+        asl_log(NULL, NULL, ASL_LEVEL_ERR, "tlu_ipctask: caught exception \"%s\" in log_message_with_level", [[exception description] UTF8String]);
         // log to asl as a fallback
         asl_log(NULL, NULL, ASL_LEVEL_ERR, "%s", [message UTF8String]);
         [_logServer release];
