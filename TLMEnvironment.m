@@ -84,6 +84,24 @@ static NSMutableDictionary *_environments = nil;
         _environments = [NSMutableDictionary new];
 }
 
+/*
+ TODO:
+ 
+ Compute state at -init and store it.  This will be an immutable object, where a given TL
+ distro has path, version, and permissions associated with it.  In that case, we only have
+ one-time cost in computing variables.
+ 
+ If user changes path to tlmgr or changes TeX Dist prefs, we just set or create a new
+ environment, which is also immutable.  The only problematic bit, then, is dealing with
+ server URL versions, but at least the local db version will be the same (year) per-instance
+ since you can't upgrade TL major versions.
+ 
+ Have to make sure I don't allow users to change any options that I cache, but I think
+ keeping ivars of any tlmgr options is fair game, since someone who is mucking about in the
+ Terminal with tlmgr option while running TLU deserves whatever he gets.
+ 
+ */
+
 + (TLMEnvironment *)currentEnvironment;
 {
     TLMEnvironment *env = nil;
