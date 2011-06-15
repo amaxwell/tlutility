@@ -116,17 +116,29 @@ static NSString            *_currentEnvironmentKey = nil;
 + (void)updateEnvironment
 {
     @synchronized(_environments) {
-        [_currentEnvironmentKey autorelease];
-        _currentEnvironmentKey = [[self _installDirectoryFromCurrentDefaults] copy];
         
-        [self updatePathEnvironment];
+        NSString *installDir = [self _installDirectoryFromCurrentDefaults];
+        if ([installDir isEqualToString:_currentEnvironmentKey] == NO) {
+            [_currentEnvironmentKey autorelease];
+            _currentEnvironmentKey = [installDir copy];
+            
+            TLMEnvironment *env = [_environments objectForKey:_currentEnvironmentKey];
+            if (nil == env) {
+                TLMLog(__func__, @"Setting up a new environment for %@%C", installDir, 0x2026);
+                [self updatePathEnvironment];
+                env = [[self alloc] initWithInstallDirectory:_currentEnvironmentKey];
+                [_environments setObject:env forKey:_currentEnvironmentKey];
+                [env release];
+            }
+            else {
+                TLMLog(__func__, @"Using cached environment for %@", installDir);
+            }
 
-        TLMEnvironment *env = [_environments objectForKey:_currentEnvironmentKey];
-        if (nil == env) {
-            env = [[self alloc] initWithInstallDirectory:_currentEnvironmentKey];
-            [_environments setObject:env forKey:_currentEnvironmentKey];
-            [env release];
         }
+        else {
+            TLMLog(__func__, @"Nothing to update for %@", installDir);
+        }
+
     }
 }    
 
