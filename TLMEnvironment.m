@@ -47,8 +47,8 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
 
 @interface TLMEnvironment (Private)
 
-- (NSURL *)_installDirectory;
-- (void)_resetVersions;
++ (void)updatePathEnvironment;
+
 + (NSMutableArray *)_systemPaths;
 - (void)_displayFallbackServerAlert;
 - (TLMDatabaseYear)_texliveYear:(NSString **)versionStr isDevelopmentVersion:(BOOL *)isDev tlmgrVersion:(NSInteger *)tlmgrVersion;
@@ -69,8 +69,9 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
 #define KPSEWHICH_CMD @"kpsewhich"
 #define TEXDIST_PATH  @"/Library/TeX"
 
-static NSString *_permissionCheckLock = @"permissionCheckLockString";
+static NSString            *_permissionCheckLock = @"permissionCheckLockString";
 static NSMutableDictionary *_environments = nil;
+static NSString            *_currentEnvironmentKey = nil;
 
 @implementation TLMEnvironment
 
@@ -83,6 +84,50 @@ static NSMutableDictionary *_environments = nil;
     if (nil == _environments)
         _environments = [NSMutableDictionary new];
 }
+
++ (NSString *)_installDirectoryFromCurrentDefaults
+{
+    NSString *installDirectory = nil;
+    // kpsewhich -var-value=SELFAUTOPARENT
+    NSString *texbinPath = [[NSUserDefaults standardUserDefaults] objectForKey:TLMTexBinPathPreferenceKey];
+    NSString *kpsewhichPath = [[texbinPath stringByAppendingPathComponent:KPSEWHICH_CMD] stringByStandardizingPath];
+    NSFileManager *fm = [[NSFileManager new] autorelease];
+    if ([fm isExecutableFileAtPath:kpsewhichPath]) {
+        TLMTask *task = [TLMTask new];
+        [task setLaunchPath:kpsewhichPath];
+        [task setArguments:[NSArray arrayWithObject:@"-var-value=SELFAUTOPARENT"]];
+        [task launch];
+        [task waitUntilExit];
+        if ([task terminationStatus] == 0 && [task outputString]) {
+            installDirectory = [[task outputString] stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+        }
+        else {
+            TLMLog(__func__, @"kpsewhich returned an error: %@", [task errorString]);
+        }
+        [task release];
+    }
+    else {
+        TLMLog(__func__, @"no kpsewhich executable at %@", kpsewhichPath);
+    }
+    return installDirectory;
+}
+
++ (void)updateEnvironment
+{
+    @synchronized(_environments) {
+        [_currentEnvironmentKey autorelease];
+        _currentEnvironmentKey = [[self _installDirectoryFromCurrentDefaults] copy];
+        
+        [self updatePathEnvironment];
+
+        TLMEnvironment *env = [_environments objectForKey:_currentEnvironmentKey];
+        if (nil == env) {
+            env = [[self alloc] initWithInstallDirectory:_currentEnvironmentKey];
+            [_environments setObject:env forKey:_currentEnvironmentKey];
+            [env release];
+        }
+    }
+}    
 
 /*
  TODO:
@@ -102,24 +147,21 @@ static NSMutableDictionary *_environments = nil;
  
  */
 
+
 + (TLMEnvironment *)currentEnvironment;
 {
-    TLMEnvironment *env = nil;
     @synchronized(_environments) {
-        // should be SELFAUTOPARENT
-        NSString *path = [[NSUserDefaults standardUserDefaults] objectForKey:TLMTexBinPathPreferenceKey];
-        env = [_environments objectForKey:path];
-        if (nil == env) {
-            env = [self new];
-            [_environments setObject:env forKey:path];
-            [env release];
-        }
+        TLMEnvironment *env = [_environments objectForKey:_currentEnvironmentKey];
+        // okay to call +updateEnvironment inside recursive mutex
+        if (nil == env)
+            [self updateEnvironment];
+        return [_environments objectForKey:_currentEnvironmentKey];
     }
-    return env;
 }
 
-- (id)init
+- (id)initWithInstallDirectory:(NSString *)absolutePath
 {
+    NSParameterAssert(absolutePath);
     self = [super init];
     if (self) {
         
@@ -128,10 +170,10 @@ static NSMutableDictionary *_environments = nil;
         _versions.tlmgrVersion = -1;
         _versions.isDevelopment = NO;
         
-        _installDirectory = [[self _installDirectory] retain];
+        _installDirectory = [[NSURL alloc] initFileURLWithPath:absolutePath isDirectory:YES];
         
         if ([[NSFileManager defaultManager] fileExistsAtPath:TEXDIST_PATH]) {
-            FSEventStreamContext ctxt = { 0, self, CFRetain, CFRelease, CFCopyDescription };
+            FSEventStreamContext ctxt = { 0, [self class], CFRetain, CFRelease, CFCopyDescription };
             CFArrayRef paths = (CFArrayRef)[NSArray arrayWithObject:TEXDIST_PATH];
             FSEventStreamCreateFlags flags = kFSEventStreamCreateFlagUseCFTypes|kFSEventStreamCreateFlagNoDefer;
             _fseventStream = FSEventStreamCreate(NULL, __TLMTeXDistChanged, &ctxt, paths, kFSEventStreamEventIdSinceNow, 0.1, flags);
@@ -160,20 +202,6 @@ static NSMutableDictionary *_environments = nil;
     [super dealloc];
 }
 
-- (void)_resetVersions
-{
-    @synchronized(self) {
-        TLMLog(__func__, @"Resetting cached version info");
-        _versions.repositoryYear = TLMDatabaseUnknownYear;
-        _versions.installedYear = TLMDatabaseUnknownYear;
-        _versions.tlmgrVersion = -1;
-        _versions.isDevelopment = NO;
-        [self setLegacyRepositoryURL:nil];
-        [self setInstallDirectory:[self _installDirectory]];
-        [self setRecursiveRootCheckRequired:nil];
-    }    
-}
-
 /*
  Try to account for a user changing the TeX Distribution pref pane.  The effect is
  substantially the same as changing the texbin preference (path to tlmgr), insofar
@@ -184,7 +212,7 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
     for (NSUInteger i = 0; i < numEvents; i++) {
         if (eventFlags[i] == kFSEventStreamEventFlagNone) {
             TLMLog(__func__, @"TeX distribution path changed");
-            [(TLMEnvironment *)context _resetVersions];
+            [(Class)context updateEnvironment];
             break;
         }
     }
@@ -409,12 +437,6 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
     return texliveYear;
 }
 
-+ (void)updateEnvironment
-{
-    [self updatePathEnvironment];
-    [[self currentEnvironment] _resetVersions];
-}    
-
 - (NSURL *)validServerURL
 {
     NSURL *validURL = nil;
@@ -513,33 +535,6 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
         backupDir = [[[self installDirectory] path] stringByAppendingPathComponent:backupDir];
     return backupDir ? [NSURL fileURLWithPath:backupDir] : nil;
 }
-
-- (NSURL *)_installDirectory
-{
-    NSURL *installDirectory = nil;
-    // kpsewhich -var-value=SELFAUTOPARENT
-    NSString *kpsewhichPath = [self kpsewhichAbsolutePath];
-    NSFileManager *fm = [[NSFileManager new] autorelease];
-    if ([fm isExecutableFileAtPath:kpsewhichPath]) {
-        TLMTask *task = [TLMTask new];
-        [task setLaunchPath:kpsewhichPath];
-        [task setArguments:[NSArray arrayWithObject:@"-var-value=SELFAUTOPARENT"]];
-        [task launch];
-        [task waitUntilExit];
-        if ([task terminationStatus] == 0 && [task outputString]) {
-            NSString *str = [[task outputString] stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]];
-            installDirectory = [NSURL fileURLWithPath:str isDirectory:YES];
-        }
-        else {
-            TLMLog(__func__, @"kpsewhich returned an error: %@", [task errorString]);
-        }
-        [task release];
-    }
-    else {
-        TLMLog(__func__, @"no kpsewhich executable at %@", kpsewhichPath);
-    }
-    return installDirectory;
-}    
 
 - (BOOL)installRequiresRootPrivileges
 {

@@ -56,6 +56,7 @@
 
 + (void)updateEnvironment;
 + (TLMEnvironment *)currentEnvironment;
+- (id)initWithInstallDirectory:(NSString *)absolutePath;
 
 /*
  
