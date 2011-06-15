@@ -52,7 +52,7 @@ extern NSString * const TLMShouldListTLCritical;
 extern NSString * const TLMTLCriticalRepository;
 extern NSString * const TLMEnableNetInstall;
 
-@interface TLMPreferenceController : NSWindowController <NSComboBoxDataSource>
+@interface TLMPreferenceController : NSWindowController <NSComboBoxDataSource, NSOpenSavePanelDelegate>
 {
 @private
     NSPathControl       *_texbinPathControl;

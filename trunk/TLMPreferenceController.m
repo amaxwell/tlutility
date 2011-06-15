@@ -306,6 +306,26 @@ static NSURL * __TLMParseLocationOption(NSString *location)
     }
 }
 
+// 10.6 and later
+- (BOOL)panel:(id)sender validateURL:(NSURL *)url error:(NSError **)outError
+{
+    if (NO == [TLMEnvironment isValidTexbinPath:[url path]]) {
+        NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+        [userInfo setObject:url forKey:NSURLErrorKey];
+        [userInfo setObject:NSLocalizedString(@"Necessary programs for TeX Live do not exist in that folder", @"alert title in preferences") forKey:NSLocalizedDescriptionKey];
+        [userInfo setObject:NSLocalizedString(@"The tlmgr and kpsewhich tools must be present in this folder for basic functionality.", @"alert message text in preferences") forKey:NSLocalizedRecoverySuggestionErrorKey];
+        if (outError) *outError = [NSError errorWithDomain:@"com.googlecode.mactlmgr.errors" code:1 userInfo:userInfo];
+        return NO;
+    }
+    return YES;
+}
+
+// 10.5
+- (BOOL)panel:(id)sender isValidFilename:(NSString *)filename;
+{
+    return [TLMEnvironment isValidTexbinPath:filename];
+}
+
 - (IBAction)changeTexBinPath:(id)sender
 {
     NSOpenPanel *openPanel = [NSOpenPanel openPanel];
@@ -315,6 +335,7 @@ static NSURL * __TLMParseLocationOption(NSString *location)
     [openPanel setCanChooseFiles:NO];
     [openPanel setAllowsMultipleSelection:NO];
     [openPanel setPrompt:NSLocalizedString(@"Choose", @"button title in open panel (must be short)")];
+    [openPanel setDelegate:self];
     [openPanel beginSheetForDirectory:@"/usr" file:nil 
                        modalForWindow:[self window] modalDelegate:self 
                        didEndSelector:@selector(openPanelDidEnd:returnCode:contextInfo:) contextInfo:NULL];
