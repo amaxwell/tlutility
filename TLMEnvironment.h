@@ -47,24 +47,28 @@
     FSEventStreamRef     _fseventStream;
     BOOL                 _rootRequired;
     NSConditionLock     *_rootRequiredLock;
-    struct __versions {
-        TLMDatabaseYear repositoryYear;
-        TLMDatabaseYear installedYear;
-        NSInteger       tlmgrVersion;
+    TLMDatabaseYear      _installedYear;
+    // baseline: tlmgr version changes with updates
+    struct __tlmgrVersion {
+        NSInteger       revision;
         BOOL            isDevelopment;
-    } _versions;
+    } _tlmgrVersion;
 }
 
+// call when prefs change for tlmgr path or TeX distribution
 + (void)updateEnvironment;
+
+// should be the only object needed for external usage
 + (TLMEnvironment *)currentEnvironment;
+
+// not useful when instantiated directly
 - (id)initWithInstallDirectory:(NSString *)absolutePath;
 
 /*
- 
- NOTE: although property syntax is used, these keys are not observable with
- KVO at present.  Since no bindings are currently used, and I only use KVO 
- in code when there's no other option, this is not a problem.
- 
+ NOTE: although property syntax is used, these keys are not necessarily
+ observable with KVO at present.  Since no bindings are currently used, 
+ and I only use KVO in code when there's no other option, this is not
+ a problem.
  */
 
 // composes the URL as needed
@@ -85,7 +89,7 @@
 
 @property (readonly) NSString *kpsewhichAbsolutePath;
 
-// checks permission on offlineServerURL
+// checks permission on installDirectory
 @property (readonly) BOOL installRequiresRootPrivileges;
 
 // tlmgr 2009 modifiers to update action
@@ -93,6 +97,7 @@
 @property (readonly) BOOL autoRemove;
 
 @property (readonly) BOOL tlmgrSupportsPersistentDownloads;
+@property (readonly) BOOL tlmgrSupportsDumpTlpdb;
 @property (readonly) TLMDatabaseYear texliveYear;
 
 
