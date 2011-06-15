@@ -37,19 +37,19 @@
  */
 
 #import "TLMBackupOperation.h"
-#import "TLMPreferenceController.h"
+#import "TLMEnvironment.h"
 
 @implementation TLMBackupOperation
 
 + (TLMBackupOperation *)newCleanOperation
 {
-    NSString *cmd = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath];
+    NSString *cmd = [[TLMEnvironment currentEnvironment] tlmgrAbsolutePath];
     return [[self alloc] initWithCommand:cmd options:[NSArray arrayWithObjects:@"backup", @"--clean", @"--all", nil]];
 }
 
 + (TLMBackupOperation *)newDeepCleanOperation
 {
-    NSString *cmd = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath];
+    NSString *cmd = [[TLMEnvironment currentEnvironment] tlmgrAbsolutePath];
     return [[self alloc] initWithCommand:cmd options:[NSArray arrayWithObjects:@"backup", @"--clean=0", @"--all", nil]];
 }
 
@@ -57,7 +57,7 @@
 {
     NSParameterAssert(packageName);
     NSParameterAssert(version);
-    NSString *cmd = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath];
+    NSString *cmd = [[TLMEnvironment currentEnvironment] tlmgrAbsolutePath];
     // --force is not documented, but according to Norbert will keep tlmgr from prompting y/n
     return [[self alloc] initWithCommand:cmd options:[NSArray arrayWithObjects:@"restore", @"--force", packageName, [version stringValue], nil]];
 }

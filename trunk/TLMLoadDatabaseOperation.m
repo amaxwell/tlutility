@@ -38,7 +38,7 @@
 
 #import "TLMLoadDatabaseOperation.h"
 #import "BDSKTask.h"
-#import "TLMPreferenceController.h"
+#import "TLMEnvironment.h"
 #import "TLMLogServer.h"
 #import "TLMPackageNode.h"
 #import "TLMDatabasePackage.h"
@@ -96,7 +96,7 @@
 {
     NSAutoreleasePool *pool = [NSAutoreleasePool new];
 
-    NSString *tlmgrPath = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath];
+    NSString *tlmgrPath = [[TLMEnvironment currentEnvironment] tlmgrAbsolutePath];
     BDSKTask *dumpTask = nil, *parseTask = nil;
     NSArray *arguments = nil;
     

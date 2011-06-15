@@ -37,7 +37,6 @@
  */
 
 #import <Cocoa/Cocoa.h>
-#import "TLMDatabase.h"
 
 extern NSString * const TLMTexBinPathPreferenceKey;
 extern NSString * const TLMUseRootHomePreferenceKey;
@@ -69,16 +68,7 @@ extern NSString * const TLMEnableNetInstall;
     NSTextField         *_progressField;
     BOOL                 _hasPendingServerEdit;
     NSUInteger           _pendingOptionChangeCount;
-    NSURL               *_legacyRepositoryURL;
-    NSNumber            *_recursiveRootRequired;
-    NSURL               *_installDirectory;
-    FSEventStreamRef     _fseventStream;
-    struct __versions {
-        TLMDatabaseYear repositoryYear;
-        TLMDatabaseYear installedYear;
-        NSInteger       tlmgrVersion;
-        BOOL            isDevelopment;
-    } _versions;
+
 }
 
 + (TLMPreferenceController *)sharedPreferenceController;
@@ -101,41 +91,5 @@ extern NSString * const TLMEnableNetInstall;
 @property (nonatomic, retain) IBOutlet NSProgressIndicator *_progressIndicator;
 @property (nonatomic, retain) IBOutlet NSTextField *_progressField;
 @property (readonly) NSArray *defaultServers;
-
-/*
- 
- NOTE: although property syntax is used, these keys are not observable with
- KVO at present.  Since no bindings are currently used, and I only use KVO 
- in code when there's no other option, this is not a problem.
- 
- */
-
-// composes the URL as needed
-@property (readonly) NSURL *defaultServerURL;
-@property (readonly) NSURL *validServerURL;
-
-// returns the local installation directory (/usr/local/texlive/2009)
-@property (readonly, copy) NSURL *installDirectory;
-
-// adds tlmgr to TLMTexBinPathPreferenceKey, standardizes path
-@property (readonly) NSString *tlmgrAbsolutePath;
-
-// absolute URL to backupdir option
-@property (readonly) NSURL *backupDirectory;
-
-// adds texdoc to TLMTexBinPathPreferenceKey, standardizes path
-@property (readonly) NSString *texdocAbsolutePath;
-
-@property (readonly) NSString *kpsewhichAbsolutePath;
-
-// checks permission on offlineServerURL
-@property (readonly) BOOL installRequiresRootPrivileges;
-
-// tlmgr 2009 modifiers to update action
-@property (readonly) BOOL autoInstall;
-@property (readonly) BOOL autoRemove;
-
-@property (readonly) BOOL tlmgrSupportsPersistentDownloads;
-@property (readonly) TLMDatabaseYear texliveYear;
 
 @end

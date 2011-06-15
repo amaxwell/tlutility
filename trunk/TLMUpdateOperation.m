@@ -37,8 +37,8 @@
  */
 
 #import "TLMUpdateOperation.h"
-#import "TLMPreferenceController.h"
 #import "TLMAppController.h"
+#import "TLMEnvironment.h"
 
 @implementation TLMUpdateOperation
 
@@ -48,12 +48,12 @@
 - (id)initWithPackageNames:(NSArray *)packageNames location:(NSURL *)location;
 {
     NSParameterAssert(location);
-    NSString *cmd = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath]; 
+    NSString *cmd = [[TLMEnvironment currentEnvironment] tlmgrAbsolutePath]; 
     NSString *locationString = [location absoluteString];
     NSMutableArray *options = [NSMutableArray arrayWithObjects:@"--repository", locationString, @"--machine-readable", nil];
     
     // added after TL 2009 release
-    if ([[TLMPreferenceController sharedPreferenceController] tlmgrSupportsPersistentDownloads])
+    if ([[TLMEnvironment currentEnvironment] tlmgrSupportsPersistentDownloads])
         [options addObject:@"--persistent-downloads"];
     
     [options addObject:@"update"];
@@ -66,10 +66,10 @@
     }
     
     // from tlmgr docs, these appear to come after the package name
-    if ([[TLMPreferenceController sharedPreferenceController] autoInstall] == NO)
+    if ([[TLMEnvironment currentEnvironment] autoInstall] == NO)
         [options addObject:@"--no-auto-install"];
     
-    if ([[TLMPreferenceController sharedPreferenceController] autoRemove] == NO)
+    if ([[TLMEnvironment currentEnvironment] autoRemove] == NO)
         [options addObject:@"--no-auto-remove"];    
     
     self = [self initWithCommand:cmd options:options];

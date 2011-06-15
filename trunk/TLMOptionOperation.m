@@ -37,7 +37,7 @@
  */
 
 #import "TLMOptionOperation.h"
-#import "TLMPreferenceController.h"
+#import "TLMEnvironment.h"
 
 @implementation TLMOptionOperation
 
@@ -45,7 +45,7 @@
 {
     NSParameterAssert(key);
     NSParameterAssert(value);
-    NSString *cmd = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath];
+    NSString *cmd = [[TLMEnvironment currentEnvironment] tlmgrAbsolutePath];
     // insert -- in arguments to keep tlmgr from further parsing (allows passing -1 for autobackup)
     return [self initWithCommand:cmd options:[NSArray arrayWithObjects:@"option", @"--", key, value, nil]];
 }

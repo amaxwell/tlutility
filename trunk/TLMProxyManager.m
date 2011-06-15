@@ -38,7 +38,7 @@
 
 #import "TLMProxyManager.h"
 #import "TLMLogServer.h"
-#import "TLMPreferenceController.h"
+#import "TLMEnvironment.h"
 #import <SystemConfiguration/SystemConfiguration.h>
 #import <CoreServices/CoreServices.h>
 #import <Security/Security.h>
@@ -389,7 +389,7 @@ static NSURL * __TLMProxyDefaultServerURL()
      The main thing is to avoid a download here, since this is called very early, and could cause a delay
      in showing the main window.
      */
-    return [[TLMPreferenceController sharedPreferenceController] defaultServerURL];
+    return [[TLMEnvironment currentEnvironment] defaultServerURL];
 }
 
 - (id)init

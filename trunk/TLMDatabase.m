@@ -40,9 +40,9 @@
 #import "BDSKTask.h"
 #import <regex.h>
 #import "TLMLogServer.h"
-#import "TLMPreferenceController.h"
 #import "TLMDatabasePackage.h"
 #import "TLMPackageNode.h"
+#import "TLMEnvironment.h"
 
 #define TLPDB_PATH      CFSTR("tlpkg/texlive.tlpdb")
 #define MIN_DATA_LENGTH 2048
@@ -230,7 +230,7 @@ static NSMutableDictionary *_databases = nil;
     @synchronized(_databases) {
         
         if (nil == aURL)
-            aURL = [[TLMPreferenceController sharedPreferenceController] defaultServerURL];
+            aURL = [[TLMEnvironment currentEnvironment] defaultServerURL];
         
         NSParameterAssert(aURL != nil);
         CFAllocatorRef alloc = CFGetAllocator((CFURLRef)aURL);

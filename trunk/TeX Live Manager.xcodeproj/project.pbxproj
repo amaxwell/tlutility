@@ -14,6 +14,7 @@
 		F90520DA0EFDCB5400B489FE /* TLMAuthorizedOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F90520D90EFDCB5400B489FE /* TLMAuthorizedOperation.m */; };
 		F9053F4810B21B0D00BF5C0B /* TLMProgressIndicatorCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F9053F4710B21B0D00BF5C0B /* TLMProgressIndicatorCell.m */; };
 		F9129BC0102F25AC000A7B50 /* TLMSizeFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = F9129BBF102F25AC000A7B50 /* TLMSizeFormatter.m */; };
+		F915C9FF13A846A100F3E807 /* TLMEnvironment.m in Sources */ = {isa = PBXBuildFile; fileRef = F915C9FE13A846A100F3E807 /* TLMEnvironment.m */; };
 		F91858E0104798C400341791 /* TLMOptionOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F91858DF104798C400341791 /* TLMOptionOperation.m */; };
 		F922D79E1038B1E1004E9B12 /* TLMDownload.m in Sources */ = {isa = PBXBuildFile; fileRef = F922D79D1038B1E1004E9B12 /* TLMDownload.m */; };
 		F925D1AB12957B1800D75BB4 /* TLMMirrorController.m in Sources */ = {isa = PBXBuildFile; fileRef = F925D1AA12957B1800D75BB4 /* TLMMirrorController.m */; };
@@ -272,6 +273,8 @@
 		F9053F4710B21B0D00BF5C0B /* TLMProgressIndicatorCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMProgressIndicatorCell.m; sourceTree = "<group>"; };
 		F9129BBE102F25AC000A7B50 /* TLMSizeFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMSizeFormatter.h; sourceTree = "<group>"; };
 		F9129BBF102F25AC000A7B50 /* TLMSizeFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMSizeFormatter.m; sourceTree = "<group>"; };
+		F915C9FD13A846A100F3E807 /* TLMEnvironment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMEnvironment.h; sourceTree = "<group>"; };
+		F915C9FE13A846A100F3E807 /* TLMEnvironment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMEnvironment.m; sourceTree = "<group>"; };
 		F91858DE104798C400341791 /* TLMOptionOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMOptionOperation.h; sourceTree = "<group>"; };
 		F91858DF104798C400341791 /* TLMOptionOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMOptionOperation.m; sourceTree = "<group>"; };
 		F922D79C1038B1E1004E9B12 /* TLMDownload.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMDownload.h; sourceTree = "<group>"; };
@@ -461,6 +464,8 @@
 				F9999F9B10D1C33800F594CB /* TLMProxyManager.m */,
 				F9C7F175139E8E550031774F /* NSString_TLMExtensions.h */,
 				F9C7F176139E8E550031774F /* NSString_TLMExtensions.m */,
+				F915C9FD13A846A100F3E807 /* TLMEnvironment.h */,
+				F915C9FE13A846A100F3E807 /* TLMEnvironment.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -1046,6 +1051,7 @@
 				F9C7F177139E8E550031774F /* NSString_TLMExtensions.m in Sources */,
 				F942FFC513A08FD60008D8FD /* TLMDatabasePackage.m in Sources */,
 				F9B2F09913A2FFC400F37783 /* TLMLoadDatabaseOperation.m in Sources */,
+				F915C9FF13A846A100F3E807 /* TLMEnvironment.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

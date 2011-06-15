@@ -37,7 +37,7 @@
  */
 
 #import "TLMInstallOperation.h"
-#import "TLMPreferenceController.h"
+#import "TLMEnvironment.h"
 #import "TLMAppController.h"
 
 @implementation TLMInstallOperation
@@ -47,12 +47,12 @@
 
 - (id)initWithPackageNames:(NSArray *)packageNames location:(NSURL *)location reinstall:(BOOL)reinstall;
 {
-    NSString *cmd = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath]; 
+    NSString *cmd = [[TLMEnvironment currentEnvironment] tlmgrAbsolutePath]; 
     NSString *locationString = [location absoluteString];
     NSMutableArray *options = [NSMutableArray arrayWithObjects:@"--machine-readable", @"--repository", locationString, nil];
     
     // added after TL 2009 release
-    if ([[TLMPreferenceController sharedPreferenceController] tlmgrSupportsPersistentDownloads])
+    if ([[TLMEnvironment currentEnvironment] tlmgrSupportsPersistentDownloads])
         [options addObject:@"--persistent-downloads"];
     
     [options addObject:@"install"];

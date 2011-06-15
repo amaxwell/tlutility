@@ -38,14 +38,12 @@
 
 #import "TLMPreferenceController.h"
 #import "TLMURLFormatter.h"
-#import "TLMAppController.h"
 #import "TLMLogServer.h"
 #import "TLMTask.h"
 #import "TLMDownload.h"
 #import "TLMReadWriteOperationQueue.h"
 #import "TLMOptionOperation.h"
-#import "TLMDatabase.h"
-
+#import "TLMEnvironment.h"
 #import <pthread.h>
 
 NSString * const TLMTexBinPathPreferenceKey = @"TLMTexBinPathPreferenceKey";       /* /usr/texbin                      */
@@ -62,22 +60,7 @@ NSString * const TLMShouldListTLCritical = @"TLMShouldListTLCritical";          
 NSString * const TLMTLCriticalRepository = @"TLMTLCriticalRepository";             /* ftp://tug.org/texlive/tlcritical */
 NSString * const TLMEnableNetInstall = @"TLMEnableNetInstall";                     /* NO                               */
 
-#define TLMGR_CMD     @"tlmgr"
-#define TEXDOC_CMD    @"texdoc"
-#define KPSEWHICH_CMD @"kpsewhich"
 #define URL_TIMEOUT   30.0
-#define TEXDIST_PATH  @"/Library/TeX"
-
-static NSString *_permissionCheckLock = @"permissionCheckLockString";
-
-@interface TLMPreferenceController ()
-
-@property (readwrite, copy) NSURL *legacyRepositoryURL;
-@property (readwrite, copy) NSURL *installDirectory;
-@property (readwrite, copy) NSNumber *recursiveRootCheckRequired;
-
-@end
-
 
 @implementation TLMPreferenceController
 
@@ -92,9 +75,6 @@ static NSString *_permissionCheckLock = @"permissionCheckLockString";
 @synthesize _autoremoveCheckBox;
 @synthesize _autoinstallCheckBox;
 @synthesize defaultServers = _servers;
-@synthesize legacyRepositoryURL = _legacyRepositoryURL;
-@synthesize installDirectory = _installDirectory;
-@synthesize recursiveRootCheckRequired = _recursiveRootRequired;
 
 // Do not use directly!  File scope only because pthread_once doesn't take an argument.
 static id _sharedInstance = nil;
@@ -105,58 +85,6 @@ static void __TLMPrefControllerInit() { _sharedInstance = [TLMPreferenceControll
     static pthread_once_t once = PTHREAD_ONCE_INIT;
     (void) pthread_once(&once, __TLMPrefControllerInit);
     return _sharedInstance;
-}
-
-- (NSURL *)_installDirectory
-{
-    NSURL *installDirectory = nil;
-    // kpsewhich -var-value=SELFAUTOPARENT
-    NSString *kpsewhichPath = [self kpsewhichAbsolutePath];
-    NSFileManager *fm = [[NSFileManager new] autorelease];
-    if ([fm isExecutableFileAtPath:kpsewhichPath]) {
-        TLMTask *task = [TLMTask new];
-        [task setLaunchPath:kpsewhichPath];
-        [task setArguments:[NSArray arrayWithObject:@"-var-value=SELFAUTOPARENT"]];
-        [task launch];
-        [task waitUntilExit];
-        if ([task terminationStatus] == 0 && [task outputString]) {
-            NSString *str = [[task outputString] stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]];
-            installDirectory = [NSURL fileURLWithPath:str isDirectory:YES];
-        }
-        else {
-            TLMLog(__func__, @"kpsewhich returned an error: %@", [task errorString]);
-        }
-        [task release];
-    }
-    else {
-        TLMLog(__func__, @"no kpsewhich executable at %@", kpsewhichPath);
-    }
-    return installDirectory;
-}    
-
-- (void)_resetVersions
-{
-    @synchronized(self) {
-        TLMLog(__func__, @"Resetting cached version info");
-        _versions.repositoryYear = TLMDatabaseUnknownYear;
-        _versions.installedYear = TLMDatabaseUnknownYear;
-        _versions.tlmgrVersion = -1;
-        _versions.isDevelopment = NO;
-        [self setLegacyRepositoryURL:nil];
-        [self setInstallDirectory:[self _installDirectory]];
-        [self setRecursiveRootCheckRequired:nil];
-    }    
-}
-
-static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_t numEvents, void *eventPaths, const FSEventStreamEventFlags eventFlags[], const FSEventStreamEventId eventIds[])
-{
-    for (NSUInteger i = 0; i < numEvents; i++) {
-        if (eventFlags[i] == kFSEventStreamEventFlagNone) {
-            TLMLog(__func__, @"TeX distribution path changed");
-            [(TLMPreferenceController *)context _resetVersions];
-            break;
-        }
-    }
 }
 
 - (id)init
@@ -181,38 +109,13 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
             [servers insertObject:[[NSUserDefaults standardUserDefaults] objectForKey:TLMTLCriticalRepository] atIndex:0];
         
         _servers = [servers copy];
-        
-        _versions.repositoryYear = TLMDatabaseUnknownYear;
-        _versions.installedYear = TLMDatabaseUnknownYear;
-        _versions.tlmgrVersion = -1;
-        _versions.isDevelopment = NO;
-        
-        _installDirectory = [[self _installDirectory] retain];
-        
-        if ([[NSFileManager defaultManager] fileExistsAtPath:TEXDIST_PATH]) {
-            FSEventStreamContext ctxt = { 0, self, CFRetain, CFRelease, CFCopyDescription };
-            CFArrayRef paths = (CFArrayRef)[NSArray arrayWithObject:TEXDIST_PATH];
-            FSEventStreamCreateFlags flags = kFSEventStreamCreateFlagUseCFTypes|kFSEventStreamCreateFlagNoDefer;
-            _fseventStream = FSEventStreamCreate(NULL, __TLMTeXDistChanged, &ctxt, paths, kFSEventStreamEventIdSinceNow, 0.1, flags);
-            if (_fseventStream) {
-                FSEventStreamScheduleWithRunLoop(_fseventStream, CFRunLoopGetMain(), kCFRunLoopDefaultMode);
-                FSEventStreamStart(_fseventStream);
-            }
-        }
-        
-        // spin off a thread to check this lazily, in case a recursive check is required
-        [NSThread detachNewThreadSelector:@selector(installRequiresRootPrivileges) toTarget:self withObject:nil];
+
     }
     return self;
 }
 
 - (void)dealloc
 {
-    if (_fseventStream) {
-        FSEventStreamStop(_fseventStream);
-        FSEventStreamUnscheduleFromRunLoop(_fseventStream, CFRunLoopGetMain(), kCFRunLoopDefaultMode);
-        FSEventStreamRelease(_fseventStream);
-    }
     [_texbinPathControl release];
     [_serverComboBox release];
     [_rootHomeCheckBox release];
@@ -224,9 +127,6 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
     [_autoremoveCheckBox release];
     [_autoinstallCheckBox release];
     [_setCommandLineServerCheckbox release];
-    [_recursiveRootRequired release];
-    [_legacyRepositoryURL release];
-    [_installDirectory release];
     [super dealloc];
 }
 
@@ -264,7 +164,7 @@ static NSURL * __TLMParseLocationOption(NSString *location)
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:NSTaskDidTerminateNotification
                                                   object:checkTask];
-    NSURL *serverURL = [self defaultServerURL];
+    NSURL *serverURL = [[TLMEnvironment currentEnvironment] defaultServerURL];
     NSURL *tlmgrURL = nil;
     if ([checkTask terminationStatus] == 0)
         tlmgrURL = __TLMParseLocationOption([checkTask outputString]);
@@ -291,7 +191,7 @@ static NSURL * __TLMParseLocationOption(NSString *location)
     // this needs to be asynchronous, since it really slows down the panel opening
     NSArray *args = [NSArray arrayWithObjects:@"--machine-readable", @"option", @"location", nil];
     TLMTask *checkTask = [[TLMTask new] autorelease];
-    [checkTask setLaunchPath:[self tlmgrAbsolutePath]];
+    [checkTask setLaunchPath:[[TLMEnvironment currentEnvironment] tlmgrAbsolutePath]];
     [checkTask setArguments:args];
     [checkTask setCurrentDirectoryPath:NSTemporaryDirectory()];
     [[NSNotificationCenter defaultCenter] addObserver:self 
@@ -310,7 +210,7 @@ static NSURL * __TLMParseLocationOption(NSString *location)
 - (NSURL *)_currentTeXLiveLocationOption
 {
     NSArray *args = [NSArray arrayWithObjects:@"--machine-readable", @"option", @"location", nil];
-    TLMTask *checkTask = [TLMTask launchedTaskWithLaunchPath:[self tlmgrAbsolutePath] arguments:args];
+    TLMTask *checkTask = [TLMTask launchedTaskWithLaunchPath:[[TLMEnvironment currentEnvironment] tlmgrAbsolutePath] arguments:args];
     [checkTask waitUntilExit];
     return ([checkTask terminationStatus] == 0) ? __TLMParseLocationOption([checkTask outputString]) : nil;
 }
@@ -347,11 +247,12 @@ static NSURL * __TLMParseLocationOption(NSString *location)
         return;
     
     NSURL *location = [self _currentTeXLiveLocationOption];
+    NSURL *defaultServerURL = [[TLMEnvironment currentEnvironment] defaultServerURL];
 
     // this is kind of slow, so avoid doing it unless we really have to
-    if ([location isEqual:[self defaultServerURL]] == NO) {
-        TLMLog(__func__, @"Setting command line server location to %@", [[self defaultServerURL] absoluteString]);
-        TLMOptionOperation *op = [[TLMOptionOperation alloc] initWithKey:@"location" value:[[self defaultServerURL] absoluteString]];
+    if ([location isEqual:defaultServerURL] == NO) {
+        TLMLog(__func__, @"Setting command line server location to %@", [defaultServerURL absoluteString]);
+        TLMOptionOperation *op = [[TLMOptionOperation alloc] initWithKey:@"location" value:[defaultServerURL absoluteString]];
         [[NSNotificationCenter defaultCenter] addObserver:self 
                                                  selector:@selector(_handleLocationOperationFinished:) 
                                                      name:TLMOperationFinishedNotification 
@@ -384,86 +285,13 @@ static NSURL * __TLMParseLocationOption(NSString *location)
     [[NSUserDefaults standardUserDefaults] setBool:([sender state] == NSOnState) forKey:TLMAutoRemovePreferenceKey];
 }
 
-- (TLMDatabaseYear)_texliveYear:(NSString **)versionStr isDevelopmentVersion:(BOOL *)isDev tlmgrVersion:(NSInteger *)tlmgrVersion
-{
-    // always run the check and log the result
-    TLMTask *tlmgrTask = [[TLMTask new] autorelease];
-    [tlmgrTask setLaunchPath:[[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath]];
-    [tlmgrTask setArguments:[NSArray arrayWithObject:@"--version"]];
-    [tlmgrTask launch];
-    [tlmgrTask waitUntilExit];
-    
-    NSString *versionString = [tlmgrTask terminationStatus] ? nil : [tlmgrTask outputString];
-    
-    // !!! this happens periodically, and I don't yet know why...
-    if (nil == versionString)
-        TLMLog(__func__, @"Failed to read version string: %@, ret = %d", [tlmgrTask errorString], [tlmgrTask terminationStatus]);
-    
-    versionString = [versionString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    NSArray *versionLines = [versionString componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
-    NSInteger texliveYear = 0;
-    if (isDev) *isDev = NO;
-    
-    if ([versionLines count]) {
-        
-        /*
-         Using an svn version of tlmgr:
-         $ tlmgr --version
-         tlmgr revision unknown ($Date$)
-         tlmgr using installation: /usr/local/texlive/2011
-         TeX Live (http://tug.org/texlive) version 2011
-         
-         $ tlmgr --version
-         tlmgr revision 14230 (2009-07-11 14:56:31 +0200)
-         tlmgr using installation: /usr/local/texlive/2009
-         TeX Live (http://tug.org/texlive) version 2009-dev
-         
-         $ tlmgr --version
-         tlmgr revision 12152 (2009-02-12 13:08:37 +0100)
-         tlmgr using installation: /usr/local/texlive/2008
-         TeX Live (http://tug.org/texlive) version 2008
-         texlive-20080903
-         */         
-        
-        for (versionString in versionLines) {
-            
-            if ([versionString hasPrefix:@"TeX Live"]) {
-                
-                // allow handling development versions differently (not sure this is stable year-to-year)
-                if (isDev && [versionString hasSuffix:@"dev"])
-                    *isDev = YES;
-                
-                NSScanner *scanner = [NSScanner scannerWithString:versionString];
-                [scanner setCharactersToBeSkipped:[[NSCharacterSet decimalDigitCharacterSet] invertedSet]];
-                [scanner scanInteger:&texliveYear];
-            }
-            
-            if ([versionString hasPrefix:@"tlmgr revision"]) {
-                
-                NSScanner *scanner = [NSScanner scannerWithString:versionString];
-                [scanner setCharactersToBeSkipped:[[NSCharacterSet decimalDigitCharacterSet] invertedSet]];
-                if ([scanner scanInteger:tlmgrVersion] == NO)
-                    *tlmgrVersion = -1;
-            }
-        }
-    }
-    if (versionStr)
-        *versionStr = versionString;
-    
-    TLMLog(__func__, @"Looks like you're using TeX Live %d", texliveYear);
-    
-    return texliveYear;
-}
-
 - (void)updateTeXBinPathWithURL:(NSURL *)aURL
 {
     [_texbinPathControl setURL:aURL];
     [[NSUserDefaults standardUserDefaults] setObject:[aURL path] forKey:TLMTexBinPathPreferenceKey];
             
     // update environment, or tlmgr will be non-functional
-    [TLMAppController updatePathEnvironment];
-    
-    [self _resetVersions];
+    [TLMEnvironment updateEnvironment];
 
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:TLMDisableVersionMismatchWarningKey];
     [self updateUI];
@@ -494,7 +322,9 @@ static NSURL * __TLMParseLocationOption(NSString *location)
 
 - (BOOL)_canConnectToDefaultFTPServer
 {
-    CFReadStreamRef stream = CFReadStreamCreateWithFTPURL(NULL, (CFURLRef)[self defaultServerURL]);
+    NSURL *defaultServerURL = [[TLMEnvironment currentEnvironment] defaultServerURL];
+    
+    CFReadStreamRef stream = CFReadStreamCreateWithFTPURL(NULL, (CFURLRef)defaultServerURL);
     if (NULL == stream)
         return NO;
     
@@ -515,7 +345,7 @@ static NSURL * __TLMParseLocationOption(NSString *location)
         }
         // absolute timeout check; set error to bail out after this loop
         else if (CFAbsoluteTimeGetCurrent() > start + URL_TIMEOUT) {
-            TLMLog(__func__, @"Unable to connect to %@ after %.0f seconds", [[self defaultServerURL] absoluteString], URL_TIMEOUT);
+            TLMLog(__func__, @"Unable to connect to %@ after %.0f seconds", [defaultServerURL absoluteString], URL_TIMEOUT);
             status = kCFStreamStatusError;
             keepWaiting = false;
         }
@@ -550,7 +380,7 @@ static NSURL * __TLMParseLocationOption(NSString *location)
         }
         // absolute timeout check
         else if (CFAbsoluteTimeGetCurrent() > start + URL_TIMEOUT) {
-            TLMLog(__func__, @"Unable to read data from %@ after %.0f seconds", [[self defaultServerURL] absoluteString], URL_TIMEOUT);
+            TLMLog(__func__, @"Unable to read data from %@ after %.0f seconds", [defaultServerURL absoluteString], URL_TIMEOUT);
             keepWaiting = false;
         }
         else {
@@ -584,7 +414,7 @@ static NSURL * __TLMParseLocationOption(NSString *location)
         
     } while (remainingLength > 0);
     
-    TLMLog(__func__, @"%@ has %lu files", [[self defaultServerURL] absoluteString], (long)[files count]);
+    TLMLog(__func__, @"%@ has %lu files", [defaultServerURL absoluteString], (long)[files count]);
     return ([files count] > 0);
 }
 
@@ -595,20 +425,22 @@ static NSURL * __TLMParseLocationOption(NSString *location)
 
 - (BOOL)_canConnectToDefaultServer
 {
+    NSURL *defaultServerURL = [[TLMEnvironment currentEnvironment] defaultServerURL];
+    
     // this is really a case of formatter failure...
-    if (nil == [self defaultServerURL])
+    if (nil == defaultServerURL)
         return NO;
     
-    NSString *URLString = [[self defaultServerURL] absoluteString];
+    NSString *URLString = [defaultServerURL absoluteString];
     
     TLMLog(__func__, @"Checking for a connection to %@%C", URLString, 0x2026);
     TLMLogServerSync();
     
     // CFNetDiagnostic crashes with nil URL
-    NSParameterAssert([self defaultServerURL]);
+    NSParameterAssert(defaultServerURL);
     
     // see if we have a network connection
-    CFNetDiagnosticRef diagnostic = CFNetDiagnosticCreateWithURL(NULL, (CFURLRef)[self defaultServerURL]);
+    CFNetDiagnosticRef diagnostic = CFNetDiagnosticCreateWithURL(NULL, (CFURLRef)defaultServerURL);
     [(id)diagnostic autorelease];
     if (kCFNetDiagnosticConnectionDown == CFNetDiagnosticCopyNetworkStatusPassively(diagnostic, NULL)) {
         TLMLog(__func__, @"net diagnostic reports the connection is down");
@@ -616,10 +448,10 @@ static NSURL * __TLMParseLocationOption(NSString *location)
     }
     
     // An ftp server doesn't return data for a directory listing via NSURLConnection, so use CFFTP
-    if ([[[self defaultServerURL] scheme] isEqualToString:@"ftp"])
+    if ([[defaultServerURL scheme] isEqualToString:@"ftp"])
         return [self _canConnectToDefaultFTPServer];
     
-    NSURLRequest *request = [NSURLRequest requestWithURL:[self defaultServerURL] 
+    NSURLRequest *request = [NSURLRequest requestWithURL:defaultServerURL 
                                              cachePolicy:NSURLRequestReloadIgnoringCacheData 
                                          timeoutInterval:URL_TIMEOUT];
     
@@ -713,7 +545,7 @@ static NSURL * __TLMParseLocationOption(NSString *location)
     if ([oldValue isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:TLMFullServerURLPreferenceKey]] == NO) {
         
         // always reset these, so we have a known state
-        [self _resetVersions];
+        [TLMEnvironment updateEnvironment];
         
         [self _syncCommandLineServerOption];
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:TLMDisableVersionMismatchWarningKey];
@@ -734,274 +566,6 @@ static NSURL * __TLMParseLocationOption(NSString *location)
 }
 
 - (NSString *)windowNibName { return @"Preferences"; }
-
-- (NSURL *)defaultServerURL
-{
-    NSString *location = [[NSUserDefaults standardUserDefaults] objectForKey:TLMFullServerURLPreferenceKey];
-    while ([location hasSuffix:@"/"])
-        location = [location substringToIndex:([location length] - 1)];
-    return [NSURL URLWithString:location];    
-}
-
-- (void)versionWarningDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
-{
-    if ([[alert suppressionButton] state] == NSOnState)
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:TLMDisableVersionMismatchWarningKey];
-}
-
-- (void)_displayFallbackServerAlert
-{
-    /*
-     Formerly logged that the URL was okay, but that was only correct for the transition from TL 2008 to 2009.
-     However, tlmgr itself will perform that check and log if it fails, so logging that it's okay was just
-     confusing pretest users.
-     */
-    TLMDatabaseYear remoteVersion, localVersion;
-    @synchronized(self) {
-        remoteVersion = _versions.repositoryYear;
-        localVersion = _versions.installedYear;
-    }
-    
-    NSAlert *alert = [[NSAlert new] autorelease];
-    BOOL allowSuppression;
-    if (localVersion == 2008) {
-        [alert setMessageText:NSLocalizedString(@"TeX Live 2008 is not supported", @"")];
-        [alert setInformativeText:NSLocalizedString(@"This version of TeX Live Utility will not work correctly with TeX Live 2008.  You need to download TeX Live Utility version 0.74 or earlier, or upgrade to a newer TeX Live.  I recommend the latter.", @"")];
-        // non-functional, so no point in hiding this alert
-        allowSuppression = NO;
-    }
-    else if (remoteVersion > localVersion) {
-        [alert setMessageText:NSLocalizedString(@"Mirror URL has a newer TeX Live version", @"")];
-        [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"Your TeX Live version is %d, but your default mirror URL appears to be for TeX Live %d.  You need to manually upgrade to a newer version of TeX Live, as there will be no further updates for your version.", @"two integer specifiers"), localVersion, remoteVersion]];
-        // nag users into upgrading, to keep them from using ftp.tug.org willy-nilly
-        allowSuppression = NO;
-    }
-    else {
-        [alert setMessageText:NSLocalizedString(@"Mirror URL has an older TeX Live version", @"")];
-        [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"Your TeX Live version is %d, but your default mirror URL appears to be for TeX Live %d.  You need to choose an appropriate mirror.", @"two integer specifiers"), localVersion, remoteVersion]];
-        // may come up during pretest
-        allowSuppression = YES;
-    }
-
-
-    if (NO == allowSuppression || [[NSUserDefaults standardUserDefaults] boolForKey:TLMDisableVersionMismatchWarningKey] == NO) {
-        
-        SEL endSel = NULL;
-        
-        if (allowSuppression) {
-            endSel = @selector(versionWarningDidEnd:returnCode:contextInfo:);
-            [alert setShowsSuppressionButton:YES];
-        }
-        
-        // always show on the main window
-        [alert beginSheetModalForWindow:[[[NSApp delegate] mainWindowController] window] 
-                          modalDelegate:self 
-                         didEndSelector:endSel 
-                            contextInfo:NULL];            
-    }
-}
-
-- (NSURL *)validServerURL
-{
-    NSURL *validURL = nil;
-    @synchronized(self) {
-        
-        /*
-         Recomputing installedYear and repositoryYear is expensive.
-         */
-        if (_versions.installedYear == TLMDatabaseUnknownYear)
-            _versions.installedYear = [self _texliveYear:NULL isDevelopmentVersion:&_versions.isDevelopment tlmgrVersion:&_versions.tlmgrVersion];
-
-        /*
-         Always recompute this, because if we're using the multiplexer, it's going to redirect to
-         some other URL.  Eventually we'll get a few of them cached in the TLMDatabase, but this
-         is a slowdown if you use mirror.ctan.org.
-         */
-        TLMDatabaseVersion version = [TLMDatabase versionForMirrorURL:[self defaultServerURL]];
-        _versions.repositoryYear = version.year;
-        validURL = version.usedURL;
-        
-        // handled as a separate condition so we can log it for sure
-        if (_versions.repositoryYear == TLMDatabaseUnknownYear) {
-            TLMLog(__func__, @"Failed to determine the TeX Live version of the repository, so we'll just use the default");
-            validURL = [self defaultServerURL];
-            NSParameterAssert(validURL != nil);
-        }
-        else if (_versions.repositoryYear != _versions.installedYear && version.isOfficial) {
-            
-            if ([self legacyRepositoryURL] == nil) {
-                NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"DefaultMirrors" ofType:@"plist"];
-                NSDictionary *mirrorsByYear = nil;
-                if (plistPath)
-                    mirrorsByYear = [NSDictionary dictionaryWithContentsOfFile:plistPath];
-                NSString *location = [mirrorsByYear objectForKey:[[NSNumber numberWithShort:_versions.installedYear] stringValue]];
-                if (location) {
-                    TLMLog(__func__, @"Version mismatch detected.  Trying to fall back to %@", location);
-                    [self setLegacyRepositoryURL:[NSURL URLWithString:location]];
-                }
-                else {
-                    TLMLog(__func__, @"Version mismatch detected, but no fallback URL was found.");
-                    // ??? avoid using a nil URL for validURL...is this what I want to do?
-                    [self setLegacyRepositoryURL:[self defaultServerURL]];
-                }
-                
-                // async sheet with no user interaction, so no point in waiting...
-                [self performSelectorOnMainThread:@selector(_displayFallbackServerAlert) withObject:nil waitUntilDone:NO];
-            }
-            
-            validURL = [self legacyRepositoryURL];
-            NSParameterAssert(validURL != nil);
-        }
-        else {
-            TLMLog(__func__, @"Mirror version appears to be %d, a good year for TeX Live", _versions.repositoryYear);
-            if (version.isOfficial == false)
-                TLMLog(__func__, @"This appears to be a 3rd party TeX Live repository");
-        }
-
-        NSParameterAssert(validURL != nil);
-    }
-
-    return validURL;
-}
-
-- (NSString *)tlmgrAbsolutePath
-{
-    NSString *texbinPath = [[NSUserDefaults standardUserDefaults] objectForKey:TLMTexBinPathPreferenceKey];
-    return [[texbinPath stringByAppendingPathComponent:TLMGR_CMD] stringByStandardizingPath];
-}
-
-- (NSString *)texdocAbsolutePath
-{
-    NSString *texbinPath = [[NSUserDefaults standardUserDefaults] objectForKey:TLMTexBinPathPreferenceKey];
-    return [[texbinPath stringByAppendingPathComponent:TEXDOC_CMD] stringByStandardizingPath];
-}
-
-- (NSString *)kpsewhichAbsolutePath
-{
-    NSString *texbinPath = [[NSUserDefaults standardUserDefaults] objectForKey:TLMTexBinPathPreferenceKey];
-    return [[texbinPath stringByAppendingPathComponent:KPSEWHICH_CMD] stringByStandardizingPath];
-}
-
-- (NSString *)_backupDirOption
-{
-    // kpsewhich -var-value=SELFAUTOPARENT
-    NSString *tlmgrPath = [self tlmgrAbsolutePath];
-    NSString *backupDir = nil;
-    if ([[NSFileManager defaultManager] isExecutableFileAtPath:tlmgrPath]) {
-        TLMTask *task = [TLMTask new];
-        [task setLaunchPath:tlmgrPath];
-        [task setArguments:[NSArray arrayWithObjects:@"option", @"backupdir", nil]];
-        [task launch];
-        [task waitUntilExit];
-        if ([task terminationStatus] == 0 && [task outputString]) {
-            NSString *str = [[task outputString] stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]];
-            NSRange r = [str rangeOfString:@": " options:NSLiteralSearch];
-            if (r.length)
-                backupDir = [[str substringFromIndex:NSMaxRange(r)] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-        }
-        else {
-            TLMLog(__func__, @"tlmgr returned an error: %@", [task errorString]);
-        }
-        [task release];
-    }
-    else {
-        TLMLog(__func__, @"no tlmgr executable at %@", tlmgrPath);
-    }
-    return backupDir;
-}
-
-- (NSURL *)backupDirectory
-{
-    NSString *backupDir = [self _backupDirOption];
-    if ([backupDir isAbsolutePath] == NO)
-        backupDir = [[[self installDirectory] path] stringByAppendingPathComponent:backupDir];
-    return backupDir ? [NSURL fileURLWithPath:backupDir] : nil;
-}
-
-- (BOOL)installRequiresRootPrivileges
-{
-    NSAutoreleasePool *pool = [NSAutoreleasePool new];
-    
-    NSString *path = [[self installDirectory] path];
-    
-    // things are going to fail regardless...
-    if (nil == path) {
-        [pool release];
-        return NO;
-    }
-    
-    NSFileManager *fm = [[NSFileManager new] autorelease];
-    
-    // !!! early return; check top level first, which is the common case
-    if ([fm isWritableFileAtPath:path] == NO) {
-        [pool release];
-        return YES;
-    }
-    
-    /*
-     In older versions, this method considered TLMUseRootHomePreferenceKey and the top level dir.
-     This could result in requiring root privileges even if the user had write permission to the
-     tree, which caused root-owned files to also be created in the tree.  Consequently, we need
-     to do a deep directory traversal for the first check; this takes < 3 seconds on my Mac Pro
-     with TL 2010.
-     
-     By doing this once, I assume that the situation won't change during the lifetime of this 
-     process.  I think that's reasonable, so will wait to hear otherwise before monitoring it 
-     with FSEventStream or similar madness.
-     
-     NB: synchronizing on self here caused contention with -validServerURL, and it took a while
-     to figure out why it was beachballing on launch after I threaded this check.
-     */
-    BOOL rootRequired = NO;
-    @synchronized(_permissionCheckLock) {
-        if (nil == _recursiveRootRequired) {
-            
-            TLMLog(__func__, @"Recursive check of installation privileges. This will happen once per launch, and may be slow if %@ is on a network filesystem%C", path, 0x2026);
-            TLMLogServerSync();
-            CFAbsoluteTime start = CFAbsoluteTimeGetCurrent();
-            
-            NSDirectoryEnumerator *dirEnum = [fm enumeratorAtPath:path];
-            for (NSString *subpath in dirEnum) {
-                
-                // okay if this doesn't get released on the break; it'll be caught by the top-level pool
-                NSAutoreleasePool *innerPool = [NSAutoreleasePool new];
-                subpath = [path stringByAppendingPathComponent:subpath];
-                if ([fm fileExistsAtPath:subpath]) {
-                    if ([fm isWritableFileAtPath:subpath] == NO) {
-                        rootRequired = YES;
-                        [innerPool release];
-                        break;
-                    }
-                }
-                else {
-                    // I have a bad symlink at /usr/local/texlive/2010/texmf/doc/man/man; this is MacTeX-specific
-                    TLMLog(__func__, @"%@ does not exist; ignoring permissions", subpath);
-                }
-                [innerPool release];
-            }
-            _recursiveRootRequired = [[NSNumber alloc] initWithBool:rootRequired];
-            TLMLog(__func__, @"Recursive check completed in %.1f seconds.  Root privileges %@ required.", CFAbsoluteTimeGetCurrent() - start, rootRequired ? @"are" : @"not");
-        }
-        rootRequired = [_recursiveRootRequired boolValue];
-    }
-    [pool release];
-    
-    return rootRequired;
-}
-
-- (BOOL)autoInstall { return [[NSUserDefaults standardUserDefaults] boolForKey:TLMAutoInstallPreferenceKey]; }
-
-- (BOOL)autoRemove { return [[NSUserDefaults standardUserDefaults] boolForKey:TLMAutoRemovePreferenceKey]; }
-
-- (TLMDatabaseYear)texliveYear
-{
-    return _versions.installedYear;
-}
-
-- (BOOL)tlmgrSupportsPersistentDownloads;
-{
-    return (_versions.tlmgrVersion >= 16424);
-}
 
 #pragma mark Server combo box datasource
 

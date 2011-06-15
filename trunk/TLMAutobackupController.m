@@ -39,7 +39,7 @@
 #import "TLMAutobackupController.h"
 #import "TLMLogServer.h"
 #import "TLMTask.h"
-#import "TLMPreferenceController.h"
+#import "TLMEnvironment.h"
 
 @implementation TLMAutobackupController
 
@@ -83,7 +83,7 @@
 
 - (void)awakeFromNib
 {
-    NSString *cmd = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath];
+    NSString *cmd = [[TLMEnvironment currentEnvironment] tlmgrAbsolutePath];
     
     // owner's responsiblity to validate this before showing the sheet
     NSParameterAssert([[NSFileManager defaultManager] isExecutableFileAtPath:cmd]);

@@ -37,7 +37,7 @@
  */
 
 #import "TLMRemoveOperation.h"
-#import "TLMPreferenceController.h"
+#import "TLMEnvironment.h"
 
 @implementation TLMRemoveOperation
 
@@ -46,7 +46,7 @@
 - (id)initWithPackageNames:(NSArray *)packageNames force:(BOOL)force;
 {
     NSParameterAssert(packageNames);
-    NSString *cmd = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath]; 
+    NSString *cmd = [[TLMEnvironment currentEnvironment] tlmgrAbsolutePath]; 
     NSMutableArray *options = [NSMutableArray arrayWithObjects:@"remove", nil];
     if (force) [options addObject:@"--force"];
     [options addObjectsFromArray:packageNames];
