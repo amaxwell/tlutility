@@ -59,7 +59,7 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
 @interface TLMEnvironment ()
 
 @property (readwrite, copy) NSURL *legacyRepositoryURL;
-@property (readwrite, copy) NSURL *installDirectory;
+@property (readwrite, copy) NSString *installDirectory;
 @property (readwrite, copy) NSNumber *recursiveRootCheckRequired;
 
 @end
@@ -170,7 +170,7 @@ static NSString            *_currentEnvironmentKey = nil;
         _versions.tlmgrVersion = -1;
         _versions.isDevelopment = NO;
         
-        _installDirectory = [[NSURL alloc] initFileURLWithPath:absolutePath isDirectory:YES];
+        _installDirectory = [absolutePath copy];
         
         if ([[NSFileManager defaultManager] fileExistsAtPath:TEXDIST_PATH]) {
             FSEventStreamContext ctxt = { 0, [self class], CFRetain, CFRelease, CFCopyDescription };
@@ -532,7 +532,7 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
 {
     NSString *backupDir = [self _backupDirOption];
     if ([backupDir isAbsolutePath] == NO)
-        backupDir = [[[self installDirectory] path] stringByAppendingPathComponent:backupDir];
+        backupDir = [[self installDirectory] stringByAppendingPathComponent:backupDir];
     return backupDir ? [NSURL fileURLWithPath:backupDir] : nil;
 }
 
@@ -540,7 +540,7 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
 {
     NSAutoreleasePool *pool = [NSAutoreleasePool new];
     
-    NSString *path = [[self installDirectory] path];
+    NSString *path = [self installDirectory];
     
     // things are going to fail regardless...
     if (nil == path) {

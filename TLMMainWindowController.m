@@ -1210,7 +1210,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     CFStringRef desc = NULL;
     if (diagnostic && kCFNetDiagnosticConnectionDown == CFNetDiagnosticCopyNetworkStatusPassively(diagnostic, &desc)) {
         // this is basically a dummy URL that we pass through in offline mode
-        serverURL = [[TLMEnvironment currentEnvironment] installDirectory];
+        serverURL = [NSURL fileURLWithPath:[[TLMEnvironment currentEnvironment] installDirectory] isDirectory:YES];
         TLMLog(__func__, @"Network connection is down (%@).  Trying local install database %@%C", desc, serverURL, 0x2026);
         [(id)desc autorelease];
         [self _refreshFullPackageListFromLocation:serverURL offline:YES];

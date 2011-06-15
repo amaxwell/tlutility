@@ -44,7 +44,7 @@
 @private
     NSURL               *_legacyRepositoryURL;
     NSNumber            *_recursiveRootRequired;
-    NSURL               *_installDirectory;
+    NSString            *_installDirectory;
     FSEventStreamRef     _fseventStream;
     struct __versions {
         TLMDatabaseYear repositoryYear;
@@ -71,7 +71,7 @@
 @property (readonly) NSURL *validServerURL;
 
 // returns the local installation directory (/usr/local/texlive/2009)
-@property (readonly, copy) NSURL *installDirectory;
+@property (readonly, copy) NSString *installDirectory;
 
 // adds tlmgr to TLMTexBinPathPreferenceKey, standardizes path
 @property (readonly) NSString *tlmgrAbsolutePath;
