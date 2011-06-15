@@ -64,6 +64,9 @@
 // not useful when instantiated directly
 - (id)initWithInstallDirectory:(NSString *)absolutePath;
 
+// for UI validation
++ (BOOL)isValidTexbinPath:(NSString *)absolutePath;
+
 /*
  NOTE: although property syntax is used, these keys are not necessarily
  observable with KVO at present.  Since no bindings are currently used, 

@@ -118,7 +118,10 @@ static NSString            *_currentEnvironmentKey = nil;
     @synchronized(_environments) {
         
         NSString *installDir = [self _installDirectoryFromCurrentDefaults];
-        if ([installDir isEqualToString:_currentEnvironmentKey] == NO) {
+        if (nil == installDir) {
+            TLMLog(__func__, @"No install directory from current defaults; this is very disturbing, and lots of things are going to fail.  You probably need to fix the tlmgr path in preferences.");
+        }
+        else if ([installDir isEqualToString:_currentEnvironmentKey] == NO) {
             [_currentEnvironmentKey autorelease];
             _currentEnvironmentKey = [installDir copy];
             
@@ -142,34 +145,33 @@ static NSString            *_currentEnvironmentKey = nil;
     }
 }    
 
-/*
- TODO:
- 
- Compute state at -init and store it.  This will be an immutable object, where a given TL
- distro has path, version, and permissions associated with it.  In that case, we only have
- one-time cost in computing variables.
- 
- If user changes path to tlmgr or changes TeX Dist prefs, we just set or create a new
- environment, which is also immutable.  The only problematic bit, then, is dealing with
- server URL versions, but at least the local db version will be the same (year) per-instance
- since you can't upgrade TL major versions.
- 
- Have to make sure I don't allow users to change any options that I cache, but I think
- keeping ivars of any tlmgr options is fair game, since someone who is mucking about in the
- Terminal with tlmgr option while running TLU deserves whatever he gets.
- 
- */
-
-
 + (TLMEnvironment *)currentEnvironment;
 {
     @synchronized(_environments) {
         TLMEnvironment *env = [_environments objectForKey:_currentEnvironmentKey];
         // okay to call +updateEnvironment inside recursive mutex
-        if (nil == env)
+        if (nil == env) {
             [self updateEnvironment];
-        return [_environments objectForKey:_currentEnvironmentKey];
+            env = [_environments objectForKey:_currentEnvironmentKey];
+        }
+        // return a dummy environment in case the user screwed up the path
+        return env ? [_environments objectForKey:_currentEnvironmentKey] : [[self new] autorelease];
     }
+}
+
++ (BOOL)isValidTexbinPath:(NSString *)absolutePath;
+{
+    NSFileManager *fm = [NSFileManager defaultManager];
+    BOOL isDir;
+    if ([fm fileExistsAtPath:absolutePath isDirectory:&isDir] && isDir) {
+        // check for executable paths here, or bad things happen when we try and set up the environment
+        if ([fm isExecutableFileAtPath:[absolutePath stringByAppendingPathComponent:TLMGR_CMD]] == NO)
+            return NO;
+        if ([fm isExecutableFileAtPath:[absolutePath stringByAppendingPathComponent:KPSEWHICH_CMD]] == NO)
+            return NO;
+        return YES;
+    }
+    return NO;
 }
 
 - (id)initWithInstallDirectory:(NSString *)absolutePath
