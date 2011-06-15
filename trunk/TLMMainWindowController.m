@@ -630,7 +630,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 
 - (void)_refreshLocalDatabase
 {
-    if ([[TLMEnvironment currentEnvironment] texliveYear] < 2011) {
+    if ([[TLMEnvironment currentEnvironment] tlmgrSupportsDumpTlpdb]) {
         TLMLog(__func__, @"Updating local package database");
         NSURL *mirror = [[TLMEnvironment currentEnvironment] defaultServerURL];
         TLMLoadDatabaseOperation *op = [[TLMLoadDatabaseOperation alloc] initWithLocation:mirror offline:YES];
@@ -926,7 +926,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     [_packageListDataSource setRefreshing:YES];
     TLMLog(__func__, @"Refreshing list of all packages%C", 0x2026);
     
-    if ([[TLMEnvironment currentEnvironment] texliveYear] < 2011) {
+    if ([[TLMEnvironment currentEnvironment] tlmgrSupportsDumpTlpdb] == NO) {
         TLMLog(__func__, @"Using legacy code for listing packages.  Hopefully it still works.");
         TLMListOperation *op = [[TLMListOperation alloc] initWithLocation:location offline:offline];
         [self _addOperation:op selector:@selector(_handleListFinishedNotification:)];
