@@ -185,7 +185,7 @@ static bool hasKeyPrefix(NSString *line)
     NSMutableArray *docfiles = [NSMutableArray array];
     int state = -1;
     
-    NSString *installPath = [[[TLMEnvironment currentEnvironment] installDirectory] path];
+    NSString *installPath = [[TLMEnvironment currentEnvironment] installDirectory];
     
     for (NSString *line in lines) {
         

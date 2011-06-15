@@ -80,7 +80,7 @@
 
 - (NSArray *)_absoluteURLsFromDatabaseFiles:(NSArray *)dbfiles
 {
-    NSString *installPath = [[[TLMEnvironment currentEnvironment] installDirectory] path];
+    NSString *installPath = [[TLMEnvironment currentEnvironment] installDirectory];
     NSFileManager *fm = [NSFileManager new];
     
     NSMutableArray *files = [dbfiles mutableCopy];
