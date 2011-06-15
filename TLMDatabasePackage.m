@@ -38,7 +38,7 @@
 
 #import "TLMDatabasePackage.h"
 #import "TLMLogServer.h"
-#import "TLMPreferenceController.h"
+#import "TLMEnvironment.h"
 
 @implementation TLMDatabasePackage
 
@@ -80,7 +80,7 @@
 
 - (NSArray *)_absoluteURLsFromDatabaseFiles:(NSArray *)dbfiles
 {
-    NSString *installPath = [[[TLMPreferenceController sharedPreferenceController] installDirectory] path];
+    NSString *installPath = [[[TLMEnvironment currentEnvironment] installDirectory] path];
     NSFileManager *fm = [NSFileManager new];
     
     NSMutableArray *files = [dbfiles mutableCopy];

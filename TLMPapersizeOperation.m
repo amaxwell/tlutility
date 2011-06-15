@@ -37,7 +37,7 @@
  */
 
 #import "TLMPapersizeOperation.h"
-#import "TLMPreferenceController.h"
+#import "TLMEnvironment.h"
 
 @implementation TLMPapersizeOperation
 
@@ -45,7 +45,7 @@
 {
     NSParameterAssert(paperSize);
     
-    NSString *cmd = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath];
+    NSString *cmd = [[TLMEnvironment currentEnvironment] tlmgrAbsolutePath];
     return [self initWithCommand:cmd options:[NSArray arrayWithObjects:@"paper", paperSize, nil]];
 }
 

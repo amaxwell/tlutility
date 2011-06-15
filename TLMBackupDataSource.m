@@ -40,7 +40,7 @@
 #import "TLMInfoController.h"
 #import "TLMLogServer.h"
 #import "TLMBackupCell.h"
-#import "TLMPreferenceController.h"
+#import "TLMEnvironment.h"
 
 @implementation TLMBackupDataSource
 
@@ -99,7 +99,7 @@
 {
     [_backupNodes autorelease];
     _backupNodes = [nodes copy];
-    NSString *backupDir = [[[TLMPreferenceController sharedPreferenceController] backupDirectory] path];
+    NSString *backupDir = [[[TLMEnvironment currentEnvironment] backupDirectory] path];
     for (TLMBackupNode *node in _backupNodes) {
         for (NSUInteger i = 0; i < [node numberOfVersions]; i++) {
             TLMBackupNode *child = [node versionAtIndex:i];

@@ -37,7 +37,7 @@
  */
 
 #import "TLMBackupListOperation.h"
-#import "TLMPreferenceController.h"
+#import "TLMEnvironment.h"
 #import "TLMOutputParser.h"
 #import "TLMLogServer.h"
 
@@ -47,7 +47,7 @@
 
 - (id)init
 {
-    NSString *tlmgrPath = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath];
+    NSString *tlmgrPath = [[TLMEnvironment currentEnvironment] tlmgrAbsolutePath];
     return [self initWithCommand:tlmgrPath options:[NSArray arrayWithObject:@"restore"]];
 }
 

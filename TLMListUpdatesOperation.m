@@ -38,9 +38,9 @@
 
 #import "TLMListUpdatesOperation.h"
 #import "TLMOutputParser.h"
-#import "TLMPreferenceController.h"
 #import "TLMLogServer.h"
 #import "TLMTask.h"
+#import "TLMEnvironment.h"
 
 @interface TLMListUpdatesOperation()
 @property (readwrite, copy) NSURL *updateURL;
@@ -56,7 +56,7 @@
     NSParameterAssert([location absoluteString]);
     // add --all to workaround tlmgr 2010 breakage: http://code.google.com/p/mactlmgr/issues/detail?id=47
     NSArray *options = [NSArray arrayWithObjects:@"--machine-readable", @"--repository", [location absoluteString], @"update", @"--list", @"--all", nil];
-    NSString *cmd = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath];
+    NSString *cmd = [[TLMEnvironment currentEnvironment] tlmgrAbsolutePath];
     return [self initWithCommand:cmd options:options];
 }
 

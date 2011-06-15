@@ -37,7 +37,7 @@
  */
 
 #import "TLMListOperation.h"
-#import "TLMPreferenceController.h"
+#import "TLMEnvironment.h"
 #import "TLMOutputParser.h"
 #import "TLMLogServer.h"
 
@@ -57,7 +57,7 @@
         options = [NSArray arrayWithObjects:@"--repository", [location absoluteString], @"list", nil];
     else
         options = [NSArray arrayWithObjects:@"list", @"--only-installed", nil];
-    NSString *cmd = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath];
+    NSString *cmd = [[TLMEnvironment currentEnvironment] tlmgrAbsolutePath];
     self = [self initWithCommand:cmd options:options];
     if (offline)
         [self setUpdateURL:location];

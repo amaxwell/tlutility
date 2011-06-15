@@ -71,6 +71,7 @@
 #import "TLMProgressIndicatorCell.h"
 #import "TLMAutobackupController.h"
 #import "TLMLaunchAgentController.h"
+#import "TLMEnvironment.h"
 
 #import "TLMDatabase.h"
 #import "TLMDatabasePackage.h"
@@ -313,7 +314,7 @@ static char _TLMOperationQueueOperationContext;
 {
     NSURL *aURL = [_currentListDataSource lastUpdateURL];
     if (nil == aURL)
-        aURL = [[TLMPreferenceController sharedPreferenceController] validServerURL];
+        aURL = [[TLMEnvironment currentEnvironment] validServerURL];
     NSParameterAssert(aURL);
     return aURL;
 }
@@ -323,7 +324,7 @@ static char _TLMOperationQueueOperationContext;
     NSURL *aURL = [_currentListDataSource lastUpdateURL];
     // use defaultServerURL if we haven't previously contacted a host; -validServerURL does network ops
     if (nil == aURL)
-        aURL = [[TLMPreferenceController sharedPreferenceController] defaultServerURL];
+        aURL = [[TLMEnvironment currentEnvironment] defaultServerURL];
     NSTextStorage *ts = [_hostnameView textStorage];
     [[ts mutableString] setString:[aURL absoluteString]];
     [ts addAttribute:NSFontAttributeName value:[NSFont labelFontOfSize:0] range:NSMakeRange(0, [ts length])];
@@ -487,7 +488,7 @@ static char _TLMOperationQueueOperationContext;
 
 - (BOOL)_checkCommandPathAndWarn:(BOOL)displayWarning
 {
-    NSString *cmdPath = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath];
+    NSString *cmdPath = [[TLMEnvironment currentEnvironment] tlmgrAbsolutePath];
     BOOL exists = [[NSFileManager defaultManager] isExecutableFileAtPath:cmdPath];
     
     if (NO == exists) {
@@ -538,7 +539,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     NSMutableDictionary *versions = [NSMutableDictionary new];
     for (NSString *name in packageNames) {
         TLMTask *task = [[TLMTask new] autorelease];
-        [task setLaunchPath:[[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath]];
+        [task setLaunchPath:[[TLMEnvironment currentEnvironment] tlmgrAbsolutePath]];
         [task setArguments:[NSArray arrayWithObjects:@"show", name, nil]];
         [task launch];
         [task waitUntilExit];
@@ -629,9 +630,9 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 
 - (void)_refreshLocalDatabase
 {
-    if ([[TLMPreferenceController sharedPreferenceController] texliveYear] < 2011) {
+    if ([[TLMEnvironment currentEnvironment] texliveYear] < 2011) {
         TLMLog(__func__, @"Updating local package database");
-        NSURL *mirror = [[TLMPreferenceController sharedPreferenceController] defaultServerURL];
+        NSURL *mirror = [[TLMEnvironment currentEnvironment] defaultServerURL];
         TLMLoadDatabaseOperation *op = [[TLMLoadDatabaseOperation alloc] initWithLocation:mirror offline:YES];
         [self _addOperation:op selector:NULL];
         [op release];
@@ -925,7 +926,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     [_packageListDataSource setRefreshing:YES];
     TLMLog(__func__, @"Refreshing list of all packages%C", 0x2026);
     
-    if ([[TLMPreferenceController sharedPreferenceController] texliveYear] < 2011) {
+    if ([[TLMEnvironment currentEnvironment] texliveYear] < 2011) {
         TLMLog(__func__, @"Using legacy code for listing packages.  Hopefully it still works.");
         TLMListOperation *op = [[TLMListOperation alloc] initWithLocation:location offline:offline];
         [self _addOperation:op selector:@selector(_handleListFinishedNotification:)];
@@ -1042,7 +1043,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
      Use the URL set in preferences, in case the currently installed TL is from the previous year,
      and we munged it to point at the TUG archived versions.
      */
-    NSURL *installURL = [[TLMPreferenceController sharedPreferenceController] defaultServerURL];
+    NSURL *installURL = [[TLMEnvironment currentEnvironment] defaultServerURL];
     TLMNetInstallOperation *op = [[TLMNetInstallOperation alloc] initWithProfile:profile location:installURL];
     [self _addOperation:op selector:@selector(_handleNetInstallFinishedNotification:)];
     [op release];
@@ -1197,7 +1198,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 
 - (void)refreshFullPackageList
 {
-    NSURL *serverURL = [[TLMPreferenceController sharedPreferenceController] validServerURL];
+    NSURL *serverURL = [[TLMEnvironment currentEnvironment] validServerURL];
     
     /* 
      If the network is not available, read the local package db so that show info still works.
@@ -1209,7 +1210,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     CFStringRef desc = NULL;
     if (diagnostic && kCFNetDiagnosticConnectionDown == CFNetDiagnosticCopyNetworkStatusPassively(diagnostic, &desc)) {
         // this is basically a dummy URL that we pass through in offline mode
-        serverURL = [[TLMPreferenceController sharedPreferenceController] installDirectory];
+        serverURL = [[TLMEnvironment currentEnvironment] installDirectory];
         TLMLog(__func__, @"Network connection is down (%@).  Trying local install database %@%C", desc, serverURL, 0x2026);
         [(id)desc autorelease];
         [self _refreshFullPackageListFromLocation:serverURL offline:YES];
@@ -1228,7 +1229,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 - (void)refreshUpdatedPackageListWithURL:(NSURL *)aURL;
 {
     if (nil == aURL)
-        aURL = [[TLMPreferenceController sharedPreferenceController] validServerURL];
+        aURL = [[TLMEnvironment currentEnvironment] validServerURL];
     
     // check refresh flag since this may be called from DO
     if ([_updateListDataSource isRefreshing] == NO)
@@ -1249,12 +1250,12 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(willBeRemoved == YES)"];
     NSUInteger removeCount = [[[_updateListDataSource allPackages] filteredArrayUsingPredicate:predicate] count];
-    if ([[TLMPreferenceController sharedPreferenceController] autoRemove] && removeCount)
+    if ([[TLMEnvironment currentEnvironment] autoRemove] && removeCount)
         [informativeText appendFormat:@"  %@", NSLocalizedString(@"Packages that no longer exist on the server will be removed.", @"update alert message text part 2 (optional)")];
     
     predicate = [NSPredicate predicateWithFormat:@"(isInstalled == NO)"];
     NSUInteger installCount = [[[_updateListDataSource allPackages] filteredArrayUsingPredicate:predicate] count];
-    if ([[TLMPreferenceController sharedPreferenceController] autoInstall] && installCount)
+    if ([[TLMEnvironment currentEnvironment] autoInstall] && installCount)
         [informativeText appendFormat:@"  %@", NSLocalizedString(@"New packages will be installed.", @"update alert message text part 3 (optional)")];
     
     TLMSizeFormatter *sizeFormatter = [[TLMSizeFormatter new] autorelease];

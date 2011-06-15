@@ -37,9 +37,9 @@
  */
 
 #import "TLMInfoOperation.h"
-#import "TLMPreferenceController.h"
 #import "TLMLogServer.h"
 #import "TLMTask.h"
+#import "TLMEnvironment.h"
 
 @interface TLMInfoOperation()
 @property (readwrite, copy) NSArray *documentationURLs;
@@ -55,7 +55,7 @@
     NSParameterAssert(packageName);
     NSParameterAssert(locationURL);
     NSArray *options = [NSArray arrayWithObjects:@"--repository", [locationURL absoluteString], @"show", @"--list", packageName, nil];
-    NSString *cmd = [[TLMPreferenceController sharedPreferenceController] tlmgrAbsolutePath];
+    NSString *cmd = [[TLMEnvironment currentEnvironment] tlmgrAbsolutePath];
     self = [self initWithCommand:cmd options:options];
     if (self) {
         _packageName = [packageName copy];
@@ -84,7 +84,7 @@
 
 static float __TLMTexdocVersion()
 {
-    NSString *cmd = [[TLMPreferenceController sharedPreferenceController] texdocAbsolutePath];
+    NSString *cmd = [[TLMEnvironment currentEnvironment] texdocAbsolutePath];
     TLMTask *task = [[TLMTask new] autorelease];
     [task setLaunchPath:cmd];
     
@@ -199,7 +199,7 @@ static NSArray * __TLMURLsFromTexdocOutput2(NSString *outputString)
     
     NSAutoreleasePool *pool = [NSAutoreleasePool new];
     
-    NSString *cmd = [[TLMPreferenceController sharedPreferenceController] texdocAbsolutePath];
+    NSString *cmd = [[TLMEnvironment currentEnvironment] texdocAbsolutePath];
     
     // !!! bail out early if the file doesn't exist
     if ([[NSFileManager defaultManager] isExecutableFileAtPath:cmd] == NO) {

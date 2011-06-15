@@ -45,7 +45,7 @@
 #import "NSMenu_TLMExtensions.h"
 #import "TLMOutlineView.h"
 #import "TLMTask.h"
-#import "TLMPreferenceController.h"
+#import "TLMEnvironment.h"
 
 #import "TLMDatabase.h"
 #import "TLMDatabasePackage.h"
@@ -275,7 +275,7 @@ static NSArray * __TLMURLsFromTexdocOutput2(NSString *outputString)
 - (NSArray *)_texdocForPackage:(TLMDatabasePackage *)package
 {
     
-    NSString *cmd = [[TLMPreferenceController sharedPreferenceController] texdocAbsolutePath];
+    NSString *cmd = [[TLMEnvironment currentEnvironment] texdocAbsolutePath];
         
     // !!! bail out early if the file doesn't exist
     if ([[NSFileManager defaultManager] isExecutableFileAtPath:cmd] == NO) {

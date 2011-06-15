@@ -49,9 +49,6 @@
     NSURL                   *_updateURL;
 }
 
-// update $PATH from NSUserDefaults
-+ (void)updatePathEnvironment;
-
 @property (readonly) TLMMainWindowController *mainWindowController;
 
 - (IBAction)showPreferences:(id)sender;

@@ -39,8 +39,8 @@
 #import "TLMOutputParser.h"
 #import "TLMPackageNode.h"
 #import "TLMLogServer.h"
-#import "TLMPreferenceController.h"
 #import "TLMBackupNode.h"
+#import "TLMEnvironment.h"
 
 @interface _TLMInfoOutput : NSObject <TLMInfoOutput>
 {
@@ -185,7 +185,7 @@ static bool hasKeyPrefix(NSString *line)
     NSMutableArray *docfiles = [NSMutableArray array];
     int state = -1;
     
-    NSString *installPath = [[[TLMPreferenceController sharedPreferenceController] installDirectory] path];
+    NSString *installPath = [[[TLMEnvironment currentEnvironment] installDirectory] path];
     
     for (NSString *line in lines) {
         

@@ -46,6 +46,7 @@
 #import "TLMProxyManager.h"
 #import "TLMDatabase.h"
 #import "TLMMirrorController.h"
+#import "TLMEnvironment.h"
 
 @implementation TLMAppController
 
@@ -141,87 +142,6 @@ static void __TLMMigrateBundleIdentifier()
     [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];   
 }
 
-+ (NSMutableArray *)_systemPaths
-{
-    // return nil on failure: http://code.google.com/p/mactlmgr/issues/detail?id=55
-    NSString *str = [NSString stringWithContentsOfFile:@"/etc/paths" encoding:NSUTF8StringEncoding error:NULL];
-    NSMutableArray *paths = [NSMutableArray array];
-    // one path per line, according to man page for path_helper(8)
-    for (NSString *path in [str componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]]) {
-        
-        // trim and check for empty string, in case of empty/trailing line
-        path = [path stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        if ([path isEqualToString:@""] == NO)
-            [paths addObject:path];
-    }
-    return [paths count] ? paths : nil;
-}
-
-+ (void)updatePathEnvironment;
-{
-    /*
-     
-     I originally tried using the path to tlmgr itself as the sole setting, but it needs kpsewhich etc., 
-     so we have to pass tlmgr a correct, usable environment.
-     
-     Next rev was to append the path from prefs (typically /usr/texbin) to the existing PATH variable.  
-     Unfortunately, there are at least a couple of problems with this:
-     
-        1) If the user has a teTeX install in PATH prior to TeX Live, kpsewhich breaks horribly.
-        2) If the pref previously pointed directly to a TeX Live install, that version of TL should
-           be removed from the path, and there's no good way to do that.
-     
-     The main breakage came from our ancient enemy environment.plist, of course.  The best solution 
-     appears to be to set a clean path from /etc/paths, then append /usr/texbin.  This should work 
-     even if the user did something stupid like set PATH in environment.plist, and is more secure than
-     prepending /usr/texbin to the PATH.
-     
-     Even though PATH is now reset, we still check for environment.plist and use a log as a LART,
-     since it can still break TeX in strange ways.  No point in wasting more time on this.
-
-     NB: I set the path globally for convenience, since the app is basically useless without tlmgr.  This
-     avoids the hassle of passing the environment to each child process.
-
-     */
-    
-    NSDictionary *env = [NSDictionary dictionaryWithContentsOfFile:[@"~/.MacOSX/environment.plist" stringByStandardizingPath]];
-    if (env) {
-        
-        // look for path, something possibly TeX related like TEXINPUTS/BIBINPUTS, or one of the proxy-related variables
-        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(SELF contains[cd] 'PATH') OR "
-                                                                  @"(SELF contains[cd] 'TEX') OR "
-                                                                  @"(SELF contains 'INPUTS') OR "
-                                                                  @"(SELF contains[cd] '_proxy') OR "
-                                                                  @"(SELF contains 'WGETRC')"];
-        NSArray *keys = [[env allKeys] filteredArrayUsingPredicate:predicate];
-        if ([keys count]) {
-            TLMLog(__func__, @"*** WARNING *** ~/.MacOSX/environment.plist alters critical variables; ignoring PATH if present in %@", keys);
-        }
-        else {
-            // log anyway, since it's a huge PITA to diagnose a screwed up environment
-            TLMLog(__func__, @"Found ~/.MacOSX/environment.plist%Cdidn't look too evil.", 0x2026);
-        }
-    }
-    
-    // get the base path from /etc
-    NSMutableArray *systemPaths = [self _systemPaths];
-    
-    // could abort here, but try the default on 10.5+
-    if (nil == systemPaths) {
-        systemPaths = [NSMutableArray arrayWithObjects:@"/usr/bin", @"/bin", @"/usr/sbin", @"/sbin", @"/usr/local/bin", nil];
-        TLMLog(__func__, @"*** ERROR *** Unable to read /etc/paths.");
-    }
-    NSParameterAssert([systemPaths count]);
-    
-    NSParameterAssert([[NSUserDefaults standardUserDefaults] objectForKey:TLMTexBinPathPreferenceKey]);
-    [systemPaths addObject:[[NSUserDefaults standardUserDefaults] objectForKey:TLMTexBinPathPreferenceKey]];
-    NSString *newPath = [systemPaths componentsJoinedByString:@":"];
-    NSParameterAssert(newPath);
-    
-    setenv("PATH", [newPath saneFileSystemRepresentation], 1);
-    TLMLog(__func__, @"Using PATH = \"%@\"", systemPaths);
-}
-
 - (void)dealloc
 {
     [_mainWindowController release];
@@ -258,7 +178,7 @@ static void __TLMMigrateBundleIdentifier()
     [[TLMProxyManager sharedManager] updateProxyEnvironmentForURL:nil];
     
     // make sure this is set up early enough to use tasks anywhere
-    [[self class] updatePathEnvironment]; 
+    [TLMEnvironment updateEnvironment]; 
 
     if (nil == _updateURL) {
         [[self mainWindowController] showWindow:nil];

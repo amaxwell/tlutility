@@ -40,6 +40,7 @@
 #import "TLMLogServer.h"
 #import "TLMTask.h"
 #import "TLMPreferenceController.h"
+#import "TLMEnvironment.h"
 
 #import <Security/Authorization.h>
 
@@ -104,7 +105,7 @@ struct TLMAOInternal {
         _internal->_options = [fullOptions copy];
         [fullOptions release];
         
-        _internal->_authorizationRequired = [[TLMPreferenceController sharedPreferenceController] installRequiresRootPrivileges];
+        _internal->_authorizationRequired = [[TLMEnvironment currentEnvironment] installRequiresRootPrivileges];
     }
     return self;
 }
