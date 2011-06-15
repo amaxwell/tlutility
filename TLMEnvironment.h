@@ -43,9 +43,10 @@
 {
 @private
     NSURL               *_legacyRepositoryURL;
-    NSNumber            *_recursiveRootRequired;
     NSString            *_installDirectory;
     FSEventStreamRef     _fseventStream;
+    BOOL                 _rootRequired;
+    NSConditionLock     *_rootRequiredLock;
     struct __versions {
         TLMDatabaseYear repositoryYear;
         TLMDatabaseYear installedYear;

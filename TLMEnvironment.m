@@ -53,6 +53,7 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
 - (void)_displayFallbackServerAlert;
 - (TLMDatabaseYear)_texliveYear:(NSString **)versionStr isDevelopmentVersion:(BOOL *)isDev tlmgrVersion:(NSInteger *)tlmgrVersion;
 - (NSString *)_backupDirOption;
+- (void)_checkForRootPrivileges;
 
 @end
 
@@ -60,7 +61,6 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
 
 @property (readwrite, copy) NSURL *legacyRepositoryURL;
 @property (readwrite, copy) NSString *installDirectory;
-@property (readwrite, copy) NSNumber *recursiveRootCheckRequired;
 
 @end
 
@@ -69,7 +69,9 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
 #define KPSEWHICH_CMD @"kpsewhich"
 #define TEXDIST_PATH  @"/Library/TeX"
 
-static NSString            *_permissionCheckLock = @"permissionCheckLockString";
+#define PERMISSION_CHECK_IN_PROGRESS 1
+#define PERMISSION_CHECK_DONE        0
+
 static NSMutableDictionary *_environments = nil;
 static NSString            *_currentEnvironmentKey = nil;
 
@@ -77,7 +79,6 @@ static NSString            *_currentEnvironmentKey = nil;
 
 @synthesize legacyRepositoryURL = _legacyRepositoryURL;
 @synthesize installDirectory = _installDirectory;
-@synthesize recursiveRootCheckRequired = _recursiveRootRequired;
 
 + (void)initialize
 {
@@ -184,7 +185,8 @@ static NSString            *_currentEnvironmentKey = nil;
         }
         
         // spin off a thread to check this lazily, in case a recursive check is required
-        [NSThread detachNewThreadSelector:@selector(installRequiresRootPrivileges) toTarget:self withObject:nil];
+        _rootRequiredLock = [[NSConditionLock alloc] initWithCondition:PERMISSION_CHECK_IN_PROGRESS];
+        [NSThread detachNewThreadSelector:@selector(_checkForRootPrivileges) toTarget:self withObject:nil];
     }
     return self;
 }
@@ -196,7 +198,7 @@ static NSString            *_currentEnvironmentKey = nil;
         FSEventStreamUnscheduleFromRunLoop(_fseventStream, CFRunLoopGetMain(), kCFRunLoopDefaultMode);
         FSEventStreamRelease(_fseventStream);
     }
-    [_recursiveRootRequired release];
+    [_rootRequiredLock release];
     [_legacyRepositoryURL release];
     [_installDirectory release];
     [super dealloc];
@@ -538,23 +540,29 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
 
 - (BOOL)installRequiresRootPrivileges
 {
+    /*
+     Normally should succeed immediately, after the check thread is
+     spun off at init time.  The lock is only to account for the race
+     window between the time init returns and the time this method is
+     first called.  Normally there should be no contention for this
+     resource, so the lock overhead is negligible.
+     */
+    [_rootRequiredLock lockWhenCondition:PERMISSION_CHECK_DONE];
+    BOOL ret = _rootRequired;
+    [_rootRequiredLock unlock];
+    return ret;
+}
+
+- (void)_checkForRootPrivileges;
+{
     NSAutoreleasePool *pool = [NSAutoreleasePool new];
     
-    NSString *path = [self installDirectory];
+    [_rootRequiredLock lockWhenCondition:PERMISSION_CHECK_IN_PROGRESS];
     
-    // things are going to fail regardless...
-    if (nil == path) {
-        [pool release];
-        return NO;
-    }
+    NSString *path = [self installDirectory];
+    NSParameterAssert(path);
     
     NSFileManager *fm = [[NSFileManager new] autorelease];
-    
-    // !!! early return; check top level first, which is the common case
-    if ([fm isWritableFileAtPath:path] == NO) {
-        [pool release];
-        return YES;
-    }
     
     /*
      In older versions, this method considered TLMUseRootHomePreferenceKey and the top level dir.
@@ -570,41 +578,36 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
      NB: synchronizing on self here caused contention with -validServerURL, and it took a while
      to figure out why it was beachballing on launch after I threaded this check.
      */
-    BOOL rootRequired = NO;
-    @synchronized(_permissionCheckLock) {
-        if (nil == _recursiveRootRequired) {
+   
+    // check for writable top-level directory, before doing any traversal
+    if ([fm isWritableFileAtPath:path]) {
+        TLMLog(__func__, @"Recursive check of installation privileges. This will happen once per launch, and may be slow if %@ is on a network filesystem%C", path, 0x2026);
+        TLMLogServerSync();
+        CFAbsoluteTime start = CFAbsoluteTimeGetCurrent();
+        
+        NSDirectoryEnumerator *dirEnum = [fm enumeratorAtPath:path];
+        for (NSString *subpath in dirEnum) {
             
-            TLMLog(__func__, @"Recursive check of installation privileges. This will happen once per launch, and may be slow if %@ is on a network filesystem%C", path, 0x2026);
-            TLMLogServerSync();
-            CFAbsoluteTime start = CFAbsoluteTimeGetCurrent();
-            
-            NSDirectoryEnumerator *dirEnum = [fm enumeratorAtPath:path];
-            for (NSString *subpath in dirEnum) {
-                
-                // okay if this doesn't get released on the break; it'll be caught by the top-level pool
-                NSAutoreleasePool *innerPool = [NSAutoreleasePool new];
-                subpath = [path stringByAppendingPathComponent:subpath];
-                if ([fm fileExistsAtPath:subpath]) {
-                    if ([fm isWritableFileAtPath:subpath] == NO) {
-                        rootRequired = YES;
-                        [innerPool release];
-                        break;
-                    }
+            // okay if this doesn't get released on the break; it'll be caught by the top-level pool
+            NSAutoreleasePool *innerPool = [NSAutoreleasePool new];
+            subpath = [path stringByAppendingPathComponent:subpath];
+            if ([fm fileExistsAtPath:subpath]) {
+                if ([fm isWritableFileAtPath:subpath] == NO) {
+                    _rootRequired = YES;
+                    [innerPool release];
+                    break;
                 }
-                else {
-                    // I have a bad symlink at /usr/local/texlive/2010/texmf/doc/man/man; this is MacTeX-specific
-                    TLMLog(__func__, @"%@ does not exist; ignoring permissions", subpath);
-                }
-                [innerPool release];
             }
-            _recursiveRootRequired = [[NSNumber alloc] initWithBool:rootRequired];
-            TLMLog(__func__, @"Recursive check completed in %.1f seconds.  Root privileges %@ required.", CFAbsoluteTimeGetCurrent() - start, rootRequired ? @"are" : @"not");
+            else {
+                // I have a bad symlink at /usr/local/texlive/2010/texmf/doc/man/man; this is MacTeX-specific
+                TLMLog(__func__, @"%@ does not exist; ignoring permissions", subpath);
+            }
+            [innerPool release];
         }
-        rootRequired = [_recursiveRootRequired boolValue];
+        TLMLog(__func__, @"Recursive check completed in %.1f seconds.  Root privileges %@ required.", CFAbsoluteTimeGetCurrent() - start, _rootRequired ? @"are" : @"not");
     }
-    [pool release];
-    
-    return rootRequired;
+    [_rootRequiredLock unlockWithCondition:PERMISSION_CHECK_DONE];
+    [pool release];    
 }
 
 - (BOOL)autoInstall { return [[NSUserDefaults standardUserDefaults] boolForKey:TLMAutoInstallPreferenceKey]; }
