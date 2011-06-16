@@ -98,7 +98,12 @@ class TLPackage(object):
         return s
         
     def dictionary_value(self):
-        """Returns a dictionary with name as key and attributes as key-value pairs."""
+        """Returns a dictionary with name as key and attributes as key-value pairs.
+        
+        NOTE: not all attributes are saved, because I don't need all of them.  So if
+        you don't see one in the plist, it may just need to be added as a line here.
+        
+        """
         kv = {}
         kv["name"] = self.name
         if self.category: kv["category"] = self.category
@@ -109,6 +114,8 @@ class TLPackage(object):
         if self.runfiles: kv["runFiles"] = self.runfiles
         if self.srcfiles: kv["sourceFiles"] = self.srcfiles
         if self.binfiles: kv["binFiles"] = self.binfiles
+        if self.cataloguedata: kv["catalogueData"] = self.cataloguedata
+        if self.depends: kv["depends"] = self.depends
         if self.docfiles: kv["docFiles"] = self.docfiles
         if self.extradata: kv["extradata"] = self.extradata
         if self.docfiledata: kv["docFileData"] = self.docfiledata
