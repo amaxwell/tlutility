@@ -202,7 +202,7 @@ static NSArray * __TLMURLsFromTexdocOutput2(NSString *outputString)
     NSString *cmd = [[TLMEnvironment currentEnvironment] texdocAbsolutePath];
     
     // !!! bail out early if the file doesn't exist
-    if ([[NSFileManager defaultManager] isExecutableFileAtPath:cmd] == NO) {
+    if ([[[NSFileManager new] autorelease] isExecutableFileAtPath:cmd] == NO) {
         TLMLog(__func__, @"%@ does not exist or is not executable", cmd);
         [pool release];
         return;

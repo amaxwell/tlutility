@@ -92,8 +92,7 @@ static NSString            *_currentEnvironmentKey = nil;
     // kpsewhich -var-value=SELFAUTOPARENT
     NSString *texbinPath = [[NSUserDefaults standardUserDefaults] objectForKey:TLMTexBinPathPreferenceKey];
     NSString *kpsewhichPath = [[texbinPath stringByAppendingPathComponent:KPSEWHICH_CMD] stringByStandardizingPath];
-    NSFileManager *fm = [[NSFileManager new] autorelease];
-    if ([fm isExecutableFileAtPath:kpsewhichPath]) {
+    if ([[[NSFileManager new] autorelease] isExecutableFileAtPath:kpsewhichPath]) {
         TLMTask *task = [TLMTask new];
         [task setLaunchPath:kpsewhichPath];
         [task setArguments:[NSArray arrayWithObject:@"-var-value=SELFAUTOPARENT"]];
@@ -164,6 +163,9 @@ static NSString            *_currentEnvironmentKey = nil;
 
 + (BOOL)isValidTexbinPath:(NSString *)absolutePath;
 {
+    // for NSFileManager; this is a UI validation method
+    NSParameterAssert([NSThread isMainThread]); 
+    
     NSFileManager *fm = [NSFileManager defaultManager];
     BOOL isDir;
     if ([fm fileExistsAtPath:absolutePath isDirectory:&isDir] && isDir) {
@@ -186,7 +188,7 @@ static NSString            *_currentEnvironmentKey = nil;
         _installDirectory = [absolutePath copy];
         [TLMEnvironment _getInstalledYear:&_installedYear isDevelopmentVersion:&_tlmgrVersion.isDevelopment tlmgrVersion:&_tlmgrVersion.revision];
 
-        if ([[NSFileManager defaultManager] fileExistsAtPath:TEXDIST_PATH]) {
+        if ([[[NSFileManager new] autorelease] fileExistsAtPath:TEXDIST_PATH]) {
             FSEventStreamContext ctxt = { 0, [self class], CFRetain, CFRelease, CFCopyDescription };
             CFArrayRef paths = (CFArrayRef)[NSArray arrayWithObject:TEXDIST_PATH];
             FSEventStreamCreateFlags flags = kFSEventStreamCreateFlagUseCFTypes|kFSEventStreamCreateFlagNoDefer;
@@ -517,7 +519,7 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
     // kpsewhich -var-value=SELFAUTOPARENT
     NSString *tlmgrPath = [self tlmgrAbsolutePath];
     NSString *backupDir = nil;
-    if ([[NSFileManager defaultManager] isExecutableFileAtPath:tlmgrPath]) {
+    if ([[[NSFileManager new] autorelease] isExecutableFileAtPath:tlmgrPath]) {
         TLMTask *task = [TLMTask new];
         [task setLaunchPath:tlmgrPath];
         [task setArguments:[NSArray arrayWithObjects:@"option", @"backupdir", nil]];
