@@ -616,6 +616,11 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
         }
         TLMLog(__func__, @"Recursive check completed in %.1f seconds.  Root privileges %@ required.", CFAbsoluteTimeGetCurrent() - start, _rootRequired ? @"are" : @"not");
     }
+    else {
+        TLMLog(__func__, @"Root permission required for installation at %@", path);
+        _rootRequired = YES;
+    }
+
     [_rootRequiredLock unlockWithCondition:PERMISSION_CHECK_DONE];
     [pool release];    
 }
