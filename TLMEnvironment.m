@@ -147,16 +147,19 @@ static NSString            *_currentEnvironmentKey = nil;
 
 + (TLMEnvironment *)currentEnvironment;
 {
+    TLMEnvironment *env = nil;
     @synchronized(_environments) {
-        TLMEnvironment *env = [_environments objectForKey:_currentEnvironmentKey];
+        env = [_environments objectForKey:_currentEnvironmentKey];
         // okay to call +updateEnvironment inside recursive mutex
         if (nil == env) {
             [self updateEnvironment];
             env = [_environments objectForKey:_currentEnvironmentKey];
         }
-        // return a dummy environment in case the user screwed up the path
-        return env ? [_environments objectForKey:_currentEnvironmentKey] : [[self new] autorelease];
+        // return a dummy environment in case the user screwed up the path and we failed to get a key
+        if (nil == env)
+            env = [[self new] autorelease];
     }
+    return env;
 }
 
 + (BOOL)isValidTexbinPath:(NSString *)absolutePath;
