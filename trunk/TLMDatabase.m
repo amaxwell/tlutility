@@ -309,7 +309,7 @@ static NSMutableDictionary *_databases = nil;
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
     _failed = YES;
-    TLMLog(__func__, @"Failed to download tlpdb %@ : %@", (_actualURL ? _actualURL : _tlpdbURL), error);
+    TLMLog(__func__, @"Failed to download tlpdb for version check %@ : %@", (_actualURL ? _actualURL : _tlpdbURL), error);
 }
 
 - (NSURLRequest *)connection:(NSURLConnection *)connection willSendRequest:(NSURLRequest *)request redirectResponse:(NSURLResponse *)response;
@@ -335,7 +335,7 @@ static NSMutableDictionary *_databases = nil;
         NSURLRequest *request = [NSURLRequest requestWithURL:_tlpdbURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:URL_TIMEOUT];
         _failed = NO;
         TLMLog(__func__, @"Checking the repository version.  Please be patient.");
-        TLMLog(__func__, @"Downloading tlpdb%C", 0x2026);
+        TLMLog(__func__, @"Downloading at least %d bytes of tlpdb for a version check%C", MIN_DATA_LENGTH, 0x2026);
         TLMLogServerSync();
 
         NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
@@ -363,7 +363,7 @@ static NSMutableDictionary *_databases = nil;
                 break;
             
         } while ([_tlpdbData length] < MIN_DATA_LENGTH);
-        TLMLog(__func__, @"Downloaded %lu bytes", (unsigned long)[_tlpdbData length]);
+        TLMLog(__func__, @"Downloaded %lu bytes of tlpdb for version check", (unsigned long)[_tlpdbData length]);
         [connection cancel];
         [connection release];
     }
