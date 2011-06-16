@@ -42,7 +42,7 @@
    This function's job is to create thumbnail for designated file as fast as possible
    ----------------------------------------------------------------------------- */
 
-OSStatus GenerateThumbnailForURL(void *thisInterface, QLThumbnailRequestRef thumbnail, CFURLRef url, CFStringRef contentTypeUTI, CFDictionaryRef options, CGSize maxSize)
+OSStatus GenerateThumbnailForURL(void *thisInterface, QLThumbnailRequestRef thumbnail, CFURLRef url, CFStringRef contentTypeUTI, CFDictionaryRef options, CGSize maximumSize)
 {
     CFDataRef pdfData = DVICreatePDFDataFromFile(url, false, QLThumbnailRequestGetGeneratorBundle(thumbnail));
     
@@ -63,12 +63,12 @@ OSStatus GenerateThumbnailForURL(void *thisInterface, QLThumbnailRequestRef thum
     if (page) {
                             
         /*
-         The page is typically larger than maxSize, so we need to scale it before asking for a 
+         The page is typically larger than maximumSize, so we need to scale it before asking for a 
          context that's too large for a texture (or whatever Quick Look uses internally).  
          Failure to do this can result in "CGImageCreate: invalid image size: 0 x 0" log messages.
          */
         CGRect pageRect = CGPDFPageGetBoxRect(page, kCGPDFMediaBox);
-        CGFloat scale = fmin(maxSize.width / pageRect.size.width, maxSize.height / pageRect.size.height);
+        CGFloat scale = fmin(maximumSize.width / pageRect.size.width, maximumSize.height / pageRect.size.height);
         CGRect imageRect = CGRectZero;
         imageRect.size.height = pageRect.size.height * scale;
         imageRect.size.width = pageRect.size.width * scale;
