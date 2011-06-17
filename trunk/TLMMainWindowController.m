@@ -1183,6 +1183,8 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 {
     TLMLog(__func__, @"Beginning user-requested infrastructure update%C", 0x2026);
     _updateInfrastructure = YES;
+#warning check repo version
+    // what if the current repo is the wrong one, and this points to an old update-tlmgr.sh that blindly overwrites?
     [self _updateAllPackages];
 }
 
