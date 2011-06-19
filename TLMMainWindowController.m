@@ -972,6 +972,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     NSURL *currentURL = [self _lastUpdateURL];
     TLMInstallOperation *op = [[TLMInstallOperation alloc] initWithPackageNames:packageNames location:currentURL reinstall:reinstall];
     [self _addOperation:op selector:@selector(_handleInstallFinishedNotification:)];
+    [op release];
     TLMLog(__func__, @"Beginning install of %@\nfrom %@", packageNames, [currentURL absoluteString]);   
 }
 
