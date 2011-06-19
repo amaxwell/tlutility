@@ -514,19 +514,47 @@ static char _TLMOperationQueueOperationContext;
     }
 }
 
+/*
+ Call before a write operation (update/install), just in case the environment has changed
+ since the last time updates were listed.  This avoids downloading the wrong disaster
+ recovery script and running it against a different TL version (which the current script
+ handles correctly, so this is just an extra precaution).  Note that changing mirrors
+ should not be an issue since we always use the last (already validated) mirror.  However,
+ changing the the tlmgr path or TeX Dist in system prefs can cause problems.
+ */
+- (BOOL)_isCorrectDatabaseVersionAtURL:(NSURL *)aURL
+{
+    TLMLog(__func__, @"Checking database version in case preferences have been changed%C", 0x2026);
+    // should be cached, unless the user has screwed up (and that's the case we're trying to catch)
+    const TLMDatabaseVersion version = [TLMDatabase versionForMirrorURL:aURL];
+    const TLMDatabaseYear year = [[TLMEnvironment currentEnvironment] texliveYear];
+    if (version.year != year) {
+        NSAlert *alert = [[NSAlert new] autorelease];
+        [alert setMessageText:NSLocalizedString(@"Current mirror has a different TeX Live version", @"alert title")];
+        [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"The mirror at %@ has TeX Live %d, but you have TeX Live %d installed.  You need to adjust your preferences in order to continue.", @"alert text, two integer format specifiers"), [aURL absoluteString], version.year, year]];
+        [alert beginSheetModalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
+        TLMLog(__func__, @"Well, this is not going to work:  %@ has TeX Live %d, and the installed version is TeX Live %d", [aURL absoluteString], version.year, year);
+        return NO;
+    }
+    return YES;
+}
+
 - (void)_updateAllPackagesFromRepository:(NSURL *)repository
 {
-    TLMUpdateOperation *op = nil;
-    if (_updateInfrastructure) {
-        op = [[TLMInfraUpdateOperation alloc] initWithLocation:repository];
-        TLMLog(__func__, @"Beginning infrastructure update from %@", [repository absoluteString]);
+    // sanity check in case the user switched the environment after getting an update listing
+    if ([self _isCorrectDatabaseVersionAtURL:repository]) {
+        TLMUpdateOperation *op = nil;
+        if (_updateInfrastructure) {
+            op = [[TLMInfraUpdateOperation alloc] initWithLocation:repository];
+            TLMLog(__func__, @"Beginning infrastructure update from %@", [repository absoluteString]);
+        }
+        else {
+            op = [[TLMUpdateOperation alloc] initWithPackageNames:nil location:repository];
+            TLMLog(__func__, @"Beginning update of all packages from %@", [repository absoluteString]);
+        }
+        [self _addOperation:op selector:@selector(_handleUpdateFinishedNotification:)];
+        [op release];
     }
-    else {
-        op = [[TLMUpdateOperation alloc] initWithPackageNames:nil location:repository];
-        TLMLog(__func__, @"Beginning update of all packages from %@", [repository absoluteString]);
-    }
-    [self _addOperation:op selector:@selector(_handleUpdateFinishedNotification:)];
-    [op release];
 }
 
 - (void)_updateAllPackages
@@ -969,11 +997,14 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 
 - (void)_installPackagesWithNames:(NSArray *)packageNames reinstall:(BOOL)reinstall
 {
+    // sanity check in case the user switched the environment after getting an update listing
     NSURL *currentURL = [self _lastUpdateURL];
-    TLMInstallOperation *op = [[TLMInstallOperation alloc] initWithPackageNames:packageNames location:currentURL reinstall:reinstall];
-    [self _addOperation:op selector:@selector(_handleInstallFinishedNotification:)];
-    [op release];
-    TLMLog(__func__, @"Beginning install of %@\nfrom %@", packageNames, [currentURL absoluteString]);   
+    if ([self _isCorrectDatabaseVersionAtURL:currentURL]) {
+        TLMInstallOperation *op = [[TLMInstallOperation alloc] initWithPackageNames:packageNames location:currentURL reinstall:reinstall];
+        [self _addOperation:op selector:@selector(_handleInstallFinishedNotification:)];
+        [op release];
+        TLMLog(__func__, @"Beginning install of %@\nfrom %@", packageNames, [currentURL absoluteString]);   
+    }
 }
 
 - (void)_handleRemoveFinishedNotification:(NSNotification *)aNote
@@ -1184,8 +1215,6 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 {
     TLMLog(__func__, @"Beginning user-requested infrastructure update%C", 0x2026);
     _updateInfrastructure = YES;
-#warning check repo version
-    // what if the current repo is the wrong one, and this points to an old update-tlmgr.sh that blindly overwrites?
     [self _updateAllPackages];
 }
 
@@ -1261,9 +1290,12 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     if ([[TLMEnvironment currentEnvironment] autoInstall] && installCount)
         [informativeText appendFormat:@"  %@", NSLocalizedString(@"New packages will be installed.", @"update alert message text part 3 (optional)")];
     
-    TLMSizeFormatter *sizeFormatter = [[TLMSizeFormatter new] autorelease];
-    NSString *sizeString = [sizeFormatter stringForObjectValue:[NSNumber numberWithUnsignedInteger:size]];
-    [informativeText appendFormat:NSLocalizedString(@"  Total download size will be %@.", @"partial alert text, with double space in front, only used with tlmgr2"), sizeString];
+    // disaster recovery script is much larger than the value we get from tlmgr
+    if (NO == _updateInfrastructure) {
+        TLMSizeFormatter *sizeFormatter = [[TLMSizeFormatter new] autorelease];
+        NSString *sizeString = [sizeFormatter stringForObjectValue:[NSNumber numberWithUnsignedInteger:size]];
+        [informativeText appendFormat:NSLocalizedString(@"  Total download size will be %@.", @"partial alert text, with double space in front, only used with tlmgr2"), sizeString];
+    }
     
     [alert setInformativeText:informativeText];
     [alert addButtonWithTitle:NSLocalizedString(@"Update", @"button title")];
@@ -1277,10 +1309,12 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 - (void)updatePackagesWithNames:(NSArray *)packageNames;
 {
     NSURL *currentURL = [self _lastUpdateURL];
-    TLMUpdateOperation *op = [[TLMUpdateOperation alloc] initWithPackageNames:packageNames location:currentURL];
-    [self _addOperation:op selector:@selector(_handleUpdateFinishedNotification:)];
-    [op release];
-    TLMLog(__func__, @"Beginning update of %@\nfrom %@", packageNames, [currentURL absoluteString]);
+    if ([self _isCorrectDatabaseVersionAtURL:currentURL]) {
+        TLMUpdateOperation *op = [[TLMUpdateOperation alloc] initWithPackageNames:packageNames location:currentURL];
+        [self _addOperation:op selector:@selector(_handleUpdateFinishedNotification:)];
+        [op release];
+        TLMLog(__func__, @"Beginning update of %@\nfrom %@", packageNames, [currentURL absoluteString]);
+    }
 }
 
 // reinstall requires additional option to tlmgr
