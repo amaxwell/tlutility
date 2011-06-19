@@ -347,6 +347,7 @@ static char _TLMOperationQueueOperationContext;
 - (NSRect)window:(NSWindow *)window willPositionSheet:(NSWindow *)sheet usingRect:(NSRect)rect
 {
     [self performSelector:@selector(_fixOverlayWindowOrder) withObject:nil afterDelay:0];
+    TLMLogServerSync();
     return rect;
 }
 
