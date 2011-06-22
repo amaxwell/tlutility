@@ -368,8 +368,18 @@
     while ((NSInteger)[_sortDescriptors count] > [tableView numberOfColumns])
         [_sortDescriptors removeLastObject];
     
+    NSArray *selectedItems = [_tableView numberOfSelectedRows] ? [_packages objectsAtIndexes:[_tableView selectedRowIndexes]] : nil;
+    
     [_packages sortUsingDescriptors:_sortDescriptors];
     [_tableView reloadData];
+    
+    NSMutableIndexSet *selRows = [NSMutableIndexSet indexSet];
+    for (id item in selectedItems) {
+        NSUInteger idx = [_packages indexOfObjectIdenticalTo:item];
+        if (NSNotFound != idx)
+            [selRows addIndex:idx];
+    }
+    [_tableView selectRowIndexes:selRows byExtendingSelection:NO];
 }
 
 - (void)tableViewSelectionDidChange:(NSNotification *)notification;

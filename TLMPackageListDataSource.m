@@ -266,8 +266,19 @@
     while ((NSInteger)[_sortDescriptors count] > [outlineView numberOfColumns])
         [_sortDescriptors removeLastObject];
     
+    NSArray *selectedItems = [_outlineView selectedItems];
+    
     [_displayedPackageNodes sortUsingDescriptors:_sortDescriptors];
     [outlineView reloadData];
+    
+    // restore selection
+    NSMutableIndexSet *selRows = [NSMutableIndexSet indexSet];
+    for (id item in selectedItems) {
+        NSInteger row = [_outlineView rowForItem:item];
+        if (row != -1)
+            [selRows addIndex:row];
+    }
+    [outlineView selectRowIndexes:selRows byExtendingSelection:NO];
 }
 
 - (void)outlineViewSelectionDidChange:(NSNotification *)notification;
