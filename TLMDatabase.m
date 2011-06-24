@@ -224,6 +224,19 @@ static NSMutableDictionary *_databases = nil;
     [super dealloc];
 }
 
+// CFURL is pretty stupid about equality.  Among other things, it considers a double slash directory separator significant.
+static NSURL *__TLMNormalizedURL(NSURL *aURL)
+{
+    if (nil == aURL) return nil;
+    NSMutableString *str = [[aURL absoluteString] mutableCopy];
+    NSRange startRange = [str rangeOfString:@"//"];
+    NSUInteger start = NSMaxRange(startRange);
+    if (startRange.length && [str replaceOccurrencesOfString:@"//" withString:@"/" options:NSLiteralSearch range:NSMakeRange(start, [str length] - start)])
+        aURL = [NSURL URLWithString:str];
+    [str release];
+    return aURL;
+}
+
 + (TLMDatabaseVersion)versionForMirrorURL:(NSURL *)aURL;
 {
     TLMDatabaseVersion version =  { TLMDatabaseUnknownYear, false, [[aURL retain] autorelease] };
@@ -236,7 +249,8 @@ static NSMutableDictionary *_databases = nil;
         CFAllocatorRef alloc = CFGetAllocator((CFURLRef)aURL);
         
         // cache under the full tlpdb URL
-        NSURL *tlpdbURL = [(id)CFURLCreateCopyAppendingPathComponent(alloc, (CFURLRef)aURL, TLPDB_PATH, FALSE) autorelease];        
+        NSURL *tlpdbURL = [(id)CFURLCreateCopyAppendingPathComponent(alloc, (CFURLRef)aURL, TLPDB_PATH, FALSE) autorelease];
+        tlpdbURL = __TLMNormalizedURL(tlpdbURL);
         _TLMDatabase *db = [_databases objectForKey:tlpdbURL];
         if (nil == db) {
             db = [[_TLMDatabase alloc] initWithURL:tlpdbURL];
@@ -249,7 +263,7 @@ static NSMutableDictionary *_databases = nil;
         version.isOfficial = [db isOfficial];
         
         // now see if we redirected at some point...we don't want to return the tlpdb path
-        NSURL *actualURL = [db actualURL];
+        NSURL *actualURL = __TLMNormalizedURL([db actualURL]);
         if (actualURL) {
             // delete "tlpkg/texlive.tlpdb"
             CFURLRef tmpURL = CFURLCreateCopyDeletingLastPathComponent(alloc, (CFURLRef)actualURL);
@@ -262,10 +276,21 @@ static NSMutableDictionary *_databases = nil;
         }
         
         // if redirected (e.g., from mirror.ctan.org), actualURL is non-nil
-        if ([db actualURL] && [[db actualURL] isEqual:tlpdbURL] == NO) {            
+        if ([db actualURL] && [[db actualURL] isEqual:tlpdbURL] == NO) {    
+            /*
+             This sucks.  Add a duplicate value for URLs that redirect, since the Utah
+             pretest mirror is listed as http://www.math.utah.edu/pub/texlive/tlpretest/
+             but ends up getting redirected to http://ftp.math.utah.edu:80/pub//texlive/tlpretest
+             so I had to ask it for the tlpdb each time.  Need to see if this works with
+             other hosts that redirect.
+             
+             The main thing to avoid is caching anything for the multiplexer, since there
+             is no guarantee that the hosts it returns are consistent from one request to
+             the next.
+             */
             [_databases setObject:db forKey:[db actualURL]];
-            // don't cache by the original host
-            [_databases removeObjectForKey:tlpdbURL];
+            if ([[[tlpdbURL host] lowercaseString] isEqualToString:@"mirror.ctan.org"])
+                [_databases removeObjectForKey:tlpdbURL];
         }
         
         NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithCapacity:3];
@@ -316,9 +341,9 @@ static NSMutableDictionary *_databases = nil;
 {
     // response is nil if we are not processing a redirect
     if (response) {
-        TLMLog(__func__, @"redirected request to %@", [[request URL] absoluteString]);
+        TLMLog(__func__, @"redirected request to %@", [__TLMNormalizedURL([request URL]) absoluteString]);
         TLMLogServerSync();
-        [self setActualURL:[request URL]];
+        [self setActualURL:__TLMNormalizedURL([request URL])];
     }
     return request;
 }
