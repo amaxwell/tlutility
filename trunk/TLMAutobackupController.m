@@ -147,6 +147,7 @@
 - (IBAction)changeCount:(id)sender;
 {
     [self setBackupCount:[sender integerValue]];
+    [self updateUI];
 }
 
 - (IBAction)cancel:(id)sender;
