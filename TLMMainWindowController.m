@@ -796,6 +796,19 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     }
 }
 
+- (void)_handleBackupPruningFinishedNotification:(NSNotification *)aNote
+{
+    TLMBackupOperation *op = [aNote object];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:TLMOperationFinishedNotification object:op];
+    if ([op failed]) {
+        TLMLog(__func__, @"Pruning failed.  Error was: %@", [op errorMessages]);
+    }
+    else {
+        [_backupDataSource setNeedsUpdate:YES];
+        [self _refreshCurrentDataSourceIfNeeded];
+    }
+}
+
 - (void)autobackupSheetDidEnd:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)context
 {
     [sheet orderOut:self];
@@ -818,7 +831,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
             
             if (change)
                 [cleaner addDependency:change];
-            [self _addOperation:cleaner selector:@selector(_handleAutobackupOptionFinishedNotification:)];
+            [self _addOperation:cleaner selector:@selector(_handleBackupPruningFinishedNotification:)];
             [cleaner release];
             TLMLog(__func__, @"Pruning autobackup sets to the last %ld", (long)[abc backupCount]);
         }
