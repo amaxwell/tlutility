@@ -157,28 +157,31 @@
 
 - (IBAction)accept:(id)sender;
 {
-    TLMAutobackupReturnCode ret = TLMAutobackupUnchanged;
+    // try to commit editing before ending the sheet
+    if ([[self window] makeFirstResponder:nil]) {
     
-    // change is a change in count or requirement to prune
-    if ([self backupCount] != [self initialBackupCount] || [_pruneCheckbox state] == NSOnState) {
-        ret = TLMAutobackupChanged;
+        TLMAutobackupReturnCode ret = TLMAutobackupUnchanged;
         
-        if ([self backupCount] > [self initialBackupCount])
-            ret |= TLMAutobackupIncreased;
-        else if ([self backupCount] < [self initialBackupCount])
-            ret |= TLMAutobackupDecreased;
-        
-        if ([self backupCount] == 0)
-            ret |= TLMAutobackupDisabled;
-        
-        if ([_pruneCheckbox state] == NSOnState)
-            ret |= TLMAutobackupPrune;
-    }    
-    
-    if ([[self window] makeFirstResponder:nil])
+        // change is a change in count or requirement to prune
+        if ([self backupCount] != [self initialBackupCount] || [_pruneCheckbox state] == NSOnState) {
+            ret = TLMAutobackupChanged;
+            
+            if ([self backupCount] > [self initialBackupCount])
+                ret |= TLMAutobackupIncreased;
+            else if ([self backupCount] < [self initialBackupCount])
+                ret |= TLMAutobackupDecreased;
+            
+            if ([self backupCount] == 0)
+                ret |= TLMAutobackupDisabled;
+            
+            if ([_pruneCheckbox state] == NSOnState)
+                ret |= TLMAutobackupPrune;
+        }  
         [NSApp endSheet:[self window] returnCode:ret];
-    else
+    }
+    else {
         NSBeep();
+    }
 }
 
 @end
