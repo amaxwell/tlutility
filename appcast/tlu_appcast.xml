@@ -416,5 +416,34 @@
             <pubDate>Thu, 18 Nov 2010 18:33:30 -0800</pubDate>
             <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20101118.tgz" sparkle:version="0.91" length="1750388" type="application/octet-stream" sparkle:dsaSignature="MCwCFDY4ZjRzdya7cE6MstRjdjT8hUIQAhQpbteUM8H11CawXu/haeMfeCIHJQ=="></enclosure>
         </item>
+        <item>
+            <title>Version 0.92</title>
+            <description>
+                <h3>Changes Since 0.91</h3>
+                <li>Improved previewing for icons in Info panel</li>
+                <li>Fix origin for views in Info panel to get rid of upper border</li>
+                <li>SIGPIPE is now always ignored</li>
+                <li>Recursive permissions check now occurs in a background thread</li>
+                <li>Missing /etc/paths file is now handled correctly (but removing it is a bad idea)</li>
+                <li>Empty arguments to a child task will no longer cause an exception in bizarre Apple code</li>
+                <li>Double-click on a package will now display the Info panel</li>
+                <li>Install profile is updated for TL 2011</li>
+                <li>Clang compiler is now used instead of gcc</li>
+                <li>Parsing tlmgr version is now more robust in case of a missing version number</li>
+                <li>Show Info panel will be significantly faster with TL 2011</li>
+                <li>Major refactoring of preferences and environment code, fixing a number of threading bugs</li>
+                <li>Do not allow choosing an invalid TeX binary path in preferences</li>
+                <li>Fixed a minor memory leak when installing a package</li>
+                <li>Incorrect size in bytes is no longer displayed for infrastructure updates</li>
+                <li>Check mirror version before update/install operations in case preferences have changed</li>
+                <li>Flush log display before displaying a sheet on the main window</li>
+                <li>Selection is now preserved when sorting table and outline views</li>
+                <li>Backup sheet UI is now updated properly when entering a zero</li>
+                <li>Backup list is now refreshed after pruning backups</li>
+                <li>End editing on the backup sheet before closing it</li>
+            </description>
+            <pubDate>Tue, 28 Jun 2011 02:53:37 +0000</pubDate>
+            <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20110627.tgz" sparkle:version="0.92" length="1878567" type="application/octet-stream" sparkle:dsaSignature="MCwCFFDzgEouXaiWTDT5VXdfGBd6kBh+AhQidPWYezKDeppIHXazUWFJHm4Cmg=="></enclosure>
+        </item>
     </channel>
 </rss>
