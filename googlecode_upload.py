@@ -139,7 +139,7 @@ def encode_upload_request(fields, file_path):
   body.extend(
     ['--' + BOUNDARY,
      'Content-Disposition: form-data; name="filename"; filename="%s"'
-     % file_name,
+     % str(file_name.encode("utf8")),
      # The upload server determines the mime-type, no need to set it.
      'Content-Type: application/octet-stream',
      '',
