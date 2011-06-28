@@ -145,8 +145,17 @@ static void __TLMMigrateBundleIdentifier()
 - (void)dealloc
 {
     [_mainWindowController release];
-    [_updateURL release];
+    [_aevtUpdateURL release];
+    [_sparkleUpdateInvocation release];
     [super dealloc];
+}
+
+- (void)_setSparkleUpdateInvocation:(NSInvocation *)inv
+{
+    if (inv != _sparkleUpdateInvocation) {
+        [_sparkleUpdateInvocation release];
+        _sparkleUpdateInvocation = [inv retain];
+    }
 }
 
 - (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender
@@ -154,14 +163,27 @@ static void __TLMMigrateBundleIdentifier()
     return ([[self mainWindowController] windowShouldClose:sender]) ? NSTerminateNow : NSTerminateCancel;
 }
 
+// Return YES to delay the relaunch until you do some processing; invoke the given NSInvocation to continue.
+- (BOOL)updater:(SUUpdater *)updater shouldPostponeRelaunchForUpdate:(SUAppcastItem *)update untilInvoking:(NSInvocation *)invocation;
+{
+    if ([[self mainWindowController] windowShouldClose:nil]) {
+        TLMLog(__func__, @"Delaying update and relaunch since the main window is busy");
+        [self _setSparkleUpdateInvocation:invocation];
+        [_sparkleUpdateInvocation autorelease];
+        _sparkleUpdateInvocation = [invocation retain];
+        return YES;
+    }
+    return NO;
+}
+
 - (void)handleGetURLEvent:(NSAppleEventDescriptor *)event withReplyEvent:(NSAppleEventDescriptor *)replyEvent
 {
-    [_updateURL autorelease];
+    [_aevtUpdateURL autorelease];
     NSAppleEventDescriptor *desc = [event numberOfItems] ? [event descriptorAtIndex:1] : nil;
-    _updateURL = [desc stringValue] ? [[NSURL alloc] initWithString:[desc stringValue]] : nil;
-    TLMLog(__func__, @"Requesting listing from location %@", [_updateURL absoluteString]);
+    _aevtUpdateURL = [desc stringValue] ? [[NSURL alloc] initWithString:[desc stringValue]] : nil;
+    TLMLog(__func__, @"Requesting listing from location %@", [_aevtUpdateURL absoluteString]);
     [[self mainWindowController] showWindow:nil];
-    [[self mainWindowController] refreshUpdatedPackageListWithURL:_updateURL];
+    [[self mainWindowController] refreshUpdatedPackageListWithURL:_aevtUpdateURL];
 }
 
 - (void)applicationWillFinishLaunching:(NSNotification *)notification;
@@ -180,7 +202,7 @@ static void __TLMMigrateBundleIdentifier()
     // make sure this is set up early enough to use tasks anywhere
     [TLMEnvironment updateEnvironment]; 
 
-    if (nil == _updateURL) {
+    if (nil == _aevtUpdateURL) {
         [[self mainWindowController] showWindow:nil];
         [[self mainWindowController] refreshUpdatedPackageList];
     }

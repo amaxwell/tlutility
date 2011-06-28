@@ -46,7 +46,9 @@
 @private
     TLMMainWindowController *_mainWindowController;
     TLMMirrorController     *_mirrorController;
-    NSURL                   *_updateURL;
+    NSURL                   *_aevtUpdateURL;
+    NSInvocation            *_sparkleUpdateInvocation;
+    
 }
 
 @property (readonly) TLMMainWindowController *mainWindowController;
