@@ -259,6 +259,6 @@ if __name__ == '__main__':
     
     username, password = user_and_pass_for_upload()
     summary = "%s build (%s)" % (strftime("%Y%m%d", localtime()), newVersion)
-
-    googlecode_upload.upload(tarballPath, "mactlmgr", username, password, "20101118 build (0.91)", None)
+    labels = ["Featured", "Type-Archive", "OpSys-OSX"]
+    googlecode_upload.upload(tarballPath, "mactlmgr", username, password, summary, labels)
 
