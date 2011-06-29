@@ -151,8 +151,9 @@ if __name__ == '__main__':
     tarballPath = create_tarball_of_application()
     
     username, password = user_and_pass_for_upload()
+    # same as regular build, prefixed with BETA
     summary = "BETA: %s build (%s)" % (strftime("%Y%m%d", localtime()), newVersion)
+    # make sure it's not Featured!
     labels = ["Type-Archive", "OpSys-OSX"]
-    print username, password, summary, labels
-    #googlecode_upload.upload(tarballPath, "mactlmgr", username, password, summary, labels)
+    googlecode_upload.upload(tarballPath, "mactlmgr", username, password, summary, labels)
 
