@@ -285,9 +285,7 @@ static char _TLMOperationQueueOperationContext;
 }
 
 - (BOOL)windowShouldClose:(id)sender;
-{
-    if ([[self window] attachedSheet]) return YES;
-    
+{    
     BOOL shouldClose = YES;
     if ([[TLMReadWriteOperationQueue defaultQueue] isWriting]) {
         NSAlert *alert = [[NSAlert new] autorelease];

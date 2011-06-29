@@ -166,12 +166,28 @@ static void __TLMMigrateBundleIdentifier()
 // Return YES to delay the relaunch until you do some processing; invoke the given NSInvocation to continue.
 - (BOOL)updater:(SUUpdater *)updater shouldPostponeRelaunchForUpdate:(SUAppcastItem *)update untilInvoking:(NSInvocation *)invocation;
 {
-    if ([[self mainWindowController] windowShouldClose:nil]) {
-        TLMLog(__func__, @"Delaying update and relaunch since the main window is busy");
+    if ([[self mainWindowController] windowShouldClose:nil] == NO) {
+        NSAlert *alert = [[NSAlert new] autorelease];
+        [alert setMessageText:NSLocalizedString(@"Unable to relaunch", "alert title")];
+        [alert setInformativeText:NSLocalizedString(@"You will need to manually quit and relaunch TeX Live Utility to complete installation of the new version.", @"alert text")];
+        [alert runModal];
+        TLMLog(__func__, @"Delaying update and relaunch since the main window was busy");
+        
+        // thought about invoking this when all operations are finished, but not sure that's a good idea...
         [self _setSparkleUpdateInvocation:invocation];
         [_sparkleUpdateInvocation autorelease];
         _sparkleUpdateInvocation = [invocation retain];
         return YES;
+    }
+    /*
+     Relaunch fails if we have a sheet attached to the main window, as in the case of infra update alert.
+     Try closing the sheet, since the user has chosen to do the app update, and presumably doesn't want
+     to do an infra update.
+     */
+    for (NSWindow *window in [NSApp windows]) {
+        NSWindow *sheet = [window attachedSheet];
+        if (sheet)
+            [NSApp endSheet:sheet returnCode:NSRunAbortedResponse];
     }
     return NO;
 }
