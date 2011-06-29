@@ -210,70 +210,65 @@ static NSURL *__TLMNormalizedURL(NSURL *aURL)
 
 + (TLMDatabaseVersion)versionForMirrorURL:(NSURL *)aURL;
 {
-#warning get rid of this struct
-    TLMDatabaseVersion version =  { TLMDatabaseUnknownYear, false, [[aURL retain] autorelease] };
-#warning locking
-    @synchronized(_databases) {
-        
-        if (nil == aURL)
-            aURL = [[TLMEnvironment currentEnvironment] defaultServerURL];
-        
-        NSParameterAssert(aURL != nil);
-        CFAllocatorRef alloc = CFGetAllocator((CFURLRef)aURL);
-        
-        // cache under the full tlpdb URL
-        NSURL *tlpdbURL = [(id)CFURLCreateCopyAppendingPathComponent(alloc, (CFURLRef)aURL, TLPDB_PATH, FALSE) autorelease];
-        tlpdbURL = __TLMNormalizedURL(tlpdbURL);
-        TLMDatabase *db = [_databases objectForKey:tlpdbURL];
-        if (nil == db) {
-            db = [[TLMDatabase alloc] init];
-            [db setTlpdbURL:tlpdbURL];
-            [db setMirrorURL:aURL];
+    if (nil == aURL)
+        aURL = [[TLMEnvironment currentEnvironment] defaultServerURL];
+    
+    NSParameterAssert(aURL != nil);
+    CFAllocatorRef alloc = CFGetAllocator((CFURLRef)aURL);
+    
+    // cache under the full tlpdb URL
+    NSURL *tlpdbURL = [(id)CFURLCreateCopyAppendingPathComponent(alloc, (CFURLRef)aURL, TLPDB_PATH, FALSE) autorelease];
+    tlpdbURL = __TLMNormalizedURL(tlpdbURL);
+    TLMDatabase *db = [[self _databaseForKey:tlpdbURL];
+    if (nil == db) {
+        db = [[TLMDatabase alloc] init];
+        [db setTlpdbURL:tlpdbURL];
+        [db setMirrorURL:aURL];
+        @synchronized(_databases) {
             [_databases setObject:db forKey:tlpdbURL];
-            [db autorelease];
         }
-        
-        // force a download if necessary
-        version.year = [db texliveYear];
-        version.isOfficial = [db isOfficial];
-        
-        // now see if we redirected at some point...we don't want to return the tlpdb path
-        NSURL *actualURL = __TLMNormalizedURL([db actualDatabaseURL]);
-        if (actualURL) {
-            // delete "tlpkg/texlive.tlpdb"
-            CFURLRef tmpURL = CFURLCreateCopyDeletingLastPathComponent(alloc, (CFURLRef)actualURL);
-            if (tmpURL) {
-                actualURL = [(id)CFURLCreateCopyDeletingLastPathComponent(alloc, tmpURL) autorelease];
-                CFRelease(tmpURL);
-            }
-            version.usedURL = [[actualURL retain] autorelease];
-            NSParameterAssert(actualURL != nil);
+        [db autorelease];
+    }
+    
+    // now see if we redirected at some point...we don't want to return the tlpdb path
+    NSURL *actualURL = __TLMNormalizedURL([db actualDatabaseURL]);
+    if (actualURL) {
+        // delete "tlpkg/texlive.tlpdb"
+        CFURLRef tmpURL = CFURLCreateCopyDeletingLastPathComponent(alloc, (CFURLRef)actualURL);
+        if (tmpURL) {
+            actualURL = [(id)CFURLCreateCopyDeletingLastPathComponent(alloc, tmpURL) autorelease];
+            CFRelease(tmpURL);
         }
-        
-        // if redirected (e.g., from mirror.ctan.org), actualURL is non-nil
-        if ([db actualDatabaseURL] && [[db actualDatabaseURL] isEqual:tlpdbURL] == NO) {    
-            /*
-             This sucks.  Add a duplicate value for URLs that redirect, since the Utah
-             pretest mirror is listed as http://www.math.utah.edu/pub/texlive/tlpretest/
-             but ends up getting redirected to http://ftp.math.utah.edu:80/pub//texlive/tlpretest
-             so I had to ask it for the tlpdb each time.  Need to see if this works with
-             other hosts that redirect.
-             
-             The main thing to avoid is caching anything for the multiplexer, since there
-             is no guarantee that the hosts it returns are consistent from one request to
-             the next.
-             */
+        [db setMirrorURL:actualURL];
+        NSParameterAssert(actualURL != nil);
+    }
+    
+    // if redirected (e.g., from mirror.ctan.org), actualURL is non-nil
+    if ([db actualDatabaseURL] && [[db actualDatabaseURL] isEqual:tlpdbURL] == NO) {    
+        /*
+         This sucks.  Add a duplicate value for URLs that redirect, since the Utah
+         pretest mirror is listed as http://www.math.utah.edu/pub/texlive/tlpretest/
+         but ends up getting redirected to http://ftp.math.utah.edu:80/pub//texlive/tlpretest
+         so I had to ask it for the tlpdb each time.  Need to see if this works with
+         other hosts that redirect.
+         
+         The main thing to avoid is caching anything for the multiplexer, since there
+         is no guarantee that the hosts it returns are consistent from one request to
+         the next.
+         */
+        @synchronized(_databases) {
             [_databases setObject:db forKey:[db actualDatabaseURL]];
             if ([[[tlpdbURL host] lowercaseString] isEqualToString:@"mirror.ctan.org"])
                 [_databases removeObjectForKey:tlpdbURL];
         }
-        
-        NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithCapacity:3];
-        [userInfo setObject:version.usedURL forKey:@"URL"];
-        [userInfo setObject:[NSNumber numberWithShort:version.year] forKey:@"year"];
-        NSNotification *note = [NSNotification notificationWithName:TLMDatabaseVersionCheckComplete object:self userInfo:userInfo];
-        [[NSNotificationCenter defaultCenter] performSelectorOnMainThread:@selector(postNotification:) withObject:note waitUntilDone:NO];
     }
+    
+    NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithCapacity:3];
+    [userInfo setObject:[db mirrorURL] forKey:@"URL"];
+    [userInfo setObject:[NSNumber numberWithShort:[db texliveYear]] forKey:@"year"];
+    NSNotification *note = [NSNotification notificationWithName:TLMDatabaseVersionCheckComplete object:self userInfo:userInfo];
+    [[NSNotificationCenter defaultCenter] performSelectorOnMainThread:@selector(postNotification:) withObject:note waitUntilDone:NO];
+
     return version;
 }
 
@@ -400,6 +395,12 @@ static NSString *__TLMTemporaryFile()
     NSString *absolutePath = [NSTemporaryDirectory() stringByAppendingPathComponent:[(id)CFUUIDCreateString(NULL, uuid) autorelease]];
     if (uuid) CFRelease(uuid);
     return absolutePath;
+}
+
+- (BOOL)isOfficial
+{
+    [self texliveYear];
+    return _isOfficial;
 }
 
 - (TLMDatabaseYear)texliveYear;
