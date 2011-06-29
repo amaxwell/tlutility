@@ -51,31 +51,25 @@
 #define LOCAL_DB_KEY    @"local tlpdb"
 
 const TLMDatabaseYear TLMDatabaseUnknownYear = -1;
-
 NSString * const TLMDatabaseVersionCheckComplete = @"TLMDatabaseVersionCheckComplete";
 
-@interface _TLMDatabase : NSObject {
-    NSURL           *_tlpdbURL;
-    NSMutableData   *_tlpdbData;
-    BOOL             _failed;
-    NSURL           *_actualURL;
-    TLMDatabaseYear  _version;
-    BOOL             _isOfficial;
-}
-
-- (id)initWithURL:(NSURL *)tlpdbURL;
-- (TLMDatabaseYear)versionNumber;
-@property (nonatomic, copy) NSURL *actualURL;
-@property (readonly) BOOL failed;
-@property (readonly) BOOL isOfficial;
-
+@interface TLMDatabase ()
+@property (readwrite, retain) NSMutableData *tlpdbData;
+@property (readwrite, copy) NSURL *tlpdbURL;
+@property (readwrite, copy) NSURL *actualDatabaseURL;
 @end
 
 @implementation TLMDatabase
 
 @synthesize packages = _packages;
-@synthesize mirrorURL = _mirrorURL;
 @synthesize loadDate = _loadDate;
+@synthesize mirrorURL = _mirrorURL;
+
+@synthesize failed = _failed;
+@synthesize isOfficial = _isOfficial;
+@synthesize tlpdbData = _tlpdbData;
+@synthesize tlpdbURL = _tlpdbURL;
+@synthesize actualDatabaseURL = _actualDatabaseURL;
 
 static NSMutableDictionary *_databases = nil;
 
@@ -83,21 +77,6 @@ static NSMutableDictionary *_databases = nil;
 {
     if (nil == _databases)
         _databases = [NSMutableDictionary new];
-}
-
-- (void)reloadDatabaseFromPath:(NSString *)absolutePath
-{    
-    NSArray *packageDictionaries = [[NSDictionary dictionaryWithContentsOfFile:absolutePath] objectForKey:@"packages"];
-    NSMutableArray *packages = [NSMutableArray arrayWithCapacity:[packageDictionaries count]];
-    for (NSDictionary *pkgDict in packageDictionaries) {
-        TLMDatabasePackage *pkg = [[TLMDatabasePackage alloc] initWithDictionary:pkgDict];
-        [packages addObject:pkg];
-        [pkg release];
-    }
-    if (packages) {
-        [self setPackages:packages];
-        [self setLoadDate:[NSDate date]];
-    }
 }
 
 + (TLMDatabase *)_databaseForKey:(id)aKey
@@ -115,11 +94,11 @@ static NSMutableDictionary *_databases = nil;
 + (NSArray *)packagesByMergingLocalWithMirror:(NSURL *)aURL;
 {
     TLMDatabase *mirror = [self databaseForURL:aURL];
- 
+    
     // was asserting this, but that's not going to work well with offline mode
     if ([[mirror packages] count] == 0)
         TLMLog(__func__, @"No packages loaded for mirror %@", mirror);
-
+    
     TLMDatabase *local = [self localDatabase];
     NSAssert([[local packages] count], @"No packages in local database");
     
@@ -157,7 +136,7 @@ static NSMutableDictionary *_databases = nil;
             [node setInstalled:YES];
         
         NSRange r = [name rangeOfString:@"."];
-
+        
         if (r.length) {
             [node setName:[name substringFromIndex:NSMaxRange(r)]];
             [node setHasParent:YES];
@@ -178,7 +157,7 @@ static NSMutableDictionary *_databases = nil;
             [node release];
         }
     }
-
+    
     // deal with orphaned nodes that weren't ordered optimally
     for (TLMPackageNode *node in orphanedNodes) {
         
@@ -216,14 +195,6 @@ static NSMutableDictionary *_databases = nil;
     return [self _databaseForKey:aURL];
 }
 
-- (void)dealloc
-{
-    [_packages release];
-    [_loadDate release];
-    [_mirrorURL release];
-    [super dealloc];
-}
-
 // CFURL is pretty stupid about equality.  Among other things, it considers a double slash directory separator significant.
 static NSURL *__TLMNormalizedURL(NSURL *aURL)
 {
@@ -239,7 +210,9 @@ static NSURL *__TLMNormalizedURL(NSURL *aURL)
 
 + (TLMDatabaseVersion)versionForMirrorURL:(NSURL *)aURL;
 {
+#warning get rid of this struct
     TLMDatabaseVersion version =  { TLMDatabaseUnknownYear, false, [[aURL retain] autorelease] };
+#warning locking
     @synchronized(_databases) {
         
         if (nil == aURL)
@@ -251,19 +224,21 @@ static NSURL *__TLMNormalizedURL(NSURL *aURL)
         // cache under the full tlpdb URL
         NSURL *tlpdbURL = [(id)CFURLCreateCopyAppendingPathComponent(alloc, (CFURLRef)aURL, TLPDB_PATH, FALSE) autorelease];
         tlpdbURL = __TLMNormalizedURL(tlpdbURL);
-        _TLMDatabase *db = [_databases objectForKey:tlpdbURL];
+        TLMDatabase *db = [_databases objectForKey:tlpdbURL];
         if (nil == db) {
-            db = [[_TLMDatabase alloc] initWithURL:tlpdbURL];
+            db = [[TLMDatabase alloc] init];
+            [db setTlpdbURL:tlpdbURL];
+            [db setMirrorURL:aURL];
             [_databases setObject:db forKey:tlpdbURL];
             [db autorelease];
         }
-
+        
         // force a download if necessary
-        version.year = [db versionNumber];
+        version.year = [db texliveYear];
         version.isOfficial = [db isOfficial];
         
         // now see if we redirected at some point...we don't want to return the tlpdb path
-        NSURL *actualURL = __TLMNormalizedURL([db actualURL]);
+        NSURL *actualURL = __TLMNormalizedURL([db actualDatabaseURL]);
         if (actualURL) {
             // delete "tlpkg/texlive.tlpdb"
             CFURLRef tmpURL = CFURLCreateCopyDeletingLastPathComponent(alloc, (CFURLRef)actualURL);
@@ -276,7 +251,7 @@ static NSURL *__TLMNormalizedURL(NSURL *aURL)
         }
         
         // if redirected (e.g., from mirror.ctan.org), actualURL is non-nil
-        if ([db actualURL] && [[db actualURL] isEqual:tlpdbURL] == NO) {    
+        if ([db actualDatabaseURL] && [[db actualDatabaseURL] isEqual:tlpdbURL] == NO) {    
             /*
              This sucks.  Add a duplicate value for URLs that redirect, since the Utah
              pretest mirror is listed as http://www.math.utah.edu/pub/texlive/tlpretest/
@@ -288,7 +263,7 @@ static NSURL *__TLMNormalizedURL(NSURL *aURL)
              is no guarantee that the hosts it returns are consistent from one request to
              the next.
              */
-            [_databases setObject:db forKey:[db actualURL]];
+            [_databases setObject:db forKey:[db actualDatabaseURL]];
             if ([[[tlpdbURL host] lowercaseString] isEqualToString:@"mirror.ctan.org"])
                 [_databases removeObjectForKey:tlpdbURL];
         }
@@ -302,22 +277,13 @@ static NSURL *__TLMNormalizedURL(NSURL *aURL)
     return version;
 }
 
-@end
+#pragma mark Instance methods
 
-@implementation _TLMDatabase
-
-@synthesize actualURL = _actualURL;
-@synthesize failed = _failed;
-@synthesize isOfficial = _isOfficial;
-
-- (id)initWithURL:(NSURL *)tlpdbURL;
+- (id)init
 {
-    NSParameterAssert(tlpdbURL);
     self = [super init];
     if (self) {
-        _tlpdbURL = [tlpdbURL copy];
-        _tlpdbData = [NSMutableData new];
-        _version = TLMDatabaseUnknownYear;
+        _year = TLMDatabaseUnknownYear;
         _isOfficial = YES;
     }
     return self;
@@ -325,16 +291,45 @@ static NSURL *__TLMNormalizedURL(NSURL *aURL)
 
 - (void)dealloc
 {
+    [_packages release];
+    [_loadDate release];
+    [_mirrorURL release];
     [_tlpdbURL release];
     [_tlpdbData release];
-    [_actualURL release];
+    [_actualDatabaseURL release];
     [super dealloc];
 }
+
+- (void)reloadDatabaseFromPath:(NSString *)absolutePath
+{    
+    NSArray *packageDictionaries = [[NSDictionary dictionaryWithContentsOfFile:absolutePath] objectForKey:@"packages"];
+    NSMutableArray *packages = [NSMutableArray arrayWithCapacity:[packageDictionaries count]];
+    for (NSDictionary *pkgDict in packageDictionaries) {
+        TLMDatabasePackage *pkg = [[TLMDatabasePackage alloc] initWithDictionary:pkgDict];
+        [packages addObject:pkg];
+        [pkg release];
+    }
+    if (packages) {
+        [self setPackages:packages];
+        [self setLoadDate:[NSDate date]];
+    }
+}
+
+- (TLMDatabasePackage *)packageNamed:(NSString *)name
+{
+    for (TLMDatabasePackage *pkg in [self packages]) {
+        if ([[pkg name] isEqualToString:name])
+            return pkg;
+    }
+    return nil;
+}
+
+#pragma mark Download for version check
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
     _failed = YES;
-    TLMLog(__func__, @"Failed to download tlpdb for version check %@ : %@", (_actualURL ? _actualURL : _tlpdbURL), error);
+    TLMLog(__func__, @"Failed to download tlpdb for version check %@ : %@", (_actualDatabaseURL ? _actualDatabaseURL : _tlpdbURL), error);
 }
 
 - (NSURLRequest *)connection:(NSURLConnection *)connection willSendRequest:(NSURLRequest *)request redirectResponse:(NSURLResponse *)response;
@@ -343,20 +338,25 @@ static NSURL *__TLMNormalizedURL(NSURL *aURL)
     if (response) {
         TLMLog(__func__, @"redirected request to %@", [__TLMNormalizedURL([request URL]) absoluteString]);
         TLMLogServerSync();
-        [self setActualURL:__TLMNormalizedURL([request URL])];
+        [self setActualDatabaseURL:__TLMNormalizedURL([request URL])];
     }
     return request;
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data;
 {
-    [_tlpdbData appendData:data];
+    [[self tlpdbData] appendData:data];
 }
 
 - (void)_downloadDatabaseHead
 {
+    NSParameterAssert(_tlpdbURL);
+    
     // retry a download if _failed was previously set
-    if ([_tlpdbData length] == 0) {
+    if ([[self tlpdbData] length] == 0) {
+        
+        [self setTlpdbData:[NSMutableData data]];
+        
         NSURLRequest *request = [NSURLRequest requestWithURL:_tlpdbURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:URL_TIMEOUT];
         _failed = NO;
         TLMLog(__func__, @"Checking the repository version.  Please be patient.");
@@ -387,93 +387,69 @@ static NSURL *__TLMNormalizedURL(NSURL *aURL)
             if (_failed)
                 break;
             
-        } while ([_tlpdbData length] < MIN_DATA_LENGTH);
-        TLMLog(__func__, @"Downloaded %lu bytes of tlpdb for version check", (unsigned long)[_tlpdbData length]);
+        } while ([[self tlpdbData] length] < MIN_DATA_LENGTH);
+        TLMLog(__func__, @"Downloaded %lu bytes of tlpdb for version check", (unsigned long)[[self tlpdbData] length]);
         [connection cancel];
         [connection release];
     }
 }
 
-- (TLMDatabaseYear)versionNumber;
+static NSString *__TLMTemporaryFile()
+{
+    CFUUIDRef uuid = CFUUIDCreate(NULL);
+    NSString *absolutePath = [NSTemporaryDirectory() stringByAppendingPathComponent:[(id)CFUUIDCreateString(NULL, uuid) autorelease]];
+    if (uuid) CFRelease(uuid);
+    return absolutePath;
+}
+
+- (TLMDatabaseYear)texliveYear;
 {
     // !!! early return if it's already copmuted
-    if (TLMDatabaseUnknownYear != _version)
-        return _version;
-    
-    [self _downloadDatabaseHead];
+    if (TLMDatabaseUnknownYear != _year)
+        return _year;
 
-    if (NO == [self failed] && [_tlpdbData length] >= MIN_DATA_LENGTH) {
-        /*
-         name 00texlive.config
-         category TLCore
-         revision 15388
-         shortdesc TeX Live network archive option settings
-         longdesc This package contains configuration options for the TeX Live
-         longdesc archive If container_split_{doc,src}_files occurs in the depend
-         longdesc lines the {doc,src} files are split into separate containers
-         longdesc (.tar.xz)  during container build time. Note that this has NO
-         longdesc effect on the appearance within the texlive.tlpdb. It is only
-         longdesc on container level. The container_format/XXXXX specifies the
-         longdesc format, currently allowed is only "xz", which generates .tar.xz
-         longdesc files. zip can be supported. release/NNNN specifies the release
-         longdesc number as used in the installer.  These values are taken from
-         longdesc TeXLive::TLConfig::TLPDBConfigs hash at tlpdb creation time.
-         longdesc For information on the 00texlive prefix see
-         longdesc 00texlive.installation(.tlpsrc)
-         depend container_format/xz
-         depend container_split_doc_files/1
-         depend container_split_src_files/1
-         depend release/2010
-         depend revision/19668
-         */
-        char *tlpdb_str = [_tlpdbData mutableBytes];
+    if ([[self packages] count] == 0)
+        [self _downloadDatabaseHead];
+
+    if (NO == [self failed] && [[self tlpdbData] length] >= MIN_DATA_LENGTH) {
         
-        // NUL terminate the data, since it's arbitrary
-        // FIXME: better to look for a newline and create NSString?
-        if (tlpdb_str[[_tlpdbData length] - 1] != '\0')
-            [_tlpdbData appendBytes:"" length:1];
+        NSString *tlpdbPath = __TLMTemporaryFile();
+        [[self tlpdbData] writeToFile:tlpdbPath atomically:NO];
         
-        // !!! early return if there's no texlive.config package
-        const char *head_str = "name 00texlive.config";
-        if (strncmp(head_str, tlpdb_str, sizeof(head_str)) != 0) {
-            TLMLog(__func__, @"No 00texlive.config package present in tlpdb");
-            return _version;
-        }
+        NSString *plistPath = __TLMTemporaryFile();
         
-        regex_t regex;
-        regmatch_t match[3];
+        BDSKTask *parseTask = [[BDSKTask new] autorelease];
+        [parseTask setLaunchPath:[[NSBundle mainBundle] pathForAuxiliaryExecutable:@"parse_tlpdb.py"]];
+        [parseTask setArguments:[NSArray arrayWithObjects:@"-o", plistPath, @"-f", @"plist", tlpdbPath, nil]];
+        [parseTask launch];
+        [parseTask waitUntilExit];
+
+        if ([parseTask terminationStatus] == EXIT_SUCCESS)
+            [self reloadDatabaseFromPath:plistPath];
         
-        /*
-         May be other characters after the 4 digit year, so ignore those; see e-mail from
-         Norbert on 5 Oct 2010.  ConTeXt repo uses depend release/2010-tlcontrib.
-         */
-        int err = regcomp(&regex, "^depend release\\/([0-9]{4})(.*)$", REG_NEWLINE|REG_EXTENDED);
-        if (err) {
-            char err_msg[1024] = {'\0'};
-            regerror(err, &regex, err_msg, sizeof(err_msg));
-            TLMLog(__func__, @"Unable to compile regex: %s", err_msg);
-        }
-        else if (0 == (err = regexec(&regex, tlpdb_str, 3, match, 0))) {
-            size_t matchLength = match[1].rm_eo - match[1].rm_so;
-            char *year = NSZoneMalloc(NSDefaultMallocZone(), matchLength + 1);
-            memset(year, '\0', matchLength + 1);
-            memcpy(year, &tlpdb_str[match[1].rm_so], matchLength);
-            _version = strtol(year, NULL, 0);
-            NSZoneFree(NSDefaultMallocZone(), year);
-            
-            if ((match[2].rm_eo - match[2].rm_so) > 0)
-                _isOfficial = NO;
-            
-        }
-        else {
-            char err_msg[1024] = {'\0'};
-            regerror(err, &regex, err_msg, sizeof(err_msg));
-            TLMLog(__func__, @"Unable to find year in tlpdb: %s", err_msg);
-        }
-        regfree(&regex);
+        unlink([plistPath saneFileSystemRepresentation]);
+        unlink([tlpdbPath saneFileSystemRepresentation]);
+        
+        [self setTlpdbData:nil];
 
     }
-    return _version;
+    
+    for (NSString *depend in [[self packageNamed:@"00texlive.config"] depends]) {
+        
+        if ([depend hasPrefix:@"release/"]) {
+            NSScanner *scanner = [NSScanner scannerWithString:depend];
+            if ([scanner scanString:@"release/" intoString:NULL] == NO)
+                TLMLog(__func__, @"Unexpected syntax for depend line: %@", depend);
+            if ([scanner scanInt:&_year] == NO)
+                TLMLog(__func__, @"Unable to determine year from depend line: %@", depend);
+            if ([scanner isAtEnd] == NO) {
+                _isOfficial = NO;
+                TLMLog(__func__, @"This looks like an unofficial repository");
+            }
+            break;
+        }
+    }    
+    return _year;
 }
 
 @end
