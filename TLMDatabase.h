@@ -38,7 +38,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-typedef int16_t TLMDatabaseYear;
+typedef int32_t TLMDatabaseYear;
 
 // returned as the year in case of an error
 extern const TLMDatabaseYear TLMDatabaseUnknownYear;
@@ -53,10 +53,17 @@ typedef struct _TLMDatabaseVersion {
 
 @interface TLMDatabase : NSObject 
 {
-    NSArray            *_packages;
-    NSDate             *_loadDate;
-    NSURL              *_mirrorURL;
-    TLMDatabaseVersion  _version;
+@private
+    NSArray         *_packages;
+    NSDate          *_loadDate;
+    NSURL           *_mirrorURL;
+    
+    TLMDatabaseYear  _year;
+    BOOL             _isOfficial;
+    NSURL           *_tlpdbURL;
+    NSMutableData   *_tlpdbData;
+    BOOL             _failed;
+    NSURL           *_actualDatabaseURL;
 }
 
 + (TLMDatabase *)localDatabase;
@@ -66,8 +73,11 @@ typedef struct _TLMDatabaseVersion {
 + (NSArray *)packagesByMergingLocalWithMirror:(NSURL *)aURL;
 - (void)reloadDatabaseFromPath:(NSString *)absolutePath;
 
+@property (readonly) TLMDatabaseYear texliveYear;
 @property (copy) NSArray *packages;
 @property (copy) NSURL *mirrorURL;
 @property (copy) NSDate *loadDate;
+@property (readonly) BOOL failed;
+@property (readonly) BOOL isOfficial;
 
 @end
