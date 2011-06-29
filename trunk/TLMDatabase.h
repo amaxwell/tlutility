@@ -45,12 +45,6 @@ extern const TLMDatabaseYear TLMDatabaseUnknownYear;
 
 extern NSString * const TLMDatabaseVersionCheckComplete;
 
-typedef struct _TLMDatabaseVersion {
-    TLMDatabaseYear  year;       // release year from the tlpdb
-    BOOL             isOfficial; // whether this is a TL or 3rd party repo
-    NSURL           *usedURL;    // actual URL used (may be redirected)
-} TLMDatabaseVersion;
-
 @interface TLMDatabase : NSObject 
 {
 @private
