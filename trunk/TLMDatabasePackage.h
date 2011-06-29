@@ -54,6 +54,7 @@
 @property (nonatomic, readonly) NSString *catalogue;
 @property (nonatomic, readonly) NSNumber *relocated;
 @property (nonatomic, readonly) NSNumber *revision;
+@property (nonatomic, readonly) NSArray *depends;
 
 // underlying paths are modified to return file URLs
 // only files that exist on disk are returned

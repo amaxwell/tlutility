@@ -122,6 +122,7 @@ TLM_METHOD(NSString*, longDescription)
 TLM_METHOD(NSString*, catalogue)
 TLM_METHOD(NSNumber*, relocated)
 TLM_METHOD(NSNumber*, revision)
+TLM_METHOD(NSArray*, depends);
 
 // override to return arrays of URL objects (only for files that exist on-disk)
 - (NSArray *)runFiles
