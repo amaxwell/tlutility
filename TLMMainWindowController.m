@@ -527,14 +527,14 @@ static char _TLMOperationQueueOperationContext;
 {
     TLMLog(__func__, @"Checking database version in case preferences have been changed%C", 0x2026);
     // should be cached, unless the user has screwed up (and that's the case we're trying to catch)
-    const TLMDatabaseVersion version = [TLMDatabase versionForMirrorURL:aURL];
+    TLMDatabase *db = [TLMDatabase databaseForMirrorURL:aURL];
     const TLMDatabaseYear year = [[TLMEnvironment currentEnvironment] texliveYear];
-    if (version.year != year) {
+    if ([db texliveYear] != year) {
         NSAlert *alert = [[NSAlert new] autorelease];
         [alert setMessageText:NSLocalizedString(@"Current mirror has a different TeX Live version", @"alert title")];
-        [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"The mirror at %@ has TeX Live %d, but you have TeX Live %d installed.  You need to adjust your preferences in order to continue.", @"alert text, two integer format specifiers"), [aURL absoluteString], version.year, year]];
+        [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"The mirror at %@ has TeX Live %d, but you have TeX Live %d installed.  You need to adjust your preferences in order to continue.", @"alert text, two integer format specifiers"), [aURL absoluteString], [db texliveYear], year]];
         [alert beginSheetModalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
-        TLMLog(__func__, @"Well, this is not going to work:  %@ has TeX Live %d, and the installed version is TeX Live %d", [aURL absoluteString], version.year, year);
+        TLMLog(__func__, @"Well, this is not going to work:  %@ has TeX Live %d, and the installed version is TeX Live %d", [aURL absoluteString], [db texliveYear], year);
         return NO;
     }
     return YES;
