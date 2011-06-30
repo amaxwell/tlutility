@@ -456,9 +456,7 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
 }
 
 - (NSURL *)validServerURL
-{
-    NSURL *validURL = nil;
-        
+{        
     NSParameterAssert(_installedYear != TLMDatabaseUnknownYear);
     
     /*
@@ -466,24 +464,34 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
      some other URL.  Eventually we'll get a few of them cached in the TLMDatabase, but this
      is a slowdown if you use mirror.ctan.org.
      */
-    const TLMDatabaseVersion version = [TLMDatabase versionForMirrorURL:[self defaultServerURL]];
-    const TLMDatabaseYear repositoryYear = version.year;
-    validURL = version.usedURL;
+    TLMDatabase *db = [TLMDatabase databaseForMirrorURL:[self defaultServerURL]];
+    const TLMDatabaseYear repositoryYear = [db texliveYear];
+    NSURL *validURL = [db mirrorURL];
     
     // handled as a separate condition so we can log it for sure
     if (repositoryYear == TLMDatabaseUnknownYear) {
-        TLMLog(__func__, @"Failed to determine the TeX Live version of the repository, so we'll just use the default");
+        TLMLog(__func__, @"Failed to determine the TeX Live version of the repository, so we'll just try the default server");
         validURL = [self defaultServerURL];
         NSParameterAssert(validURL != nil);
     }
-    else if (repositoryYear != _installedYear && version.isOfficial) {
+    else if ([db isOfficial] == NO) {
         
+        // no fallback URL for unofficial repos, so just warn and let the user deal with it
+        TLMLog(__func__, @"This appears to be a 3rd party TeX Live repository");
+        if (repositoryYear != _installedYear)
+            TLMLog(__func__, @"*** WARNING *** This repository is for TeX Live %d, but you are using TeX Live %d", repositoryYear, _installedYear);
+    }
+    else if (repositoryYear != _installedYear) {
+        
+        // this fallback is only for official repos
+        NSParameterAssert([db isOfficial]);
+                
         if ([self legacyRepositoryURL] == nil) {
             NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"DefaultMirrors" ofType:@"plist"];
             NSDictionary *mirrorsByYear = nil;
             if (plistPath)
                 mirrorsByYear = [NSDictionary dictionaryWithContentsOfFile:plistPath];
-            NSString *location = [mirrorsByYear objectForKey:[[NSNumber numberWithShort:_installedYear] stringValue]];
+            NSString *location = [mirrorsByYear objectForKey:[[NSNumber numberWithInt:_installedYear] stringValue]];
             if (location) {
                 TLMLog(__func__, @"Version mismatch detected.  Trying to fall back to %@", location);
                 [self setLegacyRepositoryURL:[NSURL URLWithString:location]];
@@ -504,9 +512,14 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
         NSParameterAssert(validURL != nil);
     }
     else {
-        TLMLog(__func__, @"Mirror version appears to be %d, a good year for TeX Live", repositoryYear);
-        if (version.isOfficial == false)
-            TLMLog(__func__, @"This appears to be a 3rd party TeX Live repository");
+        CFTimeZoneRef tz = CFTimeZoneCopyDefault();
+        CFGregorianDate currentDate = CFAbsoluteTimeGetGregorianDate(CFAbsoluteTimeGetCurrent(), tz);
+        CFRelease(tz);
+        TLMDatabaseYear age = currentDate.year - repositoryYear;
+        NSString *ageString = age == 0 ? @"a fine, young TeX Live" : @"a mature, full-bodied TeX Live";
+        
+        // removed this branch but users wanted it back, so I made it less boring
+        TLMLog(__func__, @"Mirror version appears to be %d; %@", repositoryYear, ageString);
     }
     
     NSParameterAssert(validURL != nil);
