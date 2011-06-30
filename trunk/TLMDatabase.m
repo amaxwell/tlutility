@@ -44,19 +44,15 @@
 #import "TLMPackageNode.h"
 #import "TLMEnvironment.h"
 
-#define TLPDB_PATH      CFSTR("tlpkg/texlive.tlpdb")
+#define TLPDB_PATH      (CFSTR("tlpkg/texlive.tlpdb"))
 #define MIN_DATA_LENGTH 2048
 #define URL_TIMEOUT     30
-
-#define LOCAL_DB_KEY    @"local tlpdb"
 
 const TLMDatabaseYear TLMDatabaseUnknownYear = -1;
 NSString * const TLMDatabaseVersionCheckComplete = @"TLMDatabaseVersionCheckComplete";
 
 @interface TLMDatabase ()
 @property (readwrite, retain) NSMutableData *tlpdbData;
-@property (readwrite, copy) NSURL *tlpdbURL;
-@property (readwrite, copy) NSURL *actualDatabaseURL;
 @end
 
 @implementation TLMDatabase
@@ -68,32 +64,21 @@ NSString * const TLMDatabaseVersionCheckComplete = @"TLMDatabaseVersionCheckComp
 @synthesize failed = _failed;
 @synthesize isOfficial = _isOfficial;
 @synthesize tlpdbData = _tlpdbData;
-@synthesize tlpdbURL = _tlpdbURL;
-@synthesize actualDatabaseURL = _actualDatabaseURL;
 
-static NSMutableDictionary *_databases = nil;
+static NSMutableSet *_databases = nil;
+static NSLock       *_databasesLock = nil;
 
 + (void)initialize
 {
-    if (nil == _databases)
-        _databases = [NSMutableDictionary new];
-}
-
-+ (TLMDatabase *)_databaseForKey:(id)aKey
-{
-    TLMDatabase *db = [_databases objectForKey:(aKey ? aKey : LOCAL_DB_KEY)];
-    if (nil == db) {
-        db = [TLMDatabase new];
-        [db setMirrorURL:aKey];
-        [_databases setObject:db forKey:(aKey ? aKey : LOCAL_DB_KEY)];
-        [db release];
+    if (nil == _databases) {
+        _databases = [NSMutableSet new];
+        _databasesLock = [NSLock new];
     }
-    return db;
 }
 
 + (NSArray *)packagesByMergingLocalWithMirror:(NSURL *)aURL;
 {
-    TLMDatabase *mirror = [self databaseForURL:aURL];
+    TLMDatabase *mirror = [self databaseForMirrorURL:aURL];
     
     // was asserting this, but that's not going to work well with offline mode
     if ([[mirror packages] count] == 0)
@@ -101,6 +86,8 @@ static NSMutableDictionary *_databases = nil;
     
     TLMDatabase *local = [self localDatabase];
     NSAssert([[local packages] count], @"No packages in local database");
+    
+    TLMLog(__func__, @"%ld packages in mirror database, %ld packages in local database", [[mirror packages] count], [[local packages] count]);
     
     NSSet *localPackageSet = [NSSet setWithArray:[local packages]];
     
@@ -187,12 +174,34 @@ static NSMutableDictionary *_databases = nil;
 
 + (TLMDatabase *)localDatabase;
 {
-    return [self _databaseForKey:nil];
+    return [self databaseForMirrorURL:[NSURL fileURLWithPath:[[TLMEnvironment currentEnvironment] installDirectory]]];
 }
 
-+ (TLMDatabase *)databaseForURL:(NSURL *)aURL;
++ (TLMDatabase *)databaseForMirrorURL:(NSURL *)aURL;
 {
-    return [self _databaseForKey:aURL];
+    NSParameterAssert(aURL);
+    
+    TLMDatabase *db;
+    [_databasesLock lock];
+    
+    for (db in _databases) {
+        // !!! early return
+        if ([[db mirrorURL] isEqual:aURL]) {
+            [_databasesLock unlock];
+            return db;
+        }
+    }
+    db = [TLMDatabase new];
+    /*
+     Key may be mirror.ctan.org initially if version is being requested, but will get reset
+     if downloading the db directly to check version or when loaded from disk.
+     */
+    [db setMirrorURL:aURL];
+    [_databases addObject:db];
+    [db release];
+    [_databasesLock unlock];
+    
+    return db;
 }
 
 // CFURL is pretty stupid about equality.  Among other things, it considers a double slash directory separator significant.
@@ -208,70 +217,6 @@ static NSURL *__TLMNormalizedURL(NSURL *aURL)
     return aURL;
 }
 
-+ (TLMDatabaseVersion)versionForMirrorURL:(NSURL *)aURL;
-{
-    if (nil == aURL)
-        aURL = [[TLMEnvironment currentEnvironment] defaultServerURL];
-    
-    NSParameterAssert(aURL != nil);
-    CFAllocatorRef alloc = CFGetAllocator((CFURLRef)aURL);
-    
-    // cache under the full tlpdb URL
-    NSURL *tlpdbURL = [(id)CFURLCreateCopyAppendingPathComponent(alloc, (CFURLRef)aURL, TLPDB_PATH, FALSE) autorelease];
-    tlpdbURL = __TLMNormalizedURL(tlpdbURL);
-    TLMDatabase *db = [[self _databaseForKey:tlpdbURL];
-    if (nil == db) {
-        db = [[TLMDatabase alloc] init];
-        [db setTlpdbURL:tlpdbURL];
-        [db setMirrorURL:aURL];
-        @synchronized(_databases) {
-            [_databases setObject:db forKey:tlpdbURL];
-        }
-        [db autorelease];
-    }
-    
-    // now see if we redirected at some point...we don't want to return the tlpdb path
-    NSURL *actualURL = __TLMNormalizedURL([db actualDatabaseURL]);
-    if (actualURL) {
-        // delete "tlpkg/texlive.tlpdb"
-        CFURLRef tmpURL = CFURLCreateCopyDeletingLastPathComponent(alloc, (CFURLRef)actualURL);
-        if (tmpURL) {
-            actualURL = [(id)CFURLCreateCopyDeletingLastPathComponent(alloc, tmpURL) autorelease];
-            CFRelease(tmpURL);
-        }
-        [db setMirrorURL:actualURL];
-        NSParameterAssert(actualURL != nil);
-    }
-    
-    // if redirected (e.g., from mirror.ctan.org), actualURL is non-nil
-    if ([db actualDatabaseURL] && [[db actualDatabaseURL] isEqual:tlpdbURL] == NO) {    
-        /*
-         This sucks.  Add a duplicate value for URLs that redirect, since the Utah
-         pretest mirror is listed as http://www.math.utah.edu/pub/texlive/tlpretest/
-         but ends up getting redirected to http://ftp.math.utah.edu:80/pub//texlive/tlpretest
-         so I had to ask it for the tlpdb each time.  Need to see if this works with
-         other hosts that redirect.
-         
-         The main thing to avoid is caching anything for the multiplexer, since there
-         is no guarantee that the hosts it returns are consistent from one request to
-         the next.
-         */
-        @synchronized(_databases) {
-            [_databases setObject:db forKey:[db actualDatabaseURL]];
-            if ([[[tlpdbURL host] lowercaseString] isEqualToString:@"mirror.ctan.org"])
-                [_databases removeObjectForKey:tlpdbURL];
-        }
-    }
-    
-    NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithCapacity:3];
-    [userInfo setObject:[db mirrorURL] forKey:@"URL"];
-    [userInfo setObject:[NSNumber numberWithShort:[db texliveYear]] forKey:@"year"];
-    NSNotification *note = [NSNotification notificationWithName:TLMDatabaseVersionCheckComplete object:self userInfo:userInfo];
-    [[NSNotificationCenter defaultCenter] performSelectorOnMainThread:@selector(postNotification:) withObject:note waitUntilDone:NO];
-
-    return version;
-}
-
 #pragma mark Instance methods
 
 - (id)init
@@ -279,6 +224,7 @@ static NSURL *__TLMNormalizedURL(NSURL *aURL)
     self = [super init];
     if (self) {
         _year = TLMDatabaseUnknownYear;
+        _downloadLock = [NSLock new];
         _isOfficial = YES;
     }
     return self;
@@ -289,9 +235,8 @@ static NSURL *__TLMNormalizedURL(NSURL *aURL)
     [_packages release];
     [_loadDate release];
     [_mirrorURL release];
-    [_tlpdbURL release];
     [_tlpdbData release];
-    [_actualDatabaseURL release];
+    [_downloadLock release];
     [super dealloc];
 }
 
@@ -321,38 +266,60 @@ static NSURL *__TLMNormalizedURL(NSURL *aURL)
 
 #pragma mark Download for version check
 
+- (NSURL *)_tlpdbURL
+{
+    CFURLRef baseURL = (CFURLRef)[self mirrorURL];
+    NSURL *tlpdbURL = [(id)CFURLCreateCopyAppendingPathComponent(CFGetAllocator(baseURL), (CFURLRef)baseURL, TLPDB_PATH, FALSE) autorelease];
+    return __TLMNormalizedURL(tlpdbURL);
+}
+
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
+    NSAssert1([_downloadLock tryLock] == NO, @"acquire lock before calling %s", __func__);
     _failed = YES;
-    TLMLog(__func__, @"Failed to download tlpdb for version check %@ : %@", (_actualDatabaseURL ? _actualDatabaseURL : _tlpdbURL), error);
+    TLMLog(__func__, @"Failed to download tlpdb for version check %@ : %@", (_mirrorURL ? _mirrorURL : [self _tlpdbURL]), error);
 }
 
 - (NSURLRequest *)connection:(NSURLConnection *)connection willSendRequest:(NSURLRequest *)request redirectResponse:(NSURLResponse *)response;
 {
+    NSAssert1([_downloadLock tryLock] == NO, @"acquire lock before calling %s", __func__);
     // response is nil if we are not processing a redirect
     if (response) {
         TLMLog(__func__, @"redirected request to %@", [__TLMNormalizedURL([request URL]) absoluteString]);
         TLMLogServerSync();
-        [self setActualDatabaseURL:__TLMNormalizedURL([request URL])];
+        NSURL *actualURL = __TLMNormalizedURL([request URL]);
+        CFAllocatorRef alloc = CFAllocatorGetDefault();
+        if (actualURL) {
+            // delete "tlpkg/texlive.tlpdb"
+            CFURLRef tmpURL = CFURLCreateCopyDeletingLastPathComponent(alloc, (CFURLRef)actualURL);
+            if (tmpURL) {
+                actualURL = [(id)CFURLCreateCopyDeletingLastPathComponent(alloc, tmpURL) autorelease];
+                CFRelease(tmpURL);
+            }
+            [self setMirrorURL:actualURL];
+            NSParameterAssert(actualURL != nil);
+        }
     }
     return request;
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data;
 {
+    NSAssert1([_downloadLock tryLock] == NO, @"acquire lock before calling %s", __func__);
     [[self tlpdbData] appendData:data];
 }
 
 - (void)_downloadDatabaseHead
 {
-    NSParameterAssert(_tlpdbURL);
+    NSParameterAssert(_mirrorURL);
+    NSAssert1([_downloadLock tryLock] == NO, @"acquire lock before calling %s", __func__);
     
     // retry a download if _failed was previously set
     if ([[self tlpdbData] length] == 0) {
         
         [self setTlpdbData:[NSMutableData data]];
         
-        NSURLRequest *request = [NSURLRequest requestWithURL:_tlpdbURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:URL_TIMEOUT];
+        NSURLRequest *request = [NSURLRequest requestWithURL:[self _tlpdbURL] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:URL_TIMEOUT];
         _failed = NO;
         TLMLog(__func__, @"Checking the repository version.  Please be patient.");
         TLMLog(__func__, @"Downloading at least %d bytes of tlpdb for a version check%C", MIN_DATA_LENGTH, 0x2026);
@@ -405,10 +372,14 @@ static NSString *__TLMTemporaryFile()
 
 - (TLMDatabaseYear)texliveYear;
 {
-    // !!! early return if it's already copmuted
-    if (TLMDatabaseUnknownYear != _year)
-        return _year;
+    [_downloadLock lock];
 
+    // !!! early return if it's already copmuted
+    if (TLMDatabaseUnknownYear != _year) {
+        [_downloadLock unlock];
+        return _year;
+    }
+    
     if ([[self packages] count] == 0)
         [self _downloadDatabaseHead];
 
@@ -449,7 +420,17 @@ static NSString *__TLMTemporaryFile()
             }
             break;
         }
-    }    
+    }
+    
+    [_downloadLock unlock];
+    
+    // !!! temporary hack for mirror controller
+    NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithCapacity:3];
+    [userInfo setObject:[self mirrorURL] forKey:@"URL"];
+    [userInfo setObject:[NSNumber numberWithShort:[self texliveYear]] forKey:@"year"];
+    NSNotification *note = [NSNotification notificationWithName:TLMDatabaseVersionCheckComplete object:self userInfo:userInfo];
+    [[NSNotificationCenter defaultCenter] performSelectorOnMainThread:@selector(postNotification:) withObject:note waitUntilDone:NO];
+    
     return _year;
 }
 

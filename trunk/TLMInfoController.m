@@ -503,7 +503,7 @@ static NSArray * __TLMURLsFromTexdocOutput2(NSString *outputString)
             
             NSMutableSet *packages = [NSMutableSet set];
             // !!! what to do if the db hasn't been loaded yet for this mirror?
-            [packages addObjectsFromArray:[[TLMDatabase databaseForURL:mirrorURL] packages]];
+            [packages addObjectsFromArray:[[TLMDatabase databaseForMirrorURL:mirrorURL] packages]];
             [packages addObjectsFromArray:[[TLMDatabase localDatabase] packages]];
             
             for (TLMDatabasePackage *pkg in packages) {

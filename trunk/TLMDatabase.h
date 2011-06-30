@@ -51,18 +51,15 @@ extern NSString * const TLMDatabaseVersionCheckComplete;
     NSArray         *_packages;
     NSDate          *_loadDate;
     NSURL           *_mirrorURL;
-    
+    NSLock          *_downloadLock;
     TLMDatabaseYear  _year;
     BOOL             _isOfficial;
-    NSURL           *_tlpdbURL;
     NSMutableData   *_tlpdbData;
     BOOL             _failed;
-    NSURL           *_actualDatabaseURL;
 }
 
 + (TLMDatabase *)localDatabase;
-+ (TLMDatabase *)databaseForURL:(NSURL *)aURL;
-+ (TLMDatabaseVersion)versionForMirrorURL:(NSURL *)aURL;
++ (TLMDatabase *)databaseForMirrorURL:(NSURL *)aURL;
 
 + (NSArray *)packagesByMergingLocalWithMirror:(NSURL *)aURL;
 - (void)reloadDatabaseFromPath:(NSString *)absolutePath;
