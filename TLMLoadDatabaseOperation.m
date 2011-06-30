@@ -175,7 +175,7 @@
                 TLMLog(__func__, @"Unable to read mirror from tlpdb property list with keys %@", [dict allKeys]);
             else
                 [self setUpdateURL:[NSURL URLWithString:mirror]];
-            [[TLMDatabase databaseForURL:[self updateURL]] reloadDatabaseFromPath:temporaryPath];
+            [[TLMDatabase databaseForMirrorURL:[self updateURL]] reloadDatabaseFromPath:temporaryPath];
         }
         else {
             TLMLog(__func__, @"Dumping tlpdb from mirror %@ failed", [self updateURL]);
