@@ -391,13 +391,13 @@ static NSString *__TLMTemporaryFile()
          */
         if (checkInterval < (URL_TIMEOUT * 3)) {
             // !!! early return: avoid multiple timeouts for successive requests
-            TLMLog(__func__, @"Failed to contact this mirror %.1f seconds ago.  Using that result.", checkInterval);
+            TLMLog(__func__, @"Failed to contact this mirror %.1f seconds ago.  Using that result.", checkInterval);
             [_downloadLock unlock];
             return TLMDatabaseUnknownYear;
         }
         else {
             // log and try again
-            TLMLog(__func__, @"Failed to contact this mirror %.1f seconds ago.  Trying again.", checkInterval);
+            TLMLog(__func__, @"Failed to contact this mirror %.1f seconds ago.  Trying again.", checkInterval);
         }
     }    
     
