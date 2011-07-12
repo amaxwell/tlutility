@@ -670,13 +670,19 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 
 - (void)_refreshUpdatedPackageListFromLocation:(NSURL *)location
 {
-    [self _displayStatusString:nil dataSource:_updateListDataSource];
-    // disable refresh action for this view
-    [_updateListDataSource setRefreshing:YES];
-    TLMListUpdatesOperation *op = [[TLMListUpdatesOperation alloc] initWithLocation:location];
-    [self _addOperation:op selector:@selector(_handleListUpdatesFinishedNotification:)];
-    [op release];
-    TLMLog(__func__, @"Refreshing list of updated packages%C", 0x2026);
+    if ([[TLMDatabase databaseForMirrorURL:location] texliveYear] != TLMDatabaseUnknownYear) {
+        [self _displayStatusString:nil dataSource:_updateListDataSource];
+        // disable refresh action for this view
+        [_updateListDataSource setRefreshing:YES];
+        TLMListUpdatesOperation *op = [[TLMListUpdatesOperation alloc] initWithLocation:location];
+        [self _addOperation:op selector:@selector(_handleListUpdatesFinishedNotification:)];
+        [op release];
+        TLMLog(__func__, @"Refreshing list of updated packages%C", 0x2026);
+    }
+    else {
+        // happens when network is down; this can be a 10-12 minute timeout with TL 2011
+        TLMLog(__func__, @"Not updating package list, since the mirror database version is unknown");
+    }
 }
 
 - (void)_handleUpdateFinishedNotification:(NSNotification *)aNote
@@ -963,6 +969,12 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 
 - (void)_refreshFullPackageListFromLocation:(NSURL *)location offline:(BOOL)offline
 {
+    // should only happen when the network or mirror is unreachable
+    if ([[TLMDatabase databaseForMirrorURL:location] texliveYear] == TLMDatabaseUnknownYear) {
+        TLMLog(__func__, @"Unknown database year, so forcing offline mode for package listing");
+        offline = YES;
+    }
+    
     [self _displayStatusString:nil dataSource:_packageListDataSource];
     // disable refresh action for this view
     [_packageListDataSource setRefreshing:YES];
