@@ -56,6 +56,7 @@ extern NSString * const TLMDatabaseVersionCheckComplete;
     BOOL             _isOfficial;
     NSMutableData   *_tlpdbData;
     BOOL             _failed;
+    CFAbsoluteTime   _failureTime;
 }
 
 + (TLMDatabase *)localDatabase;
