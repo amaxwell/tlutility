@@ -277,6 +277,7 @@ static NSURL *__TLMNormalizedURL(NSURL *aURL)
 {
     NSAssert1([_downloadLock tryLock] == NO, @"acquire lock before calling %s", __func__);
     _failed = YES;
+    _failureTime = CFAbsoluteTimeGetCurrent();
     TLMLog(__func__, @"Failed to download tlpdb for version check %@ : %@", (_mirrorURL ? _mirrorURL : [self _tlpdbURL]), error);
 }
 
@@ -366,6 +367,7 @@ static NSString *__TLMTemporaryFile()
 
 - (BOOL)isOfficial
 {
+    // force download if needed
     [self texliveYear];
     return _isOfficial;
 }
@@ -374,11 +376,30 @@ static NSString *__TLMTemporaryFile()
 {
     [_downloadLock lock];
 
-    // !!! early return if it's already copmuted
+    // !!! early return if it's already computed
     if (TLMDatabaseUnknownYear != _year) {
         [_downloadLock unlock];
         return _year;
     }
+    
+    // check time of previous failure
+    if ([self failed]) {
+        const CFAbsoluteTime checkInterval = CFAbsoluteTimeGetCurrent() - _failureTime;
+        /*
+         We usually make 2-3 requests while doing a normal update/listing, and it's not likely the
+         server is going to recover in such a short time.  Avoid retrying for a short time.
+         */
+        if (checkInterval < (URL_TIMEOUT * 3)) {
+            // !!! early return: avoid multiple timeouts for successive requests
+            TLMLog(__func__, @"Failed to contact this mirror %.1f seconds ago.  Using that result.", checkInterval);
+            [_downloadLock unlock];
+            return TLMDatabaseUnknownYear;
+        }
+        else {
+            // log and try again
+            TLMLog(__func__, @"Failed to contact this mirror %.1f seconds ago.  Trying again.", checkInterval);
+        }
+    }    
     
     if ([[self packages] count] == 0)
         [self _downloadDatabaseHead];
@@ -410,6 +431,7 @@ static NSString *__TLMTemporaryFile()
         
         if ([depend hasPrefix:@"release/"]) {
             NSScanner *scanner = [NSScanner scannerWithString:depend];
+#warning check for minrelease as in tlmgr.pl
             if ([scanner scanString:@"release/" intoString:NULL] == NO)
                 TLMLog(__func__, @"Unexpected syntax for depend line: %@", depend);
             if ([scanner scanInt:&_year] == NO)
@@ -427,7 +449,8 @@ static NSString *__TLMTemporaryFile()
     // !!! temporary hack for mirror controller
     NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithCapacity:3];
     [userInfo setObject:[self mirrorURL] forKey:@"URL"];
-    [userInfo setObject:[NSNumber numberWithShort:[self texliveYear]] forKey:@"year"];
+    // use ivar directly to avoid reentrancy
+    [userInfo setObject:[NSNumber numberWithShort:_year] forKey:@"year"];
     NSNotification *note = [NSNotification notificationWithName:TLMDatabaseVersionCheckComplete object:self userInfo:userInfo];
     [[NSNotificationCenter defaultCenter] performSelectorOnMainThread:@selector(postNotification:) withObject:note waitUntilDone:NO];
     
