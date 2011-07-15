@@ -91,6 +91,7 @@
 		F9D5CD671298454F00AEEDCB /* TLMMirrorCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D5CD661298454F00AEEDCB /* TLMMirrorCell.m */; };
 		F9D85F7A125E865E00C0FEC5 /* update_check.py in Resources */ = {isa = PBXBuildFile; fileRef = F9D85F75125E85FD00C0FEC5 /* update_check.py */; };
 		F9D85F7B125E866100C0FEC5 /* com.googlecode.mactlmgr.update_check.plist in Resources */ = {isa = PBXBuildFile; fileRef = F9D85F73125E85FD00C0FEC5 /* com.googlecode.mactlmgr.update_check.plist */; };
+		F9DAAB8213D0DE26004055A0 /* NSURL_TLMExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = F9DAAB8113D0DE26004055A0 /* NSURL_TLMExtensions.m */; };
 		F9DCD36C0F06F0A200600DD2 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9DCD3650F06F08C00600DD2 /* Sparkle.framework */; };
 		F9DCD3700F06F0F400600DD2 /* Sparkle.framework in copy frameworks */ = {isa = PBXBuildFile; fileRef = F9DCD3650F06F08C00600DD2 /* Sparkle.framework */; };
 		F9DCD43F0F06F76F00600DD2 /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = F9DCD43E0F06F76F00600DD2 /* dsa_pub.pem */; };
@@ -393,6 +394,8 @@
 		F9D85F73125E85FD00C0FEC5 /* com.googlecode.mactlmgr.update_check.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = com.googlecode.mactlmgr.update_check.plist; sourceTree = "<group>"; };
 		F9D85F75125E85FD00C0FEC5 /* update_check.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = update_check.py; sourceTree = "<group>"; };
 		F9D9AEB60F0D7EED00CB1A2F /* tlu_ipctask-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "tlu_ipctask-Info.plist"; sourceTree = "<group>"; };
+		F9DAAB8013D0DE26004055A0 /* NSURL_TLMExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSURL_TLMExtensions.h; sourceTree = "<group>"; };
+		F9DAAB8113D0DE26004055A0 /* NSURL_TLMExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSURL_TLMExtensions.m; sourceTree = "<group>"; };
 		F9DCD3590F06F08C00600DD2 /* Sparkle.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Sparkle.xcodeproj; path = Sparkle/Sparkle.xcodeproj; sourceTree = "<group>"; };
 		F9DCD43E0F06F76F00600DD2 /* dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dsa_pub.pem; sourceTree = "<group>"; };
 		F9DCD4A10F07126F00600DD2 /* tlu_appcast.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = tlu_appcast.xml; path = appcast/tlu_appcast.xml; sourceTree = "<group>"; };
@@ -466,6 +469,8 @@
 				F9C7F176139E8E550031774F /* NSString_TLMExtensions.m */,
 				F915C9FD13A846A100F3E807 /* TLMEnvironment.h */,
 				F915C9FE13A846A100F3E807 /* TLMEnvironment.m */,
+				F9DAAB8013D0DE26004055A0 /* NSURL_TLMExtensions.h */,
+				F9DAAB8113D0DE26004055A0 /* NSURL_TLMExtensions.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -1052,6 +1057,7 @@
 				F942FFC513A08FD60008D8FD /* TLMDatabasePackage.m in Sources */,
 				F9B2F09913A2FFC400F37783 /* TLMLoadDatabaseOperation.m in Sources */,
 				F915C9FF13A846A100F3E807 /* TLMEnvironment.m in Sources */,
+				F9DAAB8213D0DE26004055A0 /* NSURL_TLMExtensions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

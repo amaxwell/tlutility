@@ -44,7 +44,6 @@
 #import "TLMPackageNode.h"
 #import "TLMEnvironment.h"
 
-#define TLPDB_PATH      (CFSTR("tlpkg/texlive.tlpdb"))
 #define MIN_DATA_LENGTH 2048
 #define URL_TIMEOUT     30
 
@@ -204,19 +203,6 @@ static NSLock       *_databasesLock = nil;
     return db;
 }
 
-// CFURL is pretty stupid about equality.  Among other things, it considers a double slash directory separator significant.
-static NSURL *__TLMNormalizedURL(NSURL *aURL)
-{
-    if (nil == aURL) return nil;
-    NSMutableString *str = [[aURL absoluteString] mutableCopy];
-    NSRange startRange = [str rangeOfString:@"//"];
-    NSUInteger start = NSMaxRange(startRange);
-    if (startRange.length && [str replaceOccurrencesOfString:@"//" withString:@"/" options:NSLiteralSearch range:NSMakeRange(start, [str length] - start)])
-        aURL = [NSURL URLWithString:str];
-    [str release];
-    return aURL;
-}
-
 #pragma mark Instance methods
 
 - (id)init
@@ -268,9 +254,7 @@ static NSURL *__TLMNormalizedURL(NSURL *aURL)
 
 - (NSURL *)_tlpdbURL
 {
-    CFURLRef baseURL = (CFURLRef)[self mirrorURL];
-    NSURL *tlpdbURL = [(id)CFURLCreateCopyAppendingPathComponent(CFGetAllocator(baseURL), (CFURLRef)baseURL, TLPDB_PATH, FALSE) autorelease];
-    return __TLMNormalizedURL(tlpdbURL);
+    return [[NSURL databaseURLForTLNetURL:[self mirrorURL]] tlm_normalizedURL];
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
@@ -286,20 +270,13 @@ static NSURL *__TLMNormalizedURL(NSURL *aURL)
     NSAssert1([_downloadLock tryLock] == NO, @"acquire lock before calling %s", __func__);
     // response is nil if we are not processing a redirect
     if (response) {
-        TLMLog(__func__, @"redirected request to %@", [__TLMNormalizedURL([request URL]) absoluteString]);
+        NSURL *actualURL = [[request URL] tlm_normalizedURL];
+        TLMLog(__func__, @"redirected request to %@", [actualURL absoluteString]);
         TLMLogServerSync();
-        NSURL *actualURL = __TLMNormalizedURL([request URL]);
-        CFAllocatorRef alloc = CFAllocatorGetDefault();
-        if (actualURL) {
-            // delete "tlpkg/texlive.tlpdb"
-            CFURLRef tmpURL = CFURLCreateCopyDeletingLastPathComponent(alloc, (CFURLRef)actualURL);
-            if (tmpURL) {
-                actualURL = [(id)CFURLCreateCopyDeletingLastPathComponent(alloc, tmpURL) autorelease];
-                CFRelease(tmpURL);
-            }
-            [self setMirrorURL:actualURL];
-            NSParameterAssert(actualURL != nil);
-        }
+        // delete "tlpkg/texlive.tlpdb"
+        actualURL = [[actualURL tlm_URLByDeletingLastPathComponent] tlm_URLByDeletingLastPathComponent];
+        [self setMirrorURL:actualURL];
+        NSParameterAssert(actualURL != nil);
     }
     return request;
 }
