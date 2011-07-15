@@ -80,9 +80,7 @@
 
 static NSURL *__TLMTLNetURL(NSString *mirrorURLString)
 {
-#define TL_PATH      CFSTR("systems/texlive/tlnet")
-    NSURL *aURL = [NSURL URLWithString:mirrorURLString];
-    return [(id)CFURLCreateCopyAppendingPathComponent(CFAllocatorGetDefault(), (CFURLRef)aURL, TL_PATH, TRUE) autorelease];     
+    return [NSURL TLNetURLForMirror:[NSURL URLWithString:mirrorURLString]];
 }
 
 - (void)_loadDefaultSites
