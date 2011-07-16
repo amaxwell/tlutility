@@ -228,9 +228,8 @@ static NSString *__TLMGetTemporaryDirectory()
 - (BOOL)_downloadUpdateScript
 {
     NSString *path = [[NSUserDefaults standardUserDefaults] objectForKey:TLMInfraPathPreferenceKey];
-    CFURLRef fullURL = CFURLCreateCopyAppendingPathComponent(CFGetAllocator(_location), (CFURLRef)_location, (CFStringRef)path, FALSE);
-    NSURL *scriptURL = [(id)fullURL autorelease];
-    
+    NSURL *scriptURL = [_location tlm_URLByAppendingPathComponent:path];
+
     [self _synchronouslyDownloadURL:scriptURL toPath:_scriptPath];
 
     // set rwxr-xr-x
@@ -275,8 +274,7 @@ static NSString *__TLMGetTemporaryDirectory()
     // remote URL is the same as the file we just downloaded, but with .sha256 appended
     NSString *path = [[NSUserDefaults standardUserDefaults] objectForKey:TLMInfraPathPreferenceKey];
     path = [path stringByAppendingPathExtension:@"sha256"];
-    CFURLRef fullURL = CFURLCreateCopyAppendingPathComponent(CFGetAllocator(_location), (CFURLRef)_location, (CFStringRef)path, FALSE);
-    NSURL *hashURL = [(id)fullURL autorelease];
+    NSURL *hashURL = [_location tlm_URLByAppendingPathComponent:path];
     
     [self _synchronouslyDownloadURL:hashURL toPath:_hashPath];
     

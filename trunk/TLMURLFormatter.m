@@ -46,22 +46,12 @@
     return obj;
 }
 
-// need to ensure it can be composed, since "ftp://" is a non-nil URL, but is nil after appending a path component
-static NSURL *__TLMURLFromStringUsingTestPath(NSString *URLString)
-{
-    CFStringRef path = CFSTR("/a/test/path");
-    NSURL *base = [NSURL URLWithString:URLString];
-    CFURLRef fullURL = NULL;
-    if (base)
-        fullURL = CFURLCreateCopyAppendingPathComponent(CFGetAllocator(base), (CFURLRef)base, path, TRUE);
-    return [(NSURL *)fullURL autorelease];
-}
-
 - (BOOL)getObjectValue:(id *)obj forString:(NSString *)string errorDescription:(NSString **)error;
 {
     BOOL success = YES;
     *obj = string;
-    NSURL *aURL = string ? __TLMURLFromStringUsingTestPath(string) : nil;
+    // need to ensure it can be composed, since "ftp://" is a non-nil URL, but is nil after appending a path component
+    NSURL *aURL = string ? [[NSURL URLWithString:string] tlm_URLByAppendingPathComponent:@"/a/test/path"] : nil;
     if (nil == aURL) {
         success = NO;
         if (error) *error = NSLocalizedString(@"This URL was not valid.", @"error message");
