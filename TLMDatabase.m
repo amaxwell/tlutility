@@ -404,22 +404,32 @@ static NSString *__TLMTemporaryFile()
 
     }
     
+    // !!! minrelease not currently used, but tlcontrib isn't using it (yet) either
+    int32_t release = TLMDatabaseUnknownYear, minrelease = TLMDatabaseUnknownYear;
+    
     for (NSString *depend in [[self packageNamed:@"00texlive.config"] depends]) {
         
+        // release is the upper limit for which this database applies
         if ([depend hasPrefix:@"release/"]) {
             NSScanner *scanner = [NSScanner scannerWithString:depend];
-#warning check for minrelease as in tlmgr.pl
-            if ([scanner scanString:@"release/" intoString:NULL] == NO)
-                TLMLog(__func__, @"Unexpected syntax for depend line: %@", depend);
-            if ([scanner scanInt:&_year] == NO)
+            [scanner scanString:@"release/" intoString:NULL];
+            if ([scanner scanInt:&release] == NO)
                 TLMLog(__func__, @"Unable to determine year from depend line: %@", depend);
             if ([scanner isAtEnd] == NO) {
                 _isOfficial = NO;
                 TLMLog(__func__, @"This looks like an unofficial repository");
             }
-            break;
+        }
+        else if ([depend hasPrefix:@"minrelease/"]) {
+            // minrelease is the lower limit for which this database applies
+            NSScanner *scanner = [NSScanner scannerWithString:depend];
+            [scanner scanString:@"minrelease/" intoString:NULL];
+            if ([scanner scanInt:&minrelease] == NO)
+                TLMLog(__func__, @"Unable to determine year from depend line: %@", depend);
         }
     }
+    
+    _year = release;
     
     [_downloadLock unlock];
     
@@ -427,7 +437,7 @@ static NSString *__TLMTemporaryFile()
     NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithCapacity:3];
     [userInfo setObject:[self mirrorURL] forKey:@"URL"];
     // use ivar directly to avoid reentrancy
-    [userInfo setObject:[NSNumber numberWithShort:_year] forKey:@"year"];
+    [userInfo setObject:[NSNumber numberWithInt:_year] forKey:@"year"];
     NSNotification *note = [NSNotification notificationWithName:TLMDatabaseVersionCheckComplete object:self userInfo:userInfo];
     [[NSNotificationCenter defaultCenter] performSelectorOnMainThread:@selector(postNotification:) withObject:note waitUntilDone:NO];
     
