@@ -203,8 +203,7 @@ static NSString *__TLMGetTemporaryDirectory()
 - (BOOL)_downloadUpdateScript
 {
     NSString *path = [[NSUserDefaults standardUserDefaults] objectForKey:TLMNetInstallerPathPreferenceKey];
-    CFURLRef fullURL = CFURLCreateCopyAppendingPathComponent(CFGetAllocator(_location), (CFURLRef)_location, (CFStringRef)path, FALSE);
-    NSURL *scriptURL = [(id)fullURL autorelease];
+    NSURL *scriptURL = [_location tlm_URLByAppendingPathComponent:path];
     
     [self _synchronouslyDownloadURL:scriptURL toPath:[_updateDirectory stringByAppendingPathComponent:path]];
     
