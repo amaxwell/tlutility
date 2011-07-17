@@ -128,20 +128,37 @@
     [super dealloc];
 }
 
+- (void)setTabControl:(NSSegmentedControl *)tabControl
+{
+    if (_tabControl != tabControl) {
+        [_tabControl removeFromSuperview];
+        [_tabControl release];
+        _tabControl = [tabControl retain];
+        [_tabControl setSegmentCount:0];
+        [_tabControl setTarget:self];
+        [_tabControl setAction:@selector(changeView:)];
+        _externalTabControl = YES;
+    }
+}
+
+- (NSSegmentedControl *)tabControl { return _tabControl; }
+
 // subview frame in receiver's coordinates
 - (NSRect)contentRect
-{
+{    
     NSRect viewFrame = [self bounds];
-    viewFrame.size.height -= (NSHeight([_tabControl frame]) - 3 * TAB_CONTROL_MARGIN);
+    if (NO == _externalTabControl)
+        viewFrame.size.height -= (NSHeight([_tabControl frame]) - 3 * TAB_CONTROL_MARGIN);
     return viewFrame;
 }
 
 - (void)_adjustTabs
 {
-    NSRect tabBounds = [_tabControl bounds];
-    tabBounds.origin.y = NSMaxY([self bounds]) - NSHeight(tabBounds) + TAB_CONTROL_MARGIN;
-    tabBounds.origin.x = 0.5 * (NSWidth([self bounds]) - NSWidth(tabBounds));
-    [_tabControl setFrame:[self centerScanRect:tabBounds]];  
+    NSRect tabFrame = [_tabControl frame];
+    tabFrame.origin.x = 0.5 * (NSWidth([[_tabControl superview] bounds]) - NSWidth(tabFrame));
+    if (NO == _externalTabControl)
+        tabFrame.origin.y = NSMaxY([self bounds]) - NSHeight(tabFrame) + TAB_CONTROL_MARGIN;
+    [_tabControl setFrame:[[_tabControl superview] centerScanRect:tabFrame]];          
 }
 
 - (void)resizeSubviewsWithOldSize:(NSSize)oldSize;

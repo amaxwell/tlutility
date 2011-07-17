@@ -56,6 +56,7 @@
     NSInteger                _selectedIndex;
     id <TLMTabViewDelegate>  _delegate;
     NSArray                 *_transitionViews;
+    BOOL                     _externalTabControl;
 }
 
 - (void)addTabNamed:(NSString *)tabName withView:(NSView *)aView;
@@ -63,6 +64,7 @@
 - (void)selectViewAtIndex:(NSUInteger)anIndex;
 
 @property (nonatomic, assign) id <TLMTabViewDelegate> delegate;
+@property (nonatomic, retain) IBOutlet NSSegmentedControl *tabControl;
 
 @end
 
