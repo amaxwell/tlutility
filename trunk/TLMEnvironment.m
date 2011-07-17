@@ -409,6 +409,7 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
 
 - (void)_displayFallbackServerAlertForRepositoryYear:(NSNumber *)repositoryYear
 {
+    NSParameterAssert([NSThread isMainThread]);
     /*
      Formerly logged that the URL was okay, but that was only correct for the transition from TL 2008 to 2009.
      However, tlmgr itself will perform that check and log if it fails, so logging that it's okay was just
@@ -468,8 +469,14 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
     const TLMDatabaseYear repositoryYear = [db texliveYear];
     NSURL *validURL = [db mirrorURL];
     
-    // handled as a separate condition so we can log it for sure
-    if (repositoryYear == TLMDatabaseUnknownYear) {
+    if ([db failed]) {
+        
+        // not correct to show an error sheet here, since this may not be the main thread
+        validURL = nil;
+    }
+    else if (repositoryYear == TLMDatabaseUnknownYear) {
+        
+        // handled as a separate condition so we can log it for sure
         TLMLog(__func__, @"Failed to determine the TeX Live version of the repository, so we'll just try the default server");
         validURL = [self defaultServerURL];
         NSParameterAssert(validURL != nil);
@@ -512,18 +519,17 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
         NSParameterAssert(validURL != nil);
     }
     else {
+        
+        // official db of the correct year; removed this branch, but users wanted the message back
         CFTimeZoneRef tz = CFTimeZoneCopyDefault();
         CFGregorianDate currentDate = CFAbsoluteTimeGetGregorianDate(CFAbsoluteTimeGetCurrent(), tz);
         CFRelease(tz);
         TLMDatabaseYear age = currentDate.year - repositoryYear;
-        NSString *ageString = age == 0 ? @"a fine, young TeX Live" : @"a mature, full-bodied TeX Live";
+        NSString *ageString = age == 0 ? @"a young TeX Live" : @"a mature TeX Live";
         
-        // removed this branch but users wanted it back, so I made it less boring
         TLMLog(__func__, @"Mirror version appears to be %d; %@", repositoryYear, ageString);
     }
-    
-    NSParameterAssert(validURL != nil);
-    
+        
     return validURL;
 }
 
@@ -599,9 +605,6 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
      By doing this once, I assume that the situation won't change during the lifetime of this 
      process.  I think that's reasonable, so will wait to hear otherwise before monitoring it 
      with FSEventStream or similar madness.
-     
-     NB: synchronizing on self here caused contention with -validServerURL, and it took a while
-     to figure out why it was beachballing on launch after I threaded this check.
      */
    
     // check for writable top-level directory, before doing any traversal

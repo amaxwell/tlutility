@@ -76,6 +76,8 @@
 
 // composes the URL as needed
 @property (readonly) NSURL *defaultServerURL;
+
+// returns nil when no server can be reached
 @property (readonly) NSURL *validServerURL;
 
 // returns the local installation directory (/usr/local/texlive/2009)
