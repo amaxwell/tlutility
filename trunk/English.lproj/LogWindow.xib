@@ -42,8 +42,8 @@
 				<int key="NSWindowStyleMask">15</int>
 				<int key="NSWindowBacking">2</int>
 				<string key="NSWindowRect">{{196, 238}, {598, 272}}</string>
-				<int key="NSWTFlags">544735232</int>
-				<string key="NSWindowTitle">Window</string>
+				<int key="NSWTFlags">544738304</int>
+				<string key="NSWindowTitle">Log</string>
 				<string key="NSWindowClass">NSWindow</string>
 				<nil key="NSViewClass"/>
 				<string key="NSWindowContentMaxSize">{3.40282e+38, 3.40282e+38}</string>
@@ -308,6 +308,7 @@
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1680, 1028}}</string>
 				<string key="NSMaxSize">{3.40282e+38, 3.40282e+38}</string>
+				<string key="NSFrameAutosaveName">Log Window</string>
 			</object>
 		</object>
 		<object class="IBObjectContainer" key="IBDocument.Objects">
@@ -523,7 +524,7 @@
 					<string>{{160, 437}, {598, 272}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>{{160, 437}, {598, 272}}</string>
-					<integer value="1"/>
+					<boolean value="NO"/>
 					<string>{196, 240}</string>
 					<string>{{202, 428}, {480, 270}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -578,15 +579,7 @@
 				<object class="IBPartialClassDescription">
 					<string key="className">TLMLogMessageCell</string>
 					<string key="superclassName">NSTextFieldCell</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">TLMLogDataSource.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">TLMLogMessageCell</string>
-					<string key="superclassName">NSTextFieldCell</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="916949379">
+					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="457372269">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">TLMLogWindowController.h</string>
 					</object>
@@ -605,7 +598,7 @@
 							<string key="candidateClassName">TLMTableView</string>
 						</object>
 					</object>
-					<reference key="sourceIdentifier" ref="916949379"/>
+					<reference key="sourceIdentifier" ref="457372269"/>
 				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">TLMTableView</string>
@@ -1104,7 +1097,7 @@
 			<integer value="3000" key="NS.object.0"/>
 		</object>
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
-		<string key="IBDocument.LastKnownRelativeProjectPath">TeX Live Manager.xcodeproj</string>
+		<string key="IBDocument.LastKnownRelativeProjectPath">../TeX Live Manager.xcodeproj</string>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 	</data>
 </archive>

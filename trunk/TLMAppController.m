@@ -219,6 +219,9 @@ static void __TLMMigrateBundleIdentifier()
     if (nil == _logWindowController)
         _logWindowController = [TLMLogWindowController new];
     
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:TLMShowLogWindowPreferenceKey])
+        [self showLogWindow:nil];
+    
     // call before anything uses tlmgr
     [[TLMProxyManager sharedManager] updateProxyEnvironmentForURL:nil];
     

@@ -59,6 +59,7 @@ NSString * const TLMNetInstallerPathPreferenceKey = @"TLMNetInstallerPathPrefere
 NSString * const TLMShouldListTLCritical = @"TLMShouldListTLCritical";             /* NO (obsolete)                    */
 NSString * const TLMTLCriticalRepository = @"TLMTLCriticalRepository";             /* ftp://tug.org/texlive/tlcritical */
 NSString * const TLMEnableNetInstall = @"TLMEnableNetInstall";                     /* NO                               */
+NSString * const TLMShowLogWindowPreferenceKey = @"TLMShowLogWindowPreferenceKey"; /* NO                               */
 
 #define URL_TIMEOUT   30.0
 
