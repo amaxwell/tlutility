@@ -315,6 +315,9 @@ static char _TLMOperationQueueOperationContext;
     NSURL *aURL = [_currentListDataSource lastUpdateURL];
     if (nil == aURL)
         aURL = [[TLMEnvironment currentEnvironment] validServerURL];
+    // final fallback, in case the mirror wasn't available due to network or other issues
+    if (nil == aURL)
+        aURL = [[TLMEnvironment currentEnvironment] defaultServerURL];
     NSParameterAssert(aURL);
     return aURL;
 }
@@ -1257,22 +1260,29 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 - (void)refreshFullPackageList
 {
     NSURL *serverURL = [[TLMEnvironment currentEnvironment] validServerURL];
-    
+
     /* 
      If the network is not available, read the local package db so that show info still works.
      Note that all packages thus shown will be installed, so presumably forced updates will fail
      and removal may succeed.  Avoid doing special case menu validation until it seems necessary.
+     
+     The serverURL and diagnostic are separate tests; serverURL is more robust, but the diagnostic
+     might help if the network is actually down.  Should this be done elsewhere?
      */
-    CFNetDiagnosticRef diagnostic = CFNetDiagnosticCreateWithURL(NULL, (CFURLRef)serverURL);
-    [(id)diagnostic autorelease];
+    CFNetDiagnosticRef diagnostic = NULL;
+    if (serverURL) {
+        diagnostic = CFNetDiagnosticCreateWithURL(NULL, (CFURLRef)serverURL);
+        [(id)diagnostic autorelease];
+    }
     CFStringRef desc = NULL;
-    if (diagnostic && kCFNetDiagnosticConnectionDown == CFNetDiagnosticCopyNetworkStatusPassively(diagnostic, &desc)) {
+    if (nil == serverURL || (diagnostic && kCFNetDiagnosticConnectionDown == CFNetDiagnosticCopyNetworkStatusPassively(diagnostic, &desc))) {
         // this is basically a dummy URL that we pass through in offline mode
         serverURL = [NSURL fileURLWithPath:[[TLMEnvironment currentEnvironment] installDirectory] isDirectory:YES];
+        if (NULL == desc) desc = CFRetain(CFSTR("unknown error"));
         TLMLog(__func__, @"Network connection is down (%@).  Trying local install database %@%C", desc, serverURL, 0x2026);
         [(id)desc autorelease];
+        [self _displayStatusString:NSLocalizedString(@"Network is unavailable", @"") dataSource:_packageListDataSource];
         [self _refreshFullPackageListFromLocation:serverURL offline:YES];
-        [self _displayStatusString:NSLocalizedString(@"Network is unavailable", @"") dataSource:_updateListDataSource];
     }
     else {
         [self _refreshFullPackageListFromLocation:serverURL offline:NO];
@@ -1289,8 +1299,16 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     if (nil == aURL)
         aURL = [[TLMEnvironment currentEnvironment] validServerURL];
     
-    // check refresh flag since this may be called from DO
-    if ([_updateListDataSource isRefreshing] == NO)
+    if (nil == aURL) {
+        NSAlert *alert = [[NSAlert new] autorelease];
+        [alert setMessageText:NSLocalizedString(@"Update server not available", @"alert title")];
+        [alert setInformativeText:NSLocalizedString(@"Unable to contact the update server.  If this problem persists on further attempts, you may need to try a different mirror.", @"alert text")];
+        [alert beginSheetModalForWindow:[self window]
+                          modalDelegate:nil
+                         didEndSelector:NULL
+                            contextInfo:NULL];
+    }
+    else if ([_updateListDataSource isRefreshing] == NO)
         [self _refreshUpdatedPackageListFromLocation:aURL];    
 }
 
