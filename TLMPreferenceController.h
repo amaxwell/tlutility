@@ -51,6 +51,7 @@ extern NSString * const TLMNetInstallerPathPreferenceKey;
 extern NSString * const TLMShouldListTLCritical;
 extern NSString * const TLMTLCriticalRepository;
 extern NSString * const TLMEnableNetInstall;
+extern NSString * const TLMShowLogWindowPreferenceKey;
 
 @interface TLMPreferenceController : NSWindowController <NSComboBoxDataSource, NSOpenSavePanelDelegate>
 {
