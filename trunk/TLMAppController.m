@@ -47,6 +47,7 @@
 #import "TLMDatabase.h"
 #import "TLMMirrorController.h"
 #import "TLMEnvironment.h"
+#import "TLMLogWindowController.h"
 
 @implementation TLMAppController
 
@@ -69,7 +70,7 @@ static void __TLMMigrateBundleIdentifier()
             [[NSUserDefaults standardUserDefaults] setObject:[oldPrefs objectForKey:key] forKey:key];
 
         if ([oldPrefs count])
-            TLMLog(__func__, @"Migrated preferences = %@", oldPrefs);
+            NSLog(@"Migrated preferences = %@", oldPrefs);
         
         // force synchronization to disk, so we never have to do this again
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:updateKey];
@@ -97,7 +98,9 @@ static void __TLMMigrateBundleIdentifier()
             serverPath = [[NSUserDefaults standardUserDefaults] objectForKey:@"TLMServerPathPreferenceKey"];
         
         tlnetDefault = [NSString stringWithFormat:@"%@/%@", userURL, serverPath];
-        TLMLog(__func__, @"Converting old-style URL preference to %@", tlnetDefault);
+        
+        // no TLMLog yet
+        NSLog(@"Converting old-style URL preference to %@", tlnetDefault);
         
         // set the new value and sync to disk
         [[NSUserDefaults standardUserDefaults] setObject:tlnetDefault forKey:TLMFullServerURLPreferenceKey];
@@ -212,6 +215,10 @@ static void __TLMMigrateBundleIdentifier()
 
 - (void)applicationDidFinishLaunching:(NSNotification *)notification;
 {
+    // make sure this gets hooked up early enough that it collects messages
+    if (nil == _logWindowController)
+        _logWindowController = [TLMLogWindowController new];
+    
     // call before anything uses tlmgr
     [[TLMProxyManager sharedManager] updateProxyEnvironmentForURL:nil];
     
@@ -232,7 +239,7 @@ static void __TLMMigrateBundleIdentifier()
 
 - (IBAction)newDocument:(id)sender
 {
-    [[self mainWindowController] showWindow:nil];
+    [[self mainWindowController] showWindow:sender];
 }
 
 - (IBAction)showPreferences:(id)sender
@@ -244,7 +251,12 @@ static void __TLMMigrateBundleIdentifier()
 {
     if (nil == _mirrorController)
         _mirrorController = [TLMMirrorController new];
-    [_mirrorController showWindow:nil];
+    [_mirrorController showWindow:sender];
+}
+
+- (IBAction)showLogWindow:(id)sender
+{
+    [_logWindowController showWindow:sender];
 }
 
 #pragma mark Help Menu

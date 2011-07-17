@@ -40,7 +40,6 @@
 #import "TLMTabView.h"
 
 @class TLMSplitView;
-@class TLMLogDataSource;
 @class TLMStatusWindow;
 @class TLMPackageListDataSource;
 @class TLMUpdateListDataSource;
@@ -69,7 +68,6 @@
     BOOL                      _updateInfrastructure;
     NSDictionary             *_previousInfrastructureVersions;
 
-    TLMLogDataSource         *_logDataSource;
     TLMUpdateListDataSource  *_updateListDataSource;
     TLMPackageListDataSource *_packageListDataSource;
     TLMInstallDataSource     *_installDataSource;
@@ -87,7 +85,6 @@
 @property (nonatomic, retain) IBOutlet NSProgressIndicator *_progressBar;
 @property (nonatomic, retain) IBOutlet NSTextView *_hostnameView;
 @property (nonatomic, retain) IBOutlet TLMSplitView *_splitView;
-@property (nonatomic, retain) IBOutlet TLMLogDataSource *_logDataSource;
 @property (nonatomic, retain) IBOutlet TLMPackageListDataSource *_packageListDataSource;
 @property (nonatomic, retain) IBOutlet TLMUpdateListDataSource *_updateListDataSource;
 @property (nonatomic, retain) IBOutlet TLMInstallDataSource *_installDataSource;

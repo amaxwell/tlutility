@@ -91,7 +91,6 @@ static char _TLMOperationQueueOperationContext;
 @synthesize _progressBar;
 @synthesize _hostnameView;
 @synthesize _splitView;
-@synthesize _logDataSource;
 @synthesize _packageListDataSource;
 @synthesize _tabView;
 @synthesize _statusBarView;
@@ -134,7 +133,6 @@ static char _TLMOperationQueueOperationContext;
     
     [_progressIndicator release];
     [_progressBar release];
-    [_logDataSource release];
     [_packageListDataSource release];
     [_updateListDataSource release];
     [_previousInfrastructureVersions release];

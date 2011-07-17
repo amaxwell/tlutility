@@ -40,12 +40,14 @@
 
 @class TLMMainWindowController;
 @class TLMMirrorController;
+@class TLMLogWindowController;
 
 @interface TLMAppController : NSObject 
 {
 @private
     TLMMainWindowController *_mainWindowController;
     TLMMirrorController     *_mirrorController;
+    TLMLogWindowController  *_logWindowController;
     NSURL                   *_aevtUpdateURL;
     NSInvocation            *_sparkleUpdateInvocation;
     
@@ -60,5 +62,6 @@
 - (IBAction)openTracker:(id)sender;
 - (IBAction)openReleaseNotes:(id)sender;
 - (IBAction)manageMirrors:(id)sender;
+- (IBAction)showLogWindow:(id)sender;
 
 @end
