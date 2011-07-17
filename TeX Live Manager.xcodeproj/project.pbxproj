@@ -24,6 +24,8 @@
 		F94E74A20EF4965100E0B78F /* TLMTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = F94E74A10EF4965100E0B78F /* TLMTableView.m */; };
 		F957A4E312514B040079E07F /* TLMBackupOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F957A4E212514B040079E07F /* TLMBackupOperation.m */; };
 		F958309812695A0800DB997C /* TLMBackupCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F958309712695A0800DB997C /* TLMBackupCell.m */; };
+		F96203BF13D3656300932965 /* TLMLogWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = F96203BE13D3656300932965 /* TLMLogWindowController.m */; };
+		F96203EB13D36ACC00932965 /* LogWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = F96203EA13D36ACC00932965 /* LogWindow.xib */; };
 		F96249D10F1C453B007F3D70 /* TLMReleaseNotesController.m in Sources */ = {isa = PBXBuildFile; fileRef = F96249D00F1C453B007F3D70 /* TLMReleaseNotesController.m */; };
 		F96249D50F1C516F007F3D70 /* ReleaseNotes.xib in Resources */ = {isa = PBXBuildFile; fileRef = F96249D40F1C516F007F3D70 /* ReleaseNotes.xib */; };
 		F964A3350EFEFBCC0006868B /* TLMStatusWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = F964A3340EFEFBCC0006868B /* TLMStatusWindow.m */; };
@@ -103,7 +105,6 @@
 		F9F1C11310C5ABA300D32C17 /* NSMenu_TLMExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F1C11210C5ABA300D32C17 /* NSMenu_TLMExtensions.m */; };
 		F9F1C14E10C6EEC200D32C17 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9F1C14D10C6EEC200D32C17 /* SystemConfiguration.framework */; };
 		F9F56B4C0EF31F8800E934A9 /* TLMLogMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F56B4B0EF31F8800E934A9 /* TLMLogMessage.m */; };
-		F9F56BA10EF36F8B00E934A9 /* TLMLogDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F56BA00EF36F8B00E934A9 /* TLMLogDataSource.m */; };
 		F9FAA44E0EFCBECD0040EAB2 /* TLMPapersizeController.m in Sources */ = {isa = PBXBuildFile; fileRef = F9FAA44D0EFCBECD0040EAB2 /* TLMPapersizeController.m */; };
 		F9FE58B4123EB80800B6008F /* TLMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = F9FE58B3123EB80800B6008F /* TLMDatabase.m */; };
 /* End PBXBuildFile section */
@@ -292,6 +293,9 @@
 		F957A4E212514B040079E07F /* TLMBackupOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMBackupOperation.m; sourceTree = "<group>"; };
 		F958309612695A0800DB997C /* TLMBackupCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMBackupCell.h; sourceTree = "<group>"; };
 		F958309712695A0800DB997C /* TLMBackupCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMBackupCell.m; sourceTree = "<group>"; };
+		F96203BD13D3656300932965 /* TLMLogWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMLogWindowController.h; sourceTree = "<group>"; };
+		F96203BE13D3656300932965 /* TLMLogWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMLogWindowController.m; sourceTree = "<group>"; };
+		F96203CE13D3677600932965 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/LogWindow.xib; sourceTree = "<group>"; };
 		F96249CF0F1C453B007F3D70 /* TLMReleaseNotesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMReleaseNotesController.h; sourceTree = "<group>"; };
 		F96249D00F1C453B007F3D70 /* TLMReleaseNotesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMReleaseNotesController.m; sourceTree = "<group>"; };
 		F96249D40F1C516F007F3D70 /* ReleaseNotes.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ReleaseNotes.xib; sourceTree = "<group>"; };
@@ -412,8 +416,6 @@
 		F9F1C14D10C6EEC200D32C17 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = /System/Library/Frameworks/SystemConfiguration.framework; sourceTree = "<absolute>"; };
 		F9F56B4A0EF31F8800E934A9 /* TLMLogMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMLogMessage.h; sourceTree = "<group>"; };
 		F9F56B4B0EF31F8800E934A9 /* TLMLogMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMLogMessage.m; sourceTree = "<group>"; };
-		F9F56B9F0EF36F8B00E934A9 /* TLMLogDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMLogDataSource.h; sourceTree = "<group>"; };
-		F9F56BA00EF36F8B00E934A9 /* TLMLogDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMLogDataSource.m; sourceTree = "<group>"; };
 		F9FAA44C0EFCBECD0040EAB2 /* TLMPapersizeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMPapersizeController.h; sourceTree = "<group>"; };
 		F9FAA44D0EFCBECD0040EAB2 /* TLMPapersizeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMPapersizeController.m; sourceTree = "<group>"; };
 		F9FE58B2123EB80800B6008F /* TLMDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMDatabase.h; sourceTree = "<group>"; };
@@ -453,6 +455,7 @@
 				F9F56B7E0EF32F3500E934A9 /* Logging */,
 				F98FAB3D105DF0D7002C1972 /* Datasources */,
 				F98FAB3E105DF112002C1972 /* Window controllers */,
+				F96203C513D366CC00932965 /* Categories */,
 				F922D79C1038B1E1004E9B12 /* TLMDownload.h */,
 				F922D79D1038B1E1004E9B12 /* TLMDownload.m */,
 				F9B1345F0EEB1894007C0046 /* TLMAppController.h */,
@@ -461,16 +464,8 @@
 				F99E51970EEE4AD5006E6B39 /* TLMURLFormatter.m */,
 				F9129BBE102F25AC000A7B50 /* TLMSizeFormatter.h */,
 				F9129BBF102F25AC000A7B50 /* TLMSizeFormatter.m */,
-				F9F1C11110C5ABA300D32C17 /* NSMenu_TLMExtensions.h */,
-				F9F1C11210C5ABA300D32C17 /* NSMenu_TLMExtensions.m */,
 				F9999F9A10D1C33800F594CB /* TLMProxyManager.h */,
 				F9999F9B10D1C33800F594CB /* TLMProxyManager.m */,
-				F9C7F175139E8E550031774F /* NSString_TLMExtensions.h */,
-				F9C7F176139E8E550031774F /* NSString_TLMExtensions.m */,
-				F915C9FD13A846A100F3E807 /* TLMEnvironment.h */,
-				F915C9FE13A846A100F3E807 /* TLMEnvironment.m */,
-				F9DAAB8013D0DE26004055A0 /* NSURL_TLMExtensions.h */,
-				F9DAAB8113D0DE26004055A0 /* NSURL_TLMExtensions.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -535,6 +530,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				F96203EA13D36ACC00932965 /* LogWindow.xib */,
 				F925D1BA12957C1B00D75BB4 /* CTAN.sites.plist */,
 				F9C0D3E6125ECF3700B1FBE5 /* LaunchAgentSheet.xib */,
 				F982553E12504E210018CB73 /* AutobackupSheet.xib */,
@@ -594,6 +590,19 @@
 			name = Views;
 			sourceTree = "<group>";
 		};
+		F96203C513D366CC00932965 /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				F9F1C11110C5ABA300D32C17 /* NSMenu_TLMExtensions.h */,
+				F9F1C11210C5ABA300D32C17 /* NSMenu_TLMExtensions.m */,
+				F9C7F175139E8E550031774F /* NSString_TLMExtensions.h */,
+				F9C7F176139E8E550031774F /* NSString_TLMExtensions.m */,
+				F9DAAB8013D0DE26004055A0 /* NSURL_TLMExtensions.h */,
+				F9DAAB8113D0DE26004055A0 /* NSURL_TLMExtensions.m */,
+			);
+			name = Categories;
+			sourceTree = "<group>";
+		};
 		F98FAB3D105DF0D7002C1972 /* Datasources */ = {
 			isa = PBXGroup;
 			children = (
@@ -628,6 +637,8 @@
 				F9C0D3CA125ECCE600B1FBE5 /* TLMLaunchAgentController.m */,
 				F925D1A912957B1800D75BB4 /* TLMMirrorController.h */,
 				F925D1AA12957B1800D75BB4 /* TLMMirrorController.m */,
+				F96203BD13D3656300932965 /* TLMLogWindowController.h */,
+				F96203BE13D3656300932965 /* TLMLogWindowController.m */,
 			);
 			name = "Window controllers";
 			sourceTree = "<group>";
@@ -643,6 +654,8 @@
 		F9A8BA6F0EF7668E00E35DC9 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				F915C9FD13A846A100F3E807 /* TLMEnvironment.h */,
+				F915C9FE13A846A100F3E807 /* TLMEnvironment.m */,
 				F942FFC313A08FD60008D8FD /* TLMDatabasePackage.h */,
 				F942FFC413A08FD60008D8FD /* TLMDatabasePackage.m */,
 				F9AAC11B126798F6003D665F /* TLMBackupNode.h */,
@@ -758,8 +771,6 @@
 		F9F56B7E0EF32F3500E934A9 /* Logging */ = {
 			isa = PBXGroup;
 			children = (
-				F9F56B9F0EF36F8B00E934A9 /* TLMLogDataSource.h */,
-				F9F56BA00EF36F8B00E934A9 /* TLMLogDataSource.m */,
 				F9F56B4A0EF31F8800E934A9 /* TLMLogMessage.h */,
 				F9F56B4B0EF31F8800E934A9 /* TLMLogMessage.m */,
 				F9B6B5F60EF469A600CF767F /* TLMLogServer.h */,
@@ -958,6 +969,7 @@
 				F9C7F1F313A003660031774F /* Debug.xcconfig in Resources */,
 				F9C7F1F413A003660031774F /* Release.xcconfig in Resources */,
 				F9C7F23113A0041B0031774F /* Common.xcconfig in Resources */,
+				F96203EB13D36ACC00932965 /* LogWindow.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1013,7 +1025,6 @@
 				F9F1305B0EED94F700D9968D /* TLMPreferenceController.m in Sources */,
 				F99E51980EEE4AD5006E6B39 /* TLMURLFormatter.m in Sources */,
 				F9F56B4C0EF31F8800E934A9 /* TLMLogMessage.m in Sources */,
-				F9F56BA10EF36F8B00E934A9 /* TLMLogDataSource.m in Sources */,
 				F9B6B5F80EF469A600CF767F /* TLMLogServer.m in Sources */,
 				F94E74A20EF4965100E0B78F /* TLMTableView.m in Sources */,
 				F9A8BB370EF8B11200E35DC9 /* TLMInfraUpdateOperation.m in Sources */,
@@ -1058,6 +1069,7 @@
 				F9B2F09913A2FFC400F37783 /* TLMLoadDatabaseOperation.m in Sources */,
 				F915C9FF13A846A100F3E807 /* TLMEnvironment.m in Sources */,
 				F9DAAB8213D0DE26004055A0 /* NSURL_TLMExtensions.m in Sources */,
+				F96203BF13D3656300932965 /* TLMLogWindowController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1124,6 +1136,14 @@
 				F925D1AE12957B4C00D75BB4 /* English */,
 			);
 			name = Mirrors.xib;
+			sourceTree = "<group>";
+		};
+		F96203EA13D36ACC00932965 /* LogWindow.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F96203CE13D3677600932965 /* English */,
+			);
+			name = LogWindow.xib;
 			sourceTree = "<group>";
 		};
 		F982553E12504E210018CB73 /* AutobackupSheet.xib */ = {
