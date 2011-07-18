@@ -63,10 +63,7 @@
 
 - (void)drawRect:(NSRect)aRect
 {
-    aRect = [self bounds];
-    [[NSColor clearColor] setFill];
-    NSRectFillUsingOperation(aRect, NSCompositeSourceOver);
-    [[self image] drawInRect:aRect fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:[self imageAlphaValue]];
+    [[self image] drawInRect:[self bounds] fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:[self imageAlphaValue]];
 }
 
 @end
@@ -130,6 +127,7 @@
 
 - (void)setTabControl:(NSSegmentedControl *)tabControl
 {
+    // if explicitly set, only do the target/action setup
     if (_tabControl != tabControl) {
         [_tabControl removeFromSuperview];
         [_tabControl release];
@@ -194,7 +192,7 @@
     if (value > 0.99) {
         [animation stopAnimation];
         [timer invalidate];
-        [_transitionViews makeObjectsPerformSelector:@selector(removeFromSuperview)];     
+        [_transitionViews makeObjectsPerformSelector:@selector(removeFromSuperviewWithoutNeedingDisplay)];     
         NSParameterAssert([_currentView isDescendantOf:self]);
         [_currentView setHidden:NO];
         [self setNeedsDisplay:YES];
@@ -202,7 +200,8 @@
     else {
         [[_transitionViews objectAtIndex:0] setImageAlphaValue:(1 - value)];
         [[_transitionViews objectAtIndex:1] setImageAlphaValue:value];    
-        [self displayRectIgnoringOpacity:[[_transitionViews objectAtIndex:0] frame]];
+        // displayRectIgnoringOpacity causes vertical jitter in the bottom of the view
+        [self displayRect:[[_transitionViews objectAtIndex:0] frame]];
     }
 }
 
@@ -210,7 +209,7 @@
 {
     // will unhide when animation finishes
     [nextView setHidden:YES];
-    
+        
     // use the same frame; no autoresizing needed for these
     [[_transitionViews objectAtIndex:0] setFrame:[nextView frame]];
     [[_transitionViews objectAtIndex:1] setFrame:[nextView frame]];
@@ -219,9 +218,10 @@
     NSImage *image;
     
     // cache the currently displayed view to a bitmap and set it initially opaque
-    imageRep = [_currentView bitmapImageRepForCachingDisplayInRect:[_currentView bounds]];
-    [_currentView cacheDisplayInRect:[_currentView bounds] toBitmapImageRep:imageRep];
-    image = [[NSImage alloc] initWithSize:[_currentView bounds].size];
+    NSRect bitmapBounds = [_currentView bounds];
+    imageRep = [_currentView bitmapImageRepForCachingDisplayInRect:bitmapBounds];
+    [_currentView cacheDisplayInRect:bitmapBounds toBitmapImageRep:imageRep];
+    image = [[NSImage alloc] initWithSize:bitmapBounds.size];
     [image addRepresentation:imageRep];
     [[_transitionViews objectAtIndex:0] setImage:image];
     [[_transitionViews objectAtIndex:1] setImageAlphaValue:1.0];
@@ -231,9 +231,10 @@
     [_currentView removeFromSuperviewWithoutNeedingDisplay];
     
     // now cache the next view to a bitmap and set it initially transparent
-    imageRep = [nextView bitmapImageRepForCachingDisplayInRect:[nextView bounds]];
-    [nextView cacheDisplayInRect:[nextView bounds] toBitmapImageRep:imageRep];
-    image = [[NSImage alloc] initWithSize:[nextView bounds].size];
+    NSParameterAssert(NSEqualRects([_currentView bounds], [nextView bounds]));
+    imageRep = [nextView bitmapImageRepForCachingDisplayInRect:bitmapBounds];
+    [nextView cacheDisplayInRect:bitmapBounds toBitmapImageRep:imageRep];
+    image = [[NSImage alloc] initWithSize:bitmapBounds.size];
     [image addRepresentation:imageRep];
     [[_transitionViews objectAtIndex:1] setImage:image];
     [[_transitionViews objectAtIndex:1] setImageAlphaValue:0.0];
@@ -247,19 +248,18 @@
     [[_transitionViews objectAtIndex:0] setHidden:NO];
     [[_transitionViews objectAtIndex:1] setHidden:NO];
     
-    // avoid an initial flash before the timer fires, since _currentView was removed
-    [self displayRectIgnoringOpacity:[[_transitionViews objectAtIndex:0] frame]];
-    
     // set now, since the timer callback needs it
     _currentView = nextView;
     
+#define DURATION 0.3
+    
     // animate ~30 fps for 0.3 seconds, using NSAnimation to get the alpha curve
-    NSAnimation *animation = [[NSAnimation alloc] initWithDuration:0.3 animationCurve:NSAnimationEaseInOut]; 
+    NSAnimation *animation = [[NSAnimation alloc] initWithDuration:DURATION animationCurve:NSAnimationEaseInOut]; 
     // runloop mode is irrelevant for non-blocking threaded
     [animation setAnimationBlockingMode:NSAnimationNonblockingThreaded];
     // explicitly alloc/init so it can be added to all the common modes instead of the default mode
     NSTimer *timer = [[NSTimer alloc] initWithFireDate:[NSDate date]
-                                              interval:0.03
+                                              interval:(DURATION / 10.0)
                                                 target:self 
                                               selector:@selector(animationFired:)
                                               userInfo:animation
@@ -286,7 +286,6 @@
     
     NSParameterAssert([nextView isDescendantOf:self] == NO);
     [self addSubview:nextView];
-    [self setNeedsDisplay:YES];
 
     // if this is the initial display, we don't want to animate anything
     if ([_currentView isDescendantOf:self]) {
@@ -307,9 +306,11 @@
         [self selectViewAtIndex:[_tabControl selectedSegment]];
 }
 
-- (void)drawRect:(NSRect)dirtyRect {
-    [[NSColor lightGrayColor] setFill];
-    NSFrameRectWithWidth([self centerScanRect:[self bounds]], 0.0);
+- (void)drawRect:(NSRect)dirtyRect
+{
+    // flashes to window background on initial transition
+    [[NSColor whiteColor] setFill];
+    NSRectFillUsingOperation(dirtyRect, NSCompositeCopy);
     [super drawRect:dirtyRect];
 }
 

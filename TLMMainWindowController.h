@@ -39,12 +39,10 @@
 #import <Cocoa/Cocoa.h>
 #import "TLMTabView.h"
 
-@class TLMSplitView;
 @class TLMStatusWindow;
 @class TLMPackageListDataSource;
 @class TLMUpdateListDataSource;
 @class TLMInstallDataSource;
-@class TLMGradientView;
 @class TLMBackupDataSource;
 
 @protocol TLMListDataSource <NSObject>
@@ -60,8 +58,6 @@
     NSProgressIndicator      *_progressBar;
     NSTextView               *_hostnameView;
     TLMTabView               *_tabView;
-    TLMSplitView             *_splitView;
-    TLMGradientView          *_statusBarView;
     
     NSUInteger                _operationCount;
     CGFloat                   _lastTextViewHeight;
@@ -84,13 +80,11 @@
 @property (nonatomic, retain) IBOutlet NSProgressIndicator *_progressIndicator;
 @property (nonatomic, retain) IBOutlet NSProgressIndicator *_progressBar;
 @property (nonatomic, retain) IBOutlet NSTextView *_hostnameView;
-@property (nonatomic, retain) IBOutlet TLMSplitView *_splitView;
 @property (nonatomic, retain) IBOutlet TLMPackageListDataSource *_packageListDataSource;
 @property (nonatomic, retain) IBOutlet TLMUpdateListDataSource *_updateListDataSource;
 @property (nonatomic, retain) IBOutlet TLMInstallDataSource *_installDataSource;
 @property (nonatomic, retain) IBOutlet TLMBackupDataSource *_backupDataSource;
 @property (nonatomic, retain) IBOutlet TLMTabView *_tabView;
-@property (nonatomic, retain) IBOutlet TLMGradientView *_statusBarView;
 @property (nonatomic, readonly) BOOL infrastructureNeedsUpdate;
 
 // install/update actions will use lastUpdateURL
