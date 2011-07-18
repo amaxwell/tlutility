@@ -217,7 +217,7 @@
 									<int key="NSCellFlags">343014976</int>
 									<int key="NSCellFlags2">268436480</int>
 									<string key="NSContents"/>
-									<object class="NSFont" key="NSSupport" id="399074865">
+									<object class="NSFont" key="NSSupport" id="762134236">
 										<string key="NSName">LucidaGrande</string>
 										<double key="NSSize">13</double>
 										<int key="NSfFlags">1044</int>
@@ -225,7 +225,7 @@
 									<reference key="NSControlView" ref="973647257"/>
 									<bool key="NSDrawsBackground">YES</bool>
 									<int key="NSTextBezelStyle">1</int>
-									<object class="NSColor" key="NSBackgroundColor" id="250408084">
+									<object class="NSColor" key="NSBackgroundColor" id="807370300">
 										<int key="NSColorSpace">6</int>
 										<string key="NSCatalogName">System</string>
 										<string key="NSColorName">textBackgroundColor</string>
@@ -650,18 +650,18 @@ AAEAAQAAAT0AAwAAAAEAAgAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 							<int key="NSpiFlags">28938</int>
 							<double key="NSMaxValue">100</double>
 						</object>
-						<object class="NSBox" id="1068240794">
+						<object class="NSBox" id="293982919">
 							<reference key="NSNextResponder" ref="1006"/>
 							<int key="NSvFlags">34</int>
-							<string key="NSFrame">{{0, 66}, {600, 5}}</string>
+							<string key="NSFrame">{{0, 65}, {600, 5}}</string>
 							<reference key="NSSuperview" ref="1006"/>
 							<string key="NSOffsets">{0, 0}</string>
 							<object class="NSTextFieldCell" key="NSTitleCell">
 								<int key="NSCellFlags">67239424</int>
 								<int key="NSCellFlags2">0</int>
 								<string key="NSContents">Box</string>
-								<reference key="NSSupport" ref="399074865"/>
-								<reference key="NSBackgroundColor" ref="250408084"/>
+								<reference key="NSSupport" ref="762134236"/>
+								<reference key="NSBackgroundColor" ref="807370300"/>
 								<object class="NSColor" key="NSTextColor">
 									<int key="NSColorSpace">3</int>
 									<bytes key="NSWhite">MCAwLjgwMDAwMDAxMTkAA</bytes>
@@ -1802,7 +1802,7 @@ AAEAAQAAAT0AAwAAAAEAAgAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 							<reference ref="729838278"/>
 							<reference ref="685916308"/>
 							<reference ref="469774147"/>
-							<reference ref="1068240794"/>
+							<reference ref="293982919"/>
 						</array>
 						<reference key="parent" ref="1005"/>
 					</object>
@@ -2300,7 +2300,7 @@ AAEAAQAAAT0AAwAAAAEAAgAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">252</int>
-						<reference key="object" ref="1068240794"/>
+						<reference key="object" ref="293982919"/>
 						<reference key="parent" ref="1006"/>
 					</object>
 				</array>
