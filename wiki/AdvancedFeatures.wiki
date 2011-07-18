@@ -12,3 +12,15 @@ If you hold down the option key (alt on some keyboards) while the Action menu is
 = TeX Live Critical Repository =
 
 If you hold down the option key (alt on some keyboards) while the Action menu is active, you'll see an option to *Install TeX Live Manager From Critical Repository*.  This peculiar-sounding item allows you to install the latest TeX Live Manager  [http://tug.org/texlive/tlmgr.html#testversions test version].  If you do this, please report any problems encountered to the TeX Live team via the [http://lists.tug.org/tex-live mailing list].  In addition, you can revert to a non-beta version of tlmgr by using the *Actions->Reinstall TeX Live Manager* menu item noted above.
+
+= Install TeX Live =
+
+[http://tug.org/mactex MacTeX] is the easiest way to install TeX Live on the Mac.  However, it requires root access to install.  Not all users have administrative privileges, and some may wish to customize their install using the [http://www.tug.org/texlive/doc/install-tl.html UNIX install script] for TeX Live.  TeX Live Utility provides a graphical interface to the install script, but you have to enable a command-line preference to use it in Terminal.app.  Quit TeX Live Utility, then enter the following command in Terminal and press Return:
+
+{{{
+defaults write com.googlecode.mactlmgr.tlu TLMEnableNetInstall 1
+}}}
+
+When you next launch TeX Live Utility, you should see a third tab, allowing access to various install options.  To disable it, repeat the process, replacing 1 with 0 in the Terminal command.
+
+Note that this will not install the TeX Distribution preference pane or enable switching between MacTeX distributions using the /usr/texbin symlink setup.  That is on the list of things to add in future.
