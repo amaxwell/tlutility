@@ -57,7 +57,6 @@
 #import "TLMBackupListOperation.h"
 #import "TLMLoadDatabaseOperation.h"
 
-#import "TLMSplitView.h"
 #import "TLMStatusWindow.h"
 #import "TLMInfoController.h"
 #import "TLMPreferenceController.h"
@@ -90,10 +89,8 @@ static char _TLMOperationQueueOperationContext;
 @synthesize _progressIndicator;
 @synthesize _progressBar;
 @synthesize _hostnameView;
-@synthesize _splitView;
 @synthesize _packageListDataSource;
 @synthesize _tabView;
-@synthesize _statusBarView;
 @synthesize _updateListDataSource;
 @synthesize _installDataSource;
 @synthesize infrastructureNeedsUpdate = _updateInfrastructure;
@@ -125,10 +122,6 @@ static char _TLMOperationQueueOperationContext;
     [_tabView setDelegate:nil];
     [_tabView release];
     
-    [_splitView setDelegate:nil];
-    [_splitView release];
-    
-    [_statusBarView release];
     [_hostnameView release];
     
     [_progressIndicator release];
@@ -450,39 +443,6 @@ static char _TLMOperationQueueOperationContext;
         default:
             break;
     }
-}
-
-// implementation from BibDesk's BDSKEditor
-- (void)splitView:(TLMSplitView *)splitView doubleClickedDividerAt:(NSUInteger)subviewIndex;
-{
-    NSView *tableView = [[splitView subviews] objectAtIndex:0];
-    NSView *textView = [[splitView subviews] objectAtIndex:1];
-    NSRect tableFrame = [tableView frame];
-    NSRect textViewFrame = [textView frame];
-    
-    // not sure what the criteria for isSubviewCollapsed, but it doesn't work
-    if(NSHeight(textViewFrame) > 0.0){ 
-        // save the current height
-        _lastTextViewHeight = NSHeight(textViewFrame);
-        tableFrame.size.height += _lastTextViewHeight;
-        textViewFrame.size.height = 0.0;
-    } else {
-        // previously collapsed, so pick a reasonable value to start
-        if(_lastTextViewHeight <= 0.0)
-            _lastTextViewHeight = 150.0; 
-        textViewFrame.size.height = _lastTextViewHeight;
-        tableFrame.size.height = NSHeight([splitView frame]) - _lastTextViewHeight - [splitView dividerThickness];
-        if (NSHeight(tableFrame) < 0.0) {
-            tableFrame.size.height = 0.0;
-            textViewFrame.size.height = NSHeight([splitView frame]) - [splitView dividerThickness];
-            _lastTextViewHeight = NSHeight(textViewFrame);
-        }
-    }
-    [tableView setFrame:tableFrame];
-    [textView setFrame:textViewFrame];
-    [splitView adjustSubviews];
-    // fix for NSSplitView bug, which doesn't send this in adjustSubviews
-    [[NSNotificationCenter defaultCenter] postNotificationName:NSSplitViewDidResizeSubviewsNotification object:splitView];
 }
 
 #pragma mark -
