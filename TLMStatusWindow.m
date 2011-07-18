@@ -117,7 +117,7 @@ static void CenterRectInRect(NSRect *toCenter, NSRect enclosingRect)
 - (BOOL)isOpaque { return NO; }
 
 - (void)drawRect:(NSRect)dirtyRect 
-{                        
+{    
     // fill and stroke the path
     [NSGraphicsContext saveGraphicsState];    
     
@@ -210,7 +210,7 @@ static void CenterRectInRect(NSRect *toCenter, NSRect enclosingRect)
 - (void)handleViewFrameChange:(NSNotification *)aNote
 {
     NSParameterAssert(_frameView);
-    NSRect frame = [_frameView convertRectToBase:[_frameView frame]];
+    NSRect frame = [_frameView convertRectToBase:[_frameView bounds]];
     frame.origin = [[_frameView window] convertBaseToScreen:frame.origin];
     [self setFrame:frame display:YES];
 }
