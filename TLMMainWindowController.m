@@ -466,14 +466,19 @@ static char _TLMOperationQueueOperationContext;
     return exists;
 }
 
-- (void)_addOperation:(TLMOperation *)op selector:(SEL)sel
+- (void)_addOperation:(TLMOperation *)op selector:(SEL)sel setRefreshingForDataSource:(id)dataSource
 {
-    // avoid the tlmgr check when installing
+    // avoid the tlmgr path check when installing
     if (op && ([_currentListDataSource isEqual:_installDataSource] || [self _checkCommandPathAndWarn:YES])) {
         if (NULL != sel)
             [[NSNotificationCenter defaultCenter] addObserver:self selector:sel name:TLMOperationFinishedNotification object:op];
         [[TLMReadWriteOperationQueue defaultQueue] addOperation:op];
     }
+    else if ([dataSource respondsToSelector:@selector(setRefreshing:)]) {
+        // operation ending handlers aren't called, so this will never get reset
+        [dataSource setRefreshing:NO];
+    }
+
 }
 
 /*
@@ -514,7 +519,7 @@ static char _TLMOperationQueueOperationContext;
             op = [[TLMUpdateOperation alloc] initWithPackageNames:nil location:repository];
             TLMLog(__func__, @"Beginning update of all packages from %@", [repository absoluteString]);
         }
-        [self _addOperation:op selector:@selector(_handleUpdateFinishedNotification:)];
+        [self _addOperation:op selector:@selector(_handleUpdateFinishedNotification:) setRefreshingForDataSource:nil];
         [op release];
     }
 }
@@ -624,7 +629,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
         TLMLog(__func__, @"Updating local package database");
         NSURL *mirror = [[TLMEnvironment currentEnvironment] defaultServerURL];
         TLMLoadDatabaseOperation *op = [[TLMLoadDatabaseOperation alloc] initWithLocation:mirror offline:YES];
-        [self _addOperation:op selector:NULL];
+        [self _addOperation:op selector:NULL setRefreshingForDataSource:nil];
         [op release];
     }   
 }
@@ -636,7 +641,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
         // disable refresh action for this view
         [_updateListDataSource setRefreshing:YES];
         TLMListUpdatesOperation *op = [[TLMListUpdatesOperation alloc] initWithLocation:location];
-        [self _addOperation:op selector:@selector(_handleListUpdatesFinishedNotification:)];
+        [self _addOperation:op selector:@selector(_handleListUpdatesFinishedNotification:) setRefreshingForDataSource:_updateListDataSource];
         [op release];
         TLMLog(__func__, @"Refreshing list of updated packages%C", 0x2026);
     }
@@ -744,7 +749,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     [psc autorelease];
     if (TLMPapersizeChanged == returnCode && [psc paperSize]) {
         TLMPapersizeOperation *op = [[TLMPapersizeOperation alloc] initWithPapersize:[psc paperSize]];
-        [self _addOperation:op selector:@selector(_handlePapersizeFinishedNotification:)];
+        [self _addOperation:op selector:@selector(_handlePapersizeFinishedNotification:) setRefreshingForDataSource:nil];
         [op release];             
         TLMLog(__func__, @"Setting paper size to %@", [psc paperSize]);
     }
@@ -786,7 +791,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
         TLMOptionOperation *change = nil;
         if ((returnCode & TLMAutobackupIncreased) || (returnCode & TLMAutobackupDecreased)) {
             change = [[TLMOptionOperation alloc] initWithKey:@"autobackup" value:[NSString stringWithFormat:@"%ld", (long)[abc backupCount]]];
-            [self _addOperation:change selector:@selector(_handleAutobackupOptionFinishedNotification:)];
+            [self _addOperation:change selector:@selector(_handleAutobackupOptionFinishedNotification:) setRefreshingForDataSource:nil];
             [change autorelease];         
             TLMLog(__func__, @"Setting autobackup to %ld", (long)[abc backupCount]);
         }
@@ -798,7 +803,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
             
             if (change)
                 [cleaner addDependency:change];
-            [self _addOperation:cleaner selector:@selector(_handleBackupPruningFinishedNotification:)];
+            [self _addOperation:cleaner selector:@selector(_handleBackupPruningFinishedNotification:) setRefreshingForDataSource:nil];
             [cleaner release];
             TLMLog(__func__, @"Pruning autobackup sets to the last %ld", (long)[abc backupCount]);
         }
@@ -857,7 +862,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
             }
         }                      
         
-        [self _addOperation:installOp selector:@selector(_handleLaunchAgentInstallFinishedNotification:)];
+        [self _addOperation:installOp selector:@selector(_handleLaunchAgentInstallFinishedNotification:) setRefreshingForDataSource:nil];
         [installOp release];
         
     }
@@ -944,12 +949,12 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     if ([[TLMEnvironment currentEnvironment] tlmgrSupportsDumpTlpdb] == NO) {
         TLMLog(__func__, @"Using legacy code for listing packages.  Hopefully it still works.");
         TLMListOperation *op = [[TLMListOperation alloc] initWithLocation:location offline:offline];
-        [self _addOperation:op selector:@selector(_handleListFinishedNotification:)];
+        [self _addOperation:op selector:@selector(_handleListFinishedNotification:) setRefreshingForDataSource:_packageListDataSource];
         [op release];
     }
     else {
         TLMLoadDatabaseOperation *op = [[TLMLoadDatabaseOperation alloc] initWithLocation:location offline:offline];
-        [self _addOperation:op selector:@selector(_handleLoadDatabaseFinishedNotification:)];
+        [self _addOperation:op selector:@selector(_handleLoadDatabaseFinishedNotification:) setRefreshingForDataSource:_packageListDataSource];
         [op release];
     }
 }
@@ -988,7 +993,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     NSURL *currentURL = [self _lastUpdateURL];
     if ([self _isCorrectDatabaseVersionAtURL:currentURL]) {
         TLMInstallOperation *op = [[TLMInstallOperation alloc] initWithPackageNames:packageNames location:currentURL reinstall:reinstall];
-        [self _addOperation:op selector:@selector(_handleInstallFinishedNotification:)];
+        [self _addOperation:op selector:@selector(_handleInstallFinishedNotification:) setRefreshingForDataSource:nil];
         [op release];
         TLMLog(__func__, @"Beginning install of %@\nfrom %@", packageNames, [currentURL absoluteString]);   
     }
@@ -1064,7 +1069,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
      */
     NSURL *installURL = [[TLMEnvironment currentEnvironment] defaultServerURL];
     TLMNetInstallOperation *op = [[TLMNetInstallOperation alloc] initWithProfile:profile location:installURL];
-    [self _addOperation:op selector:@selector(_handleNetInstallFinishedNotification:)];
+    [self _addOperation:op selector:@selector(_handleNetInstallFinishedNotification:) setRefreshingForDataSource:nil];
     [op release];
 }
 
@@ -1313,7 +1318,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     NSURL *currentURL = [self _lastUpdateURL];
     if ([self _isCorrectDatabaseVersionAtURL:currentURL]) {
         TLMUpdateOperation *op = [[TLMUpdateOperation alloc] initWithPackageNames:packageNames location:currentURL];
-        [self _addOperation:op selector:@selector(_handleUpdateFinishedNotification:)];
+        [self _addOperation:op selector:@selector(_handleUpdateFinishedNotification:) setRefreshingForDataSource:nil];
         [op release];
         TLMLog(__func__, @"Beginning update of %@\nfrom %@", packageNames, [currentURL absoluteString]);
     }
@@ -1355,7 +1360,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     }
     else {
         TLMRemoveOperation *op = [[TLMRemoveOperation alloc] initWithPackageNames:packageNames force:force];
-        [self _addOperation:op selector:@selector(_handleRemoveFinishedNotification:)];
+        [self _addOperation:op selector:@selector(_handleRemoveFinishedNotification:) setRefreshingForDataSource:nil];
         [op release];
         TLMLog(__func__, @"Beginning removal of\n%@", packageNames); 
     }
@@ -1365,7 +1370,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 {
     TLMBackupListOperation *op = [TLMBackupListOperation new];
     [_backupDataSource setRefreshing:YES];
-    [self _addOperation:op selector:@selector(_handleListBackupsFinishedNotification:)];
+    [self _addOperation:op selector:@selector(_handleListBackupsFinishedNotification:) setRefreshingForDataSource:_backupDataSource];
     [op release];
 }
 
@@ -1373,7 +1378,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 {
     TLMBackupOperation *op = [TLMBackupOperation newRestoreOperationWithPackage:packageName version:version];
     TLMLog(__func__, @"Restoring version %@ of %@", version, packageName);
-    [self _addOperation:op selector:@selector(_handleRestoreFinishedNotification:)];
+    [self _addOperation:op selector:@selector(_handleRestoreFinishedNotification:) setRefreshingForDataSource:nil];
     [op release];    
 }
 
