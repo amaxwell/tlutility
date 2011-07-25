@@ -37,6 +37,7 @@
  */
 
 #import "NSURL_TLMExtensions.h"
+#import "TLMLogServer.h"
 
 #define TLPDB_PATH  @"tlpkg/texlive.tlpdb"
 #define MULTIPLEXER @"mirror.ctan.org"
@@ -52,6 +53,54 @@
 + (NSURL *)TLNetURLForMirror:(NSURL *)mirrorURL;
 {
     return [mirrorURL tlm_URLByAppendingPathComponent:TLNET_PATH];
+}
+
++ (BOOL)writeURLs:(NSArray *)array toPasteboard:(NSPasteboard *)pboard;
+{
+    OSStatus err;
+    
+    PasteboardRef carbonPboard;
+    err = PasteboardCreate((CFStringRef)[pboard name], &carbonPboard);
+    
+    if (noErr == err)
+        err = PasteboardClear(carbonPboard);
+    
+    if (noErr == err)
+        (void)PasteboardSynchronize(carbonPboard);
+    
+    if (noErr != err) {
+        TLMLog(__func__, @"failed to setup pboard %@: %s", [pboard name], GetMacOSStatusErrorString(err));
+        return NO;
+    }
+    
+    for (NSURL *aURL in array) {
+        
+        CFDataRef utf8Data = (CFDataRef)[[aURL absoluteString] dataUsingEncoding:NSUTF8StringEncoding];
+        
+        // any pointer type; private to the creating application
+        PasteboardItemID itemID = (void *)aURL;
+        
+        // Finder adds a file URL and destination URL for weblocs, but only a file URL for regular files
+        // could also put a string representation of the URL, but Finder doesn't do that
+        
+        if ([aURL isFileURL]) {
+            err = PasteboardPutItemFlavor(carbonPboard, itemID, kUTTypeFileURL, utf8Data, kPasteboardFlavorNoFlags);
+        }
+        else {
+            err = PasteboardPutItemFlavor(carbonPboard, itemID, kUTTypeURL, utf8Data, kPasteboardFlavorNoFlags);
+        }
+        
+        if (noErr != err)
+            TLMLog(__func__, @"failed to write to pboard %@: %s", [pboard name], GetMacOSStatusErrorString(err));
+    }
+    
+    ItemCount itemCount;
+    err = PasteboardGetItemCount(carbonPboard, &itemCount);
+    
+    if (carbonPboard) 
+        CFRelease(carbonPboard);
+    
+    return noErr == err && itemCount > 0;
 }
 
 - (BOOL)isMultiplexer;

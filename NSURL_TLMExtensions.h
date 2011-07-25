@@ -44,6 +44,8 @@
 // mirrorURL is host + systems/texlive/tlnet
 + (NSURL *)databaseURLForTLNetURL:(NSURL *)mirrorURL;
 
++ (BOOL)writeURLs:(NSArray *)array toPasteboard:(NSPasteboard *)pboard;
+
 // mirrorURL is host only
 + (NSURL *)TLNetURLForMirror:(NSURL *)mirrorURL;
 
