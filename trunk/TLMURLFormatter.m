@@ -41,17 +41,20 @@
 
 @implementation TLMURLFormatter
 
+@synthesize returnsURL = _returnsURL;
+
 - (NSString *)stringForObjectValue:(id)obj;
 {
-    return obj;
+    return [obj isKindOfClass:[NSURL class]] ? [obj absoluteString] : obj;
 }
 
 - (BOOL)getObjectValue:(id *)obj forString:(NSString *)string errorDescription:(NSString **)error;
 {
     BOOL success = YES;
-    *obj = string;
     // need to ensure it can be composed, since "ftp://" is a non-nil URL, but is nil after appending a path component
-    NSURL *aURL = string ? [[NSURL URLWithString:string] tlm_URLByAppendingPathComponent:@"/a/test/path"] : nil;
+    NSURL *aURL = nil;
+    if (string)
+        aURL = [[NSURL URLWithString:string] tlm_URLByAppendingPathComponent:@"/a/test/path"];
     if (nil == aURL) {
         success = NO;
         if (error) *error = NSLocalizedString(@"This URL was not valid.", @"error message");
@@ -61,6 +64,9 @@
         success = NO;
         if (error) *error = NSLocalizedString(@"This URL is missing a scheme, such as http.", @"error message");
         *obj = nil;        
+    }
+    else {
+        *obj = [self returnsURL] ? [NSURL URLWithString:string] : string;
     }
     return success;
 }
