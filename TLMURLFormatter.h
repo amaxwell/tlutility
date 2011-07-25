@@ -40,5 +40,11 @@
 
 
 @interface TLMURLFormatter : NSFormatter
+{
+@private
+    BOOL _returnsURL;
+}
+
+@property (nonatomic) BOOL returnsURL;
 
 @end
