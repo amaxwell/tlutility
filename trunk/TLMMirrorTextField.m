@@ -54,13 +54,14 @@
 
 - (BOOL)isFieldEditor { return YES; }
 
-- (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender{
-	return NSDragOperationCopy;
+- (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender { return NSDragOperationCopy; }
+
+- (void)concludeDragOperation:(id <NSDraggingInfo>)sender { 
+    [[self window] makeFirstResponder:nil];
 }
 
 - (BOOL)performDragOperation:(id < NSDraggingInfo >)sender
 {
-    fprintf(stderr, "%s\n", __func__);
     NSPasteboard *pboard = [sender draggingPasteboard];
     NSString *type = [pboard availableTypeFromArray:[NSArray arrayWithObjects:NSURLPboardType, (id)kUTTypeURL, NSStringPboardType, nil]];
     BOOL rv = NO;
@@ -79,16 +80,24 @@
     return rv;
 }
 
-- (BOOL)prepareForDragOperation:(id < NSDraggingInfo >)sender
-{
-    return YES;
-}
+- (BOOL)prepareForDragOperation:(id < NSDraggingInfo >)sender { return YES; }
 
 @end
 
 
 
 @implementation TLMMirrorTextField
+
+/*
+ I tried NSTrackingArea, but it only works on the fringes of the icon, or if you enter the
+ icon area from inside the cell.  Entering from the bottom, left, or top of the icon did
+ not work.  Since this works and is a single line of code instead of multiple overrides
+ and an ivar to get something partially functional...I say NSTrackingArea officially sucks.
+ */
+- (void)resetCursorRects
+{
+    [self addCursorRect:[[self cell] iconRectForBounds:[self bounds]] cursor:[NSCursor arrowCursor]];
+}
 
 - (void)viewWillMoveToWindow:(NSWindow *)newWindow
 {
@@ -101,18 +110,15 @@
     }
 }
 
-- (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender{
-	return NSDragOperationCopy;
-}
+- (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender { return NSDragOperationCopy; }
 
-- (void)concludeDragOperation:(id <NSDraggingInfo>)sender;
-{
-    [self sendAction:[self action] to:[self target]];
+- (void)concludeDragOperation:(id <NSDraggingInfo>)sender { 
+    if ([[self window] makeFirstResponder:nil])
+        [self sendAction:[self action] to:[self target]];
 }
 
 - (BOOL)performDragOperation:(id < NSDraggingInfo >)sender
 {
-    fprintf(stderr, "%s\n", __func__);
     NSPasteboard *pboard = [sender draggingPasteboard];
     NSString *type = [pboard availableTypeFromArray:[NSArray arrayWithObjects:NSURLPboardType, (id)kUTTypeURL, NSStringPboardType, nil]];
     BOOL rv = NO;
@@ -131,25 +137,8 @@
     return rv;
 }
 
-- (BOOL)prepareForDragOperation:(id < NSDraggingInfo >)sender
-{
-    return YES;
-}
+- (BOOL)prepareForDragOperation:(id < NSDraggingInfo >)sender { return YES; }
 
 - (NSDragOperation)draggingSourceOperationMaskForLocal:(BOOL)flag { return NSDragOperationCopy; }
-
-- (void)textDidChange:(NSNotification *)notification
-{
-    [super textDidChange:notification];
-    _changedText = YES;
-}
-
-- (void)textDidEndEditing:(NSNotification *)aNote
-{
-    if (_changedText) {
-        [super textDidEndEditing:aNote];
-        _changedText = NO;
-    }
-}
 
 @end
