@@ -240,7 +240,8 @@ static NSMutableDictionary *_iconsByURLScheme = nil;
 {
     [super selectWithFrame:[self textRectForBounds:cellFrame] inView:controlView editor:textObj delegate:anObject start:selStart length:selLength];
 }
-/*
+
+#if 0
 - (NSUInteger)hitTestForEvent:(NSEvent *)event inRect:(NSRect)cellFrame ofView:(NSView *)controlView
 {
     NSUInteger hit = NSCellHitNone;
@@ -258,5 +259,6 @@ static NSMutableDictionary *_iconsByURLScheme = nil;
     }
     return hit;
 }
-*/
+#endif
+
 @end
