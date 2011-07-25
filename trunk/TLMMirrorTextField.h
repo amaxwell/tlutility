@@ -1,10 +1,10 @@
 //
-//  TLMMirrorCell.h
+//  TLMMirrorTextField.h
 //  TeX Live Manager
 //
-//  Created by Adam R. Maxwell on 11/20/10.
+//  Created by Adam R. Maxwell on 07/24/11.
 /*
- This software is Copyright (c) 2010-2011
+ This software is Copyright (c) 2011
  Adam Maxwell. All rights reserved.
  
  Redistribution and use in source and binary forms, with or without
@@ -36,17 +36,22 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+
 #import <Cocoa/Cocoa.h>
 
-@interface TLMMirrorCell : NSTextFieldCell
+@interface TLMMirrorFieldEditor : NSTextView
 {
-@private
-    NSImage *_icon;
+    
 }
 
-- (NSRect)iconRectForBounds:(NSRect)cellFrame;
-- (NSRect)textRectForBounds:(NSRect)cellFrame;
 
-@property (nonatomic, retain) NSImage *icon;
+@end
+
+
+
+@interface TLMMirrorTextField : NSTextField
+{
+    BOOL _changedText;
+}
 
 @end

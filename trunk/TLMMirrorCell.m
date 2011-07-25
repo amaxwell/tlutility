@@ -75,6 +75,9 @@ static NSMutableDictionary *_iconsByURLScheme = nil;
 
 - (NSImage *)_iconForURL:(NSURL *)aURL
 {
+    // !!! early return
+    if (nil == aURL) return nil;
+    
     NSString *scheme = [aURL scheme];
     NSImage *icon = [_iconsByURLScheme objectForKey:scheme];
     if (nil == icon) {
@@ -97,14 +100,28 @@ static NSMutableDictionary *_iconsByURLScheme = nil;
 
         [_iconsByURLScheme setObject:icon forKey:scheme];
     }
+    NSParameterAssert(icon);
     return icon;
 }
 
 - (void)setObjectValue:(id <NSCopying>)obj
 {
-    NSImage *icon = [(id)obj respondsToSelector:@selector(scheme)] ? [self _iconForURL:(NSURL *)obj] : nil;
+    NSImage *icon = nil;
+    if ([(id)obj isKindOfClass:[NSURL class]])
+        icon = [self _iconForURL:(NSURL *)obj];
+    else if ([(id)obj isKindOfClass:[NSString class]] && [(NSString *)obj isEqualToString:@""] == NO)
+        icon = [self _iconForURL:[NSURL URLWithString:obj]];
     [self setIcon:icon];
     [super setObjectValue:obj];
+}
+
+- (void)setStringValue:(NSString *)aString
+{
+    NSURL *aURL = nil;
+    if (aString && [aString isEqualToString:@""] == NO)
+        aURL = [NSURL URLWithString:aString];
+    [self setIcon:[self _iconForURL:aURL]];
+    [super setStringValue:aString];
 }
 
 - (NSRect)drawingRectForBounds:(NSRect)theRect
@@ -121,26 +138,125 @@ static NSMutableDictionary *_iconsByURLScheme = nil;
     return drawingRect;
 }
 
+- (NSRect)iconRectForBounds:(NSRect)cellFrame
+{
+    NSRect iconRect = cellFrame;
+    iconRect.size.width = NSHeight(cellFrame);
+    return iconRect;
+}
+
+- (NSRect)textRectForBounds:(NSRect)cellFrame
+{
+    NSRect iconRect = [self iconRectForBounds:cellFrame];
+    cellFrame.origin.x = NSMaxX(iconRect);
+    cellFrame.size.width -= NSWidth(iconRect);
+    return cellFrame;    
+}
+
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
     
-    NSRect iconRect = cellFrame;
-    iconRect.size.width = NSHeight(cellFrame);
-    if ([controlView isFlipped] && [self icon]) {
+    if ([self icon]) {
+        NSRect iconRect = [self iconRectForBounds:cellFrame];
         CGContextRef ctxt = [[NSGraphicsContext currentContext] graphicsPort];
         CGContextSaveGState(ctxt);
         CGContextSetInterpolationQuality(ctxt, kCGInterpolationHigh);
         CGContextSetShouldAntialias(ctxt, true);
-        CGContextTranslateCTM(ctxt, 0, NSMaxY(iconRect));
-        CGContextScaleCTM(ctxt, 1, -1);
-        iconRect.origin.y = 0;
-        [[self icon] drawInRect:iconRect fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
+        if ([controlView isFlipped]) {
+            CGContextTranslateCTM(ctxt, 0, NSMaxY(iconRect));
+            CGContextScaleCTM(ctxt, 1, -1);
+            iconRect.origin.y = 0;
+        }
+        [[self icon] drawInRect:NSInsetRect(iconRect, 1, 1) fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
         CGContextRestoreGState(ctxt);
     }
     
-    cellFrame.origin.x = NSMaxX(iconRect);
-    cellFrame.size.width -= NSWidth(iconRect);
-    [super drawInteriorWithFrame:cellFrame inView:controlView];
+    [super drawInteriorWithFrame:[self textRectForBounds:cellFrame] inView:controlView];
 }
 
+- (void)drawWithFrame:(NSRect)aRect inView:(NSView *)controlView
+{
+    [super drawWithFrame:aRect inView:controlView];
+#if 0
+    /*
+     Editing causes a white border to be drawn around the cell, and the focus ring doesn't
+     entirely fill it.  Mail has the same issue, so it's not worth playing with the text rect
+     to lessen the effect.  It's not drawn by super's drawWithFrame or drawInteriorWithFrame,
+     so it's probably the outline view itself.
+     */
+    if ([self showsFirstResponder]) {
+        [NSGraphicsContext saveGraphicsState];
+        NSSetFocusRingStyle(NSFocusRingAbove);
+        NSRectFill([self textRectForBounds:aRect]);
+        [NSGraphicsContext restoreGraphicsState];
+    }
+#endif
+}
+
+- (NSRect)expansionFrameWithFrame:(NSRect)cellFrame inView:(NSView *)view;
+{
+    // see if constrained text width is less than the ideal text rect
+    if (NSWidth([self textRectForBounds:cellFrame]) < [super cellSize].width) {
+        // set width to constrained text width, and let super figure out the required frame since [self cellSize].width isn't quite enough
+        cellFrame.size.width = NSWidth([self textRectForBounds:cellFrame]);
+        NSRect expansionFrame = [super expansionFrameWithFrame:cellFrame inView:view];
+        // SL needs this?
+        expansionFrame.size.height = NSHeight(cellFrame);
+        return expansionFrame;
+    }
+    return NSZeroRect;
+}
+
+- (BOOL)trackMouse:(NSEvent *)event inRect:(NSRect)cellFrame ofView:(NSView *)controlView untilMouseUp:(BOOL)flag;
+{
+    NSPoint mouseLoc = [controlView convertPoint:[event locationInWindow] fromView:nil];
+    if ([self icon] && NSMouseInRect(mouseLoc, [self iconRectForBounds:cellFrame], [controlView isFlipped])) {
+        
+        if (NSLeftMouseDragged == [[NSApp nextEventMatchingMask:NSLeftMouseUpMask | NSLeftMouseDraggedMask untilDate:[NSDate distantFuture] inMode:NSEventTrackingRunLoopMode dequeue:NO] type]) {        
+            NSPasteboard *pboard = [NSPasteboard pasteboardWithName:NSDragPboard];
+            [NSURL writeURLs:[NSArray arrayWithObject:[NSURL URLWithString:[self stringValue]]] toPasteboard:pboard];
+            NSImage *dragImage = [[[self icon] copy] autorelease];
+            [dragImage setSize:[self iconRectForBounds:cellFrame].size];
+            NSPoint dragImageOrigin = [controlView convertPoint:[event locationInWindow] fromView:nil];
+            dragImageOrigin.x -= [dragImage size].width / 2;
+            dragImageOrigin.y = [controlView isFlipped] ? dragImageOrigin.y + [dragImage size].height / 2 : dragImageOrigin.y - [dragImage size].width / 2;
+            [controlView dragImage:dragImage at:dragImageOrigin offset:NSZeroSize event:event pasteboard:pboard source:controlView slideBack:YES];
+        }
+    }
+    else {
+        return [super trackMouse:event inRect:cellFrame ofView:controlView untilMouseUp:flag];
+    }
+    return YES;
+}
+
+- (NSFocusRingType)focusRingType { return NSFocusRingTypeNone; }
+
+- (void)editWithFrame:(NSRect)cellFrame inView:(NSView *)controlView editor:(NSText *)textObj delegate:(id)anObject event:(NSEvent *)theEvent;
+{
+    [super editWithFrame:[self textRectForBounds:cellFrame] inView:controlView editor:textObj delegate:anObject event:theEvent];
+}
+
+- (void)selectWithFrame:(NSRect)cellFrame inView:(NSView *)controlView editor:(NSText *)textObj delegate:(id)anObject start:(NSInteger)selStart length:(NSInteger)selLength;
+{
+    [super selectWithFrame:[self textRectForBounds:cellFrame] inView:controlView editor:textObj delegate:anObject start:selStart length:selLength];
+}
+/*
+- (NSUInteger)hitTestForEvent:(NSEvent *)event inRect:(NSRect)cellFrame ofView:(NSView *)controlView
+{
+    NSUInteger hit = NSCellHitNone;
+    NSPoint mouseLoc = [controlView convertPoint:[event locationInWindow] fromView:nil];
+    if (NSMouseInRect(mouseLoc, cellFrame, [controlView isFlipped]))
+        hit = NSCellHitContentArea;
+    
+    NSRect iconRect = [self iconRectForBounds:cellFrame];
+    
+    if (NSMouseInRect(mouseLoc, iconRect, [controlView isFlipped])) {
+        hit |= NSCellHitTrackableArea;
+    }
+    else if (NSMouseInRect(mouseLoc, [self textRectForBounds:cellFrame], [controlView isFlipped])) {
+        if ([self isEnabled]) hit |= NSCellHitEditableTextArea;
+    }
+    return hit;
+}
+*/
 @end

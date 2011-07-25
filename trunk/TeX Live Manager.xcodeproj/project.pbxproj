@@ -20,6 +20,7 @@
 		F925D1AB12957B1800D75BB4 /* TLMMirrorController.m in Sources */ = {isa = PBXBuildFile; fileRef = F925D1AA12957B1800D75BB4 /* TLMMirrorController.m */; };
 		F925D1B112957B5600D75BB4 /* Mirrors.xib in Resources */ = {isa = PBXBuildFile; fileRef = F925D1B012957B5600D75BB4 /* Mirrors.xib */; };
 		F925D1BB12957C1B00D75BB4 /* CTAN.sites.plist in Resources */ = {isa = PBXBuildFile; fileRef = F925D1BA12957C1B00D75BB4 /* CTAN.sites.plist */; };
+		F929DE8413DCE00000072DDA /* TLMMirrorTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = F929DE8313DCE00000072DDA /* TLMMirrorTextField.m */; };
 		F942FFC513A08FD60008D8FD /* TLMDatabasePackage.m in Sources */ = {isa = PBXBuildFile; fileRef = F942FFC413A08FD60008D8FD /* TLMDatabasePackage.m */; };
 		F94E74A20EF4965100E0B78F /* TLMTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = F94E74A10EF4965100E0B78F /* TLMTableView.m */; };
 		F957A4E312514B040079E07F /* TLMBackupOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F957A4E212514B040079E07F /* TLMBackupOperation.m */; };
@@ -285,6 +286,8 @@
 		F925D1AA12957B1800D75BB4 /* TLMMirrorController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMMirrorController.m; sourceTree = "<group>"; };
 		F925D1AE12957B4C00D75BB4 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/Mirrors.xib; sourceTree = "<group>"; };
 		F925D1BA12957C1B00D75BB4 /* CTAN.sites.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = CTAN.sites.plist; sourceTree = "<group>"; };
+		F929DE8213DCDFFF00072DDA /* TLMMirrorTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMMirrorTextField.h; sourceTree = "<group>"; };
+		F929DE8313DCE00000072DDA /* TLMMirrorTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMMirrorTextField.m; sourceTree = "<group>"; };
 		F942FFC313A08FD60008D8FD /* TLMDatabasePackage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMDatabasePackage.h; sourceTree = "<group>"; };
 		F942FFC413A08FD60008D8FD /* TLMDatabasePackage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMDatabasePackage.m; sourceTree = "<group>"; };
 		F94E74A00EF4965100E0B78F /* TLMTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMTableView.h; sourceTree = "<group>"; };
@@ -568,6 +571,8 @@
 		F94E74BA0EF49AE100E0B78F /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				F929DE8213DCDFFF00072DDA /* TLMMirrorTextField.h */,
+				F929DE8313DCE00000072DDA /* TLMMirrorTextField.m */,
 				F9053F4610B21B0D00BF5C0B /* TLMProgressIndicatorCell.h */,
 				F9053F4710B21B0D00BF5C0B /* TLMProgressIndicatorCell.m */,
 				F99D9B090F01731E00A1DCCB /* TLMTabView.h */,
@@ -1070,6 +1075,7 @@
 				F915C9FF13A846A100F3E807 /* TLMEnvironment.m in Sources */,
 				F9DAAB8213D0DE26004055A0 /* NSURL_TLMExtensions.m in Sources */,
 				F96203BF13D3656300932965 /* TLMLogWindowController.m in Sources */,
+				F929DE8413DCE00000072DDA /* TLMMirrorTextField.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

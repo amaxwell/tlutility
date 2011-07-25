@@ -44,6 +44,7 @@
 @class TLMUpdateListDataSource;
 @class TLMInstallDataSource;
 @class TLMBackupDataSource;
+@class TLMMirrorTextField;
 
 @protocol TLMListDataSource <NSObject>
 @property (nonatomic, copy) NSURL *lastUpdateURL;
@@ -56,8 +57,8 @@
 @private
     NSProgressIndicator      *_progressIndicator;
     NSProgressIndicator      *_progressBar;
-    NSTextView               *_hostnameView;
     TLMTabView               *_tabView;
+    TLMMirrorTextField       *_URLField;
     
     NSUInteger                _operationCount;
     CGFloat                   _lastTextViewHeight;
@@ -76,10 +77,11 @@
 - (IBAction)changeAutobackup:(id)sender;
 - (IBAction)automaticUpdateCheck:(id)sender;
 - (IBAction)cancelAllOperations:(id)sender;
+- (IBAction)changeServerURL:(id)sender;
 
 @property (nonatomic, retain) IBOutlet NSProgressIndicator *_progressIndicator;
 @property (nonatomic, retain) IBOutlet NSProgressIndicator *_progressBar;
-@property (nonatomic, retain) IBOutlet NSTextView *_hostnameView;
+@property (nonatomic, retain) IBOutlet TLMMirrorTextField *_URLField;
 @property (nonatomic, retain) IBOutlet TLMPackageListDataSource *_packageListDataSource;
 @property (nonatomic, retain) IBOutlet TLMUpdateListDataSource *_updateListDataSource;
 @property (nonatomic, retain) IBOutlet TLMInstallDataSource *_installDataSource;

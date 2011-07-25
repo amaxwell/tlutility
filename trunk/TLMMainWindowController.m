@@ -71,6 +71,8 @@
 #import "TLMAutobackupController.h"
 #import "TLMLaunchAgentController.h"
 #import "TLMEnvironment.h"
+#import "TLMURLFormatter.h"
+#import "TLMMirrorTextField.h"
 
 #import "TLMDatabase.h"
 #import "TLMDatabasePackage.h"
@@ -88,7 +90,7 @@ static char _TLMOperationQueueOperationContext;
 
 @synthesize _progressIndicator;
 @synthesize _progressBar;
-@synthesize _hostnameView;
+@synthesize _URLField;
 @synthesize _packageListDataSource;
 @synthesize _tabView;
 @synthesize _updateListDataSource;
@@ -122,8 +124,8 @@ static char _TLMOperationQueueOperationContext;
     [_tabView setDelegate:nil];
     [_tabView release];
     
-    [_hostnameView release];
-    
+    [_URLField release];
+        
     [_progressIndicator release];
     [_progressBar release];
     [_packageListDataSource release];
@@ -162,6 +164,10 @@ static char _TLMOperationQueueOperationContext;
                                              selector:@selector(_stopProgressBar:)
                                                  name:TLMLogFinishedProgressNotification
                                                object:nil];
+    
+    TLMURLFormatter *fmt = [[TLMURLFormatter new] autorelease];
+    [fmt setReturnsURL:YES];
+    [_URLField setFormatter:fmt];
 }
 
 - (void)_stopProgressBar:(NSNotification *)aNote
@@ -293,6 +299,17 @@ static char _TLMOperationQueueOperationContext;
     return shouldClose;
 }
 
+- (id)windowWillReturnFieldEditor:(NSWindow *)sender toObject:(id)client
+{
+    if (client == _URLField) {
+        static TLMMirrorFieldEditor *editor = nil;
+        if (nil == editor)
+            editor = [[TLMMirrorFieldEditor alloc] init];
+        return editor;
+    }
+    return nil;
+}   
+
 #pragma mark Interface updates
 
 /*
@@ -319,11 +336,7 @@ static char _TLMOperationQueueOperationContext;
     // use defaultServerURL if we haven't previously contacted a host; -validServerURL does network ops
     if (nil == aURL)
         aURL = [[TLMEnvironment currentEnvironment] defaultServerURL];
-    NSTextStorage *ts = [_hostnameView textStorage];
-    [[ts mutableString] setString:[aURL absoluteString]];
-    [ts addAttribute:NSFontAttributeName value:[NSFont labelFontOfSize:0] range:NSMakeRange(0, [ts length])];
-    [ts addAttribute:NSLinkAttributeName value:aURL range:NSMakeRange(0, [ts length])];
-    [ts addAttributes:[_hostnameView linkTextAttributes] range:NSMakeRange(0, [ts length])];
+    [_URLField setStringValue:[aURL absoluteString]];
 }
 
 - (void)_fixOverlayWindowOrder
@@ -1201,6 +1214,11 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     else {
         [self _cancelAllOperations];
     }
+}
+
+- (IBAction)changeServerURL:(id)sender;
+{
+    TLMLog(__func__, @"change to %@", [_URLField objectValue]);
 }
 
 - (void)updateInfrastructure:(id)sender;
