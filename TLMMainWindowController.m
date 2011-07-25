@@ -234,13 +234,22 @@ static char _TLMOperationQueueOperationContext;
     NSUInteger newCount = [count unsignedIntegerValue];
     if (_operationCount != newCount) {
         
+        /*
+         ??? _URLField is set (un)editable here depending on operation count,
+         which may not be the best long-term behavior.  Dealing with changes
+         during an operation (cancelling & starting) is more complicated than
+         I want to deal with at this time, particularly with multiple panes.
+         */
+        
         // previous count was zero, so spinner is currently stopped
         if (0 == _operationCount) {
             [_progressIndicator startAnimation:self];
+            [_URLField setEditable:NO];
         }
         // previous count != 0, so spinner is currently animating
         else if (0 == newCount) {
             [_progressIndicator stopAnimation:self];
+            [_URLField setEditable:YES];
         }
         
         // validation depends on this value
