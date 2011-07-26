@@ -222,11 +222,9 @@ static NSMutableDictionary *_iconsByURLScheme = nil;
             dragImageOrigin.y = [controlView isFlipped] ? dragImageOrigin.y + [dragImage size].height / 2 : dragImageOrigin.y - [dragImage size].width / 2;
             [controlView dragImage:dragImage at:dragImageOrigin offset:NSZeroSize event:event pasteboard:pboard source:controlView slideBack:YES];
         }
+        return YES;
     }
-    else {
-        return [super trackMouse:event inRect:cellFrame ofView:controlView untilMouseUp:flag];
-    }
-    return YES;
+    return [super trackMouse:event inRect:cellFrame ofView:controlView untilMouseUp:flag];
 }
 
 - (NSFocusRingType)focusRingType { return NSFocusRingTypeNone; }
