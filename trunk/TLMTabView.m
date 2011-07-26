@@ -200,8 +200,7 @@
     else {
         [[_transitionViews objectAtIndex:0] setImageAlphaValue:(1 - value)];
         [[_transitionViews objectAtIndex:1] setImageAlphaValue:value];    
-        // displayRectIgnoringOpacity causes vertical jitter in the bottom of the view
-        [self displayRect:[[_transitionViews objectAtIndex:0] frame]];
+        [self displayRectIgnoringOpacity:[[_transitionViews objectAtIndex:0] frame]];
     }
 }
 
@@ -224,7 +223,7 @@
     image = [[NSImage alloc] initWithSize:bitmapBounds.size];
     [image addRepresentation:imageRep];
     [[_transitionViews objectAtIndex:0] setImage:image];
-    [[_transitionViews objectAtIndex:1] setImageAlphaValue:1.0];
+    [[_transitionViews objectAtIndex:0] setImageAlphaValue:1.0];
     [image release];
     
     // only remove after caching to bitmap
@@ -250,7 +249,7 @@
     
     // set now, since the timer callback needs it
     _currentView = nextView;
-    
+        
 #define DURATION 0.3
     
     // animate ~30 fps for 0.3 seconds, using NSAnimation to get the alpha curve
