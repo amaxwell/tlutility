@@ -244,12 +244,12 @@ static char _TLMOperationQueueOperationContext;
         // previous count was zero, so spinner is currently stopped
         if (0 == _operationCount) {
             [_progressIndicator startAnimation:self];
-            [_URLField setEditable:NO];
+            [_URLField setEnabled:NO];
         }
         // previous count != 0, so spinner is currently animating
         else if (0 == newCount) {
             [_progressIndicator stopAnimation:self];
-            [_URLField setEditable:YES];
+            [_URLField setEnabled:YES];
         }
         
         // validation depends on this value
