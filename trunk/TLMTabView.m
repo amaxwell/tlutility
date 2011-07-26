@@ -305,6 +305,8 @@
         [self selectViewAtIndex:[_tabControl selectedSegment]];
 }
 
+- (BOOL)isOpaque { return YES; }
+
 - (void)drawRect:(NSRect)dirtyRect
 {
     // flashes to window background on initial transition
