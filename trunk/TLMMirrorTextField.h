@@ -40,11 +40,17 @@
 #import <Cocoa/Cocoa.h>
 
 @interface TLMMirrorFieldEditor : NSTextView
-
+{
+@private
+    BOOL _dragChangedText;
+}
 @end
 
 
 
 @interface TLMMirrorTextField : NSTextField
-
+{
+@private
+    BOOL _dragChangedText;
+}
 @end

@@ -54,10 +54,26 @@
 
 - (BOOL)isFieldEditor { return YES; }
 
-- (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender { return NSDragOperationCopy; }
+- (BOOL)dragChangedText { return _dragChangedText; }
+
+- (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender { 
+    _dragChangedText = NO;
+    return [sender draggingSource] == [self delegate] ? NSDragOperationNone : NSDragOperationCopy; 
+}
 
 - (void)concludeDragOperation:(id <NSDraggingInfo>)sender { 
     [[self window] makeFirstResponder:nil];
+    _dragChangedText = NO;
+}
+
+- (BOOL)setStringFromDragOperation:(NSString *)aString
+{
+    if ([[self string] isEqualToString:aString])
+        return NO;
+
+    [self setString:aString];
+    _dragChangedText = YES;
+    return YES;
 }
 
 - (BOOL)performDragOperation:(id < NSDraggingInfo >)sender
@@ -66,16 +82,13 @@
     NSString *type = [pboard availableTypeFromArray:[NSArray arrayWithObjects:NSURLPboardType, (id)kUTTypeURL, NSStringPboardType, nil]];
     BOOL rv = NO;
     if ([type isEqualToString:NSURLPboardType]) {
-        [self setString:[[NSURL URLFromPasteboard:pboard] absoluteString]];
-        rv = YES;
+        rv = [self setStringFromDragOperation:[[NSURL URLFromPasteboard:pboard] absoluteString]];
     }
     else if ([type isEqualToString:(id)kUTTypeURL]) {
-        [self setString:[pboard stringForType:type]];
-        rv = YES;
+        rv = [self setStringFromDragOperation:[pboard stringForType:type]];
     }
     else if ([type isEqualToString:NSStringPboardType]) {
-        [self setString:[pboard stringForType:type]];
-        rv = YES;
+        rv = [self setStringFromDragOperation:[pboard stringForType:type]];
     }
     return rv;
 }
@@ -110,11 +123,25 @@
     }
 }
 
-- (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender { return NSDragOperationCopy; }
+- (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender { 
+    _dragChangedText = NO;
+    return [sender draggingSource] == self ? NSDragOperationNone : NSDragOperationCopy; 
+}
 
 - (void)concludeDragOperation:(id <NSDraggingInfo>)sender { 
     if ([[self window] makeFirstResponder:nil])
         [self sendAction:[self action] to:[self target]];
+    _dragChangedText = NO;
+}
+
+- (BOOL)setStringFromDragOperation:(NSString *)aString
+{
+    if ([[self stringValue] isEqualToString:aString])
+        return NO;
+    
+    [self setStringValue:aString];
+    _dragChangedText = YES;
+    return YES;
 }
 
 - (BOOL)performDragOperation:(id < NSDraggingInfo >)sender
@@ -123,16 +150,13 @@
     NSString *type = [pboard availableTypeFromArray:[NSArray arrayWithObjects:NSURLPboardType, (id)kUTTypeURL, NSStringPboardType, nil]];
     BOOL rv = NO;
     if ([type isEqualToString:NSURLPboardType]) {
-        [self setStringValue:[[NSURL URLFromPasteboard:pboard] absoluteString]];
-        rv = YES;
+        rv = [self setStringFromDragOperation:[[NSURL URLFromPasteboard:pboard] absoluteString]];
     }
     else if ([type isEqualToString:(id)kUTTypeURL]) {
-        [self setStringValue:[pboard stringForType:type]];
-        rv = YES;
+        rv = [self setStringFromDragOperation:[pboard stringForType:type]];
     }
     else if ([type isEqualToString:NSStringPboardType]) {
-        [self setStringValue:[pboard stringForType:type]];
-        rv = YES;
+        rv = [self setStringFromDragOperation:[pboard stringForType:type]];
     }
     return rv;
 }
@@ -140,5 +164,24 @@
 - (BOOL)prepareForDragOperation:(id < NSDraggingInfo >)sender { return YES; }
 
 - (NSDragOperation)draggingSourceOperationMaskForLocal:(BOOL)flag { return NSDragOperationCopy; }
+
+- (void)textDidChange:(NSNotification *)notification
+{
+    [super textDidChange:notification];
+    _dragChangedText = YES;
+}
+
+/*
+ The _dragChangedText business is to avoid sending spurious action messages
+ when text hasn't actually changed due to drag-and-drop or direct editing.
+ By default, it sends it every time you click on the icon, which is a bit
+ much if the action does anything nontrivial.
+ */
+- (void)textDidEndEditing:(NSNotification *)notification
+{
+    TLMMirrorFieldEditor *editor = [notification object];
+    if ([editor dragChangedText] || _dragChangedText)
+        [super textDidEndEditing:notification];
+}
 
 @end
