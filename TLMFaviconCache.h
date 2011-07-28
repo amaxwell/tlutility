@@ -1,8 +1,8 @@
 //
-//  TLMMirrorTextField.h
+//  TLMFaviconCache.h
 //  TeX Live Manager
 //
-//  Created by Adam R. Maxwell on 07/24/11.
+//  Created by Adam R. Maxwell on 07/27/11.
 /*
  This software is Copyright (c) 2011
  Adam Maxwell. All rights reserved.
@@ -36,22 +36,25 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 #import <Cocoa/Cocoa.h>
-#import "TLMFaviconCache.h"
 
-@interface TLMMirrorFieldEditor : NSTextView
+@class WebView;
+
+@interface TLMFaviconCache : NSObject 
 {
 @private
-    BOOL _dragChangedText;
+    NSMutableArray      *_queue;
+    WebView             *_webview;
+    NSMutableDictionary *_iconsByURL;
+    BOOL                 _downloading;
 }
+
++ (id)sharedCache;
+- (void)downloadIconForURL:(NSURL *)aURL delegate:(id)object;
+
 @end
 
-
-
-@interface TLMMirrorTextField : NSTextField <TLMFaviconCacheDelegate>
-{
-@private
-    BOOL _dragChangedText;
-}
+@protocol TLMFaviconCacheDelegate <NSObject>
+- (void)iconCache:(TLMFaviconCache *)cache downloadedIcon:(NSImage *)anIcon forURL:(NSURL *)aURL;
 @end
+
