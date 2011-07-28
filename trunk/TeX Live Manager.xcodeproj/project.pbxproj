@@ -33,6 +33,8 @@
 		F964A6350F0070E80006868B /* TLMPackageListDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = F964A6340F0070E80006868B /* TLMPackageListDataSource.m */; };
 		F964A63B0F0071920006868B /* TLMPackageNode.m in Sources */ = {isa = PBXBuildFile; fileRef = F964A63A0F0071920006868B /* TLMPackageNode.m */; };
 		F964A6660F009B1F0006868B /* TLMListOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F964A6650F009B1F0006868B /* TLMListOperation.m */; };
+		F967340513E10867008C2B3E /* TLMFaviconCache.m in Sources */ = {isa = PBXBuildFile; fileRef = F967340413E10867008C2B3E /* TLMFaviconCache.m */; };
+		F967342713E10BB3008C2B3E /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F967342613E10BB3008C2B3E /* WebKit.framework */; };
 		F97A7E500F13067C008EBCEA /* TLMTask.m in Sources */ = {isa = PBXBuildFile; fileRef = F97A7E4F0F13067C008EBCEA /* TLMTask.m */; };
 		F97B37B2128B4FE600B49CA7 /* agent_installer.py in Copy aux executables */ = {isa = PBXBuildFile; fileRef = F97B37B0128B4FCC00B49CA7 /* agent_installer.py */; };
 		F97E85740EFA18F400862882 /* TeXDistTool.icns in Resources */ = {isa = PBXBuildFile; fileRef = F97E85730EFA18F400862882 /* TeXDistTool.icns */; };
@@ -310,6 +312,9 @@
 		F964A63A0F0071920006868B /* TLMPackageNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMPackageNode.m; sourceTree = "<group>"; };
 		F964A6640F009B1F0006868B /* TLMListOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMListOperation.h; sourceTree = "<group>"; };
 		F964A6650F009B1F0006868B /* TLMListOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMListOperation.m; sourceTree = "<group>"; };
+		F967340313E10867008C2B3E /* TLMFaviconCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMFaviconCache.h; sourceTree = "<group>"; };
+		F967340413E10867008C2B3E /* TLMFaviconCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMFaviconCache.m; sourceTree = "<group>"; };
+		F967342613E10BB3008C2B3E /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = /System/Library/Frameworks/WebKit.framework; sourceTree = "<absolute>"; };
 		F97A7E4E0F13067C008EBCEA /* TLMTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMTask.h; sourceTree = "<group>"; };
 		F97A7E4F0F13067C008EBCEA /* TLMTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMTask.m; sourceTree = "<group>"; };
 		F97B37B0128B4FCC00B49CA7 /* agent_installer.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = agent_installer.py; sourceTree = "<group>"; };
@@ -435,6 +440,7 @@
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
 				F9B137330EEC4C6A007C0046 /* Security.framework in Frameworks */,
 				F9F1C14E10C6EEC200D32C17 /* SystemConfiguration.framework in Frameworks */,
+				F967342713E10BB3008C2B3E /* WebKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -560,6 +566,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F967342613E10BB3008C2B3E /* WebKit.framework */,
 				F9F1C14D10C6EEC200D32C17 /* SystemConfiguration.framework */,
 				F9B137320EEC4C6A007C0046 /* Security.framework */,
 				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
@@ -677,6 +684,8 @@
 				F9FE58B3123EB80800B6008F /* TLMDatabase.m */,
 				F9D5CCB712977D8C00AEEDCB /* TLMMirrorNode.h */,
 				F9D5CCB812977D8C00AEEDCB /* TLMMirrorNode.m */,
+				F967340313E10867008C2B3E /* TLMFaviconCache.h */,
+				F967340413E10867008C2B3E /* TLMFaviconCache.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -1076,6 +1085,7 @@
 				F9DAAB8213D0DE26004055A0 /* NSURL_TLMExtensions.m in Sources */,
 				F96203BF13D3656300932965 /* TLMLogWindowController.m in Sources */,
 				F929DE8413DCE00000072DDA /* TLMMirrorTextField.m in Sources */,
+				F967340513E10867008C2B3E /* TLMFaviconCache.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

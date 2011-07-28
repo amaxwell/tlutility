@@ -171,6 +171,19 @@
     _dragChangedText = YES;
 }
 
+- (void)iconCache:(TLMFaviconCache *)cache downloadedIcon:(NSImage *)anIcon forURL:(NSURL *)aURL;
+{
+    [[self cell] setIcon:anIcon];
+    [self setNeedsDisplay:YES];
+}
+
+- (void)setStringValue:(NSString *)aString
+{
+    [super setStringValue:aString];
+    if ([aString isEqualToString:@""] == NO)
+        [[TLMFaviconCache sharedCache] downloadIconForURL:[NSURL URLWithString:aString] delegate:self];
+}
+
 /*
  The _dragChangedText business is to avoid sending spurious action messages
  when text hasn't actually changed due to drag-and-drop or direct editing.
