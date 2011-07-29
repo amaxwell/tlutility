@@ -37,11 +37,14 @@
  */
 
 #import <Cocoa/Cocoa.h>
+#import "TLMFaviconCache.h"
 
-@interface TLMMirrorCell : NSTextFieldCell
+@interface TLMMirrorCell : NSTextFieldCell <TLMFaviconCacheDelegate>
 {
 @private
     NSImage *_icon;
+    NSSize   _inset;
+    BOOL     _hasFavicon;
 }
 
 - (NSRect)iconRectForBounds:(NSRect)cellFrame;

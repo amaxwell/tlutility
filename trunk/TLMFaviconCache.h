@@ -50,6 +50,12 @@
 }
 
 + (id)sharedCache;
+
+// returns nil if no icon in cache
+- (NSImage *)iconForURL:(NSURL *)aURL;
+
+// registers for callback when icon finishes downloading
+// callback is invoked immediately if the icon is already cached
 - (void)downloadIconForURL:(NSURL *)aURL delegate:(id)object;
 
 @end
