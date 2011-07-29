@@ -49,7 +49,7 @@
 
 
 
-@interface TLMMirrorTextField : NSTextField <TLMFaviconCacheDelegate>
+@interface TLMMirrorTextField : NSTextField
 {
 @private
     BOOL _dragChangedText;

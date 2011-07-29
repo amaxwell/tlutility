@@ -42,6 +42,9 @@
 
 static NSMutableDictionary *_iconsByURLScheme = nil;
 
+#define FAVICON_INSET ((NSSize) { 2, 2 })
+#define DEFAULT_INSET ((NSSize) { 1, 1 })
+
 + (void)initialize
 {
     if (nil == _iconsByURLScheme)
@@ -56,15 +59,18 @@ static NSMutableDictionary *_iconsByURLScheme = nil;
     if (self) {
         [self setScrollable:YES];
         [self setLineBreakMode:NSLineBreakByTruncatingTail];
+        _inset = DEFAULT_INSET;
     }
     return self;
 }
 
 - (id)copyWithZone:(NSZone *)zone
 {
-    self = [super copyWithZone:zone];
-    [self->_icon retain];
-    return self;
+    TLMMirrorCell *copy = [super copyWithZone:zone];
+    [copy->_icon retain];
+    copy->_inset = _inset;
+    copy->_hasFavicon = _hasFavicon;
+    return copy;
 }
 
 - (void)dealloc
@@ -73,10 +79,30 @@ static NSMutableDictionary *_iconsByURLScheme = nil;
     [super dealloc];
 }
 
+- (void)iconCache:(TLMFaviconCache *)cache downloadedIcon:(NSImage *)anIcon forURL:(NSURL *)aURL;
+{
+    [self setIcon:anIcon];
+    [[self controlView] setNeedsDisplay:YES];
+    _inset = FAVICON_INSET;
+    _hasFavicon = YES;
+}
+
 - (NSImage *)_iconForURL:(NSURL *)aURL
 {
     // !!! early return
     if (nil == aURL) return nil;
+    
+    // return favicon immediately if it's cached
+    if ([[TLMFaviconCache sharedCache] iconForURL:aURL]) {
+        _inset = FAVICON_INSET;
+        _hasFavicon = YES;
+        return [[TLMFaviconCache sharedCache] iconForURL:aURL];
+    }
+    
+    // guaranteed to need a download, so reset ivars
+    _inset = DEFAULT_INSET;
+    _hasFavicon = NO;
+    [[TLMFaviconCache sharedCache] downloadIconForURL:aURL delegate:self];
     
     NSString *scheme = [aURL scheme];
     NSImage *icon = [_iconsByURLScheme objectForKey:scheme];
@@ -167,7 +193,7 @@ static NSMutableDictionary *_iconsByURLScheme = nil;
             CGContextScaleCTM(ctxt, 1, -1);
             iconRect.origin.y = 0;
         }
-        [[self icon] drawInRect:NSInsetRect(iconRect, 1, 1) fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
+        [[self icon] drawInRect:NSInsetRect(iconRect, _inset.width, _inset.height) fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
         CGContextRestoreGState(ctxt);
     }
     
@@ -216,10 +242,13 @@ static NSMutableDictionary *_iconsByURLScheme = nil;
             NSPasteboard *pboard = [NSPasteboard pasteboardWithName:NSDragPboard];
             [NSURL writeURLs:[NSArray arrayWithObject:[NSURL URLWithString:[self stringValue]]] toPasteboard:pboard];
             NSImage *dragImage = [[[self icon] copy] autorelease];
-            [dragImage setSize:[self iconRectForBounds:cellFrame].size];
+            NSSize dragImageSize = [self iconRectForBounds:cellFrame].size;
+            dragImageSize.width -= _inset.width * 2;
+            dragImageSize.height -= _inset.height * 2;
+            [dragImage setSize:dragImageSize];
             NSPoint dragImageOrigin = [controlView convertPoint:[event locationInWindow] fromView:nil];
-            dragImageOrigin.x -= [dragImage size].width / 2;
-            dragImageOrigin.y = [controlView isFlipped] ? dragImageOrigin.y + [dragImage size].height / 2 : dragImageOrigin.y - [dragImage size].width / 2;
+            dragImageOrigin.x -= dragImageSize.width / 2;
+            dragImageOrigin.y = [controlView isFlipped] ? dragImageOrigin.y + dragImageSize.height / 2 : dragImageOrigin.y - dragImageSize.width / 2;
             [controlView dragImage:dragImage at:dragImageOrigin offset:NSZeroSize event:event pasteboard:pboard source:controlView slideBack:YES];
         }
         return YES;

@@ -136,7 +136,7 @@ static void __TLMFaviconCacheInit() { _sharedCache = [TLMFaviconCache new]; }
 {
     _TLMFaviconQueueItem *item = [self _currentItem];
     TLMLog(__func__, @"Failed to download icon for %@", [item iconURL]);
-    [_iconsByURL setObject:[NSNull null] forKey:[item iconURL]];
+    [_iconsByURL setObject:[NSNull null] forKey:[[item iconURL] host]];
     [_webview stopLoading:nil];
     [_queue removeLastObject];
     _downloading = NO;
@@ -150,7 +150,7 @@ static void __TLMFaviconCacheInit() { _sharedCache = [TLMFaviconCache new]; }
         if (nil == icon)
             icon = [NSNull null];
         _TLMFaviconQueueItem *item = [self _currentItem];
-        [_iconsByURL setObject:icon forKey:[item iconURL]];
+        [_iconsByURL setObject:icon forKey:[[item iconURL] host]];
         
         if (icon != [NSNull null]) {
             for (id <TLMFaviconCacheDelegate> obj in [item delegates])
@@ -163,13 +163,35 @@ static void __TLMFaviconCacheInit() { _sharedCache = [TLMFaviconCache new]; }
     }
 }
 
+# pragma mark API
+
+/*
+ Cache by host, since I ended up with a dictionary containing these entries:
+ http://mirrors.med.harvard.edu/ctan/systems/texlive/tlnet != http://mirrors.med.harvard.edu/ctan/systems/texlive/tlnet/
+ and calling tlm_normalizedURL doesn't get rid of the trailing slash (in fact,
+ +[NSURL URLWithString:] addes it back on even if I delete it).
+ Once again, NSURL sucks as a dictionary key.
+ */
+
+- (NSImage *)iconForURL:(NSURL *)aURL;
+{
+    NSParameterAssert(aURL);
+    return [_iconsByURL objectForKey:[aURL host]];
+}
+
 - (void)downloadIconForURL:(NSURL *)aURL delegate:(id)object;
 {
     NSParameterAssert(aURL);
     NSParameterAssert([object conformsToProtocol:@protocol(TLMFaviconCacheDelegate)]);
     
-    if ([_iconsByURL objectForKey:aURL]) {
-        id icon = [_iconsByURL objectForKey:aURL];
+    // !!! early return for non-http URLs
+    if ([[aURL scheme] hasPrefix:@"http"] == NO)
+        return;
+    
+    aURL = [aURL tlm_normalizedURL];
+    
+    if ([_iconsByURL objectForKey:[aURL host]]) {
+        id icon = [_iconsByURL objectForKey:[aURL host]];
         if (icon != [NSNull null])
             [object iconCache:self downloadedIcon:icon forURL:aURL];
     }
