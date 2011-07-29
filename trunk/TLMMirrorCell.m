@@ -37,6 +37,7 @@
  */
 
 #import "TLMMirrorCell.h"
+#import <WebKit/WebKit.h>
 
 @implementation TLMMirrorCell
 
@@ -87,16 +88,31 @@ static NSMutableDictionary *_iconsByURLScheme = nil;
     _hasFavicon = YES;
 }
 
+- (NSImage *)_defaultFavicon
+{
+    static bool didInit = false;
+    static NSImage *icon = nil;
+    if (false == didInit) {
+        NSString *imgPath = [[NSBundle bundleForClass:[WebView class]] pathForResource:@"url_icon" ofType:@"tiff"];
+        icon = [[NSImage alloc] initWithContentsOfFile:imgPath];
+    }
+    return icon;
+}
+
 - (NSImage *)_iconForURL:(NSURL *)aURL
 {
+    
+    NSImage *icon = nil;
+    
     // !!! early return
-    if (nil == aURL) return nil;
+    if (nil == aURL) return icon;
     
     // return favicon immediately if it's cached
-    if ([[TLMFaviconCache sharedCache] iconForURL:aURL]) {
+    icon = [[TLMFaviconCache sharedCache] iconForURL:aURL];
+    if (icon) {
         _inset = FAVICON_INSET;
         _hasFavicon = YES;
-        return [[TLMFaviconCache sharedCache] iconForURL:aURL];
+        return icon;
     }
     
     // guaranteed to need a download, so reset ivars
@@ -104,8 +120,16 @@ static NSMutableDictionary *_iconsByURLScheme = nil;
     _hasFavicon = NO;
     [[TLMFaviconCache sharedCache] downloadIconForURL:aURL delegate:self];
     
+    icon = [self _defaultFavicon];
+    if (icon) {
+        _inset = FAVICON_INSET;
+        _hasFavicon = YES;
+        return icon;
+    }
+    
+    // now a legacy code path, unless WebKit changes the url_icon name
     NSString *scheme = [aURL scheme];
-    NSImage *icon = [_iconsByURLScheme objectForKey:scheme];
+    icon = [_iconsByURLScheme objectForKey:scheme];
     if (nil == icon) {
         
         OSType iconType = kInternetLocationGenericIcon;
