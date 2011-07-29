@@ -1,6 +1,6 @@
 //
 //  TLMOptionOperation.m
-//  TeX Live Manager
+//  TeX Live Utility
 //
 //  Created by Adam Maxwell on 8/27/09.
 /*

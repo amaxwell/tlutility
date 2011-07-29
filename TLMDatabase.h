@@ -1,6 +1,6 @@
 //
 //  TLMDatabase.h
-//  TeX Live Manager
+//  TeX Live Utility
 //
 //  Created by Adam R. Maxwell on 09/13/10.
 /*

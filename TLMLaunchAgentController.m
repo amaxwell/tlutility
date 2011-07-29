@@ -1,6 +1,6 @@
 //
 //  TLMLaunchAgentController.m
-//  TeX Live Manager
+//  TeX Live Utility
 //
 //  Created by Adam R. Maxwell on 10/07/10.
 /*

@@ -1,6 +1,6 @@
 //
 //  TLMInstallOperation.m
-//  TeX Live Manager
+//  TeX Live Utility
 //
 //  Created by Adam Maxwell on 12/26/08.
 /*

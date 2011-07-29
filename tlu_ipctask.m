@@ -1,6 +1,6 @@
 /*
  *  tlu_ipctask.c
- *  TeX Live Manager
+ *  TeX Live Utility
  *
  *  Created by Adam Maxwell on 12/7/08.
  *

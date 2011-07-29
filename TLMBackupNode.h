@@ -1,6 +1,6 @@
 //
 //  TLMBackupNode.h
-//  TeX Live Manager
+//  TeX Live Utility
 //
 /*
  This software is Copyright (c) 2010-2011

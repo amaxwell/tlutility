@@ -1,6 +1,6 @@
 //
 //  TLMInstallDataSource.h
-//  TeX Live Manager
+//  TeX Live Utility
 //
 //  Created by Adam Maxwell on 09/10/09.
 /*
