@@ -1,6 +1,6 @@
 //
 //  TLMAutobackupController.m
-//  TeX Live Manager
+//  TeX Live Utility
 //
 //  Created by Adam R. Maxwell on 09/26/10.
 /*

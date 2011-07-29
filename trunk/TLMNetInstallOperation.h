@@ -1,6 +1,6 @@
 //
 //  TLMNetInstallOperation.h
-//  TeX Live Manager
+//  TeX Live Utility
 //
 //  Created by Adam Maxwell on 09/20/09.
 /*

@@ -1,6 +1,6 @@
 //
 //  KeychainUtilities.m
-//  TeX Live Manager
+//  TeX Live Utility
 //
 //  Created by Adam R. Maxwell on 12/10/09.
 /*

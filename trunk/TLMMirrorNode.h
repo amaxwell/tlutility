@@ -1,6 +1,6 @@
 //
 //  TLMMirrorNode.h
-//  TeX Live Manager
+//  TeX Live Utility
 //
 //  Created by Adam R. Maxwell on 11/19/10.
 /*

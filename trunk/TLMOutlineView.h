@@ -1,6 +1,6 @@
 //
 //  TLMOutlineView.h
-//  TeX Live Manager
+//  TeX Live Utility
 //
 //  Created by Adam Maxwell on 12/24/08.
 /*
