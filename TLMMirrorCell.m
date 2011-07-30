@@ -243,19 +243,25 @@ static NSMutableDictionary *_iconsByURLScheme = nil;
 #endif
 }
 
+- (NSSize)cellSize;
+{
+    NSSize cellSize = [super cellSize];
+    // cellSize.height approximates the icon size
+    cellSize.width += cellSize.height;
+    return cellSize;
+}
+
+#if 0
 - (NSRect)expansionFrameWithFrame:(NSRect)cellFrame inView:(NSView *)view;
 {
-    // see if constrained text width is less than the ideal text rect
-    if (NSWidth([self textRectForBounds:cellFrame]) < [super cellSize].width) {
-        // set width to constrained text width, and let super figure out the required frame since [self cellSize].width isn't quite enough
-        cellFrame.size.width = NSWidth([self textRectForBounds:cellFrame]);
-        NSRect expansionFrame = [super expansionFrameWithFrame:cellFrame inView:view];
-        // SL needs this?
+    NSRect expansionFrame = [super expansionFrameWithFrame:cellFrame inView:view];
+    if (NSEqualRects(expansionFrame, NSZeroRect) == NO) {
+        expansionFrame.size = [self cellSize];
         expansionFrame.size.height = NSHeight(cellFrame);
-        return expansionFrame;
     }
-    return NSZeroRect;
+    return expansionFrame;
 }
+#endif
 
 - (BOOL)trackMouse:(NSEvent *)event inRect:(NSRect)cellFrame ofView:(NSView *)controlView untilMouseUp:(BOOL)flag;
 {
