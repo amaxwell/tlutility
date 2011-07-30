@@ -49,7 +49,6 @@
     TLMOutlineView          *_outlineView;
     TLMProfileNode          *_rootNode;
     TLMMainWindowController *_controller;
-    NSURL                   *_lastUpdateURL;
     TLMStatusWindow         *_statusWindow;
     NSButtonCell            *_checkboxCell;
     BOOL                     _needsUpdate;

@@ -42,7 +42,6 @@
 
 @implementation TLMInstallDataSource
 
-@synthesize lastUpdateURL = _lastUpdateURL;
 @synthesize statusWindow = _statusWindow;
 @synthesize outlineView = _outlineView;
 @synthesize _controller;
@@ -67,7 +66,6 @@
     [_archivePath release];
     [_outlineView release];
     [_rootNode release];
-    [_lastUpdateURL release];
     [_statusWindow release];
     [_checkboxCell release];
     [_metadata release];

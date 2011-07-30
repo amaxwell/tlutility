@@ -52,7 +52,6 @@
     BOOL                     _sortAscending;
     NSSearchField           *_searchField;
     TLMMainWindowController *_controller;
-    NSURL                   *_lastUpdateURL;
     TLMStatusWindow         *_statusWindow;
     BOOL                     _refreshing;
     BOOL                     _ignoreSelectionChanges;
@@ -63,7 +62,6 @@
 @property (nonatomic, assign) IBOutlet TLMMainWindowController *_controller;
 @property (nonatomic, retain) IBOutlet NSSearchField *_searchField;
 @property (nonatomic, copy) NSArray *allPackages;
-@property (nonatomic, copy) NSURL *lastUpdateURL;
 @property (nonatomic, getter = isRefreshing) BOOL refreshing;
 
 - (IBAction)refreshList:(id)sender;

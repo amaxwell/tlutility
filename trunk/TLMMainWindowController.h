@@ -47,7 +47,6 @@
 @class TLMMirrorTextField;
 
 @protocol TLMListDataSource <NSObject>
-@property (nonatomic, copy) NSURL *lastUpdateURL;
 @property (nonatomic, retain) TLMStatusWindow *statusWindow;
 @property (nonatomic) BOOL needsUpdate;
 @end
@@ -59,6 +58,7 @@
     NSProgressIndicator      *_progressBar;
     TLMTabView               *_tabView;
     TLMMirrorTextField       *_URLField;
+    NSURL                    *_serverURL;
     
     NSUInteger                _operationCount;
     CGFloat                   _lastTextViewHeight;
@@ -88,8 +88,9 @@
 @property (nonatomic, retain) IBOutlet TLMBackupDataSource *_backupDataSource;
 @property (nonatomic, retain) IBOutlet TLMTabView *_tabView;
 @property (nonatomic, readonly) BOOL infrastructureNeedsUpdate;
+@property (nonatomic, copy) NSURL *serverURL;
 
-// install/update actions will use lastUpdateURL
+// install/update actions will use serverURL
 - (void)updateAllPackages;
 - (void)installPackagesWithNames:(NSArray *)packageNames reinstall:(BOOL)reinstall;
 - (void)updatePackagesWithNames:(NSArray *)packageNames;
