@@ -65,6 +65,11 @@
         if (error) *error = NSLocalizedString(@"This URL is missing a scheme, such as http.", @"error message");
         *obj = nil;        
     }
+    else if ([[aURL scheme] hasPrefix:@"http"] == NO || [[aURL scheme] isEqualToString:@"ftp"] == NO) {
+        success = NO;
+        if (error) *error = NSLocalizedString(@"Only http and ftp URL schemes are supported for TeX Live.", @"error message");
+        *obj = nil;
+    }
     else {
         *obj = [self returnsURL] ? [NSURL URLWithString:string] : string;
     }
