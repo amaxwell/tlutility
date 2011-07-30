@@ -97,6 +97,7 @@ static char _TLMOperationQueueOperationContext;
 @synthesize _installDataSource;
 @synthesize infrastructureNeedsUpdate = _updateInfrastructure;
 @synthesize _backupDataSource;
+@synthesize serverURL = _serverURL;
 
 - (id)init
 {
@@ -125,6 +126,7 @@ static char _TLMOperationQueueOperationContext;
     [_tabView release];
     
     [_URLField release];
+    [_serverURL release];
         
     [_progressIndicator release];
     [_progressBar release];
@@ -167,7 +169,7 @@ static char _TLMOperationQueueOperationContext;
     
     TLMURLFormatter *fmt = [[TLMURLFormatter new] autorelease];
     [fmt setReturnsURL:YES];
-    [_URLField setFormatter:fmt];
+    [_URLField setFormatter:fmt];    
 }
 
 - (void)_stopProgressBar:(NSNotification *)aNote
@@ -220,6 +222,25 @@ static char _TLMOperationQueueOperationContext;
     
     // checkbox in IB doesn't work?
     [[[self window] toolbar] setAutosavesConfiguration:YES];    
+    
+    // do this after the window loads, so something is visible right away
+    _serverURL = [[[TLMEnvironment currentEnvironment] validServerURL] copy];
+    
+    if (nil == _serverURL) {
+        // !!! is this what I want to do here?
+#warning we get out of sync when this is mirror.ctan.org and the first mirror was stale
+        _serverURL = [[[TLMEnvironment currentEnvironment] defaultServerURL] copy];
+        
+        NSAlert *alert = [[NSAlert new] autorelease];
+        [alert setMessageText:NSLocalizedString(@"Update server not available", @"alert title")];
+        [alert setInformativeText:NSLocalizedString(@"Unable to contact the update server.  If this problem persists on further attempts, you may need to try a different mirror.", @"alert text")];
+        [alert beginSheetModalForWindow:[self window]
+                          modalDelegate:nil
+                         didEndSelector:NULL
+                            contextInfo:NULL];
+    }
+    
+    [_URLField setStringValue:[[self serverURL] absoluteString]];
     
     // for info window; TL 2011 and later only
     [self _refreshLocalDatabase];
@@ -321,30 +342,11 @@ static char _TLMOperationQueueOperationContext;
 
 #pragma mark Interface updates
 
-/*
- Cover for <TLMListDataSource> lastUpdateURL that ensures the URL is non-nil.  
- The original tlmgr (August 2008 MacTeX) doesn't print the URL on the first line of output, 
- and we die with various assertion failures if the URL is nil.  Parsing logs a diagnostic
- in this case, as well, since this breaks some functionality.
- */
-- (NSURL *)_lastUpdateURL
+- (void)setServerURL:(NSURL *)aURL
 {
-    NSURL *aURL = [_currentListDataSource lastUpdateURL];
-    if (nil == aURL)
-        aURL = [[TLMEnvironment currentEnvironment] validServerURL];
-    // final fallback, in case the mirror wasn't available due to network or other issues
-    if (nil == aURL)
-        aURL = [[TLMEnvironment currentEnvironment] defaultServerURL];
     NSParameterAssert(aURL);
-    return aURL;
-}
-
-- (void)_updateURLView
-{
-    NSURL *aURL = [_currentListDataSource lastUpdateURL];
-    // use defaultServerURL if we haven't previously contacted a host; -validServerURL does network ops
-    if (nil == aURL)
-        aURL = [[TLMEnvironment currentEnvironment] defaultServerURL];
+    [_serverURL autorelease];
+    _serverURL = [aURL copy];
     [_URLField setStringValue:[aURL absoluteString]];
 }
 
@@ -420,7 +422,6 @@ static char _TLMOperationQueueOperationContext;
             
             [self _insertDataSourceInResponderChain:_updateListDataSource];   
             _currentListDataSource = _updateListDataSource;
-            [self _updateURLView];
             [[_currentListDataSource statusWindow] fadeIn];
             [self _refreshCurrentDataSourceIfNeeded];
             if ([[_updateListDataSource allPackages] count])
@@ -430,7 +431,6 @@ static char _TLMOperationQueueOperationContext;
             
             [self _insertDataSourceInResponderChain:_packageListDataSource];   
             _currentListDataSource = _packageListDataSource;
-            [self _updateURLView];
             [[_currentListDataSource statusWindow] fadeIn];
             
             [self _refreshCurrentDataSourceIfNeeded];
@@ -443,7 +443,6 @@ static char _TLMOperationQueueOperationContext;
             
             [self _insertDataSourceInResponderChain:_backupDataSource];
             _currentListDataSource = _backupDataSource;
-            [self _updateURLView];
             [[_currentListDataSource statusWindow] fadeIn];
             
             [self _refreshCurrentDataSourceIfNeeded];
@@ -456,7 +455,6 @@ static char _TLMOperationQueueOperationContext;
             
             [self _insertDataSourceInResponderChain:_installDataSource];
             _currentListDataSource = _installDataSource;
-            [self _updateURLView];
             [[_currentListDataSource statusWindow] fadeIn];
             
             [self _refreshCurrentDataSourceIfNeeded];
@@ -548,7 +546,7 @@ static char _TLMOperationQueueOperationContext;
 
 - (void)_updateAllPackages
 {
-    [self _updateAllPackagesFromRepository:[self _lastUpdateURL]];
+    [self _updateAllPackagesFromRepository:[self serverURL]];
 }
 
 static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
@@ -629,9 +627,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     
     [_updateListDataSource setAllPackages:packages];
     [_updateListDataSource setRefreshing:NO];
-    [_updateListDataSource setLastUpdateURL:[op updateURL]];
     [_updateListDataSource setNeedsUpdate:NO];
-    [self _updateURLView];
     
     NSString *statusString = nil;
     
@@ -721,7 +717,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
                                     contextInfo:NULL];
             }
             else {
-                [self _refreshUpdatedPackageListFromLocation:[self _lastUpdateURL]];
+                [self _refreshUpdatedPackageListFromLocation:[self serverURL]];
             }
             
         }
@@ -733,9 +729,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
             [_packageListDataSource setNeedsUpdate:YES];
             [_backupDataSource setNeedsUpdate:YES];
             
-            [_updateListDataSource setLastUpdateURL:[op updateURL]];
-            [_packageListDataSource setLastUpdateURL:[op updateURL]];
-            [_backupDataSource setLastUpdateURL:[op updateURL]];
+            [self setServerURL:[op updateURL]];
             
             [self _refreshCurrentDataSourceIfNeeded];
 
@@ -906,8 +900,6 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
         statusString = NSLocalizedString(@"Listing Failed", @"main window status string");
     
     [self _displayStatusString:statusString dataSource:_packageListDataSource];
-    [_packageListDataSource setLastUpdateURL:[op updateURL]];
-    [self _updateURLView];
 }
 
 - (void)_handleLoadDatabaseFinishedNotification:(NSNotification *)aNote
@@ -927,8 +919,6 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
         statusString = NSLocalizedString(@"Listing Failed", @"main window status string");
     
     [self _displayStatusString:statusString dataSource:_packageListDataSource];
-    [_packageListDataSource setLastUpdateURL:[op updateURL]];
-    [self _updateURLView];
 }
 
 - (void)_handleListBackupsFinishedNotification:(NSNotification *)aNote
@@ -948,10 +938,6 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
         statusString = NSLocalizedString(@"No Backups Available", @"main window status string");
         
     [self _displayStatusString:statusString dataSource:_backupDataSource];
-    // should always be a valid URL; mainly useful for TLMInfoController
-    [_backupDataSource setLastUpdateURL:[_updateListDataSource lastUpdateURL]];
-    [self _updateURLView];
-    
     [_backupDataSource setRefreshing:NO];
 }
 
@@ -1001,10 +987,6 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
         [_packageListDataSource setNeedsUpdate:YES];
         [_backupDataSource setNeedsUpdate:YES];
         
-        [_updateListDataSource setLastUpdateURL:[op updateURL]];
-        [_packageListDataSource setLastUpdateURL:[op updateURL]];
-        [_backupDataSource setLastUpdateURL:[op updateURL]];
-        
         [self _refreshCurrentDataSourceIfNeeded];
     }    
 }
@@ -1012,7 +994,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 - (void)_installPackagesWithNames:(NSArray *)packageNames reinstall:(BOOL)reinstall
 {
     // sanity check in case the user switched the environment after getting an update listing
-    NSURL *currentURL = [self _lastUpdateURL];
+    NSURL *currentURL = [self serverURL];
     if ([self _isCorrectDatabaseVersionAtURL:currentURL]) {
         TLMInstallOperation *op = [[TLMInstallOperation alloc] initWithPackageNames:packageNames location:currentURL reinstall:reinstall];
         [self _addOperation:op selector:@selector(_handleInstallFinishedNotification:) setRefreshingForDataSource:nil];
@@ -1039,10 +1021,6 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
         [_packageListDataSource setNeedsUpdate:YES];
         [_backupDataSource setNeedsUpdate:YES];
         
-        [_updateListDataSource setLastUpdateURL:[_packageListDataSource lastUpdateURL]];
-        [_packageListDataSource setLastUpdateURL:[_packageListDataSource lastUpdateURL]];
-        [_backupDataSource setLastUpdateURL:[_packageListDataSource lastUpdateURL]];
-        
         [self _refreshCurrentDataSourceIfNeeded];
 
     }    
@@ -1066,10 +1044,6 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
         [_packageListDataSource setNeedsUpdate:YES];
         [_backupDataSource setNeedsUpdate:YES];
         
-        [_updateListDataSource setLastUpdateURL:[_updateListDataSource lastUpdateURL]];
-        [_packageListDataSource setLastUpdateURL:[_updateListDataSource lastUpdateURL]];
-        [_backupDataSource setLastUpdateURL:[_updateListDataSource lastUpdateURL]];
-        
         [self _refreshCurrentDataSourceIfNeeded];
 
     }        
@@ -1077,7 +1051,6 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 
 - (void)_handleNetInstallFinishedNotification:(NSNotification *)aNote
 {
-    [_installDataSource setLastUpdateURL:[[aNote object] updateURL]];
     [self _handleInstallFinishedNotification:aNote];
 }
     
@@ -1109,19 +1082,13 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
         return;
     
     if ([_currentListDataSource isEqual:_updateListDataSource] && [_updateListDataSource isRefreshing] == NO) {
-        if ([_updateListDataSource lastUpdateURL])
-            [self _refreshUpdatedPackageListFromLocation:[_updateListDataSource lastUpdateURL]];
-        else
-            [self refreshUpdatedPackageList];
+        [self refreshUpdatedPackageList];
     }
     else if ([_currentListDataSource isEqual:_backupDataSource] && [_backupDataSource isRefreshing] == NO) {
         [self refreshBackupList];
     }
     else if ([_currentListDataSource isEqual:_packageListDataSource] && [_packageListDataSource isRefreshing] == NO) {
-        if ([_packageListDataSource lastUpdateURL])
-            [self _refreshFullPackageListFromLocation:[_packageListDataSource lastUpdateURL] offline:NO];
-        else
-            [self refreshFullPackageList];
+        [self refreshFullPackageList];
     }
 }
 
@@ -1144,7 +1111,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 
 - (void)versionAlertDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)unused
 {
-    [self _refreshUpdatedPackageListFromLocation:[self _lastUpdateURL]];
+    [self _refreshUpdatedPackageListFromLocation:[self serverURL]];
 }
 
 - (void)cancelWarningSheetDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
@@ -1227,7 +1194,21 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 
 - (IBAction)changeServerURL:(id)sender;
 {
-    TLMLog(__func__, @"change to %@", [_URLField objectValue]);
+    NSURL *aURL;
+    NSString *err;
+    // manual validation for drag-and-drop; maybe another way to do this...
+    if ([[[_URLField cell] formatter] getObjectValue:&aURL forString:[_URLField stringValue] errorDescription:&err]) {
+        TLMLog(__func__, @"User changed URL to %@", [_URLField objectValue]);
+        [self setServerURL:[_URLField objectValue]];
+    }
+    else {
+        NSAlert *alert = [[NSAlert new] autorelease];
+        [alert setMessageText:NSLocalizedString(@"Invalid URL entered", @"alert title")];
+        [alert setInformativeText:err];
+        [alert beginSheetModalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
+        [_URLField setStringValue:[[self serverURL] absoluteString]];
+    }
+
 }
 
 - (void)updateInfrastructure:(id)sender;
@@ -1249,7 +1230,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 
 - (void)refreshFullPackageList
 {
-    NSURL *serverURL = [[TLMEnvironment currentEnvironment] validServerURL];
+    NSURL *serverURL = [self serverURL];
 
     /* 
      If the network is not available, read the local package db so that show info still works.
@@ -1281,24 +1262,12 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 
 - (void)refreshUpdatedPackageList
 {
-    [self refreshUpdatedPackageListWithURL:nil];
+    [self refreshUpdatedPackageListWithURL:[self serverURL]];
 }
 
 - (void)refreshUpdatedPackageListWithURL:(NSURL *)aURL;
 {
-    if (nil == aURL)
-        aURL = [[TLMEnvironment currentEnvironment] validServerURL];
-    
-    if (nil == aURL) {
-        NSAlert *alert = [[NSAlert new] autorelease];
-        [alert setMessageText:NSLocalizedString(@"Update server not available", @"alert title")];
-        [alert setInformativeText:NSLocalizedString(@"Unable to contact the update server.  If this problem persists on further attempts, you may need to try a different mirror.", @"alert text")];
-        [alert beginSheetModalForWindow:[self window]
-                          modalDelegate:nil
-                         didEndSelector:NULL
-                            contextInfo:NULL];
-    }
-    else if ([_updateListDataSource isRefreshing] == NO)
+    if (aURL && [_updateListDataSource isRefreshing] == NO)
         [self _refreshUpdatedPackageListFromLocation:aURL];    
 }
 
@@ -1342,7 +1311,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 
 - (void)updatePackagesWithNames:(NSArray *)packageNames;
 {
-    NSURL *currentURL = [self _lastUpdateURL];
+    NSURL *currentURL = [self serverURL];
     if ([self _isCorrectDatabaseVersionAtURL:currentURL]) {
         TLMUpdateOperation *op = [[TLMUpdateOperation alloc] initWithPackageNames:packageNames location:currentURL];
         [self _addOperation:op selector:@selector(_handleUpdateFinishedNotification:) setRefreshingForDataSource:nil];

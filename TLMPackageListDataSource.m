@@ -47,7 +47,6 @@
 @synthesize packageNodes = _packageNodes;
 @synthesize _searchField;
 @synthesize _controller;
-@synthesize lastUpdateURL = _lastUpdateURL;
 @synthesize statusWindow = _statusWindow;
 @synthesize refreshing = _refreshing;
 @synthesize needsUpdate = _needsUpdate;
@@ -72,7 +71,6 @@
     [_displayedPackageNodes release];
     [_searchField release];
     [_sortDescriptors release];
-    [_lastUpdateURL release];
     [_statusWindow release];
     [super dealloc];
 }
@@ -95,9 +93,9 @@
 - (IBAction)showInfo:(id)sender;
 {
     if ([self selectedItem] != nil)
-        [[TLMInfoController sharedInstance] showInfoForPackage:[self selectedItem] location:[self lastUpdateURL]];
+        [[TLMInfoController sharedInstance] showInfoForPackage:[self selectedItem] location:[_controller serverURL]];
     else if ([[[TLMInfoController sharedInstance] window] isVisible] == NO) {
-        [[TLMInfoController sharedInstance] showInfoForPackage:nil location:[self lastUpdateURL]];
+        [[TLMInfoController sharedInstance] showInfoForPackage:nil location:[_controller serverURL]];
         [[TLMInfoController sharedInstance] showWindow:nil];
     }
 }
@@ -286,7 +284,7 @@
     if ([[[TLMInfoController sharedInstance] window] isVisible]) {
         // reset for multiple selection or empty selection
         if ([_outlineView numberOfSelectedRows] != 1)
-            [[TLMInfoController sharedInstance] showInfoForPackage:nil location:[self lastUpdateURL]];
+            [[TLMInfoController sharedInstance] showInfoForPackage:nil location:[_controller serverURL]];
         else
             [self showInfo:nil];
     }

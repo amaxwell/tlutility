@@ -51,7 +51,6 @@
     TLMMainWindowController *_controller;
     TLMStatusWindow         *_statusWindow;
     TLMOutlineView          *_outlineView;
-    NSURL                   *_lastUpdateURL;
     BOOL                     _refreshing;
     BOOL                     _needsUpdate;
 }

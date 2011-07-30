@@ -52,7 +52,6 @@
     BOOL                     _sortAscending;
     NSMutableArray          *_sortDescriptors;
     TLMMainWindowController *_controller;
-    NSURL                   *_lastUpdateURL;
     TLMStatusWindow         *_statusWindow;
     BOOL                     _refreshing;
     BOOL                     _needsUpdate;
@@ -71,7 +70,6 @@
 @property (nonatomic, assign) IBOutlet TLMMainWindowController *_controller;
 @property (nonatomic, copy) NSArray *packageNodes;
 @property (readonly) id selectedItem;
-@property (nonatomic, copy) NSURL *lastUpdateURL;
 @property (nonatomic, getter = isRefreshing) BOOL refreshing;
 
 @end
