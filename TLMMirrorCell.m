@@ -205,7 +205,19 @@ static NSMutableDictionary *_iconsByURLScheme = nil;
 
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
+    if ([self drawsBackground]) {
+        [NSGraphicsContext saveGraphicsState];
+        [[self backgroundColor] setFill];
+        NSRectFillUsingOperation(cellFrame, NSCompositeSourceOver);
+        [NSGraphicsContext restoreGraphicsState];
+    }
     
+    [NSGraphicsContext saveGraphicsState];
+    NSBezierPath *roundRect = [NSBezierPath bezierPathWithRoundedRect:NSInsetRect(cellFrame, 0.5, 0.5) xRadius:2 yRadius:2];
+    [[NSColor blackColor] setStroke];
+    [roundRect stroke];
+    [roundRect addClip];
+
     if ([self icon]) {
         NSRect iconRect = [self iconRectForBounds:cellFrame];
         CGContextRef ctxt = [[NSGraphicsContext currentContext] graphicsPort];
@@ -222,6 +234,7 @@ static NSMutableDictionary *_iconsByURLScheme = nil;
     }
     
     [super drawInteriorWithFrame:[self textRectForBounds:cellFrame] inView:controlView];
+    [NSGraphicsContext restoreGraphicsState];
 }
 
 - (void)drawWithFrame:(NSRect)aRect inView:(NSView *)controlView
