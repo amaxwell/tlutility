@@ -1,10 +1,10 @@
 //
-//  TLMMirrorTextField.h
-//  TeX Live Utility
+//  BDSKTextViewCompletionController.h
+//  Bibdesk
 //
-//  Created by Adam R. Maxwell on 07/24/11.
+//  Created by Adam Maxwell on 01/08/06.
 /*
- This software is Copyright (c) 2011
+ This software is Copyright (c) 2006-2010
  Adam Maxwell. All rights reserved.
  
  Redistribution and use in source and binary forms, with or without
@@ -36,37 +36,41 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 #import <Cocoa/Cocoa.h>
-#import "TLMFaviconCache.h"
 
-@interface TLMMirrorFieldEditor : NSTextView
+// we implement some of the NSResponder methods, but not all; this class inherits from NSResponder in order to avoid declaring them
+
+@interface BDSKTextViewCompletionController : NSResponder <NSTableViewDelegate, NSTableViewDataSource>
 {
-@private
-    BOOL _dragChangedText;
-    BOOL _isEditing;
+	NSWindow *completionWindow;
+	NSArray *completions;
+	NSString *originalString;
+	NSInteger movement;
+	NSTableView *tableView;
+	NSTextView *textView;
+	NSWindow *textViewWindow;
+    BOOL shouldInsert;
 }
+
++ (id)sharedController;
+
+- (NSWindow *)completionWindow;
+- (NSTextView *)currentTextView;
+- (void)displayCompletions:(NSArray *)completions forPartialWordRange:(NSRange)partialWordRange originalString:(NSString *)origString atPoint:(NSPoint)point forTextView:(NSTextView *)textView;
+- (void)displayCompletions:(NSArray *)completions indexOfSelectedItem:(NSInteger)indexOfSelectedItem forPartialWordRange:(NSRange)partialWordRange originalString:(NSString *)originalString atPoint:(NSPoint)point forTextView:(NSTextView *)textView;
+- (void)endDisplay;
+- (void)endDisplayAndComplete:(BOOL)complete;
+- (void)endDisplayNoComplete;
+- (void)tableAction:(id)sender;
+
 @end
 
-
-
-@interface TLMMirrorTextField : NSTextField
-{
-@private
-    BOOL _dragChangedText;
-}
+@interface NSTextView (BDSKExtensions)
+- (NSPoint)locationForCompletionWindow;
 @end
 
-@protocol BDSKFieldEditorDelegate <NSTextViewDelegate>
+@protocol BDSKTextViewCompletionDelegate <NSTextViewDelegate>
 @optional
-- (NSRange)textView:(NSTextView *)textView rangeForUserCompletion:(NSRange)charRange;
-- (BOOL)textViewShouldAutoComplete:(NSTextView *)textView;
-@end
-
-// the above delegate methods could be implemented by calling these delegate methods for NSControl subclasses that actually have a delegate
-// currently implemented for NSTableView
-@protocol BDSKFieldEditorControlDelegate <BDSKFieldEditorDelegate>
-@optional
-- (NSRange)control:(NSControl *)control textView:(NSTextView *)textView rangeForUserCompletion:(NSRange)charRange;
-- (BOOL)control:(NSControl *)control textViewShouldAutoComplete:(NSTextView *)textView;
+- (NSPoint)locationForCompletionWindowInTextView:(NSTextView *)tv;
+- (NSPoint)control:(NSControl *)control locationForCompletionWindowInTextView:(NSTextView *)tv;
 @end

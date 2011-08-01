@@ -172,6 +172,25 @@ static NSURL *__TLMTLNetURL(NSString *mirrorURLString)
     TLMLog(__func__, @"mirror = %@", [self _mirrorForURL:[[aNote userInfo] objectForKey:@"URL"]]);
 }
 
+- (NSArray *)mirrorsMatchingSearchString:(NSString *)aString;
+{
+    NSMutableArray *array = [NSMutableArray array];
+    for (TLMMirrorNode *continentNode in _mirrorRoot) {
+        
+        for (TLMMirrorNode *countryNode in continentNode) {
+            
+            for (TLMMirrorNode *URLNode in countryNode) {
+                
+                NSParameterAssert([URLNode type] == TLMMirrorNodeURL);
+                NSString *urlString = [[URLNode value] absoluteString];
+                if ([urlString rangeOfString:aString].length)
+                    [array addObject:urlString];
+            }
+        }
+    }
+    return array;
+}
+
 #pragma mark NSOutlineView datasource
 
 - (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)anIndex ofItem:(TLMMirrorNode *)item;

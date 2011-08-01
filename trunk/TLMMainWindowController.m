@@ -76,6 +76,7 @@
 
 #import "TLMDatabase.h"
 #import "TLMDatabasePackage.h"
+#import "TLMMirrorController.h"
 
 @interface TLMMainWindowController (Private)
 // only declare here if reorganizing the implementation isn't practical
@@ -464,6 +465,42 @@ static char _TLMOperationQueueOperationContext;
             break;
     }
 }
+
+- (BOOL)control:(NSControl *)control didFailToFormatString:(NSString *)string errorDescription:(NSString *)error
+{
+    if (control == _URLField) {
+        NSAlert *alert = [[NSAlert new] autorelease];
+        [alert setMessageText:NSLocalizedString(@"Invalid URL", @"alert title")];
+        [alert setInformativeText:error];
+        [alert beginSheetModalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
+    }
+    return NO;
+}
+
+- (NSArray *)control:(NSControl *)control textView:(NSTextView *)textView completions:(NSArray *)words forPartialWordRange:(NSRange)charRange indexOfSelectedItem:(NSInteger *)index;
+{
+    if (index) *index = 0;
+    NSFormatter *fmt = [[control cell] formatter];
+    NSMutableArray *candidates = [[[[NSApp delegate] mirrorController] mirrorsMatchingSearchString:[textView string]] mutableCopy];
+    if (fmt) {
+        
+        NSUInteger idx = [candidates count];
+        while (idx--) {
+            id ignored;
+            if ([fmt getObjectValue:&ignored forString:[candidates objectAtIndex:idx] errorDescription:NULL] == NO)
+                [candidates removeObjectAtIndex:idx];
+        }
+    }
+        
+    return [candidates autorelease];
+}
+
+- (NSRange)control:(NSControl *)control textView:(NSTextView *)textView rangeForUserCompletion:(NSRange)charRange;
+{
+    return NSMakeRange(0, [[textView string] length]);
+}
+
+- (BOOL)control:(NSControl *)control textViewShouldAutoComplete:(NSTextView *)textView { return control == _URLField; }
 
 #pragma mark -
 #pragma mark Operations

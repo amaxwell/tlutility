@@ -54,6 +54,7 @@
 		F9A49FC71059E64400F5AC62 /* TLMInstallDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = F9A49FC61059E64400F5AC62 /* TLMInstallDataSource.m */; };
 		F9A4A093105CA67100F5AC62 /* TLMProfileNode.m in Sources */ = {isa = PBXBuildFile; fileRef = F9A4A092105CA67100F5AC62 /* TLMProfileNode.m */; };
 		F9A4A106105D736B00F5AC62 /* texlive.profile.plist in Resources */ = {isa = PBXBuildFile; fileRef = F9A4A105105D736B00F5AC62 /* texlive.profile.plist */; };
+		F9A616D513E709F000851984 /* BDSKTextViewCompletionController.m in Sources */ = {isa = PBXBuildFile; fileRef = F9A616D413E709F000851984 /* BDSKTextViewCompletionController.m */; };
 		F9A8BB370EF8B11200E35DC9 /* TLMInfraUpdateOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F9A8BB360EF8B11200E35DC9 /* TLMInfraUpdateOperation.m */; };
 		F9AAC10F12679785003D665F /* TLMBackupDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = F9AAC10E12679785003D665F /* TLMBackupDataSource.m */; };
 		F9AAC11D126798F6003D665F /* TLMBackupNode.m in Sources */ = {isa = PBXBuildFile; fileRef = F9AAC11C126798F6003D665F /* TLMBackupNode.m */; };
@@ -344,6 +345,8 @@
 		F9A4A091105CA67100F5AC62 /* TLMProfileNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMProfileNode.h; sourceTree = "<group>"; };
 		F9A4A092105CA67100F5AC62 /* TLMProfileNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMProfileNode.m; sourceTree = "<group>"; };
 		F9A4A105105D736B00F5AC62 /* texlive.profile.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = texlive.profile.plist; sourceTree = "<group>"; };
+		F9A616D313E709F000851984 /* BDSKTextViewCompletionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDSKTextViewCompletionController.h; sourceTree = "<group>"; };
+		F9A616D413E709F000851984 /* BDSKTextViewCompletionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BDSKTextViewCompletionController.m; sourceTree = "<group>"; };
 		F9A8BB350EF8B11200E35DC9 /* TLMInfraUpdateOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMInfraUpdateOperation.h; sourceTree = "<group>"; };
 		F9A8BB360EF8B11200E35DC9 /* TLMInfraUpdateOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMInfraUpdateOperation.m; sourceTree = "<group>"; };
 		F9AAC10D12679785003D665F /* TLMBackupDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMBackupDataSource.h; sourceTree = "<group>"; };
@@ -578,6 +581,8 @@
 		F94E74BA0EF49AE100E0B78F /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				F9A616D313E709F000851984 /* BDSKTextViewCompletionController.h */,
+				F9A616D413E709F000851984 /* BDSKTextViewCompletionController.m */,
 				F929DE8213DCDFFF00072DDA /* TLMMirrorTextField.h */,
 				F929DE8313DCE00000072DDA /* TLMMirrorTextField.m */,
 				F9053F4610B21B0D00BF5C0B /* TLMProgressIndicatorCell.h */,
@@ -1086,6 +1091,7 @@
 				F96203BF13D3656300932965 /* TLMLogWindowController.m in Sources */,
 				F929DE8413DCE00000072DDA /* TLMMirrorTextField.m in Sources */,
 				F967340513E10867008C2B3E /* TLMFaviconCache.m in Sources */,
+				F9A616D513E709F000851984 /* BDSKTextViewCompletionController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -51,6 +51,8 @@
     NSTextFieldCell *_textFieldCell;
 }
 
+- (NSArray *)mirrorsMatchingSearchString:(NSString *)aString;
+
 @property (nonatomic, retain) IBOutlet NSOutlineView *_outlineView;
 
 @end
