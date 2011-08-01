@@ -54,6 +54,7 @@
 }
 
 @property (readonly) TLMMainWindowController *mainWindowController;
+@property (readonly) TLMMirrorController *mirrorController;
 
 - (IBAction)showPreferences:(id)sender;
 - (IBAction)openDisasterRecoveryPage:(id)sender;

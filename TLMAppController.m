@@ -250,10 +250,15 @@ static void __TLMMigrateBundleIdentifier()
     [[TLMPreferenceController sharedPreferenceController] showWindow:nil];
 }
 
-- (IBAction)manageMirrors:(id)sender
+- (TLMMirrorController *)mirrorController
 {
     if (nil == _mirrorController)
         _mirrorController = [TLMMirrorController new];
+    return _mirrorController;
+}
+
+- (IBAction)manageMirrors:(id)sender
+{
     [_mirrorController showWindow:sender];
 }
 
