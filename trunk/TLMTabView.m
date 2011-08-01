@@ -145,8 +145,14 @@
 - (NSRect)contentRect
 {    
     NSRect viewFrame = [self bounds];
-    if (NO == _externalTabControl)
+    if (NO == _externalTabControl) {
         viewFrame.size.height -= (NSHeight([_tabControl frame]) - 3 * TAB_CONTROL_MARGIN);
+    }
+    else {
+        viewFrame = NSInsetRect(viewFrame, 0, 1);
+        viewFrame.size.height += 0.5;
+    }
+
     return viewFrame;
 }
 
@@ -313,6 +319,8 @@
     [[NSColor whiteColor] setFill];
     NSRectFillUsingOperation(dirtyRect, NSCompositeCopy);
     [super drawRect:dirtyRect];
+    [[NSColor blackColor] set];
+    NSFrameRectWithWidth([self bounds], 1.0);
 }
 
 @end

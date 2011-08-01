@@ -28,7 +28,7 @@
 				<string key="NSClassName">NSApplication</string>
 			</object>
 			<object class="NSWindowTemplate" id="1005">
-				<int key="NSWindowStyleMask">4111</int>
+				<int key="NSWindowStyleMask">4367</int>
 				<int key="NSWindowBacking">2</int>
 				<string key="NSWindowRect">{{196, 71}, {600, 439}}</string>
 				<int key="NSWTFlags">544737280</int>
@@ -1680,11 +1680,11 @@
 						<int key="objectID">2</int>
 						<reference key="object" ref="1006"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="122085614"/>
 							<reference ref="346788096"/>
 							<reference ref="168491833"/>
 							<reference ref="1057310975"/>
 							<reference ref="1047754984"/>
+							<reference ref="122085614"/>
 						</array>
 						<reference key="parent" ref="1005"/>
 					</object>
@@ -2122,12 +2122,6 @@
 						<reference key="parent" ref="1064875389"/>
 					</object>
 					<object class="IBObjectRecord">
-						<int key="objectID">150</int>
-						<reference key="object" ref="122085614"/>
-						<array class="NSMutableArray" key="children"/>
-						<reference key="parent" ref="1006"/>
-					</object>
-					<object class="IBObjectRecord">
 						<int key="objectID">232</int>
 						<reference key="object" ref="346788096"/>
 						<array class="NSMutableArray" key="children">
@@ -2161,6 +2155,11 @@
 					<object class="IBObjectRecord">
 						<int key="objectID">263</int>
 						<reference key="object" ref="1057310975"/>
+						<reference key="parent" ref="1006"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">150</int>
+						<reference key="object" ref="122085614"/>
 						<reference key="parent" ref="1006"/>
 					</object>
 				</array>
@@ -2240,7 +2239,7 @@
 				<string key="261.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="262.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<object class="NSAffineTransform" key="262.IBViewBoundsToFrameTransform">
-					<bytes key="NSTransformStruct">P4AAAL+AAABDsYAAw9KAAA</bytes>
+					<bytes key="NSTransformStruct">P4AAAL+AAABDyoAAw9gAAA</bytes>
 				</object>
 				<string key="263.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<object class="NSAffineTransform" key="263.IBViewBoundsToFrameTransform">
@@ -2274,7 +2273,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">269</int>
+			<int key="maxID">270</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
