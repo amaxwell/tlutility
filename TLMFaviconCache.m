@@ -46,16 +46,19 @@
 {
     NSURL        *_iconURL;
     NSMutableSet *_delegates;
+    NSMutableSet *_otherURLs;
 }
 
 @property (nonatomic, retain) NSURL *iconURL;
 @property (nonatomic, retain) NSMutableSet *delegates;
+@property (nonatomic, retain) NSMutableSet *otherURLs;
 @end
 
 @implementation _TLMFaviconQueueItem
 
 @synthesize iconURL = _iconURL;
 @synthesize delegates = _delegates;
+@synthesize otherURLs = _otherURLs;
 
 - (id)initWithURL:(NSURL *)aURL;
 {
@@ -63,6 +66,7 @@
     if (self) {
         _iconURL = [aURL retain];
         _delegates = [NSMutableSet new];
+        _otherURLs = [NSMutableSet new];
     }
     return self;
 }
@@ -71,6 +75,7 @@
 {
     [_iconURL release];
     [_delegates release];
+    [_otherURLs release];
     [super dealloc];
 }
 
@@ -132,6 +137,11 @@ static void __TLMFaviconCacheInit() { _sharedCache = [TLMFaviconCache new]; }
     }
 }
 
+- (void)webView:(WebView *)sender didReceiveServerRedirectForProvisionalLoadForFrame:(WebFrame *)frame
+{
+    [[[self _currentItem] otherURLs] addObject:[[[frame provisionalDataSource] request] URL]];
+}
+
 - (void)webView:(WebView *)sender didFailLoadWithError:(NSError *)error forFrame:(WebFrame *)frame;
 {
     _TLMFaviconQueueItem *item = [self _currentItem];
@@ -151,6 +161,10 @@ static void __TLMFaviconCacheInit() { _sharedCache = [TLMFaviconCache new]; }
             icon = [NSNull null];
         _TLMFaviconQueueItem *item = [self _currentItem];
         [_iconsByURL setObject:icon forKey:[[item iconURL] host]];
+        
+        // take care of redirects
+        for (NSURL *otherURL in [item otherURLs])
+            [_iconsByURL setObject:icon forKey:[otherURL host]];
         
         if (icon != [NSNull null]) {
             for (id <TLMFaviconCacheDelegate> obj in [item delegates])
