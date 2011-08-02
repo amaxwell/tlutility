@@ -107,6 +107,14 @@ static void __TLMFaviconCacheInit() { _sharedCache = [TLMFaviconCache new]; }
         _queue = [NSMutableArray new];
         _webview = [[WebView alloc] initWithFrame:NSMakeRect(0, 0, 10, 10)];
         [_webview setFrameLoadDelegate:self];
+        /*
+         The first call to mainFrameIcon always results in the default icon,
+         even if you've loaded a site that has a favicon (e.g., utah.edu).
+         This was a nightmare to debug, since it only appeared if the first
+         site loaded had a favicon.  Calling it once here takes care of the
+         problem.
+         */
+        (void)[_webview mainFrameIcon];
         _iconsByURL = [NSMutableDictionary new];
     }
     return self;
@@ -131,7 +139,8 @@ static void __TLMFaviconCacheInit() { _sharedCache = [TLMFaviconCache new]; }
 {
     if ([_queue count] && NO == _downloading) {
         _TLMFaviconQueueItem *item = [self _currentItem];
-        [[_webview mainFrame] loadRequest:[NSURLRequest requestWithURL:[item iconURL]]];
+        NSURLRequest *request = [NSURLRequest requestWithURL:[item iconURL] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:10];
+        [[_webview mainFrame] loadRequest:request];
         TLMLog(__func__, @"Loading favicon for %@", [item iconURL]);
         _downloading = YES;
     }
@@ -161,7 +170,7 @@ static void __TLMFaviconCacheInit() { _sharedCache = [TLMFaviconCache new]; }
             icon = [NSNull null];
         _TLMFaviconQueueItem *item = [self _currentItem];
         [_iconsByURL setObject:icon forKey:[[item iconURL] host]];
-        
+                
         // take care of redirects
         for (NSURL *otherURL in [item otherURLs])
             [_iconsByURL setObject:icon forKey:[otherURL host]];
@@ -190,13 +199,14 @@ static void __TLMFaviconCacheInit() { _sharedCache = [TLMFaviconCache new]; }
 - (NSImage *)iconForURL:(NSURL *)aURL;
 {
     NSParameterAssert(aURL);
-    return [_iconsByURL objectForKey:[aURL host]];
+    // return nil for non-http icons, for symmetry with downloadIcon:delegate:
+    return [[aURL scheme] hasPrefix:@"http"] ? [_iconsByURL objectForKey:[aURL host]] : nil;
 }
 
-- (void)downloadIconForURL:(NSURL *)aURL delegate:(id)object;
+- (void)downloadIconForURL:(NSURL *)aURL delegate:(id)delegate;
 {
     NSParameterAssert(aURL);
-    NSParameterAssert([object conformsToProtocol:@protocol(TLMFaviconCacheDelegate)]);
+    NSParameterAssert(nil == delegate || [delegate conformsToProtocol:@protocol(TLMFaviconCacheDelegate)]);
     
     // !!! early return for non-http URLs
     if ([[aURL scheme] hasPrefix:@"http"] == NO)
@@ -207,15 +217,15 @@ static void __TLMFaviconCacheInit() { _sharedCache = [TLMFaviconCache new]; }
     if ([_iconsByURL objectForKey:[aURL host]]) {
         id icon = [_iconsByURL objectForKey:[aURL host]];
         if (icon != [NSNull null])
-            [object iconCache:self downloadedIcon:icon forURL:aURL];
+            [delegate iconCache:self downloadedIcon:icon forURL:aURL];
     }
     else {
         _TLMFaviconQueueItem *item = [[_TLMFaviconQueueItem alloc] initWithURL:aURL];
         [item setIconURL:aURL];
-        [[item delegates] addObject:object];
+        if (delegate) [[item delegates] addObject:delegate];
         const NSUInteger idx = [_queue indexOfObject:item];
         if (NSNotFound != idx) {
-            [[[_queue objectAtIndex:idx] delegates] addObject:object];
+            if (delegate) [[[_queue objectAtIndex:idx] delegates] addObject:delegate];
         }
         else {
             [_queue insertObject:item atIndex:0];
