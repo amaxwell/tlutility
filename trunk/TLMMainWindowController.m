@@ -225,16 +225,17 @@ static char _TLMOperationQueueOperationContext;
     [[[self window] toolbar] setAutosavesConfiguration:YES];    
     
     // do this after the window loads, so something is visible right away
-    _serverURL = [[[TLMEnvironment currentEnvironment] validServerURL] copy];
+    _serverURL = [[[TLMEnvironment currentEnvironment] validServerURL] copy];    
     
-    if (nil == _serverURL) {
-        // !!! is this what I want to do here?
-#warning we get out of sync when this is mirror.ctan.org and the first mirror was stale
+    // !!! end up with a bad environment if this is the multiplexer, and the UI gets out of sync
+    if (nil == _serverURL)
         _serverURL = [[[TLMEnvironment currentEnvironment] defaultServerURL] copy];
-        
+    
+    if ([_serverURL isMultiplexer]) {
+        TLMLog(__func__, @"Still have multiplexer URL after setup.  This is not good.");
         NSAlert *alert = [[NSAlert new] autorelease];
-        [alert setMessageText:NSLocalizedString(@"Update server not available", @"alert title")];
-        [alert setInformativeText:NSLocalizedString(@"Unable to contact the update server.  If this problem persists on further attempts, you may need to try a different mirror.", @"alert text")];
+        [alert setMessageText:NSLocalizedString(@"Unable to find a valid update server", @"alert title")];
+        [alert setInformativeText:NSLocalizedString(@"Either a network problem exists or the TeX Live version on the server does not match.  If this problem persists on further attempts, you may need to try a different mirror.", @"alert text")];
         [alert beginSheetModalForWindow:[self window]
                           modalDelegate:nil
                          didEndSelector:NULL
