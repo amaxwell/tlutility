@@ -44,12 +44,12 @@
 
 @interface _TLMFaviconQueueItem : NSObject
 {
-    NSURL          *_iconURL;
-    NSMutableArray *_delegates;
+    NSURL        *_iconURL;
+    NSMutableSet *_delegates;
 }
 
 @property (nonatomic, retain) NSURL *iconURL;
-@property (nonatomic, retain) NSMutableArray *delegates;
+@property (nonatomic, retain) NSMutableSet *delegates;
 @end
 
 @implementation _TLMFaviconQueueItem
@@ -62,7 +62,7 @@
     self = [super init];
     if (self) {
         _iconURL = [aURL retain];
-        _delegates = [NSMutableArray new];
+        _delegates = [NSMutableSet new];
     }
     return self;
 }
