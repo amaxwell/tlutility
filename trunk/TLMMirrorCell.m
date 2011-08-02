@@ -205,20 +205,21 @@ static NSMutableDictionary *_iconsByURLScheme = nil;
 
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
+    
+    [NSGraphicsContext saveGraphicsState];
+
+    if ([controlView isKindOfClass:[NSTextField class]]) {
+        NSBezierPath *roundRect = [NSBezierPath bezierPathWithRoundedRect:NSInsetRect(cellFrame, 0.5, 0.5) xRadius:4 yRadius:4];
+        [[NSColor blackColor] setStroke];
+        [roundRect stroke];
+    }
+    
     if ([self drawsBackground]) {
         [NSGraphicsContext saveGraphicsState];
         [[self backgroundColor] setFill];
         NSRectFillUsingOperation(cellFrame, NSCompositeSourceOver);
         [NSGraphicsContext restoreGraphicsState];
-    }
-    
-    [NSGraphicsContext saveGraphicsState];
-#if 0
-    NSBezierPath *roundRect = [NSBezierPath bezierPathWithRoundedRect:NSInsetRect(cellFrame, 0.5, 0.5) xRadius:2 yRadius:2];
-    [[NSColor blackColor] setStroke];
-    [roundRect stroke];
-    [roundRect addClip];
-#endif
+    }    
 
     if ([self icon]) {
         NSRect iconRect = [self iconRectForBounds:cellFrame];
@@ -239,9 +240,32 @@ static NSMutableDictionary *_iconsByURLScheme = nil;
     [NSGraphicsContext restoreGraphicsState];
 }
 
-- (void)drawWithFrame:(NSRect)aRect inView:(NSView *)controlView
+- (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
-    [super drawWithFrame:aRect inView:controlView];
+    if ([controlView isKindOfClass:[NSTextField class]]) {
+        cellFrame = NSInsetRect(cellFrame, 0.5, 0.5);
+    }
+    
+    [super drawWithFrame:cellFrame inView:controlView];
+
+    if ([controlView isKindOfClass:[NSTextField class]]) {
+
+        [NSGraphicsContext saveGraphicsState];
+        NSBezierPath *framePath = [NSBezierPath bezierPathWithRect:NSInsetRect(cellFrame, -0.5, -0.5)];
+        [framePath setWindingRule:NSEvenOddWindingRule];
+        
+        NSBezierPath *roundRect = [NSBezierPath bezierPathWithRoundedRect:cellFrame xRadius:4 yRadius:4];
+        [framePath appendBezierPath:roundRect];
+        
+        [[[controlView window] backgroundColor] setFill];
+        [framePath fill];
+        
+        [[NSColor darkGrayColor] setStroke];
+        [roundRect stroke];
+            
+        [NSGraphicsContext restoreGraphicsState];
+    }
+
 #if 0
     /*
      Editing causes a white border to be drawn around the cell, and the focus ring doesn't
@@ -252,7 +276,7 @@ static NSMutableDictionary *_iconsByURLScheme = nil;
     if ([self showsFirstResponder]) {
         [NSGraphicsContext saveGraphicsState];
         NSSetFocusRingStyle(NSFocusRingAbove);
-        NSRectFill([self textRectForBounds:aRect]);
+        NSRectFill([self textRectForBounds:cellFrame]);
         [NSGraphicsContext restoreGraphicsState];
     }
 #endif
