@@ -83,9 +83,9 @@ static NSMutableDictionary *_iconsByURLScheme = nil;
 - (void)iconCache:(TLMFaviconCache *)cache downloadedIcon:(NSImage *)anIcon forURL:(NSURL *)aURL;
 {
     [self setIcon:anIcon];
-    [[self controlView] setNeedsDisplay:YES];
     _inset = FAVICON_INSET;
     _hasFavicon = YES;
+    [[self controlView] setNeedsDisplay:YES];
 }
 
 - (NSImage *)_defaultFavicon
@@ -213,10 +213,12 @@ static NSMutableDictionary *_iconsByURLScheme = nil;
     }
     
     [NSGraphicsContext saveGraphicsState];
+#if 0
     NSBezierPath *roundRect = [NSBezierPath bezierPathWithRoundedRect:NSInsetRect(cellFrame, 0.5, 0.5) xRadius:2 yRadius:2];
     [[NSColor blackColor] setStroke];
     [roundRect stroke];
     [roundRect addClip];
+#endif
 
     if ([self icon]) {
         NSRect iconRect = [self iconRectForBounds:cellFrame];
