@@ -456,7 +456,7 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
     }
 }
 
-- (NSURL *)validServerURL
+- (NSURL *)_validServerURL:(BOOL *)failed
 {        
     NSParameterAssert(_installedYear != TLMDatabaseUnknownYear);
     
@@ -469,6 +469,8 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
     const TLMDatabaseYear repositoryYear = [db texliveYear];
     NSURL *validURL = [db mirrorURL];
     
+    if (failed) *failed = [db failed];
+    
     if ([db failed]) {
         
         // not correct to show an error sheet here, since this may not be the main thread
@@ -479,7 +481,6 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
         // handled as a separate condition so we can log it for sure
         TLMLog(__func__, @"Failed to determine the TeX Live version of the repository, so we'll just try the default server");
         validURL = [self defaultServerURL];
-        NSParameterAssert(validURL != nil);
     }
     else if ([db isOfficial] == NO) {
         
@@ -505,8 +506,7 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
             }
             else {
                 TLMLog(__func__, @"Version mismatch detected, but no fallback URL was found.");
-                // ??? avoid using a nil URL for validURL...is this what I want to do?
-                [self setLegacyRepositoryURL:[self defaultServerURL]];
+                // !!! return a nil URL; this is a stale server, and we might want to retry
             }
             
             // async sheet with no user interaction, so no point in waiting...
@@ -516,7 +516,6 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
         }
         
         validURL = [self legacyRepositoryURL];
-        NSParameterAssert(validURL != nil);
     }
     else {
         
@@ -530,6 +529,25 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
         TLMLog(__func__, @"Mirror version appears to be %d; %@", repositoryYear, ageString);
     }
         
+    return validURL;
+}
+
+- (NSURL *)validServerURL
+{
+    BOOL failed;
+    NSURL *validURL = [self _validServerURL:&failed];
+
+    // this is a special case for the multiplexer, which can return a stale server; retry under certain conditions
+    if (nil == validURL && [[self defaultServerURL] isMultiplexer] && NO == failed) {
+        int tryCount = 2;
+        const int maxTries = 5;
+        while (nil == validURL && tryCount <= maxTries) {
+            TLMLog(__func__, @"Stale mirror returned from multiplexer.  Requesting another mirror (attempt %d of %d).", tryCount, maxTries);
+            validURL = [self _validServerURL:&failed];
+            tryCount++;
+        }
+    }
+    
     return validURL;
 }
 
