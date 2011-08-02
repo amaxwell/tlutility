@@ -150,7 +150,6 @@
     }
     else {
         viewFrame = NSInsetRect(viewFrame, 0, 1);
-        viewFrame.size.height += 0.5;
     }
 
     return viewFrame;
@@ -320,6 +319,7 @@
     NSRectFillUsingOperation(dirtyRect, NSCompositeCopy);
     [super drawRect:dirtyRect];
     [[NSColor blackColor] set];
+#warning fix top line width
     NSFrameRectWithWidth([self bounds], 1.0);
 }
 
