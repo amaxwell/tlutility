@@ -319,8 +319,15 @@
     NSRectFillUsingOperation(dirtyRect, NSCompositeCopy);
     [super drawRect:dirtyRect];
     [[NSColor blackColor] set];
-#warning fix top line width
-    NSFrameRectWithWidth([self bounds], 1.0);
+
+    NSRect bottomRect = [self bounds];
+    bottomRect.size.height = 1;
+    NSFrameRectWithWidth(bottomRect, 1.0);
+    
+    NSRect topRect = [self bounds];
+    topRect.origin.y = NSMaxY(topRect) - 1.5;
+    topRect.size.height = 1;
+    NSFrameRectWithWidth(topRect, 1.0);
 }
 
 @end
