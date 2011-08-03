@@ -244,6 +244,10 @@ static char _TLMOperationQueueOperationContext;
     
     [_URLField setStringValue:[[self serverURL] absoluteString]];
     
+    // I don't like having this selected and highlighted at launch, for some reason
+    [[_URLField currentEditor] setSelectedRange:NSMakeRange(0, 0)];
+    [[self window] makeFirstResponder:nil];
+    
     // for info window; TL 2011 and later only
     [self _refreshLocalDatabase];
 }
