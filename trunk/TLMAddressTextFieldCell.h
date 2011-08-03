@@ -42,7 +42,8 @@
 @interface TLMAddressTextFieldCell : NSTextFieldCell <TLMFaviconCacheDelegate>
 {
 @private
-    NSImage *_icon;
+    NSImage      *_icon;
+    NSButtonCell *_buttonCell;
 }
 
 - (NSRect)iconRectForBounds:(NSRect)cellFrame;
