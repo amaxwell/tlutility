@@ -45,13 +45,28 @@
 
 @synthesize icon = _icon;
 
+- (void)commonInit
+{
+    [self setScrollable:YES];
+    [self setLineBreakMode:NSLineBreakByTruncatingTail];
+    _buttonCell = [[NSButtonCell alloc] initImageCell:[NSImage imageNamed:NSImageNameStopProgressFreestandingTemplate]];
+    [_buttonCell setButtonType:NSMomentaryChangeButton];
+    [_buttonCell setBordered:NO];
+    [_buttonCell setImagePosition:NSImageOnly];
+    [_buttonCell setImageScaling:NSImageScaleProportionallyUpOrDown];    
+}
+
 - (id)initTextCell:(NSString *)aString
 {
     self = [super initTextCell:aString];
-    if (self) {
-        [self setScrollable:YES];
-        [self setLineBreakMode:NSLineBreakByTruncatingTail];
-    }
+    [self commonInit];
+    return self;
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super initWithCoder:aDecoder];
+    [self commonInit];
     return self;
 }
 
@@ -59,12 +74,14 @@
 {
     TLMAddressTextFieldCell *copy = [super copyWithZone:zone];
     [copy->_icon retain];
+    copy->_buttonCell = [_buttonCell copyWithZone:zone];
     return copy;
 }
 
 - (void)dealloc
 {
     [_icon release];
+    [_buttonCell release];
     [super dealloc];
 }
 
@@ -120,24 +137,28 @@
     return iconRect;
 }
 
+- (NSRect)buttonRectForBounds:(NSRect)cellFrame
+{
+    NSRect buttonRect = cellFrame;
+    buttonRect.origin.x = NSMaxX(cellFrame) - NSHeight(cellFrame);
+    buttonRect.size.width = NSHeight(cellFrame);
+    return NSInsetRect(buttonRect, 3, 3);
+}
+
 - (NSRect)textRectForBounds:(NSRect)cellFrame
 {
     NSRect iconRect = [self iconRectForBounds:cellFrame];
     cellFrame.origin.x = NSMaxX(iconRect);
     cellFrame.size.width -= NSWidth(iconRect);
+    cellFrame.size.width -= (NSWidth([self buttonRectForBounds:cellFrame]) + 2 /* padding */);
     return cellFrame;    
 }
 
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
-    
-    [NSGraphicsContext saveGraphicsState];
-    
-    if ([controlView isKindOfClass:[NSTextField class]]) {
-        NSBezierPath *roundRect = [NSBezierPath bezierPathWithRoundedRect:NSInsetRect(cellFrame, 0.5, 0.5) xRadius:4 yRadius:4];
-        [[NSColor blackColor] setStroke];
-        [roundRect stroke];
-    }
+    NSBezierPath *roundRect = [NSBezierPath bezierPathWithRoundedRect:NSInsetRect(cellFrame, 0.5, 0.5) xRadius:4 yRadius:4];
+    [[NSColor blackColor] setStroke];
+    [roundRect stroke];
     
     if ([self drawsBackground]) {
         [NSGraphicsContext saveGraphicsState];
@@ -162,34 +183,29 @@
     }
     
     [super drawInteriorWithFrame:[self textRectForBounds:cellFrame] inView:controlView];
-    [NSGraphicsContext restoreGraphicsState];
+    [_buttonCell drawWithFrame:[self buttonRectForBounds:cellFrame] inView:controlView];
 }
 
 - (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
-    if ([controlView isKindOfClass:[NSTextField class]]) {
-        cellFrame = NSInsetRect(cellFrame, 0.5, 0.5);
-    }
+    cellFrame = NSInsetRect(cellFrame, 0.5, 0.5);
     
     [super drawWithFrame:cellFrame inView:controlView];
+        
+    [NSGraphicsContext saveGraphicsState];
+    NSBezierPath *framePath = [NSBezierPath bezierPathWithRect:NSInsetRect(cellFrame, -0.5, -0.5)];
+    [framePath setWindingRule:NSEvenOddWindingRule];
     
-    if ([controlView isKindOfClass:[NSTextField class]]) {
-        
-        [NSGraphicsContext saveGraphicsState];
-        NSBezierPath *framePath = [NSBezierPath bezierPathWithRect:NSInsetRect(cellFrame, -0.5, -0.5)];
-        [framePath setWindingRule:NSEvenOddWindingRule];
-        
-        NSBezierPath *roundRect = [NSBezierPath bezierPathWithRoundedRect:cellFrame xRadius:4 yRadius:4];
-        [framePath appendBezierPath:roundRect];
-        
-        [[[controlView window] backgroundColor] setFill];
-        [framePath fill];
-        
-        [[NSColor darkGrayColor] setStroke];
-        [roundRect stroke];
-        
-        [NSGraphicsContext restoreGraphicsState];
-    }
+    NSBezierPath *roundRect = [NSBezierPath bezierPathWithRoundedRect:cellFrame xRadius:4 yRadius:4];
+    [framePath appendBezierPath:roundRect];
+    
+    [[[controlView window] backgroundColor] setFill];
+    [framePath fill];
+    
+    [[NSColor darkGrayColor] setStroke];
+    [roundRect stroke];
+    
+    [NSGraphicsContext restoreGraphicsState];
     
 #if 0
     /*
@@ -247,6 +263,13 @@
         }
         return YES;
     }
+    else if (NSMouseInRect(mouseLoc, [self buttonRectForBounds:cellFrame], [controlView isFlipped])) {
+        // NSButtonCell does not highlight itself, it tracks until a click or the mouse exits
+        [_buttonCell highlight:YES withFrame:[self buttonRectForBounds:cellFrame] inView:controlView];
+        [_buttonCell trackMouse:event inRect:[self buttonRectForBounds:cellFrame] ofView:controlView untilMouseUp:NO];
+        [_buttonCell highlight:NO withFrame:[self buttonRectForBounds:cellFrame] inView:controlView];
+        return YES;
+    }
     return [super trackMouse:event inRect:cellFrame ofView:controlView untilMouseUp:flag];
 }
 
@@ -262,7 +285,6 @@
     [super selectWithFrame:[self textRectForBounds:cellFrame] inView:controlView editor:textObj delegate:anObject start:selStart length:selLength];
 }
 
-#if 0
 - (NSUInteger)hitTestForEvent:(NSEvent *)event inRect:(NSRect)cellFrame ofView:(NSView *)controlView
 {
     NSUInteger hit = NSCellHitNone;
@@ -271,8 +293,9 @@
         hit = NSCellHitContentArea;
     
     NSRect iconRect = [self iconRectForBounds:cellFrame];
+    NSRect buttonRect = [self buttonRectForBounds:cellFrame];
     
-    if (NSMouseInRect(mouseLoc, iconRect, [controlView isFlipped])) {
+    if (NSMouseInRect(mouseLoc, iconRect, [controlView isFlipped]) || NSMouseInRect(mouseLoc, buttonRect, [controlView isFlipped])) {
         hit |= NSCellHitTrackableArea;
     }
     else if (NSMouseInRect(mouseLoc, [self textRectForBounds:cellFrame], [controlView isFlipped])) {
@@ -280,7 +303,6 @@
     }
     return hit;
 }
-#endif
 
 @end
 
