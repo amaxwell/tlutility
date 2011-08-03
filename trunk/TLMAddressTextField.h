@@ -1,5 +1,5 @@
 //
-//  TLMMirrorTextField.h
+//  TLMAddressTextField.h
 //  TeX Live Utility
 //
 //  Created by Adam R. Maxwell on 07/24/11.
@@ -50,7 +50,7 @@
 
 
 
-@interface TLMMirrorTextField : NSTextField
+@interface TLMAddressTextField : NSTextField
 {
 @private
     BOOL _dragChangedText;
