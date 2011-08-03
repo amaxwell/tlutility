@@ -350,4 +350,8 @@ static inline BOOL forwardSelectorForCompletionInTextView(SEL selector, NSTextVi
 	return NO;
 }
 
+- (void)setButtonImage:(NSImage *)image { [[self cell] setButtonImage:image]; }
+- (void)setButtonAction:(SEL)action { [[self cell] setButtonAction:action]; }
+- (void)setButtonTarget:(id)target { [[self cell] setButtonTarget:target]; }
+
 @end

@@ -285,24 +285,8 @@
     [super selectWithFrame:[self textRectForBounds:cellFrame] inView:controlView editor:textObj delegate:anObject start:selStart length:selLength];
 }
 
-- (NSUInteger)hitTestForEvent:(NSEvent *)event inRect:(NSRect)cellFrame ofView:(NSView *)controlView
-{
-    NSUInteger hit = NSCellHitNone;
-    NSPoint mouseLoc = [controlView convertPoint:[event locationInWindow] fromView:nil];
-    if (NSMouseInRect(mouseLoc, cellFrame, [controlView isFlipped]))
-        hit = NSCellHitContentArea;
-    
-    NSRect iconRect = [self iconRectForBounds:cellFrame];
-    NSRect buttonRect = [self buttonRectForBounds:cellFrame];
-    
-    if (NSMouseInRect(mouseLoc, iconRect, [controlView isFlipped]) || NSMouseInRect(mouseLoc, buttonRect, [controlView isFlipped])) {
-        hit |= NSCellHitTrackableArea;
-    }
-    else if (NSMouseInRect(mouseLoc, [self textRectForBounds:cellFrame], [controlView isFlipped])) {
-        if ([self isEnabled]) hit |= NSCellHitEditableTextArea;
-    }
-    return hit;
-}
+- (void)setButtonImage:(NSImage *)image { [_buttonCell setImage:image]; }
+- (void)setButtonAction:(SEL)action { [_buttonCell setAction:action]; }
+- (void)setButtonTarget:(id)target { [_buttonCell setTarget:target]; }
 
 @end
-

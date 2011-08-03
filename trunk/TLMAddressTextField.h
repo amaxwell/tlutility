@@ -55,6 +55,11 @@
 @private
     BOOL _dragChangedText;
 }
+
+- (void)setButtonImage:(NSImage *)image;
+- (void)setButtonAction:(SEL)action;
+- (void)setButtonTarget:(id)target;
+
 @end
 
 @protocol BDSKFieldEditorDelegate <NSTextViewDelegate>

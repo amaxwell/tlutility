@@ -49,6 +49,10 @@
 - (NSRect)iconRectForBounds:(NSRect)cellFrame;
 - (NSRect)textRectForBounds:(NSRect)cellFrame;
 
+- (void)setButtonImage:(NSImage *)image;
+- (void)setButtonAction:(SEL)action;
+- (void)setButtonTarget:(id)target;
+
 @property (nonatomic, retain) NSImage *icon;
 
 @end
