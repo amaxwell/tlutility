@@ -36,10 +36,10 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "TLMMirrorCell.h"
+#import "TLMAddressTextFieldCell.h"
 #import <WebKit/WebKit.h>
 
-@implementation TLMMirrorCell
+@implementation TLMAddressTextFieldCell
 
 #define FAVICON_INSET ((NSSize) { 2, 2 })
 
@@ -57,7 +57,7 @@
 
 - (id)copyWithZone:(NSZone *)zone
 {
-    TLMMirrorCell *copy = [super copyWithZone:zone];
+    TLMAddressTextFieldCell *copy = [super copyWithZone:zone];
     [copy->_icon retain];
     return copy;
 }
@@ -103,7 +103,7 @@
 {
     NSRect drawingRect = [super drawingRectForBounds:theRect];
     NSSize cellSize = [self cellSizeForBounds:theRect];
-        
+    
     CGFloat offset = NSHeight(drawingRect) - cellSize.height;      
     if (offset > 0.5) {
         drawingRect.size.height -= offset;
@@ -130,13 +130,22 @@
 
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
+    
+    [NSGraphicsContext saveGraphicsState];
+    
+    if ([controlView isKindOfClass:[NSTextField class]]) {
+        NSBezierPath *roundRect = [NSBezierPath bezierPathWithRoundedRect:NSInsetRect(cellFrame, 0.5, 0.5) xRadius:4 yRadius:4];
+        [[NSColor blackColor] setStroke];
+        [roundRect stroke];
+    }
+    
     if ([self drawsBackground]) {
         [NSGraphicsContext saveGraphicsState];
         [[self backgroundColor] setFill];
         NSRectFillUsingOperation(cellFrame, NSCompositeSourceOver);
         [NSGraphicsContext restoreGraphicsState];
     }    
-
+    
     if ([self icon]) {
         NSRect iconRect = [self iconRectForBounds:cellFrame];
         CGContextRef ctxt = [[NSGraphicsContext currentContext] graphicsPort];
@@ -153,6 +162,49 @@
     }
     
     [super drawInteriorWithFrame:[self textRectForBounds:cellFrame] inView:controlView];
+    [NSGraphicsContext restoreGraphicsState];
+}
+
+- (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
+{
+    if ([controlView isKindOfClass:[NSTextField class]]) {
+        cellFrame = NSInsetRect(cellFrame, 0.5, 0.5);
+    }
+    
+    [super drawWithFrame:cellFrame inView:controlView];
+    
+    if ([controlView isKindOfClass:[NSTextField class]]) {
+        
+        [NSGraphicsContext saveGraphicsState];
+        NSBezierPath *framePath = [NSBezierPath bezierPathWithRect:NSInsetRect(cellFrame, -0.5, -0.5)];
+        [framePath setWindingRule:NSEvenOddWindingRule];
+        
+        NSBezierPath *roundRect = [NSBezierPath bezierPathWithRoundedRect:cellFrame xRadius:4 yRadius:4];
+        [framePath appendBezierPath:roundRect];
+        
+        [[[controlView window] backgroundColor] setFill];
+        [framePath fill];
+        
+        [[NSColor darkGrayColor] setStroke];
+        [roundRect stroke];
+        
+        [NSGraphicsContext restoreGraphicsState];
+    }
+    
+#if 0
+    /*
+     Editing causes a white border to be drawn around the cell, and the focus ring doesn't
+     entirely fill it.  Mail has the same issue, so it's not worth playing with the text rect
+     to lessen the effect.  It's not drawn by super's drawWithFrame or drawInteriorWithFrame,
+     so it's probably the outline view itself.
+     */
+    if ([self showsFirstResponder]) {
+        [NSGraphicsContext saveGraphicsState];
+        NSSetFocusRingStyle(NSFocusRingAbove);
+        NSRectFill([self textRectForBounds:cellFrame]);
+        [NSGraphicsContext restoreGraphicsState];
+    }
+#endif
 }
 
 - (NSSize)cellSize;
@@ -231,3 +283,4 @@
 #endif
 
 @end
+

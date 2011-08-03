@@ -1,10 +1,10 @@
 //
-//  TLMFaviconCache.h
+//  TLMMirrorCell.h
 //  TeX Live Utility
 //
-//  Created by Adam R. Maxwell on 07/27/11.
+//  Created by Adam R. Maxwell on 11/20/10.
 /*
- This software is Copyright (c) 2011
+ This software is Copyright (c) 2010-2011
  Adam Maxwell. All rights reserved.
  
  Redistribution and use in source and binary forms, with or without
@@ -37,28 +37,17 @@
  */
 
 #import <Cocoa/Cocoa.h>
+#import "TLMFaviconCache.h"
 
-@class WebView;
-
-@interface TLMFaviconCache : NSObject 
+@interface TLMAddressTextFieldCell : NSTextFieldCell <TLMFaviconCacheDelegate>
 {
 @private
-    NSMutableArray      *_queue;
-    WebView             *_webview;
-    NSMutableDictionary *_iconsByURL;
-    NSImage             *_defaultFavicon;
-    BOOL                 _downloading;
+    NSImage *_icon;
 }
 
-+ (id)sharedCache;
+- (NSRect)iconRectForBounds:(NSRect)cellFrame;
+- (NSRect)textRectForBounds:(NSRect)cellFrame;
 
-// registers for callback when icon finishes downloading
-// callback is invoked immediately if the icon is already cached
-- (NSImage *)downloadIconForURL:(NSURL *)aURL delegate:(id)delegate;
+@property (nonatomic, retain) NSImage *icon;
 
 @end
-
-@protocol TLMFaviconCacheDelegate <NSObject>
-- (void)iconCache:(TLMFaviconCache *)cache downloadedIcon:(NSImage *)anIcon forURL:(NSURL *)aURL;
-@end
-
