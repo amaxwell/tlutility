@@ -41,7 +41,7 @@
 
 @interface TLMMirrorCell : NSTextFieldCell <TLMFaviconCacheDelegate>
 {
-@private
+@protected
     NSImage *_icon;
     NSSize   _inset;
     BOOL     _hasFavicon;

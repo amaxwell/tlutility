@@ -1,5 +1,5 @@
 //
-//  TLMMirrorTextField.m
+//  TLMAddressTextField.m
 //  TeX Live Utility
 //
 //  Created by Adam R. Maxwell on 07/24/11.
@@ -36,7 +36,7 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "TLMMirrorTextField.h"
+#import "TLMAddressTextField.h"
 #import "TLMMirrorCell.h"
 #import "BDSKTextViewCompletionController.h"
 
@@ -253,7 +253,7 @@ static inline BOOL forwardSelectorForCompletionInTextView(SEL selector, NSTextVi
 
 
 
-@implementation TLMMirrorTextField
+@implementation TLMAddressTextField
 
 /*
  I tried NSTrackingArea, but it only works on the fringes of the icon, or if you enter the

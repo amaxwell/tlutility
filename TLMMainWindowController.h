@@ -44,7 +44,7 @@
 @class TLMUpdateListDataSource;
 @class TLMInstallDataSource;
 @class TLMBackupDataSource;
-@class TLMMirrorTextField;
+@class TLMAddressTextField;
 
 @protocol TLMListDataSource <NSObject>
 @property (nonatomic, retain) TLMStatusWindow *statusWindow;
@@ -57,7 +57,7 @@
     NSProgressIndicator      *_progressIndicator;
     NSProgressIndicator      *_progressBar;
     TLMTabView               *_tabView;
-    TLMMirrorTextField       *_URLField;
+    TLMAddressTextField       *_URLField;
     NSURL                    *_serverURL;
     
     NSUInteger                _operationCount;
@@ -81,7 +81,7 @@
 
 @property (nonatomic, retain) IBOutlet NSProgressIndicator *_progressIndicator;
 @property (nonatomic, retain) IBOutlet NSProgressIndicator *_progressBar;
-@property (nonatomic, retain) IBOutlet TLMMirrorTextField *_URLField;
+@property (nonatomic, retain) IBOutlet TLMAddressTextField *_URLField;
 @property (nonatomic, retain) IBOutlet TLMPackageListDataSource *_packageListDataSource;
 @property (nonatomic, retain) IBOutlet TLMUpdateListDataSource *_updateListDataSource;
 @property (nonatomic, retain) IBOutlet TLMInstallDataSource *_installDataSource;

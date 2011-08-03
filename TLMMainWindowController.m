@@ -72,7 +72,7 @@
 #import "TLMLaunchAgentController.h"
 #import "TLMEnvironment.h"
 #import "TLMURLFormatter.h"
-#import "TLMMirrorTextField.h"
+#import "TLMAddressTextField.h"
 
 #import "TLMDatabase.h"
 #import "TLMDatabasePackage.h"
