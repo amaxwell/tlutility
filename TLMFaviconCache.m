@@ -232,8 +232,10 @@ static void __TLMFaviconCacheInit() { _sharedCache = [TLMFaviconCache new]; }
     
     id icon = [_iconsByURL objectForKey:[aURL host]];
     
-    if (icon == [NSNull null]) {
-        icon = [self defaultFavicon];
+    if (icon) {
+        
+        if ([NSNull null] == icon)
+            icon = [self defaultFavicon];
     }
     else {
         _TLMFaviconQueueItem *item = [[_TLMFaviconQueueItem alloc] initWithURL:aURL];
