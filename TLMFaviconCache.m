@@ -100,6 +100,17 @@ static void __TLMFaviconCacheInit() { _sharedCache = [TLMFaviconCache new]; }
     return _sharedCache;
 }
 
+- (NSImage *)_defaultFavicon
+{    
+    static bool didInit = false;
+    static NSImage *icon = nil;
+    if (false == didInit) {
+        NSString *imgPath = [[NSBundle bundleForClass:[WebView class]] pathForResource:@"url_icon" ofType:@"tiff"];
+        icon = [[NSImage alloc] initWithContentsOfFile:imgPath];
+    }
+    return icon;
+}
+
 - (id)init
 {
     self = [super init];
@@ -112,9 +123,9 @@ static void __TLMFaviconCacheInit() { _sharedCache = [TLMFaviconCache new]; }
          even if you've loaded a site that has a favicon (e.g., utah.edu).
          This was a nightmare to debug, since it only appeared if the first
          site loaded had a favicon.  Calling it once here takes care of the
-         problem.
+         problem, and as a bonus it provides us with the default favicon.
          */
-        (void)[_webview mainFrameIcon];
+        _defaultFavicon = [[_webview mainFrameIcon] retain];
         _iconsByURL = [NSMutableDictionary new];
     }
     return self;
@@ -127,7 +138,13 @@ static void __TLMFaviconCacheInit() { _sharedCache = [TLMFaviconCache new]; }
     [_webview release];
     [_queue release];
     [_iconsByURL release];
+    [_defaultFavicon release];
     [super dealloc];
+}
+
+- (NSImage *)defaultFavicon
+{
+    return _defaultFavicon ? _defaultFavicon : [self _defaultFavicon];
 }
 
 - (_TLMFaviconQueueItem *)_currentItem
@@ -200,24 +217,23 @@ static void __TLMFaviconCacheInit() { _sharedCache = [TLMFaviconCache new]; }
 {
     NSParameterAssert(aURL);
     // return nil for non-http icons, for symmetry with downloadIcon:delegate:
-    return [[aURL scheme] hasPrefix:@"http"] ? [_iconsByURL objectForKey:[aURL host]] : nil;
+    return [[aURL scheme] hasPrefix:@"http"] ? [_iconsByURL objectForKey:[aURL host]] : [self defaultFavicon];
 }
 
-- (void)downloadIconForURL:(NSURL *)aURL delegate:(id)delegate;
+- (NSImage *)downloadIconForURL:(NSURL *)aURL delegate:(id)delegate;
 {
     NSParameterAssert(aURL);
     NSParameterAssert(nil == delegate || [delegate conformsToProtocol:@protocol(TLMFaviconCacheDelegate)]);
     
     // !!! early return for non-http URLs
-    if ([[aURL scheme] hasPrefix:@"http"] == NO)
-        return;
+    if ([[aURL scheme] hasPrefix:@"http"] == NO) return [self defaultFavicon];
     
     aURL = [aURL tlm_normalizedURL];
     
-    if ([_iconsByURL objectForKey:[aURL host]]) {
-        id icon = [_iconsByURL objectForKey:[aURL host]];
-        if (icon != [NSNull null])
-            [delegate iconCache:self downloadedIcon:icon forURL:aURL];
+    id icon = [_iconsByURL objectForKey:[aURL host]];
+    
+    if (icon == [NSNull null]) {
+        icon = [self defaultFavicon];
     }
     else {
         _TLMFaviconQueueItem *item = [[_TLMFaviconQueueItem alloc] initWithURL:aURL];
@@ -232,8 +248,9 @@ static void __TLMFaviconCacheInit() { _sharedCache = [TLMFaviconCache new]; }
             [self _downloadItems];
         }
         [item release];
+        icon = [self defaultFavicon];
     }
-
+    return icon;
 }
 
 @end
