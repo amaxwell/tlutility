@@ -257,22 +257,23 @@ static char _TLMOperationQueueOperationContext;
     NSUInteger newCount = [count unsignedIntegerValue];
     if (_operationCount != newCount) {
         
-        /*
-         ??? _URLField is set (un)editable here depending on operation count,
-         which may not be the best long-term behavior.  Dealing with changes
-         during an operation (cancelling & starting) is more complicated than
-         I want to deal with at this time, particularly with multiple panes.
-         */
-        
         // previous count was zero, so spinner is currently stopped
         if (0 == _operationCount) {
             [_progressIndicator startAnimation:self];
-            [_URLField setEnabled:NO];
+            
+            // change address field to cancel
+            [_URLField setButtonImage:[NSImage imageNamed:NSImageNameStopProgressFreestandingTemplate]];
+            [_URLField setButtonTarget:self];
+            [_URLField setButtonAction:@selector(cancelAllOperations:)];
         }
         // previous count != 0, so spinner is currently animating
         else if (0 == newCount) {
             [_progressIndicator stopAnimation:self];
-            [_URLField setEnabled:YES];
+            
+            // change address field to refresh
+            [_URLField setButtonImage:[NSImage imageNamed:NSImageNameRefreshFreestandingTemplate]];
+            [_URLField setButtonTarget:self];
+            [_URLField setButtonAction:@selector(refresh:)];
         }
         
         // validation depends on this value
@@ -1232,21 +1233,27 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 
 - (IBAction)changeServerURL:(id)sender;
 {
-    NSURL *aURL;
-    NSString *err;
-    // manual validation for drag-and-drop; maybe another way to do this...
-    if ([[[_URLField cell] formatter] getObjectValue:&aURL forString:[_URLField stringValue] errorDescription:&err]) {
-        TLMLog(__func__, @"User changed URL to %@", [_URLField objectValue]);
-        [self setServerURL:[_URLField objectValue]];
+    if (_operationCount) {
+        TLMLog(__func__, @"Can't change URL while an operation is in progress");
+        [_URLField setStringValue:[[self serverURL] absoluteString]];
+        NSBeep();
     }
     else {
-        NSAlert *alert = [[NSAlert new] autorelease];
-        [alert setMessageText:NSLocalizedString(@"Invalid URL entered", @"alert title")];
-        [alert setInformativeText:err];
-        [alert beginSheetModalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
-        [_URLField setStringValue:[[self serverURL] absoluteString]];
+        NSURL *aURL;
+        NSString *err;
+        // manual validation for drag-and-drop; maybe another way to do this...
+        if ([[[_URLField cell] formatter] getObjectValue:&aURL forString:[_URLField stringValue] errorDescription:&err]) {
+            TLMLog(__func__, @"User changed URL to %@", [_URLField objectValue]);
+            [self setServerURL:[_URLField objectValue]];
+        }
+        else {
+            NSAlert *alert = [[NSAlert new] autorelease];
+            [alert setMessageText:NSLocalizedString(@"Invalid URL entered", @"alert title")];
+            [alert setInformativeText:err];
+            [alert beginSheetModalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
+            [_URLField setStringValue:[[self serverURL] absoluteString]];
+        }
     }
-
 }
 
 - (void)updateInfrastructure:(id)sender;
@@ -1265,6 +1272,13 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 }
 
 #pragma mark API
+
+- (void)refresh:(id)sender
+{
+    // not part of the protocol since it's meaningless for the install datasource
+    if ([_currentListDataSource respondsToSelector:@selector(refreshList:)])
+        [(id)_currentListDataSource refreshList:sender];
+}
 
 - (void)refreshFullPackageList
 {
