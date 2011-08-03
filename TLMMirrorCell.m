@@ -175,31 +175,6 @@
 }
 #endif
 
-- (BOOL)trackMouse:(NSEvent *)event inRect:(NSRect)cellFrame ofView:(NSView *)controlView untilMouseUp:(BOOL)flag;
-{
-    NSPoint mouseLoc = [controlView convertPoint:[event locationInWindow] fromView:nil];
-    if ([self icon] && NSMouseInRect(mouseLoc, [self iconRectForBounds:cellFrame], [controlView isFlipped])) {
-        
-        if (NSLeftMouseDragged == [[NSApp nextEventMatchingMask:NSLeftMouseUpMask | NSLeftMouseDraggedMask untilDate:[NSDate distantFuture] inMode:NSEventTrackingRunLoopMode dequeue:NO] type]) {        
-            NSPasteboard *pboard = [NSPasteboard pasteboardWithName:NSDragPboard];
-            [NSURL writeURLs:[NSArray arrayWithObject:[NSURL URLWithString:[self stringValue]]] toPasteboard:pboard];
-            NSImage *dragImage = [[[self icon] copy] autorelease];
-            NSSize dragImageSize = [self iconRectForBounds:cellFrame].size;
-            dragImageSize.width -= FAVICON_INSET.width * 2;
-            dragImageSize.height -= FAVICON_INSET.height * 2;
-            [dragImage setSize:dragImageSize];
-            NSPoint dragImageOrigin = [controlView convertPoint:[event locationInWindow] fromView:nil];
-            dragImageOrigin.x -= dragImageSize.width / 2;
-            dragImageOrigin.y = [controlView isFlipped] ? dragImageOrigin.y + dragImageSize.height / 2 : dragImageOrigin.y - dragImageSize.width / 2;
-            [controlView dragImage:dragImage at:dragImageOrigin offset:NSZeroSize event:event pasteboard:pboard source:controlView slideBack:YES];
-        }
-        return YES;
-    }
-    return [super trackMouse:event inRect:cellFrame ofView:controlView untilMouseUp:flag];
-}
-
-- (NSFocusRingType)focusRingType { return NSFocusRingTypeNone; }
-
 - (void)editWithFrame:(NSRect)cellFrame inView:(NSView *)controlView editor:(NSText *)textObj delegate:(id)anObject event:(NSEvent *)theEvent;
 {
     [super editWithFrame:[self textRectForBounds:cellFrame] inView:controlView editor:textObj delegate:anObject event:theEvent];
@@ -209,25 +184,5 @@
 {
     [super selectWithFrame:[self textRectForBounds:cellFrame] inView:controlView editor:textObj delegate:anObject start:selStart length:selLength];
 }
-
-#if 0
-- (NSUInteger)hitTestForEvent:(NSEvent *)event inRect:(NSRect)cellFrame ofView:(NSView *)controlView
-{
-    NSUInteger hit = NSCellHitNone;
-    NSPoint mouseLoc = [controlView convertPoint:[event locationInWindow] fromView:nil];
-    if (NSMouseInRect(mouseLoc, cellFrame, [controlView isFlipped]))
-        hit = NSCellHitContentArea;
-    
-    NSRect iconRect = [self iconRectForBounds:cellFrame];
-    
-    if (NSMouseInRect(mouseLoc, iconRect, [controlView isFlipped])) {
-        hit |= NSCellHitTrackableArea;
-    }
-    else if (NSMouseInRect(mouseLoc, [self textRectForBounds:cellFrame], [controlView isFlipped])) {
-        if ([self isEnabled]) hit |= NSCellHitEditableTextArea;
-    }
-    return hit;
-}
-#endif
 
 @end
