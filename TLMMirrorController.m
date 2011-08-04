@@ -177,14 +177,42 @@ static NSURL *__TLMTLNetURL(NSString *mirrorURLString)
     NSMutableArray *array = [NSMutableArray array];
     for (TLMMirrorNode *continentNode in _mirrorRoot) {
         
-        for (TLMMirrorNode *countryNode in continentNode) {
+        // if the search string is a particular continent, add all of its mirrors
+        if ([continentNode type] != TLMMirrorNodeURL && [[continentNode value] caseInsensitiveCompare:aString] == NSOrderedSame) {
             
-            for (TLMMirrorNode *URLNode in countryNode) {
+            for (TLMMirrorNode *countryNode in continentNode) {
                 
-                NSParameterAssert([URLNode type] == TLMMirrorNodeURL);
-                NSString *urlString = [[URLNode value] absoluteString];
-                if ([urlString rangeOfString:aString].length)
-                    [array addObject:urlString];
+                for (TLMMirrorNode *URLNode in countryNode) {
+                    
+                    NSParameterAssert([URLNode type] == TLMMirrorNodeURL);
+                    [array addObject:[[URLNode value] absoluteString]];
+                }
+            }
+        }
+        else {
+        
+            for (TLMMirrorNode *countryNode in continentNode) {
+                
+                // if the search string is a particular country, add all of its mirrors
+                if ([countryNode type] != TLMMirrorNodeURL && [[countryNode value] caseInsensitiveCompare:aString] == NSOrderedSame) {
+                                         
+                    for (TLMMirrorNode *URLNode in countryNode) {
+                        
+                        NSParameterAssert([URLNode type] == TLMMirrorNodeURL);
+                        [array addObject:[[URLNode value] absoluteString]];
+                    }
+                }
+                else {
+                
+                    // add specific mirrors from any continent
+                    for (TLMMirrorNode *URLNode in countryNode) {
+                        
+                        NSParameterAssert([URLNode type] == TLMMirrorNodeURL);
+                        NSString *urlString = [[URLNode value] absoluteString];
+                        if ([urlString rangeOfString:aString].length)
+                            [array addObject:urlString];
+                    }
+                }
             }
         }
     }
