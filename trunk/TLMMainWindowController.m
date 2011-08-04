@@ -560,7 +560,7 @@ static char _TLMOperationQueueOperationContext;
     const TLMDatabaseYear year = [[TLMEnvironment currentEnvironment] texliveYear];
     if ([db texliveYear] != year) {
         NSAlert *alert = [[NSAlert new] autorelease];
-        [alert setMessageText:NSLocalizedString(@"Current mirror has a different TeX Live version", @"alert title")];
+        [alert setMessageText:NSLocalizedString(@"Mirror has a different TeX Live version", @"alert title")];
         [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"The mirror at %@ has TeX Live %d, but you have TeX Live %d installed.  You need to adjust your preferences in order to continue.", @"alert text, two integer format specifiers"), [aURL absoluteString], [db texliveYear], year]];
         [alert beginSheetModalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
         TLMLog(__func__, @"Well, this is not going to work:  %@ has TeX Live %d, and the installed version is TeX Live %d", [aURL absoluteString], [db texliveYear], year);
@@ -1247,8 +1247,17 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
         NSString *err;
         // manual validation for drag-and-drop; maybe another way to do this...
         if ([[[_URLField cell] formatter] getObjectValue:&aURL forString:[_URLField stringValue] errorDescription:&err]) {
-            TLMLog(__func__, @"User changed URL to %@", [_URLField objectValue]);
-            [self setServerURL:[_URLField objectValue]];
+            
+            // will show an alert if there's a version mismatch
+            if ([self _isCorrectDatabaseVersionAtURL:aURL]) {
+                TLMLog(__func__, @"User changed URL to %@", [_URLField objectValue]);
+                [self setServerURL:[_URLField objectValue]];
+            }
+            else {
+                [_URLField setStringValue:[[self serverURL] absoluteString]];
+            }
+
+            
         }
         else {
             NSAlert *alert = [[NSAlert new] autorelease];
