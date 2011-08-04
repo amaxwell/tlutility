@@ -456,9 +456,11 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
     }
 }
 
-- (NSURL *)_validServerURL:(BOOL *)failed
+- (BOOL)_getValidServerURL:(NSURL **)outURL repositoryYear:(TLMDatabaseYear *)outYear
 {        
     NSParameterAssert(_installedYear != TLMDatabaseUnknownYear);
+    NSParameterAssert(outURL);
+    NSParameterAssert(outYear);
     
     /*
      Always recompute this, because if we're using the multiplexer, it's going to redirect to
@@ -468,9 +470,7 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
     TLMDatabase *db = [TLMDatabase databaseForMirrorURL:[self defaultServerURL]];
     const TLMDatabaseYear repositoryYear = [db texliveYear];
     NSURL *validURL = [db mirrorURL];
-    
-    if (failed) *failed = [db failed];
-    
+        
     if ([db failed]) {
         
         // not correct to show an error sheet here, since this may not be the main thread
@@ -508,11 +508,6 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
                 TLMLog(__func__, @"Version mismatch detected, but no fallback URL was found.");
                 // !!! return a nil URL; this is a stale server, and we might want to retry
             }
-            
-            // async sheet with no user interaction, so no point in waiting...
-            [self performSelectorOnMainThread:@selector(_displayFallbackServerAlertForRepositoryYear:) 
-                                   withObject:[NSNumber numberWithInteger:repositoryYear] 
-                                waitUntilDone:NO];
         }
         
         validURL = [self legacyRepositoryURL];
@@ -529,23 +524,41 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
         TLMLog(__func__, @"Mirror version appears to be %d; %@", repositoryYear, ageString);
     }
         
-    return validURL;
+    *outURL = validURL;
+    *outYear = repositoryYear;
+    return [db failed];
 }
 
 - (NSURL *)validServerURL
 {
-    BOOL failed;
-    NSURL *validURL = [self _validServerURL:&failed];
+    // will be nil on failure; always initialized
+    NSURL *validURL;
+    TLMDatabaseYear repositoryYear;
+    
+    // false return value signifies TLMDatabase failure (usually a network problem)
+    BOOL dbFailed = [self _getValidServerURL:&validURL repositoryYear:&repositoryYear];
 
-    // this is a special case for the multiplexer, which can return a stale server; retry under certain conditions
-    if (nil == validURL && [[self defaultServerURL] isMultiplexer] && NO == failed) {
+    /*
+     This is a special case for the multiplexer, which can return a stale server; retry
+     when have a nil URL but not due to a network issue.  This should mean that we were
+     not able to find a legacy repository, so likely it's an old server.  This happens
+     frequently around the time of a new TL release.
+     */
+    if (nil == validURL && [[self defaultServerURL] isMultiplexer] && NO == dbFailed) {
         int tryCount = 2;
         const int maxTries = 5;
         while (nil == validURL && tryCount <= maxTries) {
             TLMLog(__func__, @"Stale mirror returned from multiplexer.  Requesting another mirror (attempt %d of %d).", tryCount, maxTries);
-            validURL = [self _validServerURL:&failed];
+            (void) [self _getValidServerURL:&validURL repositoryYear:&repositoryYear];
             tryCount++;
         }
+    }
+    
+    // Moved this check out of _getValidServer:repositoryYear: to avoid issues in the loop above
+    if (nil == validURL && NO == dbFailed) {
+        [self performSelectorOnMainThread:@selector(_displayFallbackServerAlertForRepositoryYear:) 
+                               withObject:[NSNumber numberWithInteger:repositoryYear] 
+                            waitUntilDone:NO];
     }
     
     return validURL;
