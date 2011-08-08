@@ -54,6 +54,7 @@
     [_buttonCell setBordered:NO];
     [_buttonCell setImagePosition:NSImageOnly];
     [_buttonCell setImageScaling:NSImageScaleProportionallyUpOrDown];    
+    [_buttonCell setControlSize:[self controlSize]];
 }
 
 - (id)initTextCell:(NSString *)aString
@@ -142,7 +143,7 @@
     NSRect buttonRect = cellFrame;
     buttonRect.origin.x = NSMaxX(cellFrame) - NSHeight(cellFrame);
     buttonRect.size.width = NSHeight(cellFrame);
-    return NSInsetRect(buttonRect, 3, 3);
+    return NSInsetRect(buttonRect, 4, 4);
 }
 
 - (NSRect)textRectForBounds:(NSRect)cellFrame
