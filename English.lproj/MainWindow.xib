@@ -36,7 +36,7 @@
 				<string key="NSWindowClass">NSWindow</string>
 				<nil key="NSViewClass"/>
 				<string key="NSWindowContentMaxSize">{1.79769e+308, 1.79769e+308}</string>
-				<string key="NSWindowContentMinSize">{640, 300}</string>
+				<string key="NSWindowContentMinSize">{400, 300}</string>
 				<object class="NSView" key="NSWindowView" id="1006">
 					<reference key="NSNextResponder"/>
 					<int key="NSvFlags">256</int>
@@ -44,14 +44,14 @@
 						<object class="NSCustomView" id="122085614">
 							<reference key="NSNextResponder" ref="1006"/>
 							<int key="NSvFlags">274</int>
-							<string key="NSFrame">{{0, 32}, {600, 347}}</string>
+							<string key="NSFrame">{{0, 32}, {600, 353}}</string>
 							<reference key="NSSuperview" ref="1006"/>
 							<string key="NSClassName">TLMTabView</string>
 						</object>
 						<object class="NSSegmentedControl" id="346788096">
 							<reference key="NSNextResponder" ref="1006"/>
 							<int key="NSvFlags">264</int>
-							<string key="NSFrame">{{250, 378}, {100, 25}}</string>
+							<string key="NSFrame">{{250, 385}, {100, 25}}</string>
 							<reference key="NSSuperview" ref="1006"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSSegmentedCell" key="NSCell" id="582894233">
@@ -88,7 +88,7 @@
 						<object class="NSTextField" id="1047754984">
 							<reference key="NSNextResponder" ref="1006"/>
 							<int key="NSvFlags">270</int>
-							<string key="NSFrame">{{20, 417}, {394, 22}}</string>
+							<string key="NSFrame">{{20, 417}, {374, 22}}</string>
 							<reference key="NSSuperview" ref="1006"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="400353948">
@@ -133,9 +133,9 @@
 						</object>
 						<object class="NSProgressIndicator" id="1057310975">
 							<reference key="NSNextResponder" ref="1006"/>
-							<int key="NSvFlags">1313</int>
+							<int key="NSvFlags">1289</int>
 							<object class="NSPSMatrix" key="NSDrawMatrix"/>
-							<string key="NSFrame">{{406, 9}, {16, 16}}</string>
+							<string key="NSFrame">{{400, 419}, {16, 16}}</string>
 							<reference key="NSSuperview" ref="1006"/>
 							<int key="NSpiFlags">28938</int>
 							<double key="NSMaxValue">100</double>
@@ -322,7 +322,7 @@
 					<reference key="NSSuperview"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1440, 878}}</string>
-				<string key="NSMinSize">{640, 322}</string>
+				<string key="NSMinSize">{400, 322}</string>
 				<string key="NSMaxSize">{1.79769e+308, 1.79769e+308}</string>
 				<string key="NSFrameAutosaveName">Main Window</string>
 				<bool key="NSAutorecalculatesContentBorderThicknessMinY">NO</bool>
@@ -1450,8 +1450,8 @@
 							<reference ref="1047754984"/>
 							<reference ref="374636178"/>
 							<reference ref="168491833"/>
-							<reference ref="1057310975"/>
 							<reference ref="346788096"/>
+							<reference ref="1057310975"/>
 						</array>
 						<reference key="parent" ref="1005"/>
 					</object>
@@ -1918,7 +1918,7 @@
 				<string key="1.IBWindowTemplateEditedContentRect">{{382, 557}, {600, 439}}</string>
 				<integer value="1" key="1.NSWindowTemplate.visibleAtLaunch"/>
 				<boolean value="YES" key="1.windowTemplate.hasMinSize"/>
-				<string key="1.windowTemplate.minSize">{640, 300}</string>
+				<string key="1.windowTemplate.minSize">{400, 300}</string>
 				<string key="10.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="11.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="12.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1968,7 +1968,7 @@
 				<string key="231.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="232.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<object class="NSAffineTransform" key="232.IBViewBoundsToFrameTransform">
-					<bytes key="NSTransformStruct">P4AAAL+AAABDegAAw8qAAA</bytes>
+					<bytes key="NSTransformStruct">P4AAAL+AAABDegAAw8wAAA</bytes>
 				</object>
 				<string key="233.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="260.CustomClassName">TLMAddressTextField</string>
@@ -1984,7 +1984,7 @@
 				</object>
 				<string key="263.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<object class="NSAffineTransform" key="263.IBViewBoundsToFrameTransform">
-					<bytes key="NSTransformStruct">P4AAAL+AAABDzAAAwbgAAA</bytes>
+					<bytes key="NSTransformStruct">P4AAAL+AAABDywAAwbgAAA</bytes>
 				</object>
 				<string key="271.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<object class="NSAffineTransform" key="271.IBViewBoundsToFrameTransform">
