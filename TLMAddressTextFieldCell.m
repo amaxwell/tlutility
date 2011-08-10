@@ -152,6 +152,8 @@
     cellFrame.origin.x = NSMaxX(iconRect);
     cellFrame.size.width -= NSWidth(iconRect);
     cellFrame.size.width -= (NSWidth([self buttonRectForBounds:cellFrame]) + 2 /* padding */);
+    // adjust baseline to be vertically centered in the border
+    cellFrame.origin.y += ([[self controlView] isFlipped] ? -1 : 1);
     return cellFrame;    
 }
 
