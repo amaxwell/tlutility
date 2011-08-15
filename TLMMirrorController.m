@@ -261,7 +261,7 @@ static NSURL *__TLMTLNetURL(NSString *mirrorURLString)
 
 - (CGFloat)outlineView:(NSOutlineView *)outlineView heightOfRowByItem:(TLMMirrorNode *)item
 {
-    return [item type] == TLMMirrorNodeURL ? 24.0 : 17.0;
+    return [item type] == TLMMirrorNodeURL ? 21.0 : 17.0;
 }
 
 - (BOOL)outlineView:(NSOutlineView *)outlineView isGroupItem:(TLMMirrorNode *)item
