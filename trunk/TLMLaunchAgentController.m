@@ -246,7 +246,7 @@ static NSString * __TLMGetTemporaryDirectory()
     }
     
     [plist setObject:interval forKey:@"StartCalendarInterval"];
-    if ([[NSPropertyListSerialization dataWithPropertyList:plist format:NSPropertyListXMLFormat_v1_0 options:0 error:NULL] writeToFile:plistPath atomically:NO])
+    if ([[NSPropertyListSerialization dataFromPropertyList:plist format:NSPropertyListXMLFormat_v1_0 errorDescription:NULL] writeToFile:plistPath atomically:NO])
         [self setPropertyListPath:plistPath];    
 }
 
