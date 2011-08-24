@@ -56,6 +56,7 @@
     BOOL                     _refreshing;
     BOOL                     _ignoreSelectionChanges;
     BOOL                     _needsUpdate;
+    id                       _updatingPackage;
 }
 
 @property (nonatomic, retain) IBOutlet TLMTableView *tableView;
