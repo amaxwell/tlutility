@@ -146,20 +146,13 @@
     return NSInsetRect(buttonRect, 4, 4);
 }
 
-- (NSRect)textRectForBounds:(NSRect)cellFrame verticalOffset:(BOOL)flag
+- (NSRect)textRectForBounds:(NSRect)cellFrame
 {
     NSRect iconRect = [self iconRectForBounds:cellFrame];
     cellFrame.origin.x = NSMaxX(iconRect);
     cellFrame.size.width -= NSWidth(iconRect);
     cellFrame.size.width -= (NSWidth([self buttonRectForBounds:cellFrame]) + 2 /* padding */);
-    // adjust baseline to be vertically centered in the border
-    if (flag) cellFrame.origin.y += ([[self controlView] isFlipped] ? -1 : 1);
     return cellFrame;    
-}
-
-- (NSRect)textRectForBounds:(NSRect)cellFrame
-{
-    return [self textRectForBounds:cellFrame verticalOffset:NO];
 }
 
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
@@ -283,14 +276,25 @@
 
 - (NSFocusRingType)focusRingType { return NSFocusRingTypeNone; }
 
+// adjustments to avoid text jumping when editing or selecting
+static void __adjust_editor_rect(NSRect *textRect, NSView *controlView)
+{
+    textRect->origin.y += ([controlView isFlipped] ? -1 : 1);
+    textRect->origin.x -= 1;
+}
+
 - (void)editWithFrame:(NSRect)cellFrame inView:(NSView *)controlView editor:(NSText *)textObj delegate:(id)anObject event:(NSEvent *)theEvent;
 {
-    [super editWithFrame:[self textRectForBounds:cellFrame verticalOffset:YES] inView:controlView editor:textObj delegate:anObject event:theEvent];
+    NSRect textRect = [self textRectForBounds:cellFrame];
+    __adjust_editor_rect(&textRect, controlView);
+    [super editWithFrame:textRect inView:controlView editor:textObj delegate:anObject event:theEvent];
 }
 
 - (void)selectWithFrame:(NSRect)cellFrame inView:(NSView *)controlView editor:(NSText *)textObj delegate:(id)anObject start:(NSInteger)selStart length:(NSInteger)selLength;
 {
-    [super selectWithFrame:[self textRectForBounds:cellFrame verticalOffset:YES] inView:controlView editor:textObj delegate:anObject start:selStart length:selLength];
+    NSRect textRect = [self textRectForBounds:cellFrame];
+    __adjust_editor_rect(&textRect, controlView);
+    [super selectWithFrame:textRect inView:controlView editor:textObj delegate:anObject start:selStart length:selLength];
 }
 
 - (void)setButtonImage:(NSImage *)image { [_buttonCell setImage:image]; }
