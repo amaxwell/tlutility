@@ -65,6 +65,7 @@
 
 - (void)dealloc
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     _controller = nil;
     [_tableView setDelegate:nil];
     [_tableView setDataSource:nil];
@@ -74,6 +75,7 @@
     [_allPackages release];
     [_sortDescriptors release];
     [_statusWindow release];
+    [_updatingPackage release];
     [super dealloc];
 }
 
@@ -89,8 +91,12 @@
     [[[_tableView tableColumnWithIdentifier:@"size"] dataCell] setFormatter:sizeFormatter];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(_handleProgressNotification:)
+                                             selector:@selector(_handleIncrementalProgressNotification:)
                                                  name:TLMLogIncrementalProgressNotification
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(_handleProgressFinishedNotification:)
+                                                 name:TLMLogFinishedProgressNotification
                                                object:nil];
     [_tableView setDoubleAction:@selector(showInfo:)];
     [_tableView setTarget:self];
@@ -123,34 +129,53 @@
     [self _selectPackages:[_packages filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"name IN %@", names]]];
 }
 
-- (void)_handleProgressNotification:(NSNotification *)aNote
+- (void)_handleProgressFinishedNotification:(NSNotification *)aNote
+{
+    if (_updatingPackage) {
+        [_updatingPackage autorelease];
+        _updatingPackage = nil;
+        [_tableView reloadData];
+    }
+}
+
+- (void)_handleIncrementalProgressNotification:(NSNotification *)aNote
 {
     NSString *pkgName = [[aNote userInfo] objectForKey:TLMLogPackageName];
     if (pkgName) {
-        TLMPackage *toRemove = [[_allPackages filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"name LIKE %@", pkgName]] lastObject];
-        [[toRemove retain] autorelease];
+        TLMPackage *toRemove = [[[_allPackages filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"name LIKE %@", pkgName]] lastObject] retain];
         
-        NSMutableArray *toSelect = nil;
-        if ([_tableView numberOfSelectedRows]) {
-            toSelect = [[[_packages objectsAtIndexes:[_tableView selectedRowIndexes]] mutableCopy] autorelease];
-            [toSelect removeObject:toRemove];
+        [toRemove setStatus:[NSString stringWithFormat:@"%@%C", NSLocalizedString(@"Updating", @"package status"), 0x2026]];
+        
+        if (_updatingPackage) {
+        
+            NSMutableArray *toSelect = nil;
+            if ([_tableView numberOfSelectedRows]) {
+                toSelect = [[[_packages objectsAtIndexes:[_tableView selectedRowIndexes]] mutableCopy] autorelease];
+                [toSelect removeObject:_updatingPackage];
+            }
+            
+            // remove from the display array...
+            [_packages removeObjectIdenticalTo:_updatingPackage];        
+            // now remove from the full array
+            NSMutableArray *allPackages = [[_allPackages mutableCopy] autorelease];
+            [allPackages removeObjectIdenticalTo:_updatingPackage];
+            
+            // accessor does search:nil, which resets _packages and clears the search; we don't want that
+            [_allPackages release];
+            _allPackages = [allPackages copy];
+            
+            [_packages sortUsingDescriptors:_sortDescriptors];
+            [_tableView reloadData];
+            
+            // wait until after reloading to reselect...
+            [self _selectPackages:toSelect];
         }
-        
-        // remove from the display array...
-        [_packages removeObject:toRemove];        
-        // now remove from the full array
-        NSMutableArray *allPackages = [[_allPackages mutableCopy] autorelease];
-        [allPackages removeObject:toRemove];
-        
-        // accessor does search:nil, which resets _packages and clears the search; we don't want that
-        [_allPackages release];
-        _allPackages = [allPackages copy];
-        
-        [_packages sortUsingDescriptors:_sortDescriptors];
-        [_tableView reloadData];
-        
-        // wait until after reloading to reselect...
-        [self _selectPackages:toSelect];
+        else {
+            [_tableView reloadData];
+        }
+        [_updatingPackage autorelease];
+        _updatingPackage = toRemove;
+
     }
 }
 
