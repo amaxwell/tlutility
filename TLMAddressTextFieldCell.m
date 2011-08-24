@@ -146,15 +146,20 @@
     return NSInsetRect(buttonRect, 4, 4);
 }
 
-- (NSRect)textRectForBounds:(NSRect)cellFrame
+- (NSRect)textRectForBounds:(NSRect)cellFrame verticalOffset:(BOOL)flag
 {
     NSRect iconRect = [self iconRectForBounds:cellFrame];
     cellFrame.origin.x = NSMaxX(iconRect);
     cellFrame.size.width -= NSWidth(iconRect);
     cellFrame.size.width -= (NSWidth([self buttonRectForBounds:cellFrame]) + 2 /* padding */);
     // adjust baseline to be vertically centered in the border
-    cellFrame.origin.y += ([[self controlView] isFlipped] ? -1 : 1);
+    if (flag) cellFrame.origin.y += ([[self controlView] isFlipped] ? -1 : 1);
     return cellFrame;    
+}
+
+- (NSRect)textRectForBounds:(NSRect)cellFrame
+{
+    return [self textRectForBounds:cellFrame verticalOffset:NO];
 }
 
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
@@ -280,12 +285,12 @@
 
 - (void)editWithFrame:(NSRect)cellFrame inView:(NSView *)controlView editor:(NSText *)textObj delegate:(id)anObject event:(NSEvent *)theEvent;
 {
-    [super editWithFrame:[self textRectForBounds:cellFrame] inView:controlView editor:textObj delegate:anObject event:theEvent];
+    [super editWithFrame:[self textRectForBounds:cellFrame verticalOffset:YES] inView:controlView editor:textObj delegate:anObject event:theEvent];
 }
 
 - (void)selectWithFrame:(NSRect)cellFrame inView:(NSView *)controlView editor:(NSText *)textObj delegate:(id)anObject start:(NSInteger)selStart length:(NSInteger)selLength;
 {
-    [super selectWithFrame:[self textRectForBounds:cellFrame] inView:controlView editor:textObj delegate:anObject start:selStart length:selLength];
+    [super selectWithFrame:[self textRectForBounds:cellFrame verticalOffset:YES] inView:controlView editor:textObj delegate:anObject start:selStart length:selLength];
 }
 
 - (void)setButtonImage:(NSImage *)image { [_buttonCell setImage:image]; }
