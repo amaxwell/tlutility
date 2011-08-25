@@ -42,6 +42,8 @@
 #import <WebKit/WebKit.h>
 #import <pthread.h>
 
+#define FAVICON_TIMEOUT 10.0
+
 @interface _TLMFaviconQueueItem : NSObject
 {
     NSURL        *_iconURL;
@@ -156,11 +158,28 @@ static void __TLMFaviconCacheInit() { _sharedCache = [TLMFaviconCache new]; }
 {
     if ([_queue count] && NO == _downloading) {
         _TLMFaviconQueueItem *item = [self _currentItem];
-        NSURLRequest *request = [NSURLRequest requestWithURL:[item iconURL] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:10];
+        NSURLRequest *request = [NSURLRequest requestWithURL:[item iconURL] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:FAVICON_TIMEOUT];
         [[_webview mainFrame] loadRequest:request];
-        TLMLog(__func__, @"Loading favicon for %@", [item iconURL]);
         _downloading = YES;
+        
+        // retain cycle here; not a problem, since it expires quickly (and this is a singleton anyway)
+        _cancelTimer = [NSTimer scheduledTimerWithTimeInterval:FAVICON_TIMEOUT target:self selector:@selector(_cancelFaviconLoad:) userInfo:nil repeats:NO];
     }
+}
+
+- (void)_cancelFaviconLoad:(NSTimer *)timer
+{
+    _TLMFaviconQueueItem *item = [self _currentItem];
+    if (timer)
+        TLMLog(__func__, @"Stopping attempted download of %@ due to timeout", [item iconURL]);
+    [_iconsByURL setObject:[NSNull null] forKey:[[item iconURL] host]];
+    [_webview stopLoading:nil];
+    [_queue removeLastObject];
+    _downloading = NO;
+    [_cancelTimer invalidate];
+    _cancelTimer = nil;
+    
+    [self _downloadItems];
 }
 
 - (void)webView:(WebView *)sender didReceiveServerRedirectForProvisionalLoadForFrame:(WebFrame *)frame
@@ -170,13 +189,8 @@ static void __TLMFaviconCacheInit() { _sharedCache = [TLMFaviconCache new]; }
 
 - (void)webView:(WebView *)sender didFailLoadWithError:(NSError *)error forFrame:(WebFrame *)frame;
 {
-    _TLMFaviconQueueItem *item = [self _currentItem];
-    TLMLog(__func__, @"Failed to download icon for %@", [item iconURL]);
-    [_iconsByURL setObject:[NSNull null] forKey:[[item iconURL] host]];
-    [_webview stopLoading:nil];
-    [_queue removeLastObject];
-    _downloading = NO;
-    [self _downloadItems];
+    TLMLog(__func__, @"Failed to download icon for %@", [[self _currentItem] iconURL]);
+    [self _cancelFaviconLoad:nil];
 }
 
 - (void)webView:(WebView *)sender didFinishLoadForFrame:(WebFrame *)frame;
@@ -199,6 +213,9 @@ static void __TLMFaviconCacheInit() { _sharedCache = [TLMFaviconCache new]; }
         [_webview stopLoading:nil];
         [_queue removeLastObject];
         _downloading = NO;
+        [_cancelTimer invalidate];
+        _cancelTimer = nil;
+        
         [self _downloadItems];
     }
 }

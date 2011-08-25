@@ -48,6 +48,7 @@
     NSMutableDictionary *_iconsByURL;
     NSImage             *_defaultFavicon;
     BOOL                 _downloading;
+    NSTimer             *_cancelTimer;
 }
 
 + (id)sharedCache;
