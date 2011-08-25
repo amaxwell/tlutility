@@ -141,7 +141,7 @@ static NSString *__TLMGetTemporaryDirectory()
             TLMLog(__func__, @"Received %.0f%% of %lld bytes%C", pct, _expectedLength, 0x2026);
         }
         NSDictionary *userInfo = [NSDictionary dictionaryWithObject:[NSNumber numberWithUnsignedInteger:length] forKey:TLMLogSize];
-        NSNotification *note = [NSNotification notificationWithName:TLMLogIncrementalProgressNotification
+        NSNotification *note = [NSNotification notificationWithName:TLMLogDidIncrementProgressNotification
                                                              object:self
                                                            userInfo:userInfo];
         [[NSNotificationCenter defaultCenter] performSelectorOnMainThread:@selector(postNotification:) withObject:note waitUntilDone:NO];
