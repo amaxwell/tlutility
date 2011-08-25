@@ -95,6 +95,7 @@
 - (void)showWindow:(id)sender
 {
     [super showWindow:sender];
+    [_tableView reloadData];
     // showWindow is called in response to user action, so it's okay to force an update and scroll
     TLMLogServerSync();
     [_tableView scrollRowToVisible:([_tableView numberOfRows] - 1)];
