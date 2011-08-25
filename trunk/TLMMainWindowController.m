@@ -161,7 +161,7 @@ static char _TLMOperationQueueOperationContext;
                                                object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(_updateProgressBar:)
-                                                 name:TLMLogIncrementalProgressNotification
+                                                 name:TLMLogDidIncrementProgressNotification
                                                object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(_stopProgressBar:)

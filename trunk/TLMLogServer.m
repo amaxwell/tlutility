@@ -45,10 +45,12 @@
 NSString * const TLMLogServerUpdateNotification = @"TLMLogServerUpdateNotification";
 NSString * const TLMLogTotalProgressNotification = @"TLMLogTotalProgressNotification";
 NSString * const TLMLogFinishedProgressNotification = @"TLMLogFinishedProgressNotification";
-NSString * const TLMLogIncrementalProgressNotification = @"TLMLogIncrementalProgressNotification";
+NSString * const TLMLogDidIncrementProgressNotification = @"TLMLogDidIncrementProgressNotification";
+NSString * const TLMLogWillIncrementProgressNotification = @"TLMLogWillIncrementProgressNotification";
 NSString * const TLMLogServerSyncNotification = @"TLMLogServerSyncNotification";
 NSString * const TLMLogSize = @"TLMLogSize";
 NSString * const TLMLogPackageName = @"TLMLogPackageName";
+NSString * const TLMLogStatusMessage = @"TLMLogStatusMessage";
 
 @implementation TLMLogServer
 
@@ -177,11 +179,22 @@ static NSConnection * __TLMLSCreateAndRegisterConnectionForServer(TLMLogServer *
                                                    forModes:_runLoopModes];
 }
 
-- (void)_processNextNotification:(NSNotification *)note
+- (void)_processNextNotification:(NSDictionary *)userInfo
 {
     NSParameterAssert([NSThread isMainThread]);
+    
+    // post the pre-install/update notification
+    NSNotification *note = [NSNotification notificationWithName:TLMLogWillIncrementProgressNotification
+                                                         object:self
+                                                       userInfo:userInfo];
+    [[NSNotificationCenter defaultCenter] postNotification:note];
+    
+    // post the previous install/update notification, which is now a completed operation
     if (_nextNotification)
         [[NSNotificationCenter defaultCenter] postNotification:_nextNotification];
+
+    // now set up the next post-install/update notification
+    note = [NSNotification notificationWithName:TLMLogDidIncrementProgressNotification object:self userInfo:userInfo];
     [_nextNotification autorelease];
     _nextNotification = [note retain];
 }
@@ -232,17 +245,14 @@ static NSConnection * __TLMLSCreateAndRegisterConnectionForServer(TLMLogServer *
             parsedMessage = [status stringByAppendingString:[comps objectAtIndex:0]];
             
             NSInteger bytes = [[comps objectAtIndex:4] integerValue];
-            NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInteger:(NSUInteger)bytes], TLMLogSize, [comps objectAtIndex:0], TLMLogPackageName, nil];
-            NSNotification *note = [NSNotification notificationWithName:TLMLogIncrementalProgressNotification
-                                                                 object:self
-                                                               userInfo:userInfo];
+            NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInteger:(NSUInteger)bytes], TLMLogSize, [comps objectAtIndex:0], TLMLogPackageName, [status stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]], TLMLogStatusMessage, nil];
 
             /*
              Main thread perform is expensive, but these are fairly low frequency events, and it's not doing much else.
              This is a workaround for tlmgr printing /before/ it installs a package, rather than after.  I need the
              notifications posted after install, or the progress bar doesn't work correctly.
              */
-            [self performSelectorOnMainThread:@selector(_processNextNotification:) withObject:note waitUntilDone:NO modes:_runLoopModes];
+            [self performSelectorOnMainThread:@selector(_processNextNotification:) withObject:userInfo waitUntilDone:NO modes:_runLoopModes];
         }
         else if ([msg hasPrefix:@"total-bytes"]) {
             
