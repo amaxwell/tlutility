@@ -110,14 +110,23 @@
 			</dict>
 			<dict>
 				<key>country</key>
+				<string>India</string>
+				<key>name</key>
+				<string>ekalavya.imsc.res.in</string>
+				<key>urls</key>
+				<array>
+					<string>http://ekalavya.imsc.res.in/tex-archive/</string>
+				</array>
+			</dict>
+			<dict>
+				<key>country</key>
 				<string>Indonesia</string>
 				<key>name</key>
 				<string>ctan.cermin.lipi.go.id</string>
 				<key>urls</key>
 				<array>
-					<string>ftp://cermin.lipi.go.id/pub/tex-archive/</string>
 					<string>http://ctan.cermin.lipi.go.id/</string>
-					<string>rsync://cermin.lipi.go.id/CTAN/</string>
+					<string>rsync://ctan.cermin.lipi.go.id/CTAN/</string>
 				</array>
 			</dict>
 			<dict>
@@ -392,16 +401,6 @@
 				<key>country</key>
 				<string>France</string>
 				<key>name</key>
-				<string>ctan.chaoscdn.de</string>
-				<key>urls</key>
-				<array>
-					<string>http://ctan.chaoscdn.de/</string>
-				</array>
-			</dict>
-			<dict>
-				<key>country</key>
-				<string>France</string>
-				<key>name</key>
 				<string>ctan.mines-albi.fr</string>
 				<key>urls</key>
 				<array>
@@ -635,6 +634,16 @@
 			</dict>
 			<dict>
 				<key>country</key>
+				<string>Italy</string>
+				<key>name</key>
+				<string>ctan.mirror.garr.it</string>
+				<key>urls</key>
+				<array>
+					<string>http://ctan.mirror.garr.it/mirrors/CTAN/</string>
+				</array>
+			</dict>
+			<dict>
+				<key>country</key>
 				<string>Lithuania</string>
 				<key>name</key>
 				<string>ctan.vgtu.lt</string>
@@ -788,17 +797,6 @@
 				<key>country</key>
 				<string>Russia</string>
 				<key>name</key>
-				<string>ftp.chg.ru</string>
-				<key>urls</key>
-				<array>
-					<string>ftp://ftp.chg.ru/pub/TeX/CTAN</string>
-					<string>http://ftp.chg.ru/</string>
-				</array>
-			</dict>
-			<dict>
-				<key>country</key>
-				<string>Russia</string>
-				<key>name</key>
 				<string>ftp.vsu.ru</string>
 				<key>urls</key>
 				<array>
@@ -857,29 +855,6 @@
 				<array>
 					<string>ftp://ftp.gui.uva.es/sites/ctan.org/</string>
 					<string>http://ftp.gui.uva.es/sites/ctan.org/</string>
-				</array>
-			</dict>
-			<dict>
-				<key>country</key>
-				<string>Spain</string>
-				<key>name</key>
-				<string>ftp.rediris.es</string>
-				<key>urls</key>
-				<array>
-					<string>ftp://ftp.rediris.es/mirror/tex-archive</string>
-					<string>http://ftp.rediris.es/mirror/tex-archive</string>
-				</array>
-			</dict>
-			<dict>
-				<key>country</key>
-				<string>Spain</string>
-				<key>name</key>
-				<string>ftp.udc.es</string>
-				<key>urls</key>
-				<array>
-					<string>ftp://ftp.udc.es/CTAN/</string>
-					<string>http://ftp.udc.es/CTAN/</string>
-					<string>rsync://rsync.udc.es/CTAN/</string>
 				</array>
 			</dict>
 			<dict>
@@ -979,8 +954,8 @@
 				<string>ctan.cms.math.ca</string>
 				<key>urls</key>
 				<array>
-					<string>ftp://ctan.cms.math.ca/tex-archive</string>
-					<string>http://ctan.math.ca/</string>
+					<string>ftp://ctan.cms.math.ca/tex-archive/</string>
+					<string>http://ctan.math.ca/tex-archive/</string>
 				</array>
 			</dict>
 			<dict>
@@ -1058,7 +1033,7 @@
 				<key>urls</key>
 				<array>
 					<string>ftp://ctan.math.utah.edu/tex-archive</string>
-					<string>http://www.math.utah.edu/pub/ctan/</string>
+					<string>http://ctan.math.utah.edu/ctan/tex-archive/</string>
 				</array>
 			</dict>
 			<dict>
@@ -1248,6 +1223,6 @@
 		</array>
 	</dict>
 	<key>timestamp</key>
-	<real>1307159173.6854041</real>
+	<real>1314235441.716578</real>
 </dict>
 </plist>
