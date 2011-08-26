@@ -1269,6 +1269,12 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     }
 }
 
+- (IBAction)goHome:(id)sender;
+{
+    [_URLField setStringValue:[[[TLMEnvironment currentEnvironment] validServerURL] absoluteString]];
+    [self changeServerURL:nil];
+}
+
 - (void)updateInfrastructure:(id)sender;
 {
     TLMLog(__func__, @"Beginning user-requested infrastructure update%C", 0x2026);
