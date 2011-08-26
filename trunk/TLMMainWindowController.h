@@ -78,6 +78,7 @@
 - (IBAction)automaticUpdateCheck:(id)sender;
 - (IBAction)cancelAllOperations:(id)sender;
 - (IBAction)changeServerURL:(id)sender;
+- (IBAction)goHome:(id)sender;
 
 @property (nonatomic, retain) IBOutlet NSProgressIndicator *_progressIndicator;
 @property (nonatomic, retain) IBOutlet NSProgressIndicator *_progressBar;
