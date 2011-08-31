@@ -82,6 +82,7 @@
 // only declare here if reorganizing the implementation isn't practical
 - (void)_refreshCurrentDataSourceIfNeeded;
 - (void)_refreshLocalDatabase;
+- (void)_displayStatusString:(NSString *)statusString dataSource:(id <TLMListDataSource>)dataSource;
 @end
 
 
@@ -215,17 +216,30 @@ static char _TLMOperationQueueOperationContext;
 {
     [super windowDidLoad];
     
+    // checkbox in IB doesn't work?
+    [[[self window] toolbar] setAutosavesConfiguration:YES];   
+}
+
+- (void)showWindow:(id)sender
+{
+    [super showWindow:sender];
+
+    static BOOL __windowDidShow = NO;
+    if (__windowDidShow) return;
+    __windowDidShow = YES;
+    
     // set the dirty bit on all datasources
     [_updateListDataSource setNeedsUpdate:YES];
     [_packageListDataSource setNeedsUpdate:YES];
     [_backupDataSource setNeedsUpdate:YES];
     [_installDataSource setNeedsUpdate:YES];
     
-    // checkbox in IB doesn't work?
-    [[[self window] toolbar] setAutosavesConfiguration:YES];    
-    
     // do this after the window loads, so something is visible right away
-    _serverURL = [[[TLMEnvironment currentEnvironment] validServerURL] copy];    
+    if ([[[TLMEnvironment currentEnvironment] defaultServerURL] isMultiplexer])
+        [self _displayStatusString:[NSString stringWithFormat:@"%@%C", NSLocalizedString(@"Validating Server", @"status message"), 0x2026]
+                                                   dataSource:_updateListDataSource];
+    _serverURL = [[[TLMEnvironment currentEnvironment] validServerURL] copy];
+    [self _displayStatusString:nil dataSource:_updateListDataSource];
     
     // !!! end up with a bad environment if this is the multiplexer, and the UI gets out of sync
     if (nil == _serverURL)
@@ -684,13 +698,23 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     [self _displayStatusString:statusString dataSource:_updateListDataSource];
 }
 
+- (void)_handleRefreshLocalDatabaseFinishedNotification:(NSNotification *)aNote
+{
+    TLMLoadDatabaseOperation *op = [aNote object];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:TLMOperationFinishedNotification object:op];
+    [self _displayStatusString:nil dataSource:_updateListDataSource];
+}
+
 - (void)_refreshLocalDatabase
 {
     if ([[TLMEnvironment currentEnvironment] tlmgrSupportsDumpTlpdb]) {
+        // pick a datasource to use here; doesn't matter which, as long as it's the same in the callback
+        [self _displayStatusString:[NSString stringWithFormat:@"%@%C", NSLocalizedString(@"Loading Database", @"status message"), 0x2026]
+                        dataSource:_updateListDataSource];
         TLMLog(__func__, @"Updating local package database");
         NSURL *mirror = [[TLMEnvironment currentEnvironment] defaultServerURL];
         TLMLoadDatabaseOperation *op = [[TLMLoadDatabaseOperation alloc] initWithLocation:mirror offline:YES];
-        [self _addOperation:op selector:NULL setRefreshingForDataSource:nil];
+        [self _addOperation:op selector:@selector(_handleRefreshLocalDatabaseFinishedNotification:) setRefreshingForDataSource:nil];
         [op release];
     }   
 }
@@ -1271,7 +1295,11 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 
 - (IBAction)goHome:(id)sender;
 {
+    if ([[[TLMEnvironment currentEnvironment] defaultServerURL] isMultiplexer])
+        [self _displayStatusString:[NSString stringWithFormat:@"%@%C", NSLocalizedString(@"Validating Server", @"status message"), 0x2026]
+                        dataSource:_currentListDataSource];
     [_URLField setStringValue:[[[TLMEnvironment currentEnvironment] validServerURL] absoluteString]];
+    [self _displayStatusString:nil dataSource:_currentListDataSource];
     [self changeServerURL:nil];
 }
 
