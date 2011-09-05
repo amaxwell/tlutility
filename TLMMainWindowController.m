@@ -745,9 +745,14 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     // ignore operations that failed or were explicitly cancelled
     if ([op failed]) {
         NSAlert *alert = [[NSAlert new] autorelease];
-        [alert setMessageText:NSLocalizedString(@"The installation failed.", @"alert title")];
-        [alert setInformativeText:NSLocalizedString(@"The installation process appears to have failed.  Please check the log display below for details.", @"alert message text")];
-        [alert beginSheetModalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];                    
+        [alert setMessageText:NSLocalizedString(@"The update failed.", @"alert title")];
+        [alert setInformativeText:NSLocalizedString(@"The update process appears to have failed. Would you like to show the log now or ignore this warning?", @"alert message text")];
+        [alert addButtonWithTitle:NSLocalizedString(@"Show Log", @"button title")];
+        [alert addButtonWithTitle:NSLocalizedString(@"Ignore", @"button title")];
+        [alert beginSheetModalForWindow:[self window] 
+                          modalDelegate:self 
+                         didEndSelector:@selector(alertForLogWindowDidEnd:returnCode:contextInfo:) 
+                            contextInfo:NULL];                
     }
     else if ([op isCancelled] == NO) {
         
@@ -784,12 +789,15 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
                                     contextInfo:NULL];
             }
             else {
+                [self _displayStatusString:NSLocalizedString(@"Infrastructure Update Succeeded", @"status message") dataSource:_updateListDataSource];
                 [self _refreshUpdatedPackageListFromLocation:[self serverURL]];
             }
             
         }
         else {
             
+#warning too many messages
+            [self _displayStatusString:NSLocalizedString(@"Update Succeeded", @"status message") dataSource:_updateListDataSource];
             [self _refreshLocalDatabase];
             
             [_updateListDataSource setNeedsUpdate:YES];
@@ -822,6 +830,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     [[NSNotificationCenter defaultCenter] removeObserver:self name:TLMOperationFinishedNotification object:op];
     if ([op failed]) {
         TLMLog(__func__, @"Failed to change paper size.  Error was: %@", [op errorMessages]);
+        [self _displayStatusString:NSLocalizedString(@"Paper Size Change Failed", @"status message") dataSource:_updateListDataSource];
     }
 }
 
@@ -857,6 +866,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     [[NSNotificationCenter defaultCenter] removeObserver:self name:TLMOperationFinishedNotification object:op];
     if ([op failed]) {
         TLMLog(__func__, @"Pruning failed.  Error was: %@", [op errorMessages]);
+        [self _displayStatusString:NSLocalizedString(@"Backup Pruning Failed", @"status message") dataSource:_backupDataSource];
     }
     else {
         [_backupDataSource setNeedsUpdate:YES];
@@ -981,9 +991,9 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     NSString *statusString = nil;
     
     if ([op isCancelled])
-        statusString = NSLocalizedString(@"Listing Cancelled", @"main window status string");
+        statusString = NSLocalizedString(@"Database Loading Cancelled", @"main window status string");
     else if ([op failed])
-        statusString = NSLocalizedString(@"Listing Failed", @"main window status string");
+        statusString = NSLocalizedString(@"Database Loading Failed", @"main window status string");
     
     [self _displayStatusString:statusString dataSource:_packageListDataSource];
 }
@@ -1034,6 +1044,13 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     }
 }
 
+- (void)alertForLogWindowDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
+{
+    if (NSAlertFirstButtonReturn == returnCode) {
+        [[NSApp delegate] showLogWindow:nil];
+    }
+}
+
 - (void)_handleInstallFinishedNotification:(NSNotification *)aNote
 {
     TLMInstallOperation *op = [aNote object];
@@ -1043,10 +1060,18 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     if ([op failed]) {
         NSAlert *alert = [[NSAlert new] autorelease];
         [alert setMessageText:NSLocalizedString(@"Install failed.", @"alert title")];
-        [alert setInformativeText:NSLocalizedString(@"The install process appears to have failed.  Please check the log display below for details.", @"alert message text")];
-        [alert beginSheetModalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];                    
+        [alert setInformativeText:NSLocalizedString(@"The install process appears to have failed. Would you like to show the log now or ignore this warning?", @"alert message text")];
+        [alert addButtonWithTitle:NSLocalizedString(@"Show Log", @"button title")];
+        [alert addButtonWithTitle:NSLocalizedString(@"Ignore", @"button title")];
+        [alert beginSheetModalForWindow:[self window] 
+                          modalDelegate:self 
+                         didEndSelector:@selector(alertForLogWindowDidEnd:returnCode:contextInfo:) 
+                            contextInfo:NULL];                    
     }
     else if ([op isCancelled] == NO) {
+        
+        // also gets called for _installDataSource, but that's pretty rare
+        [self _displayStatusString:NSLocalizedString(@"Install Succeeded", @"status message") dataSource:_packageListDataSource];
         
         [self _refreshLocalDatabase];
         
@@ -1079,10 +1104,17 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     if ([op failed]) {
         NSAlert *alert = [[NSAlert new] autorelease];
         [alert setMessageText:NSLocalizedString(@"Removal failed.", @"alert title")];
-        [alert setInformativeText:NSLocalizedString(@"The removal process appears to have failed.  Please check the log display below for details.", @"alert message text")];
-        [alert beginSheetModalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];                    
+        [alert setInformativeText:NSLocalizedString(@"The removal process appears to have failed. Would you like to show the log now or ignore this warning?", @"alert message text")];
+        [alert addButtonWithTitle:NSLocalizedString(@"Show Log", @"button title")];
+        [alert addButtonWithTitle:NSLocalizedString(@"Ignore", @"button title")];
+        [alert beginSheetModalForWindow:[self window] 
+                          modalDelegate:self 
+                         didEndSelector:@selector(alertForLogWindowDidEnd:returnCode:contextInfo:) 
+                            contextInfo:NULL];                 
     }
     else if ([op isCancelled] == NO) {
+        
+        [self _displayStatusString:NSLocalizedString(@"Removal Succeeded", @"status message") dataSource:_packageListDataSource];
         
         [_updateListDataSource setNeedsUpdate:YES];
         [_packageListDataSource setNeedsUpdate:YES];
@@ -1102,10 +1134,17 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     if ([op failed]) {
         NSAlert *alert = [[NSAlert new] autorelease];
         [alert setMessageText:NSLocalizedString(@"Restore failed.", @"alert title")];
-        [alert setInformativeText:NSLocalizedString(@"The restore process appears to have failed.  Please check the log display below for details.", @"alert message text")];
-        [alert beginSheetModalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];                    
+        [alert setInformativeText:NSLocalizedString(@"The restore process appears to have failed. Would you like to show the log now or ignore this warning?", @"alert message text")];
+        [alert addButtonWithTitle:NSLocalizedString(@"Show Log", @"button title")];
+        [alert addButtonWithTitle:NSLocalizedString(@"Ignore", @"button title")];
+        [alert beginSheetModalForWindow:[self window] 
+                          modalDelegate:self 
+                         didEndSelector:@selector(alertForLogWindowDidEnd:returnCode:contextInfo:) 
+                            contextInfo:NULL];              
     }
     else if ([op isCancelled] == NO) {
+        
+        [self _displayStatusString:NSLocalizedString(@"Restore Succeeded", @"status message") dataSource:_backupDataSource];
         
         [_updateListDataSource setNeedsUpdate:YES];
         [_packageListDataSource setNeedsUpdate:YES];
