@@ -57,12 +57,15 @@ typedef NSUInteger TLMLogMessageFlags;
     TLMLogMessageFlags  _flags;
 }
 
+- (id)initWithPropertyList:(NSDictionary *)plist;
+
 @property (readwrite, copy) NSDate *date;
 @property (readwrite, copy) NSString *message;
 @property (readwrite, copy) NSString *sender;
 @property (readwrite, copy) NSString *level;
 @property (readwrite) pid_t pid;
 @property (readwrite) TLMLogMessageFlags flags;
+@property (readonly) NSDictionary *propertyList;
 
 @end
 

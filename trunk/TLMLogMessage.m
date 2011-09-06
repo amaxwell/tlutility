@@ -86,9 +86,35 @@
     return self;
 }
 
+- (id)initWithPropertyList:(NSDictionary *)plist
+{
+    self = [super init];
+    if (self) {
+        _date = [[plist objectForKey:@"_date"] copy];
+        _message = [[plist objectForKey:@"_message"] copy];
+        _sender = [[plist objectForKey:@"_sender"] copy];
+        _level = [[plist objectForKey:@"_level"] copy];
+        _pid = [[plist objectForKey:@"_pid"] unsignedIntegerValue];
+        _flags = [[plist objectForKey:@"_flags"] unsignedIntegerValue];
+    }
+    return self;
+}
+
 - (id)replacementObjectForPortCoder:(NSPortCoder *)encoder
 {
     return [encoder isByref] ? (id)[NSDistantObject proxyWithLocal:self connection:[encoder connection]] : (id)self;
+}
+
+- (id)propertyList
+{
+    NSMutableDictionary *plist = [NSMutableDictionary dictionary];
+    [plist setObject:_date forKey:@"_date"];
+    [plist setObject:_message forKey:@"_message"];
+    [plist setObject:_sender forKey:@"_sender"];
+    [plist setObject:_level forKey:@"_level"];
+    [plist setObject:[NSNumber numberWithUnsignedInteger:_pid] forKey:@"_pid"];
+    [plist setObject:[NSNumber numberWithUnsignedInteger:_flags] forKey:@"_flags"];
+    return plist;
 }
 
 - (NSUInteger)hash { return [_date hash]; }
