@@ -43,13 +43,16 @@
 @interface TLMLogWindowController : NSWindowController <NSWindowDelegate>
 {
 @private
-    TLMTableView           *_tableView;
-    NSMutableArray         *_messages;
+    TLMTableView           *_sessionTableView;
+    TLMTableView           *_messageTableView;
     CFMutableDictionaryRef  _rowHeights;
     BOOL                    _updateScheduled;
+    NSDate                 *_displayedSessionDate;
+    NSMutableDictionary    *_messagesByDate;
 }
 
-@property (nonatomic, retain) IBOutlet TLMTableView *_tableView;
+@property (nonatomic, retain) IBOutlet TLMTableView *_messageTableView;
+@property (nonatomic, retain) IBOutlet TLMTableView *_sessionTableView;
 
 @end
 

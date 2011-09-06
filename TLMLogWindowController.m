@@ -44,7 +44,39 @@
 
 @implementation TLMLogWindowController
 
-@synthesize _tableView;
+static NSDate *_currentSessionDate = nil;
+
+@synthesize _messageTableView;
+@synthesize _sessionTableView;
+
++ (void)initialize
+{
+    if (nil == _currentSessionDate)
+        _currentSessionDate = [NSDate new];
+}
+
+static NSString * __TLMLogArchivePath()
+{
+    static NSString *archivePath = nil;
+    if (nil == archivePath) {
+        archivePath = [NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES) lastObject];
+        NSString *appname = [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString *)kCFBundleNameKey];
+        archivePath = [archivePath stringByAppendingPathComponent:appname];
+        [[NSFileManager defaultManager] createDirectoryAtPath:archivePath withIntermediateDirectories:YES attributes:nil error:NULL];
+        archivePath = [[archivePath stringByAppendingPathComponent:@"Log Messages.plist"] copy];
+    }
+    return archivePath;
+}
+
+static NSDate *__TLMLogDateWithString(NSString *string)
+{
+    return [NSDate dateWithTimeIntervalSinceReferenceDate:[string doubleValue]];
+}
+
+static NSString *__TLMLogStringFromDate(NSDate *date)
+{
+    return [NSString stringWithFormat:@"%f", [date timeIntervalSinceReferenceDate]];
+}
 
 - (id)init
 {
@@ -58,7 +90,26 @@
                                                  selector:@selector(_handleSyncNotification:) 
                                                      name:TLMLogServerSyncNotification 
                                                    object:[TLMLogServer sharedServer]];  
-        _messages = [NSMutableArray new];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(_handleApplicationTerminate:)
+                                                     name:NSApplicationWillTerminateNotification
+                                                   object:nil];
+
+        _messagesByDate = [NSMutableDictionary new];
+        [_messagesByDate setObject:[NSMutableArray array] forKey:_currentSessionDate];
+        _displayedSessionDate = [_currentSessionDate copy];
+
+        NSDictionary *archive = [NSDictionary dictionaryWithContentsOfFile:__TLMLogArchivePath()];
+        for (NSString *dateString in archive) {
+            NSMutableArray *messages = [NSMutableArray new];
+            for (NSDictionary *plist in [archive objectForKey:dateString]) {
+                TLMLogMessage *message = [[TLMLogMessage alloc] initWithPropertyList:plist];
+                [messages addObject:message];
+                [message release];
+            }
+            [_messagesByDate setObject:[[messages copy] autorelease] forKey:__TLMLogDateWithString(dateString)];
+            [messages release];
+        }
         
         // pointer equality dictionary, non-copying (since TLMLogMessage is technically mutable)
         _rowHeights = CFDictionaryCreateMutable(CFAllocatorGetDefault(), 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
@@ -70,11 +121,16 @@
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
-    [_tableView setDataSource:nil];
-    [_tableView setDelegate:nil];
-    [_tableView release];
+    [_messageTableView setDataSource:nil];
+    [_messageTableView setDelegate:nil];
+    [_messageTableView release];
     
-    [_messages release];
+    [_sessionTableView setDataSource:nil];
+    [_sessionTableView setDelegate:nil];
+    [_sessionTableView release];
+    
+    [_displayedSessionDate release];
+    [_messagesByDate release];
     if (_rowHeights) CFRelease(_rowHeights);
     
     [super dealloc];
@@ -92,13 +148,32 @@
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:TLMShowLogWindowPreferenceKey];
 }
 
+- (void)_handleApplicationTerminate:(NSNotification *)aNote
+{
+    NSMutableDictionary *rootPlist = [NSMutableDictionary new];
+    for (NSDate *date in _messagesByDate) {
+        NSMutableArray *plistArray = [NSMutableArray new];
+        for (TLMLogMessage *message in [_messagesByDate objectForKey:date])
+            [plistArray addObject:[message propertyList]];
+        [rootPlist setObject:plistArray forKey:__TLMLogStringFromDate(date)];
+        [plistArray release];
+    }
+    NSString *path = __TLMLogArchivePath();
+    if ([rootPlist count] && [rootPlist writeToFile:path atomically:YES] == NO) {
+        NSLog(@"Failed to save log message archive to %@", path);
+        if ([[NSFileManager defaultManager] isWritableFileAtPath:[path stringByDeletingLastPathComponent]] == NO)
+            NSLog(@"Incorrect permissions on %@", [path stringByDeletingLastPathComponent]);
+    }
+    [rootPlist release];
+}
+
 - (void)showWindow:(id)sender
 {
     [super showWindow:sender];
-    [_tableView reloadData];
+    [_messageTableView reloadData];
     // showWindow is called in response to user action, so it's okay to force an update and scroll
     TLMLogServerSync();
-    [_tableView scrollRowToVisible:([_tableView numberOfRows] - 1)];
+    [_messageTableView scrollRowToVisible:([_messageTableView numberOfRows] - 1)];
 }
 
 - (void)_update
@@ -106,27 +181,27 @@
     // timer does not repeat
     _updateScheduled = NO;
     
-    NSArray *toAdd = [[TLMLogServer sharedServer] messagesFromIndex:[_messages count]];
+    NSArray *toAdd = [[TLMLogServer sharedServer] messagesFromIndex:[[_messagesByDate objectForKey:_currentSessionDate] count]];
     // !!! early return: nothing to do; may happen if the delayed perform arrives just before a sync notification
     if ([toAdd count] == 0)
         return;
     
-    [_messages addObjectsFromArray:toAdd];
+    [[_messagesByDate objectForKey:_currentSessionDate] addObjectsFromArray:toAdd];
     
     // no drawing work needed if the window is off screen
     if ([[self window] isVisible]) {
     
         BOOL shouldScroll = NO;
-        NSUInteger rowCount = [_tableView numberOfRows];
+        NSUInteger rowCount = [_messageTableView numberOfRows];
         // scroll to the last row, unless the user has manually scrolled up (check before reloading!)
-        if (0 == rowCount || (rowCount > 0 && NSIntersectsRect([_tableView visibleRect], [_tableView rectOfRow:(rowCount - 1)])))
+        if (0 == rowCount || (rowCount > 0 && NSIntersectsRect([_messageTableView visibleRect], [_messageTableView rectOfRow:(rowCount - 1)])))
             shouldScroll = YES; 
         
-        [_tableView reloadData];
+        [_messageTableView reloadData];
         
         // remember to call -numberOfRows again since it just changed...
         if (shouldScroll)
-            [_tableView scrollRowToVisible:([_tableView numberOfRows] - 1)];
+            [_messageTableView scrollRowToVisible:([_messageTableView numberOfRows] - 1)];
     }
 }
 
@@ -152,21 +227,45 @@
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView;
 {
-    return [_messages count];
+    if (tableView == _messageTableView)
+        return [[_messagesByDate objectForKey:_displayedSessionDate] count];
+    return [_messagesByDate count];
+}
+
+- (NSArray *)_sortedSessionDates
+{ 
+    NSArray *ascending = [[_messagesByDate allKeys] sortedArrayUsingSelector:@selector(compare:)];
+    NSUInteger cnt = [ascending count];
+    NSMutableArray *descending = [NSMutableArray arrayWithCapacity:cnt];
+    while (cnt--)
+        [descending addObject:[ascending objectAtIndex:cnt]];
+    return descending;
 }
 
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row;
 {
-    TLMLogMessage *msg = [_messages objectAtIndex:row];
-    return [msg valueForKey:[tableColumn identifier]];
+    if (tableView == _messageTableView) {
+        TLMLogMessage *msg = [[_messagesByDate objectForKey:_displayedSessionDate] objectAtIndex:row];
+        return [msg valueForKey:[tableColumn identifier]];
+    }
+    else {
+        if (row == 0)
+            return NSLocalizedString(@"Current", @"entry in log message table");
+        return [[self _sortedSessionDates] objectAtIndex:row];
+    }
 }
 
 - (void)tableView:(TLMTableView *)tableView writeSelectedRowsToPasteboard:(NSPasteboard *)pboard;
 {
-    NSParameterAssert(tableView == _tableView);
+    if (tableView == _sessionTableView) {
+        NSBeep();
+        return;
+    }
+    
+    NSParameterAssert(tableView == _messageTableView);
     [pboard declareTypes:[NSArray arrayWithObject:NSStringPboardType] owner:nil];
     if ([[tableView selectedRowIndexes] count]) {
-        NSArray *messages = [_messages objectsAtIndexes:[tableView selectedRowIndexes]];
+        NSArray *messages = [[_messagesByDate objectForKey:_displayedSessionDate] objectsAtIndexes:[tableView selectedRowIndexes]];
         [pboard setString:[messages componentsJoinedByString:@"\n"] forType:NSStringPboardType];
     }
     else if ([[tableView selectedColumnIndexes] count]) {
@@ -185,11 +284,25 @@
 {
     // changing width will change height, but tableview doesn't know that
     CFDictionaryRemoveAllValues(_rowHeights);
-    [_tableView noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [_messages count])]];
+    [_messageTableView noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [[_messagesByDate objectForKey:_displayedSessionDate] count])]];
+}
+
+- (void)tableViewSelectionDidChange:(NSNotification *)notification
+{
+    if ([notification object] == _sessionTableView) {
+        [_displayedSessionDate autorelease];
+        _displayedSessionDate = [[[self _sortedSessionDates] objectAtIndex:[_sessionTableView selectedRow]] copy];
+        CFDictionaryRemoveAllValues(_rowHeights);
+        [_messageTableView reloadData];
+    }
 }
 
 - (CGFloat)tableView:(NSTableView *)tableView heightOfRow:(NSInteger)row;
 {
+    
+    if (tableView == _sessionTableView)
+        return [[[[tableView tableColumns] lastObject] dataCell] cellSize].height;
+    
     // base height on message cell
     NSTableColumn *tc = [tableView tableColumnWithIdentifier:@"message"];
     id obj = [self tableView:tableView objectValueForTableColumn:tc row:row];
