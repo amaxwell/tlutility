@@ -42,7 +42,12 @@
 #import "TLMLogServer.h"
 #import "TLMTableView.h"
 
-#define HISTORY_MAX 7
+#define DEFAULT_HISTORY_MAX 7
+#define DEFAULT_HISTORY_KEY @"LogHistoryMax"
+#define ARCHIVE_FILENAME    @"Log Messages.plist"
+#define ARCHIVE_TIMER_DELAY 30.0
+
+#define UPDATE_TIMER_DELAY  0.3
 
 @implementation TLMLogWindowController
 
@@ -65,7 +70,7 @@ static NSString * __TLMLogArchivePath()
         NSString *appname = [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString *)kCFBundleNameKey];
         archivePath = [archivePath stringByAppendingPathComponent:appname];
         [[NSFileManager defaultManager] createDirectoryAtPath:archivePath withIntermediateDirectories:YES attributes:nil error:NULL];
-        archivePath = [[archivePath stringByAppendingPathComponent:@"Log Messages.plist"] copy];
+        archivePath = [[archivePath stringByAppendingPathComponent:ARCHIVE_FILENAME] copy];
     }
     return archivePath;
 }
@@ -108,8 +113,14 @@ static NSString *__TLMLogStringFromDate(NSDate *date)
         for (NSString *dateString in archive)
             [dates addObject:__TLMLogDateWithString(dateString)];
         [dates sortUsingSelector:@selector(compare:)];
-        if ([dates count] > HISTORY_MAX)
-            dates = (id)[dates subarrayWithRange:NSMakeRange([dates count] - HISTORY_MAX, HISTORY_MAX)];
+        
+        // hidden default to set history limit; 0 is the default, nonzero is respected, and <0 is infinite
+        NSInteger historyLimit = [[NSUserDefaults standardUserDefaults] integerForKey:DEFAULT_HISTORY_KEY];
+        if (0 == historyLimit) historyLimit = DEFAULT_HISTORY_MAX;
+        else if (historyLimit < 0) historyLimit = NSUIntegerMax;
+        
+        if ([dates count] > (NSUInteger)historyLimit)
+            dates = (id)[dates subarrayWithRange:NSMakeRange([dates count] - historyLimit, historyLimit)];
         
         for (NSDate *date in dates) {
             NSMutableArray *messages = [NSMutableArray new];
@@ -126,7 +137,7 @@ static NSString *__TLMLogStringFromDate(NSDate *date)
         _rowHeights = CFDictionaryCreateMutable(CFAllocatorGetDefault(), 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
         
         // archive messages periodically, in case of crash or forced quit
-        [NSTimer scheduledTimerWithTimeInterval:30.0 target:self selector:@selector(_archiveTimerFired:) userInfo:nil repeats:YES];
+        [NSTimer scheduledTimerWithTimeInterval:ARCHIVE_TIMER_DELAY target:self selector:@selector(_archiveTimerFired:) userInfo:nil repeats:YES];
         _lastArchiveCount = 0;
     }
     return self;    
@@ -243,7 +254,7 @@ static NSString *__TLMLogStringFromDate(NSDate *date)
     _updateScheduled = YES;
     
     // update the log in all common modes
-    [self performSelector:@selector(_update) withObject:nil afterDelay:0.3 inModes:[NSArray arrayWithObject:NSRunLoopCommonModes]];
+    [self performSelector:@selector(_update) withObject:nil afterDelay:UPDATE_TIMER_DELAY inModes:[NSArray arrayWithObject:NSRunLoopCommonModes]];
 }    
 
 - (void)_handleLogServerUpdateNotification:(NSNotification *)aNote
