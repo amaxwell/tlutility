@@ -49,6 +49,7 @@
     BOOL                    _updateScheduled;
     NSDate                 *_displayedSessionDate;
     NSMutableDictionary    *_messagesByDate;
+    NSUInteger              _lastArchiveCount;
 }
 
 @property (nonatomic, retain) IBOutlet TLMTableView *_messageTableView;
