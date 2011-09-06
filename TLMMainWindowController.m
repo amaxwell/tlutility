@@ -789,15 +789,13 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
                                     contextInfo:NULL];
             }
             else {
-                [self _displayStatusString:NSLocalizedString(@"Infrastructure Update Succeeded", @"status message") dataSource:_updateListDataSource];
                 [self _refreshUpdatedPackageListFromLocation:[self serverURL]];
+                [self _displayStatusString:NSLocalizedString(@"Infrastructure Update Succeeded", @"status message") dataSource:_updateListDataSource];
             }
             
         }
         else {
             
-#warning too many messages
-            [self _displayStatusString:NSLocalizedString(@"Update Succeeded", @"status message") dataSource:_updateListDataSource];
             [self _refreshLocalDatabase];
             
             [_updateListDataSource setNeedsUpdate:YES];
@@ -807,6 +805,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
             [self setServerURL:[op updateURL]];
             
             [self _refreshCurrentDataSourceIfNeeded];
+            [self _displayStatusString:NSLocalizedString(@"Update Succeeded", @"status message") dataSource:_updateListDataSource];
 
         }
     }
@@ -1069,10 +1068,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
                             contextInfo:NULL];                    
     }
     else if ([op isCancelled] == NO) {
-        
-        // also gets called for _installDataSource, but that's pretty rare
-        [self _displayStatusString:NSLocalizedString(@"Install Succeeded", @"status message") dataSource:_packageListDataSource];
-        
+                
         [self _refreshLocalDatabase];
         
         [_updateListDataSource setNeedsUpdate:YES];
@@ -1080,6 +1076,10 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
         [_backupDataSource setNeedsUpdate:YES];
         
         [self _refreshCurrentDataSourceIfNeeded];
+        
+        // _handleInstallFinishedNotification: also gets called for _installDataSource, but that's pretty rare
+        [self _displayStatusString:NSLocalizedString(@"Install Succeeded", @"status message") dataSource:_packageListDataSource];
+
     }    
 }
 
@@ -1113,15 +1113,13 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
                             contextInfo:NULL];                 
     }
     else if ([op isCancelled] == NO) {
-        
-        [self _displayStatusString:NSLocalizedString(@"Removal Succeeded", @"status message") dataSource:_packageListDataSource];
-        
+                
         [_updateListDataSource setNeedsUpdate:YES];
         [_packageListDataSource setNeedsUpdate:YES];
         [_backupDataSource setNeedsUpdate:YES];
         
         [self _refreshCurrentDataSourceIfNeeded];
-
+        [self _displayStatusString:NSLocalizedString(@"Removal Succeeded", @"status message") dataSource:_packageListDataSource];
     }    
 }
 
