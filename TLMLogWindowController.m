@@ -177,8 +177,14 @@ static NSString *__TLMLogStringFromDate(NSDate *date)
             [plistArray release];
         }
         NSString *path = __TLMLogArchivePath();
-        if ([rootPlist count] && [rootPlist writeToFile:path atomically:YES] == NO)
-            NSLog(@"Failed to save log message archive to %@", path);
+        NSString *error;
+        NSData *data = [NSPropertyListSerialization dataFromPropertyList:rootPlist format:NSPropertyListBinaryFormat_v1_0 errorDescription:&error];
+        if (nil == data) {
+            NSLog(@"Failed to create property list: %@", error);
+            [error autorelease];
+        } else if ([data writeToFile:path atomically:YES] == NO) {
+            NSLog(@"Failed to save property list at %@", path);
+        }
         [rootPlist release];
         _lastArchiveCount = currentCount;
     }
