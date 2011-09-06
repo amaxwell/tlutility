@@ -42,6 +42,8 @@
 #import "TLMLogServer.h"
 #import "TLMTableView.h"
 
+#define HISTORY_MAX 7
+
 @implementation TLMLogWindowController
 
 static NSDate *_currentSessionDate = nil;
@@ -100,14 +102,23 @@ static NSString *__TLMLogStringFromDate(NSDate *date)
         _displayedSessionDate = [_currentSessionDate copy];
 
         NSDictionary *archive = [NSDictionary dictionaryWithContentsOfFile:__TLMLogArchivePath()];
-        for (NSString *dateString in archive) {
+        
+        // sort and prune to most recent HISTORY_MAX dates
+        NSMutableArray *dates = [NSMutableArray array];
+        for (NSString *dateString in archive)
+            [dates addObject:__TLMLogDateWithString(dateString)];
+        [dates sortUsingSelector:@selector(compare:)];
+        if ([dates count] > HISTORY_MAX)
+            dates = (id)[dates subarrayWithRange:NSMakeRange([dates count] - HISTORY_MAX, HISTORY_MAX)];
+        
+        for (NSDate *date in dates) {
             NSMutableArray *messages = [NSMutableArray new];
-            for (NSDictionary *plist in [archive objectForKey:dateString]) {
+            for (NSDictionary *plist in [archive objectForKey:__TLMLogStringFromDate(date)]) {
                 TLMLogMessage *message = [[TLMLogMessage alloc] initWithPropertyList:plist];
                 [messages addObject:message];
                 [message release];
             }
-            [_messagesByDate setObject:[[messages copy] autorelease] forKey:__TLMLogDateWithString(dateString)];
+            [_messagesByDate setObject:[[messages copy] autorelease] forKey:date];
             [messages release];
         }
         
