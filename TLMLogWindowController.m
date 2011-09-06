@@ -113,6 +113,10 @@ static NSString *__TLMLogStringFromDate(NSDate *date)
         
         // pointer equality dictionary, non-copying (since TLMLogMessage is technically mutable)
         _rowHeights = CFDictionaryCreateMutable(CFAllocatorGetDefault(), 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
+        
+        // archive messages periodically, in case of crash or forced quit
+        [NSTimer scheduledTimerWithTimeInterval:30.0 target:self selector:@selector(_archiveTimerFired:) userInfo:nil repeats:YES];
+        _lastArchiveCount = 0;
     }
     return self;    
 }
@@ -148,23 +152,35 @@ static NSString *__TLMLogStringFromDate(NSDate *date)
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:TLMShowLogWindowPreferenceKey];
 }
 
+- (void)_archiveAllSessions
+{
+    const NSUInteger currentCount = [[_messagesByDate objectForKey:_currentSessionDate] count];
+    if (_lastArchiveCount != currentCount) {
+        NSMutableDictionary *rootPlist = [NSMutableDictionary new];
+        for (NSDate *date in _messagesByDate) {
+            NSMutableArray *plistArray = [NSMutableArray new];
+            for (TLMLogMessage *message in [_messagesByDate objectForKey:date])
+                [plistArray addObject:[message propertyList]];
+            // unfortunately, a plist must have strings as keys
+            [rootPlist setObject:plistArray forKey:__TLMLogStringFromDate(date)];
+            [plistArray release];
+        }
+        NSString *path = __TLMLogArchivePath();
+        if ([rootPlist count] && [rootPlist writeToFile:path atomically:YES] == NO)
+            NSLog(@"Failed to save log message archive to %@", path);
+        [rootPlist release];
+        _lastArchiveCount = currentCount;
+    }
+}
+
 - (void)_handleApplicationTerminate:(NSNotification *)aNote
 {
-    NSMutableDictionary *rootPlist = [NSMutableDictionary new];
-    for (NSDate *date in _messagesByDate) {
-        NSMutableArray *plistArray = [NSMutableArray new];
-        for (TLMLogMessage *message in [_messagesByDate objectForKey:date])
-            [plistArray addObject:[message propertyList]];
-        [rootPlist setObject:plistArray forKey:__TLMLogStringFromDate(date)];
-        [plistArray release];
-    }
-    NSString *path = __TLMLogArchivePath();
-    if ([rootPlist count] && [rootPlist writeToFile:path atomically:YES] == NO) {
-        NSLog(@"Failed to save log message archive to %@", path);
-        if ([[NSFileManager defaultManager] isWritableFileAtPath:[path stringByDeletingLastPathComponent]] == NO)
-            NSLog(@"Incorrect permissions on %@", [path stringByDeletingLastPathComponent]);
-    }
-    [rootPlist release];
+    [self _archiveAllSessions];
+}
+
+- (void)_archiveTimerFired:(NSTimer *)ignored
+{
+    [self _archiveAllSessions];
 }
 
 - (void)showWindow:(id)sender
@@ -249,8 +265,6 @@ static NSString *__TLMLogStringFromDate(NSDate *date)
         return [msg valueForKey:[tableColumn identifier]];
     }
     else {
-        if (row == 0)
-            return NSLocalizedString(@"Current", @"entry in log message table");
         return [[self _sortedSessionDates] objectAtIndex:row];
     }
 }
