@@ -41,11 +41,14 @@
 #import "TLMLogMessage.h"
 #import "TLMLogServer.h"
 #import "TLMTableView.h"
+#import "TLMSplitView.h"
 
 #define DEFAULT_HISTORY_MAX 7
 #define DEFAULT_HISTORY_KEY @"LogHistoryMax"
 #define ARCHIVE_FILENAME    @"Log Messages.plist"
 #define ARCHIVE_TIMER_DELAY 30.0
+
+#define SPLITVIEW_AUTOSAVE  @"Session table saved frame"
 
 #define UPDATE_TIMER_DELAY  0.3
 
@@ -55,6 +58,7 @@ static NSDate *_currentSessionDate = nil;
 
 @synthesize _messageTableView;
 @synthesize _sessionTableView;
+@synthesize _splitView;
 
 + (void)initialize
 {
@@ -158,11 +162,33 @@ static NSString *__TLMLogStringFromDate(NSDate *date)
     [_displayedSessionDate release];
     [_messagesByDate release];
     if (_rowHeights) CFRelease(_rowHeights);
+    [_splitView setDelegate:nil];
+    [_splitView release];
     
     [super dealloc];
 }
 
 - (NSString *)windowNibName { return @"LogWindow"; }
+
+- (void)awakeFromNib
+{
+    NSArray *frameStrings = [[NSUserDefaults standardUserDefaults] stringArrayForKey:SPLITVIEW_AUTOSAVE];
+    NSUInteger idx = 0;
+    for (NSString *frameString in frameStrings)
+        [[[_splitView subviews] objectAtIndex:idx++] setFrame:NSRectFromString(frameString)];
+    [_splitView adjustSubviews];
+}
+
+- (void)splitViewDidResizeSubviews:(NSNotification *)aNotification
+{
+    // this is getting sent before awakeFromNib, which might be why the autosave name in the nib won't work
+    if ([[self window] isVisible]) {
+        NSMutableArray *frameStrings = [NSMutableArray array];
+        for (NSView *view in [_splitView subviews])
+            [frameStrings addObject:NSStringFromRect([view frame])];
+        [[NSUserDefaults standardUserDefaults] setObject:frameStrings forKey:SPLITVIEW_AUTOSAVE];
+    }
+}
 
 - (void)windowWillClose:(NSNotification *)aNote
 {
