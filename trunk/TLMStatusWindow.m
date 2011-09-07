@@ -262,5 +262,7 @@ static void CenterRectInRect(NSRect *toCenter, NSRect enclosingRect)
     [[self animator] setAlphaValue:0.0];
 }
 
+- (NSString *)statusString { return [_statusView statusString]; }
+
 @end
 
