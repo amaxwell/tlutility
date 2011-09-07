@@ -54,4 +54,6 @@
 - (void)fadeIn;
 - (void)fadeOutAndRemove:(BOOL)remove;
 
+@property (nonatomic, readonly) NSString *statusString;
+
 @end

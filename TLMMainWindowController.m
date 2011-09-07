@@ -88,6 +88,9 @@
 
 static char _TLMOperationQueueOperationContext;
 
+#define DB_LOAD_STATUS_STRING      ([NSString stringWithFormat:@"%@%C", NSLocalizedString(@"Loading Database", @"status message"), 0x2026])
+#define URL_VALIDATE_STATUS_STRING ([NSString stringWithFormat:@"%@%C", NSLocalizedString(@"Validating Server", @"status message"), 0x2026])
+
 @implementation TLMMainWindowController
 
 @synthesize _progressIndicator;
@@ -236,10 +239,10 @@ static char _TLMOperationQueueOperationContext;
     
     // do this after the window loads, so something is visible right away
     if ([[[TLMEnvironment currentEnvironment] defaultServerURL] isMultiplexer])
-        [self _displayStatusString:[NSString stringWithFormat:@"%@%C", NSLocalizedString(@"Validating Server", @"status message"), 0x2026]
-                                                   dataSource:_updateListDataSource];
+        [self _displayStatusString:URL_VALIDATE_STATUS_STRING dataSource:_updateListDataSource];
     _serverURL = [[[TLMEnvironment currentEnvironment] validServerURL] copy];
-    [self _displayStatusString:nil dataSource:_updateListDataSource];
+    if ([[[_updateListDataSource statusWindow] statusString] isEqualToString:URL_VALIDATE_STATUS_STRING])
+        [self _displayStatusString:nil dataSource:_updateListDataSource];
     
     // !!! end up with a bad environment if this is the multiplexer, and the UI gets out of sync
     if (nil == _serverURL)
@@ -654,7 +657,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     /*
      TL 2009: 'bin-texlive' is gone, and we now have 'texlive.infra' and 'texlive.infra.universal-darwin' 
      for infrastructure updates.  This is satisfied by checking for the prefix 'texlive.infra'.  The only 
-     other infrastructure packages is 'tlperl.win32', which we probably won't see.
+     other infrastructure package is 'tlperl.win32', which we probably won't see.
      
      Note: a slow-to-update mirror may have a stale version, so check needsUpdate as well.
      */
@@ -702,15 +705,16 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 {
     TLMLoadDatabaseOperation *op = [aNote object];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:TLMOperationFinishedNotification object:op];
-    [self _displayStatusString:nil dataSource:_updateListDataSource];
+    // only clear this status message, which is intended to be ephemeral
+    if ([[[_updateListDataSource statusWindow] statusString] isEqualToString:DB_LOAD_STATUS_STRING])
+        [self _displayStatusString:nil dataSource:_updateListDataSource];
 }
 
 - (void)_refreshLocalDatabase
 {
     if ([[TLMEnvironment currentEnvironment] tlmgrSupportsDumpTlpdb]) {
         // pick a datasource to use here; doesn't matter which, as long as it's the same in the callback
-        [self _displayStatusString:[NSString stringWithFormat:@"%@%C", NSLocalizedString(@"Loading Database", @"status message"), 0x2026]
-                        dataSource:_updateListDataSource];
+        [self _displayStatusString:DB_LOAD_STATUS_STRING dataSource:_updateListDataSource];
         TLMLog(__func__, @"Updating local package database");
         NSURL *mirror = [[TLMEnvironment currentEnvironment] defaultServerURL];
         TLMLoadDatabaseOperation *op = [[TLMLoadDatabaseOperation alloc] initWithLocation:mirror offline:YES];
@@ -789,6 +793,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
                                     contextInfo:NULL];
             }
             else {
+#warning could just reset a filter here
                 [self _refreshUpdatedPackageListFromLocation:[self serverURL]];
                 [self _displayStatusString:NSLocalizedString(@"Infrastructure Update Succeeded", @"status message") dataSource:_updateListDataSource];
             }
@@ -798,6 +803,10 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
             
             [self _refreshLocalDatabase];
             
+            /*
+             Could remove this to ensure that the "Update Succeeded" message is displayed longer,
+             but it's needed in case a package update also updates or installs other dependencies.
+             */
             [_updateListDataSource setNeedsUpdate:YES];
             [_packageListDataSource setNeedsUpdate:YES];
             [_backupDataSource setNeedsUpdate:YES];
@@ -1333,10 +1342,10 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 - (IBAction)goHome:(id)sender;
 {
     if ([[[TLMEnvironment currentEnvironment] defaultServerURL] isMultiplexer])
-        [self _displayStatusString:[NSString stringWithFormat:@"%@%C", NSLocalizedString(@"Validating Server", @"status message"), 0x2026]
-                        dataSource:_currentListDataSource];
+        [self _displayStatusString:URL_VALIDATE_STATUS_STRING dataSource:_currentListDataSource];
     [_URLField setStringValue:[[[TLMEnvironment currentEnvironment] validServerURL] absoluteString]];
-    [self _displayStatusString:nil dataSource:_currentListDataSource];
+    if ([[[_currentListDataSource statusWindow] statusString] isEqualToString:URL_VALIDATE_STATUS_STRING])
+        [self _displayStatusString:nil dataSource:_currentListDataSource];
     [self changeServerURL:nil];
 }
 
