@@ -451,5 +451,29 @@
     // toolbar updating is somewhat erratic, so force it to validate here
     [[[_controller window] toolbar] validateVisibleItems];
 }
+
+- (NSMenu *)tableView:(NSTableView *)tableView contextMenuForRow:(NSInteger)row column:(NSInteger)column;
+{
+    NSZone *zone = [NSMenu menuZone];
+    NSMenu *menu = [[NSMenu allocWithZone:zone] init];
+    
+    NSMenuItem *item = [[NSMenuItem allocWithZone:zone] initWithTitle:NSLocalizedString(@"Update Selected Packages", @"context menu")
+                                                               action:@selector(updateSelectedRows:)
+                                                        keyEquivalent:@""];
+    [item setAction:@selector(updateSelectedRows:)];
+    [item setTarget:self];
+    [menu addItem:item];
+    [item release];
+    
+    item = [[NSMenuItem allocWithZone:zone] initWithTitle:NSLocalizedString(@"Show Info", @"context menu")
+                                                   action:@selector(showInfo:)
+                                            keyEquivalent:@""];
+    [item setAction:@selector(showInfo:)];
+    [item setTarget:self];
+    [menu addItem:item];
+    [item release];
+    
+    return [menu autorelease];
+}
     
 @end
