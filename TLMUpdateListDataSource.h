@@ -46,7 +46,8 @@
 {
 @private
     TLMTableView            *_tableView;
-    NSMutableArray          *_packages;
+    NSMutableArray          *_displayedPackages;
+    NSArray                 *_filteredPackages;
     NSArray                 *_allPackages;
     NSMutableArray          *_sortDescriptors;
     BOOL                     _sortAscending;
@@ -57,6 +58,7 @@
     BOOL                     _ignoreSelectionChanges;
     BOOL                     _needsUpdate;
     id                       _updatingPackage;
+    NSPredicate             *_packageFilter;
 }
 
 @property (nonatomic, retain) IBOutlet TLMTableView *tableView;
@@ -64,6 +66,7 @@
 @property (nonatomic, retain) IBOutlet NSSearchField *_searchField;
 @property (nonatomic, copy) NSArray *allPackages;
 @property (nonatomic, getter = isRefreshing) BOOL refreshing;
+@property (nonatomic, copy) NSPredicate *packageFilter;
 
 - (IBAction)refreshList:(id)sender;
 - (IBAction)updateAll:(id)sender;

@@ -52,12 +52,13 @@
 @synthesize statusWindow = _statusWindow;
 @synthesize refreshing = _refreshing;
 @synthesize needsUpdate = _needsUpdate;
+@synthesize packageFilter = _packageFilter;
 
 - (id)init
 {
     self = [super init];
     if (self) {
-        _packages = [NSMutableArray new];
+        _displayedPackages = [NSMutableArray new];
         _sortDescriptors = [NSMutableArray new];
     }
     return self;
@@ -71,11 +72,12 @@
     [_tableView setDataSource:nil];
     [_tableView release];
     [_searchField release];
-    [_packages release];
+    [_displayedPackages release];
     [_allPackages release];
     [_sortDescriptors release];
     [_statusWindow release];
     [_updatingPackage release];
+    [_packageFilter release];
     [super dealloc];
 }
 
@@ -106,7 +108,7 @@
 {
     NSMutableIndexSet *indexes = [NSMutableIndexSet indexSet];
     for (TLMPackage *pkg in packages) {
-        NSUInteger idx = [_packages indexOfObject:pkg];
+        NSUInteger idx = [_displayedPackages indexOfObject:pkg];
         if (NSNotFound != idx)
             [indexes addIndex:idx];
     }
@@ -126,7 +128,7 @@
 
 - (void)_selectPackagesNamed:(NSArray *)names
 {
-    [self _selectPackages:[_packages filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"name IN %@", names]]];
+    [self _selectPackages:[_displayedPackages filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"name IN %@", names]]];
 }
 
 - (void)_setUpdatingPackage:(id)pkg
@@ -137,26 +139,44 @@
     }
 }
 
+- (void)_updateFilteredPackages
+{
+    [_filteredPackages autorelease];
+    _filteredPackages = [self packageFilter] ? [[_allPackages filteredArrayUsingPredicate:[self packageFilter]] retain] : [_allPackages retain];
+}
+
+- (void)setPackageFilter:(NSPredicate *)pf
+{
+    [_packageFilter autorelease];
+    _packageFilter = [pf copy];
+    [self _updateFilteredPackages];
+    [self search:nil];
+}
+
 - (void)_deselectUpdatingPackage
 {
     NSMutableArray *toSelect = nil;
     if ([_tableView numberOfSelectedRows]) {
-        toSelect = [[[_packages objectsAtIndexes:[_tableView selectedRowIndexes]] mutableCopy] autorelease];
+        toSelect = [[[_displayedPackages objectsAtIndexes:[_tableView selectedRowIndexes]] mutableCopy] autorelease];
         [toSelect removeObject:_updatingPackage];
     }
     
     // remove from the display array...
-    [_packages removeObjectIdenticalTo:_updatingPackage];        
+    [_displayedPackages removeObjectIdenticalTo:_updatingPackage];    
+    
     // now remove from the full array
     NSMutableArray *allPackages = [[_allPackages mutableCopy] autorelease];
     [allPackages removeObjectIdenticalTo:_updatingPackage];
     [self _setUpdatingPackage:nil];
     
-    // accessor does search:nil, which resets _packages and clears the search; we don't want that
+    // accessor does search:nil, which resets _displayedPackages and clears the search; we don't want that
     [_allPackages release];
     _allPackages = [allPackages copy];
     
-    [_packages sortUsingDescriptors:_sortDescriptors];
+    // sync filtered packages
+    [self _updateFilteredPackages];
+    
+    [_displayedPackages sortUsingDescriptors:_sortDescriptors];
     [_tableView reloadData];
     
     // wait until after reloading to reselect...
@@ -195,11 +215,13 @@
     // select based on name, since package identity will change
     NSArray *selectedPackageNames = nil;
     if ([_tableView numberOfSelectedRows])
-        selectedPackageNames = [[_packages objectsAtIndexes:[_tableView selectedRowIndexes]] valueForKey:@"name"];
+        selectedPackageNames = [[_displayedPackages objectsAtIndexes:[_tableView selectedRowIndexes]] valueForKey:@"name"];
     [_tableView selectRowIndexes:[NSIndexSet indexSet] byExtendingSelection:NO];
     
     [_allPackages autorelease];
     _allPackages = [packages copy];
+    
+    [self _updateFilteredPackages];
     [self search:nil];
     
     if ([selectedPackageNames count])
@@ -212,7 +234,7 @@
     if ([_controller infrastructureNeedsUpdate])
         return NO;
     
-    if ([_packages count] == 0)
+    if ([_displayedPackages count] == 0)
         return NO;
     
     if ([[_tableView selectedRowIndexes] count] == 0)
@@ -220,7 +242,7 @@
     
     // be strict about this; only valid, installed packages that need to be updated can be selected for update
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(isInstalled == NO) OR (willBeRemoved == YES) OR (failedToParse == YES)"];
-    NSArray *packages = [[_packages objectsAtIndexes:[_tableView selectedRowIndexes]] filteredArrayUsingPredicate:predicate];
+    NSArray *packages = [[_displayedPackages objectsAtIndexes:[_tableView selectedRowIndexes]] filteredArrayUsingPredicate:predicate];
     if ([packages count])
         return NO;
     
@@ -242,7 +264,7 @@
      installed, we just invalidate the action.  Additionally, we don't allow reinstall here, but installed packages
      shouldn't show up in this list anyway.
      */
-    NSArray *selItems = [_packages objectsAtIndexes:[_tableView selectedRowIndexes]];
+    NSArray *selItems = [_displayedPackages objectsAtIndexes:[_tableView selectedRowIndexes]];
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(wasForciblyRemoved == YES) OR (isInstalled == NO)"];
     if ([[selItems filteredArrayUsingPredicate:predicate] count] == selectedRowCount)
         return YES;
@@ -271,7 +293,7 @@
 
 - (IBAction)installSelectedRows:(id)sender;
 {
-    NSArray *selItems = [_packages objectsAtIndexes:[_tableView selectedRowIndexes]];
+    NSArray *selItems = [_displayedPackages objectsAtIndexes:[_tableView selectedRowIndexes]];
  
     // never a reinstall here (see validation)
     [_controller installPackagesWithNames:[selItems valueForKey:@"name"] reinstall:NO];
@@ -280,26 +302,26 @@
 // for times when the local package is newer, and you want to force a downgrade
 - (IBAction)reinstallSelectedRows:(id)sender;
 {
-    NSArray *selItems = [_packages objectsAtIndexes:[_tableView selectedRowIndexes]];
+    NSArray *selItems = [_displayedPackages objectsAtIndexes:[_tableView selectedRowIndexes]];
     [_controller installPackagesWithNames:[selItems valueForKey:@"name"] reinstall:YES];
 }
 
 - (IBAction)search:(id)sender;
 {
     NSString *searchString = [_searchField stringValue];
-    NSArray *selectedPackages = [_tableView numberOfSelectedRows] ? [_packages objectsAtIndexes:[_tableView selectedRowIndexes]] : nil;
+    NSArray *selectedPackages = [_tableView numberOfSelectedRows] ? [_displayedPackages objectsAtIndexes:[_tableView selectedRowIndexes]] : nil;
     
     if (nil == searchString || [searchString isEqualToString:@""]) {
-        [_packages setArray:_allPackages];
+        [_displayedPackages setArray:_filteredPackages];
     }
     else {
-        [_packages removeAllObjects];
-        for (TLMPackage *pkg in _allPackages) {
+        [_displayedPackages removeAllObjects];
+        for (TLMPackage *pkg in _filteredPackages) {
             if ([pkg matchesSearchString:searchString])
-                [_packages addObject:pkg];
+                [_displayedPackages addObject:pkg];
         }
     }
-    [_packages sortUsingDescriptors:_sortDescriptors];
+    [_displayedPackages sortUsingDescriptors:_sortDescriptors];
     [_tableView reloadData];
     
     // restore previously selected packages, if possible
@@ -311,7 +333,7 @@
 - (IBAction)showInfo:(id)sender;
 {
     if ([_tableView selectedRow] != -1)
-        [[TLMInfoController sharedInstance] showInfoForPackage:[_packages objectAtIndex:[_tableView selectedRow]] location:[_controller serverURL]];
+        [[TLMInfoController sharedInstance] showInfoForPackage:[_displayedPackages objectAtIndex:[_tableView selectedRow]] location:[_controller serverURL]];
     else if ([[[TLMInfoController sharedInstance] window] isVisible] == NO) {
         [[TLMInfoController sharedInstance] showInfoForPackage:nil location:[_controller serverURL]];
         [[TLMInfoController sharedInstance] showWindow:nil];
@@ -327,11 +349,11 @@
 - (IBAction)updateSelectedRows:(id)sender;
 {
     // if all packages are being updated, use the standard mechanism instead of passing each one as an argument
-    if ([[_tableView selectedRowIndexes] count] == [_allPackages count]) {
+    if ([[_tableView selectedRowIndexes] count] == [_filteredPackages count]) {
         [_controller updateAllPackages];
     }
     else {
-        NSArray *packageNames = [[_packages objectsAtIndexes:[_tableView selectedRowIndexes]] valueForKey:@"name"];
+        NSArray *packageNames = [[_displayedPackages objectsAtIndexes:[_tableView selectedRowIndexes]] valueForKey:@"name"];
         [_controller updatePackagesWithNames:packageNames];
     }
 }
@@ -345,17 +367,17 @@
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView;
 {
-    return [_packages count];
+    return [_displayedPackages count];
 }
 
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row;
 {
-    return [[_packages objectAtIndex:row] valueForKey:[tableColumn identifier]];
+    return [[_displayedPackages objectAtIndex:row] valueForKey:[tableColumn identifier]];
 }
 
 - (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row;
 {
-    TLMPackage *package = [_packages objectAtIndex:row];
+    TLMPackage *package = [_displayedPackages objectAtIndex:row];
     if ([package failedToParse])
         [cell setTextColor:[NSColor redColor]];
     else if ([package willBeRemoved])
@@ -402,14 +424,14 @@
     while ((NSInteger)[_sortDescriptors count] > [tableView numberOfColumns])
         [_sortDescriptors removeLastObject];
     
-    NSArray *selectedItems = [_tableView numberOfSelectedRows] ? [_packages objectsAtIndexes:[_tableView selectedRowIndexes]] : nil;
+    NSArray *selectedItems = [_tableView numberOfSelectedRows] ? [_displayedPackages objectsAtIndexes:[_tableView selectedRowIndexes]] : nil;
     
-    [_packages sortUsingDescriptors:_sortDescriptors];
+    [_displayedPackages sortUsingDescriptors:_sortDescriptors];
     [_tableView reloadData];
     
     NSMutableIndexSet *selRows = [NSMutableIndexSet indexSet];
     for (id item in selectedItems) {
-        NSUInteger idx = [_packages indexOfObjectIdenticalTo:item];
+        NSUInteger idx = [_displayedPackages indexOfObjectIdenticalTo:item];
         if (NSNotFound != idx)
             [selRows addIndex:idx];
     }
