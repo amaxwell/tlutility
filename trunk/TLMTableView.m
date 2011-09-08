@@ -55,6 +55,7 @@
 {
     [_fontNamePreferenceKey release];
     [_fontSizePreferenceKey release];
+    [_defaultFont release];
     [super dealloc];
 }
 
@@ -95,13 +96,10 @@
     [self reloadData];     
 }
 
-- (NSFont *)font
+- (NSFont *)defaultFont;
 {
-    return [[[[self tableColumns] lastObject] dataCell] font];
-}
-
-- (void)updateFontFromPreferences
-{
+    NSFont *font = nil;
+    
     if ([self fontNamePreferenceKey] && [self fontSizePreferenceKey]) {
         
         NSString *fontName = [[NSUserDefaults standardUserDefaults] objectForKey:[self fontNamePreferenceKey]];
@@ -109,11 +107,21 @@
         
         // if not set, use the font from the nib
         if (fontName) {
-            NSFont *font = [NSFont fontWithName:fontName size:fontSize];
-            if (font) 
-                [self setFont:font];
-        }        
+            font = [NSFont fontWithName:fontName size:fontSize];
+        }  
     }
+    return font ? font : _defaultFont;
+}
+
+- (NSFont *)font
+{
+    return [[[[self tableColumns] lastObject] dataCell] font];
+}
+
+- (void)updateFontFromPreferences
+{
+    NSFont *font = [self defaultFont];
+    if (font) [self setFont:font];
 }
 
 - (void)changeFont:(id)sender 
@@ -139,6 +147,46 @@
 {
     [super viewDidMoveToWindow];
     [self updateFontFromPreferences];
+    if (nil == _defaultFont)
+        _defaultFont = [[self font] retain];
 }
+
+@end
+
+@interface NSTableView (OAExtensions)
+@end
+
+@implementation NSTableView (OAExtensions)
+
+- (BOOL)_dataSourceHandlesContextMenu;
+{
+    // This is an override point so that OutlineView can get our implementation for free but provide item-based datasource API
+    return [[self dataSource] respondsToSelector:@selector(tableView:contextMenuForRow:column:)];
+}
+
+- (NSMenu *)_contextMenuForRow:(NSInteger)row column:(NSInteger)column;
+{
+    // This is an override point so that OutlineView can get our implementation for free but provide item-based datasource API
+    NSParameterAssert([self _dataSourceHandlesContextMenu]); // should already know this by the time we get here
+    return [(id <TLMTableDataSource>)[self dataSource] tableView:self contextMenuForRow:row column:column];
+}
+
+- (NSMenu *)menuForEvent:(NSEvent *)event;
+{
+    if (![self _dataSourceHandlesContextMenu])
+        return [super menuForEvent:event];
+    
+    NSPoint point = [self convertPoint:[event locationInWindow] fromView:nil];
+    NSInteger rowIndex = [self rowAtPoint:point];
+    // Christiaan M. Hofman: fixed bug in following line
+    NSInteger columnIndex = [self columnAtPoint:point]; 
+    if (rowIndex >= 0 && columnIndex >= 0) {
+        if (![self isRowSelected:rowIndex])
+            [self selectRowIndexes:[NSIndexSet indexSetWithIndex:rowIndex] byExtendingSelection:NO];
+    }
+    
+    return [self _contextMenuForRow:rowIndex column:columnIndex];
+}
+
 
 @end

@@ -44,6 +44,7 @@
 @private
     NSString *_fontNamePreferenceKey;
     NSString *_fontSizePreferenceKey;
+    NSFont   *_defaultFont;
 }
 
 - (IBAction)copy:(id)sender;
@@ -54,4 +55,5 @@
 @protocol TLMTableDataSource <NSTableViewDataSource>
 @optional
 - (void)tableView:(TLMTableView *)tableView writeSelectedRowsToPasteboard:(NSPasteboard *)pboard;
+- (NSMenu *)tableView:(NSTableView *)tableView contextMenuForRow:(NSInteger)row column:(NSInteger)column;
 @end
