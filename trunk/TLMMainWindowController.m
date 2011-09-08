@@ -662,14 +662,18 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
      Note: a slow-to-update mirror may have a stale version, so check needsUpdate as well.
      */
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"((name == 'tlperl.win32' OR name BEGINSWITH 'texlive.infra')) AND (needsUpdate == YES)"];
-    NSArray *packages = [allPackages filteredArrayUsingPredicate:predicate];
+    NSArray *criticalPackages = [allPackages filteredArrayUsingPredicate:predicate];
     
-    if ([packages count]) {
+    if ([criticalPackages count]) {
         [_previousInfrastructureVersions release];
-        _previousInfrastructureVersions = __TLMCopyVersionsForPackageNames([packages valueForKey:@"name"]);
+        _previousInfrastructureVersions = __TLMCopyVersionsForPackageNames([criticalPackages valueForKey:@"name"]);
         _updateInfrastructure = YES;
+        
+        // only allow updating the infra packages
+        [_updateListDataSource setPackageFilter:predicate];
+        
         // log for debugging, then display an alert so the user has some idea of what's going on...
-        TLMLog(__func__, @"Critical updates detected: %@", [packages valueForKey:@"name"]);
+        TLMLog(__func__, @"Critical updates detected: %@", [criticalPackages valueForKey:@"name"]);
         NSAlert *alert = [[NSAlert new] autorelease];
         [alert setMessageText:NSLocalizedString(@"Critical updates available.", @"alert title")];
         [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"%lu packages are available for update.  Of these, the TeX Live installer packages listed here must be updated first.  Update now?", @"alert message text"), (unsigned long)[[op packages] count]]];
@@ -682,10 +686,10 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     }
     else {
         _updateInfrastructure = NO;
-        packages = allPackages;
+        [_updateListDataSource setPackageFilter:nil];
     }
     
-    [_updateListDataSource setAllPackages:packages];
+    [_updateListDataSource setAllPackages:allPackages];
     [_updateListDataSource setRefreshing:NO];
     [_updateListDataSource setNeedsUpdate:NO];
     
@@ -695,7 +699,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
         statusString = NSLocalizedString(@"Listing Cancelled", @"main window status string");
     else if ([op failed])
         statusString = NSLocalizedString(@"Listing Failed", @"main window status string");
-    else if ([packages count] == 0)
+    else if ([allPackages count] == 0)
         statusString = NSLocalizedString(@"No Updates Available", @"main window status string");
     
     [self _displayStatusString:statusString dataSource:_updateListDataSource];
@@ -793,8 +797,10 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
                                     contextInfo:NULL];
             }
             else {
-#warning could just reset a filter here
-                [self _refreshUpdatedPackageListFromLocation:[self serverURL]];
+                // formerly called _refreshUpdatedPackageListFromLocation here
+                [_updateListDataSource setPackageFilter:nil];
+                // versions are okay, and we can no longer rely on the list updates callback to reset this
+                _updateInfrastructure = NO;
                 [self _displayStatusString:NSLocalizedString(@"Infrastructure Update Succeeded", @"status message") dataSource:_updateListDataSource];
             }
             
@@ -806,8 +812,11 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
             /*
              Could remove this to ensure that the "Update Succeeded" message is displayed longer,
              but it's needed in case a package update also updates or installs other dependencies.
-             */
+             However, this notification is not posted for installs, so I now think that's not a
+             problem.
             [_updateListDataSource setNeedsUpdate:YES];
+             */
+
             [_packageListDataSource setNeedsUpdate:YES];
             [_backupDataSource setNeedsUpdate:YES];
             
@@ -1351,6 +1360,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 
 - (void)updateInfrastructure:(id)sender;
 {
+    [self _displayStatusString:nil dataSource:_updateListDataSource];
     TLMLog(__func__, @"Beginning user-requested infrastructure update%C", 0x2026);
     _updateInfrastructure = YES;
     [self _updateAllPackages];
@@ -1358,6 +1368,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 
 - (void)updateInfrastructureFromCriticalRepository:(id)sender
 {
+    [self _displayStatusString:nil dataSource:_updateListDataSource];
     TLMLog(__func__, @"Beginning user-requested infrastructure update from tlcritical repo%C", 0x2026);
     _updateInfrastructure = YES;
     NSURL *repo = [NSURL URLWithString:[[NSUserDefaults standardUserDefaults] objectForKey:TLMTLCriticalRepository]];
@@ -1418,6 +1429,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 
 - (void)updateAllPackages;
 {
+    [self _displayStatusString:nil dataSource:_updateListDataSource];
     NSAlert *alert = [[NSAlert new] autorelease];
     NSUInteger size = 0;
     for (TLMPackage *pkg in [_updateListDataSource allPackages])
@@ -1456,6 +1468,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 
 - (void)updatePackagesWithNames:(NSArray *)packageNames;
 {
+    [self _displayStatusString:nil dataSource:_updateListDataSource];
     NSURL *currentURL = [self serverURL];
     if ([self _isCorrectDatabaseVersionAtURL:currentURL]) {
         TLMUpdateOperation *op = [[TLMUpdateOperation alloc] initWithPackageNames:packageNames location:currentURL];
@@ -1510,6 +1523,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 - (void)refreshBackupList
 {
     TLMBackupListOperation *op = [TLMBackupListOperation new];
+    [self _displayStatusString:nil dataSource:_backupDataSource];
     [_backupDataSource setRefreshing:YES];
     [self _addOperation:op selector:@selector(_handleListBackupsFinishedNotification:) setRefreshingForDataSource:_backupDataSource];
     [op release];
@@ -1518,6 +1532,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 - (void)restorePackage:(NSString *)packageName version:(NSNumber *)version;
 {
     TLMBackupOperation *op = [TLMBackupOperation newRestoreOperationWithPackage:packageName version:version];
+    [self _displayStatusString:nil dataSource:_backupDataSource];
     TLMLog(__func__, @"Restoring version %@ of %@", version, packageName);
     [self _addOperation:op selector:@selector(_handleRestoreFinishedNotification:) setRefreshingForDataSource:nil];
     [op release];    
