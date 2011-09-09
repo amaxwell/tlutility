@@ -66,12 +66,20 @@ NSString * const TLMDatabaseVersionCheckComplete = @"TLMDatabaseVersionCheckComp
 
 static NSMutableSet *_databases = nil;
 static NSLock       *_databasesLock = nil;
+static double        _dataTimeout = URL_TIMEOUT;
 
 + (void)initialize
 {
     if (nil == _databases) {
         _databases = [NSMutableSet new];
         _databasesLock = [NSLock new];
+        
+        // some servers may have a quick URL response, but be terribly slow to return data (indian.cse.msu.edu)
+        NSNumber *dataTimeout = [[NSUserDefaults standardUserDefaults] objectForKey:@"TLMDatabaseDownloadTimeout"];
+        if (dataTimeout && [dataTimeout doubleValue] > 0) {
+            _dataTimeout = [dataTimeout doubleValue];
+            TLMLog(__func__, @"Using custom database download timeout of %.0f seconds", _dataTimeout);
+        }
     }
 }
 
@@ -314,7 +322,7 @@ static NSLock       *_databasesLock = nil;
         NSString *rlmode = @"__TLMDatabaseDownloadRunLoopMode";
         [connection scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:rlmode];
         [connection start];
-        const CFAbsoluteTime stopTime = CFAbsoluteTimeGetCurrent() + URL_TIMEOUT;
+        const CFAbsoluteTime stopTime = CFAbsoluteTimeGetCurrent() + _dataTimeout;
         do {
             const SInt32 ret = CFRunLoopRunInMode((CFStringRef)rlmode, 0.3, TRUE);
             
