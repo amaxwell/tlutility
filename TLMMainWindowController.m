@@ -1423,8 +1423,10 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 
 - (void)refreshUpdatedPackageListWithURL:(NSURL *)aURL;
 {
-    if (aURL && [_updateListDataSource isRefreshing] == NO)
-        [self _refreshUpdatedPackageListFromLocation:aURL];    
+    if (aURL && [_updateListDataSource isRefreshing] == NO) {
+        [self setServerURL:aURL];
+        [self _refreshUpdatedPackageListFromLocation:aURL];  
+    }
 }
 
 - (void)updateAllPackages;
