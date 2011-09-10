@@ -374,12 +374,7 @@ static NSURL *__TLMTLNetURL(NSString *mirrorURLString)
 {
     NSArray *URLs = [NSURL URLsFromPasteboard:[info draggingPasteboard]];
     if ([URLs count] == 0) return NSDragOperationNone;
-    NSUInteger nonFileURLCount = 0;
-    for (NSURL *aURL in URLs) {
-        if ([aURL isFileURL] == NO)
-            nonFileURLCount++;
-    }
-    if (nonFileURLCount == 0) return NSDragOperationNone;
+    // originally checked isFileURL here, but you can have a file: based repo
     return ([item isEqual:[self _customNode]]) ? NSDragOperationCopy : NSDragOperationNone;    
 }
 
