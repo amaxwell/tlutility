@@ -41,15 +41,33 @@
 #import "TLMMirrorCell.h"
 #import "TLMLogServer.h"
 #import "TLMDatabase.h"
+#import "TLMAppController.h"
+#import "TLMMainWindowController.h"
+
+#define MIRRORS_FILENAME @"Mirrors.plist"
+#define USER_MIRRORS_KEY @"User mirrors"
 
 @interface TLMMirrorController (Private)
 - (void)_loadDefaultSites;
 @end
 
-
 @implementation TLMMirrorController
 
 @synthesize _outlineView;
+@synthesize _addRemoveControl;
+
+static NSString * __TLMUserMirrorsPath()
+{
+    static NSString *archivePath = nil;
+    if (nil == archivePath) {
+        archivePath = [NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES) lastObject];
+        NSString *appname = [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString *)kCFBundleNameKey];
+        archivePath = [archivePath stringByAppendingPathComponent:appname];
+        [[NSFileManager defaultManager] createDirectoryAtPath:archivePath withIntermediateDirectories:YES attributes:nil error:NULL];
+        archivePath = [[archivePath stringByAppendingPathComponent:MIRRORS_FILENAME] copy];
+    }
+    return archivePath;
+}
 
 - (id)init
 {
@@ -73,6 +91,7 @@
     [_outlineView release];
     [_mirrorCell release];
     [_textFieldCell release];
+    [_addRemoveControl release];
     [super dealloc];
 }
 
@@ -81,6 +100,22 @@
 static NSURL *__TLMTLNetURL(NSString *mirrorURLString)
 {
     return [NSURL TLNetURLForMirror:[NSURL URLWithString:mirrorURLString]];
+}
+
+- (TLMMirrorNode *)_customNode
+{
+    return [_mirrorRoot childAtIndex:0];
+}
+
+- (void)_archivePlist
+{
+    NSMutableArray *array = [NSMutableArray array];
+    for (TLMMirrorNode *userNode in [self _customNode]) {
+        if ([(NSURL *)[userNode value] isMultiplexer] == NO)
+            [array addObject:[[userNode value] absoluteString]];
+    }
+    NSDictionary *plist = [NSDictionary dictionaryWithObject:array forKey:USER_MIRRORS_KEY];
+    [plist writeToFile:__TLMUserMirrorsPath() atomically:YES];
 }
 
 - (void)_loadDefaultSites
@@ -105,6 +140,15 @@ static NSURL *__TLMTLNetURL(NSString *mirrorURLString)
     [multiplexorNode setValue:__TLMTLNetURL(@"http://mirror.ctan.org/")];
     [customNode addChild:multiplexorNode];
     [multiplexorNode release];
+    
+    NSDictionary *userPlist = [NSDictionary dictionaryWithContentsOfFile:__TLMUserMirrorsPath()];
+    for (NSString *URLString in [userPlist objectForKey:USER_MIRRORS_KEY]) {
+        TLMMirrorNode *userNode = [TLMMirrorNode new];
+        [userNode setType:TLMMirrorNodeURL];
+        [userNode setValue:[NSURL URLWithString:URLString]];
+        [[self _customNode] addChild:userNode];
+        [userNode release];
+    }
     
     for (NSString *continent in sites) {
         
@@ -147,6 +191,9 @@ static NSURL *__TLMTLNetURL(NSString *mirrorURLString)
 - (void)awakeFromNib
 {        
     [_outlineView reloadData];
+    [_outlineView registerForDraggedTypes:[NSArray arrayWithObjects:(id)kUTTypeURL, NSURLPboardType, nil]];
+    [_outlineView setDoubleAction:@selector(doubleClickAction:)];
+    [_outlineView setTarget:self];
 }
 
 - (TLMMirrorNode *)_mirrorForURL:(NSURL *)aURL
@@ -170,6 +217,18 @@ static NSURL *__TLMTLNetURL(NSString *mirrorURLString)
 {
     TLMLog(__func__, @"%@", [aNote userInfo]);
     TLMLog(__func__, @"mirror = %@", [self _mirrorForURL:[[aNote userInfo] objectForKey:@"URL"]]);
+}
+
+- (void)doubleClickAction:(id)sender
+{
+    NSInteger row = [_outlineView clickedRow];
+    if (row >= 0) {
+        TLMMirrorNode *clickedNode = [_outlineView itemAtRow:row];
+        if ([clickedNode type] == TLMMirrorNodeURL)
+            [[[NSApp delegate] mainWindowController] refreshUpdatedPackageListWithURL:[clickedNode value]];
+        else
+            NSBeep();
+    }
 }
 
 - (NSArray *)mirrorsMatchingSearchString:(NSString *)aString;
@@ -295,7 +354,6 @@ static NSURL *__TLMTLNetURL(NSString *mirrorURLString)
     return [NSURL writeURLs:URLs toPasteboard:pasteboard];
 }
 
-
 - (void)outlineView:(TLMOutlineView *)outlineView writeSelectedRowsToPasteboard:(NSPasteboard *)pboard;
 {
     NSMutableArray *URLs = [NSMutableArray array];
@@ -310,6 +368,87 @@ static NSURL *__TLMTLNetURL(NSString *mirrorURLString)
     
     if ([NSURL writeURLs:URLs toPasteboard:[NSPasteboard pasteboardWithName:NSGeneralPboard]] == NO)
         NSBeep();
+}
+
+- (NSDragOperation)outlineView:(NSOutlineView *)outlineView validateDrop:(id <NSDraggingInfo>)info proposedItem:(id)item proposedChildIndex:(NSInteger)index;
+{
+    NSArray *URLs = [NSURL URLsFromPasteboard:[info draggingPasteboard]];
+    if ([URLs count] == 0) return NSDragOperationNone;
+    NSUInteger nonFileURLCount = 0;
+    for (NSURL *aURL in URLs) {
+        if ([aURL isFileURL] == NO)
+            nonFileURLCount++;
+    }
+    if (nonFileURLCount == 0) return NSDragOperationNone;
+    return ([item isEqual:[self _customNode]]) ? NSDragOperationCopy : NSDragOperationNone;    
+}
+
+- (void)outlineViewSelectionDidChange:(NSNotification *)notification;
+{
+    // only allow removal of custom node children, except for the multiplexer
+    NSArray *selectedItems = [_outlineView selectedItems];
+    [_addRemoveControl setEnabled:([selectedItems count] > 0) forSegment:1];
+    // only allow adding if there's a single selection
+    [_addRemoveControl setEnabled:([selectedItems count] == 1) forSegment:0];
+    for (id item in selectedItems) {
+        if ([_outlineView parentForItem:item] != [self _customNode]) {
+            [_addRemoveControl setEnabled:NO forSegment:1];
+            [_addRemoveControl setEnabled:NO forSegment:0];
+            // may still be able to add if the custom node parent is selected
+        }
+        else if ([(NSURL *)[item value] isMultiplexer]) {
+            [_addRemoveControl setEnabled:NO forSegment:1];
+            [_addRemoveControl setEnabled:([selectedItems count] == 1) forSegment:0];
+        }
+        else if (item == [self _customNode]) {
+            [_addRemoveControl setEnabled:([selectedItems count] == 1) forSegment:0];
+        }
+        else {
+            // parent is custom node
+            [_addRemoveControl setEnabled:([selectedItems count] == 1) forSegment:0];
+        }
+    }
+}
+
+- (void)_removeSelectedItems
+{
+    NSArray *selectedItems = [[[_outlineView selectedItems] copy] autorelease];
+    for (TLMMirrorNode *node in selectedItems) {
+        if ([node type] == TLMMirrorNodeURL)
+            [[self _customNode] removeChild:node];
+    }
+    [_outlineView reloadData];
+    [self _archivePlist];
+}
+
+- (void)addRemoveAction:(id)sender
+{
+    switch ([_addRemoveControl selectedSegment]) {
+        case 0:
+            TLMLog(__func__, @"Should allow add/edit here or something");
+            break;
+        case 1:
+            [self _removeSelectedItems];
+            break;
+        default:
+            break;
+    }
+}
+
+- (BOOL)outlineView:(NSOutlineView *)outlineView acceptDrop:(id <NSDraggingInfo>)info item:(id)item childIndex:(NSInteger)index;
+{
+    NSArray *URLs = [NSURL URLsFromPasteboard:[info draggingPasteboard]];
+    NSParameterAssert([item isEqual:[self _customNode]]);
+    for (NSURL *aURL in URLs) {
+        TLMMirrorNode *userNode = [TLMMirrorNode new];
+        [userNode setType:TLMMirrorNodeURL];
+        [userNode setValue:aURL];
+        [[self _customNode] addChild:userNode];
+        [userNode release];
+    }
+    [_outlineView reloadData];
+    [self performSelector:@selector(_archivePlist) withObject:nil afterDelay:0];
+    return [URLs count] > 0;
 }
 
 

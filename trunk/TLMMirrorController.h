@@ -45,14 +45,18 @@
 @interface TLMMirrorController : NSWindowController <TLMOutlineViewDataSource>
 {
 @private
-    TLMMirrorNode   *_mirrorRoot;
-    TLMOutlineView  *_outlineView;
-    TLMMirrorCell   *_mirrorCell;
-    NSTextFieldCell *_textFieldCell;
+    TLMMirrorNode      *_mirrorRoot;
+    TLMOutlineView     *_outlineView;
+    TLMMirrorCell      *_mirrorCell;
+    NSTextFieldCell    *_textFieldCell;
+    NSSegmentedControl *_addRemoveControl;
 }
 
 - (NSArray *)mirrorsMatchingSearchString:(NSString *)aString;
 
 @property (nonatomic, retain) IBOutlet NSOutlineView *_outlineView;
+@property (nonatomic, retain) IBOutlet NSSegmentedControl *_addRemoveControl;
+
+- (IBAction)addRemoveAction:(id)sender;
 
 @end
