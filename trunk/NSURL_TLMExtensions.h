@@ -45,6 +45,7 @@
 + (NSURL *)databaseURLForTLNetURL:(NSURL *)mirrorURL;
 
 + (BOOL)writeURLs:(NSArray *)array toPasteboard:(NSPasteboard *)pboard;
++ (NSArray *)URLsFromPasteboard:(NSPasteboard *)pboard;
 
 // mirrorURL is host only
 + (NSURL *)TLNetURLForMirror:(NSURL *)mirrorURL;
