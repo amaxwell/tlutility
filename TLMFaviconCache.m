@@ -245,6 +245,9 @@ static void __TLMFaviconCacheInit() { _sharedCache = [TLMFaviconCache new]; }
     // !!! early return for non-http URLs
     if ([[aURL scheme] hasPrefix:@"http"] == NO) return [self defaultFavicon];
     
+    // !!! early return: don't let it redirect and give the wrong icon
+    if ([aURL isMultiplexer]) return [self defaultFavicon];
+    
     aURL = [aURL tlm_normalizedURL];
     
     id icon = [_iconsByURL objectForKey:[aURL host]];
