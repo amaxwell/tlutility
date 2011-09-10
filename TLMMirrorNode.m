@@ -128,6 +128,11 @@
     return [_children objectAtIndex:idx];
 }
 
+- (void)removeChild:(TLMMirrorNode *)child;
+{
+    [_children removeObject:child];
+}
+
 - (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state objects:(id *)stackbuf count:(NSUInteger)len;
 {
     return [_children countByEnumeratingWithState:state objects:stackbuf count:len];
