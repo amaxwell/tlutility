@@ -1159,14 +1159,14 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
                             contextInfo:NULL];              
     }
     else if ([op isCancelled] == NO) {
-        
-        [self _displayStatusString:NSLocalizedString(@"Restore Succeeded", @"status message") dataSource:_backupDataSource];
-        
+                
         [_updateListDataSource setNeedsUpdate:YES];
-        [_packageListDataSource setNeedsUpdate:YES];
-        [_backupDataSource setNeedsUpdate:YES];
         
+        // no reason to refresh backups or package list after a restore
         [self _refreshCurrentDataSourceIfNeeded];
+        
+        // will get blown away by the refresh if backup isn't the current datasource, but that's okay
+        [self _displayStatusString:NSLocalizedString(@"Restore Succeeded", @"status message") dataSource:_backupDataSource];
 
     }        
 }
