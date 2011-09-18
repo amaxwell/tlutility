@@ -68,6 +68,9 @@
 @property (nonatomic, getter = isRefreshing) BOOL refreshing;
 @property (nonatomic, copy) NSPredicate *packageFilter;
 
+// for removing infra update package manually
+- (void)removePackageNamed:(NSString *)packageName;
+
 - (IBAction)refreshList:(id)sender;
 - (IBAction)updateAll:(id)sender;
 - (IBAction)updateSelectedRows:(id)sender;
