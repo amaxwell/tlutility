@@ -1356,6 +1356,11 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     if ([[[_currentListDataSource statusWindow] statusString] isEqualToString:URL_VALIDATE_STATUS_STRING])
         [self _displayStatusString:nil dataSource:_currentListDataSource];
     [self changeServerURL:nil];
+    
+    // mark all URL based datasources as needing an update, and reload the current one if needed
+    [_updateListDataSource setNeedsUpdate:YES];
+    [_packageListDataSource setNeedsUpdate:YES];
+    [self _refreshCurrentDataSourceIfNeeded];
 }
 
 - (void)updateInfrastructure:(id)sender;
