@@ -797,6 +797,9 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
                                     contextInfo:NULL];
             }
             else {
+                // successful infrastructure update; remove the infra package from the list manually
+                // ??? when did TL quit using arch-specific texlive.infra packages?
+                [_updateListDataSource removePackageNamed:@"texlive.infra"];
                 // formerly called _refreshUpdatedPackageListFromLocation here
                 [_updateListDataSource setPackageFilter:nil];
                 // versions are okay, and we can no longer rely on the list updates callback to reset this

@@ -153,6 +153,14 @@
     [self search:nil];
 }
 
+- (void)removePackageNamed:(NSString *)packageName;
+{
+    // for whatever reason, "name NOT LIKE %@" raises an exception in -[NSPredicate predicateWithFormat:]
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name != %@", packageName];
+    NSArray *newPackages = [_allPackages filteredArrayUsingPredicate:predicate];
+    [self setAllPackages:newPackages];
+}
+
 - (void)_deselectUpdatingPackage
 {
     NSMutableArray *toSelect = nil;
