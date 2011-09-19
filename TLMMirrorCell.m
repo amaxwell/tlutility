@@ -155,6 +155,19 @@
     [super drawInteriorWithFrame:[self textRectForBounds:cellFrame] inView:controlView];
 }
 
+- (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
+{
+    [super drawWithFrame:cellFrame inView:controlView];
+    if ([self showsFirstResponder]) {
+        [NSGraphicsContext saveGraphicsState];
+        NSSetFocusRingStyle(NSFocusRingAbove);
+        NSRectFill([self textRectForBounds:cellFrame]);
+        [NSGraphicsContext restoreGraphicsState];
+    }
+}
+
+- (NSFocusRingType)focusRingType { return NSFocusRingTypeNone; }
+
 - (NSSize)cellSize;
 {
     NSSize cellSize = [super cellSize];
