@@ -43,6 +43,7 @@
 #import "TLMDatabase.h"
 #import "TLMAppController.h"
 #import "TLMMainWindowController.h"
+#import "TLMEnvironment.h"
 
 #define MIRRORS_FILENAME @"Mirrors.plist"
 #define USER_MIRRORS_KEY @"User mirrors"
@@ -304,7 +305,7 @@ static NSURL *__TLMTLNetURL(NSString *mirrorURLString)
 {
     NSFont *defaultFont = [outlineView defaultFont];
     
-    if ([item type] == TLMMirrorNodeCountry) {
+    if (([item type] == TLMMirrorNodeURL && [[item value] isEqual:[[TLMEnvironment currentEnvironment] defaultServerURL]])) {
         [cell setFont:[NSFont boldSystemFontOfSize:[defaultFont pointSize]]];
     }
     else if (defaultFont) {
