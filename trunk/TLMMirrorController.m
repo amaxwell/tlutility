@@ -456,8 +456,16 @@ static bool __isdefaultserver(TLMMirrorNode *node)
 {
     switch ([_addRemoveControl selectedSegment]) {
         case 0:
-            TLMLog(__func__, @"Should allow add/edit here or something");
+        {
+            TLMMirrorNode *child = [[TLMMirrorNode new] autorelease];
+            [child setType:TLMMirrorNodeURL];
+            [child setValue:[NSURL URLWithString:@"http://"]];
+            [[self _customNode] addChild:child];
+            [_outlineView reloadData];
+            [_outlineView expandItem:[self _customNode]];
+            [_outlineView editColumn:0 row:[_outlineView rowForItem:child] withEvent:nil select:YES];
             break;
+        }
         case 1:
             [self _removeSelectedItems];
             break;
