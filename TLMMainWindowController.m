@@ -1331,11 +1331,22 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
         if ([[[_URLField cell] formatter] getObjectValue:&aURL forString:[_URLField stringValue] errorDescription:&err]) {
             
             // will show an alert if there's a version mismatch
-            if ([self _isCorrectDatabaseVersionAtURL:aURL]) {
-                TLMLog(__func__, @"User changed URL to %@", [_URLField objectValue]);
-                [self setServerURL:[_URLField objectValue]];
+            NSURL *newURL = [_URLField objectValue];
+            if ([newURL isEqual:[self serverURL]]) {
+                // don't trigger tlmgr every time the address field loses first responder
+                TLMLog(__func__, @"Ignoring spurious URL change action");
+            }
+            else if ([self _isCorrectDatabaseVersionAtURL:newURL]) {
+                TLMLog(__func__, @"User changed URL to %@", newURL);
+                [self setServerURL:newURL];
+                
+                // web browser expectations
+                [_updateListDataSource setNeedsUpdate:YES];
+                [_packageListDataSource setNeedsUpdate:YES];
+                [self _refreshCurrentDataSourceIfNeeded];
             }
             else {
+                // wrong db version
                 [_URLField setStringValue:[[self serverURL] absoluteString]];
             }
 
@@ -1360,7 +1371,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
         [self _displayStatusString:nil dataSource:_currentListDataSource];
     [self changeServerURL:nil];
     
-    // mark all URL based datasources as needing an update, and reload the current one if needed
+    // web browser expectations
     [_updateListDataSource setNeedsUpdate:YES];
     [_packageListDataSource setNeedsUpdate:YES];
     [self _refreshCurrentDataSourceIfNeeded];
