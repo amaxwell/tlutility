@@ -44,6 +44,7 @@
 #import "TLMAppController.h"
 #import "TLMMainWindowController.h"
 #import "TLMEnvironment.h"
+#import "TLMURLFormatter.h"
 
 #define MIRRORS_FILENAME @"Mirrors.plist"
 #define USER_MIRRORS_KEY @"User mirrors"
@@ -301,16 +302,48 @@ static NSURL *__TLMTLNetURL(NSString *mirrorURLString)
     return [item valueForKey:[tableColumn identifier]];
 }
 
+static bool __isdefaultserver(TLMMirrorNode *node)
+{
+    return [node type] == TLMMirrorNodeURL && [[node value] isEqual:[[TLMEnvironment currentEnvironment] defaultServerURL]];
+}
+
+- (void)outlineView:(NSOutlineView *)outlineView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn byItem:(TLMMirrorNode *)item;
+{
+    // could assert these conditions
+    if ([_outlineView parentForItem:item] != [self _customNode])
+        return NSBeep();
+    
+    if (__isdefaultserver(item))
+        return NSBeep();
+    
+    if ([item type] == TLMMirrorNodeURL) {
+        [item setValue:([object isKindOfClass:[NSURL class]] ? object : [NSURL URLWithString:object])];
+        [self performSelector:@selector(_archivePlist) withObject:nil afterDelay:0];
+    }
+}
+
+#pragma mark NSOutlineView delegate
+
 - (void)outlineView:(TLMOutlineView *)outlineView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(TLMMirrorNode *)item;
 {
     NSFont *defaultFont = [outlineView defaultFont];
+    const bool defaultServer = __isdefaultserver(item);
     
-    if (([item type] == TLMMirrorNodeURL && [[item value] isEqual:[[TLMEnvironment currentEnvironment] defaultServerURL]])) {
+    if (defaultServer) {
         [cell setFont:[NSFont boldSystemFontOfSize:[defaultFont pointSize]]];
     }
     else if (defaultFont) {
         [cell setFont:defaultFont];
     }
+    
+    if ([_outlineView parentForItem:item] == [self _customNode] && defaultServer == false) {
+        [cell setEditable:YES];
+        [cell setFormatter:[[TLMURLFormatter new] autorelease]];
+    }
+    else {
+        [cell setEditable:NO];
+    }
+
 }
 
 - (NSCell *)outlineView:(NSOutlineView *)outlineView dataCellForTableColumn:(NSTableColumn *)tableColumn item:(TLMMirrorNode *)item
@@ -339,6 +372,8 @@ static NSURL *__TLMTLNetURL(NSString *mirrorURLString)
 {
     return [NSKeyedArchiver archivedDataWithRootObject:item];
 }
+
+#pragma mark User interaction
 
 - (BOOL)outlineView:(TLMOutlineView *)outlineView writeItems:(NSArray *)items toPasteboard:(NSPasteboard *)pasteboard;
 {
@@ -447,5 +482,15 @@ static NSURL *__TLMTLNetURL(NSString *mirrorURLString)
     return [URLs count] > 0;
 }
 
+- (BOOL)control:(NSControl *)control didFailToFormatString:(NSString *)string errorDescription:(NSString *)error
+{
+    if (control == _outlineView) {
+        NSAlert *alert = [[NSAlert new] autorelease];
+        [alert setMessageText:NSLocalizedString(@"Invalid URL", @"alert title")];
+        [alert setInformativeText:error];
+        [alert beginSheetModalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
+    }
+    return NO;
+}
 
 @end
