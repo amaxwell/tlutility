@@ -57,40 +57,22 @@ extern NSString * const TLMShowLogWindowPreferenceKey;
 {
 @private
     NSPathControl       *_texbinPathControl;
-    NSComboBox          *_serverComboBox;
-    NSButton            *_setCommandLineServerCheckbox;
-    NSButton            *_rootHomeCheckBox;
     NSButton            *_useSyslogCheckBox;
     NSButton            *_autoinstallCheckBox;
     NSButton            *_autoremoveCheckBox;
-    NSArray             *_servers;
-    NSPanel             *_progressPanel;
-    NSProgressIndicator *_progressIndicator;
-    NSTextField         *_progressField;
-    BOOL                 _hasPendingServerEdit;
-    NSUInteger           _pendingOptionChangeCount;
-
 }
 
 + (TLMPreferenceController *)sharedPreferenceController;
 - (IBAction)changeTexBinPath:(id)sender;
-- (IBAction)changeServerURL:(id)sender;
 - (IBAction)toggleUseRootHome:(id)sender;
-- (IBAction)toggleCommandLineServer:(id)sender;
 - (IBAction)toggleUseSyslog:(id)sender;
 - (IBAction)toggleAutoinstall:(id)sender;
 - (IBAction)toggleAutoremove:(id)sender;
 
 @property (nonatomic, retain) IBOutlet NSPathControl *_texbinPathControl;
-@property (nonatomic, retain) IBOutlet NSComboBox *_serverComboBox;
-@property (nonatomic, retain) IBOutlet NSButton *_setCommandLineServerCheckbox;
 @property (nonatomic, retain) IBOutlet NSButton *_rootHomeCheckBox;
 @property (nonatomic, retain) IBOutlet NSButton *_useSyslogCheckBox;
 @property (nonatomic, retain) IBOutlet NSButton *_autoinstallCheckBox;
 @property (nonatomic, retain) IBOutlet NSButton *_autoremoveCheckBox;
-@property (nonatomic, retain) IBOutlet NSPanel *_progressPanel;
-@property (nonatomic, retain) IBOutlet NSProgressIndicator *_progressIndicator;
-@property (nonatomic, retain) IBOutlet NSTextField *_progressField;
-@property (readonly) NSArray *defaultServers;
 
 @end

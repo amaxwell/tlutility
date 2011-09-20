@@ -45,6 +45,7 @@
 #import "TLMMainWindowController.h"
 #import "TLMEnvironment.h"
 #import "TLMURLFormatter.h"
+#import "TLMPreferenceController.h"
 
 #define MIRRORS_FILENAME @"Mirrors.plist"
 #define USER_MIRRORS_KEY @"User mirrors"
@@ -402,7 +403,7 @@ static bool __isdefaultserver(TLMMirrorNode *node)
         [URLs addObject:[node value]];
     }
     
-    if ([NSURL writeURLs:URLs toPasteboard:[NSPasteboard pasteboardWithName:NSGeneralPboard]] == NO)
+    if ([URLs count] == 0 || [NSURL writeURLs:URLs toPasteboard:[NSPasteboard pasteboardWithName:NSGeneralPboard]] == NO)
         NSBeep();
 }
 
@@ -450,6 +451,48 @@ static bool __isdefaultserver(TLMMirrorNode *node)
     }
     [_outlineView reloadData];
     [self _archivePlist];
+}
+
+- (void)_copySelectedRows:(id)sender
+{
+    [self outlineView:_outlineView writeSelectedRowsToPasteboard:[NSPasteboard generalPasteboard]];
+}
+
+- (void)_makeSelectedMirrorDefault:(id)sender
+{
+    NSArray *selectedItems = [_outlineView selectedItems];
+    if ([selectedItems count] == 1 && [(TLMMirrorNode *)[selectedItems lastObject] type] == TLMMirrorNodeURL) {
+        NSURL *url = [(TLMMirrorNode *)[selectedItems lastObject] value];
+        [[NSUserDefaults standardUserDefaults] setObject:[url absoluteString] forKey:TLMFullServerURLPreferenceKey];
+        [_outlineView reloadData];
+    }
+    else {
+        NSBeep();
+    }
+}
+
+- (NSMenu *)tableView:(NSTableView *)tableView contextMenuForRow:(NSInteger)row column:(NSInteger)column;
+{
+    NSZone *zone = [NSMenu menuZone];
+    NSMenu *menu = [[NSMenu allocWithZone:zone] init];
+    
+    NSMenuItem *item = [[NSMenuItem allocWithZone:zone] initWithTitle:NSLocalizedString(@"Copy", @"context menu")
+                                                               action:@selector(_copySelectedRows:)
+                                                        keyEquivalent:@""];
+    [item setAction:@selector(_copySelectedRows:)];
+    [item setTarget:self];
+    [menu addItem:item];
+    [item release];
+    
+    item = [[NSMenuItem allocWithZone:zone] initWithTitle:NSLocalizedString(@"Set Default Mirror", @"context menu")
+                                                   action:@selector(_makeSelectedMirrorDefault:)
+                                            keyEquivalent:@""];
+    [item setAction:@selector(_makeSelectedMirrorDefault:)];
+    [item setTarget:self];
+    [menu addItem:item];
+    [item release];
+    
+    return [menu autorelease];
 }
 
 - (void)addRemoveAction:(id)sender
