@@ -43,7 +43,7 @@
 #import "TLMTableView.h"
 #import "TLMSplitView.h"
 
-#define DEFAULT_HISTORY_MAX 7
+#define DEFAULT_HISTORY_MAX 14
 #define DEFAULT_HISTORY_KEY @"LogHistoryMax"
 #define ARCHIVE_FILENAME    @"Log Messages.plist"
 #define ARCHIVE_TIMER_DELAY 30.0
