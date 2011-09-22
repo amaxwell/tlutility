@@ -58,5 +58,6 @@
 @property (nonatomic, retain) IBOutlet NSSegmentedControl *_addRemoveControl;
 
 - (IBAction)addRemoveAction:(id)sender;
+- (IBAction)changeDefaultMirror:(id)sender;
 
 @end
