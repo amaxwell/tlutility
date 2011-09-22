@@ -229,7 +229,7 @@ static void __TLMMigrateBundleIdentifier()
 
     if (nil == _aevtUpdateURL) {
         [[self mainWindowController] showWindow:nil];
-        //[[self mainWindowController] refreshUpdatedPackageList];
+        [[self mainWindowController] refreshUpdatedPackageList];
     }    
 }
 
