@@ -471,6 +471,24 @@ static bool __isdefaultserver(TLMMirrorNode *node)
     }
 }
 
+- (void)changeDefaultMirror:(id)sender
+{
+    [self _makeSelectedMirrorDefault:sender];
+}
+
+- (BOOL)validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem>)anItem;
+{
+    SEL action = [anItem action];
+    if (@selector(changeDefaultMirror:) == action || @selector(_makeSelectedMirrorDefault:) == action) {
+        NSArray *selectedItems = [_outlineView selectedItems];
+        return ([selectedItems count] == 1 && [(TLMMirrorNode *)[selectedItems lastObject] type] == TLMMirrorNodeURL);
+    }
+    else if (@selector(_copySelectedRows:) == action)
+        return [_outlineView numberOfSelectedRows] > 0;
+    else
+        return YES;
+}
+
 - (NSMenu *)tableView:(NSTableView *)tableView contextMenuForRow:(NSInteger)row column:(NSInteger)column;
 {
     NSZone *zone = [NSMenu menuZone];
