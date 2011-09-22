@@ -46,7 +46,6 @@ extern NSString * const TLMFullServerURLPreferenceKey;
 extern NSString * const TLMDisableVersionMismatchWarningKey;
 extern NSString * const TLMAutoInstallPreferenceKey;
 extern NSString * const TLMAutoRemovePreferenceKey;
-extern NSString * const TLMSetCommandLineServerPreferenceKey;
 extern NSString * const TLMNetInstallerPathPreferenceKey;
 extern NSString * const TLMShouldListTLCritical;
 extern NSString * const TLMTLCriticalRepository;
