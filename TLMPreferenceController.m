@@ -40,9 +40,6 @@
 #import "TLMURLFormatter.h"
 #import "TLMLogServer.h"
 #import "TLMTask.h"
-#import "TLMDownload.h"
-#import "TLMReadWriteOperationQueue.h"
-#import "TLMOptionOperation.h"
 #import "TLMEnvironment.h"
 #import <pthread.h>
 
@@ -54,7 +51,6 @@ NSString * const TLMFullServerURLPreferenceKey = @"TLMFullServerURLPreferenceKey
 NSString * const TLMDisableVersionMismatchWarningKey = @"TLMDisableVersionMismatchWarningKey"; /* NO                   */
 NSString * const TLMAutoInstallPreferenceKey = @"TLMAutoInstallPreferenceKey";     /* YES (2009 only)                  */
 NSString * const TLMAutoRemovePreferenceKey = @"TLMAutoRemovePreferenceKey";       /* YES (2009 only)                  */
-NSString * const TLMSetCommandLineServerPreferenceKey = @"TLMSetCommandLineServerPreferenceKey"; /* NO                 */
 NSString * const TLMNetInstallerPathPreferenceKey = @"TLMNetInstallerPathPreferenceKey"; /* install-tl-unx.tar.gz      */
 NSString * const TLMShouldListTLCritical = @"TLMShouldListTLCritical";             /* NO (obsolete)                    */
 NSString * const TLMTLCriticalRepository = @"TLMTLCriticalRepository";             /* ftp://tug.org/texlive/tlcritical */

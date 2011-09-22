@@ -117,7 +117,6 @@ static void __TLMMigrateBundleIdentifier()
     [defaults setObject:tlnetDefault forKey:TLMFullServerURLPreferenceKey];
     
     [defaults setObject:@"/usr/texbin" forKey:TLMTexBinPathPreferenceKey];
-    [defaults setObject:[NSNumber numberWithBool:NO] forKey:TLMSetCommandLineServerPreferenceKey];
     
     [defaults setObject:@"install-tl-unx.tar.gz" forKey:TLMNetInstallerPathPreferenceKey];
     
@@ -230,8 +229,8 @@ static void __TLMMigrateBundleIdentifier()
 
     if (nil == _aevtUpdateURL) {
         [[self mainWindowController] showWindow:nil];
-        [[self mainWindowController] refreshUpdatedPackageList];
-    }
+        //[[self mainWindowController] refreshUpdatedPackageList];
+    }    
 }
 
 - (TLMMainWindowController *)mainWindowController { 
