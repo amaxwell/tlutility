@@ -181,12 +181,18 @@ class DTPath2D(object):
     def __str__(self):
         s = super(DTPath2D, self).__str__() + " {\n"
         for idx, subpath in enumerate(self):
-            s += "\n  Subpath %d (%d elements)\n" % (idx, len(subpath._xvalues - 1))
+            s += "\n  Subpath %d (%d elements)\n" % (idx, len(subpath._xvalues) - 1)
             for x, y in zip(subpath._xvalues[1:], subpath._yvalues[1:]):
                 s += "    (%s, %s)\n" % (x, y)
         s += "}\n"
         return s
     
+    def __len__(self):
+        total_length = 0
+        for p in self:
+            total_length += (len(p._xvalues) - 1)
+        return total_length
+
     def __dt_type__(self):
         return "2D Path"
         
