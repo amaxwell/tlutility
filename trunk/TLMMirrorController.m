@@ -61,6 +61,7 @@
 
 @synthesize _outlineView;
 @synthesize _addRemoveControl;
+@synthesize _makeDefaultButton;
 
 static NSString * __TLMUserMirrorsPath()
 {
@@ -99,6 +100,7 @@ static NSString * __TLMUserMirrorsPath()
     [_mirrorCell release];
     [_textFieldCell release];
     [_addRemoveControl release];
+    [_makeDefaultButton release];
     [super dealloc];
 }
 
@@ -178,13 +180,15 @@ static NSURL *__TLMTLNetURL(NSString *mirrorURLString)
             }
             
             for (NSString *URLString in [mirrorInfo objectForKey:@"urls"]) {
-                TLMMirrorNode *URLNode = [TLMMirrorNode new];
-                [URLNode setValue:__TLMTLNetURL(URLString)];
-                [URLNode setType:TLMMirrorNodeURL];
-                [countryNode addChild:URLNode];
-                [URLNode release];
+                // ignore rsync URLs since we can't use them
+                if ([URLString hasPrefix:@"rsync"] == NO) {
+                    TLMMirrorNode *URLNode = [TLMMirrorNode new];
+                    [URLNode setValue:__TLMTLNetURL(URLString)];
+                    [URLNode setType:TLMMirrorNodeURL];
+                    [countryNode addChild:URLNode];
+                    [URLNode release];
+                }
             }
-                        
         }
         
         for (NSString *countryName in countryNodes)
@@ -444,6 +448,9 @@ static bool __isdefaultserver(TLMMirrorNode *node)
             [_addRemoveControl setEnabled:([selectedItems count] == 1) forSegment:0];
         }
     }
+    
+    // allow even if already default
+    [_makeDefaultButton setEnabled:([selectedItems count] == 1)];
 }
 
 - (void)_removeSelectedItems

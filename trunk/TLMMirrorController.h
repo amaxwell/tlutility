@@ -50,6 +50,7 @@
     TLMMirrorCell      *_mirrorCell;
     NSTextFieldCell    *_textFieldCell;
     NSSegmentedControl *_addRemoveControl;
+    NSButton           *_makeDefaultButton;
     NSInteger           _pendingOptionChangeCount;
 }
 
@@ -57,6 +58,7 @@
 
 @property (nonatomic, retain) IBOutlet NSOutlineView *_outlineView;
 @property (nonatomic, retain) IBOutlet NSSegmentedControl *_addRemoveControl;
+@property (nonatomic, retain) IBOutlet NSButton *_makeDefaultButton;
 
 - (IBAction)addRemoveAction:(id)sender;
 - (IBAction)changeDefaultMirror:(id)sender;
