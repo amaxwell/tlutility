@@ -958,7 +958,7 @@
 									<reference key="NSOnImage" ref="35465992"/>
 									<reference key="NSMixedImage" ref="502551668"/>
 								</object>
-								<object class="NSMenuItem" id="599429326">
+								<object class="NSMenuItem" id="111240230">
 									<reference key="NSMenu" ref="245101568"/>
 									<string key="NSTitle">Quick Look</string>
 									<string key="NSKeyEquiv">y</string>
@@ -1063,7 +1063,7 @@
 							</object>
 						</object>
 					</object>
-					<object class="NSMenuItem" id="931655973">
+					<object class="NSMenuItem" id="269936929">
 						<reference key="NSMenu" ref="649796088"/>
 						<string key="NSTitle">Configure</string>
 						<string key="NSKeyEquiv"/>
@@ -1071,36 +1071,36 @@
 						<reference key="NSOnImage" ref="35465992"/>
 						<reference key="NSMixedImage" ref="502551668"/>
 						<string key="NSAction">submenuAction:</string>
-						<object class="NSMenu" key="NSSubmenu" id="58800481">
+						<object class="NSMenu" key="NSSubmenu" id="882484711">
 							<string key="NSTitle">Configure</string>
 							<object class="NSMutableArray" key="NSMenuItems">
 								<bool key="EncodedWithXMLCoder">YES</bool>
-								<object class="NSMenuItem" id="409755461">
-									<reference key="NSMenu" ref="58800481"/>
+								<object class="NSMenuItem" id="734570126">
+									<reference key="NSMenu" ref="882484711"/>
 									<string key="NSTitle">Change Paper Size…</string>
 									<string key="NSKeyEquiv"/>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="35465992"/>
 									<reference key="NSMixedImage" ref="502551668"/>
 								</object>
-								<object class="NSMenuItem" id="289094345">
-									<reference key="NSMenu" ref="58800481"/>
+								<object class="NSMenuItem" id="980078642">
+									<reference key="NSMenu" ref="882484711"/>
 									<string key="NSTitle">Configure Automatic Backups…</string>
 									<string key="NSKeyEquiv"/>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="35465992"/>
 									<reference key="NSMixedImage" ref="502551668"/>
 								</object>
-								<object class="NSMenuItem" id="100047655">
-									<reference key="NSMenu" ref="58800481"/>
+								<object class="NSMenuItem" id="892609725">
+									<reference key="NSMenu" ref="882484711"/>
 									<string key="NSTitle">Schedule TeX Live Update Checks…</string>
 									<string key="NSKeyEquiv"/>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="35465992"/>
 									<reference key="NSMixedImage" ref="502551668"/>
 								</object>
-								<object class="NSMenuItem" id="1009420724">
-									<reference key="NSMenu" ref="58800481"/>
+								<object class="NSMenuItem" id="564369709">
+									<reference key="NSMenu" ref="882484711"/>
 									<bool key="NSIsDisabled">YES</bool>
 									<bool key="NSIsSeparator">YES</bool>
 									<string key="NSTitle"/>
@@ -1109,17 +1109,17 @@
 									<reference key="NSOnImage" ref="35465992"/>
 									<reference key="NSMixedImage" ref="502551668"/>
 								</object>
-								<object class="NSMenuItem" id="51140517">
-									<reference key="NSMenu" ref="58800481"/>
+								<object class="NSMenuItem" id="1235359">
+									<reference key="NSMenu" ref="882484711"/>
 									<string key="NSTitle">Manage Mirrors</string>
 									<string key="NSKeyEquiv"/>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="35465992"/>
 									<reference key="NSMixedImage" ref="502551668"/>
 								</object>
-								<object class="NSMenuItem" id="534682676">
-									<reference key="NSMenu" ref="58800481"/>
-									<string key="NSTitle">Set as Default Mirror</string>
+								<object class="NSMenuItem" id="169531676">
+									<reference key="NSMenu" ref="882484711"/>
+									<string key="NSTitle">Set as Home Mirror</string>
 									<string key="NSKeyEquiv"/>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="35465992"/>
@@ -1927,7 +1927,7 @@
 					<object class="IBActionConnection" key="connection">
 						<string key="label">changeAutobackup:</string>
 						<reference key="source" ref="1014"/>
-						<reference key="destination" ref="289094345"/>
+						<reference key="destination" ref="980078642"/>
 					</object>
 					<int key="connectionID">611</int>
 				</object>
@@ -1935,7 +1935,7 @@
 					<object class="IBActionConnection" key="connection">
 						<string key="label">automaticUpdateCheck:</string>
 						<reference key="source" ref="1014"/>
-						<reference key="destination" ref="100047655"/>
+						<reference key="destination" ref="892609725"/>
 					</object>
 					<int key="connectionID">612</int>
 				</object>
@@ -1943,7 +1943,7 @@
 					<object class="IBActionConnection" key="connection">
 						<string key="label">changePapersize:</string>
 						<reference key="source" ref="1014"/>
-						<reference key="destination" ref="409755461"/>
+						<reference key="destination" ref="734570126"/>
 					</object>
 					<int key="connectionID">613</int>
 				</object>
@@ -1951,7 +1951,7 @@
 					<object class="IBActionConnection" key="connection">
 						<string key="label">manageMirrors:</string>
 						<reference key="source" ref="1014"/>
-						<reference key="destination" ref="51140517"/>
+						<reference key="destination" ref="1235359"/>
 					</object>
 					<int key="connectionID">614</int>
 				</object>
@@ -1959,7 +1959,7 @@
 					<object class="IBActionConnection" key="connection">
 						<string key="label">previewAction:</string>
 						<reference key="source" ref="1014"/>
-						<reference key="destination" ref="599429326"/>
+						<reference key="destination" ref="111240230"/>
 					</object>
 					<int key="connectionID">617</int>
 				</object>
@@ -1967,7 +1967,7 @@
 					<object class="IBActionConnection" key="connection">
 						<string key="label">changeDefaultMirror:</string>
 						<reference key="source" ref="1014"/>
-						<reference key="destination" ref="534682676"/>
+						<reference key="destination" ref="169531676"/>
 					</object>
 					<int key="connectionID">618</int>
 				</object>
@@ -2012,7 +2012,7 @@
 							<reference ref="952259628"/>
 							<reference ref="379814623"/>
 							<reference ref="84169623"/>
-							<reference ref="931655973"/>
+							<reference ref="269936929"/>
 						</object>
 						<reference key="parent" ref="0"/>
 						<string key="objectName">MainMenu</string>
@@ -2509,7 +2509,7 @@
 							<reference ref="217991234"/>
 							<reference ref="538192449"/>
 							<reference ref="46715306"/>
-							<reference ref="599429326"/>
+							<reference ref="111240230"/>
 						</object>
 						<reference key="parent" ref="84169623"/>
 					</object>
@@ -2911,60 +2911,60 @@
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">603</int>
-						<reference key="object" ref="931655973"/>
+						<reference key="object" ref="269936929"/>
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<reference ref="58800481"/>
+							<reference ref="882484711"/>
 						</object>
 						<reference key="parent" ref="649796088"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">604</int>
-						<reference key="object" ref="58800481"/>
+						<reference key="object" ref="882484711"/>
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<reference ref="409755461"/>
-							<reference ref="289094345"/>
-							<reference ref="100047655"/>
-							<reference ref="51140517"/>
-							<reference ref="534682676"/>
-							<reference ref="1009420724"/>
+							<reference ref="734570126"/>
+							<reference ref="980078642"/>
+							<reference ref="892609725"/>
+							<reference ref="1235359"/>
+							<reference ref="169531676"/>
+							<reference ref="564369709"/>
 						</object>
-						<reference key="parent" ref="931655973"/>
+						<reference key="parent" ref="269936929"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">606</int>
-						<reference key="object" ref="409755461"/>
-						<reference key="parent" ref="58800481"/>
+						<reference key="object" ref="734570126"/>
+						<reference key="parent" ref="882484711"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">607</int>
-						<reference key="object" ref="289094345"/>
-						<reference key="parent" ref="58800481"/>
+						<reference key="object" ref="980078642"/>
+						<reference key="parent" ref="882484711"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">608</int>
-						<reference key="object" ref="100047655"/>
-						<reference key="parent" ref="58800481"/>
+						<reference key="object" ref="892609725"/>
+						<reference key="parent" ref="882484711"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">609</int>
-						<reference key="object" ref="51140517"/>
-						<reference key="parent" ref="58800481"/>
+						<reference key="object" ref="1235359"/>
+						<reference key="parent" ref="882484711"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">610</int>
-						<reference key="object" ref="534682676"/>
-						<reference key="parent" ref="58800481"/>
+						<reference key="object" ref="169531676"/>
+						<reference key="parent" ref="882484711"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">615</int>
-						<reference key="object" ref="1009420724"/>
-						<reference key="parent" ref="58800481"/>
+						<reference key="object" ref="564369709"/>
+						<reference key="parent" ref="882484711"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">616</int>
-						<reference key="object" ref="599429326"/>
+						<reference key="object" ref="111240230"/>
 						<reference key="parent" ref="245101568"/>
 					</object>
 				</object>
@@ -3520,7 +3520,7 @@
 						<string key="NS.key.0">ToolTip</string>
 						<object class="IBToolTipAttribute" key="NS.object.0">
 							<string key="name">ToolTip</string>
-							<reference key="object" ref="409755461"/>
+							<reference key="object" ref="734570126"/>
 							<string key="toolTip">Set the default paper size for all TeX programs.</string>
 						</object>
 					</object>
@@ -3529,7 +3529,7 @@
 						<string key="NS.key.0">ToolTip</string>
 						<object class="IBToolTipAttribute" key="NS.object.0">
 							<string key="name">ToolTip</string>
-							<reference key="object" ref="289094345"/>
+							<reference key="object" ref="980078642"/>
 							<string key="toolTip">Change number of automatic backups to keep when updating.</string>
 						</object>
 					</object>
@@ -3538,7 +3538,7 @@
 						<string key="NS.key.0">ToolTip</string>
 						<object class="IBToolTipAttribute" key="NS.object.0">
 							<string key="name">ToolTip</string>
-							<reference key="object" ref="100047655"/>
+							<reference key="object" ref="892609725"/>
 							<string key="toolTip">Schedule automatic checks to see if TeX Live packages are available for update.</string>
 						</object>
 					</object>
@@ -3547,7 +3547,7 @@
 						<string key="NS.key.0">ToolTip</string>
 						<object class="IBToolTipAttribute" key="NS.object.0">
 							<string key="name">ToolTip</string>
-							<reference key="object" ref="51140517"/>
+							<reference key="object" ref="1235359"/>
 							<string key="toolTip">View and edit available CTAN or TeX Live mirror servers.</string>
 						</object>
 					</object>
@@ -3556,7 +3556,7 @@
 						<string key="NS.key.0">ToolTip</string>
 						<object class="IBToolTipAttribute" key="NS.object.0">
 							<string key="name">ToolTip</string>
-							<reference key="object" ref="534682676"/>
+							<reference key="object" ref="169531676"/>
 							<string key="toolTip">Change the mirror used at startup of TeX Live Utility.</string>
 						</object>
 					</object>
@@ -3566,7 +3566,7 @@
 						<string key="NS.key.0">ToolTip</string>
 						<object class="IBToolTipAttribute" key="NS.object.0">
 							<string key="name">ToolTip</string>
-							<reference key="object" ref="599429326"/>
+							<reference key="object" ref="111240230"/>
 							<string key="toolTip">Preview selected file.</string>
 						</object>
 					</object>
