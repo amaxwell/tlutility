@@ -59,6 +59,7 @@ extern NSString * const TLMShowLogWindowPreferenceKey;
     NSButton            *_useSyslogCheckBox;
     NSButton            *_autoinstallCheckBox;
     NSButton            *_autoremoveCheckBox;
+    NSButton            *_rootHomeCheckBox;
 }
 
 + (TLMPreferenceController *)sharedPreferenceController;
