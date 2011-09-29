@@ -38,12 +38,12 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class TLMTableView, TLMThinSplitView;
+@class TLMTableView, TLMSplitView;
 
 @interface TLMLogWindowController : NSWindowController <NSWindowDelegate>
 {
 @private
-    TLMThinSplitView       *_splitView;
+    TLMSplitView           *_splitView;
     TLMTableView           *_sessionTableView;
     TLMTableView           *_messageTableView;
     CFMutableDictionaryRef  _rowHeights;
@@ -55,7 +55,7 @@
 
 @property (nonatomic, retain) IBOutlet TLMTableView *_messageTableView;
 @property (nonatomic, retain) IBOutlet TLMTableView *_sessionTableView;
-@property (nonatomic, retain) IBOutlet TLMThinSplitView *_splitView;
+@property (nonatomic, retain) IBOutlet TLMSplitView *_splitView;
 
 @end
 
