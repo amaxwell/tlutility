@@ -94,20 +94,7 @@
 {
     [NSGraphicsContext saveGraphicsState];
     [[NSColor darkGrayColor] set];
-    
-    NSBezierPath *path = [NSBezierPath bezierPath];
-    if ([self isVertical]) {
-        const CGFloat x = floor(NSMidX(aRect)) + 0.5;
-        [path moveToPoint:NSMakePoint(x, NSMinY(aRect))];
-        [path lineToPoint:NSMakePoint(x, NSMaxY(aRect))];
-    }
-    else {
-        const CGFloat y = floor(NSMidY(aRect)) + 0.5;
-        [path moveToPoint:NSMakePoint(NSMinX(aRect), y)];
-        [path moveToPoint:NSMakePoint(NSMaxX(aRect), y)];
-    }
-    [path setLineWidth:0.0];
-    [path stroke];
+    NSRectFillUsingOperation(aRect, NSCompositeCopy);
     [NSGraphicsContext restoreGraphicsState];
 }
 
