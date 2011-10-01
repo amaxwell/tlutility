@@ -141,6 +141,9 @@ static void __TLMMigrateBundleIdentifier()
     // no UI for this at present
     [defaults setObject:[NSNumber numberWithBool:NO] forKey:TLMEnableNetInstall];
     
+    // Lion only: http://lists.apple.com/archives/cocoa-dev/2011/Sep/msg00914.html
+    [defaults setObject:[NSNumber numberWithBool:YES] forKey:@"NSApplicationShowExceptions"];
+    
     [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];   
 }
 
