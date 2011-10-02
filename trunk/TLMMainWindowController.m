@@ -1319,10 +1319,16 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 
 - (IBAction)changeServerURL:(id)sender;
 {
+    NSURL *newURL = [_URLField objectValue];
+
     if (_operationCount) {
-        TLMLog(__func__, @"Can't change URL while an operation is in progress");
-        [_URLField setStringValue:[[self serverURL] absoluteString]];
-        NSBeep();
+        
+        // only warn if this is a different URL
+        if ([newURL isEqual:[self serverURL]] == NO) {
+            TLMLog(__func__, @"Can't change URL while an operation is in progress");
+            [_URLField setStringValue:[[self serverURL] absoluteString]];
+            NSBeep();
+        }
     }
     else {
         NSURL *aURL;
@@ -1331,7 +1337,6 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
         if ([[[_URLField cell] formatter] getObjectValue:&aURL forString:[_URLField stringValue] errorDescription:&err]) {
             
             // will show an alert if there's a version mismatch
-            NSURL *newURL = [_URLField objectValue];
             if ([newURL isEqual:[self serverURL]]) {
                 // don't trigger tlmgr every time the address field loses first responder
                 TLMLog(__func__, @"Ignoring spurious URL change action");
