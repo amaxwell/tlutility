@@ -586,9 +586,9 @@ static char *__BDSKCopyFileSystemRepresentation(NSString *str)
     int ret, status;
     
     // keep trying in case of EINTR
-    ret = waitpid(_processIdentifier, &status, wait_flags);
-    while (-1 == ret && EINTR == errno)
+    do {
         ret = waitpid(_processIdentifier, &status, wait_flags);
+    } while (-1 == ret && EINTR == errno);
     
     // happens if you call waitpid() on the child process elsewhere; don't do that
     if (-1 == ret)
