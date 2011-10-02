@@ -37,7 +37,7 @@
  */
 
 #import "TLMDatabase.h"
-#import "BDSKTask.h"
+#import "TLMTask.h"
 #import <regex.h>
 #import "TLMLogServer.h"
 #import "TLMDatabasePackage.h"
@@ -396,14 +396,20 @@ static NSString *__TLMTemporaryFile()
         
         NSString *plistPath = __TLMTemporaryFile();
         
-        BDSKTask *parseTask = [[BDSKTask new] autorelease];
+        TLMTask *parseTask = [[TLMTask new] autorelease];
         [parseTask setLaunchPath:[[NSBundle mainBundle] pathForAuxiliaryExecutable:@"parse_tlpdb.py"]];
         [parseTask setArguments:[NSArray arrayWithObjects:@"-o", plistPath, @"-f", @"plist", tlpdbPath, nil]];
         [parseTask launch];
         [parseTask waitUntilExit];
 
-        if ([parseTask terminationStatus] == EXIT_SUCCESS)
+        if ([parseTask terminationStatus] == EXIT_SUCCESS) {
             [self reloadDatabaseFromPath:plistPath];
+        }
+        else {
+            TLMLog(__func__, @"Parsing the database from this mirror failed with the following error: %@", [parseTask errorString]);
+            _failed = YES;
+            _failureTime = CFAbsoluteTimeGetCurrent();
+        }
         
         unlink([plistPath saneFileSystemRepresentation]);
         unlink([tlpdbPath saneFileSystemRepresentation]);
