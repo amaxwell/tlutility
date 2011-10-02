@@ -299,7 +299,10 @@ static NSArray * __TLMOptionArrayFromArguments(char **nullTerminatedArguments)
                     ret = [_internal->_task terminationStatus];
                 }
                 else {
-                    ret = waitpid(event.ident, &wstatus, WNOHANG | WUNTRACED);
+                    // try repeatedly in case we're interrupted by a signal
+                    do {
+                        ret = waitpid(event.ident, &wstatus, WNOHANG | WUNTRACED);
+                    } while (-1 == ret && EINTR == errno);
                     ret = (ret != 0 && WIFEXITED(wstatus)) ? WEXITSTATUS(wstatus) : EXIT_FAILURE;                
                 }
                 // set failure flag if ipctask failed
