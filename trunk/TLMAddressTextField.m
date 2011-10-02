@@ -40,6 +40,20 @@
 #import "TLMMirrorCell.h"
 #import "BDSKTextViewCompletionController.h"
 
+static NSArray * __TLMAddressDragTypes()
+{
+    /*
+     A webloc has a file: URL pointing to the webloc itself, and it also has a URL
+     embedded in it.  Guess which one NSURLPboardType gives us?  That's right, it
+     gives the file: URL pointing to the webloc file.  Never mind that when you drop
+     a webloc on something you're generally interested in what's inside the webloc.
+     
+     Fortunately, Apple's inconsistent or broken pasteboard APIs provide a workaround,
+     as asking for kUTTypeURL first will give us the embedded URL.  Yay. (as of10.6.8)
+     */
+    return [NSArray arrayWithObjects:(id)kUTTypeURL, NSURLPboardType, NSStringPboardType, nil];
+}
+
 @implementation TLMMirrorFieldEditor
 
 - (void)handleTextDidBeginEditingNotification:(NSNotification *)note { _isEditing = YES; }
@@ -50,7 +64,7 @@
 {
     [super viewWillMoveToWindow:newWindow];
     if (newWindow) {
-        [self registerForDraggedTypes:[NSArray arrayWithObjects:NSURLPboardType, (id)kUTTypeURL, NSStringPboardType, nil]];
+        [self registerForDraggedTypes:__TLMAddressDragTypes()];
         [[NSNotificationCenter defaultCenter] addObserver:self
 												 selector:@selector(handleTextDidBeginEditingNotification:)
 													 name:NSTextDidBeginEditingNotification
@@ -94,7 +108,7 @@
 - (BOOL)performDragOperation:(id < NSDraggingInfo >)sender
 {
     NSPasteboard *pboard = [sender draggingPasteboard];
-    NSString *type = [pboard availableTypeFromArray:[NSArray arrayWithObjects:NSURLPboardType, (id)kUTTypeURL, NSStringPboardType, nil]];
+    NSString *type = [pboard availableTypeFromArray:__TLMAddressDragTypes()];
     BOOL rv = NO;
     if ([type isEqualToString:NSURLPboardType]) {
         rv = [self setStringFromDragOperation:[[NSURL URLFromPasteboard:pboard] absoluteString]];
@@ -270,7 +284,7 @@ static inline BOOL forwardSelectorForCompletionInTextView(SEL selector, NSTextVi
 {
     [super viewWillMoveToWindow:newWindow];
     if (newWindow) {
-        [self registerForDraggedTypes:[NSArray arrayWithObjects:NSURLPboardType, (id)kUTTypeURL, NSStringPboardType, nil]];
+        [self registerForDraggedTypes:__TLMAddressDragTypes()];
     }
     else {
         [self unregisterDraggedTypes];
@@ -301,7 +315,7 @@ static inline BOOL forwardSelectorForCompletionInTextView(SEL selector, NSTextVi
 - (BOOL)performDragOperation:(id < NSDraggingInfo >)sender
 {
     NSPasteboard *pboard = [sender draggingPasteboard];
-    NSString *type = [pboard availableTypeFromArray:[NSArray arrayWithObjects:NSURLPboardType, (id)kUTTypeURL, NSStringPboardType, nil]];
+    NSString *type = [pboard availableTypeFromArray:__TLMAddressDragTypes()];
     BOOL rv = NO;
     if ([type isEqualToString:NSURLPboardType]) {
         rv = [self setStringFromDragOperation:[[NSURL URLFromPasteboard:pboard] absoluteString]];
