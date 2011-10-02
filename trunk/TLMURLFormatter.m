@@ -50,6 +50,7 @@
 
 - (BOOL)getObjectValue:(id *)obj forString:(NSString *)string errorDescription:(NSString **)error;
 {
+    NSArray *supportedSchemes = [NSArray arrayWithObjects:@"http", @"https", @"ftp", @"file", nil];
     BOOL success = YES;
     // need to ensure it can be composed, since "ftp://" is a non-nil URL, but is nil after appending a path component
     NSURL *aURL = nil;
@@ -65,9 +66,9 @@
         if (error) *error = NSLocalizedString(@"This URL is missing a scheme, such as http.", @"error message");
         *obj = nil;        
     }
-    else if ([[aURL scheme] hasPrefix:@"http"] == NO && [[aURL scheme] isEqualToString:@"ftp"] == NO) {
+    else if ([supportedSchemes containsObject:[[aURL scheme] lowercaseString]] == NO) {
         success = NO;
-        if (error) *error = NSLocalizedString(@"Only http and ftp URL schemes are supported for TeX Live.", @"error message");
+        if (error) *error = [NSString stringWithFormat:@"%@ %@.", NSLocalizedString(@"Unsupported URL scheme for TeX Live.  Must be one of:", @"error message"), [supportedSchemes componentsJoinedByString:@", "]];
         *obj = nil;
     }
     else {
