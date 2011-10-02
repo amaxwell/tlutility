@@ -174,7 +174,8 @@ static void __TLMFaviconCacheInit() { _sharedCache = [TLMFaviconCache new]; }
         TLMLog(__func__, @"Stopping attempted download of %@ due to timeout", [item iconURL]);
     [_iconsByURL setObject:[NSNull null] forKey:[[item iconURL] host]];
     [_webview stopLoading:nil];
-    [_queue removeLastObject];
+    if ([_queue count])
+        [_queue removeLastObject];
     _downloading = NO;
     [_cancelTimer invalidate];
     _cancelTimer = nil;
@@ -211,7 +212,8 @@ static void __TLMFaviconCacheInit() { _sharedCache = [TLMFaviconCache new]; }
                 [obj iconCache:self downloadedIcon:icon forURL:[item iconURL]];
         }
         [_webview stopLoading:nil];
-        [_queue removeLastObject];
+        if ([_queue count])
+            [_queue removeLastObject];
         _downloading = NO;
         [_cancelTimer invalidate];
         _cancelTimer = nil;
