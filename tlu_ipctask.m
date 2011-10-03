@@ -39,6 +39,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdarg.h>
 #include <sys/types.h>
 #include <pwd.h>
 #include <string.h>
@@ -112,31 +113,58 @@ static void log_message_with_level(const char *level, NSString *message, NSUInte
     [msg release];    
 }
 
+static void vlog_message_with_level(TLMLogMessageFlags flags, const char *asl_string, NSString *format, va_list args)
+{
+    NSMutableString *message = [[NSMutableString alloc] initWithFormat:format arguments:args];
+    // fgets preserves newlines, so trim them here instead of messing with the C-string buffer
+    CFStringTrimWhitespace((CFMutableStringRef)message);
+    log_message_with_level(asl_string, message, flags);
+    [message release];
+}
+
+// informational messages that can't be parsed
+static void log_notice_noparse(NSString *format, ...)
+{
+    va_list args;
+    va_start(args, format);
+    vlog_message_with_level(TLMLogDefault, ASL_STRING_NOTICE, format, args);
+    va_end(args);
+}
+
+// messages get parsed if _messageFlags is set approriately
 static void log_notice(NSString *format, ...)
 {
     va_list list;
     va_start(list, format);
-    NSMutableString *message = [[NSMutableString alloc] initWithFormat:format arguments:list];
+    vlog_message_with_level(_messageFlags, ASL_STRING_NOTICE, format, list);
     va_end(list);
-    // fgets preserves newlines, so trim them here instead of messing with the C-string buffer
-    CFStringTrimWhitespace((CFMutableStringRef)message);
-    log_message_with_level(ASL_STRING_NOTICE, message, _messageFlags);
-    [message release];
 }
 
+// for messages that are ambiguous; may be error or notice
+static void log_warning(NSString *format, ...)
+{
+    va_list list;
+    va_start(list, format);
+    /*
+     Added Warning for stderr messages from tlmgr and others which spew status/progress to stderr,
+     which is confusing to users when they copy messages out in TLU and see "Error" there.  The problem
+     is that we don't have an obvious flag for things that really are errors now...but that's more of a
+     limitation of tlmgr and its tools.
+     */
+    vlog_message_with_level(TLMLogDefault, ASL_STRING_WARNING, format, list);
+    va_end(list);  
+}
+
+// for messages that are clearly an error
 static void log_error(NSString *format, ...)
 {
     va_list list;
     va_start(list, format);
-    NSMutableString *message = [[NSMutableString alloc] initWithFormat:format arguments:list];
+    vlog_message_with_level(TLMLogDefault, ASL_STRING_ERR, format, list);
     va_end(list);
-    // fgets preserves newlines, so trim them here instead of messing with the C-string buffer
-    CFStringTrimWhitespace((CFMutableStringRef)message);
-    log_message_with_level(ASL_STRING_ERR, message, TLMLogDefault);
-    [message release];
 }
 
-static void log_lines_and_clear(NSMutableData *data, bool is_error)
+static void log_lines_and_clear(NSMutableData *data, bool is_warning)
 {
     NSUInteger i, last = 0;
     const char *ptr = [data bytes];
@@ -150,8 +178,8 @@ static void log_lines_and_clear(NSMutableData *data, bool is_error)
                 str = [[NSString alloc] initWithBytes:&ptr[last] length:(i - last) encoding:NSMacOSRomanStringEncoding];
             
             // create a single log message per line and post it to the server
-            if (is_error)
-                log_error(@"%@", str);
+            if (is_warning)
+                log_warning(@"%@", str);
             else
                 log_notice(@"%@", str);
             [str release];
@@ -317,7 +345,7 @@ int main(int argc, char *argv[]) {
             exit(1);
         }
         else {
-            log_error(@"dropped privileges to user nobody\n");
+            log_notice_noparse(@"dropped privileges to user nobody\n");
         }
         
         /*
@@ -345,9 +373,9 @@ int main(int argc, char *argv[]) {
             log_error(@"failed to send PID to server:\n\t%@", exception);
         }
         
-        /* log information as error so we get the TLMLogDefault flags */
-        log_error(@"tlu_ipctask: child HOME = '%s'\n", childHome);
-        log_error(@"tlu_ipctask: current HOME = '%s'\n", getenv("HOME"));
+        /* log without parsing */
+        log_notice_noparse(@"tlu_ipctask: child HOME = '%s'\n", childHome);
+        log_notice_noparse(@"tlu_ipctask: current HOME = '%s'\n", getenv("HOME"));
                         
         int kq_fd = kqueue();
 #define TLM_EVENT_COUNT 3
@@ -389,7 +417,7 @@ int main(int argc, char *argv[]) {
             if (event.filter == EVFILT_PROC && (event.fflags & NOTE_EXIT) == NOTE_EXIT) {
                 
                 stillRunning = false;
-                log_error(@"child process pid = %d exited", child);
+                log_notice_noparse(@"child process pid = %d exited", child);
             }
             else if (event.filter == EVFILT_READ && event.data) {
                 
@@ -436,14 +464,21 @@ int main(int argc, char *argv[]) {
         
         if ([errBuffer length]) {
             NSString *str = [[NSString alloc] initWithData:errBuffer encoding:NSUTF8StringEncoding];
-            log_error(@"%@", str);
+            log_warning(@"%@", str);
             [str release];
         }
         
+        // try repeatedly in case we're interrupted by a signal
         int childStatus;
-        ret = waitpid(child, &childStatus, WNOHANG | WUNTRACED);
+        do {
+            ret = waitpid(child, &childStatus, WNOHANG | WUNTRACED);
+        } while (-1 == ret && EINTR == errno);
         ret = (ret != 0 && WIFEXITED(childStatus)) ? WEXITSTATUS(childStatus) : EXIT_FAILURE;
-        log_error(@"exit status of pid = %d was %d", child, ret);
+        
+        if (ret)
+            log_error(@"exit status of pid = %d was %d", child, ret);
+        else
+            log_notice_noparse(@"exit status of pid = %d was %d", child, ret);
 
     }
     
