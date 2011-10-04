@@ -59,6 +59,7 @@ static NSDate *_currentSessionDate = nil;
 @synthesize _messageTableView;
 @synthesize _sessionTableView;
 @synthesize _splitView;
+@synthesize dockingDelegate = _dockingDelegate;
 
 + (void)initialize
 {
@@ -179,6 +180,23 @@ static NSString *__TLMLogStringFromDate(NSDate *date)
     [_splitView adjustSubviews];
 }
 
+- (void)setDockingDelegate:(id <TLMDockingWindowDelegate>)obj
+{
+    // make sure the delegate gets an initial notification
+    _dockingDelegate = obj;
+    [_dockingDelegate dockableWindowGeometryDidChange:[self window]];
+}
+
+- (void)windowDidResize:(NSNotification *)notification
+{
+    [_dockingDelegate dockableWindowGeometryDidChange:[self window]];
+}
+
+- (void)windowDidMove:(NSNotification *)notification;
+{
+    [_dockingDelegate dockableWindowGeometryDidChange:[self window]];    
+}
+
 - (void)splitViewDidResizeSubviews:(NSNotification *)aNotification
 {
     // this is getting sent before awakeFromNib, which might be why the autosave name in the nib won't work
@@ -229,6 +247,8 @@ static NSString *__TLMLogStringFromDate(NSDate *date)
 
 - (void)_handleApplicationTerminate:(NSNotification *)aNote
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [self setDockingDelegate:nil];
     [self _archiveAllSessions];
 }
 
