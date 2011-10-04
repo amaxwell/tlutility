@@ -38,26 +38,34 @@
 
 #import <Cocoa/Cocoa.h>
 
+@protocol TLMDockingWindowDelegate
+- (void)dockableWindowGeometryDidChange:(NSWindow *)window;
+@end
+
 @class TLMTableView, TLMSplitView;
 
 @interface TLMLogWindowController : NSWindowController <NSWindowDelegate>
 {
 @private
-    TLMSplitView           *_splitView;
-    TLMTableView           *_sessionTableView;
-    TLMTableView           *_messageTableView;
-    CFMutableDictionaryRef  _rowHeights;
-    BOOL                    _updateScheduled;
-    NSDate                 *_displayedSessionDate;
-    NSMutableDictionary    *_messagesByDate;
-    NSUInteger              _lastArchiveCount;
+    TLMSplitView                  *_splitView;
+    TLMTableView                  *_sessionTableView;
+    TLMTableView                  *_messageTableView;
+    CFMutableDictionaryRef         _rowHeights;
+    BOOL                           _updateScheduled;
+    NSDate                        *_displayedSessionDate;
+    NSMutableDictionary           *_messagesByDate;
+    NSUInteger                     _lastArchiveCount;
+    id <TLMDockingWindowDelegate>  _dockingDelegate;
 }
 
 @property (nonatomic, retain) IBOutlet TLMTableView *_messageTableView;
 @property (nonatomic, retain) IBOutlet TLMTableView *_sessionTableView;
 @property (nonatomic, retain) IBOutlet TLMSplitView *_splitView;
+@property (nonatomic, assign) id <TLMDockingWindowDelegate> dockingDelegate;
 
 @end
 
 @interface TLMLogMessageCell : NSTextFieldCell
 @end
+
+
