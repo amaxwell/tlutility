@@ -226,6 +226,8 @@ static char _TLMOperationQueueOperationContext;
 - (void)showWindow:(id)sender
 {
     [super showWindow:sender];
+    
+    [[[NSApp delegate] logWindowController] setDockingDelegate:self];
 
     static BOOL __windowDidShow = NO;
     if (__windowDidShow) return;
@@ -362,7 +364,67 @@ static char _TLMOperationQueueOperationContext;
         return editor;
     }
     return nil;
-}   
+}
+
+static bool __windowFrameIsChanging = false;
+
+- (void)windowWillMove:(NSNotification *)notification;
+{
+    __windowFrameIsChanging = true;
+}
+
+- (void)windowDidMove:(NSNotification *)notification;
+{
+    __windowFrameIsChanging = false;
+}
+
+- (void)windowDidResize:(NSNotification *)notification;
+{
+    __windowFrameIsChanging = false;
+}
+
+- (NSSize)windowWillResize:(NSWindow *)sender toSize:(NSSize)frameSize;
+{
+    __windowFrameIsChanging = true;
+    return frameSize;
+}
+
+- (void)dockableWindowGeometryDidChange:(NSWindow *)window;
+{
+    NSRect logWindowFrame = [window frame];
+    const NSRect mainWindowFrame = [[self window] frame];
+    const BOOL isChildWindow = [[[self window] childWindows] containsObject:window];
+    const CGFloat tolerance = 5.0; // ?
+    const CGFloat dx = NSMaxX(mainWindowFrame) - NSMinX(logWindowFrame);
+    const CGFloat dy = NSMinY(mainWindowFrame) - NSMaxY(logWindowFrame);
+    
+    if (ABS(dx) <= tolerance) {
+        // dock on right side of main window
+        if (isChildWindow == NO) {
+            logWindowFrame.origin.x = NSMaxX(mainWindowFrame) + 1;
+            // add before changing the frame, so we're not called twice
+            [[self window] addChildWindow:window ordered:NSWindowBelow];
+            [window setFrameOrigin:logWindowFrame.origin];
+            TLMLog(__func__, @"Docking log window on right of main window");
+        }
+    }
+    else if (ABS(dy) <= tolerance) {
+        // dock on bottom of main window
+        if (isChildWindow == NO) {
+            logWindowFrame.origin.y = NSMinY(mainWindowFrame) - NSHeight(logWindowFrame) - 1;
+            // add before changing the frame, so we're not called twice
+            [[self window] addChildWindow:window ordered:NSWindowBelow];
+            [window setFrameOrigin:logWindowFrame.origin];
+            TLMLog(__func__, @"Docking log window below main window");
+        }
+    }
+    else if (isChildWindow && __windowFrameIsChanging == false) {
+        // already a child window, but moving away
+#warning gets called at odd times after moving parent window
+        [[self window] removeChildWindow:window];
+        TLMLog(__func__, @"Undocking log window");
+    }
+}
 
 #pragma mark Interface updates
 
