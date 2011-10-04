@@ -38,6 +38,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import "TLMTabView.h"
+#import "TLMLogWindowController.h"
 
 @class TLMStatusWindow;
 @class TLMPackageListDataSource;
@@ -51,7 +52,7 @@
 @property (nonatomic) BOOL needsUpdate;
 @end
 
-@interface TLMMainWindowController : NSWindowController <TLMTabViewDelegate, NSWindowDelegate>
+@interface TLMMainWindowController : NSWindowController <TLMTabViewDelegate, NSWindowDelegate, TLMDockingWindowDelegate>
 {
 @private
     NSProgressIndicator      *_progressIndicator;
