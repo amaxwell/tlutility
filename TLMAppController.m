@@ -259,6 +259,11 @@ static void __TLMMigrateBundleIdentifier()
     return _mirrorController;
 }
 
+- (TLMLogWindowController *)logWindowController
+{
+    return _logWindowController;
+}
+
 - (IBAction)manageMirrors:(id)sender
 {
     [[self mirrorController] showWindow:sender];
