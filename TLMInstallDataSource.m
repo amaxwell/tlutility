@@ -194,7 +194,7 @@
     if ([[tableColumn identifier] isEqualToString:@"value"] && [[item value] isKindOfClass:[NSValue class]]) {
         return _checkboxCell;
     }
-    return [[[NSTextFieldCell alloc] initTextCell:@""] autorelease];
+    return [tableColumn dataCell];
 }
 
 - (BOOL)outlineView:(NSOutlineView *)outlineView isGroupItem:(TLMProfileNode *)item
