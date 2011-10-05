@@ -314,13 +314,18 @@ static bool __isdefaultserver(TLMMirrorNode *node)
     return [node type] == TLMMirrorNodeURL && [[node value] isEqual:[[TLMEnvironment currentEnvironment] defaultServerURL]];
 }
 
+static bool __ismultiplexer(TLMMirrorNode *node)
+{
+    return [node type] == TLMMirrorNodeURL && [[node value] isMultiplexer];
+}
+
 - (void)outlineView:(NSOutlineView *)outlineView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn byItem:(TLMMirrorNode *)item;
 {
     // could assert these conditions
     if ([_outlineView parentForItem:item] != [self _customNode])
         return NSBeep();
     
-    if (__isdefaultserver(item))
+    if (__ismultiplexer(item))
         return NSBeep();
     
     if ([item type] == TLMMirrorNodeURL) {
@@ -334,16 +339,15 @@ static bool __isdefaultserver(TLMMirrorNode *node)
 - (void)outlineView:(TLMOutlineView *)outlineView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(TLMMirrorNode *)item;
 {
     NSFont *defaultFont = [outlineView defaultFont];
-    const bool defaultServer = __isdefaultserver(item);
     
-    if (defaultServer) {
+    if (__isdefaultserver(item)) {
         [cell setFont:[NSFont boldSystemFontOfSize:[defaultFont pointSize]]];
     }
     else if (defaultFont) {
         [cell setFont:defaultFont];
     }
     
-    if ([_outlineView parentForItem:item] == [self _customNode] && defaultServer == false) {
+    if ([_outlineView parentForItem:item] == [self _customNode] && __ismultiplexer(item) == false) {
         [cell setEditable:YES];
         [cell setFormatter:[[TLMURLFormatter new] autorelease]];
     }
