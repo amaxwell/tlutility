@@ -80,7 +80,6 @@ static NSString * __TLMUserMirrorsPath()
 {
     self = [self initWithWindowNibName:[self windowNibName]];
     if (self) {
-        _textFieldCell = [[NSTextFieldCell alloc] initTextCell:@""];
         _mirrorCell = [[TLMMirrorCell alloc] initTextCell:@""];
         [self _loadDefaultSites];
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -98,7 +97,6 @@ static NSString * __TLMUserMirrorsPath()
     [_mirrorRoot release];
     [_outlineView release];
     [_mirrorCell release];
-    [_textFieldCell release];
     [_addRemoveControl release];
     [_makeDefaultButton release];
     [super dealloc];
@@ -358,7 +356,7 @@ static bool __isdefaultserver(TLMMirrorNode *node)
 - (NSCell *)outlineView:(NSOutlineView *)outlineView dataCellForTableColumn:(NSTableColumn *)tableColumn item:(TLMMirrorNode *)item
 {
     if (nil == tableColumn) return nil;
-    return [item type] == TLMMirrorNodeURL ? _mirrorCell : _textFieldCell;
+    return [item type] == TLMMirrorNodeURL ? _mirrorCell : [tableColumn dataCell];
 }
 
 - (CGFloat)outlineView:(NSOutlineView *)outlineView heightOfRowByItem:(TLMMirrorNode *)item
