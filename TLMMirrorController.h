@@ -48,7 +48,6 @@
     TLMMirrorNode      *_mirrorRoot;
     TLMOutlineView     *_outlineView;
     TLMMirrorCell      *_mirrorCell;
-    NSTextFieldCell    *_textFieldCell;
     NSSegmentedControl *_addRemoveControl;
     NSButton           *_makeDefaultButton;
     NSInteger           _pendingOptionChangeCount;
