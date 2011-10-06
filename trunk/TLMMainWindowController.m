@@ -388,6 +388,13 @@ static char _TLMOperationQueueOperationContext;
     return frameSize;
 }
 
+- (void)dockableWindowWillClose:(NSWindow *)window;
+{
+    _dockedEdge = TLMDockedEdgeNone;
+    [[self window] removeChildWindow:window];
+    TLMLog(__func__, @"Undocking log window");
+}
+
 - (void)dockableWindowGeometryDidChange:(NSWindow *)window;
 {
     // !!! early return on hidden default

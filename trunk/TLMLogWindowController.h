@@ -40,6 +40,7 @@
 
 @protocol TLMDockingWindowDelegate
 - (void)dockableWindowGeometryDidChange:(NSWindow *)window;
+- (void)dockableWindowWillClose:(NSWindow *)window;
 @end
 
 @class TLMTableView, TLMSplitView;

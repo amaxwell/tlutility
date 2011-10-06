@@ -220,6 +220,7 @@ static NSString *__TLMLogStringFromDate(NSDate *date)
 - (void)windowWillClose:(NSNotification *)aNote
 {
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:TLMShowLogWindowPreferenceKey];
+    [_dockingDelegate dockableWindowWillClose:[self window]];
 }
 
 - (void)windowDidBecomeKey:(NSNotification *)notification;
@@ -270,9 +271,13 @@ static NSString *__TLMLogStringFromDate(NSDate *date)
 {
     [super showWindow:sender];
     [_messageTableView reloadData];
+    
     // showWindow is called in response to user action, so it's okay to force an update and scroll
     TLMLogServerSync();
     [_messageTableView scrollRowToVisible:([_messageTableView numberOfRows] - 1)];
+    
+    // send unconditionally, since this isn't in response to the parent window moving
+    [_dockingDelegate dockableWindowGeometryDidChange:[self window]];
 }
 
 - (void)_update
