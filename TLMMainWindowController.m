@@ -407,7 +407,14 @@ static char _TLMOperationQueueOperationContext;
     const CGFloat dx = NSMaxX(mainWindowFrame) - NSMinX(logWindowFrame);
     const CGFloat dy = NSMinY(mainWindowFrame) - NSMaxY(logWindowFrame);
     
-    if (ABS(dx) <= tolerance && NSMaxY(logWindowFrame) >= NSMinY(mainWindowFrame) && NSMaxY(logWindowFrame) <= NSMaxY(mainWindowFrame)) {
+    /*
+     Allow docking anytime the log window's midpoint is within the main window's border.
+     Using the endpoint is fiddly if you're trying to line up the left edge (when docking
+     on the bottom) or top (when docking on the right), since it keeps undocking if you're
+     off by a point.
+     */
+    
+    if (ABS(dx) <= tolerance && NSMidY(logWindowFrame) >= NSMinY(mainWindowFrame) && NSMidY(logWindowFrame) <= NSMaxY(mainWindowFrame)) {
         // dock on right side of main window
         
         if (TLMDockedEdgeNone == _dockedEdge) {
@@ -424,7 +431,7 @@ static char _TLMOperationQueueOperationContext;
         [window setFrameOrigin:logWindowFrame.origin];
 
     }
-    else if (ABS(dy) <= tolerance && NSMinX(logWindowFrame) >= NSMinX(mainWindowFrame) && NSMinX(logWindowFrame) <= NSMaxX(mainWindowFrame)) {
+    else if (ABS(dy) <= tolerance && NSMidX(logWindowFrame) >= NSMinX(mainWindowFrame) && NSMidX(logWindowFrame) <= NSMaxX(mainWindowFrame)) {
         // dock on bottom of main window
         
         if (TLMDockedEdgeNone == _dockedEdge) {
