@@ -47,6 +47,13 @@
 @class TLMBackupDataSource;
 @class TLMAddressTextField;
 
+enum {
+    TLMDockedEdgeNone   = 0,
+    TLMDockedEdgeBottom = 1,
+    TLMDockedEdgeRight  = 2
+};
+typedef NSUInteger TLMDockedEdge;
+
 @protocol TLMListDataSource <NSObject>
 @property (nonatomic, retain) TLMStatusWindow *statusWindow;
 @property (nonatomic) BOOL needsUpdate;
@@ -71,6 +78,7 @@
     TLMInstallDataSource     *_installDataSource;
     TLMBackupDataSource      *_backupDataSource;
     id <TLMListDataSource>    _currentListDataSource;
+    TLMDockedEdge             _dockedEdge;
 }
 
 // IB 3.2 is losing the first @property declaration unless I move this ahead of it
