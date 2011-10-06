@@ -403,7 +403,7 @@ static char _TLMOperationQueueOperationContext;
     
     NSRect logWindowFrame = [window frame];
     const NSRect mainWindowFrame = [[self window] frame];
-    const CGFloat tolerance = 5.0; // ?
+    const CGFloat tolerance = 10.0;
     const CGFloat dx = NSMaxX(mainWindowFrame) - NSMinX(logWindowFrame);
     const CGFloat dy = NSMinY(mainWindowFrame) - NSMaxY(logWindowFrame);
     
@@ -416,10 +416,13 @@ static char _TLMOperationQueueOperationContext;
             _dockedEdge = TLMDockedEdgeRight;
             [[self window] addChildWindow:window ordered:NSWindowBelow];
 
-            logWindowFrame.origin.x = NSMaxX(mainWindowFrame) + 1;
-            [window setFrameOrigin:logWindowFrame.origin];
             TLMLog(__func__, @"Docking log window on right of main window");
         }
+        
+        // adjust even if already docked, so we get a consistent distance
+        logWindowFrame.origin.x = NSMaxX(mainWindowFrame) + 1;
+        [window setFrameOrigin:logWindowFrame.origin];
+
     }
     else if (ABS(dy) <= tolerance && NSMinX(logWindowFrame) >= NSMinX(mainWindowFrame) && NSMinX(logWindowFrame) <= NSMaxX(mainWindowFrame)) {
         // dock on bottom of main window
@@ -430,10 +433,13 @@ static char _TLMOperationQueueOperationContext;
             _dockedEdge = TLMDockedEdgeBottom;
             [[self window] addChildWindow:window ordered:NSWindowBelow];
 
-            logWindowFrame.origin.y = NSMinY(mainWindowFrame) - NSHeight(logWindowFrame) - 1;
-            [window setFrameOrigin:logWindowFrame.origin];
             TLMLog(__func__, @"Docking log window below main window");
         }
+
+        // adjust even if already docked, so we get a consistent distance
+        logWindowFrame.origin.y = NSMinY(mainWindowFrame) - NSHeight(logWindowFrame) - 1;
+        [window setFrameOrigin:logWindowFrame.origin];
+
     }
     else if (TLMDockedEdgeNone != _dockedEdge) {
         NSParameterAssert([[[self window] childWindows] containsObject:window]);
