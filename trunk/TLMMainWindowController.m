@@ -366,29 +366,6 @@ static char _TLMOperationQueueOperationContext;
     return nil;
 }
 
-static bool __windowFrameIsChanging = false;
-
-- (void)windowWillMove:(NSNotification *)notification;
-{
-    __windowFrameIsChanging = true;
-}
-
-- (void)windowDidMove:(NSNotification *)notification;
-{
-    __windowFrameIsChanging = false;
-}
-
-- (void)windowDidResize:(NSNotification *)notification;
-{
-    __windowFrameIsChanging = false;
-}
-
-- (NSSize)windowWillResize:(NSWindow *)sender toSize:(NSSize)frameSize;
-{
-    __windowFrameIsChanging = true;
-    return frameSize;
-}
-
 - (void)dockableWindowGeometryDidChange:(NSWindow *)window;
 {
     NSRect logWindowFrame = [window frame];
@@ -418,9 +395,8 @@ static bool __windowFrameIsChanging = false;
             TLMLog(__func__, @"Docking log window below main window");
         }
     }
-    else if (isChildWindow && __windowFrameIsChanging == false) {
+    else if (isChildWindow) {
         // already a child window, but moving away
-#warning gets called at odd times after moving parent window
         [[self window] removeChildWindow:window];
         TLMLog(__func__, @"Undocking log window");
     }
