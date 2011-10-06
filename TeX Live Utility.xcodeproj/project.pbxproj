@@ -40,6 +40,7 @@
 		F97B37B2128B4FE600B49CA7 /* agent_installer.py in Copy aux executables */ = {isa = PBXBuildFile; fileRef = F97B37B0128B4FCC00B49CA7 /* agent_installer.py */; };
 		F97E85740EFA18F400862882 /* TeXDistTool.icns in Resources */ = {isa = PBXBuildFile; fileRef = F97E85730EFA18F400862882 /* TeXDistTool.icns */; };
 		F97E860C0EFA3BFD00862882 /* TeXDistDocument.icns in Resources */ = {isa = PBXBuildFile; fileRef = F97E860B0EFA3BFD00862882 /* TeXDistDocument.icns */; };
+		F97EBA06143D449000E79859 /* TLMLogWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = F97EBA05143D449000E79859 /* TLMLogWindow.m */; };
 		F9825520125045980018CB73 /* TLMAutobackupController.m in Sources */ = {isa = PBXBuildFile; fileRef = F982551F125045980018CB73 /* TLMAutobackupController.m */; };
 		F982553F12504E210018CB73 /* AutobackupSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = F982553E12504E210018CB73 /* AutobackupSheet.xib */; };
 		F98FADA910672943002C1972 /* TLMNetInstallOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F98FADA810672943002C1972 /* TLMNetInstallOperation.m */; };
@@ -324,6 +325,8 @@
 		F97B37B0128B4FCC00B49CA7 /* agent_installer.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = agent_installer.py; sourceTree = "<group>"; };
 		F97E85730EFA18F400862882 /* TeXDistTool.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = TeXDistTool.icns; sourceTree = "<group>"; };
 		F97E860B0EFA3BFD00862882 /* TeXDistDocument.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = TeXDistDocument.icns; sourceTree = "<group>"; };
+		F97EBA04143D449000E79859 /* TLMLogWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMLogWindow.h; sourceTree = "<group>"; };
+		F97EBA05143D449000E79859 /* TLMLogWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMLogWindow.m; sourceTree = "<group>"; };
 		F982551E125045980018CB73 /* TLMAutobackupController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMAutobackupController.h; sourceTree = "<group>"; };
 		F982551F125045980018CB73 /* TLMAutobackupController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMAutobackupController.m; sourceTree = "<group>"; };
 		F982553C12504E040018CB73 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/AutobackupSheet.xib; sourceTree = "<group>"; };
@@ -608,6 +611,8 @@
 				F958309712695A0800DB997C /* TLMBackupCell.m */,
 				F9D5CD651298454F00AEEDCB /* TLMMirrorCell.h */,
 				F9D5CD661298454F00AEEDCB /* TLMMirrorCell.m */,
+				F97EBA04143D449000E79859 /* TLMLogWindow.h */,
+				F97EBA05143D449000E79859 /* TLMLogWindow.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -1098,6 +1103,7 @@
 				F967340513E10867008C2B3E /* TLMFaviconCache.m in Sources */,
 				F9A616D513E709F000851984 /* BDSKTextViewCompletionController.m in Sources */,
 				F96737A713E8E577008C2B3E /* TLMAddressTextFieldCell.m in Sources */,
+				F97EBA06143D449000E79859 /* TLMLogWindow.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

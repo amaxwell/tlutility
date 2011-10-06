@@ -42,6 +42,7 @@
 #import "TLMLogServer.h"
 #import "TLMTableView.h"
 #import "TLMSplitView.h"
+#import "TLMLogWindow.h"
 
 #define DEFAULT_HISTORY_MAX 14
 #define DEFAULT_HISTORY_KEY @"LogHistoryMax"
@@ -187,14 +188,22 @@ static NSString *__TLMLogStringFromDate(NSDate *date)
     [_dockingDelegate dockableWindowGeometryDidChange:[self window]];
 }
 
+// only notify for explicit moves or resize via the mouse
+- (BOOL)_shouldNotifyDockingDelegate
+{
+    return [(TLMLogWindow *)[self window] isLeftMouseDragging];
+}
+
 - (void)windowDidResize:(NSNotification *)notification
 {
-    [_dockingDelegate dockableWindowGeometryDidChange:[self window]];
+    if ([self _shouldNotifyDockingDelegate])
+        [_dockingDelegate dockableWindowGeometryDidChange:[self window]];
 }
 
 - (void)windowDidMove:(NSNotification *)notification;
 {
-    [_dockingDelegate dockableWindowGeometryDidChange:[self window]];    
+    if ([self _shouldNotifyDockingDelegate])
+        [_dockingDelegate dockableWindowGeometryDidChange:[self window]];    
 }
 
 - (void)splitViewDidResizeSubviews:(NSNotification *)aNotification
