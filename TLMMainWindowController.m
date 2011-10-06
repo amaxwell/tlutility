@@ -373,7 +373,7 @@ static char _TLMOperationQueueOperationContext;
     NSWindow *logWindow = [[[NSApp delegate] logWindowController] window];
     if ([[[self window] childWindows] containsObject:logWindow]) {
         
-        CGPoint logWindowOrigin = [logWindow frame].origin;
+        NSPoint logWindowOrigin = [logWindow frame].origin;
         switch (_dockedEdge) {
             case TLMDockedEdgeBottom:
                 logWindowOrigin.y += dy;
