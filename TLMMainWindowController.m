@@ -366,6 +366,28 @@ static char _TLMOperationQueueOperationContext;
     return nil;
 }
 
+- (NSSize)windowWillResize:(NSWindow *)sender toSize:(NSSize)frameSize;
+{
+    const CGFloat dy = NSHeight([sender frame]) - frameSize.height;
+    const CGFloat dx = NSWidth([sender frame]) - frameSize.width;
+    NSWindow *logWindow = [[[NSApp delegate] logWindowController] window];
+    if ([[[self window] childWindows] containsObject:logWindow]) {
+        
+        CGPoint logWindowOrigin = [logWindow frame].origin;
+        switch (_dockedEdge) {
+            case TLMDockedEdgeBottom:
+                logWindowOrigin.y += dy;
+                break;
+            case TLMDockedEdgeRight:
+                logWindowOrigin.x -= dx;
+            default:
+                break;
+        }
+        [logWindow setFrameOrigin:logWindowOrigin];
+    }
+    return frameSize;
+}
+
 - (void)dockableWindowGeometryDidChange:(NSWindow *)window;
 {
     NSRect logWindowFrame = [window frame];
@@ -383,6 +405,7 @@ static char _TLMOperationQueueOperationContext;
             [[self window] addChildWindow:window ordered:NSWindowBelow];
             [window setFrameOrigin:logWindowFrame.origin];
             TLMLog(__func__, @"Docking log window on right of main window");
+            _dockedEdge = TLMDockedEdgeRight;
         }
     }
     else if (ABS(dy) <= tolerance) {
@@ -393,12 +416,15 @@ static char _TLMOperationQueueOperationContext;
             [[self window] addChildWindow:window ordered:NSWindowBelow];
             [window setFrameOrigin:logWindowFrame.origin];
             TLMLog(__func__, @"Docking log window below main window");
+            _dockedEdge = TLMDockedEdgeBottom;
         }
     }
     else if (isChildWindow) {
+        NSParameterAssert(TLMDockedEdgeNone != _dockedEdge);
         // already a child window, but moving away
         [[self window] removeChildWindow:window];
         TLMLog(__func__, @"Undocking log window");
+        _dockedEdge = TLMDockedEdgeNone;
     }
 }
 
