@@ -390,41 +390,50 @@ static char _TLMOperationQueueOperationContext;
 
 - (void)dockableWindowGeometryDidChange:(NSWindow *)window;
 {
+    // !!! early return on hidden default
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"TLMDisableLogWindowDocking"])
+        return;
+    
     NSRect logWindowFrame = [window frame];
     const NSRect mainWindowFrame = [[self window] frame];
-    const BOOL isChildWindow = [[[self window] childWindows] containsObject:window];
     const CGFloat tolerance = 5.0; // ?
     const CGFloat dx = NSMaxX(mainWindowFrame) - NSMinX(logWindowFrame);
     const CGFloat dy = NSMinY(mainWindowFrame) - NSMaxY(logWindowFrame);
     
-    if (ABS(dx) <= tolerance) {
+    if (ABS(dx) <= tolerance && NSMaxY(logWindowFrame) >= NSMinY(mainWindowFrame) && NSMaxY(logWindowFrame) <= NSMaxY(mainWindowFrame)) {
         // dock on right side of main window
-        if (isChildWindow == NO) {
-            logWindowFrame.origin.x = NSMaxX(mainWindowFrame) + 1;
-            // add before changing the frame, so we're not called twice
+        
+        if (TLMDockedEdgeNone == _dockedEdge) {
+            NSParameterAssert([[[self window] childWindows] containsObject:window] == NO);
+            // !!! reentrancy: set before changing the frame
+            _dockedEdge = TLMDockedEdgeRight;
             [[self window] addChildWindow:window ordered:NSWindowBelow];
+
+            logWindowFrame.origin.x = NSMaxX(mainWindowFrame) + 1;
             [window setFrameOrigin:logWindowFrame.origin];
             TLMLog(__func__, @"Docking log window on right of main window");
-            _dockedEdge = TLMDockedEdgeRight;
         }
     }
-    else if (ABS(dy) <= tolerance) {
+    else if (ABS(dy) <= tolerance && NSMinX(logWindowFrame) >= NSMinX(mainWindowFrame) && NSMinX(logWindowFrame) <= NSMaxX(mainWindowFrame)) {
         // dock on bottom of main window
-        if (isChildWindow == NO) {
-            logWindowFrame.origin.y = NSMinY(mainWindowFrame) - NSHeight(logWindowFrame) - 1;
-            // add before changing the frame, so we're not called twice
+        
+        if (TLMDockedEdgeNone == _dockedEdge) {
+            NSParameterAssert([[[self window] childWindows] containsObject:window] == NO);
+            // !!! reentrancy: set before changing the frame
+            _dockedEdge = TLMDockedEdgeBottom;
             [[self window] addChildWindow:window ordered:NSWindowBelow];
+
+            logWindowFrame.origin.y = NSMinY(mainWindowFrame) - NSHeight(logWindowFrame) - 1;
             [window setFrameOrigin:logWindowFrame.origin];
             TLMLog(__func__, @"Docking log window below main window");
-            _dockedEdge = TLMDockedEdgeBottom;
         }
     }
-    else if (isChildWindow) {
-        NSParameterAssert(TLMDockedEdgeNone != _dockedEdge);
+    else if (TLMDockedEdgeNone != _dockedEdge) {
+        NSParameterAssert([[[self window] childWindows] containsObject:window]);
         // already a child window, but moving away
+        _dockedEdge = TLMDockedEdgeNone;
         [[self window] removeChildWindow:window];
         TLMLog(__func__, @"Undocking log window");
-        _dockedEdge = TLMDockedEdgeNone;
     }
 }
 
