@@ -222,7 +222,7 @@ static void __TLMMigrateBundleIdentifier()
         _logWindowController = [TLMLogWindowController new];
     
     NSDictionary *infoPlist = [[NSBundle mainBundle] infoDictionary];
-    TLMLog(__func__, @"Welcome to %@ version %@!", [infoPlist objectForKey:(id)kCFBundleNameKey], [infoPlist objectForKey:(id)kCFBundleVersionKey]);
+    TLMLog(__func__, @"Welcome to %@ %@, running under Mac OS X %@", [infoPlist objectForKey:(id)kCFBundleNameKey], [infoPlist objectForKey:(id)kCFBundleVersionKey], [[NSProcessInfo processInfo] operatingSystemVersionString]);
     
     if ([[NSUserDefaults standardUserDefaults] boolForKey:TLMShowLogWindowPreferenceKey])
         [self showLogWindow:nil];
