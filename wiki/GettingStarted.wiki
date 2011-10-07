@@ -11,9 +11,9 @@ Installed and Remote columns show the TeX Live version number for the package.  
 
 = Updating =
 
-To update all packages, use the “Actions->Update All Packages” menu item or associated keyboard shortcut.  Individual packages can also be updated by selecting them in the list and using the “Actions->Update Selected Packages” menu item.  A context menu with these items is also available by right-clicking or control-clicking on the list.
+To update all packages, use the *Actions->Update All Packages* menu item or associated keyboard shortcut.  Individual packages can also be updated by selecting them in the list and using the *Actions->Update Selected Packages* menu item.  A context menu with these items is also available by right-clicking or control-clicking on the list.
 
-The “Update All Packages” action will also remove and install packages to match the TeX Live database on the remote server. 
+The *Update All Packages* action will also remove and install packages to match the TeX Live database on the remote server. 
 
 = Installing =
 
@@ -35,11 +35,9 @@ Use the Actions menu to change automatic backup settings.  If you want to keep a
 
 http://mactlmgr.googlecode.com/svn/wiki/images/AutobackupSheet.png
 
-You can restore backups using the “Backups” tab.
+You can restore backups using the “Backups” tab by clicking the “Restore” button next to the package version that you want to install.
 
 http://mactlmgr.googlecode.com/svn/wiki/images/BackupTab.png
-
-Just click the “Restore” button next to the package version that you want to install.
 
 = Show Info =
 
