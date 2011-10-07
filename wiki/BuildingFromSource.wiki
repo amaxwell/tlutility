@@ -26,4 +26,5 @@ Make sure you name it "TeX Live Utility Signing Certificate" (no quotes), and ad
 Build the project in Xcode.  It will likely fail since it can't find the [http://fileview.googlecode.com FileView] Interface Builder plugin, so you'll have to add that to Interface Builder's preferences.  Just double-clicking the FileViewIBPlugin.ibplugin in Finder might work.
 
 == You cannot compile TeX Live Utility with Xcode 4 ==
+
 Apple removed the recently-added capabilities for Interface Builder plugins, and has not responded to developer requests for adding that feature back; their recommended solution is to use Xcode 3.x, which is not compatible with Lion (10.7).  Consequently, you need to use Snow Leopard (10.6.x) and Xcode 3.2.x (earlier versions may work as well).  This also avoids the [http://inessential.com/2011/09/02/the_part_of_xcode_4_that_tires_me_out painful UI of Xcode 4], so it's not all bad.
