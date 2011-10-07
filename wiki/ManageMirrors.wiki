@@ -23,4 +23,4 @@ Your home mirror (the one used when TeX Live Utility starts up) is shown in bold
 
 == Adding Mirrors ==
 
-To add a new mirror, you can use the “+” button at the bottom of the window, or drop it under the “OTHER MIRRORS” outline heading.  This is where you should add [http://tlcontrib.metatex.org/ TLContrib], for instance, or a private repository.  The by-continent list of mirrors comes from parsing [http://www.ctan.org/tex-archive/CTAN.sites CTAN.sites] and is not editable.
+To add a new mirror, you can use the “+” button at the bottom of the window, or drop it under the “OTHER MIRRORS” outline heading.  This is where you should add a URL for [http://tlcontrib.metatex.org/ TLContrib], for instance, or a private repository.  The by-continent list of mirrors comes from parsing [http://www.ctan.org/tex-archive/CTAN.sites CTAN.sites] and is not editable.
