@@ -221,6 +221,9 @@ static void __TLMMigrateBundleIdentifier()
     if (nil == _logWindowController)
         _logWindowController = [TLMLogWindowController new];
     
+    NSDictionary *infoPlist = [[NSBundle mainBundle] infoDictionary];
+    TLMLog(__func__, @"Welcome to %@ version %@!", [infoPlist objectForKey:(id)kCFBundleNameKey], [infoPlist objectForKey:(id)kCFBundleVersionKey]);
+    
     if ([[NSUserDefaults standardUserDefaults] boolForKey:TLMShowLogWindowPreferenceKey])
         [self showLogWindow:nil];
     
