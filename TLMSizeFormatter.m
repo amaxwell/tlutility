@@ -41,6 +41,8 @@
 
 @implementation TLMSizeFormatter
 
+#define SIZE_MULTIPLE 1024
+
 - (NSString *)stringForObjectValue:(id)obj
 {
     NSString *string = nil;
@@ -49,18 +51,18 @@
         float totalSize = [obj floatValue];
         NSString *sizeUnits = @"B";
         
-        if (totalSize > 1000.0) {
-            totalSize /= 1000.0;
+        if (totalSize > SIZE_MULTIPLE) {
+            totalSize /= SIZE_MULTIPLE;
             sizeUnits = @"KB";
         }
         
-        if (totalSize > 1000.0) {
-            totalSize /= 1000.0;
+        if (totalSize > SIZE_MULTIPLE) {
+            totalSize /= SIZE_MULTIPLE;
             sizeUnits = @"MB";
         }
         
-        if (totalSize > 1000.0) {
-            totalSize /= 1000.0;
+        if (totalSize > SIZE_MULTIPLE) {
+            totalSize /= SIZE_MULTIPLE;
             sizeUnits = @"GB";
         }
         
