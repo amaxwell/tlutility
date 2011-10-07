@@ -274,6 +274,17 @@
 			</dict>
 			<dict>
 				<key>country</key>
+				<string>Pakistan</string>
+				<key>name</key>
+				<string>stingray.cyber.net.pk</string>
+				<key>urls</key>
+				<array>
+					<string>ftp://stingray.cyber.net.pk/ctan/</string>
+					<string>http://stingray.cyber.net.pk/pub/ctan/</string>
+				</array>
+			</dict>
+			<dict>
+				<key>country</key>
 				<string>Singapore</string>
 				<key>name</key>
 				<string>raffles.nus.edu.sg</string>
@@ -844,6 +855,7 @@
 				<key>urls</key>
 				<array>
 					<string>http://ctan.ijs.si/tex-archive/</string>
+					<string>rsync://ctan.ijs.si/CTAN/</string>
 				</array>
 			</dict>
 			<dict>
@@ -1223,6 +1235,6 @@
 		</array>
 	</dict>
 	<key>timestamp</key>
-	<real>1314235441.716578</real>
+	<real>1318015009.785269</real>
 </dict>
 </plist>
