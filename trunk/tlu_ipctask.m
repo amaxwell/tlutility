@@ -475,10 +475,15 @@ int main(int argc, char *argv[]) {
         } while (-1 == ret && EINTR == errno);
         ret = (ret != 0 && WIFEXITED(childStatus)) ? WEXITSTATUS(childStatus) : EXIT_FAILURE;
         
-        if (ret)
-            log_error(@"exit status of pid = %d was %d", child, ret);
-        else
+        if (ret) {
+            // save this off, since it could change in the next call
+            int err = errno;
+            log_error(@"Value of errno is %s\n", strerror(err));
+            log_error(@"*** ERROR *** exit status of pid = %d was %d", child, ret);
+        }
+        else {
             log_notice_noparse(@"exit status of pid = %d was %d", child, ret);
+        }
 
     }
     
