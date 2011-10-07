@@ -45,4 +45,4 @@ This panel also shows links and thumbnails for documentation, found using texdoc
 
 = Settings =
 
-See the PreferencesPage for details.
+See the LegacyPreferencesPage for details.
