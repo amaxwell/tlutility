@@ -48,6 +48,7 @@
 #import "TLMMirrorController.h"
 #import "TLMEnvironment.h"
 #import "TLMLogWindowController.h"
+#import "TLMSizeFormatter.h"
 
 @implementation TLMAppController
 
@@ -222,7 +223,10 @@ static void __TLMMigrateBundleIdentifier()
         _logWindowController = [TLMLogWindowController new];
     
     NSDictionary *infoPlist = [[NSBundle mainBundle] infoDictionary];
-    TLMLog(__func__, @"Welcome to %@ %@, running under Mac OS X %@", [infoPlist objectForKey:(id)kCFBundleNameKey], [infoPlist objectForKey:(id)kCFBundleVersionKey], [[NSProcessInfo processInfo] operatingSystemVersionString]);
+    NSProcessInfo *pInfo = [NSProcessInfo processInfo];
+    NSFormatter *memsizeFormatter = [[TLMSizeFormatter new] autorelease];
+    NSString *memsize = [memsizeFormatter stringForObjectValue:[NSNumber numberWithUnsignedLongLong:[pInfo physicalMemory]]];
+    TLMLog(__func__, @"Welcome to %@ %@, running under Mac OS X %@ with %lu/%lu processors active and %@ physical memory.", [infoPlist objectForKey:(id)kCFBundleNameKey], [infoPlist objectForKey:(id)kCFBundleVersionKey], [pInfo operatingSystemVersionString], [pInfo activeProcessorCount], [pInfo processorCount], memsize);
     
     if ([[NSUserDefaults standardUserDefaults] boolForKey:TLMShowLogWindowPreferenceKey])
         [self showLogWindow:nil];
