@@ -1,0 +1,34 @@
+#summary Frequently Asked Questions
+#labels Featured
+
+== Where is the Log pane? ==
+
+Use the *Window->Log Window* menu item to show the log.  Previous session logs are now shown, as well.
+
+== I liked the split pane.  Can I get it back? ==
+
+No.  However, the log window will “stick” to the bottom or right-hand side of the main window, if you bring it near the edge.
+
+== The separate log window sucks.  Why did you do this to us? ==
+
+So you can look at the log output when a sheet is present on the main window, and also to allow a wider window.  In addition, I think it's more Mac-like not to show a bunch of spew that is mainly for developer debugging.
+
+== How do I know if something is happening? ==
+
+This is the only real problem with moving the log to a separate window that is hidden by default.  However, TeX Live Utility now shows more status messages when operations succeed or are in progress, and hopefully that will alleviate the anguish of wondering what your computer is doing.
+
+== What happened to the toolbar buttons? ==
+
+The were removed because I can't draw icons, and the previous set was a misuse of Apple-supplied icons that should only be used for specific purposes.  Just because Apple ignores their own interface guidelines doesn't mean that I should.
+
+== Will you add a button for updates? ==
+
+Not unless someone comes up with a really nice set of icons.  There's not enough room for text-based buttons.  Really, though, how much harder is it to use the main menu or a context menu?  Did you also like Word 6.0 for the Mac? 
+
+== Why did you redo the interface? ==
+
+In large part, this was to add support for multiple mirrors in a reasonably coherent manner.  If you think of TeX Live Utility as a special-purpose web browser, hopefully it makes more sense.  Unfortunately, this added significant complexity.
+
+== The new interface sucks.  Can I get the old one back? ==
+
+Sure, just download [http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20110627.tgz version 0.92] or an earlier version.

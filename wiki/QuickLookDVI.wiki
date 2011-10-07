@@ -1,5 +1,4 @@
 #summary Quick Look plugin for DVI files.
-#labels Featured
 
 = Installation =
 
