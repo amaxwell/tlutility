@@ -466,10 +466,12 @@ static BOOL __TLMCheckSignature()
         
         if (_internal->_authorizationRequired) {
             
+            TLMLog(__func__, @"Invoking privileged task via AuthorizationExecuteWithPrivileges");
             status = AuthorizationExecuteWithPrivileges(authorization, cmdPath, kAuthorizationFlagDefaults, args, NULL);
         }
         else {
             
+            TLMLog(__func__, @"Using TLMTask instead of AuthorizationExecuteWithPrivileges");
             _internal->_task = [TLMTask new]; 
             [_internal->_task setLaunchPath:__TLMCwrapperPath()];
             [_internal->_task setArguments:__TLMOptionArrayFromArguments(args)];
