@@ -303,6 +303,16 @@ static NSArray * __TLMOptionArrayFromArguments(char **nullTerminatedArguments)
                     do {
                         ret = waitpid(event.ident, &wstatus, WNOHANG | WUNTRACED);
                     } while (-1 == ret && EINTR == errno);
+                    
+                    /*
+                     A user reports that I'm logging an exit status of 1 in this method,
+                     when it was clearly zero in tlu_ipctask.  The only way I can see
+                     that happening is if waitpid returns -1, so we'll log that and see
+                     what happens.
+                     */
+                    int err = errno;
+                    const char *errstr = err ? strerror(err) : "No error";
+                    TLMLog(__func__, @"waitpid returned %d, WIFEXITED(%d) = %d, errno = %d (%s)", ret, wstatus, WIFEXITED(wstatus), err, errstr);
                     ret = (ret != 0 && WIFEXITED(wstatus)) ? WEXITSTATUS(wstatus) : EXIT_FAILURE;                
                 }
                 // set failure flag if ipctask failed
