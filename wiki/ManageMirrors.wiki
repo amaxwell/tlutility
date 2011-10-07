@@ -3,7 +3,7 @@
 
 = Introduction =
 
-TeX Live Utility can be used with any CTAN mirror.  Most users should use the default URL of [http://mirror.ctan.org CTAN multiplexer] which picks a nearby host for you to spread out the load, but sometimes you need to use a particular URL.
+TeX Live Utility can be used with any CTAN mirror.  Most users should use the default URL of [http://mirror.ctan.org] which picks a nearby host for you to spread out the load, but sometimes you need to use a particular URL.
 
 To change the URL, you can edit the address field at the top of the main window, or drag-and-drop a URL from another source, such as a web browser or the Finder.  If the URL is invalid or does not have the correct TeX Live version, an alert will be presented.
 
