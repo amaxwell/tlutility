@@ -13,6 +13,14 @@ If you hold down the option key (alt on some keyboards) while the Action menu is
 
 If you hold down the option key (alt on some keyboards) while the Action menu is active, you'll see an option to *Install TeX Live Manager From Critical Repository*.  This peculiar-sounding item allows you to install the latest TeX Live Manager  [http://tug.org/texlive/tlmgr.html#testversions test version].  If you do this, please report any problems encountered to the TeX Live team via the [http://lists.tug.org/tex-live mailing list].  In addition, you can revert to a non-beta version of tlmgr by using the *Actions->Reinstall TeX Live Manager* menu item noted above.
 
+= Scheduled Update Checking =
+
+You can schedule automatic update checks for TeX Live using *Configure->Schedule TeX Live Update Checks…*.  This will run in the background, using your default repository, and show an alert dialog if new or updated packages are available.
+
+http://mactlmgr.googlecode.com/svn/wiki/images/AutoUpdateSheet.png
+
+Scheduling is limited to daily or weekly checks.  To show the update to any logged-in user, check the “Show alerts to any user” box.  Otherwise, each user can schedule update checking separately.
+
 = Install TeX Live =
 
 [http://tug.org/mactex MacTeX] is the easiest way to install TeX Live on the Mac.  However, it requires root access to install.  Not all users have administrative privileges, and some may wish to customize their install using the [http://www.tug.org/texlive/doc/install-tl.html UNIX install script] for TeX Live.  TeX Live Utility provides a graphical interface to the install script, but you have to enable a command-line preference to use it in Terminal.app.  Quit TeX Live Utility, then enter the following command in Terminal and press Return:
