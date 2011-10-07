@@ -473,6 +473,16 @@
     [menu addItem:item];
     [item release];
     
+    item = [[NSMenuItem allocWithZone:zone] initWithTitle:NSLocalizedString(@"Update All Packages", @"context menu")
+                                                   action:@selector(updateAll:)
+                                            keyEquivalent:@""];
+    [item setAction:@selector(updateAll:)];
+    [item setTarget:self];
+    [menu addItem:item];
+    [item release];
+    
+    [menu addItem:[NSMenuItem separatorItem]];
+    
     item = [[NSMenuItem allocWithZone:zone] initWithTitle:NSLocalizedString(@"Show Info", @"context menu")
                                                    action:@selector(showInfo:)
                                             keyEquivalent:@""];
