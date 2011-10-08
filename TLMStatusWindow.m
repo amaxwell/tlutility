@@ -163,6 +163,7 @@ static void CenterRectInRect(NSRect *toCenter, NSRect enclosingRect)
     [window setOpaque:NO];
     [window setHasShadow:NO];
     [window setPreferredBackingLocation:NSWindowBackingLocationVideoMemory];
+    [window setIgnoresMouseEvents:YES];
     
     _TLMStatusView *statusView = [[_TLMStatusView allocWithZone:[self zone]] 
                                                   initWithFrame:[[window contentView] frame]];
