@@ -300,13 +300,20 @@ static NSArray * __TLMOptionArrayFromArguments(char **nullTerminatedArguments)
                 }
                 else {
 
-                    ret = HANDLE_EINTR(waitpid(event.ident, &wstatus, WNOHANG | WUNTRACED));
                     /*
-                     A user reports that I'm logging an exit status of 1 in this method,
-                     when it was clearly zero in tlu_ipctask.  The only way I can see
-                     that happening is if waitpid returns -1, so we'll log that and see
-                     what happens.
+                     Formerly called with WNOHANG, but a user has a repeatable case where waitpid returns 0,
+                     which obviously causes problems for us, since we already knew from ipctask logging that
+                     it exited with status 0.  Try a blocking call to waitpid instead, since we know that
+                     the process should be exited or exiting soon.  Chromium source mentions a similar race
+                     here:
+                     
+                     http://src.chromium.org/svn/trunk/src/content/common/process_watcher_mac.cc
+                     
+                     Looking at BDSKTask.m, apparently I knew about this some time ago, and forgot to apply
+                     the same fix here.  Duh.
                      */
+                    ret = HANDLE_EINTR(waitpid(event.ident, &wstatus, WUNTRACED));
+
                     int err = errno;
                     const char *errstr = err ? strerror(err) : "No error";
                     TLMLog(__func__, @"waitpid returned %d, WIFEXITED(%d) = %d, errno = %d (%s)", ret, wstatus, WIFEXITED(wstatus), err, errstr);
