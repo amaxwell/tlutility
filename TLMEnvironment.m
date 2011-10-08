@@ -372,6 +372,7 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
             // log anyway, since it's a huge PITA to diagnose a screwed up environment
             TLMLog(__func__, @"Found ~/.MacOSX/environment.plist%Cdidn't look too evil.", 0x2026);
         }
+        TLMLog(__func__, @"~/.MacOSX/environment.plist = %@", env);
     }
     
     // get the base path from /etc
