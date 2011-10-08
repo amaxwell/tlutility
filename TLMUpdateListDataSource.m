@@ -242,6 +242,9 @@
     if ([_controller infrastructureNeedsUpdate])
         return NO;
     
+    if ([_controller updatingInfrastructure])
+        return NO;
+    
     if ([_displayedPackages count] == 0)
         return NO;
     
@@ -261,6 +264,9 @@
 {
     const NSUInteger selectedRowCount = [[_tableView selectedRowIndexes] count];
     if (selectedRowCount == 0)
+        return NO;
+    
+    if ([_controller updatingInfrastructure])
         return NO;
     
     /*
@@ -288,13 +294,13 @@
     else if (@selector(updateSelectedRows:) == action)
         return [self _validateUpdateSelectedRows];
     else if (@selector(updateAll:) == action)
-        return [_allPackages count] > 0;
+        return [_allPackages count] > 0 && [_controller updatingInfrastructure] == NO;
     else if (@selector(installSelectedRows:) == action)
         return [self _validateInstallSelectedRows];
     else if (@selector(refreshList:) == action)
         return NO == _refreshing;
     else if (@selector(reinstallSelectedRows:) == action)
-        return [[_tableView selectedRowIndexes] count] > 0;
+        return [[_tableView selectedRowIndexes] count] > 0 && [_controller updatingInfrastructure] == NO;
     else
         return YES;
 }
