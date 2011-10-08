@@ -312,6 +312,9 @@ static NSArray * __TLMOptionArrayFromArguments(char **nullTerminatedArguments)
                      Looking at BDSKTask.m, apparently I knew about this some time ago, and forgot to apply
                      the same fix here.  Duh.
                      */
+                    
+                    // initialize for logging
+                    wstatus = 0;
                     ret = HANDLE_EINTR(waitpid(event.ident, &wstatus, WUNTRACED));
 
                     int err = errno;
