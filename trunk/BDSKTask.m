@@ -582,10 +582,9 @@ static char *__BDSKCopyFileSystemRepresentation(NSString *str)
      a race condition between kqueue and wait.  Since we know the child has exited, we can allow waitpid
      to block without fear that it will block indefinitely.
      */
-    int wait_flags = 0;
     int ret, status;
     
-    ret = HANDLE_EINTR(waitpid(_processIdentifier, &status, wait_flags));
+    ret = HANDLE_EINTR(waitpid(_processIdentifier, &status, 0));
     
     // happens if you call waitpid() on the child process elsewhere; don't do that
     if (-1 == ret)
