@@ -327,6 +327,16 @@
 		F97E860B0EFA3BFD00862882 /* TeXDistDocument.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = TeXDistDocument.icns; sourceTree = "<group>"; };
 		F97EBA04143D449000E79859 /* TLMLogWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMLogWindow.h; sourceTree = "<group>"; };
 		F97EBA05143D449000E79859 /* TLMLogWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMLogWindow.m; sourceTree = "<group>"; };
+		F97EBB381440971C00E79859 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Japanese.lproj/LogWindow.xib; sourceTree = "<group>"; };
+		F97EBB3B1440975200E79859 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Japanese.lproj/LaunchAgentSheet.xib; sourceTree = "<group>"; };
+		F97EBB3C1440975A00E79859 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Japanese.lproj/AutobackupSheet.xib; sourceTree = "<group>"; };
+		F97EBB3D1440976200E79859 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Japanese; path = Japanese.lproj/Localizable.strings; sourceTree = "<group>"; };
+		F97EBB3E1440976B00E79859 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Japanese; path = Japanese.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		F97EBB3F1440977100E79859 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Japanese.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		F97EBB401440977900E79859 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Japanese.lproj/MainWindow.xib; sourceTree = "<group>"; };
+		F97EBB411440977F00E79859 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Japanese.lproj/Preferences.xib; sourceTree = "<group>"; };
+		F97EBB421440978500E79859 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Japanese.lproj/PapersizeSheet.xib; sourceTree = "<group>"; };
+		F97EBB431440978E00E79859 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Japanese.lproj/Mirrors.xib; sourceTree = "<group>"; };
 		F982551E125045980018CB73 /* TLMAutobackupController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMAutobackupController.h; sourceTree = "<group>"; };
 		F982551F125045980018CB73 /* TLMAutobackupController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMAutobackupController.m; sourceTree = "<group>"; };
 		F982553C12504E040018CB73 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/AutobackupSheet.xib; sourceTree = "<group>"; };
@@ -1152,6 +1162,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				089C165DFE840E0CC02AAC07 /* English */,
+				F97EBB3E1440976B00E79859 /* Japanese */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -1160,6 +1171,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				1DDD58150DA1D0A300B32029 /* English */,
+				F97EBB3F1440977100E79859 /* Japanese */,
 			);
 			name = MainMenu.xib;
 			sourceTree = "<group>";
@@ -1168,6 +1180,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				F925D1AE12957B4C00D75BB4 /* English */,
+				F97EBB431440978E00E79859 /* Japanese */,
 			);
 			name = Mirrors.xib;
 			sourceTree = "<group>";
@@ -1176,6 +1189,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				F96203CE13D3677600932965 /* English */,
+				F97EBB381440971C00E79859 /* Japanese */,
 			);
 			name = LogWindow.xib;
 			sourceTree = "<group>";
@@ -1184,6 +1198,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				F982553C12504E040018CB73 /* English */,
+				F97EBB3C1440975A00E79859 /* Japanese */,
 			);
 			name = AutobackupSheet.xib;
 			sourceTree = "<group>";
@@ -1192,6 +1207,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				F905217E0EFEA98600B489FE /* English */,
+				F97EBB421440978500E79859 /* Japanese */,
 			);
 			name = PapersizeSheet.xib;
 			sourceTree = "<group>";
@@ -1200,6 +1216,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				F9B061FD0F0F387700BB03D3 /* English */,
+				F97EBB3D1440976200E79859 /* Japanese */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -1208,6 +1225,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				F9B1346D0EEB1AFE007C0046 /* English */,
+				F97EBB401440977900E79859 /* Japanese */,
 			);
 			name = MainWindow.xib;
 			sourceTree = "<group>";
@@ -1216,6 +1234,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				F9C0D3D1125ECEDB00B1FBE5 /* English */,
+				F97EBB3B1440975200E79859 /* Japanese */,
 			);
 			name = LaunchAgentSheet.xib;
 			sourceTree = "<group>";
@@ -1224,6 +1243,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				F9F130530EED94CC00D9968D /* English */,
+				F97EBB411440977F00E79859 /* Japanese */,
 			);
 			name = Preferences.xib;
 			sourceTree = "<group>";
