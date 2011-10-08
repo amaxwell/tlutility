@@ -315,7 +315,7 @@ static NSArray * __TLMOptionArrayFromArguments(char **nullTerminatedArguments)
                     
                     // initialize for logging
                     wstatus = 0;
-                    ret = HANDLE_EINTR(waitpid(event.ident, &wstatus, WUNTRACED));
+                    ret = HANDLE_EINTR(waitpid(event.ident, &wstatus, 0));
 
                     int err = errno;
                     const char *errstr = err ? strerror(err) : "No error";
