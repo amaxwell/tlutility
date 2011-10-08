@@ -351,7 +351,7 @@ static char *__BDSKCopyFileSystemRepresentation(NSString *str)
         
         char ignored;
         // block until the parent has setup complete
-        read(blockpipe[0], &ignored, 1);
+        (void) HANDLE_EINTR(read(blockpipe[0], &ignored, 1));
         close(blockpipe[0]);
         
         int ret = execve(args[0], args, env);
@@ -380,7 +380,7 @@ static char *__BDSKCopyFileSystemRepresentation(NSString *str)
          around after the exec.
          */
         EV_SET(&_internal->_event, _processIdentifier, EVFILT_PROC, EV_ADD, NOTE_EXIT | NOTE_SIGNAL, 0, self);
-        kevent(_kqueue, &_internal->_event, 1, NULL, 0, NULL);      
+        (void) HANDLE_EINTR(kevent(_kqueue, &_internal->_event, 1, NULL, 0, NULL));      
         
         // use a runloop source to ensure that the notification is posted on the correct thread
         _internal->_rl = (CFRunLoopRef)CFRetain(CFRunLoopGetCurrent());
@@ -479,7 +479,7 @@ static char *__BDSKCopyFileSystemRepresentation(NSString *str)
         NSAutoreleasePool *pool = [NSAutoreleasePool new];
         struct kevent evt;
         
-        if (kevent(_kqueue, NULL, 0, &evt, 1, NULL)) {
+        if (HANDLE_EINTR(kevent(_kqueue, NULL, 0, &evt, 1, NULL))) {
             
             BDSKTask *task = evt.udata;
             OSMemoryBarrier();
@@ -512,7 +512,7 @@ static char *__BDSKCopyFileSystemRepresentation(NSString *str)
 - (void)_taskSignaled
 {
     int status;
-    if (waitpid(_processIdentifier, &status, WNOHANG)) {
+    if (HANDLE_EINTR(waitpid(_processIdentifier, &status, WNOHANG))) {
         if (WIFSIGNALED(status))
             NSLog(@"task terminated with signal %d", WTERMSIG(status));
         else if (WIFSTOPPED(status))
@@ -544,7 +544,7 @@ static char *__BDSKCopyFileSystemRepresentation(NSString *str)
         
         // after this point, _taskExited and __BDSKTaskNotify will never be called, so account for their teardown
         _internal->_event.flags = EV_DELETE;
-        kevent(_kqueue, &_internal->_event, 1, NULL, 0, NULL);
+        (void) HANDLE_EINTR(kevent(_kqueue, &_internal->_event, 1, NULL, 0, NULL));
         
         CFRunLoopSourceInvalidate(_internal->_rlsource);
         _internal->_rlsource = NULL;
@@ -585,10 +585,7 @@ static char *__BDSKCopyFileSystemRepresentation(NSString *str)
     int wait_flags = 0;
     int ret, status;
     
-    // keep trying in case of EINTR
-    do {
-        ret = waitpid(_processIdentifier, &status, wait_flags);
-    } while (-1 == ret && EINTR == errno);
+    ret = HANDLE_EINTR(waitpid(_processIdentifier, &status, wait_flags));
     
     // happens if you call waitpid() on the child process elsewhere; don't do that
     if (-1 == ret)
