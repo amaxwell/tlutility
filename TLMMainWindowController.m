@@ -687,12 +687,13 @@ static char _TLMOperationQueueOperationContext;
         if (_updateInfrastructure) {
             op = [[TLMInfraUpdateOperation alloc] initWithLocation:repository];
             TLMLog(__func__, @"Beginning infrastructure update from %@", [repository absoluteString]);
+            [self _addOperation:op selector:@selector(_handleInfrastructureUpdateFinishedNotification:) setRefreshingForDataSource:nil];
         }
         else {
             op = [[TLMUpdateOperation alloc] initWithPackageNames:nil location:repository];
             TLMLog(__func__, @"Beginning update of all packages from %@", [repository absoluteString]);
+            [self _addOperation:op selector:@selector(_handleUpdateFinishedNotification:) setRefreshingForDataSource:nil];
         }
-        [self _addOperation:op selector:@selector(_handleUpdateFinishedNotification:) setRefreshingForDataSource:nil];
         [op release];
     }
 }
@@ -840,6 +841,51 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 - (void)_handleUpdateFinishedNotification:(NSNotification *)aNote
 {
     NSParameterAssert([NSThread isMainThread]);
+    NSParameterAssert(NO == _updateInfrastructure);
+    
+    TLMUpdateOperation *op = [aNote object];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:TLMOperationFinishedNotification object:op];
+    
+    // ignore operations that failed or were explicitly cancelled
+    if ([op failed]) {
+        NSAlert *alert = [[NSAlert new] autorelease];
+        [alert setMessageText:NSLocalizedString(@"The update failed.", @"alert title")];
+        [alert setInformativeText:NSLocalizedString(@"The update process appears to have failed. Would you like to show the log now or ignore this warning?", @"alert message text")];
+        [alert addButtonWithTitle:NSLocalizedString(@"Show Log", @"button title")];
+        [alert addButtonWithTitle:NSLocalizedString(@"Ignore", @"button title")];
+        [alert beginSheetModalForWindow:[self window] 
+                          modalDelegate:self 
+                         didEndSelector:@selector(alertForLogWindowDidEnd:returnCode:contextInfo:) 
+                            contextInfo:NULL];                
+    }
+    else if ([op isCancelled] == NO) {
+            
+        [self _refreshLocalDatabase];
+        
+        /*
+         Could remove this to ensure that the "Update Succeeded" message is displayed longer,
+         but it's needed in case a package update also updates or installs other dependencies.
+         However, this notification is not posted for installs, so I now think that's not a
+         problem.
+        [_updateListDataSource setNeedsUpdate:YES];
+         */
+
+        [_packageListDataSource setNeedsUpdate:YES];
+        [_backupDataSource setNeedsUpdate:YES];
+        
+        [self setServerURL:[op updateURL]];
+        
+        [self _refreshCurrentDataSourceIfNeeded];
+        [self _displayStatusString:NSLocalizedString(@"Update Succeeded", @"status message") dataSource:_updateListDataSource];
+
+    }
+}
+
+- (void)_handleInfrastructureUpdateFinishedNotification:(NSNotification *)aNote
+{
+    NSParameterAssert([NSThread isMainThread]);
+    NSParameterAssert(_updateInfrastructure);
+    
     TLMUpdateOperation *op = [aNote object];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:TLMOperationFinishedNotification object:op];
     
@@ -857,70 +903,31 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     }
     else if ([op isCancelled] == NO) {
         
-        // check to see if this was an infrastructure update, which may have wiped out tlmgr
-        // NB: should never happen with the new update path (always using disaster recovery)
-        if (_updateInfrastructure && NO == [self _checkCommandPathAndWarn:NO]) {
+        /*
+         See if texlive.infra version is the same after installing update-tlmgr-latest.sh, which can happen
+         if there's an inconsistency between texlive.infra in tlnet and what got wrapped up in the script.
+         */
+        NSDictionary *currentVersions = [__TLMCopyVersionsForPackageNames([_previousInfrastructureVersions allKeys]) autorelease];
+        if ([currentVersions isEqualToDictionary:_previousInfrastructureVersions]) {
             NSAlert *alert = [[NSAlert new] autorelease];
-            [alert setAlertStyle:NSCriticalAlertStyle];
-            [alert setMessageText:NSLocalizedString(@"The tlmgr tool no longer exists, possibly due to an update failure.", @"alert title")];
-            [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"Follow the instructions for Unix disaster recovery on the TeX Live web site at %@.  Would you like to go to that page now?  You can also open it later from the Help menu.", @"alert message text"), @"http://tug.org/texlive/tlmgr.html"]];
-            [alert addButtonWithTitle:NSLocalizedString(@"Open Now", @"button title")];
-            [alert addButtonWithTitle:NSLocalizedString(@"Later", @"button title")];
+            [alert setMessageText:NSLocalizedString(@"Possible update failure.", @"alert title")];
+            [alert setInformativeText:NSLocalizedString(@"The TeX Live infrastructure packages have the same version after updating.  This could be a packaging problem on the server.  If you see this message repeatedly, wait until the problem is resolved in TeX Live before attempting another update.", @"alert message text")];
+            
+            // refresh packages after this sheet ends, since it'll likely show the infra update alert sheet
             [alert beginSheetModalForWindow:[self window] 
                               modalDelegate:self 
-                             didEndSelector:@selector(disasterAlertDidEnd:returnCode:contextInfo:) 
-                                contextInfo:NULL];            
-        }
-        else if (_updateInfrastructure) {
-            
-            /*
-             See if texlive.infra version is the same after installing update-tlmgr-latest.sh, which can happen
-             if there's an inconsistency between texlive.infra in tlnet and what got wrapped up in the script.
-             */
-            NSDictionary *currentVersions = [__TLMCopyVersionsForPackageNames([_previousInfrastructureVersions allKeys]) autorelease];
-            if ([currentVersions isEqualToDictionary:_previousInfrastructureVersions]) {
-                NSAlert *alert = [[NSAlert new] autorelease];
-                [alert setMessageText:NSLocalizedString(@"Possible update failure.", @"alert title")];
-                [alert setInformativeText:NSLocalizedString(@"The TeX Live infrastructure packages have the same version after updating.  This could be a packaging problem on the server.  If you see this message repeatedly, wait until the problem is resolved in TeX Live before attempting another update.", @"alert message text")];
-                
-                // refresh packages after this sheet ends, since it'll likely show the infra update alert sheet
-                [alert beginSheetModalForWindow:[self window] 
-                                  modalDelegate:self 
-                                 didEndSelector:@selector(versionAlertDidEnd:returnCode:contextInfo:) 
-                                    contextInfo:NULL];
-            }
-            else {
-                // successful infrastructure update; remove the infra package from the list manually
-                // ??? when did TL quit using arch-specific texlive.infra packages?
-                [_updateListDataSource removePackageNamed:@"texlive.infra"];
-                // formerly called _refreshUpdatedPackageListFromLocation here
-                [_updateListDataSource setPackageFilter:nil];
-                // versions are okay, and we can no longer rely on the list updates callback to reset this
-                _updateInfrastructure = NO;
-                [self _displayStatusString:NSLocalizedString(@"Infrastructure Update Succeeded", @"status message") dataSource:_updateListDataSource];
-            }
-            
+                             didEndSelector:@selector(versionAlertDidEnd:returnCode:contextInfo:) 
+                                contextInfo:NULL];
         }
         else {
-            
-            [self _refreshLocalDatabase];
-            
-            /*
-             Could remove this to ensure that the "Update Succeeded" message is displayed longer,
-             but it's needed in case a package update also updates or installs other dependencies.
-             However, this notification is not posted for installs, so I now think that's not a
-             problem.
-            [_updateListDataSource setNeedsUpdate:YES];
-             */
-
-            [_packageListDataSource setNeedsUpdate:YES];
-            [_backupDataSource setNeedsUpdate:YES];
-            
-            [self setServerURL:[op updateURL]];
-            
-            [self _refreshCurrentDataSourceIfNeeded];
-            [self _displayStatusString:NSLocalizedString(@"Update Succeeded", @"status message") dataSource:_updateListDataSource];
-
+            // successful infrastructure update; remove the infra package from the list manually
+            // ??? when did TL quit using arch-specific texlive.infra packages?
+            [_updateListDataSource removePackageNamed:@"texlive.infra"];
+            // formerly called _refreshUpdatedPackageListFromLocation here
+            [_updateListDataSource setPackageFilter:nil];
+            // versions are okay, and we can no longer rely on the list updates callback to reset this
+            _updateInfrastructure = NO;
+            [self _displayStatusString:NSLocalizedString(@"Infrastructure Update Succeeded", @"status message") dataSource:_updateListDataSource];
         }
     }
 }
