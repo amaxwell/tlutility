@@ -100,7 +100,8 @@ static char _TLMOperationQueueOperationContext;
 @synthesize _tabView;
 @synthesize _updateListDataSource;
 @synthesize _installDataSource;
-@synthesize infrastructureNeedsUpdate = _updateInfrastructure;
+@synthesize infrastructureNeedsUpdate = _infrastructureNeedsUpdate;
+@synthesize updatingInfrastructure = _updatingInfrastructure;
 @synthesize _backupDataSource;
 @synthesize serverURL = _serverURL;
 
@@ -115,8 +116,8 @@ static char _TLMOperationQueueOperationContext;
     if (self) {
         TLMReadWriteOperationQueue *queue = [TLMReadWriteOperationQueue defaultQueue];
         [queue addObserver:self forKeyPath:@"operationCount" options:0 context:&_TLMOperationQueueOperationContext];
-        _lastTextViewHeight = 0.0;
-        _updateInfrastructure = NO;
+        _updatingInfrastructure = NO;
+        _infrastructureNeedsUpdate = NO;
         _operationCount = 0;
     }
     return self;
@@ -684,7 +685,9 @@ static char _TLMOperationQueueOperationContext;
     // sanity check in case the user switched the environment after getting an update listing
     if ([self _isCorrectDatabaseVersionAtURL:repository]) {
         TLMUpdateOperation *op = nil;
-        if (_updateInfrastructure) {
+        if (_infrastructureNeedsUpdate) {
+            _updatingInfrastructure = YES;
+            _infrastructureNeedsUpdate = NO;
             op = [[TLMInfraUpdateOperation alloc] initWithLocation:repository];
             TLMLog(__func__, @"Beginning infrastructure update from %@", [repository absoluteString]);
             [self _addOperation:op selector:@selector(_handleInfrastructureUpdateFinishedNotification:) setRefreshingForDataSource:nil];
@@ -761,7 +764,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     if ([criticalPackages count]) {
         [_previousInfrastructureVersions release];
         _previousInfrastructureVersions = __TLMCopyVersionsForPackageNames([criticalPackages valueForKey:@"name"]);
-        _updateInfrastructure = YES;
+        _infrastructureNeedsUpdate = YES;
         
         // only allow updating the infra packages
         [_updateListDataSource setPackageFilter:predicate];
@@ -779,7 +782,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
                             contextInfo:NULL];
     }
     else {
-        _updateInfrastructure = NO;
+        NSParameterAssert(NO == _infrastructureNeedsUpdate);
         [_updateListDataSource setPackageFilter:nil];
     }
     
@@ -841,7 +844,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 - (void)_handleUpdateFinishedNotification:(NSNotification *)aNote
 {
     NSParameterAssert([NSThread isMainThread]);
-    NSParameterAssert(NO == _updateInfrastructure);
+    NSParameterAssert(NO == _updatingInfrastructure);
     
     TLMUpdateOperation *op = [aNote object];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:TLMOperationFinishedNotification object:op];
@@ -884,7 +887,8 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 - (void)_handleInfrastructureUpdateFinishedNotification:(NSNotification *)aNote
 {
     NSParameterAssert([NSThread isMainThread]);
-    NSParameterAssert(_updateInfrastructure);
+    NSParameterAssert(_updatingInfrastructure);
+    NSParameterAssert(NO == _infrastructureNeedsUpdate);
     
     TLMUpdateOperation *op = [aNote object];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:TLMOperationFinishedNotification object:op];
@@ -918,6 +922,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
                               modalDelegate:self 
                              didEndSelector:@selector(versionAlertDidEnd:returnCode:contextInfo:) 
                                 contextInfo:NULL];
+            _infrastructureNeedsUpdate = YES;
         }
         else {
             // successful infrastructure update; remove the infra package from the list manually
@@ -925,11 +930,11 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
             [_updateListDataSource removePackageNamed:@"texlive.infra"];
             // formerly called _refreshUpdatedPackageListFromLocation here
             [_updateListDataSource setPackageFilter:nil];
-            // versions are okay, and we can no longer rely on the list updates callback to reset this
-            _updateInfrastructure = NO;
             [self _displayStatusString:NSLocalizedString(@"Infrastructure Update Succeeded", @"status message") dataSource:_updateListDataSource];
         }
     }
+    
+    _updatingInfrastructure = NO;
 }
 
 - (void)_cancelAllOperations
@@ -1486,7 +1491,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 {
     [self _displayStatusString:nil dataSource:_updateListDataSource];
     TLMLog(__func__, @"Beginning user-requested infrastructure update%C", 0x2026);
-    _updateInfrastructure = YES;
+    _infrastructureNeedsUpdate = YES;
     [self _updateAllPackages];
 }
 
@@ -1494,7 +1499,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 {
     [self _displayStatusString:nil dataSource:_updateListDataSource];
     TLMLog(__func__, @"Beginning user-requested infrastructure update from tlcritical repo%C", 0x2026);
-    _updateInfrastructure = YES;
+    _infrastructureNeedsUpdate = YES;
     NSURL *repo = [NSURL URLWithString:[[NSUserDefaults standardUserDefaults] objectForKey:TLMTLCriticalRepository]];
     [self _updateAllPackagesFromRepository:repo];
 }
@@ -1562,7 +1567,6 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
         size += [[pkg size] unsignedIntegerValue];
     
     [alert setMessageText:NSLocalizedString(@"Update all packages?", @"alert title")];
-    // size may not be correct for _updateInfrastructure, but tlmgr may remove stuff also...so leave it as-is
     NSMutableString *informativeText = [NSMutableString string];
     [informativeText appendString:NSLocalizedString(@"This will install all available updates.", @"update alert message text part 1")];
     
@@ -1577,7 +1581,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
         [informativeText appendFormat:@"  %@", NSLocalizedString(@"New packages will be installed.", @"update alert message text part 3 (optional)")];
     
     // disaster recovery script is much larger than the value we get from tlmgr
-    if (NO == _updateInfrastructure) {
+    if (NO == _infrastructureNeedsUpdate) {
         TLMSizeFormatter *sizeFormatter = [[TLMSizeFormatter new] autorelease];
         NSString *sizeString = [sizeFormatter stringForObjectValue:[NSNumber numberWithUnsignedInteger:size]];
         [informativeText appendFormat:NSLocalizedString(@"  Total download size will be %@.", @"partial alert text, with double space in front, only used with tlmgr2"), sizeString];

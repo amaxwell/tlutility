@@ -69,8 +69,8 @@ typedef NSUInteger TLMDockedEdge;
     NSURL                    *_serverURL;
     
     NSUInteger                _operationCount;
-    CGFloat                   _lastTextViewHeight;
-    BOOL                      _updateInfrastructure;
+    BOOL                      _infrastructureNeedsUpdate;
+    BOOL                      _updatingInfrastructure;
     NSDictionary             *_previousInfrastructureVersions;
 
     TLMUpdateListDataSource  *_updateListDataSource;
@@ -98,6 +98,7 @@ typedef NSUInteger TLMDockedEdge;
 @property (nonatomic, retain) IBOutlet TLMBackupDataSource *_backupDataSource;
 @property (nonatomic, retain) IBOutlet TLMTabView *_tabView;
 @property (nonatomic, readonly) BOOL infrastructureNeedsUpdate;
+@property (nonatomic, readonly) BOOL updatingInfrastructure;
 @property (nonatomic, copy) NSURL *serverURL;
 
 // install/update actions will use serverURL
