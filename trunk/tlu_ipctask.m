@@ -322,7 +322,7 @@ int main(int argc, char *argv[]) {
         close(waitpipe[1]);
         char ignored;
         /* block until the parent has setup complete */
-        read(waitpipe[0], &ignored, 1);    
+        (void) HANDLE_EINTR(read(waitpipe[0], &ignored, 1));
         close(waitpipe[0]);
 
         i = execve(argv[ARG_CMD], &argv[ARG_CMD], environ);
@@ -377,7 +377,7 @@ int main(int argc, char *argv[]) {
         log_notice_noparse(@"tlu_ipctask: child HOME = '%s'\n", childHome);
         log_notice_noparse(@"tlu_ipctask: current HOME = '%s'\n", getenv("HOME"));
                         
-        int kq_fd = kqueue();
+        int kq_fd = HANDLE_EINTR(kqueue());
 #define TLM_EVENT_COUNT 3
         struct kevent events[TLM_EVENT_COUNT];
         memset(events, 0, sizeof(struct kevent) * TLM_EVENT_COUNT);
@@ -388,7 +388,7 @@ int main(int argc, char *argv[]) {
         EV_SET(&events[0], child, EVFILT_PROC, EV_ADD, NOTE_EXIT, 0, NULL);
         EV_SET(&events[1], outpipe[0], EVFILT_READ, EV_ADD, 0, 0, NULL);
         EV_SET(&events[2], errpipe[0], EVFILT_READ, EV_ADD, 0, 0, NULL);
-        kevent(kq_fd, events, TLM_EVENT_COUNT, NULL, 0, NULL);
+        (void) HANDLE_EINTR(kevent(kq_fd, events, TLM_EVENT_COUNT, NULL, 0, NULL));
         
         /* kqueue setup complete, so widow the pipe to allow exec to proceed */
         close(waitpipe[1]);
@@ -406,7 +406,7 @@ int main(int argc, char *argv[]) {
         
         int eventCount;
         
-        while ((eventCount = kevent(kq_fd, NULL, 0, &event, 1, &ts)) != -1 && stillRunning) {
+        while ((eventCount = HANDLE_EINTR(kevent(kq_fd, NULL, 0, &event, 1, &ts))) != -1 && stillRunning) {
             
             /* if this was a timeout, don't try reading from the event */
             if (0 == eventCount)
@@ -424,7 +424,7 @@ int main(int argc, char *argv[]) {
                 size_t len = event.data;
                 char sbuf[2048];
                 char *buf = (len > sizeof(sbuf)) ? buf = malloc(len) : sbuf;
-                len = read(event.ident, buf, len);
+                len = HANDLE_EINTR(read(event.ident, buf, len));
                 
                 if (event.ident == (unsigned)outpipe[0]) {
                 
@@ -468,11 +468,8 @@ int main(int argc, char *argv[]) {
             [str release];
         }
         
-        // try repeatedly in case we're interrupted by a signal
         int childStatus;
-        do {
-            ret = waitpid(child, &childStatus, WNOHANG | WUNTRACED);
-        } while (-1 == ret && EINTR == errno);
+        ret = HANDLE_EINTR(waitpid(child, &childStatus, WNOHANG | WUNTRACED));
         ret = (ret != 0 && WIFEXITED(childStatus)) ? WEXITSTATUS(childStatus) : EXIT_FAILURE;
         
         if (ret) {

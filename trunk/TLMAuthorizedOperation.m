@@ -243,11 +243,11 @@ static NSArray * __TLMOptionArrayFromArguments(char **nullTerminatedArguments)
         
         // remove the tlu_ipctask kevent from the queue
         _internal->_cwrapper_event.flags = EV_DELETE;
-        kevent(_internal->_kqueue, &_internal->_cwrapper_event, 1, NULL, 0, NULL);
+        (void) HANDLE_EINTR(kevent(_internal->_kqueue, &_internal->_cwrapper_event, 1, NULL, 0, NULL));
         
         // remove the tlmgr kevent from the queue
         _internal->_underlying_event.flags = EV_DELETE;
-        kevent(_internal->_kqueue, &_internal->_underlying_event, 1, NULL, 0, NULL);
+        (void) HANDLE_EINTR(kevent(_internal->_kqueue, &_internal->_underlying_event, 1, NULL, 0, NULL));
         
         // close the queue itself
         close(_internal->_kqueue);
@@ -277,7 +277,7 @@ static NSArray * __TLMOptionArrayFromArguments(char **nullTerminatedArguments)
         
         // only get one event at a time
         struct kevent event;
-        int eventCount = kevent(_internal->_kqueue, NULL, 0, &event, 1, &timeout);
+        int eventCount = HANDLE_EINTR(kevent(_internal->_kqueue, NULL, 0, &event, 1, &timeout));
                     
         // eventCount == 0 indicates a timeout
         if (0 != eventCount && event.filter == EVFILT_PROC && (event.fflags & NOTE_EXIT) == NOTE_EXIT) {
@@ -299,11 +299,8 @@ static NSArray * __TLMOptionArrayFromArguments(char **nullTerminatedArguments)
                     ret = [_internal->_task terminationStatus];
                 }
                 else {
-                    // try repeatedly in case we're interrupted by a signal
-                    do {
-                        ret = waitpid(event.ident, &wstatus, WNOHANG | WUNTRACED);
-                    } while (-1 == ret && EINTR == errno);
-                    
+
+                    ret = HANDLE_EINTR(waitpid(event.ident, &wstatus, WNOHANG | WUNTRACED));
                     /*
                      A user reports that I'm logging an exit status of 1 in this method,
                      when it was clearly zero in tlu_ipctask.  The only way I can see
