@@ -396,10 +396,7 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
 
 - (NSURL *)defaultServerURL
 {
-    NSString *location = [[NSUserDefaults standardUserDefaults] objectForKey:TLMFullServerURLPreferenceKey];
-    while ([location hasSuffix:@"/"])
-        location = [location substringToIndex:([location length] - 1)];
-    return [NSURL URLWithString:location];    
+    return [[NSURL URLWithString:[[NSUserDefaults standardUserDefaults] objectForKey:TLMFullServerURLPreferenceKey]] tlm_normalizedURL];    
 }
 
 - (void)versionWarningDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
