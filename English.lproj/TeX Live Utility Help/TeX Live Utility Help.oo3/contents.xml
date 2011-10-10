@@ -1,0 +1,940 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE outline PUBLIC "-//omnigroup.com//DTD OUTLINE 3.0//EN" "http://www.omnigroup.com/namespace/OmniOutliner/xmloutline-v3.dtd">
+<outline xmlns="http://www.omnigroup.com/namespace/OmniOutliner/v3">
+  <style-attribute-registry>
+    <style-attribute version="0" key="baseline-offset" group="baseline" name="offset" class="number">0</style-attribute>
+    <style-attribute version="0" key="font-family" group="font" name="family" class="string">Helvetica</style-attribute>
+    <style-attribute version="1" key="font-fill" group="font" name="fill color" class="color">
+      <color w="0"/>
+    </style-attribute>
+    <style-attribute version="0" key="font-fixed-pitch" group="font" name="fixed pitch" class="bool">no</style-attribute>
+    <style-attribute version="0" key="font-italic" group="font" name="italic" class="bool">no</style-attribute>
+    <style-attribute version="0" key="font-size" group="font" name="size" class="number">12</style-attribute>
+    <style-attribute version="0" key="font-weight" group="font" name="weight" class="number">5</style-attribute>
+    <style-attribute version="0" key="item-post-gap(com.omnigroup.OmniOutliner)" group="row" name="post gap" class="number">0</style-attribute>
+    <style-attribute version="0" key="item-pre-gap(com.omnigroup.OmniOutliner)" group="row" name="pre gap" class="number">1</style-attribute>
+    <style-attribute version="0" key="text-background-color" group="text" name="background color" class="color">
+      <color w="0" a="0"/>
+    </style-attribute>
+    <style-attribute version="1" key="underline-color" group="underline" name="color" class="color">
+      <color w="0"/>
+    </style-attribute>
+    <style-attribute version="1" key="underline-style" group="underline" name="style" class="enum">
+      <enum-name-table default-value="0">
+        <enum-name-table-element value="0" name="none"/>
+        <enum-name-table-element value="1" name="single"/>
+        <enum-name-table-element value="2" name="thick"/>
+        <enum-name-table-element value="9" name="double"/>
+      </enum-name-table>
+    </style-attribute>
+  </style-attribute-registry>
+  <named-styles>
+    <named-style id="bMbdsrPBbNQ" name="Bold" display-order="0">
+      <style>
+        <value key="font-weight">9</value>
+      </style>
+    </named-style>
+    <named-style id="j7s0i2W8XqH" name="Emphasis" display-order="1">
+      <style>
+        <value key="font-italic">yes</value>
+      </style>
+    </named-style>
+    <named-style id="a0as48_ttlo" name="UI" display-order="2">
+      <style>
+        <value key="font-family">Lucida Grande</value>
+        <value key="font-size">13</value>
+        <value key="font-weight">9</value>
+      </style>
+    </named-style>
+    <named-style id="a-WJm12exYM" name="Verbatim" display-order="3">
+      <style>
+        <value key="font-family">Courier</value>
+        <value key="font-fixed-pitch">yes</value>
+        <value key="font-size">15</value>
+        <value key="font-weight">9</value>
+      </style>
+    </named-style>
+    <named-style id="m1Cc5eWj5Pz" name="↓ [Special styles below] ↓" display-order="4">
+      <style/>
+    </named-style>
+    <named-style id="oQxEDq66I5w" name="Destination" display-order="5">
+      <style>
+        <inherited-style name="Bold" idref="bMbdsrPBbNQ"/>
+        <value key="text-background-color">
+          <color r="1" g="0.435294" b="0.811765" a="0.3"/>
+        </value>
+      </style>
+    </named-style>
+    <named-style id="mRPR-6uEuRb" name="Box" display-order="6">
+      <style>
+        <value key="text-background-color">
+          <color r="1" g="1" b="0.4" a="0.26"/>
+        </value>
+      </style>
+    </named-style>
+    <named-style id="mkRhzPcpm-u" name="Link" display-order="7">
+      <style>
+        <value key="font-fill">
+          <color r="0" g="0.501961" b="1"/>
+        </value>
+        <value key="underline-color">
+          <color r="0" g="0.501961" b="1"/>
+        </value>
+        <value key="underline-style">single</value>
+      </style>
+    </named-style>
+    <named-style id="cf9x9Xif0tc" name="Drop" display-order="8">
+      <style>
+        <value key="font-fill">
+          <color r="0" g="0" b="0"/>
+        </value>
+        <value key="font-weight">9</value>
+        <value key="text-background-color">
+          <color r="0" g="0" b="0" a="0.25"/>
+        </value>
+      </style>
+    </named-style>
+    <named-style id="aUm3924E6__" name="Anchor" display-order="9">
+      <style>
+        <value key="font-fill">
+          <color r="1" g="0.501961" b="0"/>
+        </value>
+        <value key="text-background-color">
+          <color r="1" g="0.900465" b="0.699397"/>
+        </value>
+      </style>
+    </named-style>
+    <named-style id="klRPa19kyJm" name="Pro" display-order="10">
+      <style>
+        <value key="text-background-color">
+          <color r="0.4" g="0.8" b="1" a="0.3"/>
+        </value>
+      </style>
+    </named-style>
+    <named-style id="fHdhEYH17Qf" name="Variables" display-order="11">
+      <style>
+        <value key="text-background-color">
+          <color r="0.565611" g="0.970833" b="0.409187" a="0.5"/>
+        </value>
+      </style>
+    </named-style>
+  </named-styles>
+  <attachments>
+    <attachment id="att0" href="Prefs.png"/>
+    <attachment id="att1" href="UpdateTab.png"/>
+  </attachments>
+  <settings>
+    <base-style>
+      <style>
+        <value key="baseline-offset">3</value>
+        <value key="font-family">Hoefler Text</value>
+        <value key="font-size">16</value>
+        <value key="item-post-gap(com.omnigroup.OmniOutliner)">8</value>
+        <value key="item-pre-gap(com.omnigroup.OmniOutliner)">8</value>
+      </style>
+    </base-style>
+    <page-adornment>
+      <first-page-headers is-active="yes">
+        <header location="center">
+          <text>
+            <p>
+              <run>
+                <lit><cell variable="OOSectionTitleVariableIdentifier"/></lit>
+              </run>
+            </p>
+          </text>
+        </header>
+      </first-page-headers>
+    </page-adornment>
+    <print-info>
+      <print-info-key name="OOScaleDocumentToFitPageWidth" type="boolean">true</print-info-key>
+    </print-info>
+    <auto-generate-level-styles>no</auto-generate-level-styles>
+  </settings>
+  <editor content-size="{596, 756}" column-titles-display-mode="off" status-visible="no">
+    <drawer display="sections" width="236" palette-height="379"/>
+    <hoisted-rows ids="jj3Kw0ND2KJ"/>
+    <toolbar>{
+    &quot;TB Display Mode&quot; = 2;
+    &quot;TB Icon Size Mode&quot; = 2;
+    &quot;TB Is Shown&quot; = 1;
+    &quot;TB Item Identifiers&quot; =     (
+        ToggleSections,
+        ExpandAll,
+        CollapseAll,
+        ToggleShowRowStates,
+        ToggleRuler,
+        NSToolbarFlexibleSpaceItem,
+        AddColumn,
+        NSToolbarFlexibleSpaceItem
+    );
+    &quot;TB Size Mode&quot; = 1;
+}</toolbar>
+  </editor>
+  <columns>
+    <column id="dTpN3JwYpBn" type="text" width="18" minimum-width="18" maximum-width="18" text-export-width="1" is-note-column="yes">
+      <style>
+        <value key="font-fill">
+          <color r="0.356863" g="0.529412" b="0.94902"/>
+        </value>
+        <value key="font-italic">yes</value>
+        <value key="font-size">14</value>
+      </style>
+      <title>
+        <text>
+          <p/>
+        </text>
+      </title>
+    </column>
+    <column id="jFqHUGd_Dg1" type="text" width="560" minimum-width="13" maximum-width="1000000" text-export-width="72" is-outline-column="yes">
+      <title>
+        <text>
+          <p>
+            <run>
+              <lit>Topic</lit>
+            </run>
+          </p>
+        </text>
+      </title>
+    </column>
+  </columns>
+  <root>
+    <style>
+      <value key="font-weight">9</value>
+      <value key="underline-style">single</value>
+    </style>
+    <style>
+      <value key="font-weight">9</value>
+      <value key="underline-style">thick</value>
+    </style>
+    <style>
+      <value key="font-weight">9</value>
+    </style>
+    <item id="h2f6xuYZ-Sl" expanded="yes" children-are-sections="yes">
+      <values>
+        <text>
+          <p>
+            <run>
+              <lit>TeX Live Utility Help</lit>
+            </run>
+          </p>
+        </text>
+      </values>
+      <children>
+        <item id="jj3Kw0ND2KJ" expanded="yes">
+          <style>
+            <inherited-style name="Destination" idref="oQxEDq66I5w"/>
+          </style>
+          <values>
+            <text>
+              <p>
+                <run>
+                  <lit>Introduction</lit>
+                </run>
+              </p>
+            </text>
+          </values>
+          <children>
+            <item id="k2f5GirCi2V">
+              <values>
+                <text>
+                  <p>
+                    <run>
+                      <lit>TeX Live Utility is a Mac OS X graphical interface for the TeX Live Manager, a program included with recent versions of </lit>
+                    </run>
+                    <run>
+                      <lit><cell href="http://www.tug.org/texlive/TeX" name="TeX Live" type="link"/></lit>
+                    </run>
+                    <run>
+                      <lit>.</lit>
+                    </run>
+                  </p>
+                </text>
+              </values>
+            </item>
+            <item id="lryvPg9VrNw">
+              <values>
+                <null/>
+              </values>
+            </item>
+            <item id="in4rFyB_wd3">
+              <values>
+                <text>
+                  <p>
+                    <run>
+                      <lit>TeX Live Utility features include:</lit>
+                    </run>
+                  </p>
+                </text>
+              </values>
+            </item>
+            <item id="h4_EI5jYkEp" expanded="yes">
+              <style>
+                <inherited-style name="Box" idref="mRPR-6uEuRb"/>
+              </style>
+              <values>
+                <null/>
+              </values>
+              <children>
+                <item id="aylbUuBNBZI">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit>Update, add, and remove packages from TeX Live.</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
+                <item id="hKEx7oyJ0AC">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit>Set paper size for all TeX programs.</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
+                <item id="jZRw6Dt-oYK">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit>Show information and documentation for packages.</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
+                <item id="bhgyyvqOezY">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit>Easily switch between repositories.</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
+                <item id="d_VOinQFADJ">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit>Configure automatic backups in TeX Live Manager, and restore previous package versions.</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
+                <item id="poOULmrNn8P">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit>Automatic checking for TeX Live updates.</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
+                <item id="icWD2dG7dT1">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit>Installation of TeX Live from a repository, via a graphical interface to the UNIX® install script for TeX Live.</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
+              </children>
+            </item>
+          </children>
+        </item>
+        <item id="nIJtChAWJ-C">
+          <style>
+            <inherited-style name="Destination" idref="oQxEDq66I5w"/>
+          </style>
+          <values>
+            <text>
+              <p>
+                <run>
+                  <lit>Requirements</lit>
+                </run>
+              </p>
+            </text>
+          </values>
+          <children>
+            <item id="oFz1W9kSXc4">
+              <values>
+                <text>
+                  <p>
+                    <run>
+                      <lit>Mac OS X Leopard 10.5.7 or later.</lit>
+                    </run>
+                  </p>
+                </text>
+              </values>
+            </item>
+            <item id="ljqQtR7qc2F">
+              <values>
+                <text>
+                  <p>
+                    <run>
+                      <lit>TeX Live, which is commonly installed via </lit>
+                    </run>
+                    <run>
+                      <lit><cell href="http://www.tug.org/mactex" name="MacTeX" type="link"/></lit>
+                    </run>
+                    <run>
+                      <lit>.</lit>
+                    </run>
+                  </p>
+                </text>
+              </values>
+            </item>
+            <item id="fJCV_FMxg_N">
+              <values>
+                <text>
+                  <p>
+                    <run>
+                      <lit>A network connection is required for updating or installing, unless you manage your own </lit>
+                    </run>
+                    <run>
+                      <style>
+                        <inherited-style name="Link" idref="mkRhzPcpm-u"/>
+                      </style>
+                      <lit>repository</lit>
+                    </run>
+                    <run>
+                      <lit>.</lit>
+                    </run>
+                  </p>
+                </text>
+              </values>
+            </item>
+            <item id="ao9rrwyve9-">
+              <values>
+                <text>
+                  <p>
+                    <run>
+                      <lit>For update or install, you must have write permission to the TeX Live install directory.  For MacTeX, this means you must be an administrator of your computer.</lit>
+                    </run>
+                  </p>
+                </text>
+              </values>
+            </item>
+          </children>
+        </item>
+        <item id="eUtfoMZ7bze" children-are-sections="yes">
+          <values>
+            <text>
+              <p>
+                <run>
+                  <lit>Feature explanations</lit>
+                </run>
+              </p>
+            </text>
+          </values>
+          <children>
+            <item id="g-6zW6wA71h" expanded="yes">
+              <style>
+                <inherited-style name="Destination" idref="oQxEDq66I5w"/>
+              </style>
+              <values>
+                <text>
+                  <p>
+                    <run>
+                      <lit>Updating</lit>
+                    </run>
+                  </p>
+                </text>
+              </values>
+              <children>
+                <item id="eok_2Rmyp9q">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit>The primary usage of TeX Live Utility is updating a TeX Live installation with newer packages from CTAN.</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
+                <item id="i2e5VRqDc4y">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit>When you first launch TeX Live Utility, you are greeted with the update window:</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
+                <item id="nBuPvHUmi9B">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit><cell refid="att1" name="UpdateTab" expanded="yes" type="image" width="494" height="368"/></lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
+                <item id="gqTswy4Trgz">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit>The </lit>
+                        </run>
+                        <run>
+                          <style>
+                            <inherited-style name="UI" idref="a0as48_ttlo"/>
+                          </style>
+                          <lit>Installed</lit>
+                        </run>
+                        <run>
+                          <lit> and </lit>
+                        </run>
+                        <run>
+                          <style>
+                            <inherited-style name="UI" idref="a0as48_ttlo"/>
+                          </style>
+                          <lit>Remote</lit>
+                        </run>
+                        <run>
+                          <lit> columns show the TeX Live version number of the package currently on your system and the version on the mirror, respectively.  The </lit>
+                        </run>
+                        <run>
+                          <style>
+                            <inherited-style name="UI" idref="a0as48_ttlo"/>
+                          </style>
+                          <lit>Size</lit>
+                        </run>
+                        <run>
+                          <lit> column shows the on-disk size of the package.</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
+                <item id="fq84HT071es" expanded="yes">
+                  <style>
+                    <inherited-style name="Box" idref="mRPR-6uEuRb"/>
+                  </style>
+                  <values>
+                    <null/>
+                  </values>
+                  <children>
+                    <item id="oAGx0W2sj_5">
+                      <values>
+                        <text>
+                          <p>
+                            <run>
+                              <lit>To update, see the </lit>
+                            </run>
+                            <run>
+                              <style>
+                                <inherited-style name="UI" idref="a0as48_ttlo"/>
+                              </style>
+                              <lit>Action</lit>
+                            </run>
+                            <run>
+                              <lit> menu of the main menu bar.  You can update individual packages or all packages.</lit>
+                            </run>
+                          </p>
+                        </text>
+                      </values>
+                    </item>
+                    <item id="azqdfxO9_gl">
+                      <values>
+                        <text>
+                          <p>
+                            <run>
+                              <lit>You can also use a contextual menu (right-click or control-click selected items in the list).</lit>
+                            </run>
+                          </p>
+                        </text>
+                      </values>
+                    </item>
+                    <item id="oFpudiNeVYi">
+                      <values>
+                        <text>
+                          <p>
+                            <run>
+                              <style>
+                                <inherited-style name="Emphasis" idref="j7s0i2W8XqH"/>
+                              </style>
+                              <lit>Note: updating all packages will add </lit>
+                            </run>
+                            <run>
+                              <style>
+                                <inherited-style name="Emphasis" idref="j7s0i2W8XqH"/>
+                                <inherited-style name="Bold" idref="bMbdsrPBbNQ"/>
+                              </style>
+                              <lit>and remove</lit>
+                            </run>
+                            <run>
+                              <style>
+                                <inherited-style name="Emphasis" idref="j7s0i2W8XqH"/>
+                              </style>
+                              <lit> packages on your system to match those on the server.  If you do not want packages automatically removed, see the </lit>
+                            </run>
+                            <run>
+                              <style>
+                                <inherited-style name="Emphasis" idref="j7s0i2W8XqH"/>
+                                <inherited-style name="Link" idref="mkRhzPcpm-u"/>
+                              </style>
+                              <lit>Preferences</lit>
+                            </run>
+                            <run>
+                              <style>
+                                <inherited-style name="Emphasis" idref="j7s0i2W8XqH"/>
+                              </style>
+                              <lit> section.</lit>
+                            </run>
+                          </p>
+                        </text>
+                      </values>
+                    </item>
+                  </children>
+                </item>
+              </children>
+            </item>
+            <item id="aLvRpQYwVsb">
+              <style>
+                <inherited-style name="Destination" idref="oQxEDq66I5w"/>
+              </style>
+              <values>
+                <text>
+                  <p>
+                    <run>
+                      <lit>Preferences</lit>
+                    </run>
+                  </p>
+                </text>
+              </values>
+              <children>
+                <item id="onJKkhI7AAZ">
+                  <style>
+                    <inherited-style name="Anchor" idref="aUm3924E6__"/>
+                  </style>
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit>preferences</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
+                <item id="cvazngGEjvI">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit>TeX Live Utility has very few preferences, in order to keep things as simple as possible.  However, a few global options can be set from its </lit>
+                        </run>
+                        <run>
+                          <style>
+                            <inherited-style name="UI" idref="a0as48_ttlo"/>
+                          </style>
+                          <lit>Preferences</lit>
+                        </run>
+                        <run>
+                          <lit> item of the main menu.</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
+                <item id="a64z4CqJq-a">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit><cell refid="att0" name="Preferences" type="image" width="373" height="130"/></lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
+                <item id="mec3LTLeF40">
+                  <values>
+                    <null/>
+                  </values>
+                </item>
+              </children>
+            </item>
+          </children>
+        </item>
+        <item id="j2c194a7piX">
+          <style>
+            <inherited-style name="Destination" idref="oQxEDq66I5w"/>
+          </style>
+          <values>
+            <text>
+              <p>
+                <run>
+                  <lit>Terminology</lit>
+                </run>
+              </p>
+            </text>
+          </values>
+          <children>
+            <item id="f7usnSd_Ldb">
+              <style>
+                <inherited-style name="Anchor" idref="aUm3924E6__"/>
+              </style>
+              <values>
+                <text>
+                  <p>
+                    <run>
+                      <lit>terminology</lit>
+                    </run>
+                  </p>
+                </text>
+              </values>
+            </item>
+            <item id="hVs2IxS_xyf">
+              <style>
+                <inherited-style name="Anchor" idref="aUm3924E6__"/>
+              </style>
+              <values>
+                <text>
+                  <p>
+                    <run>
+                      <lit>repository</lit>
+                    </run>
+                  </p>
+                </text>
+              </values>
+            </item>
+            <item id="f165F3xRsxZ" expanded="yes">
+              <values>
+                <text>
+                  <p>
+                    <run>
+                      <style>
+                        <inherited-style name="Bold" idref="bMbdsrPBbNQ"/>
+                      </style>
+                      <lit>Repository</lit>
+                    </run>
+                  </p>
+                </text>
+              </values>
+              <children>
+                <item id="nUKo2S24U9k">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit>A location from which TeX Live can be updated or installed, typically represented by a URL.</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
+                <item id="nHYhELhFqL9">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit>May be local (i.e., a file: URL) or remote (http: or ftp: URL).  Rsync and other protocols are not supported.</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
+              </children>
+            </item>
+            <item id="fKPI8kD3iLM">
+              <style>
+                <inherited-style name="Anchor" idref="aUm3924E6__"/>
+              </style>
+              <values>
+                <text>
+                  <p>
+                    <run>
+                      <lit>mirror</lit>
+                    </run>
+                  </p>
+                </text>
+              </values>
+            </item>
+            <item id="lTFMiN280Gs" expanded="yes">
+              <values>
+                <text>
+                  <p>
+                    <run>
+                      <style>
+                        <inherited-style name="Bold" idref="bMbdsrPBbNQ"/>
+                      </style>
+                      <lit>Mirror</lit>
+                    </run>
+                  </p>
+                </text>
+              </values>
+              <children>
+                <item id="mNUFKNl7IGF">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit>Used synonymously with repository in TeX Live Utility.</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
+                <item id="nf6BrXFF3Fb">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit>Most TeX Live repositories reside on a </lit>
+                        </run>
+                        <run>
+                          <lit><cell href="http://mirror.ctan.org/" name="CTAN mirror" type="link"/></lit>
+                        </run>
+                        <run>
+                          <lit>.</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
+              </children>
+            </item>
+          </children>
+        </item>
+        <item id="ftDBf-ySLe5" children-are-sections="yes">
+          <style>
+            <inherited-style name="Variables" idref="fHdhEYH17Qf"/>
+          </style>
+          <values>
+            <text>
+              <p>
+                <run>
+                  <lit>Variables</lit>
+                </run>
+              </p>
+            </text>
+          </values>
+          <children>
+            <item id="gC8I5A7cfap" expanded="yes">
+              <values>
+                <text>
+                  <p>
+                    <run>
+                      <lit>Image Path</lit>
+                    </run>
+                  </p>
+                </text>
+              </values>
+              <note expanded="yes">
+                <text>
+                  <p>
+                    <run>
+                      <lit>The path to your image folder from the help book location</lit>
+                    </run>
+                  </p>
+                </text>
+              </note>
+              <children>
+                <item id="mxCB0TYlhaD">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit>HelpImages/</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
+              </children>
+            </item>
+            <item id="dJO9sBUL1qL" expanded="yes">
+              <values>
+                <text>
+                  <p>
+                    <run>
+                      <lit>Company URL</lit>
+                    </run>
+                  </p>
+                </text>
+              </values>
+              <note expanded="yes">
+                <text>
+                  <p>
+                    <run>
+                      <lit>For the link on the top page</lit>
+                    </run>
+                  </p>
+                </text>
+              </note>
+              <children>
+                <item id="ln_zdCoCWfN">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit><cell href="http://mactlmgr.googlecode.com" name="mactlmgr.googlecode.com" type="link"/></lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
+              </children>
+            </item>
+            <item id="moejLGjg54P" expanded="yes">
+              <values>
+                <text>
+                  <p>
+                    <run>
+                      <lit>Help Indexer utility arguments</lit>
+                    </run>
+                  </p>
+                </text>
+              </values>
+              <note expanded="yes">
+                <text>
+                  <p>
+                    <run>
+                      <lit>If you want to use different settings for the Snow Leopard command-line help indexing tool</lit>
+                    </run>
+                  </p>
+                </text>
+              </note>
+              <children>
+                <item id="gDJCQfxMef_">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit>-s en -C -a -v -f</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
+              </children>
+            </item>
+          </children>
+        </item>
+      </children>
+    </item>
+  </root>
+</outline>
