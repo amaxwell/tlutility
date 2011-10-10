@@ -188,11 +188,15 @@
     }
 }
 
-- (NSCell *)outlineView:(NSOutlineView *)outlineView dataCellForTableColumn:(NSTableColumn *)tableColumn item:(id)item
+- (NSCell *)outlineView:(NSOutlineView *)outlineView dataCellForTableColumn:(NSTableColumn *)tableColumn item:(TLMProfileNode *)item
 {
     if (nil == tableColumn) return nil;
     if ([[tableColumn identifier] isEqualToString:@"value"] && [[item value] isKindOfClass:[NSValue class]]) {
         return _checkboxCell;
+    }
+    else if (([item type] & TLMProfileRoot) == 0) {
+        // copy so font attributes can be set up properly by outline view
+        return [[[tableColumn dataCell] copy] autorelease];
     }
     return [tableColumn dataCell];
 }
