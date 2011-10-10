@@ -41,9 +41,9 @@
 		F97E85740EFA18F400862882 /* TeXDistTool.icns in Resources */ = {isa = PBXBuildFile; fileRef = F97E85730EFA18F400862882 /* TeXDistTool.icns */; };
 		F97E860C0EFA3BFD00862882 /* TeXDistDocument.icns in Resources */ = {isa = PBXBuildFile; fileRef = F97E860B0EFA3BFD00862882 /* TeXDistDocument.icns */; };
 		F97EBA06143D449000E79859 /* TLMLogWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = F97EBA05143D449000E79859 /* TLMLogWindow.m */; };
-		F97EBCA71442A8B900E79859 /* TeX Live Utility Help in Resources */ = {isa = PBXBuildFile; fileRef = F97EBCA61442A8B900E79859 /* TeX Live Utility Help */; };
 		F9825520125045980018CB73 /* TLMAutobackupController.m in Sources */ = {isa = PBXBuildFile; fileRef = F982551F125045980018CB73 /* TLMAutobackupController.m */; };
 		F982553F12504E210018CB73 /* AutobackupSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = F982553E12504E210018CB73 /* AutobackupSheet.xib */; };
+		F983F97114438F00001C0A42 /* HelpBook in Resources */ = {isa = PBXBuildFile; fileRef = F983F97014438F00001C0A42 /* HelpBook */; };
 		F98FADA910672943002C1972 /* TLMNetInstallOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F98FADA810672943002C1972 /* TLMNetInstallOperation.m */; };
 		F994A5AB1267E97F007EF95F /* TLMBackupListOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F994A5AA1267E97F007EF95F /* TLMBackupListOperation.m */; };
 		F9963EC50F0490E9005F0174 /* TLMRemoveOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F9963EC40F0490E9005F0174 /* TLMRemoveOperation.m */; };
@@ -338,10 +338,10 @@
 		F97EBB411440977F00E79859 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Japanese.lproj/Preferences.xib; sourceTree = "<group>"; };
 		F97EBB421440978500E79859 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Japanese.lproj/PapersizeSheet.xib; sourceTree = "<group>"; };
 		F97EBB431440978E00E79859 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Japanese.lproj/Mirrors.xib; sourceTree = "<group>"; };
-		F97EBC951442A8B100E79859 /* English */ = {isa = PBXFileReference; lastKnownFileType = folder; name = English; path = "English.lproj/TeX Live Utility Help"; sourceTree = "<group>"; };
 		F982551E125045980018CB73 /* TLMAutobackupController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMAutobackupController.h; sourceTree = "<group>"; };
 		F982551F125045980018CB73 /* TLMAutobackupController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMAutobackupController.m; sourceTree = "<group>"; };
 		F982553C12504E040018CB73 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/AutobackupSheet.xib; sourceTree = "<group>"; };
+		F983F96D14438EFB001C0A42 /* English */ = {isa = PBXFileReference; lastKnownFileType = folder; name = English; path = English.lproj/HelpBook; sourceTree = "<group>"; };
 		F98FADA710672943002C1972 /* TLMNetInstallOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMNetInstallOperation.h; sourceTree = "<group>"; };
 		F98FADA810672943002C1972 /* TLMNetInstallOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMNetInstallOperation.m; sourceTree = "<group>"; };
 		F994A5A91267E97F007EF95F /* TLMBackupListOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMBackupListOperation.h; sourceTree = "<group>"; };
@@ -560,7 +560,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				F97EBCA61442A8B900E79859 /* TeX Live Utility Help */,
+				F983F97014438F00001C0A42 /* HelpBook */,
 				F96203EA13D36ACC00932965 /* LogWindow.xib */,
 				F925D1BA12957C1B00D75BB4 /* CTAN.sites.plist */,
 				F9C0D3E6125ECF3700B1FBE5 /* LaunchAgentSheet.xib */,
@@ -1013,7 +1013,7 @@
 				F9C7F1F413A003660031774F /* Release.xcconfig in Resources */,
 				F9C7F23113A0041B0031774F /* Common.xcconfig in Resources */,
 				F96203EB13D36ACC00932965 /* LogWindow.xib in Resources */,
-				F97EBCA71442A8B900E79859 /* TeX Live Utility Help in Resources */,
+				F983F97114438F00001C0A42 /* HelpBook in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1026,15 +1026,15 @@
 			files = (
 			);
 			inputPaths = (
-				"$(SRCROOT)/English.lproj/TeX Live Utility Help Source/TeX Live Utility Help.oo3",
+				"$(SRCROOT)/HelpSource/TeX Live Utility Help.oo3",
 			);
 			name = "Create help book";
 			outputPaths = (
-				"$(SRCROOT)/English.lproj/TeX Live Utility Help/top.html",
+				"$(SRCROOT)/English.lproj/HelpBook/top.html",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\nsrc_dir=\"${SRCROOT}/English.lproj/TeX Live Utility Help Source\"\ncd \"$src_dir\"\npython OOhelpify.py \"TeX Live Utility Help.oo3\"";
+			shellScript = "\nsrc_dir=${SRCROOT}/HelpSource\ncd \"$src_dir\"\npython OOhelpify.py \"TeX Live Utility Help.oo3\"";
 		};
 		F9B396400F340E45007F95E9 /* FileView install name */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1216,14 +1216,6 @@
 			name = LogWindow.xib;
 			sourceTree = "<group>";
 		};
-		F97EBCA61442A8B900E79859 /* TeX Live Utility Help */ = {
-			isa = PBXVariantGroup;
-			children = (
-				F97EBC951442A8B100E79859 /* English */,
-			);
-			name = "TeX Live Utility Help";
-			sourceTree = "<group>";
-		};
 		F982553E12504E210018CB73 /* AutobackupSheet.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -1231,6 +1223,14 @@
 				F97EBB3C1440975A00E79859 /* Japanese */,
 			);
 			name = AutobackupSheet.xib;
+			sourceTree = "<group>";
+		};
+		F983F97014438F00001C0A42 /* HelpBook */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F983F96D14438EFB001C0A42 /* English */,
+			);
+			name = HelpBook;
 			sourceTree = "<group>";
 		};
 		F9999FE410D2AAFF00F594CB /* PapersizeSheet.xib */ = {
