@@ -29,7 +29,7 @@ Scheduling is limited to daily or weekly checks.  To show the update to any logg
 defaults write com.googlecode.mactlmgr.tlu TLMEnableNetInstall 1
 }}}
 
-When you next launch TeX Live Utility, you should see a third tab, allowing access to various install options.  To disable it, repeat the process, replacing 1 with 0 in the Terminal command.  To change the install location (TEXDIR) or other variables, you can edit them as shown here:
+When you next launch TeX Live Utility, you should see a third tab, allowing access to various install options.  To disable it, repeat the process, replacing 1 with 0 in the Terminal command.  To change the install location (TEXDIR) or other variables, you can edit them as shown here, which would install TeX Live in the your home directory:
 
 http://mactlmgr.googlecode.com/svn/wiki/images/InstallTab.png
 
