@@ -27,7 +27,7 @@ Not unless someone comes up with a really nice set of icons.  There's not enough
 
 === 7.  Why did you redo the interface? ===
 
-In large part, this was to add support for multiple mirrors in a reasonably coherent manner.  If you think of TeX Live Utility as a special-purpose web browser, hopefully it makes more sense.  Unfortunately, this added significant complexity.
+In large part, this was to add support for multiple mirrors in a reasonably coherent manner.  If you think of TeX Live Utility as a special-purpose web browser, hopefully it makes more sense.  Unfortunately, this added significant complexity to the code and required major interface changes.
 
 === 8.  The new interface sucks.  Can I get the old one back? ===
 
