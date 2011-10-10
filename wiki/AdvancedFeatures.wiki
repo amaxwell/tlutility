@@ -31,6 +31,6 @@ defaults write com.googlecode.mactlmgr.tlu TLMEnableNetInstall 1
 
 When you next launch TeX Live Utility, you should see a third tab, allowing access to various install options.  To disable it, repeat the process, replacing 1 with 0 in the Terminal command.  To change the install location (TEXDIR) or other variables, you can edit them as shown here:
 
-http://mactlmgr.googlecode.com/svn/wiki/images/AutoUpdateSheet.png
+http://mactlmgr.googlecode.com/svn/wiki/images/InstallTab.png
 
 Note that *this will not install the TeX Distribution preference pane* or enable switching between MacTeX distributions using the /usr/texbin symlink setup.  That is on the list of things to add in future.  The default value for all of the variables should be that used by MacTeX, so your custom installation can use the same TEXMFHOME and other locations.
