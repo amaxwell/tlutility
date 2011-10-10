@@ -23,12 +23,14 @@ Scheduling is limited to daily or weekly checks.  To show the update to any logg
 
 = Install TeX Live =
 
-[http://tug.org/mactex MacTeX] is the easiest way to install TeX Live on the Mac.  However, it requires root access to install.  Not all users have administrative privileges, and some may wish to customize their install using the [http://www.tug.org/texlive/doc/install-tl.html UNIX install script] for TeX Live.  TeX Live Utility provides a graphical interface to the install script, but you have to enable a command-line preference to use it in Terminal.app.  Quit TeX Live Utility, then enter the following command in Terminal and press Return:
+[http://tug.org/mactex MacTeX] is the easiest way to install TeX Live on the Mac.  However, it requires root access to install.  Not all users have administrative privileges, and some may wish to customize their install using the [http://www.tug.org/texlive/doc/install-tl.html UNIX install script] for TeX Live.  TeX Live Utility provides a graphical interface to the install script, but you have to enable a command-line preference to use it.  Quit TeX Live Utility, then enter the following command in Terminal.app and press Return:
 
 {{{
 defaults write com.googlecode.mactlmgr.tlu TLMEnableNetInstall 1
 }}}
 
-When you next launch TeX Live Utility, you should see a third tab, allowing access to various install options.  To disable it, repeat the process, replacing 1 with 0 in the Terminal command.
+When you next launch TeX Live Utility, you should see a third tab, allowing access to various install options.  To disable it, repeat the process, replacing 1 with 0 in the Terminal command.  To change the install location (TEXDIR) or other variables, you can edit them as shown here:
 
-Note that this will not install the TeX Distribution preference pane or enable switching between MacTeX distributions using the /usr/texbin symlink setup.  That is on the list of things to add in future.
+http://mactlmgr.googlecode.com/svn/wiki/images/AutoUpdateSheet.png
+
+Note that *this will not install the TeX Distribution preference pane* or enable switching between MacTeX distributions using the /usr/texbin symlink setup.  That is on the list of things to add in future.  The default value for all of the variables should be that used by MacTeX, so your custom installation can use the same TEXMFHOME and other locations.
