@@ -445,5 +445,39 @@
             <pubDate>Tue, 28 Jun 2011 02:53:37 +0000</pubDate>
             <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20110627.tgz" sparkle:version="0.92" length="1878567" type="application/octet-stream" sparkle:dsaSignature="MCwCFFDzgEouXaiWTDT5VXdfGBd6kBh+AhQidPWYezKDeppIHXazUWFJHm4Cmg=="></enclosure>
         </item>
+        <item>
+            <title>Version 0.93</title>
+            <description>
+                <h3>Changes Since 0.92</h3>
+                <li>Main window can no longer be closed if a sheet is attached (such as the critical update alert)</li>
+                <li>Attempt to workaround problems with Sparkle failing to relaunch while the critical update alert is displayed</li>
+                <li>TeX Live 2010 is supported with a legacy repository</li>
+                <li>Major refactoring and cleanup of database handling code</li>
+                <li>Should be better behaved when a mirror is not reachable, and not take 10 minutes to time out</li>
+                <li>Moved log table to a separate window (see FAQ on the wiki)</li>
+                <li>Finally fixed the jitter and flashing in the view animation</li>
+                <li>Revised main window interface to better support multiple repositories (see wiki for details)</li>
+                <li>Better handling of outdated repositories</li>
+                <li>Removed toolbar buttons, since they were used contrary to Apple guidelines</li>
+                <li>Scheduled update checking will now work on 10.5.x (bug #60)</li>
+                <li>Package status now changes during the update process for better feedback</li>
+                <li>More status messages shown on the main window, since the log is no longer visible by default</li>
+                <li>Disabled NSSupportsSuddenTermination, so NSApplicationWillTerminate notification is posted, and cleanup happens properly again</li>
+                <li>Log history is now saved on a per-session basis, for easier debugging and tracking</li>
+                <li>Custom repositories can now be added, for tlcontrib or private mirrors (see Manage Mirrors on the Configure menu)</li>
+                <li>Enabled NSApplicationShowExceptions (Lion only) so exceptions can be reported</li>
+                <li>EINTR is handled on more syscalls when dealing with child processes</li>
+                <li>Reduce log level of most tlmgr output, so fewer things are flagged as errors when they are not</li>
+                <li>Reenabled editing of install location and other cells in the network install view (see wiki page on Advanced Features)</li>
+                <li>Added contextual menu items for common actions on the update list</li>
+                <li>Fixed size in bytes in dialogs (used 1000 instead of 1024)</li>
+                <li>More detailed logging in child process handling</li>
+                <li>Japanese localization (thanks to Koji Yokota!)</li>
+                <li>Fixed a race condition between kqueue and waitpid syscalls, so spurious failure messages will no longer be shown on updates</li>
+                <li>You can no longer enqueue an infrastructure update while another one is in process</li>
+            </description>
+            <pubDate>Sun, 09 Oct 2011 23:39:18 +0000</pubDate>
+            <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20111009.tgz" sparkle:version="0.93" length="2154676" type="application/octet-stream" sparkle:dsaSignature="MCwCFEKDXI+rRGqtCzofZ8EGFJU/Mi6IAhQ6864mIDn7+Jh83h4FwYE4w/l9qg=="></enclosure>
+        </item>
     </channel>
 </rss>
