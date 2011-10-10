@@ -492,8 +492,8 @@
 				F9B134600EEB1894007C0046 /* TLMAppController.m */,
 				F99E51960EEE4AD5006E6B39 /* TLMURLFormatter.h */,
 				F99E51970EEE4AD5006E6B39 /* TLMURLFormatter.m */,
-				F9129BBE102F25AC000A7B50 /* TLMSizeFormatter.h */,
 				F9129BBF102F25AC000A7B50 /* TLMSizeFormatter.m */,
+				F9129BBE102F25AC000A7B50 /* TLMSizeFormatter.h */,
 				F9999F9A10D1C33800F594CB /* TLMProxyManager.h */,
 				F9999F9B10D1C33800F594CB /* TLMProxyManager.m */,
 			);
@@ -828,7 +828,8 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "TeX Live Utility" */;
 			buildPhases = (
-				F9DCD5650F07EFF100600DD2 /* ShellScript */,
+				F9ACDA3814434DBC005DA800 /* Create help book */,
+				F9DCD5650F07EFF100600DD2 /* Run genstrings */,
 				8D1107290486CEB800E47090 /* Resources */,
 				8D11072C0486CEB800E47090 /* Sources */,
 				8D11072E0486CEB800E47090 /* Frameworks */,
@@ -1019,6 +1020,22 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		F9ACDA3814434DBC005DA800 /* Create help book */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/English.lproj/TeX Live Utility Help Source/TeX Live Utility Help.oo3",
+			);
+			name = "Create help book";
+			outputPaths = (
+				"$(SRCROOT)/English.lproj/TeX Live Utility Help/top.html",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\nsrc_dir=\"${SRCROOT}/English.lproj/TeX Live Utility Help Source\"\ncd \"$src_dir\"\npython OOhelpify.py \"TeX Live Utility Help.oo3\"";
+		};
 		F9B396400F340E45007F95E9 /* FileView install name */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1033,13 +1050,14 @@
 			shellPath = /bin/sh;
 			shellScript = "/usr/bin/install_name_tool -change \\\n'@loader_path/../../../../../../../FileView.framework/Versions/A/FileView' \\\n'@executable_path/../Frameworks/FileView.framework/Versions/A/FileView'   \\\n\"${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}\"";
 		};
-		F9DCD5650F07EFF100600DD2 /* ShellScript */ = {
+		F9DCD5650F07EFF100600DD2 /* Run genstrings */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
+			name = "Run genstrings";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
