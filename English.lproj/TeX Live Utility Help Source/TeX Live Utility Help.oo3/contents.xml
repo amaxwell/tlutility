@@ -154,6 +154,9 @@
   <editor content-size="{596, 756}" column-titles-display-mode="off" status-visible="no">
     <drawer display="sections" width="236" palette-height="379"/>
     <hoisted-rows ids="dJO9sBUL1qL"/>
+    <selected-rows ids="ln_zdCoCWfN"/>
+    <selected-columns ids="jFqHUGd_Dg1"/>
+    <selected-characters range="{0, 1}"/>
     <toolbar>{
     &quot;TB Display Mode&quot; = 2;
     &quot;TB Icon Size Mode&quot; = 2;
@@ -886,7 +889,7 @@
                     <text>
                       <p>
                         <run>
-                          <lit><cell href="http://mactlmgr.googlecode.com" name="mactlmgr.googlecode.com" type="link"/></lit>
+                          <lit><cell href="http://mactlmgr.googlecode.com/" name="mactlmgr.googlecode.com" type="link"/></lit>
                         </run>
                       </p>
                     </text>

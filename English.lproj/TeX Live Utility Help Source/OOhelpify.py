@@ -229,6 +229,7 @@ def digItem(theItem, level, inheritedStyle=[], destReached=False):
                                         for runNode in findSubNodes(pNode, 'run'):
                                             for litNode in findSubNodes(runNode, 'lit'):
                                                 oneValue = unicode(litNode.firstChild.nodeValue)
+                                                if oneValue is None or oneValue == "None": oneValue = litNode.firstChild.getAttribute("href")
                                                 if oneKey == "Image Path": IMAGE_PATH = oneValue
                                                 elif oneKey == "Company URL": COMPANY_URL = oneValue
                                                 elif oneKey == "Help Indexer utility arguments": INDEXER_ARGS = oneValue
