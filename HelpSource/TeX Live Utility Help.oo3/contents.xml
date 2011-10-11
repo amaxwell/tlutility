@@ -120,8 +120,11 @@
     </named-style>
   </named-styles>
   <attachments>
-    <attachment id="att0" href="Prefs.png"/>
-    <attachment id="att1" href="UpdateTab.png"/>
+    <attachment id="att0" href="AutobackupSheet.png"/>
+    <attachment id="att1" href="BackupTab.png"/>
+    <attachment id="att2" href="PackageTab.png"/>
+    <attachment id="att3" href="Prefs.png"/>
+    <attachment id="att4" href="UpdateTab.png"/>
   </attachments>
   <settings>
     <base-style>
@@ -153,10 +156,10 @@
   </settings>
   <editor content-size="{596, 756}" column-titles-display-mode="off" status-visible="no">
     <drawer display="sections" width="236" palette-height="379"/>
-    <hoisted-rows ids="dJO9sBUL1qL"/>
-    <selected-rows ids="ln_zdCoCWfN"/>
+    <hoisted-rows ids="jF5DhHO-g3r"/>
+    <selected-rows ids="dKTZk3U_Jt4"/>
     <selected-columns ids="jFqHUGd_Dg1"/>
-    <selected-characters range="{0, 1}"/>
+    <selected-characters range="{0, 187}"/>
     <toolbar>{
     &quot;TB Display Mode&quot; = 2;
     &quot;TB Icon Size Mode&quot; = 2;
@@ -435,13 +438,13 @@
             <text>
               <p>
                 <run>
-                  <lit>Feature explanations</lit>
+                  <lit>Features</lit>
                 </run>
               </p>
             </text>
           </values>
           <children>
-            <item id="g-6zW6wA71h" expanded="yes">
+            <item id="g-6zW6wA71h">
               <style>
                 <inherited-style name="Destination" idref="oQxEDq66I5w"/>
               </style>
@@ -449,7 +452,7 @@
                 <text>
                   <p>
                     <run>
-                      <lit>Updating</lit>
+                      <lit>Update</lit>
                     </run>
                   </p>
                 </text>
@@ -482,7 +485,7 @@
                     <text>
                       <p>
                         <run>
-                          <lit><cell refid="att1" name="UpdateTab" expanded="yes" type="image" width="494" height="368"/></lit>
+                          <lit><cell refid="att4" name="UpdateTab" expanded="yes" type="image" width="494" height="368"/></lit>
                         </run>
                       </p>
                     </text>
@@ -609,6 +612,336 @@
                 </item>
               </children>
             </item>
+            <item id="fuS_akUfHVg">
+              <style>
+                <inherited-style name="Destination" idref="oQxEDq66I5w"/>
+              </style>
+              <values>
+                <text>
+                  <p>
+                    <run>
+                      <lit>Manage Packages</lit>
+                    </run>
+                  </p>
+                </text>
+              </values>
+              <children>
+                <item id="mF9N_SiMhI1">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit>You can also add packages manually, if you installed a minimal distribution such as </lit>
+                        </run>
+                        <run>
+                          <lit><cell href="http://www.tug.org/mactex/morepackages.html" name="BasicTeX" type="link"/></lit>
+                        </run>
+                        <run>
+                          <lit>, or remove them if you want to reclaim additional hard drive space.</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
+                <item id="dMjwUXva4um">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit><cell refid="att2" name="PackageTab" expanded="yes" type="image" width="494" height="368"/></lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
+                <item id="jmJRq3eQhOR">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit>You can also </lit>
+                        </run>
+                        <run>
+                          <style>
+                            <inherited-style name="Link" idref="mkRhzPcpm-u"/>
+                          </style>
+                          <lit>get info</lit>
+                        </run>
+                        <run>
+                          <lit> on packages, and search or view all installed packages.  Note that packages which include binary files, such as XeTeX, will only have the relevant architecture installed on your system.</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
+                <item id="px5zLxlairg" expanded="yes">
+                  <style>
+                    <inherited-style name="Box" idref="mRPR-6uEuRb"/>
+                  </style>
+                  <values>
+                    <null/>
+                  </values>
+                  <children>
+                    <item id="epf5M6M8dbr">
+                      <values>
+                        <text>
+                          <p>
+                            <run>
+                              <lit>Most commands relevant to package management are found under the </lit>
+                            </run>
+                            <run>
+                              <style>
+                                <inherited-style name="UI" idref="a0as48_ttlo"/>
+                              </style>
+                              <lit>Actions</lit>
+                            </run>
+                            <run>
+                              <lit> menu.</lit>
+                            </run>
+                          </p>
+                        </text>
+                      </values>
+                    </item>
+                    <item id="mOT9Pkg8cOj">
+                      <values>
+                        <text>
+                          <p>
+                            <run>
+                              <lit>To forcibly remove a package, hold down the </lit>
+                            </run>
+                            <run>
+                              <style>
+                                <inherited-style name="UI" idref="a0as48_ttlo"/>
+                              </style>
+                              <lit>option</lit>
+                            </run>
+                            <run>
+                              <lit> key (</lit>
+                            </run>
+                            <run>
+                              <style>
+                                <inherited-style name="UI" idref="a0as48_ttlo"/>
+                              </style>
+                              <lit>alt</lit>
+                            </run>
+                            <run>
+                              <lit> on some keyboards) while the </lit>
+                            </run>
+                            <run>
+                              <style>
+                                <inherited-style name="UI" idref="a0as48_ttlo"/>
+                              </style>
+                              <lit>Action</lit>
+                            </run>
+                            <run>
+                              <lit> menu is active.  </lit>
+                            </run>
+                            <run>
+                              <style>
+                                <inherited-style name="Bold" idref="bMbdsrPBbNQ"/>
+                              </style>
+                              <lit>Do not do this unless you really know what you are doing!</lit>
+                            </run>
+                          </p>
+                        </text>
+                      </values>
+                    </item>
+                  </children>
+                </item>
+              </children>
+            </item>
+            <item id="jF5DhHO-g3r" expanded="yes">
+              <style>
+                <inherited-style name="Destination" idref="oQxEDq66I5w"/>
+              </style>
+              <values>
+                <text>
+                  <p>
+                    <run>
+                      <lit>Backup</lit>
+                    </run>
+                  </p>
+                </text>
+              </values>
+              <children>
+                <item id="dKTZk3U_Jt4">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit>TeX Live Manager will automatically save backups for you.  When it updates a package, the previous version of that package is archived, so you can revert to an older version of it easily.</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
+                <item id="lfYZ4SmXXbh">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit>When you need to revert to an older version, click the </lit>
+                        </run>
+                        <run>
+                          <style>
+                            <inherited-style name="UI" idref="a0as48_ttlo"/>
+                          </style>
+                          <lit>Restore</lit>
+                        </run>
+                        <run>
+                          <lit> button next to its version number and install date.</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
+                <item id="c13XOMWqqMS">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit><cell refid="att1" name="BackupTab" expanded="yes" type="image" width="494" height="368"/></lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
+                <item id="d3Gfufasvqr" expanded="yes">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit>To configure automatic backups, use the </lit>
+                        </run>
+                        <run>
+                          <style>
+                            <inherited-style name="UI" idref="a0as48_ttlo"/>
+                          </style>
+                          <lit>Configure</lit>
+                        </run>
+                        <run>
+                          <lit> menu.</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                  <children>
+                    <item id="nn-MV_z6300">
+                      <values>
+                        <text>
+                          <p>
+                            <run>
+                              <lit><cell refid="att0" name="AutobackupSheet" expanded="yes" type="image" width="300" height="163"/></lit>
+                            </run>
+                          </p>
+                        </text>
+                      </values>
+                    </item>
+                  </children>
+                </item>
+                <item id="kVgvqKhHeil">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit>If the </lit>
+                        </run>
+                        <run>
+                          <style>
+                            <inherited-style name="UI" idref="a0as48_ttlo"/>
+                          </style>
+                          <lit>Autobackup enabled</lit>
+                        </run>
+                        <run>
+                          <lit> box is checked, the number of previous versions to save (per package) can be set below.  To keep all previous versions, enter ∞ (opt-5 on US keyboards).</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
+                <item id="kXgfGTUzalK">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit>If the </lit>
+                        </run>
+                        <run>
+                          <style>
+                            <inherited-style name="UI" idref="a0as48_ttlo"/>
+                          </style>
+                          <lit>Prune backups</lit>
+                        </run>
+                        <run>
+                          <lit> box is checked, the number of backups (per package) will be pruned to your maximum value when you dismiss the sheet by choosing </lit>
+                        </run>
+                        <run>
+                          <style>
+                            <inherited-style name="UI" idref="a0as48_ttlo"/>
+                          </style>
+                          <lit>Accept</lit>
+                        </run>
+                        <run>
+                          <lit>.</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
+                <item id="f0Rdu47i8wW" expanded="yes">
+                  <style>
+                    <inherited-style name="Box" idref="mRPR-6uEuRb"/>
+                  </style>
+                  <values>
+                    <null/>
+                  </values>
+                  <children>
+                    <item id="i8LEnnSJuCZ">
+                      <values>
+                        <text>
+                          <p>
+                            <run>
+                              <lit>With a system as complex as TeX Live, fully testing all packages for compatibility is practically impossible.  Additionally, sometimes a package author overlooks a bug before submitting an update to CTAN, and it may take a few days (or longer) to get fixed.  Automatic backups can help you meet deadlines and avoid tedious manual package restoration or fixes.</lit>
+                            </run>
+                          </p>
+                        </text>
+                      </values>
+                    </item>
+                    <item id="piTN4jcGlw9">
+                      <values>
+                        <text>
+                          <p>
+                            <run>
+                              <lit>Although we recommend that you keep backups enabled, old packages can use significant amounts of disk space on today&apos;s smaller SSD drives, so you may wish to limit the number of backups.</lit>
+                            </run>
+                          </p>
+                        </text>
+                      </values>
+                    </item>
+                    <item id="nZjujn32Pju">
+                      <values>
+                        <text>
+                          <p>
+                            <run>
+                              <lit>You can find out how much space is being used by TeX Live backups using the following command in Terminal.app:  </lit>
+                            </run>
+                            <run>
+                              <style>
+                                <inherited-style name="Verbatim" idref="a-WJm12exYM"/>
+                              </style>
+                              <lit>`du -sk $(kpsewhich -var-value=SELFAUTOPARENT)/$(tlmgr option backupdir |cut -d &quot;:&quot; -f 2 |sed -e &apos;s/^ //g&apos;)`</lit>
+                            </run>
+                            <run>
+                              <lit>, which reports size in kilobytes.</lit>
+                            </run>
+                          </p>
+                        </text>
+                      </values>
+                    </item>
+                  </children>
+                </item>
+              </children>
+            </item>
             <item id="aLvRpQYwVsb">
               <style>
                 <inherited-style name="Destination" idref="oQxEDq66I5w"/>
@@ -662,7 +995,7 @@
                     <text>
                       <p>
                         <run>
-                          <lit><cell refid="att0" name="Preferences" type="image" width="373" height="130"/></lit>
+                          <lit><cell refid="att3" name="Preferences" type="image" width="373" height="130"/></lit>
                         </run>
                       </p>
                     </text>
