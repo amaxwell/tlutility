@@ -157,9 +157,9 @@
   <editor content-size="{596, 756}" column-titles-display-mode="off" status-visible="no">
     <drawer display="sections" width="236" palette-height="379"/>
     <hoisted-rows ids="jF5DhHO-g3r"/>
-    <selected-rows ids="dKTZk3U_Jt4"/>
+    <selected-rows ids="kXgfGTUzalK"/>
     <selected-columns ids="jFqHUGd_Dg1"/>
-    <selected-characters range="{0, 187}"/>
+    <selected-characters range="{28, 0}"/>
     <toolbar>{
     &quot;TB Display Mode&quot; = 2;
     &quot;TB Icon Size Mode&quot; = 2;
@@ -548,7 +548,7 @@
                               <style>
                                 <inherited-style name="UI" idref="a0as48_ttlo"/>
                               </style>
-                              <lit>Action</lit>
+                              <lit>Actions</lit>
                             </run>
                             <run>
                               <lit> menu of the main menu bar.  You can update individual packages or all packages.</lit>
@@ -800,7 +800,7 @@
                     <text>
                       <p>
                         <run>
-                          <lit><cell refid="att1" name="BackupTab" expanded="yes" type="image" width="494" height="368"/></lit>
+                          <lit><cell refid="att1" name="BackupTab" type="image" width="494" height="368"/></lit>
                         </run>
                       </p>
                     </text>
@@ -837,56 +837,56 @@
                         </text>
                       </values>
                     </item>
+                    <item id="kVgvqKhHeil">
+                      <values>
+                        <text>
+                          <p>
+                            <run>
+                              <lit>If the </lit>
+                            </run>
+                            <run>
+                              <style>
+                                <inherited-style name="UI" idref="a0as48_ttlo"/>
+                              </style>
+                              <lit>Autobackup enabled</lit>
+                            </run>
+                            <run>
+                              <lit> box is checked, the number of previous versions to save (per package) can be set below.  To keep all previous versions, enter ∞ (opt-5 on US keyboards).</lit>
+                            </run>
+                          </p>
+                        </text>
+                      </values>
+                    </item>
+                    <item id="kXgfGTUzalK">
+                      <values>
+                        <text>
+                          <p>
+                            <run>
+                              <lit>If the </lit>
+                            </run>
+                            <run>
+                              <style>
+                                <inherited-style name="UI" idref="a0as48_ttlo"/>
+                              </style>
+                              <lit>Prune backups</lit>
+                            </run>
+                            <run>
+                              <lit> box is checked, the number of backups (per package) will be pruned to your maximum value when you dismiss the sheet by choosing </lit>
+                            </run>
+                            <run>
+                              <style>
+                                <inherited-style name="UI" idref="a0as48_ttlo"/>
+                              </style>
+                              <lit>Accept</lit>
+                            </run>
+                            <run>
+                              <lit>.</lit>
+                            </run>
+                          </p>
+                        </text>
+                      </values>
+                    </item>
                   </children>
-                </item>
-                <item id="kVgvqKhHeil">
-                  <values>
-                    <text>
-                      <p>
-                        <run>
-                          <lit>If the </lit>
-                        </run>
-                        <run>
-                          <style>
-                            <inherited-style name="UI" idref="a0as48_ttlo"/>
-                          </style>
-                          <lit>Autobackup enabled</lit>
-                        </run>
-                        <run>
-                          <lit> box is checked, the number of previous versions to save (per package) can be set below.  To keep all previous versions, enter ∞ (opt-5 on US keyboards).</lit>
-                        </run>
-                      </p>
-                    </text>
-                  </values>
-                </item>
-                <item id="kXgfGTUzalK">
-                  <values>
-                    <text>
-                      <p>
-                        <run>
-                          <lit>If the </lit>
-                        </run>
-                        <run>
-                          <style>
-                            <inherited-style name="UI" idref="a0as48_ttlo"/>
-                          </style>
-                          <lit>Prune backups</lit>
-                        </run>
-                        <run>
-                          <lit> box is checked, the number of backups (per package) will be pruned to your maximum value when you dismiss the sheet by choosing </lit>
-                        </run>
-                        <run>
-                          <style>
-                            <inherited-style name="UI" idref="a0as48_ttlo"/>
-                          </style>
-                          <lit>Accept</lit>
-                        </run>
-                        <run>
-                          <lit>.</lit>
-                        </run>
-                      </p>
-                    </text>
-                  </values>
                 </item>
                 <item id="f0Rdu47i8wW" expanded="yes">
                   <style>
@@ -918,27 +918,30 @@
                         </text>
                       </values>
                     </item>
-                    <item id="nZjujn32Pju">
-                      <values>
-                        <text>
-                          <p>
-                            <run>
-                              <lit>You can find out how much space is being used by TeX Live backups using the following command in Terminal.app:  </lit>
-                            </run>
-                            <run>
-                              <style>
-                                <inherited-style name="Verbatim" idref="a-WJm12exYM"/>
-                              </style>
-                              <lit>`du -sk $(kpsewhich -var-value=SELFAUTOPARENT)/$(tlmgr option backupdir |cut -d &quot;:&quot; -f 2 |sed -e &apos;s/^ //g&apos;)`</lit>
-                            </run>
-                            <run>
-                              <lit>, which reports size in kilobytes.</lit>
-                            </run>
-                          </p>
-                        </text>
-                      </values>
-                    </item>
                   </children>
+                </item>
+                <item id="nZjujn32Pju">
+                  <style>
+                    <inherited-style name="Pro" idref="klRPa19kyJm"/>
+                  </style>
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit>You can find out how much space is being used by TeX Live backups using the following command in Terminal.app:  </lit>
+                        </run>
+                        <run>
+                          <style>
+                            <inherited-style name="Verbatim" idref="a-WJm12exYM"/>
+                          </style>
+                          <lit>`du -sk $(kpsewhich -var-value=SELFAUTOPARENT)/$(tlmgr option backupdir |cut -d &quot;:&quot; -f 2 |sed -e &apos;s/^ //g&apos;)`</lit>
+                        </run>
+                        <run>
+                          <lit>, which reports size in kilobytes.</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
                 </item>
               </children>
             </item>
