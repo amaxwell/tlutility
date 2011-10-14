@@ -122,9 +122,10 @@
   <attachments>
     <attachment id="att0" href="AutobackupSheet.png"/>
     <attachment id="att1" href="BackupTab.png"/>
-    <attachment id="att2" href="PackageTab.png"/>
-    <attachment id="att3" href="Prefs.png"/>
-    <attachment id="att4" href="UpdateTab.png"/>
+    <attachment id="att2" href="Info.png"/>
+    <attachment id="att3" href="PackageTab.png"/>
+    <attachment id="att4" href="Prefs.png"/>
+    <attachment id="att5" href="UpdateTab.png"/>
   </attachments>
   <settings>
     <base-style>
@@ -154,12 +155,12 @@
     </print-info>
     <auto-generate-level-styles>no</auto-generate-level-styles>
   </settings>
-  <editor content-size="{596, 756}" column-titles-display-mode="off" status-visible="no">
+  <editor content-size="{599, 744}" column-titles-display-mode="off" status-visible="no">
     <drawer display="sections" width="236" palette-height="379"/>
-    <hoisted-rows ids="jF5DhHO-g3r"/>
-    <selected-rows ids="kXgfGTUzalK"/>
+    <hoisted-rows ids="aLvRpQYwVsb"/>
+    <selected-rows ids="cvazngGEjvI"/>
     <selected-columns ids="jFqHUGd_Dg1"/>
-    <selected-characters range="{28, 0}"/>
+    <selected-characters range="{175, 0}"/>
     <toolbar>{
     &quot;TB Display Mode&quot; = 2;
     &quot;TB Icon Size Mode&quot; = 2;
@@ -192,7 +193,7 @@
         </text>
       </title>
     </column>
-    <column id="jFqHUGd_Dg1" type="text" width="560" minimum-width="13" maximum-width="1000000" text-export-width="72" is-outline-column="yes">
+    <column id="jFqHUGd_Dg1" type="text" width="563" minimum-width="13" maximum-width="1000000" text-export-width="72" is-outline-column="yes">
       <title>
         <text>
           <p>
@@ -444,7 +445,7 @@
             </text>
           </values>
           <children>
-            <item id="g-6zW6wA71h">
+            <item id="g-6zW6wA71h" expanded="yes">
               <style>
                 <inherited-style name="Destination" idref="oQxEDq66I5w"/>
               </style>
@@ -458,6 +459,20 @@
                 </text>
               </values>
               <children>
+                <item id="gkBdcd7FCu4">
+                  <style>
+                    <inherited-style name="Anchor" idref="aUm3924E6__"/>
+                  </style>
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit>updatelist</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
                 <item id="eok_2Rmyp9q">
                   <values>
                     <text>
@@ -485,7 +500,7 @@
                     <text>
                       <p>
                         <run>
-                          <lit><cell refid="att4" name="UpdateTab" expanded="yes" type="image" width="494" height="368"/></lit>
+                          <lit><cell refid="att5" name="UpdateTab" expanded="yes" type="image" width="494" height="368"/></lit>
                         </run>
                       </p>
                     </text>
@@ -626,6 +641,20 @@
                 </text>
               </values>
               <children>
+                <item id="jA5__eRlJ7E">
+                  <style>
+                    <inherited-style name="Anchor" idref="aUm3924E6__"/>
+                  </style>
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit>packagelist</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
                 <item id="mF9N_SiMhI1">
                   <values>
                     <text>
@@ -648,7 +677,7 @@
                     <text>
                       <p>
                         <run>
-                          <lit><cell refid="att2" name="PackageTab" expanded="yes" type="image" width="494" height="368"/></lit>
+                          <lit><cell refid="att3" name="PackageTab" expanded="yes" type="image" width="494" height="368"/></lit>
                         </run>
                       </p>
                     </text>
@@ -750,7 +779,7 @@
                 </item>
               </children>
             </item>
-            <item id="jF5DhHO-g3r" expanded="yes">
+            <item id="jF5DhHO-g3r">
               <style>
                 <inherited-style name="Destination" idref="oQxEDq66I5w"/>
               </style>
@@ -945,6 +974,142 @@
                 </item>
               </children>
             </item>
+            <item id="cs-_NQpayhC" expanded="yes">
+              <style>
+                <inherited-style name="Destination" idref="oQxEDq66I5w"/>
+              </style>
+              <values>
+                <text>
+                  <p>
+                    <run>
+                      <lit>Package Info</lit>
+                    </run>
+                  </p>
+                </text>
+              </values>
+              <children>
+                <item id="lLDbKZ5DlXh" expanded="yes">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit>You can display detailed information for the selected package (in the </lit>
+                        </run>
+                        <run>
+                          <style>
+                            <inherited-style name="Link" idref="mkRhzPcpm-u"/>
+                          </style>
+                          <lit>update list</lit>
+                        </run>
+                        <run>
+                          <lit> or the </lit>
+                        </run>
+                        <run>
+                          <style>
+                            <inherited-style name="Link" idref="mkRhzPcpm-u"/>
+                          </style>
+                          <lit>package list</lit>
+                        </run>
+                        <run>
+                          <lit>) using the </lit>
+                        </run>
+                        <run>
+                          <style>
+                            <inherited-style name="UI" idref="a0as48_ttlo"/>
+                          </style>
+                          <lit>Actions</lit>
+                        </run>
+                        <run>
+                          <lit> menu or the </lit>
+                        </run>
+                        <run>
+                          <style>
+                            <inherited-style name="UI" idref="a0as48_ttlo"/>
+                          </style>
+                          <lit>Cmd-I</lit>
+                        </run>
+                        <run>
+                          <lit> keyboard shortcut.</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                  <children>
+                    <item id="olm0VNc6O4v">
+                      <values>
+                        <text>
+                          <p>
+                            <run>
+                              <lit><cell refid="att2" name="Info" expanded="yes" type="image" width="440" height="341"/></lit>
+                            </run>
+                          </p>
+                        </text>
+                      </values>
+                    </item>
+                    <item id="gmMNUw_y2oF">
+                      <values>
+                        <text>
+                          <p>
+                            <run>
+                              <lit>A short description from the TeX Catalogue is displayed, and documentation obtained from </lit>
+                            </run>
+                            <run>
+                              <lit><cell href="http://www.tug.org/texdoc/" name="Texdoc" type="link"/></lit>
+                            </run>
+                            <run>
+                              <lit> is shown as clickable links and as thumbnail icons.</lit>
+                            </run>
+                          </p>
+                        </text>
+                      </values>
+                    </item>
+                    <item id="iP0FM7DHefZ">
+                      <values>
+                        <text>
+                          <p>
+                            <run>
+                              <lit>The bottom area show all files associated with the selected package which are currently available in your system.</lit>
+                            </run>
+                          </p>
+                        </text>
+                      </values>
+                    </item>
+                    <item id="gcoLMAo1bwg" expanded="yes">
+                      <style>
+                        <inherited-style name="Box" idref="mRPR-6uEuRb"/>
+                      </style>
+                      <values>
+                        <null/>
+                      </values>
+                      <children>
+                        <item id="i1PR3WHrTx_">
+                          <values>
+                            <text>
+                              <p>
+                                <run>
+                                  <lit>You can enlarge the icons to readable size with a slider that appears if you hover near the top of the thumbnail display.</lit>
+                                </run>
+                              </p>
+                            </text>
+                          </values>
+                        </item>
+                        <item id="j3FW_vjqMOW">
+                          <values>
+                            <text>
+                              <p>
+                                <run>
+                                  <lit>Use the spacebar or Cmd-Y to show a Quick Look-style preview panel for the selected documentation file.</lit>
+                                </run>
+                              </p>
+                            </text>
+                          </values>
+                        </item>
+                      </children>
+                    </item>
+                  </children>
+                </item>
+              </children>
+            </item>
             <item id="aLvRpQYwVsb">
               <style>
                 <inherited-style name="Destination" idref="oQxEDq66I5w"/>
@@ -987,7 +1152,7 @@
                           <lit>Preferences</lit>
                         </run>
                         <run>
-                          <lit> item of the main menu.</lit>
+                          <lit> item of the main menu:</lit>
                         </run>
                       </p>
                     </text>
@@ -998,16 +1163,253 @@
                     <text>
                       <p>
                         <run>
-                          <lit><cell refid="att3" name="Preferences" type="image" width="373" height="130"/></lit>
+                          <lit><cell refid="att4" name="Preferences" expanded="yes" type="image" width="373" height="130"/></lit>
                         </run>
                       </p>
                     </text>
                   </values>
                 </item>
-                <item id="mec3LTLeF40">
+                <item id="mec3LTLeF40" expanded="yes">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <style>
+                            <inherited-style name="UI" idref="a0as48_ttlo"/>
+                          </style>
+                          <lit>TeX programs</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                  <children>
+                    <item id="ltN_2UpUJG6">
+                      <values>
+                        <text>
+                          <p>
+                            <run>
+                              <lit>This is the path to the </lit>
+                            </run>
+                            <run>
+                              <style>
+                                <inherited-style name="Verbatim" idref="a-WJm12exYM"/>
+                              </style>
+                              <lit>tlmgr</lit>
+                            </run>
+                            <run>
+                              <lit> command-line tool that TeX Live Utility uses.  If you use MacTeX, the default setting of </lit>
+                            </run>
+                            <run>
+                              <style>
+                                <inherited-style name="Verbatim" idref="a-WJm12exYM"/>
+                              </style>
+                              <lit>/usr/texbin</lit>
+                            </run>
+                            <run>
+                              <lit> is correct, but other distributions may require you to change this.</lit>
+                            </run>
+                          </p>
+                        </text>
+                      </values>
+                    </item>
+                  </children>
+                </item>
+                <item id="fK3JP_8K0x5" expanded="yes">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <style>
+                            <inherited-style name="UI" idref="a0as48_ttlo"/>
+                          </style>
+                          <lit>Install updates for all users</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                  <children>
+                    <item id="a0oGjHlHcVg">
+                      <values>
+                        <text>
+                          <p>
+                            <run>
+                              <lit>This is the equivalent of using </lit>
+                            </run>
+                            <run>
+                              <style>
+                                <inherited-style name="Verbatim" idref="a-WJm12exYM"/>
+                              </style>
+                              <lit>`sudo -H`</lit>
+                            </run>
+                            <run>
+                              <lit>, which changes your home directory environment variable when running a command as root.</lit>
+                            </run>
+                          </p>
+                        </text>
+                      </values>
+                    </item>
+                    <item id="loF5nAUhusl">
+                      <values>
+                        <text>
+                          <p>
+                            <run>
+                              <lit>Unchecking this box can lead to strange problems with fonts that I don&apos;t understand well enough to explain here.  However, if you have manually installed fonts in your personal tree (typically </lit>
+                            </run>
+                            <run>
+                              <style>
+                                <inherited-style name="Verbatim" idref="a-WJm12exYM"/>
+                              </style>
+                              <lit>~/Library/texmf</lit>
+                            </run>
+                            <run>
+                              <lit>) and run </lit>
+                            </run>
+                            <run>
+                              <style>
+                                <inherited-style name="Verbatim" idref="a-WJm12exYM"/>
+                              </style>
+                              <lit>updmap</lit>
+                            </run>
+                            <run>
+                              <lit> in Terminal, you may need to uncheck this box.</lit>
+                            </run>
+                          </p>
+                        </text>
+                      </values>
+                    </item>
+                  </children>
+                </item>
+                <item id="nj1N0eh16wQ" expanded="yes">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <style>
+                            <inherited-style name="UI" idref="a0as48_ttlo"/>
+                          </style>
+                          <lit>Show progress in system log</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                  <children>
+                    <item id="ivt0Tk6rSkJ">
+                      <values>
+                        <text>
+                          <p>
+                            <run>
+                              <lit>When checked, TeX Live Utility&apos;s log output will be written to the system log.  Now that logs are saved between sessions, this should generally be left unchecked.</lit>
+                            </run>
+                          </p>
+                        </text>
+                      </values>
+                    </item>
+                  </children>
+                </item>
+                <item id="dTvZa2OQh4C" expanded="yes">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <style>
+                            <inherited-style name="UI" idref="a0as48_ttlo"/>
+                          </style>
+                          <lit>Add new packages to match the server when updating</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                  <children>
+                    <item id="dvWVEWxjHS7">
+                      <values>
+                        <text>
+                          <p>
+                            <run>
+                              <lit>If packages were added to TeX Live after you installed it, this will bring you up to date.  You should almost never uncheck this box.</lit>
+                            </run>
+                          </p>
+                        </text>
+                      </values>
+                    </item>
+                  </children>
+                </item>
+                <item id="i31NY8LOAii" expanded="yes">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <style>
+                            <inherited-style name="UI" idref="a0as48_ttlo"/>
+                          </style>
+                          <lit>Remove packages to match the server when updating.</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                  <children>
+                    <item id="mqYR6z-6mQT">
+                      <values>
+                        <text>
+                          <p>
+                            <run>
+                              <lit>Sometimes packages are removed from the server, typically due to licensing problems.  If this box is checked, such packages will be removed from your system when you use the </lit>
+                            </run>
+                            <run>
+                              <style>
+                                <inherited-style name="UI" idref="a0as48_ttlo"/>
+                              </style>
+                              <lit>Update All</lit>
+                            </run>
+                            <run>
+                              <lit> action.</lit>
+                            </run>
+                          </p>
+                        </text>
+                      </values>
+                    </item>
+                    <item id="kDH6qoxockx">
+                      <values>
+                        <text>
+                          <p>
+                            <run>
+                              <lit>This box can generally be unchecked safely, if you&apos;re concerned about losing packages.</lit>
+                            </run>
+                          </p>
+                        </text>
+                      </values>
+                    </item>
+                  </children>
+                </item>
+                <item id="iVuqdZqACic" expanded="yes">
+                  <style>
+                    <inherited-style name="Box" idref="mRPR-6uEuRb"/>
+                    <value key="font-weight">11</value>
+                  </style>
                   <values>
                     <null/>
                   </values>
+                  <children>
+                    <item id="kg5lHa4snjm">
+                      <values>
+                        <text>
+                          <p>
+                            <run>
+                              <lit>List fonts can be changed by using the standard Font panel from the Edit menu (</lit>
+                            </run>
+                            <run>
+                              <style>
+                                <inherited-style name="UI" idref="a0as48_ttlo"/>
+                              </style>
+                              <lit>Cmd-T</lit>
+                            </run>
+                            <run>
+                              <lit>).  Font settings will persist between launches.</lit>
+                            </run>
+                          </p>
+                        </text>
+                      </values>
+                    </item>
+                  </children>
                 </item>
               </children>
             </item>
