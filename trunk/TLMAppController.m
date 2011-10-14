@@ -227,10 +227,7 @@ static void __TLMMigrateBundleIdentifier()
     NSFormatter *memsizeFormatter = [[TLMSizeFormatter new] autorelease];
     NSString *memsize = [memsizeFormatter stringForObjectValue:[NSNumber numberWithUnsignedLongLong:[pInfo physicalMemory]]];
     TLMLog(__func__, @"Welcome to %@ %@, running under Mac OS X %@ with %lu/%lu processors active and %@ physical memory.", [infoPlist objectForKey:(id)kCFBundleNameKey], [infoPlist objectForKey:(id)kCFBundleVersionKey], [pInfo operatingSystemVersionString], [pInfo activeProcessorCount], [pInfo processorCount], memsize);
-    
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:TLMShowLogWindowPreferenceKey])
-        [self showLogWindow:nil];
-    
+        
     // call before anything uses tlmgr
     [[TLMProxyManager sharedManager] updateProxyEnvironmentForURL:nil];
     
@@ -240,7 +237,10 @@ static void __TLMMigrateBundleIdentifier()
     if (nil == _aevtUpdateURL) {
         [[self mainWindowController] showWindow:nil];
         [[self mainWindowController] refreshUpdatedPackageList];
-    }    
+    }
+    
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:TLMShowLogWindowPreferenceKey])
+        [self showLogWindow:nil];
 }
 
 - (TLMMainWindowController *)mainWindowController { 
