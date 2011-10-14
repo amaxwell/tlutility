@@ -185,13 +185,14 @@ static NSString *__TLMLogStringFromDate(NSDate *date)
 {
     // make sure the delegate gets an initial notification
     _dockingDelegate = obj;
-    [_dockingDelegate dockableWindowGeometryDidChange:[self window]];
+    if ([[self window] isVisible])
+        [_dockingDelegate dockableWindowGeometryDidChange:[self window]];
 }
 
 // only notify for explicit moves or resize via the mouse
 - (BOOL)_shouldNotifyDockingDelegate
 {
-    return [(TLMLogWindow *)[self window] isLeftMouseDragging];
+    return [[self window] isVisible] && [(TLMLogWindow *)[self window] isLeftMouseDragging];
 }
 
 - (void)windowDidResize:(NSNotification *)notification
@@ -215,6 +216,12 @@ static NSString *__TLMLogStringFromDate(NSDate *date)
             [frameStrings addObject:NSStringFromRect([view frame])];
         [[NSUserDefaults standardUserDefaults] setObject:frameStrings forKey:SPLITVIEW_AUTOSAVE];
     }
+}
+
+- (NSWindow *)window
+{
+    NSWindow *w = [super window];
+    return w;
 }
 
 - (void)windowWillClose:(NSNotification *)aNote
