@@ -372,7 +372,7 @@ static char _TLMOperationQueueOperationContext;
     const CGFloat dy = NSHeight([sender frame]) - frameSize.height;
     const CGFloat dx = NSWidth([sender frame]) - frameSize.width;
     NSWindow *logWindow = [[[NSApp delegate] logWindowController] window];
-    if ([[[self window] childWindows] containsObject:logWindow]) {
+    if ([logWindow isVisible] && [[[self window] childWindows] containsObject:logWindow]) {
         
         NSPoint logWindowOrigin = [logWindow frame].origin;
         switch (_dockedEdge) {
