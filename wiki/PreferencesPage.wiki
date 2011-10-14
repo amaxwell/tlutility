@@ -14,14 +14,6 @@ The remaining user-settable preferences are available via the Preferences window
 
 http://mactlmgr.googlecode.com/svn/wiki/images/Prefs.png
 
-== Server URL ==
-
-This is the [http://ctan.org CTAN] mirror that will be used for update and installation.  This page must be a valid URL, and should point to a tlnet directory on the server.  When you view the URL in a web browser, it will look like this:
-
-http://mactlmgr.googlecode.com/svn/wiki/images/CTANRoot.png
-
-A list of CTAN mirrors and their status can be found at http://www.dante.de/mirmon/.
-
 == TeX programs ==
 
 For a standard MacTeX installation, this will be /usr/texbin.  You can choose an alternate location, as long as the tlmgr command-line tool exists at this location.
