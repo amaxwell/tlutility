@@ -238,7 +238,7 @@ static void __TLMFaviconCacheInit() { _sharedCache = [TLMFaviconCache new]; }
 {
     NSParameterAssert(aURL);
     // return nil for non-http icons, for symmetry with downloadIcon:delegate:
-    return [[aURL scheme] hasPrefix:@"http"] ? [_iconsByURL objectForKey:[aURL host]] : [self defaultFavicon];
+    return [aURL host] && [[aURL scheme] hasPrefix:@"http"] ? [_iconsByURL objectForKey:[aURL host]] : [self defaultFavicon];
 }
 
 - (NSImage *)downloadIconForURL:(NSURL *)aURL delegate:(id)delegate;
@@ -248,6 +248,9 @@ static void __TLMFaviconCacheInit() { _sharedCache = [TLMFaviconCache new]; }
     
     // !!! early return for non-http URLs
     if ([[aURL scheme] hasPrefix:@"http"] == NO) return [self defaultFavicon];
+    
+    // !!! early return in case of invalid URL
+    if ([aURL host] == nil) return [self defaultFavicon];
     
     // !!! early return: don't let it redirect and give the wrong icon
     if ([aURL isMultiplexer]) return [self defaultFavicon];
