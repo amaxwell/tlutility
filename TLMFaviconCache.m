@@ -172,7 +172,9 @@ static void __TLMFaviconCacheInit() { _sharedCache = [TLMFaviconCache new]; }
     _TLMFaviconQueueItem *item = [self _currentItem];
     if (timer)
         TLMLog(__func__, @"Stopping attempted download of %@ due to timeout", [item iconURL]);
-    [_iconsByURL setObject:[NSNull null] forKey:[[item iconURL] host]];
+    // can run into partial URLs from editing, though the formatter should disallow that...
+    if ([[item iconURL] host])
+        [_iconsByURL setObject:[NSNull null] forKey:[[item iconURL] host]];
     [_webview stopLoading:nil];
     if ([_queue count])
         [_queue removeLastObject];
