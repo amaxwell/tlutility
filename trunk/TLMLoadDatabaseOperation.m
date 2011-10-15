@@ -178,7 +178,7 @@
             [[TLMDatabase databaseForMirrorURL:[self updateURL]] reloadDatabaseFromPath:temporaryPath];
         }
         else {
-            TLMLog(__func__, @"Dumping tlpdb from mirror %@ failed", [self updateURL]);
+            TLMLog(__func__, @"Dumping tlpdb from repository %@ failed", [self updateURL]);
         } 
     }
     

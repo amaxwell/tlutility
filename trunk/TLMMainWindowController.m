@@ -255,7 +255,7 @@ static char _TLMOperationQueueOperationContext;
         TLMLog(__func__, @"Still have multiplexer URL after setup.  This is not good.");
         NSAlert *alert = [[NSAlert new] autorelease];
         [alert setMessageText:NSLocalizedString(@"Unable to find a valid update server", @"alert title")];
-        [alert setInformativeText:NSLocalizedString(@"Either a network problem exists or the TeX Live version on the server does not match.  If this problem persists on further attempts, you may need to try a different mirror.", @"alert text")];
+        [alert setInformativeText:NSLocalizedString(@"Either a network problem exists or the TeX Live version on the server does not match.  If this problem persists on further attempts, you may need to try a different repository.", @"alert text")];
         [alert beginSheetModalForWindow:[self window]
                           modalDelegate:nil
                          didEndSelector:NULL
@@ -671,8 +671,8 @@ static char _TLMOperationQueueOperationContext;
     const TLMDatabaseYear year = [[TLMEnvironment currentEnvironment] texliveYear];
     if ([db texliveYear] != year) {
         NSAlert *alert = [[NSAlert new] autorelease];
-        [alert setMessageText:NSLocalizedString(@"Mirror has a different TeX Live version", @"alert title")];
-        [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"The mirror at %@ has TeX Live %d, but you have TeX Live %d installed.  You need to adjust your preferences in order to continue.", @"alert text, two integer format specifiers"), [aURL absoluteString], [db texliveYear], year]];
+        [alert setMessageText:NSLocalizedString(@"Repository has a different TeX Live version", @"alert title")];
+        [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"The repository at %@ has TeX Live %d, but you have TeX Live %d installed.  You need to switch repositories in order to continue.", @"alert text, two integer format specifiers"), [aURL absoluteString], [db texliveYear], year]];
         [alert beginSheetModalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
         TLMLog(__func__, @"Well, this is not going to work:  %@ has TeX Live %d, and the installed version is TeX Live %d", [aURL absoluteString], [db texliveYear], year);
         return NO;
@@ -837,7 +837,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     }
     else {
         // happens when network is down; this can be a 10-12 minute timeout with TL 2011
-        TLMLog(__func__, @"Not updating package list, since the mirror database version is unknown");
+        TLMLog(__func__, @"Not updating package list, since the repository database version is unknown");
     }
 }
 

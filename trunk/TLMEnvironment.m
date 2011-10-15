@@ -424,14 +424,14 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
         allowSuppression = NO;
     }
     else if (remoteVersion > _installedYear) {
-        [alert setMessageText:NSLocalizedString(@"Mirror URL has a newer TeX Live version", @"")];
-        [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"Your TeX Live version is %d, but your default mirror URL appears to be for TeX Live %d.  You need to manually upgrade to a newer version of TeX Live, as there will be no further updates for your version.", @"two integer specifiers"), _installedYear, remoteVersion]];
+        [alert setMessageText:NSLocalizedString(@"Repository URL has a newer TeX Live version", @"")];
+        [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"Your TeX Live version is %d, but your default repository URL appears to be for TeX Live %d.  You need to manually upgrade to a newer version of TeX Live, as there will be no further updates for your version.", @"two integer specifiers"), _installedYear, remoteVersion]];
         // nag users into upgrading, to keep them from using ftp.tug.org willy-nilly
         allowSuppression = NO;
     }
     else {
-        [alert setMessageText:NSLocalizedString(@"Mirror URL has an older TeX Live version", @"")];
-        [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"Your TeX Live version is %d, but your default mirror URL appears to be for TeX Live %d.  You need to choose an appropriate mirror.", @"two integer specifiers"), _installedYear, remoteVersion]];
+        [alert setMessageText:NSLocalizedString(@"Repository URL has an older TeX Live version", @"")];
+        [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"Your TeX Live version is %d, but your default repository URL appears to be for TeX Live %d.  You need to choose an appropriate repository.", @"two integer specifiers"), _installedYear, remoteVersion]];
         // may come up during pretest
         allowSuppression = YES;
     }
@@ -519,7 +519,7 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
         TLMDatabaseYear age = currentDate.year - repositoryYear;
         NSString *ageString = age == 0 ? @"a young TeX Live" : @"a mature TeX Live";
         
-        TLMLog(__func__, @"Mirror version appears to be %d; %@", repositoryYear, ageString);
+        TLMLog(__func__, @"Repository version appears to be %d; %@", repositoryYear, ageString);
     }
         
     *outURL = validURL;
@@ -546,7 +546,7 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
         int tryCount = 2;
         const int maxTries = 5;
         while (nil == validURL && tryCount <= maxTries) {
-            TLMLog(__func__, @"Stale mirror returned from multiplexer.  Requesting another mirror (attempt %d of %d).", tryCount, maxTries);
+            TLMLog(__func__, @"Stale repository returned from multiplexer.  Requesting another repository (attempt %d of %d).", tryCount, maxTries);
             (void) [self _getValidServerURL:&validURL repositoryYear:&repositoryYear];
             tryCount++;
         }

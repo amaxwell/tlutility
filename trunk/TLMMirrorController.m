@@ -137,7 +137,7 @@ static NSURL *__TLMTLNetURL(NSString *mirrorURLString)
     _mirrorRoot = [TLMMirrorNode new];
     
     TLMMirrorNode *customNode = [TLMMirrorNode new];
-    [customNode setValue:[NSLocalizedString(@"Other Mirrors", @"mirror group title") uppercaseString]];
+    [customNode setValue:[NSLocalizedString(@"My Repositories", @"the user's repository group title") uppercaseString]];
     [customNode setType:TLMMirrorNodeContinent];
     [_mirrorRoot addChild:customNode];
     [customNode release];
@@ -225,7 +225,7 @@ static NSURL *__TLMTLNetURL(NSString *mirrorURLString)
 - (void)_handleVersionCheckNotification:(NSNotification *)aNote
 {
     TLMLog(__func__, @"%@", [aNote userInfo]);
-    TLMLog(__func__, @"mirror = %@", [self _mirrorForURL:[[aNote userInfo] objectForKey:@"URL"]]);
+    TLMLog(__func__, @"repository = %@", [self _mirrorForURL:[[aNote userInfo] objectForKey:@"URL"]]);
 }
 
 - (void)doubleClickAction:(id)sender
@@ -596,7 +596,7 @@ static NSURL * __TLMParseLocationOption(NSString *location)
     [menu addItem:item];
     [item release];
     
-    item = [[NSMenuItem allocWithZone:zone] initWithTitle:NSLocalizedString(@"Set Default Mirror", @"context menu")
+    item = [[NSMenuItem allocWithZone:zone] initWithTitle:NSLocalizedString(@"Set Default Repository", @"context menu")
                                                    action:@selector(_makeSelectedMirrorDefault:)
                                             keyEquivalent:@""];
     [item setAction:@selector(_makeSelectedMirrorDefault:)];
