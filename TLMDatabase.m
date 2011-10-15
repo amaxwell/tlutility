@@ -89,12 +89,12 @@ static double        _dataTimeout = URL_TIMEOUT;
     
     // was asserting this, but that's not going to work well with offline mode
     if ([[mirror packages] count] == 0)
-        TLMLog(__func__, @"No packages loaded for mirror %@", mirror);
+        TLMLog(__func__, @"No packages loaded for repository %@", mirror);
     
     TLMDatabase *local = [self localDatabase];
     NSAssert([[local packages] count], @"No packages in local database");
     
-    TLMLog(__func__, @"%ld packages in mirror database, %ld packages in local database", [[mirror packages] count], [[local packages] count]);
+    TLMLog(__func__, @"%ld packages in repository database, %ld packages in local database", [[mirror packages] count], [[local packages] count]);
     
     NSSet *localPackageSet = [NSSet setWithArray:[local packages]];
     
@@ -376,13 +376,13 @@ static NSString *__TLMTemporaryFile()
          */
         if (checkInterval < (URL_TIMEOUT * 3)) {
             // !!! early return: avoid multiple timeouts for successive requests
-            TLMLog(__func__, @"Failed to contact this mirror %.1f seconds ago.  Using that result.", checkInterval);
+            TLMLog(__func__, @"Failed to contact this repository %.1f seconds ago.  Using that result.", checkInterval);
             [_downloadLock unlock];
             return TLMDatabaseUnknownYear;
         }
         else {
             // log and try again
-            TLMLog(__func__, @"Failed to contact this mirror %.1f seconds ago.  Trying again.", checkInterval);
+            TLMLog(__func__, @"Failed to contact this repository %.1f seconds ago.  Trying again.", checkInterval);
         }
     }    
     
@@ -406,7 +406,7 @@ static NSString *__TLMTemporaryFile()
             [self reloadDatabaseFromPath:plistPath];
         }
         else {
-            TLMLog(__func__, @"Parsing the database from this mirror failed with the following error: %@", [parseTask errorString]);
+            TLMLog(__func__, @"Parsing the database from this repository failed with the following error: %@", [parseTask errorString]);
             _failed = YES;
             _failureTime = CFAbsoluteTimeGetCurrent();
         }

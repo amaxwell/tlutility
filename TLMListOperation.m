@@ -87,7 +87,7 @@
     NSString *installPrefix = @"tlmgr: package repository ";
     if ([packageLines count] && [[packageLines objectAtIndex:0] hasPrefix:installPrefix]) {
         NSString *urlString = [[packageLines objectAtIndex:0] stringByReplacingOccurrencesOfString:installPrefix withString:@""];
-        TLMLog(__func__, @"Using mirror at %@", urlString);
+        TLMLog(__func__, @"Using repository at %@", urlString);
         [self setUpdateURL:[NSURL URLWithString:urlString]];
         [packageLines removeObjectAtIndex:0];
     }

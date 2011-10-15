@@ -1111,7 +1111,7 @@
 								</object>
 								<object class="NSMenuItem" id="1235359">
 									<reference key="NSMenu" ref="882484711"/>
-									<string key="NSTitle">Manage Mirrors</string>
+									<string key="NSTitle">Manage Repositories</string>
 									<string key="NSKeyEquiv"/>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="35465992"/>
@@ -1119,7 +1119,7 @@
 								</object>
 								<object class="NSMenuItem" id="169531676">
 									<reference key="NSMenu" ref="882484711"/>
-									<string key="NSTitle">Set as Home Mirror</string>
+									<string key="NSTitle">Set as Home Repository</string>
 									<string key="NSKeyEquiv"/>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="35465992"/>
@@ -3548,7 +3548,7 @@
 						<object class="IBToolTipAttribute" key="NS.object.0">
 							<string key="name">ToolTip</string>
 							<reference key="object" ref="1235359"/>
-							<string key="toolTip">View and edit available CTAN or TeX Live mirror servers.</string>
+							<string key="toolTip">View and edit available CTAN or TeX Live repository locations.</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3557,7 +3557,7 @@
 						<object class="IBToolTipAttribute" key="NS.object.0">
 							<string key="name">ToolTip</string>
 							<reference key="object" ref="169531676"/>
-							<string key="toolTip">Change the mirror used at startup of TeX Live Utility.</string>
+							<string key="toolTip">Change the repository used at startup of TeX Live Utility and when clicking the Home button.</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -4073,11 +4073,13 @@
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>_addRemoveControl</string>
+							<string>_makeDefaultButton</string>
 							<string>_outlineView</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>NSSegmentedControl</string>
+							<string>NSButton</string>
 							<string>NSOutlineView</string>
 						</object>
 					</object>
@@ -4086,6 +4088,7 @@
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>_addRemoveControl</string>
+							<string>_makeDefaultButton</string>
 							<string>_outlineView</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
@@ -4093,6 +4096,10 @@
 							<object class="IBToOneOutletInfo">
 								<string key="name">_addRemoveControl</string>
 								<string key="candidateClassName">NSSegmentedControl</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">_makeDefaultButton</string>
+								<string key="candidateClassName">NSButton</string>
 							</object>
 							<object class="IBToOneOutletInfo">
 								<string key="name">_outlineView</string>
@@ -4479,6 +4486,14 @@
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBFrameworkSource</string>
 						<string key="minorKey">AppKit.framework/Headers/NSBrowser.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSButton</string>
+					<string key="superclassName">NSControl</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">AppKit.framework/Headers/NSButton.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
