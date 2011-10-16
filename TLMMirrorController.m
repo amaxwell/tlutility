@@ -125,6 +125,37 @@ static NSURL *__TLMTLNetURL(NSString *mirrorURLString)
     [plist writeToFile:__TLMUserMirrorsPath() atomically:YES];
 }
 
+- (TLMMirrorNode *)_mirrorForURL:(NSURL *)aURL
+{
+    for (TLMMirrorNode *continentNode in _mirrorRoot) {
+                
+        for (TLMMirrorNode *countryNode in continentNode) {
+                        
+            /*
+             Unfortunately, the user nodes are direct children of the custom node,
+             so we have a special case here in order to pick them up.  All other
+             URL nodes need another level of iteration.
+             */
+            if ([countryNode type] == TLMMirrorNodeCountry) {
+
+                for (TLMMirrorNode *URLNode in countryNode) {
+                                        
+                    NSParameterAssert([URLNode type] == TLMMirrorNodeURL);
+                    if ([[URLNode value] isEqual:aURL])
+                        return URLNode;
+                }
+            }
+            else if ([countryNode type] == TLMMirrorNodeURL) {
+                
+                if ([[countryNode value] isEqual:aURL])
+                    return countryNode;
+            }
+
+        }
+    }
+    return nil;
+}
+
 - (void)_loadDefaultSites
 {
     if (_mirrorRoot)
@@ -194,7 +225,23 @@ static NSURL *__TLMTLNetURL(NSString *mirrorURLString)
         
         [_mirrorRoot addChild:continentNode];
         [continentNode release];
-    }    
+    }
+    
+    /*
+     If we upgrade and lose the default server from the plist, add it back in to the 
+     custom section so the user can still edit it.
+     */
+    NSURL *defaultURL = [[TLMEnvironment currentEnvironment] defaultServerURL];
+    if (nil == [self _mirrorForURL:defaultURL]) {
+        TLMLog(__func__, @"Unable to find default server URL %@.  Adding as custom repository.", defaultURL);
+        TLMMirrorNode *userNode = [TLMMirrorNode new];
+        [userNode setType:TLMMirrorNodeURL];
+        [userNode setValue:defaultURL];
+        [[self _customNode] addChild:userNode];
+        [userNode release];
+        
+        // could save it here, but there's no reason to; if the user edits it, it'll be saved anyway
+    }
 }
 
 - (void)awakeFromNib
@@ -203,23 +250,6 @@ static NSURL *__TLMTLNetURL(NSString *mirrorURLString)
     [_outlineView registerForDraggedTypes:[NSArray arrayWithObjects:(id)kUTTypeURL, NSURLPboardType, nil]];
     [_outlineView setDoubleAction:@selector(doubleClickAction:)];
     [_outlineView setTarget:self];
-}
-
-- (TLMMirrorNode *)_mirrorForURL:(NSURL *)aURL
-{
-    for (TLMMirrorNode *continentNode in _mirrorRoot) {
-        
-        for (TLMMirrorNode *countryNode in continentNode) {
-            
-            for (TLMMirrorNode *URLNode in countryNode) {
-                
-                NSParameterAssert([URLNode type] == TLMMirrorNodeURL);
-                if ([[URLNode value] isEqual:aURL])
-                    return URLNode;
-            }
-        }
-    }
-    return nil;
 }
 
 - (void)_handleVersionCheckNotification:(NSNotification *)aNote
