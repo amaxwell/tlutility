@@ -135,7 +135,7 @@
 - (BOOL)validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem>)anItem;
 {
     SEL action = [anItem action];
-    if (@selector(installSelectedRows:) == action)
+    if (@selector(netInstall:) == action)
         return YES;
     return NO;
 }
@@ -145,7 +145,7 @@
     return [TLMProfileNode profileStringWithRoot:_rootNode];
 }
 
-- (IBAction)installSelectedRows:(id)sender;
+- (IBAction)netInstall:(id)sender;
 {
     [_controller netInstall];
 }

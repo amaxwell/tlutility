@@ -97,6 +97,7 @@ typedef NSUInteger TLMDockedEdge;
 @property (nonatomic, retain) IBOutlet TLMInstallDataSource *_installDataSource;
 @property (nonatomic, retain) IBOutlet TLMBackupDataSource *_backupDataSource;
 @property (nonatomic, retain) IBOutlet TLMTabView *_tabView;
+
 @property (nonatomic, readonly) BOOL infrastructureNeedsUpdate;
 @property (nonatomic, readonly) BOOL updatingInfrastructure;
 @property (nonatomic, copy) NSURL *serverURL;

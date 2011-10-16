@@ -50,8 +50,10 @@
     TLMLogWindowController  *_logWindowController;
     NSURL                   *_aevtUpdateURL;
     NSInvocation            *_sparkleUpdateInvocation;
-    
+    NSMenuItem              *_installMenuItem;
 }
+
+@property (nonatomic, retain) IBOutlet NSMenuItem *_installMenuItem;
 
 @property (readonly) TLMMainWindowController *mainWindowController;
 @property (readonly) TLMMirrorController *mirrorController;
