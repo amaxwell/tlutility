@@ -121,11 +121,14 @@
   </named-styles>
   <attachments>
     <attachment id="att0" href="AutobackupSheet.png"/>
-    <attachment id="att1" href="BackupTab.png"/>
-    <attachment id="att2" href="Info.png"/>
-    <attachment id="att3" href="PackageTab.png"/>
-    <attachment id="att4" href="Prefs.png"/>
-    <attachment id="att5" href="UpdateTab.png"/>
+    <attachment id="att1" href="AutocompleteAddress.png"/>
+    <attachment id="att2" href="BackupTab.png"/>
+    <attachment id="att3" href="Info.png"/>
+    <attachment id="att4" href="LogWindow.png"/>
+    <attachment id="att5" href="Mirrors.png"/>
+    <attachment id="att6" href="PackageTab.png"/>
+    <attachment id="att7" href="Prefs.png"/>
+    <attachment id="att8" href="UpdateTab.png"/>
   </attachments>
   <settings>
     <base-style>
@@ -155,12 +158,12 @@
     </print-info>
     <auto-generate-level-styles>no</auto-generate-level-styles>
   </settings>
-  <editor content-size="{599, 744}" column-titles-display-mode="off" status-visible="no">
+  <editor content-size="{654, 760}" scroll-position="{0, 391}" column-titles-display-mode="off" status-visible="no">
     <drawer display="sections" width="236" palette-height="379"/>
-    <hoisted-rows ids="aLvRpQYwVsb"/>
-    <selected-rows ids="cvazngGEjvI"/>
+    <hoisted-rows ids="h2f6xuYZ-Sl"/>
+    <selected-rows ids="pE79zsUtTHJ"/>
     <selected-columns ids="jFqHUGd_Dg1"/>
-    <selected-characters range="{175, 0}"/>
+    <selected-characters range="{331, 0}"/>
     <toolbar>{
     &quot;TB Display Mode&quot; = 2;
     &quot;TB Icon Size Mode&quot; = 2;
@@ -193,7 +196,7 @@
         </text>
       </title>
     </column>
-    <column id="jFqHUGd_Dg1" type="text" width="563" minimum-width="13" maximum-width="1000000" text-export-width="72" is-outline-column="yes">
+    <column id="jFqHUGd_Dg1" type="text" width="618" minimum-width="13" maximum-width="1000000" text-export-width="72" is-outline-column="yes">
       <title>
         <text>
           <p>
@@ -228,7 +231,7 @@
         </text>
       </values>
       <children>
-        <item id="jj3Kw0ND2KJ" expanded="yes">
+        <item id="jj3Kw0ND2KJ">
           <style>
             <inherited-style name="Destination" idref="oQxEDq66I5w"/>
           </style>
@@ -434,7 +437,10 @@
             </item>
           </children>
         </item>
-        <item id="eUtfoMZ7bze" children-are-sections="yes">
+        <item id="eUtfoMZ7bze" expanded="yes" children-are-sections="yes">
+          <style>
+            <inherited-style name="Destination" idref="oQxEDq66I5w"/>
+          </style>
           <values>
             <text>
               <p>
@@ -445,7 +451,7 @@
             </text>
           </values>
           <children>
-            <item id="g-6zW6wA71h" expanded="yes">
+            <item id="g-6zW6wA71h">
               <style>
                 <inherited-style name="Destination" idref="oQxEDq66I5w"/>
               </style>
@@ -500,7 +506,7 @@
                     <text>
                       <p>
                         <run>
-                          <lit><cell refid="att5" name="UpdateTab" expanded="yes" type="image" width="494" height="368"/></lit>
+                          <lit><cell refid="att8" name="UpdateTab" expanded="yes" type="image" width="494" height="368"/></lit>
                         </run>
                       </p>
                     </text>
@@ -677,7 +683,7 @@
                     <text>
                       <p>
                         <run>
-                          <lit><cell refid="att3" name="PackageTab" expanded="yes" type="image" width="494" height="368"/></lit>
+                          <lit><cell refid="att6" name="PackageTab" expanded="yes" type="image" width="494" height="368"/></lit>
                         </run>
                       </p>
                     </text>
@@ -829,7 +835,7 @@
                     <text>
                       <p>
                         <run>
-                          <lit><cell refid="att1" name="BackupTab" type="image" width="494" height="368"/></lit>
+                          <lit><cell refid="att2" name="BackupTab" type="image" width="494" height="368"/></lit>
                         </run>
                       </p>
                     </text>
@@ -974,7 +980,7 @@
                 </item>
               </children>
             </item>
-            <item id="cs-_NQpayhC" expanded="yes">
+            <item id="cs-_NQpayhC">
               <style>
                 <inherited-style name="Destination" idref="oQxEDq66I5w"/>
               </style>
@@ -1040,7 +1046,7 @@
                         <text>
                           <p>
                             <run>
-                              <lit><cell refid="att2" name="Info" expanded="yes" type="image" width="440" height="341"/></lit>
+                              <lit><cell refid="att3" name="Info" expanded="yes" type="image" width="440" height="341"/></lit>
                             </run>
                           </p>
                         </text>
@@ -1110,6 +1116,418 @@
                 </item>
               </children>
             </item>
+            <item id="nO7cdL0hzge">
+              <style>
+                <inherited-style name="Destination" idref="oQxEDq66I5w"/>
+              </style>
+              <values>
+                <text>
+                  <p>
+                    <run>
+                      <lit>Repositories</lit>
+                    </run>
+                  </p>
+                </text>
+              </values>
+              <children>
+                <item id="nz4qm6O7QiD">
+                  <style>
+                    <inherited-style name="Anchor" idref="aUm3924E6__"/>
+                  </style>
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit>repository</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
+                <item id="pqrOS0uIX6W">
+                  <style>
+                    <inherited-style name="Anchor" idref="aUm3924E6__"/>
+                  </style>
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit>repositories</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
+                <item id="fsEGdCmwIGZ">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit>TeX Live Utility allows you to easily switch between repositories.  In most cases, this will be a </lit>
+                        </run>
+                        <run>
+                          <lit><cell href="http://mirror.ctan.org/" name="Comprehensive TeX Archive Network (CTAN)" type="link"/></lit>
+                        </run>
+                        <run>
+                          <lit> mirror server, but some users have private repositories or use the </lit>
+                        </run>
+                        <run>
+                          <lit><cell href="http://tlcontrib.metatex.org/" name="TLContrib" type="link"/></lit>
+                        </run>
+                        <run>
+                          <lit> site for user-contributed packages.</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
+                <item id="iYZncXRv2a8">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit>TeX Live Utility comes with a fairly comprehensive list of CTAN mirrors, derived from </lit>
+                        </run>
+                        <run>
+                          <lit><cell href="http://www.tex.ac.uk/tex-archive/CTAN.sites" name="CTAN.sites" type="link"/></lit>
+                        </run>
+                        <run>
+                          <lit>.  The default repository is shown in bold (but may be hidden under a collapsed outline heading).</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
+                <item id="dVit6eWWAY_">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit><cell refid="att5" name="Mirrors" expanded="yes" type="image" width="508" height="437"/></lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
+                <item id="lmNR_xQ7qf0">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit>Additional repositories can be added by drag-and-drop from a web browser, or by using the &quot;+&quot; button at the bottom of the window and directly editing the URL.  These can only be added under the &quot;My Repositories&quot; heading.</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
+                <item id="fF02loo1HGU">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit>Repository URLs can be dragged or copied from the main list for use in other programs or in the TeX Live Utility address field.</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
+                <item id="kEXElbn6izy" expanded="yes">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit>The quickest way to enter an address is by typing part of it in the address field:</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                  <children>
+                    <item id="j0v0xFIqHJr">
+                      <values>
+                        <text>
+                          <p>
+                            <run>
+                              <style>
+                                <value key="baseline-offset">0</value>
+                                <value key="font-family">Helvetica</value>
+                                <value key="font-size">12</value>
+                              </style>
+                              <lit><cell refid="att1" name="AutocompleteAddress" expanded="yes" type="image" width="330" height="214"/></lit>
+                            </run>
+                          </p>
+                        </text>
+                      </values>
+                    </item>
+                    <item id="kiP8NRKsK6E">
+                      <values>
+                        <text>
+                          <p>
+                            <run>
+                              <lit>You can enter a full name such as &quot;USA&quot; to see all of the mirrors for a given country or continent, or a partial name such as &quot;.edu&quot; to see all university mirrors.</lit>
+                            </run>
+                          </p>
+                        </text>
+                      </values>
+                    </item>
+                    <item id="oR2d7FjPAVj">
+                      <values>
+                        <text>
+                          <p>
+                            <run>
+                              <lit>You can also drag-and-drop from a web browser, or drop a .webloc file on the address field.</lit>
+                            </run>
+                          </p>
+                        </text>
+                      </values>
+                    </item>
+                  </children>
+                </item>
+                <item id="jA_jV4Q56Xq" expanded="yes">
+                  <style>
+                    <inherited-style name="Box" idref="mRPR-6uEuRb"/>
+                  </style>
+                  <values>
+                    <null/>
+                  </values>
+                  <children>
+                    <item id="pDoEwmUCIxY">
+                      <values>
+                        <text>
+                          <p>
+                            <run>
+                              <lit>You can change the &quot;Home&quot; repository using the button at the bottom of the window, by using the </lit>
+                            </run>
+                            <run>
+                              <style>
+                                <inherited-style name="UI" idref="a0as48_ttlo"/>
+                              </style>
+                              <lit>Configure</lit>
+                            </run>
+                            <run>
+                              <lit> menu, or by right- or control-clicking on one of the repositories.</lit>
+                            </run>
+                          </p>
+                        </text>
+                      </values>
+                    </item>
+                    <item id="jOJJVid2z-r">
+                      <values>
+                        <text>
+                          <p>
+                            <run>
+                              <lit>The default repository is </lit>
+                            </run>
+                            <run>
+                              <lit><cell href="http://mirror.ctan.org/" name="mirror.ctan.org" type="link"/></lit>
+                            </run>
+                            <run>
+                              <lit>, which automatically picks a nearby server for you, in order to spread the load out among multiple sites.  This is generally the best choice for a default, and you are strongly encouraged to use it.</lit>
+                            </run>
+                          </p>
+                        </text>
+                      </values>
+                    </item>
+                    <item id="o1EiTJvOxrc">
+                      <values>
+                        <text>
+                          <p>
+                            <run>
+                              <lit>Note that you cannot edit or remove the repositories included with TeX Live Utility, and the list will be updated with each release of the program.</lit>
+                            </run>
+                          </p>
+                        </text>
+                      </values>
+                    </item>
+                  </children>
+                </item>
+              </children>
+            </item>
+            <item id="loFja0cULCm" expanded="yes">
+              <style>
+                <inherited-style name="Destination" idref="oQxEDq66I5w"/>
+              </style>
+              <values>
+                <text>
+                  <p>
+                    <run>
+                      <lit>Logging</lit>
+                    </run>
+                  </p>
+                </text>
+              </values>
+              <children>
+                <item id="kjsH-CVEBI6">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <style>
+                            <inherited-style name="Anchor" idref="aUm3924E6__"/>
+                          </style>
+                          <lit>logoutput</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
+                <item id="aPJq1P3yFKk">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit>TeX Live Utility allows you to see debug output, which comes from various sources.  Much of this is for debugging TeX Live Utility, but some of it is from underlying tools such as </lit>
+                        </run>
+                        <run>
+                          <style>
+                            <inherited-style name="Verbatim" idref="a-WJm12exYM"/>
+                          </style>
+                          <lit>tlmgr</lit>
+                        </run>
+                        <run>
+                          <lit> that print out status and progress messages.</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
+                <item id="lisODB2ZOeP">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit>To show the log window, use the </lit>
+                        </run>
+                        <run>
+                          <style>
+                            <inherited-style name="UI" idref="a0as48_ttlo"/>
+                          </style>
+                          <lit>Window</lit>
+                        </run>
+                        <run>
+                          <lit> menu.</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
+                <item id="hJ-cxJ3XEyK">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit><cell refid="att4" name="LogWindow" expanded="yes" type="image" width="710" height="210"/></lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
+                <item id="e8n8P4Dj1UR">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit>TeX Live Utility tries to show status messages and alerts when a problem occurs, but sometimes it doesn&apos;t have enough information to show the underlying cause.  In such cases, you may need to examine the log and look for possible problems.</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
+                <item id="pE79zsUtTHJ">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit>If the content of the </lit>
+                        </run>
+                        <run>
+                          <style>
+                            <inherited-style name="UI" idref="a0as48_ttlo"/>
+                          </style>
+                          <lit>Sender</lit>
+                        </run>
+                        <run>
+                          <lit> column contains </lit>
+                        </run>
+                        <run>
+                          <style>
+                            <inherited-style name="Verbatim" idref="a-WJm12exYM"/>
+                          </style>
+                          <lit>tlu_ipctask</lit>
+                        </run>
+                        <run>
+                          <lit>, the message may be from </lit>
+                        </run>
+                        <run>
+                          <style>
+                            <inherited-style name="Verbatim" idref="a-WJm12exYM"/>
+                          </style>
+                          <lit>tlmgr</lit>
+                        </run>
+                        <run>
+                          <lit> or other command-line tools, wrapped to run with administrative privileges.  If it is an Objective-C method name, such as </lit>
+                        </run>
+                        <run>
+                          <style>
+                            <inherited-style name="Verbatim" idref="a-WJm12exYM"/>
+                          </style>
+                          <lit>+[TLMDatabase initialize] </lit>
+                        </run>
+                        <run>
+                          <lit>or </lit>
+                        </run>
+                        <run>
+                          <style>
+                            <inherited-style name="Verbatim" idref="a-WJm12exYM"/>
+                          </style>
+                          <lit>-[TLMOperation main]</lit>
+                        </run>
+                        <run>
+                          <lit>, it is almost certainly a debugging message in TeX Live Utility itself.</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
+                <item id="pQXa_YZxfNy" expanded="yes">
+                  <style>
+                    <inherited-style name="Box" idref="mRPR-6uEuRb"/>
+                  </style>
+                  <values>
+                    <null/>
+                  </values>
+                  <children>
+                    <item id="lvCcEMjJKgM">
+                      <values>
+                        <text>
+                          <p>
+                            <run>
+                              <lit>If you move the top of the log window close enough to the bottom of the main window, it will &quot;stick&quot; to it.  In the same way, the right side of the main window can stick to the left side of the log window.  This allows them to move as a unit, mainly for long-time users </lit>
+                            </run>
+                            <run>
+                              <lit><cell href="http://code.google.com/p/mactlmgr/wiki/FAQ." name="who miss the split pane" type="link"/></lit>
+                            </run>
+                            <run>
+                              <lit> of older versions.</lit>
+                            </run>
+                          </p>
+                        </text>
+                      </values>
+                    </item>
+                    <item id="fZqRuE4TpCb">
+                      <values>
+                        <text>
+                          <p>
+                            <run>
+                              <lit>You can easily select/copy the log output and paste it into a mail message when reporting a problem.</lit>
+                            </run>
+                          </p>
+                        </text>
+                      </values>
+                    </item>
+                  </children>
+                </item>
+              </children>
+            </item>
             <item id="aLvRpQYwVsb">
               <style>
                 <inherited-style name="Destination" idref="oQxEDq66I5w"/>
@@ -1163,7 +1581,7 @@
                     <text>
                       <p>
                         <run>
-                          <lit><cell refid="att4" name="Preferences" expanded="yes" type="image" width="373" height="130"/></lit>
+                          <lit><cell refid="att7" name="Preferences" expanded="yes" type="image" width="373" height="130"/></lit>
                         </run>
                       </p>
                     </text>
@@ -1415,7 +1833,7 @@
             </item>
           </children>
         </item>
-        <item id="j2c194a7piX">
+        <item id="kar6WaIdFNU">
           <style>
             <inherited-style name="Destination" idref="oQxEDq66I5w"/>
           </style>
@@ -1423,71 +1841,114 @@
             <text>
               <p>
                 <run>
-                  <lit>Terminology</lit>
+                  <lit>Problems</lit>
                 </run>
               </p>
             </text>
           </values>
           <children>
-            <item id="f7usnSd_Ldb">
-              <style>
-                <inherited-style name="Anchor" idref="aUm3924E6__"/>
-              </style>
+            <item id="iBQUjAssMXU">
               <values>
                 <text>
                   <p>
                     <run>
-                      <lit>terminology</lit>
+                      <lit>Please report any problems using the </lit>
+                    </run>
+                    <run>
+                      <lit><cell href="http://code.google.com/p/mactlmgr/issues/list" name="bug tracker" type="link"/></lit>
+                    </run>
+                    <run>
+                      <lit>, or at a bare minimum, by e-mailing the </lit>
+                    </run>
+                    <run>
+                      <lit><cell href="mailto:amaxwell@mac.com" name="the maintainer" type="link"/></lit>
+                    </run>
+                    <run>
+                      <lit>.</lit>
                     </run>
                   </p>
                 </text>
               </values>
             </item>
-            <item id="hVs2IxS_xyf">
-              <style>
-                <inherited-style name="Anchor" idref="aUm3924E6__"/>
-              </style>
+            <item id="i0TEy7CBfzc" expanded="yes">
               <values>
                 <text>
                   <p>
                     <run>
-                      <lit>repository</lit>
-                    </run>
-                  </p>
-                </text>
-              </values>
-            </item>
-            <item id="f165F3xRsxZ" expanded="yes">
-              <values>
-                <text>
-                  <p>
-                    <run>
-                      <style>
-                        <inherited-style name="Bold" idref="bMbdsrPBbNQ"/>
-                      </style>
-                      <lit>Repository</lit>
+                      <lit>When reporting a bug, please include the following:</lit>
                     </run>
                   </p>
                 </text>
               </values>
               <children>
-                <item id="nUKo2S24U9k">
+                <item id="l7RcY_b0NmD">
                   <values>
                     <text>
                       <p>
                         <run>
-                          <lit>A location from which TeX Live can be updated or installed, typically represented by a URL.</lit>
+                          <lit>All of TeX Live Utility&apos;s </lit>
+                        </run>
+                        <run>
+                          <style>
+                            <inherited-style name="Link" idref="mkRhzPcpm-u"/>
+                          </style>
+                          <lit>log output</lit>
+                        </run>
+                        <run>
+                          <lit> for the problematic session</lit>
                         </run>
                       </p>
                     </text>
                   </values>
                 </item>
-                <item id="nHYhELhFqL9">
+                <item id="cZ4IRnKQ48N">
                   <values>
                     <text>
                       <p>
                         <run>
-                          <lit>May be local (i.e., a file: URL) or remote (http: or ftp: URL).  Rsync and other protocols are not supported.</lit>
+                          <lit>Exact steps to reproduce the problem</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
+                <item id="ay-36yaRH_D">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit>Expected behavior</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
+                <item id="mq6MujqrPNy">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit>Actual behavior</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
+                <item id="d6M-K-D9Hq2">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit>Crash logs from </lit>
+                        </run>
+                        <run>
+                          <style>
+                            <inherited-style name="Verbatim" idref="a-WJm12exYM"/>
+                          </style>
+                          <lit>~/Library/Logs/CrashReporter</lit>
+                        </run>
+                        <run>
+                          <lit> for any crashes.</lit>
                         </run>
                       </p>
                     </text>
@@ -1495,63 +1956,22 @@
                 </item>
               </children>
             </item>
-            <item id="fKPI8kD3iLM">
-              <style>
-                <inherited-style name="Anchor" idref="aUm3924E6__"/>
-              </style>
+            <item id="m13_4d3Itc9">
               <values>
                 <text>
                   <p>
                     <run>
-                      <lit>mirror</lit>
+                      <lit>If you are requesting a feature or asking a question, please check the </lit>
                     </run>
-                  </p>
-                </text>
-              </values>
-            </item>
-            <item id="lTFMiN280Gs" expanded="yes">
-              <values>
-                <text>
-                  <p>
                     <run>
-                      <style>
-                        <inherited-style name="Bold" idref="bMbdsrPBbNQ"/>
-                      </style>
-                      <lit>Mirror</lit>
+                      <lit><cell href="http://code.google.com/p/mactlmgr/wiki/FAQ" name="FAQ" type="link"/></lit>
+                    </run>
+                    <run>
+                      <lit> first to see if it is already addressed.</lit>
                     </run>
                   </p>
                 </text>
               </values>
-              <children>
-                <item id="mNUFKNl7IGF">
-                  <values>
-                    <text>
-                      <p>
-                        <run>
-                          <lit>Used synonymously with repository in TeX Live Utility.</lit>
-                        </run>
-                      </p>
-                    </text>
-                  </values>
-                </item>
-                <item id="nf6BrXFF3Fb">
-                  <values>
-                    <text>
-                      <p>
-                        <run>
-                          <lit>Most TeX Live repositories reside on a </lit>
-                        </run>
-                        <run>
-                          <lit><cell href="http://mirror.ctan.org/" name="CTAN mirror" type="link"/></lit>
-                        </run>
-                        <run>
-                          <lit>.</lit>
-                        </run>
-                      </p>
-                    </text>
-                  </values>
-                </item>
-              </children>
             </item>
           </children>
         </item>
