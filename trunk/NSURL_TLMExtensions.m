@@ -47,12 +47,12 @@
 
 + (NSURL *)databaseURLForTLNetURL:(NSURL *)mirrorURL;
 {
-    return [mirrorURL tlm_URLByAppendingPathComponent:TLPDB_PATH];
+    return [[mirrorURL tlm_URLByAppendingPathComponent:TLPDB_PATH] tlm_normalizedURL];
 }
 
 + (NSURL *)TLNetURLForMirror:(NSURL *)mirrorURL;
 {
-    return [mirrorURL tlm_URLByAppendingPathComponent:TLNET_PATH];
+    return [[mirrorURL tlm_URLByAppendingPathComponent:TLNET_PATH] tlm_normalizedURL];
 }
 
 + (BOOL)writeURLs:(NSArray *)array toPasteboard:(NSPasteboard *)pboard;
