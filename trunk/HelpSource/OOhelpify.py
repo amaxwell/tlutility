@@ -571,18 +571,13 @@ def main():
                 anchorlessLinks.append(oneLink)
         
         if len(anchorlessLinks):
-            print "You've got some anchorless links:"
             for oneLink in anchorlessLinks:
-                print "    ", oneLink
-            
-            print "\n"
-                
+                sys.stderr.write("OOhelpify.py:1: warning: anchorless link: \"%s\"\n" % (oneLink))
         else:
             print "Congratulations, all links are hooked up!"
     
     else:
-        print """usage: 
-    python OOhelpify.py OutlinerFile.oo3"""
+        sys.stderr.write("""usage:\n python OOhelpify.py OutlinerFile.oo3\n""")
 
 
 if __name__ == "__main__":
