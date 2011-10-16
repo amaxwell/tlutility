@@ -233,14 +233,21 @@ static void __TLMMigrateBundleIdentifier()
     
     // make sure this is set up early enough to use tasks anywhere
     [TLMEnvironment updateEnvironment]; 
-
+    
+    /*
+     Show before main window, so the main window is key when we finish launching,
+     and keyboard shortcuts can be used right away.  I'd rather have the main
+     window show up first, but forcing it to makeKeyAndOrderFront after opening
+     is more jarring than having the log window open first.
+     */
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:TLMShowLogWindowPreferenceKey])
+        [self showLogWindow:nil];
+    
     if (nil == _aevtUpdateURL) {
         [[self mainWindowController] showWindow:nil];
         [[self mainWindowController] refreshUpdatedPackageList];
     }
     
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:TLMShowLogWindowPreferenceKey])
-        [self showLogWindow:nil];
 }
 
 - (TLMMainWindowController *)mainWindowController { 
