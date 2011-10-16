@@ -159,12 +159,12 @@
     </print-info>
     <auto-generate-level-styles>no</auto-generate-level-styles>
   </settings>
-  <editor content-size="{654, 760}" scroll-position="{0, 110}" column-titles-display-mode="off" status-visible="no">
+  <editor content-size="{654, 760}" column-titles-display-mode="off" status-visible="no">
     <drawer display="sections" width="236" palette-height="379"/>
-    <hoisted-rows ids="h2f6xuYZ-Sl"/>
-    <selected-rows ids="d6M-K-D9Hq2"/>
+    <hoisted-rows ids="nIJtChAWJ-C"/>
+    <selected-rows ids="ao9rrwyve9-"/>
     <selected-columns ids="jFqHUGd_Dg1"/>
-    <selected-characters range="{4, 0}"/>
+    <selected-characters range="{462, 0}"/>
     <toolbar>{
     &quot;TB Display Mode&quot; = 2;
     &quot;TB Icon Size Mode&quot; = 2;
@@ -232,7 +232,7 @@
         </text>
       </values>
       <children>
-        <item id="jj3Kw0ND2KJ">
+        <item id="jj3Kw0ND2KJ" expanded="yes">
           <style>
             <inherited-style name="Destination" idref="oQxEDq66I5w"/>
           </style>
@@ -254,7 +254,7 @@
                       <lit>TeX Live Utility is a Mac OS X graphical interface for the TeX Live Manager, a program included with recent versions of </lit>
                     </run>
                     <run>
-                      <lit><cell href="http://www.tug.org/texlive/TeX" name="TeX Live" type="link"/></lit>
+                      <lit><cell href="http://www.tug.org/texlive" name="TeX Live" type="link"/></lit>
                     </run>
                     <run>
                       <lit>.</lit>
@@ -298,7 +298,7 @@
                     <text>
                       <p>
                         <run>
-                          <lit>Set paper size for all TeX programs.</lit>
+                          <lit>Set default paper size for all TeX programs.</lit>
                         </run>
                       </p>
                     </text>
@@ -430,7 +430,16 @@
                 <text>
                   <p>
                     <run>
-                      <lit>For update or install, you must have write permission to the TeX Live install directory.  For MacTeX, this means you must be an administrator of your computer.</lit>
+                      <lit>For install and update of packages, you must have write permission to the TeX Live install directory (typically </lit>
+                    </run>
+                    <run>
+                      <style>
+                        <inherited-style name="Verbatim" idref="a-WJm12exYM"/>
+                      </style>
+                      <lit>/usr/local/texlive</lit>
+                    </run>
+                    <run>
+                      <lit>).  If you are using MacTeX, this means you must be an administrator of your computer.  If you installed TeX Live by some other means, or e.g., manually changed ownership of the installation directory, you may not need to be an administrator.  TeX Live Utility will only prompt for an administrator password if absolutely necessary.</lit>
                     </run>
                   </p>
                 </text>
@@ -438,7 +447,7 @@
             </item>
           </children>
         </item>
-        <item id="eUtfoMZ7bze" expanded="yes" children-are-sections="yes">
+        <item id="eUtfoMZ7bze" children-are-sections="yes">
           <values>
             <text>
               <p>
@@ -449,7 +458,7 @@
             </text>
           </values>
           <children>
-            <item id="g-6zW6wA71h">
+            <item id="g-6zW6wA71h" expanded="yes">
               <style>
                 <inherited-style name="Destination" idref="oQxEDq66I5w"/>
               </style>
@@ -482,7 +491,13 @@
                     <text>
                       <p>
                         <run>
-                          <lit>The primary usage of TeX Live Utility is updating a TeX Live installation with newer packages from CTAN.</lit>
+                          <lit>The primary usage of TeX Live Utility is updating a TeX Live installation with newer packages from </lit>
+                        </run>
+                        <run>
+                          <lit><cell href="http://mirror.ctan.org/" name="CTAN" type="link"/></lit>
+                        </run>
+                        <run>
+                          <lit>.</lit>
                         </run>
                       </p>
                     </text>
@@ -1873,10 +1888,10 @@
                       <lit><cell href="http://code.google.com/p/mactlmgr/issues/list" name="bug tracker" type="link"/></lit>
                     </run>
                     <run>
-                      <lit>, or at a bare minimum, by e-mailing the </lit>
+                      <lit>, or at a bare minimum, by e-mailing the maintainer at </lit>
                     </run>
                     <run>
-                      <lit><cell href="mailto:amaxwell@mac.com" name="the maintainer" type="link"/></lit>
+                      <lit><cell href="mailto:amaxwell@mac.com" name="amaxwell@mac.com" type="link"/></lit>
                     </run>
                     <run>
                       <lit>.</lit>
