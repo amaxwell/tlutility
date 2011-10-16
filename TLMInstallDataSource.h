@@ -55,7 +55,7 @@
     NSMutableDictionary     *_metadata;
 }
 
-- (IBAction)installSelectedRows:(id)sender;
+- (IBAction)netInstall:(id)sender;
 - (NSString *)currentProfile;
 
 @property (nonatomic, retain) IBOutlet TLMOutlineView *outlineView;

@@ -52,6 +52,8 @@
 
 @implementation TLMAppController
 
+@synthesize _installMenuItem;
+
 static void __TLMMigrateBundleIdentifier()
 {
     NSString *updateKey = @"TLMDidMigratePreferencesKey";
@@ -153,7 +155,15 @@ static void __TLMMigrateBundleIdentifier()
     [_mainWindowController release];
     [_aevtUpdateURL release];
     [_sparkleUpdateInvocation release];
+    [_installMenuItem release];
     [super dealloc];
+}
+
+- (void)awakeFromNib
+{
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:TLMEnableNetInstall] == NO) {
+        [[_installMenuItem menu] removeItem:_installMenuItem];
+    }
 }
 
 - (void)_setSparkleUpdateInvocation:(NSInvocation *)inv
