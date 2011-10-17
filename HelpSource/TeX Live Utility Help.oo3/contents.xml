@@ -162,12 +162,9 @@
     </print-info>
     <auto-generate-level-styles>no</auto-generate-level-styles>
   </settings>
-  <editor content-size="{654, 760}" scroll-position="{0, 188}" column-titles-display-mode="off" status-visible="no">
+  <editor content-size="{654, 760}" scroll-position="{0, 113}" column-titles-display-mode="off" status-visible="no">
     <drawer display="sections" width="236" scroll-position="79" palette-height="379"/>
-    <hoisted-rows ids="c7F_mB7Iwc0"/>
-    <selected-rows ids="omcKpXZg3wL"/>
-    <selected-columns ids="jFqHUGd_Dg1"/>
-    <selected-characters range="{44, 0}"/>
+    <hoisted-rows ids="loFja0cULCm"/>
     <toolbar>{
     &quot;TB Display Mode&quot; = 2;
     &quot;TB Icon Size Mode&quot; = 2;
@@ -985,7 +982,7 @@
                           <style>
                             <inherited-style name="Verbatim" idref="a-WJm12exYM"/>
                           </style>
-                          <lit>`du -sk $(kpsewhich -var-value=SELFAUTOPARENT)/$(tlmgr option backupdir |cut -d &quot;:&quot; -f 2 |sed -e &apos;s/^ //g&apos;)`</lit>
+                          <lit>du -sk $(kpsewhich -var-value=SELFAUTOPARENT)/$(tlmgr option backupdir |cut -d &quot;:&quot; -f 2 |sed -e &apos;s/^ //g&apos;)</lit>
                         </run>
                         <run>
                           <lit>, which reports size in kilobytes.</lit>
@@ -1714,7 +1711,7 @@
                               <lit>If you move the top of the log window close enough to the bottom of the main window, it will &quot;stick&quot; to it.  In the same way, the right side of the main window can stick to the left side of the log window.  This allows them to move as a unit, mainly for long-time users </lit>
                             </run>
                             <run>
-                              <lit><cell href="http://code.google.com/p/mactlmgr/wiki/FAQ." name="who miss the split pane" type="link"/></lit>
+                              <lit><cell href="http://code.google.com/p/mactlmgr/wiki/FAQ" name="who miss the split pane" type="link"/></lit>
                             </run>
                             <run>
                               <lit> of older versions.</lit>
