@@ -399,6 +399,9 @@ static NSString *__TLMLogStringFromDate(NSDate *date)
 - (void)tableViewSelectionDidChange:(NSNotification *)notification
 {
     if ([notification object] == _sessionTableView) {
+        // clear selection so we don't get into an odd highlight state
+        [_messageTableView deselectAll:nil];
+        
         [_displayedSessionDate autorelease];
         _displayedSessionDate = [[[self _sortedSessionDates] objectAtIndex:[_sessionTableView selectedRow]] copy];
         CFDictionaryRemoveAllValues(_rowHeights);
