@@ -541,13 +541,24 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
      when have a nil URL but not due to a network issue.  This should mean that we were
      not able to find a legacy repository, so likely it's an old server.  This happens
      frequently around the time of a new TL release.
+     
+     I've also been seeing this periodically with a URL returned by the multiplexer,
+     where the destination is down.  In that case, we also want to retry.  In fact, the
+     only case where we don't want to retry is when the network is down or the multiplexer
+     itself is down.
      */
-    if (nil == validURL && [[self defaultServerURL] isMultiplexer] && NO == dbFailed) {
+    if (nil == validURL && [[self defaultServerURL] isMultiplexer]) {
         int tryCount = 2;
         const int maxTries = 5;
         while (nil == validURL && tryCount <= maxTries) {
-            TLMLog(__func__, @"Stale repository returned from multiplexer.  Requesting another repository (attempt %d of %d).", tryCount, maxTries);
-            (void) [self _getValidServerURL:&validURL repositoryYear:&repositoryYear];
+            if (dbFailed) {
+                TLMLog(__func__, @"Failed to load database; requesting another repository from the multiplexer (attempt %d of %d).", tryCount, maxTries);
+            }
+            else {
+                TLMLog(__func__, @"Stale repository returned from multiplexer.  Requesting another repository (attempt %d of %d).", tryCount, maxTries);
+            }
+
+            dbFailed = [self _getValidServerURL:&validURL repositoryYear:&repositoryYear];
             tryCount++;
         }
     }
