@@ -826,8 +826,10 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 
 - (void)_refreshUpdatedPackageListFromLocation:(NSURL *)location
 {
+    // refresh should always clear status first
+    [self _displayStatusString:nil dataSource:_updateListDataSource];
+    
     if ([[TLMDatabase databaseForMirrorURL:location] texliveYear] != TLMDatabaseUnknownYear) {
-        [self _displayStatusString:nil dataSource:_updateListDataSource];
         // disable refresh action for this view
         [_updateListDataSource setRefreshing:YES];
         TLMListUpdatesOperation *op = [[TLMListUpdatesOperation alloc] initWithLocation:location];
@@ -1611,6 +1613,9 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 // reinstall requires additional option to tlmgr
 - (void)installPackagesWithNames:(NSArray *)packageNames reinstall:(BOOL)reinstall
 {    
+    // action sent from current datasource
+    [self _displayStatusString:nil dataSource:_currentListDataSource];
+
     if (reinstall) {
         NSAlert *alert = [[NSAlert new] autorelease];
         [alert setMessageText:NSLocalizedString(@"Reinstall packages?", @"alert title")];
@@ -1632,7 +1637,10 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     // Some idiot could try to wipe out tlmgr itself, so let's try to prevent that...
     // NB: we can have the architecture appended to the package name, so use beginswith.
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF beginswith 'texlive.infra'"];
-    NSArray *packages = [packageNames filteredArrayUsingPredicate:predicate];
+    NSArray *packages = [packageNames filteredArrayUsingPredicate:predicate];  
+    
+    // action sent from list datasource only
+    [self _displayStatusString:nil dataSource:_packageListDataSource];
     
     if ([packages count]) {
         // log for debugging, then display an alert so the user has some idea of what's going on...
