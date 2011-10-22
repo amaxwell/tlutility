@@ -192,13 +192,14 @@
     cellFrame = NSInsetRect(cellFrame, 0.5, 0.5);
     
     [super drawWithFrame:cellFrame inView:controlView];
-        
+            
     [NSGraphicsContext saveGraphicsState];
     NSBezierPath *framePath = [NSBezierPath bezierPathWithRect:NSInsetRect(cellFrame, -0.5, -0.5)];
     [framePath setWindingRule:NSEvenOddWindingRule];
     
     NSBezierPath *roundRect = [NSBezierPath bezierPathWithRoundedRect:cellFrame xRadius:4 yRadius:4];
     [framePath appendBezierPath:roundRect];
+    [framePath setLineWidth:0];
     
     [[[controlView window] backgroundColor] setFill];
     [framePath fill];

@@ -93,6 +93,8 @@
 		F9C7F1F413A003660031774F /* Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F9C7F1F213A003660031774F /* Release.xcconfig */; };
 		F9C7F23113A0041B0031774F /* Common.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F9C7F23013A0041B0031774F /* Common.xcconfig */; };
 		F9C7F37113A124C30031774F /* parse_tlpdb.py in Copy aux executables */ = {isa = PBXBuildFile; fileRef = F9C7F37013A124B70031774F /* parse_tlpdb.py */; };
+		F9C8920C1453366300131F23 /* LionBlueProgress.png in Resources */ = {isa = PBXBuildFile; fileRef = F9C8920A1453366300131F23 /* LionBlueProgress.png */; };
+		F9C8920D1453366300131F23 /* LionGraphiteProgress.png in Resources */ = {isa = PBXBuildFile; fileRef = F9C8920B1453366300131F23 /* LionGraphiteProgress.png */; };
 		F9D37C9A0F01A80800FB755E /* TLMGradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D37C990F01A80800FB755E /* TLMGradientView.m */; };
 		F9D37D640F01EA8900FB755E /* TLMUpdateListDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D37D630F01EA8900FB755E /* TLMUpdateListDataSource.m */; };
 		F9D37E7B0F02B5F700FB755E /* TLMOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D37E7A0F02B5F700FB755E /* TLMOutlineView.m */; };
@@ -414,6 +416,8 @@
 		F9C7F1F213A003660031774F /* Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
 		F9C7F23013A0041B0031774F /* Common.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Common.xcconfig; sourceTree = "<group>"; };
 		F9C7F37013A124B70031774F /* parse_tlpdb.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = parse_tlpdb.py; sourceTree = "<group>"; };
+		F9C8920A1453366300131F23 /* LionBlueProgress.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LionBlueProgress.png; sourceTree = "<group>"; };
+		F9C8920B1453366300131F23 /* LionGraphiteProgress.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LionGraphiteProgress.png; sourceTree = "<group>"; };
 		F9D37C980F01A80800FB755E /* TLMGradientView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMGradientView.h; sourceTree = "<group>"; };
 		F9D37C990F01A80800FB755E /* TLMGradientView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMGradientView.m; sourceTree = "<group>"; };
 		F9D37D620F01EA8900FB755E /* TLMUpdateListDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMUpdateListDataSource.h; sourceTree = "<group>"; };
@@ -560,6 +564,8 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				F9C8920A1453366300131F23 /* LionBlueProgress.png */,
+				F9C8920B1453366300131F23 /* LionGraphiteProgress.png */,
 				F983F97014438F00001C0A42 /* HelpBook */,
 				F96203EA13D36ACC00932965 /* LogWindow.xib */,
 				F925D1BA12957C1B00D75BB4 /* CTAN.sites.plist */,
@@ -1014,6 +1020,8 @@
 				F9C7F23113A0041B0031774F /* Common.xcconfig in Resources */,
 				F96203EB13D36ACC00932965 /* LogWindow.xib in Resources */,
 				F983F97114438F00001C0A42 /* HelpBook in Resources */,
+				F9C8920C1453366300131F23 /* LionBlueProgress.png in Resources */,
+				F9C8920D1453366300131F23 /* LionGraphiteProgress.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -53,8 +53,16 @@
 @interface TLMAddressTextField : NSTextField
 {
 @private
-    BOOL _dragChangedText;
+    BOOL   _dragChangedText;
+    double _progressValue;
+    double _maximum;
+    double _minimum;    
 }
+
+@property (nonatomic) double progressValue;
+@property (nonatomic) double maximumProgressValue;
+@property (nonatomic) double minimumProgressValue;
+- (void)incrementProgressBy:(double)value;
 
 - (void)setButtonImage:(NSImage *)image;
 - (void)setButtonAction:(SEL)action;
