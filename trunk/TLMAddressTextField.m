@@ -328,7 +328,7 @@ static NSImage *_blueImage = nil;
     
     NSImage *image = nil;
     
-    if (_progressValue > _minimum && _progressValue < _maximum) {
+    if (_progressValue > _minimum && _progressValue <= _maximum) {
         switch ([NSColor currentControlTint]) {
             case NSBlueControlTint:
                 image = [[self window] isKeyWindow] ? _blueImage : _grayImage;
@@ -342,7 +342,9 @@ static NSImage *_blueImage = nil;
     }
     
     if (image) {
+        NSRect iconRect = [[self cell] iconRectForBounds:[self bounds]];
         NSRect imageBounds = [self bounds];
+        imageBounds.origin.x = NSMaxX(iconRect) + 1;
         imageBounds.size.width = _progressValue / (_maximum - _minimum) * NSWidth(imageBounds);
         [image drawInRect:imageBounds fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
         [[self cell] setBackgroundColor:[NSColor clearColor]];
