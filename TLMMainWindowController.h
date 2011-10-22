@@ -63,7 +63,6 @@ typedef NSUInteger TLMDockedEdge;
 {
 @private
     NSProgressIndicator      *_progressIndicator;
-    NSProgressIndicator      *_progressBar;
     TLMTabView               *_tabView;
     TLMAddressTextField       *_URLField;
     NSURL                    *_serverURL;
@@ -90,7 +89,6 @@ typedef NSUInteger TLMDockedEdge;
 - (IBAction)goHome:(id)sender;
 
 @property (nonatomic, retain) IBOutlet NSProgressIndicator *_progressIndicator;
-@property (nonatomic, retain) IBOutlet NSProgressIndicator *_progressBar;
 @property (nonatomic, retain) IBOutlet TLMAddressTextField *_URLField;
 @property (nonatomic, retain) IBOutlet TLMPackageListDataSource *_packageListDataSource;
 @property (nonatomic, retain) IBOutlet TLMUpdateListDataSource *_updateListDataSource;

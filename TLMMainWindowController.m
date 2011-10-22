@@ -94,7 +94,6 @@ static char _TLMOperationQueueOperationContext;
 @implementation TLMMainWindowController
 
 @synthesize _progressIndicator;
-@synthesize _progressBar;
 @synthesize _URLField;
 @synthesize _packageListDataSource;
 @synthesize _tabView;
@@ -135,7 +134,6 @@ static char _TLMOperationQueueOperationContext;
     [_serverURL release];
         
     [_progressIndicator release];
-    [_progressBar release];
     [_packageListDataSource release];
     [_updateListDataSource release];
     [_previousInfrastructureVersions release];
@@ -180,39 +178,29 @@ static char _TLMOperationQueueOperationContext;
 
 - (void)_stopProgressBar:(NSNotification *)aNote
 {
-    // we're done with the progress bar now, so set it to maxValue to keep it from using CPU while hidden (seen on 10.6.3)
-    [[self _progressBar] setDoubleValue:[[self _progressBar] maxValue]];
-    [[self _progressBar] setHidden:YES];
+    // we're done with the progress bar now, so set it to zero to clear it out
+    [_URLField setProgressValue:0];
     [NSApp setApplicationIconImage:nil];
 }
 
 - (void)_startProgressBar:(NSNotification *)aNote
 {    
-    /*
-     - calling [self _stopProgressBar:nil] here will keep the bar from being displayed during the first item of a download
-     - use a hack from BibDesk: progress bars may not work correctly after the first time they're used, due to an AppKit bug
-     */
-    NSProgressIndicator *pb = [NSKeyedUnarchiver unarchiveObjectWithData:[NSKeyedArchiver archivedDataWithRootObject:[self _progressBar]]];
-    [[[self _progressBar] superview] replaceSubview:[self _progressBar] with:pb];
-    [self set_progressBar:pb];
     // we always have an integral number of bytes >> 1, so set a fake value here so it draws immediately
     const double initialValue = 1.0;
-    [[self _progressBar] setMinValue:0.0];
-    [[self _progressBar] setMaxValue:([[[aNote userInfo] objectForKey:TLMLogSize] doubleValue] + initialValue)];
-    [[self _progressBar] setDoubleValue:initialValue];
-    [[self _progressBar] setHidden:NO];
-    [[self _progressBar] display];
+    [_URLField setMinimumProgressValue:0.0];
+    [_URLField setMaximumProgressValue:([[[aNote userInfo] objectForKey:TLMLogSize] doubleValue] + initialValue)];
+    [_URLField setProgressValue:initialValue];
 }
 
 - (void)_updateProgressBar:(NSNotification *)aNote
 {
-    [[self _progressBar] incrementBy:[[[aNote userInfo] objectForKey:TLMLogSize] doubleValue]];
+    [_URLField incrementProgressBy:[[[aNote userInfo] objectForKey:TLMLogSize] doubleValue]];
     /*
      Formerly called -[[self _progressBar] display] here.  That was killing performance after I
      added progress updates to the infra operation; drawing basically stalled, since the
      window had to synchronize too frequently.  All this to say...don't do that again.
      */
-    CGFloat p = [[self _progressBar] doubleValue] / [[self _progressBar] maxValue];
+    CGFloat p = [_URLField progressValue] / [_URLField maximumProgressValue];
     [NSApp setApplicationIconImage:[TLMProgressIndicatorCell applicationIconBadgedWithProgress:p]];
 }
 

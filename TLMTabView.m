@@ -318,11 +318,14 @@
     [[NSColor whiteColor] setFill];
     NSRectFillUsingOperation(dirtyRect, NSCompositeCopy);
     [super drawRect:dirtyRect];
+    
     [[NSColor blackColor] set];
 
+#if 0
     NSRect bottomRect = [self bounds];
     bottomRect.size.height = 1;
     NSFrameRectWithWidth(bottomRect, 1.0);
+#endif
     
     NSRect topRect = [self bounds];
     topRect.origin.y = NSMaxY(topRect) - 1.0;

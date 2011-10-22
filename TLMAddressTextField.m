@@ -269,6 +269,88 @@ static inline BOOL forwardSelectorForCompletionInTextView(SEL selector, NSTextVi
 
 @implementation TLMAddressTextField
 
+@synthesize progressValue = _progressValue;
+@synthesize maximumProgressValue = _maximum;
+@synthesize minimumProgressValue = _minimum;
+
+static NSImage *_grayImage = nil;
+static NSImage *_blueImage = nil;
+
++ (void)initialize
+{
+    if (nil == _grayImage) {
+        _grayImage = [[NSImage imageNamed:@"LionGraphiteProgress.png"] retain];
+        _blueImage = [[NSImage imageNamed:@"LionBlueProgress.png"] retain];
+    }
+}
+
+- (void)commonInit
+{
+    [[self cell] setBackgroundColor:[NSColor clearColor]];
+    _maximum = 100;
+    _minimum = 0;    
+}
+
+- (id)initWithFrame:(NSRect)frame {
+    self = [super initWithFrame:frame];
+    if (self) {
+        [self commonInit];
+    }
+    return self;
+}
+
+- (void)setProgressValue:(double)val
+{
+    if (_progressValue != val) {
+        _progressValue = val;
+        [self setNeedsDisplay:YES];
+    }
+}
+
+- (void)incrementProgressBy:(double)value;
+{
+    _progressValue += value;
+    [self setNeedsDisplay:YES];
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super initWithCoder:aDecoder];
+    [self commonInit];
+    return self;
+}
+
+- (void)drawRect:(NSRect)dirtyRect
+{
+    
+    [[NSColor whiteColor] setFill];
+    NSRectFill([self bounds]);
+    
+    NSImage *image = nil;
+    
+    if (_progressValue > _minimum && _progressValue < _maximum) {
+        switch ([NSColor currentControlTint]) {
+            case NSBlueControlTint:
+                image = [[self window] isKeyWindow] ? _blueImage : _grayImage;
+                break;
+            case NSGraphiteControlTint:
+                image = _grayImage;
+                break;
+            default:
+                break;
+        }
+    }
+    
+    if (image) {
+        NSRect imageBounds = [self bounds];
+        imageBounds.size.width = _progressValue / (_maximum - _minimum) * NSWidth(imageBounds);
+        [image drawInRect:imageBounds fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
+        [[self cell] setBackgroundColor:[NSColor clearColor]];
+    }
+    
+    [super drawRect:dirtyRect];
+}    
+
 /*
  I tried NSTrackingArea, but it only works on the fringes of the icon, or if you enter the
  icon area from inside the cell.  Entering from the bottom, left, or top of the icon did
