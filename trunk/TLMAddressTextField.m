@@ -287,6 +287,7 @@ static NSImage *_blueImage = nil;
 - (void)commonInit
 {
     [[self cell] setBackgroundColor:[NSColor clearColor]];
+    [[self cell] setDrawsBackground:NO];
     _maximum = 100;
     _minimum = 0;    
 }
@@ -322,9 +323,9 @@ static NSImage *_blueImage = nil;
 
 - (void)drawRect:(NSRect)dirtyRect
 {
-    
+    // [self backgroundColor] is clear color from the cell
     [[NSColor whiteColor] setFill];
-    NSRectFill([self bounds]);
+    NSRectFillUsingOperation([self bounds], NSCompositeCopy);
     
     NSImage *image = nil;
     
@@ -344,10 +345,9 @@ static NSImage *_blueImage = nil;
     if (image) {
         NSRect iconRect = [[self cell] iconRectForBounds:[self bounds]];
         NSRect imageBounds = [self bounds];
-        imageBounds.origin.x = NSMaxX(iconRect) + 1;
+        imageBounds.origin.x = NSMaxX(iconRect);
         imageBounds.size.width = _progressValue / (_maximum - _minimum) * NSWidth(imageBounds);
         [image drawInRect:imageBounds fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
-        [[self cell] setBackgroundColor:[NSColor clearColor]];
     }
     
     [super drawRect:dirtyRect];
