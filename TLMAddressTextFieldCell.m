@@ -64,7 +64,6 @@ static NSImage *_blueImage = nil;
     [self setScrollable:YES];
     [self setLineBreakMode:NSLineBreakByTruncatingTail];
     [self setDrawsBackground:NO];
-    [self setBordered:NO];
     _buttonCell = [[NSButtonCell alloc] initImageCell:[NSImage imageNamed:NSImageNameStopProgressFreestandingTemplate]];
     [_buttonCell setButtonType:NSMomentaryChangeButton];
     [_buttonCell setBordered:NO];
@@ -178,6 +177,13 @@ static NSImage *_blueImage = nil;
     return cellFrame; 
 }
 
+// adjustments to avoid text jumping when editing or selecting
+static void __adjust_text_rect(NSRect *textRect, NSView *controlView)
+{
+    textRect->origin.y += ([controlView isFlipped] ? -2 : 2);
+    //textRect->origin.x += 1;
+}
+
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {    
     NSImage *progressImage = nil;
@@ -219,7 +225,9 @@ static NSImage *_blueImage = nil;
         CGContextRestoreGState(ctxt);
     }
     
-    [super drawInteriorWithFrame:[self textRectForBounds:cellFrame] inView:controlView];
+    NSRect textRect = [self textRectForBounds:cellFrame];
+    __adjust_text_rect(&textRect, controlView);
+    [super drawInteriorWithFrame:textRect inView:controlView];
     [_buttonCell drawWithFrame:[self buttonRectForBounds:cellFrame] inView:controlView];
 }
 
@@ -242,7 +250,7 @@ static NSImage *_blueImage = nil;
     NSParameterAssert(leftCap && middle && rightCap);
     NSDrawThreePartImage(cellFrame, leftCap, middle, rightCap, NO, NSCompositeSourceOver, 1.0, [controlView isFlipped]);
     
-    [super drawWithFrame:cellFrame inView:controlView];
+    [self drawInteriorWithFrame:cellFrame inView:controlView];
 }
 
 - (NSFocusRingType)focusRingType { return floor(NSAppKitVersionNumber) < 1100 ? NSFocusRingTypeNone : [super focusRingType]; }
@@ -297,24 +305,17 @@ static NSImage *_blueImage = nil;
     return [super trackMouse:event inRect:cellFrame ofView:controlView untilMouseUp:flag];
 }
 
-// adjustments to avoid text jumping when editing or selecting
-static void __adjust_editor_rect(NSRect *textRect, NSView *controlView)
-{
-    textRect->origin.y += ([controlView isFlipped] ? 2 : -2);
-    //textRect->origin.x += 1;
-}
-
 - (void)editWithFrame:(NSRect)cellFrame inView:(NSView *)controlView editor:(NSText *)textObj delegate:(id)anObject event:(NSEvent *)theEvent;
 {
     NSRect textRect = [self textRectForBounds:cellFrame];
-    __adjust_editor_rect(&textRect, controlView);
+    __adjust_text_rect(&textRect, controlView);
     [super editWithFrame:textRect inView:controlView editor:textObj delegate:anObject event:theEvent];
 }
 
 - (void)selectWithFrame:(NSRect)cellFrame inView:(NSView *)controlView editor:(NSText *)textObj delegate:(id)anObject start:(NSInteger)selStart length:(NSInteger)selLength;
 {
     NSRect textRect = [self textRectForBounds:cellFrame];
-    __adjust_editor_rect(&textRect, controlView);
+    __adjust_text_rect(&textRect, controlView);
     [super selectWithFrame:textRect inView:controlView editor:textObj delegate:anObject start:selStart length:selLength];
 }
 

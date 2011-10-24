@@ -44,18 +44,14 @@
 - (id)initTextCell:(NSString *)aString
 {
     self = [super initTextCell:aString];
-    [self setBordered:NO];
     return self;
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
     self = [super initWithCoder:aDecoder];
-    [self setBordered:NO];
     return self;
 }
-
-- (NSFocusRingType)focusRingType { return floor(NSAppKitVersionNumber) < 1100 ? NSFocusRingTypeNone : [super focusRingType]; }
 
 - (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {        
@@ -76,22 +72,8 @@
     
     NSDrawThreePartImage(cellFrame, leftCap, middle, rightCap, NO, NSCompositeSourceOver, 1.0, [controlView isFlipped]);
     
-    [super drawWithFrame:cellFrame inView:controlView];
+    [self drawInteriorWithFrame:cellFrame inView:controlView];
     
-}
-
-- (void)editWithFrame:(NSRect)cellFrame inView:(NSView *)controlView editor:(NSText *)textObj delegate:(id)anObject event:(NSEvent *)theEvent;
-{
-    [self setBordered:YES];
-    [super editWithFrame:cellFrame inView:controlView editor:textObj delegate:anObject event:theEvent];
-    [self setBordered:NO];
-}
-
-- (void)selectWithFrame:(NSRect)cellFrame inView:(NSView *)controlView editor:(NSText *)textObj delegate:(id)anObject start:(NSInteger)selStart length:(NSInteger)selLength;
-{
-    [self setBordered:YES];
-    [super selectWithFrame:cellFrame inView:controlView editor:textObj delegate:anObject start:selStart length:selLength];
-    [self setBordered:NO];
 }
 
 @end
