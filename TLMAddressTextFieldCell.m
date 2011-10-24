@@ -63,6 +63,7 @@ static NSImage *_blueImage = nil;
 {
     [self setScrollable:YES];
     [self setLineBreakMode:NSLineBreakByTruncatingTail];
+    [self setDrawsBackground:NO];
     _buttonCell = [[NSButtonCell alloc] initImageCell:[NSImage imageNamed:NSImageNameStopProgressFreestandingTemplate]];
     [_buttonCell setButtonType:NSMomentaryChangeButton];
     [_buttonCell setBordered:NO];
@@ -174,24 +175,11 @@ static NSImage *_blueImage = nil;
     cellFrame.origin.x = NSMaxX(iconRect);
     cellFrame.size.width -= NSWidth(iconRect);
     cellFrame.size.width -= (NSWidth([self buttonRectForBounds:cellFrame]) + 2 /* padding */);
-    return cellFrame;    
+    return cellFrame; 
 }
 
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
-{
-    NSBezierPath *roundRect = [NSBezierPath bezierPathWithRoundedRect:NSInsetRect(cellFrame, 0.5, 0.5) xRadius:4 yRadius:4];
-    [[NSColor blackColor] setStroke];
-    [roundRect stroke];
-    
-    const BOOL drawBackground = [self drawsBackground];
-
-    if (drawBackground) {
-        [NSGraphicsContext saveGraphicsState];
-        [[self backgroundColor] setFill];
-        NSRectFillUsingOperation(cellFrame, NSCompositeSourceOver);
-        [NSGraphicsContext restoreGraphicsState];
-    }
-    
+{    
     NSImage *progressImage = nil;
     NSRect iconRect = [self iconRectForBounds:cellFrame];
 
@@ -229,49 +217,30 @@ static NSImage *_blueImage = nil;
         CGContextRestoreGState(ctxt);
     }
     
-    // disable super's background drawing, or it overdraws the progress image
-    [self setDrawsBackground:NO];
     [super drawInteriorWithFrame:[self textRectForBounds:cellFrame] inView:controlView];
-    [self setDrawsBackground:drawBackground];
     [_buttonCell drawWithFrame:[self buttonRectForBounds:cellFrame] inView:controlView];
 }
 
 - (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
-{
-    cellFrame = NSInsetRect(cellFrame, 0.5, 0.5);
+{       
+    NSImage *leftCap = nil;
+    NSImage *middle = nil;
+    NSImage *rightCap = nil;
+    
+    if ([[controlView window] isKeyWindow]) {
+        leftCap = [NSImage imageNamed:@"AddressFieldCapLeft.png"];
+        middle = [NSImage imageNamed:@"TextFieldStretch.png"];
+        rightCap = [NSImage imageNamed:@"AddressFieldCapRight.png"];
+    }
+    else {
+        leftCap = [NSImage imageNamed:@"AddressFieldCapLeftInactive.png"];
+        middle = [NSImage imageNamed:@"TextFieldStretchInactive.png"];
+        rightCap = [NSImage imageNamed:@"AddressFieldCapRightInactive.png"];        
+    }
+    
+    NSDrawThreePartImage(cellFrame, leftCap, middle, rightCap, NO, NSCompositeSourceOver, 1.0, [controlView isFlipped]);
     
     [super drawWithFrame:cellFrame inView:controlView];
-            
-    [NSGraphicsContext saveGraphicsState];
-    NSBezierPath *framePath = [NSBezierPath bezierPathWithRect:NSInsetRect(cellFrame, -0.5, -0.5)];
-    [framePath setWindingRule:NSEvenOddWindingRule];
-    
-    NSBezierPath *roundRect = [NSBezierPath bezierPathWithRoundedRect:cellFrame xRadius:4 yRadius:4];
-    [framePath appendBezierPath:roundRect];
-    [framePath setLineWidth:0];
-    
-    [[NSColor colorWithDeviceWhite:(203./255.) alpha:1.0] setFill];
-    [framePath fill];
-    
-    [[NSColor darkGrayColor] setStroke];
-    [roundRect stroke];
-    
-    [NSGraphicsContext restoreGraphicsState];
-    
-#if 0
-    /*
-     Editing causes a white border to be drawn around the cell, and the focus ring doesn't
-     entirely fill it.  Mail has the same issue, so it's not worth playing with the text rect
-     to lessen the effect.  It's not drawn by super's drawWithFrame or drawInteriorWithFrame,
-     so it's probably the outline view itself.
-     */
-    if ([self showsFirstResponder]) {
-        [NSGraphicsContext saveGraphicsState];
-        NSSetFocusRingStyle(NSFocusRingAbove);
-        NSRectFill([self textRectForBounds:cellFrame]);
-        [NSGraphicsContext restoreGraphicsState];
-    }
-#endif
 }
 
 - (NSSize)cellSize;
@@ -324,13 +293,11 @@ static NSImage *_blueImage = nil;
     return [super trackMouse:event inRect:cellFrame ofView:controlView untilMouseUp:flag];
 }
 
-- (NSFocusRingType)focusRingType { return NSFocusRingTypeNone; }
-
 // adjustments to avoid text jumping when editing or selecting
 static void __adjust_editor_rect(NSRect *textRect, NSView *controlView)
 {
-    textRect->origin.y += ([controlView isFlipped] ? -1 : 1);
-    textRect->origin.x -= 1;
+    //textRect->origin.y += ([controlView isFlipped] ? -1 : 1);
+    //textRect->origin.x -= 1;
 }
 
 - (void)editWithFrame:(NSRect)cellFrame inView:(NSView *)controlView editor:(NSText *)textObj delegate:(id)anObject event:(NSEvent *)theEvent;
