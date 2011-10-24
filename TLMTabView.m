@@ -325,12 +325,12 @@
     NSRect bottomRect = [self bounds];
     bottomRect.size.height = 1;
     NSFrameRectWithWidth(bottomRect, 1.0);
-#endif
     
     NSRect topRect = [self bounds];
     topRect.origin.y = NSMaxY(topRect) - 1.0;
     topRect.size.height = 1;
     NSFrameRectWithWidth(topRect, 1.0);
+#endif
 }
 
 @end
