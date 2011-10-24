@@ -109,11 +109,11 @@ def clean_and_build():
     assert rc == 0, "xcodebuild failed"
     nullDevice.close()
 
-def create_tarball_of_application():
+def create_tarball_of_application(newVersionNumber):
     
-    # create a name for the tarball based on today's date
-    tarballName = strftime("%Y%m%d", localtime())
-    tarballName = os.path.join(BUILD_DIR, os.path.basename(BUILT_APP) + "-" + tarballName + ".tgz")
+    # Create a name for the tarball based on version number, instead
+    # of date, since I sometimes want to upload multiple betas per day.
+    tarballName = os.path.join(BUILD_DIR, os.path.basename(BUILT_APP) + "-" + newVersionNumber + ".tgz")
 
     # create a tarfile object
     tarball = tarfile.open(tarballName, "w:gz")
@@ -148,7 +148,7 @@ if __name__ == '__main__':
 
     newVersion = rewrite_version()
     clean_and_build()
-    tarballPath = create_tarball_of_application()
+    tarballPath = create_tarball_of_application(newVersion)
     
     username, password = user_and_pass_for_upload()
     # same as regular build, prefixed with BETA
