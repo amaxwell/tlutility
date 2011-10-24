@@ -70,7 +70,7 @@ static NSImage *_blueImage = nil;
     [_buttonCell setImagePosition:NSImageOnly];
     [_buttonCell setImageScaling:NSImageScaleProportionallyUpOrDown];    
     [_buttonCell setControlSize:[self controlSize]];
-    _progressValue = 0;
+    _progressValue = 50;
     _maximum = 100;
     _minimum = 0;  
 }
@@ -200,6 +200,8 @@ static NSImage *_blueImage = nil;
         // full width is width of text rect; don't draw under the favicon or button cell
         NSRect imageBounds = [self textRectForBounds:cellFrame];
         imageBounds.size.width = _progressValue / (_maximum - _minimum) * NSWidth(imageBounds);
+        imageBounds.size.height -= 4;
+        imageBounds.origin.y += 2;
         [progressImage drawInRect:imageBounds fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
     }    
     
