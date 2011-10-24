@@ -88,7 +88,7 @@
               <nil key="NSToolbarItemTarget"/>
               <nil key="NSToolbarItemAction"/>
               <string key="NSToolbarItemMinSize">{25, 25}</string>
-              <string key="NSToolbarItemMaxSize">{118, 25}</string>
+              <string key="NSToolbarItemMaxSize">{25, 25}</string>
               <bool key="NSToolbarItemEnabled">YES</bool>
               <bool key="NSToolbarItemAutovalidates">YES</bool>
               <int key="NSToolbarItemTag">0</int>
@@ -374,10 +374,7 @@
                 <int key="NSpiFlags">28938</int>
                 <double key="NSMaxValue">100</double>
               </object>
-              <object class="NSCustomResource" key="NSToolbarItemImage">
-                <string key="NSClassName">NSImage</string>
-                <string key="NSResourceName">SpinnerToolbarIcon</string>
-              </object>
+              <nil key="NSToolbarItemImage"/>
               <nil key="NSToolbarItemTarget"/>
               <nil key="NSToolbarItemAction"/>
               <string key="NSToolbarItemMinSize">{16, 16}</string>
@@ -3435,7 +3432,6 @@
       <string key="NSStopProgressTemplate">{11, 11}</string>
       <string key="NSToolbarPrint">{32, 32}</string>
       <string key="NSToolbarShowFonts">{32, 32}</string>
-      <string key="SpinnerToolbarIcon">{16, 16}</string>
     </dictionary>
   </data>
 </archive>
