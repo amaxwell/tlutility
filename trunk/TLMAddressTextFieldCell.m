@@ -250,7 +250,7 @@ static NSImage *_blueImage = nil;
     [framePath appendBezierPath:roundRect];
     [framePath setLineWidth:0];
     
-    [[[controlView window] backgroundColor] setFill];
+    [[NSColor colorWithDeviceWhite:(203./255.) alpha:1.0] setFill];
     [framePath fill];
     
     [[NSColor darkGrayColor] setStroke];
