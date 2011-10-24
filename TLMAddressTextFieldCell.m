@@ -64,6 +64,7 @@ static NSImage *_blueImage = nil;
     [self setScrollable:YES];
     [self setLineBreakMode:NSLineBreakByTruncatingTail];
     [self setDrawsBackground:NO];
+    [self setBordered:NO];
     _buttonCell = [[NSButtonCell alloc] initImageCell:[NSImage imageNamed:NSImageNameStopProgressFreestandingTemplate]];
     [_buttonCell setButtonType:NSMomentaryChangeButton];
     [_buttonCell setBordered:NO];
@@ -238,11 +239,13 @@ static NSImage *_blueImage = nil;
         middle = [NSImage imageNamed:@"TextFieldStretchInactive.png"];
         rightCap = [NSImage imageNamed:@"AddressFieldCapRightInactive.png"];        
     }
-    
+    NSParameterAssert(leftCap && middle && rightCap);
     NSDrawThreePartImage(cellFrame, leftCap, middle, rightCap, NO, NSCompositeSourceOver, 1.0, [controlView isFlipped]);
     
     [super drawWithFrame:cellFrame inView:controlView];
 }
+
+- (NSFocusRingType)focusRingType { return floor(NSAppKitVersionNumber) < 1100 ? NSFocusRingTypeNone : [super focusRingType]; }
 
 - (NSSize)cellSize;
 {
@@ -297,8 +300,8 @@ static NSImage *_blueImage = nil;
 // adjustments to avoid text jumping when editing or selecting
 static void __adjust_editor_rect(NSRect *textRect, NSView *controlView)
 {
-    //textRect->origin.y += ([controlView isFlipped] ? -1 : 1);
-    //textRect->origin.x -= 1;
+    textRect->origin.y += ([controlView isFlipped] ? 2 : -2);
+    //textRect->origin.x += 1;
 }
 
 - (void)editWithFrame:(NSRect)cellFrame inView:(NSView *)controlView editor:(NSText *)textObj delegate:(id)anObject event:(NSEvent *)theEvent;
