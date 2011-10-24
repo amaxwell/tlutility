@@ -44,7 +44,15 @@
 @private
     NSImage      *_icon;
     NSButtonCell *_buttonCell;
+    double        _progressValue;
+    double        _maximum;
+    double        _minimum;        
 }
+
+@property (nonatomic) double progressValue;
+@property (nonatomic) double maximumProgressValue;
+@property (nonatomic) double minimumProgressValue;
+- (void)incrementProgressBy:(double)value;
 
 - (NSRect)iconRectForBounds:(NSRect)cellFrame;
 - (NSRect)textRectForBounds:(NSRect)cellFrame;
