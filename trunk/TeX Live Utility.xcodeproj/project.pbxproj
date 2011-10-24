@@ -17,6 +17,17 @@
 		F915C9FF13A846A100F3E807 /* TLMEnvironment.m in Sources */ = {isa = PBXBuildFile; fileRef = F915C9FE13A846A100F3E807 /* TLMEnvironment.m */; };
 		F91858E0104798C400341791 /* TLMOptionOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F91858DF104798C400341791 /* TLMOptionOperation.m */; };
 		F918B6C01455001F0038476C /* SpinnerToolbarIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = F918B6BF1455001F0038476C /* SpinnerToolbarIcon.png */; };
+		F918B749145526F90038476C /* TLMSearchFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F918B748145526F90038476C /* TLMSearchFieldCell.m */; };
+		F918B78614552A9B0038476C /* AddressFieldCapLeft.png in Resources */ = {isa = PBXBuildFile; fileRef = F918B77C14552A9B0038476C /* AddressFieldCapLeft.png */; };
+		F918B78714552A9B0038476C /* AddressFieldCapLeftInactive.png in Resources */ = {isa = PBXBuildFile; fileRef = F918B77D14552A9B0038476C /* AddressFieldCapLeftInactive.png */; };
+		F918B78814552A9B0038476C /* AddressFieldCapRight.png in Resources */ = {isa = PBXBuildFile; fileRef = F918B77E14552A9B0038476C /* AddressFieldCapRight.png */; };
+		F918B78914552A9B0038476C /* AddressFieldCapRightInactive.png in Resources */ = {isa = PBXBuildFile; fileRef = F918B77F14552A9B0038476C /* AddressFieldCapRightInactive.png */; };
+		F918B78A14552A9B0038476C /* SearchFieldCapLeft.png in Resources */ = {isa = PBXBuildFile; fileRef = F918B78014552A9B0038476C /* SearchFieldCapLeft.png */; };
+		F918B78B14552A9B0038476C /* SearchFieldCapLeftInactive.png in Resources */ = {isa = PBXBuildFile; fileRef = F918B78114552A9B0038476C /* SearchFieldCapLeftInactive.png */; };
+		F918B78C14552A9B0038476C /* SearchFieldCapRight.png in Resources */ = {isa = PBXBuildFile; fileRef = F918B78214552A9B0038476C /* SearchFieldCapRight.png */; };
+		F918B78D14552A9B0038476C /* SearchFieldCapRightInactive.png in Resources */ = {isa = PBXBuildFile; fileRef = F918B78314552A9B0038476C /* SearchFieldCapRightInactive.png */; };
+		F918B78E14552A9B0038476C /* TextFieldStretch.png in Resources */ = {isa = PBXBuildFile; fileRef = F918B78414552A9B0038476C /* TextFieldStretch.png */; };
+		F918B78F14552A9B0038476C /* TextFieldStretchInactive.png in Resources */ = {isa = PBXBuildFile; fileRef = F918B78514552A9B0038476C /* TextFieldStretchInactive.png */; };
 		F922D79E1038B1E1004E9B12 /* TLMDownload.m in Sources */ = {isa = PBXBuildFile; fileRef = F922D79D1038B1E1004E9B12 /* TLMDownload.m */; };
 		F925D1AB12957B1800D75BB4 /* TLMMirrorController.m in Sources */ = {isa = PBXBuildFile; fileRef = F925D1AA12957B1800D75BB4 /* TLMMirrorController.m */; };
 		F925D1B112957B5600D75BB4 /* Mirrors.xib in Resources */ = {isa = PBXBuildFile; fileRef = F925D1B012957B5600D75BB4 /* Mirrors.xib */; };
@@ -290,6 +301,18 @@
 		F91858DE104798C400341791 /* TLMOptionOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMOptionOperation.h; sourceTree = "<group>"; };
 		F91858DF104798C400341791 /* TLMOptionOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMOptionOperation.m; sourceTree = "<group>"; };
 		F918B6BF1455001F0038476C /* SpinnerToolbarIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SpinnerToolbarIcon.png; sourceTree = "<group>"; };
+		F918B747145526F90038476C /* TLMSearchFieldCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMSearchFieldCell.h; sourceTree = "<group>"; };
+		F918B748145526F90038476C /* TLMSearchFieldCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMSearchFieldCell.m; sourceTree = "<group>"; };
+		F918B77C14552A9B0038476C /* AddressFieldCapLeft.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = AddressFieldCapLeft.png; path = TextFieldBorders/AddressFieldCapLeft.png; sourceTree = "<group>"; };
+		F918B77D14552A9B0038476C /* AddressFieldCapLeftInactive.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = AddressFieldCapLeftInactive.png; path = TextFieldBorders/AddressFieldCapLeftInactive.png; sourceTree = "<group>"; };
+		F918B77E14552A9B0038476C /* AddressFieldCapRight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = AddressFieldCapRight.png; path = TextFieldBorders/AddressFieldCapRight.png; sourceTree = "<group>"; };
+		F918B77F14552A9B0038476C /* AddressFieldCapRightInactive.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = AddressFieldCapRightInactive.png; path = TextFieldBorders/AddressFieldCapRightInactive.png; sourceTree = "<group>"; };
+		F918B78014552A9B0038476C /* SearchFieldCapLeft.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = SearchFieldCapLeft.png; path = TextFieldBorders/SearchFieldCapLeft.png; sourceTree = "<group>"; };
+		F918B78114552A9B0038476C /* SearchFieldCapLeftInactive.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = SearchFieldCapLeftInactive.png; path = TextFieldBorders/SearchFieldCapLeftInactive.png; sourceTree = "<group>"; };
+		F918B78214552A9B0038476C /* SearchFieldCapRight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = SearchFieldCapRight.png; path = TextFieldBorders/SearchFieldCapRight.png; sourceTree = "<group>"; };
+		F918B78314552A9B0038476C /* SearchFieldCapRightInactive.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = SearchFieldCapRightInactive.png; path = TextFieldBorders/SearchFieldCapRightInactive.png; sourceTree = "<group>"; };
+		F918B78414552A9B0038476C /* TextFieldStretch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = TextFieldStretch.png; path = TextFieldBorders/TextFieldStretch.png; sourceTree = "<group>"; };
+		F918B78514552A9B0038476C /* TextFieldStretchInactive.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = TextFieldStretchInactive.png; path = TextFieldBorders/TextFieldStretchInactive.png; sourceTree = "<group>"; };
 		F922D79C1038B1E1004E9B12 /* TLMDownload.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMDownload.h; sourceTree = "<group>"; };
 		F922D79D1038B1E1004E9B12 /* TLMDownload.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMDownload.m; sourceTree = "<group>"; };
 		F925D1A912957B1800D75BB4 /* TLMMirrorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMMirrorController.h; sourceTree = "<group>"; };
@@ -566,6 +589,16 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				F918B77C14552A9B0038476C /* AddressFieldCapLeft.png */,
+				F918B77D14552A9B0038476C /* AddressFieldCapLeftInactive.png */,
+				F918B77E14552A9B0038476C /* AddressFieldCapRight.png */,
+				F918B77F14552A9B0038476C /* AddressFieldCapRightInactive.png */,
+				F918B78014552A9B0038476C /* SearchFieldCapLeft.png */,
+				F918B78114552A9B0038476C /* SearchFieldCapLeftInactive.png */,
+				F918B78214552A9B0038476C /* SearchFieldCapRight.png */,
+				F918B78314552A9B0038476C /* SearchFieldCapRightInactive.png */,
+				F918B78414552A9B0038476C /* TextFieldStretch.png */,
+				F918B78514552A9B0038476C /* TextFieldStretchInactive.png */,
 				F918B6BF1455001F0038476C /* SpinnerToolbarIcon.png */,
 				F9C8920A1453366300131F23 /* LionBlueProgress.png */,
 				F9C8920B1453366300131F23 /* LionGraphiteProgress.png */,
@@ -635,6 +668,8 @@
 				F9D5CD661298454F00AEEDCB /* TLMMirrorCell.m */,
 				F97EBA04143D449000E79859 /* TLMLogWindow.h */,
 				F97EBA05143D449000E79859 /* TLMLogWindow.m */,
+				F918B747145526F90038476C /* TLMSearchFieldCell.h */,
+				F918B748145526F90038476C /* TLMSearchFieldCell.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -1026,6 +1061,16 @@
 				F9C8920C1453366300131F23 /* LionBlueProgress.png in Resources */,
 				F9C8920D1453366300131F23 /* LionGraphiteProgress.png in Resources */,
 				F918B6C01455001F0038476C /* SpinnerToolbarIcon.png in Resources */,
+				F918B78614552A9B0038476C /* AddressFieldCapLeft.png in Resources */,
+				F918B78714552A9B0038476C /* AddressFieldCapLeftInactive.png in Resources */,
+				F918B78814552A9B0038476C /* AddressFieldCapRight.png in Resources */,
+				F918B78914552A9B0038476C /* AddressFieldCapRightInactive.png in Resources */,
+				F918B78A14552A9B0038476C /* SearchFieldCapLeft.png in Resources */,
+				F918B78B14552A9B0038476C /* SearchFieldCapLeftInactive.png in Resources */,
+				F918B78C14552A9B0038476C /* SearchFieldCapRight.png in Resources */,
+				F918B78D14552A9B0038476C /* SearchFieldCapRightInactive.png in Resources */,
+				F918B78E14552A9B0038476C /* TextFieldStretch.png in Resources */,
+				F918B78F14552A9B0038476C /* TextFieldStretchInactive.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1148,6 +1193,7 @@
 				F9A616D513E709F000851984 /* BDSKTextViewCompletionController.m in Sources */,
 				F96737A713E8E577008C2B3E /* TLMAddressTextFieldCell.m in Sources */,
 				F97EBA06143D449000E79859 /* TLMLogWindow.m in Sources */,
+				F918B749145526F90038476C /* TLMSearchFieldCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
