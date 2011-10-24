@@ -62,7 +62,8 @@ static NSImage *_blueImage = nil;
 - (void)commonInit
 {
     [self setScrollable:YES];
-    [self setLineBreakMode:NSLineBreakByTruncatingTail];
+    // Ellipsis isn't updating correctly, but OmniWeb and Safari don't use an ellipsis
+    [self setLineBreakMode:NSLineBreakByClipping];
     [self setDrawsBackground:NO];
     _buttonCell = [[NSButtonCell alloc] initImageCell:[NSImage imageNamed:NSImageNameStopProgressFreestandingTemplate]];
     [_buttonCell setButtonType:NSMomentaryChangeButton];
@@ -171,16 +172,16 @@ static NSImage *_blueImage = nil;
 - (NSRect)textRectForBounds:(NSRect)cellFrame
 {
     NSRect iconRect = [self iconRectForBounds:cellFrame];
-    cellFrame.origin.x = NSMaxX(iconRect);
-    cellFrame.size.width -= NSWidth(iconRect);
-    cellFrame.size.width -= (NSWidth([self buttonRectForBounds:cellFrame]) + 2 /* padding */);
-    return cellFrame; 
+    NSRect textRect = cellFrame;
+    textRect.origin.x = NSMaxX(iconRect);
+    textRect.size.width = NSMinX([self buttonRectForBounds:cellFrame]) - NSMaxX(iconRect) - 2 /* padding */;
+    return textRect; 
 }
 
 // adjustments to avoid text jumping when editing or selecting
 static void __adjust_text_rect(NSRect *textRect, NSView *controlView)
 {
-    textRect->origin.y += ([controlView isFlipped] ? -2 : 2);
+    textRect->origin.y += ([controlView isFlipped] ? -1 : 1);
     //textRect->origin.x += 1;
 }
 
