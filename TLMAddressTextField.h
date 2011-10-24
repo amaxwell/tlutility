@@ -54,9 +54,6 @@
 {
 @private
     BOOL   _dragChangedText;
-    double _progressValue;
-    double _maximum;
-    double _minimum;    
 }
 
 @property (nonatomic) double progressValue;

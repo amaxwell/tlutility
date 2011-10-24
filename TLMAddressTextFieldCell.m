@@ -44,6 +44,20 @@
 #define FAVICON_INSET ((NSSize) { 2, 2 })
 
 @synthesize icon = _icon;
+@synthesize progressValue = _progressValue;
+@synthesize maximumProgressValue = _maximum;
+@synthesize minimumProgressValue = _minimum;
+
+static NSImage *_grayImage = nil;
+static NSImage *_blueImage = nil;
+
++ (void)initialize
+{
+    if (nil == _grayImage) {
+        _grayImage = [[NSImage imageNamed:@"LionGraphiteProgress.png"] retain];
+        _blueImage = [[NSImage imageNamed:@"LionBlueProgress.png"] retain];
+    }
+}
 
 - (void)commonInit
 {
@@ -55,6 +69,9 @@
     [_buttonCell setImagePosition:NSImageOnly];
     [_buttonCell setImageScaling:NSImageScaleProportionallyUpOrDown];    
     [_buttonCell setControlSize:[self controlSize]];
+    _progressValue = 0;
+    _maximum = 100;
+    _minimum = 0;  
 }
 
 - (id)initTextCell:(NSString *)aString
@@ -117,6 +134,11 @@
     [super setStringValue:aString];
 }
 
+- (void)incrementProgressBy:(double)value;
+{
+    _progressValue += value;
+}
+
 - (NSRect)drawingRectForBounds:(NSRect)theRect
 {
     NSRect drawingRect = [super drawingRectForBounds:theRect];
@@ -161,15 +183,39 @@
     [[NSColor blackColor] setStroke];
     [roundRect stroke];
     
-    if ([self drawsBackground]) {
+    const BOOL drawBackground = [self drawsBackground];
+
+    if (drawBackground) {
         [NSGraphicsContext saveGraphicsState];
         [[self backgroundColor] setFill];
         NSRectFillUsingOperation(cellFrame, NSCompositeSourceOver);
         [NSGraphicsContext restoreGraphicsState];
+    }
+    
+    NSImage *progressImage = nil;
+    NSRect iconRect = [self iconRectForBounds:cellFrame];
+
+    if (_progressValue > _minimum && _progressValue <= _maximum) {
+        switch ([NSColor currentControlTint]) {
+            case NSBlueControlTint:
+                progressImage = [[controlView window] isKeyWindow] ? _blueImage : _grayImage;
+                break;
+            case NSGraphiteControlTint:
+                progressImage = _grayImage;
+                break;
+            default:
+                break;
+        }
+    }
+    
+    if (progressImage) {
+        // full width is width of text rect; don't draw under the favicon or button cell
+        NSRect imageBounds = [self textRectForBounds:cellFrame];
+        imageBounds.size.width = _progressValue / (_maximum - _minimum) * NSWidth(imageBounds);
+        [progressImage drawInRect:imageBounds fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
     }    
     
     if ([self icon]) {
-        NSRect iconRect = [self iconRectForBounds:cellFrame];
         CGContextRef ctxt = [[NSGraphicsContext currentContext] graphicsPort];
         CGContextSaveGState(ctxt);
         CGContextSetInterpolationQuality(ctxt, kCGInterpolationHigh);
@@ -183,7 +229,10 @@
         CGContextRestoreGState(ctxt);
     }
     
+    // disable super's background drawing, or it overdraws the progress image
+    [self setDrawsBackground:NO];
     [super drawInteriorWithFrame:[self textRectForBounds:cellFrame] inView:controlView];
+    [self setDrawsBackground:drawBackground];
     [_buttonCell drawWithFrame:[self buttonRectForBounds:cellFrame] inView:controlView];
 }
 
