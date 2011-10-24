@@ -77,7 +77,7 @@
     _tabControl = [[NSSegmentedControl allocWithZone:[self zone]] initWithFrame:NSZeroRect];
     
     // margin value is based on this segment style, unfortunately
-#define TAB_CONTROL_MARGIN 1.0
+#define TAB_CONTROL_MARGIN -3
     [_tabControl setSegmentStyle:NSSegmentStyleSmallSquare];
     
     [self addSubview:_tabControl];
@@ -314,20 +314,62 @@
 
 - (void)drawRect:(NSRect)dirtyRect
 {
-    // flashes to window background on initial transition
-    [[NSColor whiteColor] setFill];
-    NSRectFillUsingOperation(dirtyRect, NSCompositeCopy);
-    [super drawRect:dirtyRect];
+    [NSGraphicsContext saveGraphicsState];
+    NSRectClip(dirtyRect);
     
-    [[NSColor blackColor] set];
+    [[[self window] backgroundColor] set];
+    NSRectFillUsingOperation(dirtyRect, NSCompositeCopy);
+
+    // flashes to window background on initial transition
+    [[NSColor whiteColor] set];
+    NSRectFillUsingOperation([self contentRect], NSCompositeCopy);
+ 
+    NSRect bezelRect = [self bounds];
+    bezelRect.size.height = NSMidY([_tabControl frame]);
+    [[NSColor colorWithDeviceWhite:0.9 alpha:1.0] set];
+    NSRectFillUsingOperation(bezelRect, NSCompositeCopy);
+    
+    [NSGraphicsContext restoreGraphicsState];
+    
+    [NSGraphicsContext saveGraphicsState];
+
+    NSShadow *lineShadow = [[NSShadow new] autorelease];
+    [lineShadow setShadowColor:[NSColor colorWithDeviceWhite:0.8 alpha:1.0]];
+    [lineShadow setShadowOffset:NSMakeSize(0, -1)];
+    [lineShadow setShadowBlurRadius:2.0];
+    [lineShadow set];
+    
+    NSBezierPath *path = [NSBezierPath bezierPath];
+    NSPoint pathStart, pathEnd;
+    
+    pathStart.y = pathEnd.y = NSMaxY(bezelRect);
+    pathStart.x = -1;
+    pathEnd.x = NSMinX([_tabControl frame]);
+    [path moveToPoint:pathStart];
+    [path lineToPoint:pathEnd];
+    
+    pathStart.x = NSMaxX([_tabControl frame]);
+    pathEnd.x = NSMaxX([self bounds]) + 1;
+    [path moveToPoint:pathStart];
+    [path lineToPoint:pathEnd];
+    
+    [[NSColor colorWithDeviceWhite:0.67 alpha:1.0] setStroke];
+    [path setLineWidth:1.0];
+    [path stroke];
+
+    [NSGraphicsContext restoreGraphicsState];
+    
+    [super drawRect:dirtyRect];
 
 #if 0
+    [[NSColor grayColor] set];
+
     NSRect bottomRect = [self bounds];
     bottomRect.size.height = 1;
     NSFrameRectWithWidth(bottomRect, 1.0);
     
-    NSRect topRect = [self bounds];
-    topRect.origin.y = NSMaxY(topRect) - 1.0;
+    NSRect topRect = [self contentRect];
+    topRect.origin.y = NSMaxY(topRect) - 1;
     topRect.size.height = 1;
     NSFrameRectWithWidth(topRect, 1.0);
 #endif
