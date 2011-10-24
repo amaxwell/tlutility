@@ -70,7 +70,6 @@ static NSImage *_blueImage = nil;
     [_buttonCell setImagePosition:NSImageOnly];
     [_buttonCell setImageScaling:NSImageScaleProportionallyUpOrDown];    
     [_buttonCell setControlSize:[self controlSize]];
-    _progressValue = 50;
     _maximum = 100;
     _minimum = 0;  
 }
