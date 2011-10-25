@@ -38,7 +38,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-typedef int32_t TLMDatabaseYear;
+typedef NSInteger TLMDatabaseYear;
 
 // returned as the year in case of an error
 extern const TLMDatabaseYear TLMDatabaseUnknownYear;

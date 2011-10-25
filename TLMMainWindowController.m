@@ -690,9 +690,9 @@ static char _TLMOperationQueueOperationContext;
     if ([db texliveYear] != year) {
         NSAlert *alert = [[NSAlert new] autorelease];
         [alert setMessageText:NSLocalizedString(@"Repository has a different TeX Live version", @"alert title")];
-        [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"The repository at %@ has TeX Live %d, but you have TeX Live %d installed.  You need to switch repositories in order to continue.", @"alert text, two integer format specifiers"), [aURL absoluteString], [db texliveYear], year]];
+        [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"The repository at %@ has TeX Live %lu, but you have TeX Live %lu installed.  You need to switch repositories in order to continue.", @"alert text, two integer format specifiers"), [aURL absoluteString], [db texliveYear], year]];
         [alert beginSheetModalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
-        TLMLog(__func__, @"Well, this is not going to work:  %@ has TeX Live %d, and the installed version is TeX Live %d", [aURL absoluteString], [db texliveYear], year);
+        TLMLog(__func__, @"Well, this is not going to work:  %@ has TeX Live %lu, and the installed version is TeX Live %lu", [aURL absoluteString], [db texliveYear], year);
         return NO;
     }
     return YES;
