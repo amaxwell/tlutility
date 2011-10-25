@@ -174,11 +174,25 @@ static NSString *__TLMLogStringFromDate(NSDate *date)
 
 - (void)awakeFromNib
 {
+    /*
+     Make sure both tables are in correct state before monkeying with the frames,
+     since that can trigger table relayout.
+     */
+    [_messageTableView reloadData];
+    [_sessionTableView reloadData];
+    
     NSArray *frameStrings = [[NSUserDefaults standardUserDefaults] stringArrayForKey:SPLITVIEW_AUTOSAVE];
     NSUInteger idx = 0;
     for (NSString *frameString in frameStrings)
         [[[_splitView subviews] objectAtIndex:idx++] setFrame:NSRectFromString(frameString)];
     [_splitView adjustSubviews];
+}
+
+- (void)windowDidLoad
+{
+    TLMLog(__func__, @"Loaded log window controller");
+    [super windowDidLoad];
+    _windowDidLoad = YES;
 }
 
 - (void)setDockingDelegate:(id <TLMDockingWindowDelegate>)obj
@@ -216,12 +230,6 @@ static NSString *__TLMLogStringFromDate(NSDate *date)
             [frameStrings addObject:NSStringFromRect([view frame])];
         [[NSUserDefaults standardUserDefaults] setObject:frameStrings forKey:SPLITVIEW_AUTOSAVE];
     }
-}
-
-- (NSWindow *)window
-{
-    NSWindow *w = [super window];
-    return w;
 }
 
 - (void)windowWillClose:(NSNotification *)aNote
@@ -299,8 +307,8 @@ static NSString *__TLMLogStringFromDate(NSDate *date)
     
     [[_messagesByDate objectForKey:_currentSessionDate] addObjectsFromArray:toAdd];
     
-    // no drawing work needed if the window is off screen
-    if ([[self window] isVisible]) {
+     // No drawing work needed if the window is not loaded or offscreen
+    if (_windowDidLoad && [[self window] isVisible]) {
     
         BOOL shouldScroll = NO;
         NSUInteger rowCount = [_messageTableView numberOfRows];
