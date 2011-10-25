@@ -377,6 +377,20 @@ static char _TLMOperationQueueOperationContext;
     return frameSize;
 }
 
+- (void)windowDidResize:(NSNotification *)notification;
+{
+    NSWindow *logWindow = [[[NSApp delegate] logWindowController] window];
+    if ([logWindow isVisible] && [[[self window] childWindows] containsObject:logWindow] == NO)
+        [self dockableWindowGeometryDidChange:logWindow];    
+}
+
+- (void)windowDidMove:(NSNotification *)notification;
+{
+    NSWindow *logWindow = [[[NSApp delegate] logWindowController] window];
+    if ([logWindow isVisible] && [[[self window] childWindows] containsObject:logWindow] == NO)
+        [self dockableWindowGeometryDidChange:logWindow];
+}
+
 - (void)dockableWindowWillClose:(NSWindow *)window;
 {
     _dockedEdge = TLMDockedEdgeNone;
