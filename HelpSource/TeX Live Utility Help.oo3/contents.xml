@@ -162,9 +162,9 @@
     </print-info>
     <auto-generate-level-styles>no</auto-generate-level-styles>
   </settings>
-  <editor content-size="{654, 760}" scroll-position="{0, 113}" column-titles-display-mode="off" status-visible="no">
-    <drawer display="sections" width="236" scroll-position="79" palette-height="379"/>
-    <hoisted-rows ids="loFja0cULCm"/>
+  <editor content-size="{654, 760}" scroll-position="{0, 284}" column-titles-display-mode="off" status-visible="no">
+    <drawer display="sections" width="236" palette-height="379"/>
+    <hoisted-rows ids="h2f6xuYZ-Sl"/>
     <toolbar>{
     &quot;TB Display Mode&quot; = 2;
     &quot;TB Icon Size Mode&quot; = 2;
@@ -519,7 +519,7 @@
                     <text>
                       <p>
                         <run>
-                          <lit><cell refid="att11" name="UpdateTab" expanded="yes" type="image" width="494" height="368"/></lit>
+                          <lit><cell refid="att11" name="UpdateTab" expanded="yes" type="image" width="495" height="366"/></lit>
                         </run>
                       </p>
                     </text>
@@ -696,7 +696,7 @@
                     <text>
                       <p>
                         <run>
-                          <lit><cell refid="att8" name="PackageTab" expanded="yes" type="image" width="494" height="368"/></lit>
+                          <lit><cell refid="att8" name="PackageTab" expanded="yes" type="image" width="495" height="366"/></lit>
                         </run>
                       </p>
                     </text>
@@ -848,7 +848,7 @@
                     <text>
                       <p>
                         <run>
-                          <lit><cell refid="att3" name="BackupTab" type="image" width="494" height="368"/></lit>
+                          <lit><cell refid="att3" name="BackupTab" type="image" width="495" height="366"/></lit>
                         </run>
                       </p>
                     </text>
@@ -1456,7 +1456,7 @@
                                 <value key="font-family">Helvetica</value>
                                 <value key="font-size">12</value>
                               </style>
-                              <lit><cell refid="att1" name="AutocompleteAddress" expanded="yes" type="image" width="330" height="214"/></lit>
+                              <lit><cell refid="att1" name="AutocompleteAddress" expanded="yes" type="image" width="333" height="240"/></lit>
                             </run>
                           </p>
                         </text>
@@ -2170,7 +2170,7 @@
                     <text>
                       <p>
                         <run>
-                          <lit><cell refid="att5" name="InstallTab" expanded="yes" type="image" width="494" height="368"/></lit>
+                          <lit><cell refid="att5" name="InstallTab" expanded="yes" type="image" width="495" height="366"/></lit>
                         </run>
                       </p>
                     </text>
