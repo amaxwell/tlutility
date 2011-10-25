@@ -451,7 +451,7 @@ static NSString *__TLMTemporaryFile()
     NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithCapacity:3];
     [userInfo setObject:[self mirrorURL] forKey:@"URL"];
     // use ivar directly to avoid reentrancy
-    [userInfo setObject:[NSNumber numberWithInt:_year] forKey:@"year"];
+    [userInfo setObject:[NSNumber numberWithInteger:_year] forKey:@"year"];
     NSNotification *note = [NSNotification notificationWithName:TLMDatabaseVersionCheckComplete object:self userInfo:userInfo];
     [[NSNotificationCenter defaultCenter] performSelectorOnMainThread:@selector(postNotification:) withObject:note waitUntilDone:NO];
     

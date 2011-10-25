@@ -751,7 +751,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
                 line = [line stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
                 NSRange r = [line rangeOfString:@":"];
                 if (r.length && [[line substringToIndex:r.location] caseInsensitiveCompare:@"revision"] == NSOrderedSame) {
-                    NSInteger vers = [[line substringFromIndex:NSMaxRange(r)] intValue];
+                    NSInteger vers = [[line substringFromIndex:NSMaxRange(r)] integerValue];
                     if (vers > 0) [versions setObject:[NSNumber numberWithInteger:vers] forKey:name];
                     break;
                 }

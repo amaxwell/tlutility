@@ -413,7 +413,7 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
      However, tlmgr itself will perform that check and log if it fails, so logging that it's okay was just
      confusing pretest users.
      */
-    TLMDatabaseYear remoteVersion = [repositoryYear intValue];
+    TLMDatabaseYear remoteVersion = [repositoryYear integerValue];
     
     NSAlert *alert = [[NSAlert new] autorelease];
     BOOL allowSuppression;
@@ -497,7 +497,7 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
             NSDictionary *mirrorsByYear = nil;
             if (plistPath)
                 mirrorsByYear = [NSDictionary dictionaryWithContentsOfFile:plistPath];
-            NSString *location = [mirrorsByYear objectForKey:[[NSNumber numberWithInt:_installedYear] stringValue]];
+            NSString *location = [mirrorsByYear objectForKey:[[NSNumber numberWithInteger:_installedYear] stringValue]];
             if (location) {
                 TLMLog(__func__, @"Version mismatch detected.  Trying to fall back to %@", location);
                 [self setLegacyRepositoryURL:[NSURL URLWithString:location]];
