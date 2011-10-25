@@ -158,6 +158,9 @@ static char _TLMOperationQueueOperationContext;
     // 10.5 release notes say this is enabled by default, but it returns NO
     [_progressIndicator setUsesThreadedAnimation:YES];
     
+    // set to YES in the nib in hopes that it shows up in the stupid toolbar config sheet
+    [_progressIndicator setDisplayedWhenStopped:NO];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(_startProgressBar:)
                                                  name:TLMLogTotalProgressNotification
@@ -210,6 +213,19 @@ static char _TLMOperationQueueOperationContext;
     
     // checkbox in IB doesn't work?
     [[[self window] toolbar] setAutosavesConfiguration:YES];   
+}
+
+// apparently vain attempt to make the spinner show up in the toolbar customization sheet
+- (void)windowWillBeginSheet:(NSNotification *)notification;
+{
+    if ([[[self window] toolbar] customizationPaletteIsRunning])
+        [_progressIndicator setDisplayedWhenStopped:YES];
+}
+
+- (void)windowDidEndSheet:(NSNotification *)notification;
+{
+    if ([[[self window] toolbar] customizationPaletteIsRunning] == NO)
+        [_progressIndicator setDisplayedWhenStopped:NO];
 }
 
 - (void)showWindow:(id)sender
