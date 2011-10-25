@@ -76,9 +76,10 @@
 {
     _tabControl = [[NSSegmentedControl allocWithZone:[self zone]] initWithFrame:NSZeroRect];
     
-    // margin value is based on this segment style, unfortunately
 #define TAB_CONTROL_MARGIN -3
-    [_tabControl setSegmentStyle:NSSegmentStyleSmallSquare];
+    // use small square on Snow Leopard and earlier
+    NSSegmentStyle segStyle = floor(NSAppKitVersionNumber) < 1100 ? NSSegmentStyleSmallSquare : NSSegmentStyleCapsule;
+    [_tabControl setSegmentStyle:segStyle];
     
     [self addSubview:_tabControl];
     [_tabControl setSegmentCount:0];
