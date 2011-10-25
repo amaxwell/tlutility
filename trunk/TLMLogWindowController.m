@@ -61,6 +61,7 @@ static NSDate *_currentSessionDate = nil;
 @synthesize _sessionTableView;
 @synthesize _splitView;
 @synthesize dockingDelegate = _dockingDelegate;
+@synthesize isWindowLoaded = _windowDidLoad;
 
 + (void)initialize
 {
@@ -181,6 +182,10 @@ static NSString *__TLMLogStringFromDate(NSDate *date)
     [_messageTableView reloadData];
     [_sessionTableView reloadData];
     
+    // windowDidLoad is too late for this
+    TLMLog(__func__, @"Loaded log window controller");
+    _windowDidLoad = YES;
+
     NSArray *frameStrings = [[NSUserDefaults standardUserDefaults] stringArrayForKey:SPLITVIEW_AUTOSAVE];
     NSUInteger idx = 0;
     for (NSString *frameString in frameStrings)
@@ -188,18 +193,11 @@ static NSString *__TLMLogStringFromDate(NSDate *date)
     [_splitView adjustSubviews];
 }
 
-- (void)windowDidLoad
-{
-    TLMLog(__func__, @"Loaded log window controller");
-    [super windowDidLoad];
-    _windowDidLoad = YES;
-}
-
 - (void)setDockingDelegate:(id <TLMDockingWindowDelegate>)obj
 {
     // make sure the delegate gets an initial notification
     _dockingDelegate = obj;
-    if ([[self window] isVisible])
+    if (_windowDidLoad && [[self window] isVisible])
         [_dockingDelegate dockableWindowGeometryDidChange:[self window]];
 }
 

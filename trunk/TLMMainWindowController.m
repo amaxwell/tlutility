@@ -371,11 +371,18 @@ static char _TLMOperationQueueOperationContext;
     return nil;
 }
 
+// cover method to avoid loading the log controller's window before it's needed
+- (NSWindow *)_logWindow
+{
+    TLMLogWindowController *lwc = [[NSApp delegate] logWindowController];
+    return [lwc isWindowLoaded] ? [[[NSApp delegate] logWindowController] window] : nil;
+}
+
 - (NSSize)windowWillResize:(NSWindow *)sender toSize:(NSSize)frameSize;
 {
     const CGFloat dy = NSHeight([sender frame]) - frameSize.height;
     const CGFloat dx = NSWidth([sender frame]) - frameSize.width;
-    NSWindow *logWindow = [[[NSApp delegate] logWindowController] window];
+    NSWindow *logWindow = [self _logWindow];
     if ([logWindow isVisible] && [[[self window] childWindows] containsObject:logWindow]) {
         
         NSPoint logWindowOrigin = [logWindow frame].origin;
@@ -395,14 +402,14 @@ static char _TLMOperationQueueOperationContext;
 
 - (void)windowDidResize:(NSNotification *)notification;
 {
-    NSWindow *logWindow = [[[NSApp delegate] logWindowController] window];
+    NSWindow *logWindow = [self _logWindow];
     if ([logWindow isVisible] && [[[self window] childWindows] containsObject:logWindow] == NO)
         [self dockableWindowGeometryDidChange:logWindow];    
 }
 
 - (void)windowDidMove:(NSNotification *)notification;
 {
-    NSWindow *logWindow = [[[NSApp delegate] logWindowController] window];
+    NSWindow *logWindow = [self _logWindow];
     if ([logWindow isVisible] && [[[self window] childWindows] containsObject:logWindow] == NO)
         [self dockableWindowGeometryDidChange:logWindow];
 }

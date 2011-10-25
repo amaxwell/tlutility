@@ -64,6 +64,7 @@
 @property (nonatomic, retain) IBOutlet TLMTableView *_sessionTableView;
 @property (nonatomic, retain) IBOutlet TLMSplitView *_splitView;
 @property (nonatomic, assign) id <TLMDockingWindowDelegate> dockingDelegate;
+@property (nonatomic, readonly) BOOL isWindowLoaded;
 
 @end
 
