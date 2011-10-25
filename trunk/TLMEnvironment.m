@@ -186,7 +186,8 @@ static NSString            *_currentEnvironmentKey = nil;
     if (self) {
         
         _installDirectory = [absolutePath copy];
-        [TLMEnvironment _getInstalledYear:&_installedYear isDevelopmentVersion:&_tlmgrVersion.isDevelopment tlmgrVersion:&_tlmgrVersion.revision];
+        if ([TLMEnvironment _getInstalledYear:&_installedYear isDevelopmentVersion:&_tlmgrVersion.isDevelopment tlmgrVersion:&_tlmgrVersion.revision] == NO)
+            TLMLog(__func__, @"Failed to determine local TeX Live version information.  This is a very bad sign.");
 
         if ([[[NSFileManager new] autorelease] fileExistsAtPath:TEXDIST_PATH]) {
             FSEventStreamContext ctxt = { 0, [self class], CFRetain, CFRelease, CFCopyDescription };
@@ -260,50 +261,51 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
     NSArray *versionLines = [versionString componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
     TLMDatabaseYear texliveYear = TLMDatabaseUnknownYear;
     if (isDev) *isDev = NO;
+            
+    /*
+     Using an svn version of tlmgr:
+     $ tlmgr --version
+     tlmgr revision unknown ($Date$)
+     tlmgr using installation: /usr/local/texlive/2011
+     TeX Live (http://tug.org/texlive) version 2011
+     
+     $ tlmgr --version
+     tlmgr revision 14230 (2009-07-11 14:56:31 +0200)
+     tlmgr using installation: /usr/local/texlive/2009
+     TeX Live (http://tug.org/texlive) version 2009-dev
+     
+     $ tlmgr --version
+     tlmgr revision 12152 (2009-02-12 13:08:37 +0100)
+     tlmgr using installation: /usr/local/texlive/2008
+     TeX Live (http://tug.org/texlive) version 2008
+     texlive-20080903
+     */         
     
-    if ([versionLines count]) {
+    for (versionString in versionLines) {
         
-        /*
-         Using an svn version of tlmgr:
-         $ tlmgr --version
-         tlmgr revision unknown ($Date$)
-         tlmgr using installation: /usr/local/texlive/2011
-         TeX Live (http://tug.org/texlive) version 2011
-         
-         $ tlmgr --version
-         tlmgr revision 14230 (2009-07-11 14:56:31 +0200)
-         tlmgr using installation: /usr/local/texlive/2009
-         TeX Live (http://tug.org/texlive) version 2009-dev
-         
-         $ tlmgr --version
-         tlmgr revision 12152 (2009-02-12 13:08:37 +0100)
-         tlmgr using installation: /usr/local/texlive/2008
-         TeX Live (http://tug.org/texlive) version 2008
-         texlive-20080903
-         */         
+        if ([versionString hasPrefix:@"TeX Live"]) {
+            
+            // allow handling development versions differently (not sure this is stable year-to-year)
+            if (isDev && [versionString hasSuffix:@"dev"])
+                *isDev = YES;
+            
+            NSScanner *scanner = [NSScanner scannerWithString:versionString];
+            [scanner setCharactersToBeSkipped:[[NSCharacterSet decimalDigitCharacterSet] invertedSet]];
+            [scanner scanInteger:&texliveYear];
+        }
         
-        for (versionString in versionLines) {
+        if (tlmgrVersion && [versionString hasPrefix:@"tlmgr revision"]) {
             
-            if ([versionString hasPrefix:@"TeX Live"]) {
-                
-                // allow handling development versions differently (not sure this is stable year-to-year)
-                if (isDev && [versionString hasSuffix:@"dev"])
-                    *isDev = YES;
-                
-                NSScanner *scanner = [NSScanner scannerWithString:versionString];
-                [scanner setCharactersToBeSkipped:[[NSCharacterSet decimalDigitCharacterSet] invertedSet]];
-                [scanner scanInteger:&texliveYear];
-            }
-            
-            if (tlmgrVersion && [versionString hasPrefix:@"tlmgr revision"]) {
-                
-                NSScanner *scanner = [NSScanner scannerWithString:versionString];
-                [scanner setCharactersToBeSkipped:[[NSCharacterSet decimalDigitCharacterSet] invertedSet]];
-                if ([scanner scanInteger:tlmgrVersion] == NO)
-                    *tlmgrVersion = -1;
-            }
+            NSScanner *scanner = [NSScanner scannerWithString:versionString];
+            [scanner setCharactersToBeSkipped:[[NSCharacterSet decimalDigitCharacterSet] invertedSet]];
+            if ([scanner scanInteger:tlmgrVersion] == NO)
+                *tlmgrVersion = -1;
         }
     }
+    
+    if (TLMDatabaseUnknownYear == texliveYear)
+        TLMLog(__func__, @"Unable to determine TeX Live year from tlmgr version output: %@", versionString);
+    
     if (installedYear)
         *installedYear = texliveYear;
     
@@ -421,6 +423,11 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
         [alert setMessageText:NSLocalizedString(@"TeX Live 2008 is not supported", @"")];
         [alert setInformativeText:NSLocalizedString(@"This version of TeX Live Utility will not work correctly with TeX Live 2008.  You need to download TeX Live Utility version 0.74 or earlier, or upgrade to a newer TeX Live.  I recommend the latter.", @"")];
         // non-functional, so no point in hiding this alert
+        allowSuppression = NO;
+    }
+    else if (TLMDatabaseUnknownYear == _installedYear) {
+        [alert setMessageText:NSLocalizedString(@"Unable to determine your TeX Live version", @"alert title")];
+        [alert setInformativeText:NSLocalizedString(@"Please quit and relaunch TeX Live Utility.  If this problem occurs again, please submit a bug report using the link on the Help menu.", @"alert message")];
         allowSuppression = NO;
     }
     else if (remoteVersion > _installedYear) {
