@@ -413,7 +413,7 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
      However, tlmgr itself will perform that check and log if it fails, so logging that it's okay was just
      confusing pretest users.
      */
-    TLMDatabaseYear remoteVersion = [repositoryYear integerValue];
+    TLMDatabaseYear remoteVersion = [repositoryYear intValue];
     
     NSAlert *alert = [[NSAlert new] autorelease];
     BOOL allowSuppression;
