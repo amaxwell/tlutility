@@ -258,7 +258,7 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
     
     versionString = [versionString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     NSArray *versionLines = [versionString componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
-    NSInteger texliveYear = 0;
+    TLMDatabaseYear texliveYear = TLMDatabaseUnknownYear;
     if (isDev) *isDev = NO;
     
     if ([versionLines count]) {
@@ -295,7 +295,7 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
                 [scanner scanInteger:&texliveYear];
             }
             
-            if ([versionString hasPrefix:@"tlmgr revision"]) {
+            if (tlmgrVersion && [versionString hasPrefix:@"tlmgr revision"]) {
                 
                 NSScanner *scanner = [NSScanner scannerWithString:versionString];
                 [scanner setCharactersToBeSkipped:[[NSCharacterSet decimalDigitCharacterSet] invertedSet]];
@@ -307,7 +307,7 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
     if (installedYear)
         *installedYear = texliveYear;
     
-    TLMLog(__func__, @"Looks like you're using TeX Live %d", texliveYear);
+    TLMLog(__func__, @"Looks like you're using TeX Live %lu", texliveYear);
     
     return YES;
 }
@@ -425,13 +425,13 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
     }
     else if (remoteVersion > _installedYear) {
         [alert setMessageText:NSLocalizedString(@"Repository URL has a newer TeX Live version", @"")];
-        [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"Your TeX Live version is %d, but your default repository URL appears to be for TeX Live %d.  You need to manually upgrade to a newer version of TeX Live, as there will be no further updates for your version.", @"two integer specifiers"), _installedYear, remoteVersion]];
+        [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"Your TeX Live version is %lu, but your default repository URL appears to be for TeX Live %lu.  You need to manually upgrade to a newer version of TeX Live, as there will be no further updates for your version.", @"two integer specifiers"), _installedYear, remoteVersion]];
         // nag users into upgrading, to keep them from using ftp.tug.org willy-nilly
         allowSuppression = NO;
     }
     else {
         [alert setMessageText:NSLocalizedString(@"Repository URL has an older TeX Live version", @"")];
-        [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"Your TeX Live version is %d, but your default repository URL appears to be for TeX Live %d.  You need to choose an appropriate repository.", @"two integer specifiers"), _installedYear, remoteVersion]];
+        [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"Your TeX Live version is %lu, but your default repository URL appears to be for TeX Live %lu.  You need to choose an appropriate repository.", @"two integer specifiers"), _installedYear, remoteVersion]];
         // may come up during pretest
         allowSuppression = YES;
     }
@@ -485,7 +485,7 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
         // no fallback URL for unofficial repos, so just warn and let the user deal with it
         TLMLog(__func__, @"This appears to be a 3rd party TeX Live repository");
         if (repositoryYear != _installedYear)
-            TLMLog(__func__, @"*** WARNING *** This repository is for TeX Live %d, but you are using TeX Live %d", repositoryYear, _installedYear);
+            TLMLog(__func__, @"*** WARNING *** This repository is for TeX Live %lu, but you are using TeX Live %lu", repositoryYear, _installedYear);
     }
     else if (repositoryYear != _installedYear) {
         
@@ -519,7 +519,7 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
         TLMDatabaseYear age = currentDate.year - repositoryYear;
         NSString *ageString = age == 0 ? @"a young TeX Live" : @"a mature TeX Live";
         
-        TLMLog(__func__, @"Repository version appears to be %d; %@", repositoryYear, ageString);
+        TLMLog(__func__, @"Repository version appears to be %lu; %@", repositoryYear, ageString);
     }
         
     *outURL = validURL;
