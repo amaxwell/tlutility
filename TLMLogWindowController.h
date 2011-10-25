@@ -53,6 +53,7 @@
     TLMTableView                  *_messageTableView;
     CFMutableDictionaryRef         _rowHeights;
     BOOL                           _updateScheduled;
+    BOOL                           _windowDidLoad;
     NSDate                        *_displayedSessionDate;
     NSMutableDictionary           *_messagesByDate;
     NSUInteger                     _lastArchiveCount;
