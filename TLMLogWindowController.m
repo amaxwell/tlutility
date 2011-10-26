@@ -430,6 +430,12 @@ static NSString *__TLMLogStringFromDate(NSDate *date)
     if (tableView == _sessionTableView)
         return [[[[tableView tableColumns] lastObject] dataCell] cellSize].height;
     
+    if (row >= [self numberOfRowsInTableView:tableView]) {
+        // can't call -reloadData here
+        TLMLog(__func__, @"tableView asked for row %d, but the datasource has %d rows", row, [self numberOfRowsInTableView:tableView]);
+        return [[[[tableView tableColumns] lastObject] dataCell] cellSize].height;
+    }
+    
     // base height on message cell
     NSTableColumn *tc = [tableView tableColumnWithIdentifier:@"message"];
     id obj = [self tableView:tableView objectValueForTableColumn:tc row:row];
