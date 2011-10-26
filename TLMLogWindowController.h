@@ -37,15 +37,16 @@
  */
 
 #import <Cocoa/Cocoa.h>
+#import "TLMTableView.h"
 
 @protocol TLMDockingWindowDelegate
 - (void)dockableWindowGeometryDidChange:(NSWindow *)window;
 - (void)dockableWindowWillClose:(NSWindow *)window;
 @end
 
-@class TLMTableView, TLMSplitView;
+@class TLMSplitView;
 
-@interface TLMLogWindowController : NSWindowController <NSWindowDelegate>
+@interface TLMLogWindowController : NSWindowController <NSWindowDelegate, TLMTableDataSource, NSTableViewDelegate>
 {
 @private
     TLMSplitView                  *_splitView;
