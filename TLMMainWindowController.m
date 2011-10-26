@@ -144,7 +144,7 @@ static char _TLMOperationQueueOperationContext;
 - (void)awakeFromNib
 {
     [[self window] setTitle:[[NSBundle mainBundle] objectForInfoDictionaryKey:(id)kCFBundleNameKey]];
-
+    
     // set delegate before adding tabs, so the datasource gets inserted properly in the responder chain
     _currentListDataSource = _updateListDataSource;
     [_tabView setDelegate:self];
@@ -177,6 +177,62 @@ static char _TLMOperationQueueOperationContext;
     TLMURLFormatter *fmt = [[TLMURLFormatter new] autorelease];
     [fmt setReturnsURL:YES];
     [_URLField setFormatter:fmt];    
+}
+
+/*
+ All this crap is to allow the spinner to be visible in the customization palette and
+ toolbar when modifying the toolbar, and otherwise hidden when it's stopped.  I tried
+ a lot of stuff here, so remember not to screw with this unless it breaks.
+ 
+     1) Setting it always-visible in the nib and sending -[_progressIndicator setDisplayedWhenStopped:NO]
+        in -awakeFromNib will cause the one in the toolbar and the one in the palette to both be hidden.
+     2) It has to be sent when the sheet goes away.  Any sooner and you won't be able to see it to move
+        it around in the toolbar.
+     3) Just returning the @"pig" identifier in toolbarDefaultItemIdentifiers will put the spinner as the
+        first item in the toolbar, which is not what I want.  Therefore, a few of the other items in the
+        nib also have identifiers set.
+ */
+- (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)itemIdentifier willBeInsertedIntoToolbar:(BOOL)flag;
+{
+    if ([itemIdentifier isEqualToString:@"pig"]) {
+        NSProgressIndicator *pig = [[NSProgressIndicator alloc] initWithFrame:NSMakeRect(0, 0, 16, 16)];
+        [pig setControlSize:NSSmallControlSize];
+        [pig setStyle:NSProgressIndicatorSpinningStyle];
+        [pig setUsesThreadedAnimation:YES];
+        [pig setDisplayedWhenStopped:YES];
+        if (flag) [self set_progressIndicator:pig];
+
+        NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier:itemIdentifier];
+        [item setView:pig];
+        [pig release];
+        [item setPaletteLabel:NSLocalizedString(@"Progress", @"toolbar item palette label")];
+        [item setMaxSize:[pig frame].size];
+        [item setMinSize:[pig frame].size];
+        return [item autorelease];
+    }
+    return nil;
+}
+
+- (void)windowWillBeginSheet:(NSNotification *)notification;
+{
+    if ([[[self window] toolbar] customizationPaletteIsRunning])
+        [_progressIndicator setDisplayedWhenStopped:YES];
+}
+
+- (void)windowDidEndSheet:(NSNotification *)notification;
+{
+    if ([[[self window] toolbar] customizationPaletteIsRunning] == NO)
+        [_progressIndicator setDisplayedWhenStopped:NO];
+}
+
+- (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar*)toolbar;
+{
+    return [NSArray arrayWithObjects:@"homeButton", @"addressField", @"pig", NSToolbarFlexibleSpaceItemIdentifier, @"searchField", nil];
+}
+
+- (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar*)toolbar;
+{
+    return [NSArray arrayWithObject:@"pig"];
 }
 
 - (void)_stopProgressBar:(NSNotification *)aNote
@@ -213,19 +269,6 @@ static char _TLMOperationQueueOperationContext;
     
     // checkbox in IB doesn't work?
     [[[self window] toolbar] setAutosavesConfiguration:YES];   
-}
-
-// apparently vain attempt to make the spinner show up in the toolbar customization sheet
-- (void)windowWillBeginSheet:(NSNotification *)notification;
-{
-    if ([[[self window] toolbar] customizationPaletteIsRunning])
-        [_progressIndicator setDisplayedWhenStopped:YES];
-}
-
-- (void)windowDidEndSheet:(NSNotification *)notification;
-{
-    if ([[[self window] toolbar] customizationPaletteIsRunning] == NO)
-        [_progressIndicator setDisplayedWhenStopped:NO];
 }
 
 - (void)showWindow:(id)sender
