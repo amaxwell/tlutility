@@ -177,8 +177,20 @@ static NSString *__TLMLogStringFromDate(NSDate *date)
 {
     /*
      Make sure both tables are in correct state before monkeying with the frames,
-     since that can trigger table relayout.
+     since that can trigger table relayout.  Apparently the tableview is alive
+     and its delegate has been set before this message has been sent, so this is
+     too late to call -reloadData?  See Herb's messages to mactex on 26 Oct 2011.
+     
+     Note that windowWillLoad is too early to call -reloadData, since the outlets
+     aren't hooked up yet.  I think a better workaround is to not set the datasource
+     and delegate in the nib, but set them in code after everything is loaded.
      */
+    
+    [_messageTableView setDataSource:self];
+    [_messageTableView setDelegate:self];
+    [_sessionTableView setDataSource:self];
+    [_sessionTableView setDelegate:self];
+    
     [_messageTableView reloadData];
     [_sessionTableView reloadData];
     
@@ -324,7 +336,8 @@ static NSString *__TLMLogStringFromDate(NSDate *date)
         /*
          Noop if the outlet isn't set up yet.  Otherwise, a full UI update needed,
          but this will hopefully avoid the exceptions we see on 10.5 when window size
-         changes (which affects column layout).
+         changes (which affects column layout).  Update: it didn't fix that problem,
+         but seems like a good idea anyway.
          */
         [_messageTableView noteNumberOfRowsChanged];
     }
@@ -430,9 +443,10 @@ static NSString *__TLMLogStringFromDate(NSDate *date)
     if (tableView == _sessionTableView)
         return [[[[tableView tableColumns] lastObject] dataCell] cellSize].height;
     
-    if (row >= [self numberOfRowsInTableView:tableView]) {
-        // can't call -reloadData here
-        TLMLog(__func__, @"tableView asked for row %d, but the datasource has %d rows", row, [self numberOfRowsInTableView:tableView]);
+    const NSInteger nr = [self numberOfRowsInTableView:tableView];
+    if (row >= nr || nr < 0) {
+        // !!! workaround for 10.5.8 bug: can't call -reloadData here
+        TLMLog(__func__, @"Working around a crash: %@ asked for row index %ld, but the datasource has %ld rows.", [tableView class], row, nr);
         return [[[[tableView tableColumns] lastObject] dataCell] cellSize].height;
     }
     
