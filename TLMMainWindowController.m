@@ -91,6 +91,12 @@ static char _TLMOperationQueueOperationContext;
 #define DB_LOAD_STATUS_STRING      ([NSString stringWithFormat:@"%@%C", NSLocalizedString(@"Loading Database", @"status message"), 0x2026])
 #define URL_VALIDATE_STATUS_STRING ([NSString stringWithFormat:@"%@%C", NSLocalizedString(@"Validating Server", @"status message"), 0x2026])
 
+/*
+ Increment this when/if toolbar configuration changes.
+ I guess an alternative would be to change the identifier in the nib...
+ */
+#define TOOLBAR_VERSION ((int)1)
+
 @implementation TLMMainWindowController
 
 @synthesize _progressIndicator;
@@ -118,6 +124,12 @@ static char _TLMOperationQueueOperationContext;
         _updatingInfrastructure = NO;
         _infrastructureNeedsUpdate = NO;
         _operationCount = 0;
+        
+        if ([[NSUserDefaults standardUserDefaults] integerForKey:@"MainWindowToolbarVersion"] != TOOLBAR_VERSION) {
+            [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"NSToolbar Configuration Main window toolbar"];
+            [[NSUserDefaults standardUserDefaults] setInteger:TOOLBAR_VERSION forKey:@"MainWindowToolbarVersion"];
+        }
+        
     }
     return self;
 }
@@ -142,7 +154,7 @@ static char _TLMOperationQueueOperationContext;
 }
 
 - (void)awakeFromNib
-{
+{    
     [[self window] setTitle:[[NSBundle mainBundle] objectForInfoDictionaryKey:(id)kCFBundleNameKey]];
     
     // set delegate before adding tabs, so the datasource gets inserted properly in the responder chain
