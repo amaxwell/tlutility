@@ -320,6 +320,15 @@ static NSString *__TLMLogStringFromDate(NSDate *date)
         if (shouldScroll)
             [_messageTableView scrollRowToVisible:([_messageTableView numberOfRows] - 1)];
     }
+    else {
+        /*
+         Noop if the outlet isn't set up yet.  Otherwise, a full UI update needed,
+         but this will hopefully avoid the exceptions we see on 10.5 when window size
+         changes (which affects column layout).
+         */
+        [_messageTableView noteNumberOfRowsChanged];
+    }
+
 }
 
 - (void)_scheduleUpdate
