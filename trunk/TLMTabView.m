@@ -77,9 +77,7 @@
     _tabControl = [[NSSegmentedControl allocWithZone:[self zone]] initWithFrame:NSZeroRect];
     
 #define TAB_CONTROL_MARGIN -3
-    // use small square on Snow Leopard and earlier
-    NSSegmentStyle segStyle = floor(NSAppKitVersionNumber) < 1100 ? NSSegmentStyleTexturedRounded : NSSegmentStyleCapsule;
-    [_tabControl setSegmentStyle:segStyle];
+    [_tabControl setSegmentStyle:NSSegmentStyleTexturedRounded];
     
     [self addSubview:_tabControl];
     [_tabControl setSegmentCount:0];
