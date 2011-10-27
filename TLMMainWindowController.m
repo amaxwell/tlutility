@@ -1586,6 +1586,14 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     [self _updateAllPackagesFromRepository:repo];
 }
 
+- (void)changeDefaultMirror:(id)sender
+{
+    if ([[self window] firstResponder] != [[self window] fieldEditor:NO forObject:_URLField] || [[self window] makeFirstResponder:nil]) {
+        TLMLog(__func__, @"changing URL");
+        [TLMEnvironment setDefaultRepository:[self serverURL]];
+    }
+}
+
 #pragma mark API
 
 - (void)refresh:(id)sender

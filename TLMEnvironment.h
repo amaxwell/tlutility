@@ -39,6 +39,8 @@
 #import <Cocoa/Cocoa.h>
 #import "TLMDatabase.h"
 
+extern NSString * const TLMDefaultRepositoryChangedNotification;
+
 @interface TLMEnvironment : NSObject 
 {
 @private
@@ -66,6 +68,9 @@
 
 // for UI validation
 + (BOOL)isValidTexbinPath:(NSString *)absolutePath;
+
+// main thread only; sets defaults
++ (void)setDefaultRepository:(NSURL *)absoluteURL;
 
 /*
  NOTE: although property syntax is used, these keys are not necessarily
