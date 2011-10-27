@@ -1588,10 +1588,9 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 
 - (void)changeDefaultMirror:(id)sender
 {
-    if ([[self window] firstResponder] != [[self window] fieldEditor:NO forObject:_URLField] || [[self window] makeFirstResponder:nil]) {
-        TLMLog(__func__, @"changing URL");
+    // validate the current URL if the user is editing it (only checks syntax, not reachability or versioning)
+    if ([[self window] firstResponder] != [[self window] fieldEditor:YES forObject:_URLField] || [[self window] makeFirstResponder:nil])
         [TLMEnvironment setDefaultRepository:[self serverURL]];
-    }
 }
 
 #pragma mark API
