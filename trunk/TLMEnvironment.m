@@ -39,9 +39,13 @@
 #import "TLMEnvironment.h"
 #import "TLMAppController.h"
 #import "TLMPreferenceController.h"
+#import "TLMOptionOperation.h"
+#import "TLMReadWriteOperationQueue.h"
 #import "TLMTask.h"
 #import "TLMLogServer.h"
 #import <pthread.h>
+
+NSString * const TLMDefaultRepositoryChangedNotification = @"TLMDefaultRepositoryChangedNotification";
 
 static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_t numEvents, void *eventPaths, const FSEventStreamEventFlags eventFlags[], const FSEventStreamEventId eventIds[]);
 
@@ -725,6 +729,85 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
 {
     NSString *texbinPath = [[NSUserDefaults standardUserDefaults] objectForKey:TLMTexBinPathPreferenceKey];
     return [[texbinPath stringByAppendingPathComponent:KPSEWHICH_CMD] stringByStandardizingPath];
+}
+
+#pragma mark Default URL
+
+static NSURL * __TLMParseLocationOption(NSString *location)
+{
+    if (location) {
+        location = [location stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        location = [[location componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] lastObject];
+        // remove trailing slashes before comparison, although this is a directory
+        while ([location hasSuffix:@"/"])
+            location = [location substringToIndex:([location length] - 1)];        
+    }
+    return location ? [NSURL URLWithString:location] : nil;
+}
+
++ (NSURL *)_currentTeXLiveLocationOption
+{
+    NSArray *args = [NSArray arrayWithObjects:@"--machine-readable", @"option", @"location", nil];
+    TLMTask *checkTask = [TLMTask launchedTaskWithLaunchPath:[[TLMEnvironment currentEnvironment] tlmgrAbsolutePath] arguments:args];
+    [checkTask waitUntilExit];
+    return ([checkTask terminationStatus] == 0) ? __TLMParseLocationOption([checkTask outputString]) : nil;
+}
+
++ (void)_handleLocationOperationFinished:(NSNotification *)aNote
+{
+    TLMOptionOperation *op = [aNote object];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:TLMOperationFinishedNotification object:op];
+    
+    NSString *location = [[self _currentTeXLiveLocationOption] absoluteString];
+    if (nil == location)
+        location = NSLocalizedString(@"Error reading location from TeX Live", @"");
+    
+    if ([op failed] || [op isCancelled]) {
+        NSAlert *alert = [[NSAlert new] autorelease];
+        [alert setMessageText:NSLocalizedString(@"The location in the TeX Live database was not changed", @"")];
+        [alert setInformativeText:[NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"The current location is:", @""), location]];
+        (void) [alert runModal];
+    }
+    else {
+        TLMLog(__func__, @"Finished setting command line server location:\n\tlocation = %@", location);
+    }
+}   
+
++ (void)_syncCommandLineServerOption
+{
+    NSURL *location = [self _currentTeXLiveLocationOption];
+    NSURL *defaultServerURL = [[TLMEnvironment currentEnvironment] defaultServerURL];
+    
+    // this is kind of slow, so avoid doing it unless we really have to
+    if ([location isEqual:defaultServerURL] == NO) {
+        TLMLog(__func__, @"Setting command line server location to %@", [defaultServerURL absoluteString]);
+        TLMOptionOperation *op = [[TLMOptionOperation alloc] initWithKey:@"location" value:[defaultServerURL absoluteString]];
+        [[NSNotificationCenter defaultCenter] addObserver:self 
+                                                 selector:@selector(_handleLocationOperationFinished:) 
+                                                     name:TLMOperationFinishedNotification 
+                                                   object:op];
+        [[TLMReadWriteOperationQueue defaultQueue] addOperation:op];
+        [op release];
+    }
+}
+
++ (void)setDefaultRepository:(NSURL *)absoluteURL
+{
+    [[NSUserDefaults standardUserDefaults] setObject:[absoluteURL absoluteString] forKey:TLMFullServerURLPreferenceKey];
+    [[NSNotificationCenter defaultCenter] postNotificationName:TLMDefaultRepositoryChangedNotification object:self];
+    
+    NSAlert *alert = [[NSAlert new] autorelease];
+    [alert setMessageText:NSLocalizedString(@"Change command-line default?", @"alert title")];
+    [alert setInformativeText:NSLocalizedString(@"Would you like to use this as the default value for the command-line tlmgr tool as well?", @"alert text")];
+    [alert addButtonWithTitle:NSLocalizedString(@"Yes", @"button title")];
+    [alert addButtonWithTitle:NSLocalizedString(@"No", @"button title")];
+    switch([alert runModal]) {
+        case NSAlertFirstButtonReturn:
+            [self _syncCommandLineServerOption];
+            break;
+        default:
+            break;
+    }
 }
 
 @end

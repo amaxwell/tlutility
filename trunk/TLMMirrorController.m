@@ -46,9 +46,6 @@
 #import "TLMEnvironment.h"
 #import "TLMURLFormatter.h"
 #import "TLMPreferenceController.h"
-#import "TLMOptionOperation.h"
-#import "TLMReadWriteOperationQueue.h"
-#import "TLMTask.h"
 
 #define MIRRORS_FILENAME @"Mirrors.plist"
 #define USER_MIRRORS_KEY @"User mirrors"
@@ -86,7 +83,10 @@ static NSString * __TLMUserMirrorsPath()
                                                  selector:@selector(_handleVersionCheckNotification:)
                                                      name:TLMDatabaseVersionCheckComplete
                                                    object:nil];
-        _pendingOptionChangeCount = 0;
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(_handleRepoChangeNotification:)
+                                                     name:TLMDefaultRepositoryChangedNotification
+                                                   object:nil];
     }
     return self;
 }
@@ -256,6 +256,11 @@ static NSURL *__TLMTLNetURL(NSString *mirrorURLString)
 {
     TLMLog(__func__, @"%@", [aNote userInfo]);
     TLMLog(__func__, @"repository = %@", [self _mirrorForURL:[[aNote userInfo] objectForKey:@"URL"]]);
+}
+
+- (void)_handleRepoChangeNotification:(NSNotification *)aNote
+{
+    [_outlineView reloadData];
 }
 
 - (void)doubleClickAction:(id)sender
@@ -523,92 +528,12 @@ static bool __ismultiplexer(TLMMirrorNode *node)
     [self outlineView:_outlineView writeSelectedRowsToPasteboard:[NSPasteboard generalPasteboard]];
 }
 
-static NSURL * __TLMParseLocationOption(NSString *location)
-{
-    if (location) {
-        location = [location stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        location = [[location componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] lastObject];
-        // remove trailing slashes before comparison, although this is a directory
-        while ([location hasSuffix:@"/"])
-            location = [location substringToIndex:([location length] - 1)];        
-    }
-    return location ? [NSURL URLWithString:location] : nil;
-}
-
-- (NSURL *)_currentTeXLiveLocationOption
-{
-    NSArray *args = [NSArray arrayWithObjects:@"--machine-readable", @"option", @"location", nil];
-    TLMTask *checkTask = [TLMTask launchedTaskWithLaunchPath:[[TLMEnvironment currentEnvironment] tlmgrAbsolutePath] arguments:args];
-    [checkTask waitUntilExit];
-    return ([checkTask terminationStatus] == 0) ? __TLMParseLocationOption([checkTask outputString]) : nil;
-}
-
-- (void)_handleLocationOperationFinished:(NSNotification *)aNote
-{
-    TLMOptionOperation *op = [aNote object];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:TLMOperationFinishedNotification object:op];
-    NSParameterAssert(_pendingOptionChangeCount);
-    _pendingOptionChangeCount -= 1;
-    
-    NSString *location = [[self _currentTeXLiveLocationOption] absoluteString];
-    if (nil == location)
-        location = NSLocalizedString(@"Error reading location from TeX Live", @"");
-    
-    if ([op failed] || [op isCancelled]) {
-        NSAlert *alert = [[NSAlert new] autorelease];
-        [alert setMessageText:NSLocalizedString(@"The location in the TeX Live database was not changed", @"")];
-        [alert setInformativeText:[NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"The current location is:", @""), location]];
-        [alert beginSheetModalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
-    }
-    else {
-        TLMLog(__func__, @"Finished setting command line server location:\n\tlocation = %@", location);
-    }
-}   
-
-- (void)_syncCommandLineServerOption
-{
-    NSURL *location = [self _currentTeXLiveLocationOption];
-    NSURL *defaultServerURL = [[TLMEnvironment currentEnvironment] defaultServerURL];
-    
-    // this is kind of slow, so avoid doing it unless we really have to
-    if ([location isEqual:defaultServerURL] == NO) {
-        TLMLog(__func__, @"Setting command line server location to %@", [defaultServerURL absoluteString]);
-        TLMOptionOperation *op = [[TLMOptionOperation alloc] initWithKey:@"location" value:[defaultServerURL absoluteString]];
-        [[NSNotificationCenter defaultCenter] addObserver:self 
-                                                 selector:@selector(_handleLocationOperationFinished:) 
-                                                     name:TLMOperationFinishedNotification 
-                                                   object:op];
-        // make sure we can't close the window until this is finished
-        _pendingOptionChangeCount += 1;
-        [[TLMReadWriteOperationQueue defaultQueue] addOperation:op];
-        [op release];
-    }
-}
-
-- (void)_defaultURLAlertSheetDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
-{
-    if (NSAlertFirstButtonReturn == returnCode) {
-        [self _syncCommandLineServerOption];
-    }
-}
-
 - (void)_makeSelectedMirrorDefault:(id)sender
 {
     NSArray *selectedItems = [_outlineView selectedItems];
     if ([selectedItems count] == 1 && [(TLMMirrorNode *)[selectedItems lastObject] type] == TLMMirrorNodeURL) {
-        NSURL *url = [(TLMMirrorNode *)[selectedItems lastObject] value];
-        [[NSUserDefaults standardUserDefaults] setObject:[url absoluteString] forKey:TLMFullServerURLPreferenceKey];
-        [_outlineView reloadData];
-        
-        NSAlert *alert = [[NSAlert new] autorelease];
-        [alert setMessageText:NSLocalizedString(@"Change command-line default?", @"alert title")];
-        [alert setInformativeText:NSLocalizedString(@"Would you like to use this as the default value for the command-line tlmgr tool as well?", @"alert text")];
-        [alert addButtonWithTitle:NSLocalizedString(@"Use", @"button title")];
-        [alert addButtonWithTitle:NSLocalizedString(@"Ignore", @"button title")];
-        [alert beginSheetModalForWindow:[self window]
-                          modalDelegate:self
-                         didEndSelector:@selector(_defaultURLAlertSheetDidEnd:returnCode:contextInfo:)
-                            contextInfo:NULL];
+        [TLMEnvironment setDefaultRepository:[(TLMMirrorNode *)[selectedItems lastObject] value]];
+        // notification handler should take care of UI updates
     }
     else {
         NSBeep();
@@ -620,7 +545,7 @@ static NSURL * __TLMParseLocationOption(NSString *location)
     [self _makeSelectedMirrorDefault:sender];
 }
 
-- (BOOL)windowShouldClose:(id)sender { return [[self window] makeFirstResponder:nil] && 0 == _pendingOptionChangeCount; }
+- (BOOL)windowShouldClose:(id)sender { return [[self window] makeFirstResponder:nil]; }
 
 - (BOOL)validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem>)anItem;
 {

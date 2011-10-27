@@ -50,7 +50,6 @@
     TLMMirrorCell      *_mirrorCell;
     NSSegmentedControl *_addRemoveControl;
     NSButton           *_makeDefaultButton;
-    NSInteger           _pendingOptionChangeCount;
 }
 
 - (NSArray *)mirrorsMatchingSearchString:(NSString *)aString;
