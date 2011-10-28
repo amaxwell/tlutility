@@ -255,7 +255,10 @@ static void __TLMMigrateBundleIdentifier()
     
     if (nil == _aevtUpdateURL) {
         [[self mainWindowController] showWindow:nil];
-        //[[self mainWindowController] refreshUpdatedPackageList];
+#if DEBUG
+#warning disable auto refresh
+        [[self mainWindowController] refreshUpdatedPackageList];
+#endif
     }
     
 }
