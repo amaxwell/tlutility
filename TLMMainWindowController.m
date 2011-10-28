@@ -674,9 +674,9 @@ static char _TLMOperationQueueOperationContext;
     return NO;
 }
 
-- (NSArray *)control:(NSControl *)control textView:(NSTextView *)textView completions:(NSArray *)words forPartialWordRange:(NSRange)charRange indexOfSelectedItem:(NSInteger *)index;
+- (NSArray *)control:(NSControl *)control textView:(NSTextView *)textView completions:(NSArray *)words forPartialWordRange:(NSRange)charRange indexOfSelectedItem:(NSInteger *)selIndex;
 {
-    if (index) *index = 0;
+    if (selIndex) *selIndex = 0;
     NSFormatter *fmt = [[control cell] formatter];
     NSMutableArray *candidates = [[[[NSApp delegate] mirrorController] mirrorsMatchingSearchString:[textView string]] mutableCopy];
     if (fmt) {

@@ -474,7 +474,7 @@ static bool __ismultiplexer(TLMMirrorNode *node)
         NSBeep();
 }
 
-- (NSDragOperation)outlineView:(NSOutlineView *)outlineView validateDrop:(id <NSDraggingInfo>)info proposedItem:(id)item proposedChildIndex:(NSInteger)index;
+- (NSDragOperation)outlineView:(NSOutlineView *)outlineView validateDrop:(id <NSDraggingInfo>)info proposedItem:(id)item proposedChildIndex:(NSInteger)idx;
 {
     NSArray *URLs = [NSURL URLsFromPasteboard:[info draggingPasteboard]];
     if ([URLs count] == 0) return NSDragOperationNone;
@@ -606,7 +606,7 @@ static bool __ismultiplexer(TLMMirrorNode *node)
     }
 }
 
-- (BOOL)outlineView:(NSOutlineView *)outlineView acceptDrop:(id <NSDraggingInfo>)info item:(id)item childIndex:(NSInteger)index;
+- (BOOL)outlineView:(NSOutlineView *)outlineView acceptDrop:(id <NSDraggingInfo>)info item:(id)item childIndex:(NSInteger)idx;
 {
     NSArray *URLs = [NSURL URLsFromPasteboard:[info draggingPasteboard]];
     NSParameterAssert([item isEqual:[self _customNode]]);
@@ -614,6 +614,7 @@ static bool __ismultiplexer(TLMMirrorNode *node)
         TLMMirrorNode *userNode = [TLMMirrorNode new];
         [userNode setType:TLMMirrorNodeURL];
         [userNode setValue:aURL];
+        // FIXME: drop index is currently ignored
         [[self _customNode] addChild:userNode];
         [userNode release];
     }
