@@ -121,7 +121,7 @@ static NSImage *_blueImage = nil;
     if ([(id)obj isKindOfClass:[NSURL class]])
         icon = [self _iconForURL:(NSURL *)obj];
     else if ([(id)obj isKindOfClass:[NSString class]] && [(NSString *)obj isEqualToString:@""] == NO)
-        icon = [self _iconForURL:[NSURL URLWithString:obj]];
+        icon = [self _iconForURL:[NSURL URLWithString:(NSString *)obj]];
     [self setIcon:icon];
     [super setObjectValue:obj];
 }
