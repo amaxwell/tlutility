@@ -1,3 +1,6 @@
+% !TEX encoding = UTF-8 Unicode
+% !TEX TS-program = xelatex
+
 \documentclass[11pt]{article}
 
 \newif\iflatextortf
@@ -58,7 +61,15 @@
 \usepackage{hyperref}
 
 \begin{document}
+
+% because I'm too lazy to break the UTIs plist keys manually
 \raggedright
+
+% sugggested by Bruno; he thinks something was setting \parskip=0pt
+\parskip=\topsep
+\topsep=0pt
+
+% default to coloring comments green
 \lstset{commentstyle=\color[rgb]{0.02, 0.62, 0.14}}
 
 \section{Introduction}    
@@ -69,9 +80,9 @@ developers who will be writing \TeX -related software on Mac OS X.
 
 \subsection{What is a UTI?}
 A UTI is a string which represents an abstract “type,” or class of entities, to
-use \apple terminology
+use \apple terminology,%
 \footnote{\url{http://developer.apple.com/library/mac/\#DOCUMENTATION/FileManagement/Conceptual/understanding_utis/understand_utis_conc/understand_utis_conc.html}}
-, and file entities will be the focus of this discussion (\textit{e.g.}, \TeX{} files
+and file entities will be the focus of this discussion (\textit{e.g.}, \TeX{} files
 that sit on your hard drive).
 The UTI describes the file type uniquely, and is merely a way
 of tagging it so that the system and other software can understand how to handle it.
@@ -131,7 +142,7 @@ Although a UTI is not the same as a file extension such as the “.pdf” typica
 found on the end of an Adobe\textsuperscript{\textregistered} PDF file name,
 current versions of Mac OS X consider the extension as the primary
 form of metadata, overriding HFS type and creator code information if
-present\footnote{\url{http://tidbits.com/article/10537}}. This causes
+present.\footnote{\url{http://tidbits.com/article/10537}} This causes
 some confusion among users and developers alike, and is possibly the weakest 
 point in Mac OS X's usage of UTIs, as there is now no way to resolve 
 conflicts between files that have the same extension
@@ -141,13 +152,14 @@ that file to open it in Finder, the system will attempt to open it in the defaul
 application for that UTI. Since the UTI is based on the file's extension,
 it may well open in the wrong application! You can usually work around this
 by opening a file from within a given application, but this is not possible for
-Spotlight and Quick Look plugins.
-\footnote{\url{http://lists.apple.com/archives/quicklook-dev/2008/Feb/msg00005.html}}
+Spotlight and Quick Look plugins.%
+\footnote{\url{http://lists.apple.com/archives/quicklook-dev/2008/Feb/msg00005.html}}%
+\textsuperscript{,}%
 \footnote{\url{http://lists.apple.com/archives/quicklook-dev/2008/Feb/msg00006.html}}
 
 \subsubsection{Declaration}
 A UTI is typically declared in the Info.plist file of an application
-bundle on Mac OS X, as in this fragment from \apple documentation:
+bundle on Mac OS X, as in this fragment from \apple documentation:%
 \footnote{\url{http://developer.apple.com/library/mac/\#DOCUMENTATION/FileManagement/Conceptual/understanding_utis/understand_utis_declare/understand_utis_declare.html}} 
 \lstset{language=plist}
 \begin{lstlisting}
@@ -197,7 +209,7 @@ as much as possible, since it serves as a reference for users or developers.
 Actually using the UTI is another matter, and depends on the type of bundle
 (standalone application, Quick Look plugin, Spotlight plugin) you are developing.
 Refer to the appropriate \apple documentation for details, though it's something
-of a mess, due to rampant duplication of information. The Info.plist documentation
+of a mess, due to rampant duplication of information. The Info.plist documentation%
 \footnote{\url{http://developer.apple.com/library/mac/\#documentation/General/Reference/InfoPlistKeyReference/Introduction/Introduction.html}} is a reasonable starting point. \emph{Be very careful if you
 mix UTI and classic type declarations in an NSDocument-based application!}
 Support for UTIs varies across operating system versions, and some rather
@@ -276,8 +288,12 @@ respectively. You still may wonder where these come from, though, and
 \textbf{mdls(1)} doesn't help with that! 
 
 For further debugging, you need to use the \textbf{lsregister} tool, located at
-/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister 
-(in Mac OS X 10.7; may be different in previous systems). 
+/System/Library/Frameworks/\discretionary{}{}{}%
+CoreServices.framework/Frameworks/\discretionary{}{}{}%
+LaunchServices.framework/Support/lsregister 
+(in Mac OS X 10.7; may be different in previous systems). Note that you
+must use the full path, as this command is not available in the shell's
+default search path.
 Use the \texttt{-help} option to see a summary of
 usage, but the most useful option is \texttt{-dump}, which dumps the contents
 of the registration database to standard output as plain text. For the
@@ -319,7 +335,10 @@ definitions.
 \subsection{Prefix}
 In the case of \TeX{} and ancillary files, a “public” UTI seems appropriate,
 since it has been available to the public for many years. However, 
-the \href{file://localhost/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/Headers/UTType.h}{UTType.h} header
+the \href{file://localhost/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/Headers/UTType.h}{UTType.h} 
+header\footnote{To quickly open this header file in Terminal, you can use
+\texttt{open -h UTType.h}.  Likewise, you can use \texttt{open -h UTCoreTypes.h} 
+to see the system definitions of various UTIs and their named constants.}
 on Mac OS X contains the following comment:
 \lstset{language=C}
 \begin{lstlisting}
