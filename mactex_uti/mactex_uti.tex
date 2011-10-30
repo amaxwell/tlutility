@@ -3,30 +3,17 @@
 
 \documentclass[11pt]{article}
 
-\newif\iflatextortf
-\iflatextortf
-\providecommand{\xspace}{~}
-\providecommand{\text}{}
-\else
 \usepackage{xspace}
-\fi
-
-\iflatextortf
-\else
 \usepackage{fontspec}
 \defaultfontfeatures{Mapping=tex-text}
 \setromanfont{Hoefler Text}
 \setsansfont[Scale=0.94]{Gill Sans}
 \setmonofont[Scale=0.9]{Lucida Sans Typewriter}
-\fi
 
 \newcommand*{\apple}{Apple\textsuperscript{\textregistered}\xspace}
 \newcommand{\uti}[1]{{\ttfamily{#1}}}
 
-\usepackage{natbib}
-\bibliographystyle{apalike}
 \usepackage{microtype}
-
 \usepackage{graphicx}
 \usepackage[margin=1in]{geometry}
 \usepackage{multirow}
@@ -42,6 +29,7 @@
 
 \usepackage{color}
 \usepackage{listings}
+\usepackage{pdflscape}
 
 % thanks to http://tex.stackexchange.com/questions/10255/xml-syntax-highlighting
 \definecolor{gray}{rgb}{0.4,0.4,0.4}
@@ -65,12 +53,7 @@
 \begin{document}
 
 % because I'm too lazy to break the UTIs plist keys manually
-%\raggedright
 \sloppy
-
-% sugggested by Bruno; he thinks something was setting \parskip=0pt
-\parskip=\topsep
-\topsep=0pt
 
 % default to coloring comments green
 \lstset{commentstyle=\color[rgb]{0.02, 0.62, 0.14}}
@@ -106,7 +89,7 @@ OmniGraffle\footnote{\url{http://www.omnigroup.com/products/omnigraffle/}}
 files have a tree as shown in Figure~\ref{fig:graffle}.
 \begin{figure}[htbp]
     \centering
-        \includegraphics[height=3in]{graffle.pdf}
+        \includegraphics[height=3in]{graffle}
     \caption{OmniGraffle UTI inheritance tree}
     \label{fig:graffle}
 \end{figure}
@@ -116,8 +99,6 @@ in the system (a byte stream), and the latter its function (user-viewable conten
 This also means that an application which can open any one of these
 types can open an OmniGraffle file, so you can open it in your favorite
 text editor or XML editor, and view some representation of the data.
-% \apple system UTI definitions are found in the C header file at
-% \begin{verbatim}/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/Headers/UTCoreTypes.h\end{verbatim}.
 
 \subsection{How are they used?}
 The main use of a UTI that we are concerned with is to allow applications
@@ -396,11 +377,13 @@ Table~\ref{tab:proposedtypes} describes our proposed set of types that
 would be suitable for most applications that handle \TeX -related files
 on Mac OS X. These are unambiguous, and used by one or more currently
 shipping applications.
+\begin{landscape}
 \begin{table}
-\label{tab:proposedtypes}
 \begin{tabular}{lllll}
-& \textbf{UTTypeIdentifier}& \textbf{UTTypeDescription} & \textbf{UTTypeConformsTo} & \textbf{Tag} \\
+& \textbf{UTTypeIdentifier}& \textbf{UTTypeDescription} & \textbf{UTTypeConformsTo} & \textbf{public.filename-extension} \\
+\noalign{\smallskip}
 \hline
+\noalign{\smallskip}
 \multirow{7}{*}{\rotatebox{90}{\textbf{Input}}}
 & \uti{org.tug.tex}              & TeX Document      & \uti{public.plain-text} & .tex  \\
 & \uti{org.tug.tex.context}      & ConTeXt Document  & \uti{org.tug.tex}       & .ctx  \\
@@ -409,15 +392,18 @@ shipping applications.
 & \uti{org.tug.tex.latex.class}  & LaTeX Class       & \uti{org.tug.tex.latex} & .cls  \\
 & \uti{org.tug.tex.bibtex}       & BibTeX Database   & \uti{public.plain-text} & .bib  \\
 & \uti{org.tug.tex.bibtex.style} & BibTeX Style      & \uti{public.plain-text} & .bst  \\
-\\
+\noalign{\smallskip}
+\hline
+\noalign{\smallskip}
 \multirow{3}{*}{\rotatebox{90}{\textbf{Output}}}
 & \uti{org.tug.tex.dvi}          & DVI Document      & \uti{public.data}       & .dvi  \\
 & \uti{org.tug.tex.xdv}          & XDV Document      & \uti{public.data}       & .xdv  \\
 & \uti{org.tug.tex.bibtex.aux}   & BibTeX Auxiliary  & \uti{public.plain-text} & .aux  \\
 \end{tabular}
-\caption{Proposed type definitions for typical applications, separated by usage. 
-The “Tag” used is \texttt{public.filename-extension}.}
+\caption{Proposed type definitions for typical applications, separated by usage.}
+\label{tab:proposedtypes}
 \end{table}
+\end{landscape}
 
 \subsection{Adding to the list}
 When adding a new UTI, first consider that the primary usage is by
