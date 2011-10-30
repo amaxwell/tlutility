@@ -25,9 +25,11 @@
 
 \usepackage{natbib}
 \bibliographystyle{apalike}
+\usepackage{microtype}
 
 \usepackage{graphicx}
 \usepackage[margin=1in]{geometry}
+\usepackage{multirow}
 
 \usepackage{fancyhdr}
 \pagestyle{fancy}
@@ -63,7 +65,8 @@
 \begin{document}
 
 % because I'm too lazy to break the UTIs plist keys manually
-\raggedright
+%\raggedright
+\sloppy
 
 % sugggested by Bruno; he thinks something was setting \parskip=0pt
 \parskip=\topsep
@@ -395,21 +398,24 @@ on Mac OS X. These are unambiguous, and used by one or more currently
 shipping applications.
 \begin{table}
 \label{tab:proposedtypes}
-\caption{Proposed type definitions for typical applications.}
-\begin{tabular}{llll}
-UTTypeIdentifier               & UTTypeDescription & UTTypeConformsTo        & public.filename-extension \\
+\caption{Proposed type definitions for typical applications, separated by usage. 
+The “Tag” used is \texttt{public.filename-extension}.}
+\begin{tabular}{lllll}
+& \textbf{UTTypeIdentifier}& \textbf{UTTypeDescription} & \textbf{UTTypeConformsTo} & \textbf{Tag} \\
 \hline
-\uti{org.tug.tex}              & TeX Document      & \uti{public.plain-text} & .tex  \\
-\uti{org.tug.tex.context}      & ConTeXt Document  & \uti{org.tug.tex}       & .ctx  \\
-\uti{org.tug.tex.latex}        & LaTeX Document    & \uti{org.tug.tex}       & .ltx  \\
-\uti{org.tug.tex.latex.style}  & LaTeX Style       & \uti{org.tug.tex.latex} & .sty  \\
-\uti{org.tug.tex.latex.class}  & LaTeX Class       & \uti{org.tug.tex.latex} & .cls  \\
-\uti{org.tug.tex.bibtex}       & BibTeX Database   & \uti{public.plain-text} & .bib  \\
-\uti{org.tug.tex.bibtex.style} & BibTeX Style      & \uti{public.plain-text} & .bst  \\
-\hline
-\uti{org.tug.tex.dvi}          & DVI Document      & \uti{public.data}       & .dvi  \\
-\uti{org.tug.tex.xdv}          & XDV Document      & \uti{public.data}       & .xdv  \\
-\uti{org.tug.tex.bibtex.aux}   & BibTeX Auxiliary  & \uti{public.plain-text} & .aux  \\
+\multirow{7}{*}{\rotatebox{90}{\textbf{Input}}}
+& \uti{org.tug.tex}              & TeX Document      & \uti{public.plain-text} & .tex  \\
+& \uti{org.tug.tex.context}      & ConTeXt Document  & \uti{org.tug.tex}       & .ctx  \\
+& \uti{org.tug.tex.latex}        & LaTeX Document    & \uti{org.tug.tex}       & .ltx  \\
+& \uti{org.tug.tex.latex.style}  & LaTeX Style       & \uti{org.tug.tex.latex} & .sty  \\
+& \uti{org.tug.tex.latex.class}  & LaTeX Class       & \uti{org.tug.tex.latex} & .cls  \\
+& \uti{org.tug.tex.bibtex}       & BibTeX Database   & \uti{public.plain-text} & .bib  \\
+& \uti{org.tug.tex.bibtex.style} & BibTeX Style      & \uti{public.plain-text} & .bst  \\
+\\
+\multirow{3}{*}{\rotatebox{90}{\textbf{Output}}}
+& \uti{org.tug.tex.dvi}          & DVI Document      & \uti{public.data}       & .dvi  \\
+& \uti{org.tug.tex.xdv}          & XDV Document      & \uti{public.data}       & .xdv  \\
+& \uti{org.tug.tex.bibtex.aux}   & BibTeX Auxiliary  & \uti{public.plain-text} & .aux  \\
 \end{tabular}
 \end{table}
 
