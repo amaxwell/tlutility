@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>UTImportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>DVI Document</string>
+			<key>UTTypeIdentifier</key>
+			<string>org.tug.tex.dvi</string>
+            <key>com.apple.ostype</key>
+            <array>
+                <string>DDVI</string>
+                <string>ODVI</string>
+                <string>*DVI</string>
+                <string>DVI2</string>
+            </array>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>dvi</string>
+				</array>
+			</dict>
+		</dict>
+	</array>
+</dict>
+</plist>

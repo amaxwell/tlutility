@@ -30,6 +30,7 @@
 \usepackage{color}
 \usepackage{listings}
 \usepackage{pdflscape}
+\usepackage{attachfile2}
 
 % thanks to http://tex.stackexchange.com/questions/10255/xml-syntax-highlighting
 \definecolor{gray}{rgb}{0.4,0.4,0.4}
@@ -442,5 +443,9 @@ The MIME type should also be supplied, if it is known, though it is not clear
 if Launch Services uses it. Unless a well-known MIME type exists, 
 use application/octet-stream for binary data such as the \XeTeX\ XDV files,
 and use text/plain for plain text data.
+
+If your PDF viewer supports embedded files (Preview.app on Mac OS X does not),
+you can extract a sample Info.plist with complete examples of our 
+proposed UTIs by opening the following annotation. \attachfile{Info.plist}
 
 \end{document}
