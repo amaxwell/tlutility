@@ -17,6 +17,7 @@
 \usepackage{graphicx}
 \usepackage[margin=1in]{geometry}
 \usepackage{multirow}
+\usepackage{threeparttable}
 
 \usepackage{fancyhdr}
 \pagestyle{fancy}
@@ -381,8 +382,10 @@ and they are required by one or more currently shipping applications on
 Mac OS X.
 \begin{landscape}
 \begin{table}
+\begin{threeparttable}
+\caption{Proposed type definitions for typical applications, separated by usage.}
 \begin{tabular}{lllllll}
-& \textbf{UTTypeIdentifier}& \textbf{UTTypeDescription} & \textbf{UTTypeConformsTo} & \textbf{Extension} & \textbf{MIME Type} & \textbf{HFS} \\
+& \textbf{UTI}\tnote{a} & \textbf{Description}\tnote{b} & \textbf{Parent}\tnote{c} & \textbf{Extension}\tnote{d} & \textbf{MIME Type}\tnote{e} & \textbf{HFS}\tnote{f} \\
 \noalign{\smallskip}
 \hline
 \noalign{\smallskip}
@@ -404,12 +407,20 @@ Mac OS X.
 \\
 & \uti{org.tug.tex.xdv}          & XDV Document      & \uti{public.data}       & .xdv  & application/octet-stream & \\
 & \uti{org.tug.tex.aux}          & LaTeX Auxiliary   & \uti{public.plain-text} & .aux  & text/plain          & TEXT \\
+\noalign{\smallskip}
+\hline
+\noalign{\smallskip}
 \end{tabular}
-\caption{Proposed type definitions for typical applications, separated by usage.
-“Extension” refers to \texttt{public.filename-extension}, 
-“MIME Type” refers to \texttt{public.mime-type}, and
-“HFS” refers to the \texttt{com.apple.ostype} key.}
+\begin{tablenotes}
+\item [a] \texttt{UTTypeIdentifier}
+\item [b] \texttt{UTTypeDescription}
+\item [c] \texttt{UTTypeConformsTo}
+\item [d] \texttt{public.filename-extension}
+\item [e] \texttt{public.mime-type}
+\item [f] \texttt{com.apple.ostype}
+\end{tablenotes}
 \label{tab:proposedtypes}
+\end{threeparttable}
 \end{table}
 \end{landscape}
 Note that .tex is commonly used as an extension for multiple file types,
