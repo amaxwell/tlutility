@@ -4,7 +4,7 @@
 \documentclass[11pt]{article}
 
 \usepackage{xspace}
-\usepackage{fontspec}
+\usepackage{fontspec,xltxtra,xunicode}
 \defaultfontfeatures{Mapping=tex-text}
 \setromanfont{Hoefler Text}
 \setsansfont[Scale=0.94]{Gill Sans}
@@ -375,35 +375,45 @@ never be associated with \TeX -related UTIs.
 \section{Proposed Base Types}
 Table~\ref{tab:proposedtypes} describes our proposed set of types that
 would be suitable for most applications that handle \TeX -related files
-on Mac OS X. These are unambiguous, and used by one or more currently
-shipping applications.
+on Mac OS X. We consider these types to be unambiguously related to \TeX, 
+and they are required by one or more currently shipping applications on
+Mac OS X.
 \begin{landscape}
 \begin{table}
-\begin{tabular}{lllll}
-& \textbf{UTTypeIdentifier}& \textbf{UTTypeDescription} & \textbf{UTTypeConformsTo} & \textbf{public.filename-extension} \\
+\begin{tabular}{lllllll}
+& \textbf{UTTypeIdentifier}& \textbf{UTTypeDescription} & \textbf{UTTypeConformsTo} & \textbf{Extension} & \textbf{MIME Type} & \textbf{HFS} \\
 \noalign{\smallskip}
 \hline
 \noalign{\smallskip}
 \multirow{7}{*}{\rotatebox{90}{\textbf{Input}}}
-& \uti{org.tug.tex}              & TeX Document      & \uti{public.plain-text} & .tex  \\
-& \uti{org.tug.tex.context}      & ConTeXt Document  & \uti{org.tug.tex}       & .ctx  \\
-& \uti{org.tug.tex.latex}        & LaTeX Document    & \uti{org.tug.tex}       & .ltx  \\
-& \uti{org.tug.tex.latex.style}  & LaTeX Style       & \uti{org.tug.tex.latex} & .sty  \\
-& \uti{org.tug.tex.latex.class}  & LaTeX Class       & \uti{org.tug.tex.latex} & .cls  \\
-& \uti{org.tug.tex.bibtex}       & BibTeX Database   & \uti{public.plain-text} & .bib  \\
-& \uti{org.tug.tex.bibtex.style} & BibTeX Style      & \uti{public.plain-text} & .bst  \\
+& \uti{org.tug.tex}              & TeX Document      & \uti{public.plain-text} & .tex  & application/x-tex   & \\
+& \uti{org.tug.tex.context}      & ConTeXt Document  & \uti{org.tug.tex}       & .ctx  & text/plain          & \\
+& \uti{org.tug.tex.latex}        & LaTeX Document    & \uti{org.tug.tex}       & .ltx  & application/x-latex & \\
+& \uti{org.tug.tex.latex.style}  & LaTeX Style       & \uti{org.tug.tex.latex} & .sty  & text/plain          & \\
+& \uti{org.tug.tex.latex.class}  & LaTeX Class       & \uti{org.tug.tex.latex} & .cls  & text/plain          & \\
+& \uti{org.tug.tex.bibtex}       & BibTeX Database   & \uti{public.plain-text} & .bib  & text/plain          & \\
+& \uti{org.tug.tex.bibtex.style} & BibTeX Style      & \uti{public.plain-text} & .bst  & text/plain          & \\
 \noalign{\smallskip}
 \hline
 \noalign{\smallskip}
 \multirow{3}{*}{\rotatebox{90}{\textbf{Output}}}
-& \uti{org.tug.tex.dvi}          & DVI Document      & \uti{public.data}       & .dvi  \\
-& \uti{org.tug.tex.xdv}          & XDV Document      & \uti{public.data}       & .xdv  \\
-& \uti{org.tug.tex.bibtex.aux}   & BibTeX Auxiliary  & \uti{public.plain-text} & .aux  \\
+& \uti{org.tug.tex.dvi}          & DVI Document      & \uti{public.data}       & .dvi  & application/x-dvi   & DDVI \\
+& \uti{org.tug.tex.xdv}          & XDV Document      & \uti{public.data}       & .xdv  & application/octet-stream & \\
+& \uti{org.tug.tex.bibtex.aux}   & BibTeX Auxiliary  & \uti{public.plain-text} & .aux  & text/plain          & \\
 \end{tabular}
-\caption{Proposed type definitions for typical applications, separated by usage.}
+\caption{Proposed type definitions for typical applications, separated by usage.
+“Extension” refers to \texttt{public.filename-extension}, 
+“MIME Type” refers to \texttt{public.mime-type}, and
+“HFS” refers to the \texttt{com.apple.ostype} key, respectively.}
 \label{tab:proposedtypes}
 \end{table}
 \end{landscape}
+Note that .tex is commonly used as an extension for multiple file types,
+so there is no guarantee that a .tex file is not \LaTeX, rather than plain \TeX.
+Since Launch Services considers the extension to be the primary metadata in
+this case, the opening application or bundle will have to determine the
+actual type by sniffing the content. This may present some difficulty in
+mapping internal types used by NSDocument to your UTIs.
 
 \subsection{Adding to the list}
 When adding a new UTI, first consider that the primary usage is by
@@ -421,5 +431,13 @@ We hope that this will result in compatible choices, assuming multiple
 developers were to independently add the same type.
 The \texttt{UTTypeReferenceURL} can point to any reasonable URL that
 describes the file format, hopefully as specifically as possible.
+
+In general, the HFS type code (if it even exists) is largely irrelevant, but
+should be added if it is known. \apple used to maintain a database of these
+four-char codes, where developers could register their codes to avoid conflicts.
+The MIME type should also be supplied, if it is known, though it is not clear
+if Launch Services uses it. Unless a well-known MIME type exists, 
+use application/octet-stream for binary data such as the \XeTeX\ XDV files,
+and use text/plain for plain text data.
 
 \end{document}
