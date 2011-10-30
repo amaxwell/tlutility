@@ -386,20 +386,23 @@ Mac OS X.
 \hline
 \noalign{\smallskip}
 \multirow{7}{*}{\rotatebox{90}{\textbf{Input}}}
-& \uti{org.tug.tex}              & TeX Document      & \uti{public.plain-text} & .tex  & application/x-tex   & \\
-& \uti{org.tug.tex.context}      & ConTeXt Document  & \uti{org.tug.tex}       & .ctx  & text/plain          & \\
-& \uti{org.tug.tex.latex}        & LaTeX Document    & \uti{org.tug.tex}       & .ltx  & application/x-latex & \\
-& \uti{org.tug.tex.latex.style}  & LaTeX Style       & \uti{org.tug.tex.latex} & .sty  & text/plain          & \\
-& \uti{org.tug.tex.latex.class}  & LaTeX Class       & \uti{org.tug.tex.latex} & .cls  & text/plain          & \\
-& \uti{org.tug.tex.bibtex}       & BibTeX Database   & \uti{public.plain-text} & .bib  & text/plain          & \\
-& \uti{org.tug.tex.bibtex.style} & BibTeX Style      & \uti{public.plain-text} & .bst  & text/plain          & \\
+& \uti{org.tug.tex}              & TeX Document      & \uti{public.plain-text} & .tex  & application/x-tex   & TEXT \\
+& \uti{org.tug.tex.context}      & ConTeXt Document  & \uti{org.tug.tex}       & .ctx  & text/plain          & TEXT \\
+& \uti{org.tug.tex.latex}        & LaTeX Document    & \uti{org.tug.tex}       & .ltx  & application/x-latex & TEXT \\
+& \uti{org.tug.tex.latex.style}  & LaTeX Style       & \uti{org.tug.tex.latex} & .sty  & text/plain          & TEXT \\
+& \uti{org.tug.tex.latex.class}  & LaTeX Class       & \uti{org.tug.tex.latex} & .cls  & text/plain          & TEXT \\
+& \uti{org.tug.tex.bibtex}       & BibTeX Database   & \uti{public.plain-text} & .bib  & text/plain          & TEXT \\
+& \uti{org.tug.tex.bibtex.style} & BibTeX Style      & \uti{public.plain-text} & .bst  & text/plain          & TEXT \\
 \noalign{\smallskip}
 \hline
 \noalign{\smallskip}
-\multirow{3}{*}{\rotatebox{90}{\textbf{Output}}}
-& \uti{org.tug.tex.dvi}          & DVI Document      & \uti{public.data}       & .dvi  & application/x-dvi   & DDVI \\
+\multirow{7}{*}{\rotatebox{90}{\textbf{Output}}}
+& \uti{org.tug.tex.dvi}          & DVI Document      & \uti{public.data}       & .dvi  & application/x-dvi   & \multirow{4}{0.5in}{DDVI\\ ODVI\\ $*$DVI\\ DVI2} \\
+\\
+\\
+\\
 & \uti{org.tug.tex.xdv}          & XDV Document      & \uti{public.data}       & .xdv  & application/octet-stream & \\
-& \uti{org.tug.tex.bibtex.aux}   & BibTeX Auxiliary  & \uti{public.plain-text} & .aux  & text/plain          & \\
+& \uti{org.tug.tex.aux}          & LaTeX Auxiliary   & \uti{public.plain-text} & .aux  & text/plain          & TEXT \\
 \end{tabular}
 \caption{Proposed type definitions for typical applications, separated by usage.
 “Extension” refers to \texttt{public.filename-extension}, 
