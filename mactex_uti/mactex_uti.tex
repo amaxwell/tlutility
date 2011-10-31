@@ -452,11 +452,22 @@ should be added if it is known. \apple used to maintain a database of these
 four-char codes, where developers could register their codes to avoid conflicts.
 The MIME type should also be supplied, if it is known, though it is not clear
 if Launch Services uses it. Unless a well-known MIME type exists, 
-use application/octet-stream for binary data such as the \XeTeX\ XDV files,
+use application/octet-stream for binary data such as the \XeTeX\ .xdv files,
 and use text/plain for plain text data.
 
 If your PDF viewer supports embedded files (Preview.app on Mac OS X does not),
 you can extract a sample Info.plist with complete examples of our 
 proposed UTIs by opening the following annotation. \attachfile{Info.plist}
+
+\subsubsection{Inheritance}
+We recommend that inheritance be based on functionality you would
+need as a developer. It is rare that you would want a Bib\TeX{} database
+to be handled in the same way as a \TeX{} document, and the reverse is
+true as well. If \uti{org.tug.tex.bibtex} conformed to \uti{org.tug.tex},
+an application that claimed to handle Bib\TeX{} files could also be called
+upon to handle plain \TeX{} files, and that is not generally what we want.
+On the other hand, a developer is free to create \uti{com.foosoft.mytype}
+which inherits from all \uti{org.tug.tex} UTIs. We just don't want to require
+that by default.
 
 \end{document}
