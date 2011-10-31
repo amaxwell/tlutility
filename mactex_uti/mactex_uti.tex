@@ -380,6 +380,13 @@ would be suitable for most applications that handle \TeX -related files
 on Mac OS X. We consider these types to be unambiguously related to \TeX, 
 and they are required by one or more currently shipping applications on
 Mac OS X.
+
+Note that .tex is commonly used as an extension for multiple file types,
+so there is no guarantee that a .tex file is not \LaTeX, rather than plain \TeX.
+Since Launch Services considers the extension to be the primary metadata in
+this case, the opening application or bundle will have to determine the
+actual type by sniffing the content. This may present some difficulty in
+mapping internal types used by NSDocument to your UTIs.
 \begin{landscape}
 \begin{table}
 \begin{threeparttable}
@@ -423,44 +430,44 @@ Mac OS X.
 \end{threeparttable}
 \end{table}
 \end{landscape}
-Note that .tex is commonly used as an extension for multiple file types,
-so there is no guarantee that a .tex file is not \LaTeX, rather than plain \TeX.
-Since Launch Services considers the extension to be the primary metadata in
-this case, the opening application or bundle will have to determine the
-actual type by sniffing the content. This may present some difficulty in
-mapping internal types used by NSDocument to your UTIs.
 
-\subsection{Adding to the list}
+\section{Adding to the list}
+The list of UTIs in Table~\ref{tab:proposedtypes} is hardly
+comprehensive. We anticipate a need to add more UTIs, but it is
+not yet clear which ones will be required.
+There are three ways to proceed here:
+\begin{enumerate}
+    \item Define an exhaustive list of all possible UTIs
+    \item Define a subset, and require developers to use their own domain for others
+    \item Define a subset, and allow developers to add to our list
+\end{enumerate}
+The first is not practical, and the second defeats our purpose of
+unifying UTIs for the \TeX{} community.
+We choose the third option, and provide guidelines for creating new
+UTIs. If a developer needs a UTI for a type not on this list, there is
+no need to wait for us to “approve” its addition. However, if you create
+a new \uti{org.tug.tex} UTI, please inform us via e-mail at
+\url{mailto:mactex@tug.org} and provide a definition of the UTI.
+
+\subsection{UTI creation guidelines}
 When adding a new UTI, first consider that the primary usage is by
 Launch Services. The UTI is used to determine which application(s)
 can open a given file, which Spotlight importer should be used for
 that file, and which Quick Look plugin should be used to preview it. 
 If you need one or more of those, then you should add a new UTI.
+We hope that the guidelines here will result in compatible choices,
+assuming multiple developers were to independently add the same type.
+The \texttt{UTTypeReferenceURL} can point to any reasonable URL that
+describes the file format, hopefully as specifically as possible.
+
+\subsection{Inheritance}
 We recommend that you use \uti{public.plain-text} for plain text files,
 and \uti{public.data} for any binary data files. For the UTTypeDescription,
 use the form “Suffix Document,” so that a file with extension .foo would
 be a “Foo Document.”
 If the .foo file is produced by Bib\TeX, use \uti{org.tug.tex.bibtex} as the
 prefix, and extension as the suffix, resulting in a UTI of \uti{org.tug.tex.bibtex.foo}.
-We hope that this will result in compatible choices, assuming multiple
-developers were to independently add the same type.
-The \texttt{UTTypeReferenceURL} can point to any reasonable URL that
-describes the file format, hopefully as specifically as possible.
-
-In general, the HFS type code (if it even exists) is largely irrelevant, but
-should be added if it is known. \apple used to maintain a database of these
-four-char codes, where developers could register their codes to avoid conflicts.
-The MIME type should also be supplied, if it is known, though it is not clear
-if Launch Services uses it. Unless a well-known MIME type exists, 
-use application/octet-stream for binary data such as the \XeTeX\ .xdv files,
-and use text/plain for plain text data.
-
-If your PDF viewer supports embedded files (Preview.app on Mac OS X does not),
-you can extract a sample Info.plist with complete examples of our 
-proposed UTIs by opening the following annotation. \attachfile{Info.plist}
-
-\subsubsection{Inheritance}
-We recommend that inheritance be based on functionality you would
+The principle we follow here is that inheritance is based on functionality you would
 need as a developer. It is rare that you would want a Bib\TeX{} database
 to be handled in the same way as a \TeX{} document, and the reverse is
 true as well. If \uti{org.tug.tex.bibtex} conformed to \uti{org.tug.tex},
@@ -469,5 +476,17 @@ upon to handle plain \TeX{} files, and that is not generally what we want.
 On the other hand, a developer is free to create \uti{com.foosoft.mytype}
 which inherits from all \uti{org.tug.tex} UTIs. We just don't want to require
 that by default.
+
+\subsection{Tags}
+In general, the HFS type code (if it even exists) is largely irrelevant, but
+should be added if it is known. Unless a well-known MIME type exists, 
+use application/octet-stream for binary data such as the \XeTeX\ .xdv files,
+and use text/plain for plain text data.
+
+\subsection{Example property list}
+If your PDF viewer supports embedded files (Preview.app on Mac OS X does not),
+you can extract a sample Info.plist with complete examples of our 
+proposed UTIs by opening the following annotation. \attachfile{Info.plist}
+
 
 \end{document}
