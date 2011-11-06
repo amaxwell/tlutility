@@ -9,7 +9,6 @@
 #import "Sparkle.h"
 #import "SUPlainInstallerInternals.h"
 
-#import <CoreServices/CoreServices.h>
 #import <Security/Security.h>
 #import <sys/stat.h>
 #import <sys/wait.h>
@@ -35,7 +34,7 @@
 // that the quarantine is implemented in part by setting an extended attribute,
 // "com.apple.quarantine", on affected files.  Removing this attribute is
 // sufficient to remove files from the quarantine.
-+ (void)releaseFromQuarantine:(NSString*)root;
++ (void)releaseFromQuarantine:(NSString*)root usingFileManager:(NSFileManager *)fileManager;
 @end
 
 // Authorization code based on generous contribution from Allan Odgaard. Thanks, Allan!
@@ -194,11 +193,14 @@ static BOOL AuthorizationExecuteWithPrivilegesAndWait(AuthorizationRef authoriza
 
 + (BOOL)copyPathWithAuthentication:(NSString *)src overPath:(NSString *)dst temporaryName:(NSString *)tmp error:(NSError **)error
 {
-	FSRef srcRef, dstRef, targetRef, movedRef;
-	OSErr err;
+    // get a local copy of NSFileManager because this is running from a secondary thread
+    NSFileManager *fm;
+    if (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_4)
+        fm = [[[NSFileManager alloc] init] autorelease];
+    else
+        fm = [NSFileManager defaultManager];
 	
-	err = FSPathMakeRefWithOptions((UInt8 *)[dst fileSystemRepresentation], kFSPathMakeRefDoNotFollowLeafSymlink, &dstRef, NULL);
-	if (err != noErr)
+	if (![fm fileExistsAtPath:dst])
 	{
 		NSString *errorMessage = [NSString stringWithFormat:@"Couldn't copy %@ over %@ because there is no file at %@.", src, dst, dst];
 		if (error != NULL)
@@ -208,37 +210,38 @@ static BOOL AuthorizationExecuteWithPrivilegesAndWait(AuthorizationRef authoriza
 	
 	NSString *tmpPath = [[dst stringByDeletingLastPathComponent] stringByAppendingPathComponent:tmp];
 	
-	if (0 != access([dst fileSystemRepresentation], W_OK) || 0 != access([[dst stringByDeletingLastPathComponent] fileSystemRepresentation], W_OK))
+    if (![fm isWritableFileAtPath:dst] || ![fm isWritableFileAtPath:[dst stringByDeletingLastPathComponent]])
 		return [self _copyPathWithForcedAuthentication:src toPath:dst temporaryPath:tmpPath error:error];
 	
-	err = FSPathMakeRef((UInt8 *)[[dst stringByDeletingLastPathComponent] fileSystemRepresentation], &targetRef, NULL);
-	if (err == noErr)
-		err = FSMoveObjectSync(&dstRef, &targetRef, (CFStringRef)tmp, &movedRef, 0);
-	if (err != noErr)
+#if MAC_OS_X_VERSION_MAX_ALLOWED > MAC_OS_X_VERSION_10_4
+	if (![fm moveItemAtPath:dst toPath:tmpPath error:NULL])
+#else
+	if (![fm movePath:dst toPath:tmpPath handler:nil])
+#endif
 	{
 		if (error != NULL)
 			*error = [NSError errorWithDomain:SUSparkleErrorDomain code:SUFileCopyFailure userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Couldn't move %@ to %@.", dst, tmpPath] forKey:NSLocalizedDescriptionKey]];
 		return NO;			
 	}
-	err = FSPathMakeRef((UInt8 *)[src fileSystemRepresentation], &srcRef, NULL);
-	if (err == noErr)
-		err = FSCopyObjectSync(&srcRef, &targetRef, NULL, NULL, 0);
-	if (err != noErr)
+#if MAC_OS_X_VERSION_MAX_ALLOWED > MAC_OS_X_VERSION_10_4
+	if (![fm copyItemAtPath:src toPath:dst error:NULL])
+#else
+	if (![fm copyPath:src toPath:dst handler:nil])
+#endif
 	{
+		// We better move the old version back to its old location
+#if MAC_OS_X_VERSION_MAX_ALLOWED > MAC_OS_X_VERSION_10_4
+		[fm moveItemAtPath:tmpPath toPath:dst error:NULL];
+#else
+		[fm movePath:tmpPath toPath:dst handler:nil];
+#endif
 		if (error != NULL)
 			*error = [NSError errorWithDomain:SUSparkleErrorDomain code:SUFileCopyFailure userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Couldn't copy %@ to %@.", src, dst] forKey:NSLocalizedDescriptionKey]];
 		return NO;			
 	}
 	
 	// Trash the old copy of the app.
-#if MAC_OS_X_VERSION_MAX_ALLOWED > MAC_OS_X_VERSION_10_4
-	if (FSMoveObjectToTrashSync == NULL)
 		[self performSelectorOnMainThread:@selector(_movePathToTrash:) withObject:tmpPath waitUntilDone:YES];
-	else if (noErr != FSMoveObjectToTrashSync(&movedRef, NULL, 0))
-		NSLog(@"Sparkle error: couldn't move %@ to the trash. This is often a sign of a permissions error.", tmpPath);
-#else
-	[self performSelectorOnMainThread:@selector(_movePathToTrash:) withObject:tmpPath waitUntilDone:YES];
-#endif
 	
 	// If the currently-running application is trusted, the new
 	// version should be trusted as well.  Remove it from the
@@ -249,7 +252,7 @@ static BOOL AuthorizationExecuteWithPrivilegesAndWait(AuthorizationRef authoriza
 	// new home in case it's moved across filesystems: if that
 	// happens, the move is actually a copy, and it may result
 	// in the application being quarantined.
-	[self performSelectorOnMainThread:@selector(releaseFromQuarantine:) withObject:dst waitUntilDone:YES];
+	[self releaseFromQuarantine:dst usingFileManager:fm];
 	
 	return YES;
 }
@@ -295,7 +298,7 @@ static BOOL AuthorizationExecuteWithPrivilegesAndWait(AuthorizationRef authoriza
 	return removexattr_func(path, name, options);
 }
 
-+ (void)releaseFromQuarantine:(NSString*)root
++ (void)releaseFromQuarantine:(NSString*)root usingFileManager:(NSFileManager *)fileManager
 {
 	const char* quarantineAttribute = "com.apple.quarantine";
 	const int removeXAttrOptions = XATTR_NOFOLLOW;
@@ -307,13 +310,17 @@ static BOOL AuthorizationExecuteWithPrivilegesAndWait(AuthorizationRef authoriza
 	// Only recurse if it's actually a directory.  Don't recurse into a
 	// root-level symbolic link.
 	NSDictionary* rootAttributes =
-	[[NSFileManager defaultManager] attributesOfItemAtPath:root error:NULL];
+#if MAC_OS_X_VERSION_MIN_REQUIRED <= MAC_OS_X_VERSION_10_4
+	[fileManager fileAttributesAtPath:root traverseLink:NO];
+#else
+	[fileManager attributesOfItemAtPath:root error:NULL];
+#endif
 	NSString* rootType = [rootAttributes objectForKey:NSFileType];
 	
 	if (rootType == NSFileTypeDirectory) {
 		// The NSDirectoryEnumerator will avoid recursing into any contained
 		// symbolic links, so no further type checks are needed.
-		NSDirectoryEnumerator* directoryEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:root];
+		NSDirectoryEnumerator* directoryEnumerator = [fileManager enumeratorAtPath:root];
 		NSString* file = nil;
 		while ((file = [directoryEnumerator nextObject])) {
 			[self removeXAttr:quarantineAttribute

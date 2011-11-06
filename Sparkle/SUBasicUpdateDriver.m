@@ -217,6 +217,11 @@
 
 - (void)installUpdate
 {
+	if ([[NSFileManager defaultManager] fileExistsAtPath:downloadPath] == NO)
+	{
+		[self abortUpdate];
+		return;
+	}
 	if ([[updater delegate] respondsToSelector:@selector(updater:willInstallUpdate:)])
 		[[updater delegate] updater:updater willInstallUpdate:updateItem];
 	// Copy the relauncher into a temporary directory so we can get to it after the new version's installed.
