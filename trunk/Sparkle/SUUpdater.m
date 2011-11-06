@@ -23,7 +23,6 @@
 - (BOOL)automaticallyDownloadsUpdates;
 - (void)scheduleNextUpdateCheck;
 - (void)registerAsObserver;
-- (void)unregisterAsObserver;
 - (void)updateDriverDidFinish:(NSNotification *)note;
 - initForBundle:(NSBundle *)bundle;
 - (NSURL *)parameterizedFeedURL;
@@ -47,7 +46,7 @@ static NSString *SUUpdaterDefaultsObservationContext = @"SUUpdaterDefaultsObserv
     if (bundle == nil) bundle = [NSBundle mainBundle];
 	id updater = [sharedUpdaters objectForKey:[NSValue valueWithNonretainedObject:bundle]];
 	if (updater == nil)
-		updater = [[[self class] alloc] initForBundle:bundle];
+		updater = [[[[self class] alloc] initForBundle:bundle] autorelease];
 	return updater;
 }
 
@@ -214,18 +213,6 @@ static NSString *SUUpdaterDefaultsObservationContext = @"SUUpdaterDefaultsObserv
     [[NSUserDefaultsController sharedUserDefaultsController] addObserver:self forKeyPath:[@"values." stringByAppendingString:SUEnableAutomaticChecksKey] options:0 context:SUUpdaterDefaultsObservationContext];
 }
 
-- (void)unregisterAsObserver
-{
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
-    // Removing self as a KVO observer if no observer was registered leads to an NSException. But we don't care.
-	@try
-	{
-		[[NSUserDefaultsController sharedUserDefaultsController] removeObserver:self forKeyPath:[@"values." stringByAppendingString:SUScheduledCheckIntervalKey]];
-		[[NSUserDefaultsController sharedUserDefaultsController] removeObserver:self forKeyPath:[@"values." stringByAppendingString:SUEnableAutomaticChecksKey]];
-	}
-	@catch (NSException *e) { }
-}
-
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
 	if (context == SUUpdaterDefaultsObservationContext)
@@ -370,7 +357,7 @@ static NSString *SUUpdaterDefaultsObservationContext = @"SUUpdaterDefaultsObserv
 
 - (void)dealloc
 {
-	[self unregisterAsObserver];
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[host release];
 	if (checkTimer)
 	{
