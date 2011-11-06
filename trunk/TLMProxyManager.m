@@ -277,6 +277,13 @@ static void __TLMCheckWgetrc()
         TLMLog(__func__, @"*** WARNING *** $WGETRC is set. If you encounter problems, ensure that it does not conflict with system proxy settings.");
 }
 
+CFN_EXPORT CFRunLoopSourceRef 
+CFNetworkExecuteProxyAutoConfigurationURL(
+                                          CFURLRef								 proxyAutoConfigURL,
+                                          CFURLRef								 targetURL,
+                                          CFProxyAutoConfigurationResultCallback   cb,
+                                          CFStreamClientContext *				  clientContext) CF_RETURNS_RETAINED;
+
 static void __TLMProxySettingsChanged(SCDynamicStoreRef store, CFArrayRef changedKeys, void *info)
 {
     __TLMCheckWgetrc();
