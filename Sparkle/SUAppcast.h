@@ -14,6 +14,7 @@
 	NSArray *items;
 	NSString *userAgentString;
 	id delegate;
+	NSURLDownload *download;
 	NSString *downloadFilename;
 }
 

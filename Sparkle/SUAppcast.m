@@ -34,25 +34,25 @@
     if (userAgentString)
         [request setValue:userAgentString forHTTPHeaderField:@"User-Agent"];
             
-    NSURLDownload *download = [[[NSURLDownload alloc] initWithRequest:request delegate:self] autorelease];
-    CFRetain(download);
+    download = [[NSURLDownload alloc] initWithRequest:request delegate:self];
 }
 
-- (void)download:(NSURLDownload *)download decideDestinationWithSuggestedFilename:(NSString *)filename
+- (void)download:(NSURLDownload *)aDownload decideDestinationWithSuggestedFilename:(NSString *)filename
 {
     NSString *destinationFilename = [NSTemporaryDirectory() stringByAppendingPathComponent:filename];
-    [download setDestination:destinationFilename allowOverwrite:NO];
+    [aDownload setDestination:destinationFilename allowOverwrite:NO];
 }
 
-- (void)download:(NSURLDownload *)download didCreateDestination:(NSString *)path
+- (void)download:(NSURLDownload *)aDownload didCreateDestination:(NSString *)path
 {
     [downloadFilename release];
     downloadFilename = [path copy];
 }
 
-- (void)downloadDidFinish:(NSURLDownload *)download
+- (void)downloadDidFinish:(NSURLDownload *)aDownload
 {
-	CFRelease(download);
+	[download release];
+	download = nil;
     
 	NSError *error = nil;
     NSXMLDocument *document = [[NSXMLDocument alloc] initWithContentsOfURL:[NSURL fileURLWithPath:downloadFilename] options:0 error:&error];
@@ -178,18 +178,26 @@
 	}
 }
 
-- (void)download:(NSURLDownload *)download didFailWithError:(NSError *)error
+- (void)download:(NSURLDownload *)aDownload didFailWithError:(NSError *)error
 {
-	CFRelease(download);
+	[download release];
+	download = nil;
     
+	if (downloadFilename)
+	{
+#if MAC_OS_X_VERSION_MIN_REQUIRED <= MAC_OS_X_VERSION_10_4
+		[[NSFileManager defaultManager] removeFileAtPath:downloadFilename handler:nil];
+#else
     [[NSFileManager defaultManager] removeItemAtPath:downloadFilename error:NULL];
+#endif
+	}
     [downloadFilename release];
     downloadFilename = nil;
     
 	[self reportError:error];
 }
 
-- (NSURLRequest *)download:(NSURLDownload *)download willSendRequest:(NSURLRequest *)request redirectResponse:(NSURLResponse *)redirectResponse
+- (NSURLRequest *)download:(NSURLDownload *)aDownload willSendRequest:(NSURLRequest *)request redirectResponse:(NSURLResponse *)redirectResponse
 {
 	return request;
 }
