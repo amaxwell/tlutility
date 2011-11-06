@@ -578,7 +578,7 @@ static NSArray * __TLMURLsFromTexdocOutput2(NSString *outputString)
 
 - (NSString *)fileView:(FileView *)aFileView subtitleAtIndex:(NSUInteger)anIndex;
 {
-    return [[_fileObjects objectAtIndex:anIndex] name];
+    return [(_TLMFileObject *)[_fileObjects objectAtIndex:anIndex] name];
 }
 
 #pragma mark FileView delegate

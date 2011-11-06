@@ -764,7 +764,7 @@ static char _TLMOperationQueueOperationContext;
 {
     // sanity check in case the user switched the environment after getting an update listing
     if ([self _isCorrectDatabaseVersionAtURL:repository]) {
-        TLMUpdateOperation *op = nil;
+        TLMOperation *op = nil;
         if (_infrastructureNeedsUpdate) {
             _updatingInfrastructure = YES;
             _infrastructureNeedsUpdate = NO;
