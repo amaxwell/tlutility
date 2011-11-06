@@ -11,7 +11,7 @@
 \setmonofont[Scale=0.9]{Lucida Sans Typewriter}
 
 \newcommand*{\apple}{Apple\textsuperscript{\textregistered}\xspace}
-\newcommand{\uti}[1]{{\ttfamily{#1}}}
+\newcommand*{\uti}[1]{{\ttfamily{#1}}}
 
 \usepackage{microtype}
 \usepackage{graphicx}
@@ -387,36 +387,46 @@ Since Launch Services considers the extension to be the primary metadata in
 this case, the opening application or bundle will have to determine the
 actual type by sniffing the content. This may present some difficulty in
 mapping internal types used by NSDocument to your UTIs.
+\newcommand{\tablehline}{%
+\noalign{\smallskip}
+\hline
+\noalign{\smallskip}
+}
 \begin{landscape}
 \begin{table}
 \begin{threeparttable}
 \caption{Proposed type definitions for typical applications, separated by usage.}
 \begin{tabular}{lllllll}
 & \textbf{UTI}\tnote{a} & \textbf{Description}\tnote{b} & \textbf{Parent}\tnote{c} & \textbf{Extension}\tnote{d} & \textbf{MIME Type}\tnote{e} & \textbf{HFS}\tnote{f} \\
-\noalign{\smallskip}
-\hline
-\noalign{\smallskip}
-\multirow{7}{*}{\rotatebox{90}{\textbf{Input}}}
+\tablehline
+\multirow{4}{*}{\rotatebox{90}{\textbf{Input}}}
 & \uti{org.tug.tex}              & TeX Document      & \uti{public.plain-text} & .tex  & application/x-tex   & TEXT \\
 & \uti{org.tug.tex.context}      & ConTeXt Document  & \uti{org.tug.tex}       & .ctx  & text/plain          & TEXT \\
 & \uti{org.tug.tex.latex}        & LaTeX Document    & \uti{org.tug.tex}       & .ltx  & application/x-latex & TEXT \\
+& \uti{org.tug.tex.bibtex}       & BibTeX Database   & \uti{public.plain-text} & .bib  & text/plain          & TEXT \\
+\tablehline
+\multirow{4}{*}{\rotatebox{90}{\textbf{System}}}
 & \uti{org.tug.tex.latex.style}  & LaTeX Style       & \uti{org.tug.tex.latex} & .sty  & text/plain          & TEXT \\
 & \uti{org.tug.tex.latex.class}  & LaTeX Class       & \uti{org.tug.tex.latex} & .cls  & text/plain          & TEXT \\
-& \uti{org.tug.tex.bibtex}       & BibTeX Database   & \uti{public.plain-text} & .bib  & text/plain          & TEXT \\
+& \uti{org.tug.tex.latex.dtx}    & LaTeX Docfile     & \uti{org.tug.tex.latex} & .dtx  & text/plain          & TEXT \\
 & \uti{org.tug.tex.bibtex.style} & BibTeX Style      & \uti{public.plain-text} & .bst  & text/plain          & TEXT \\
-\noalign{\smallskip}
-\hline
-\noalign{\smallskip}
-\multirow{7}{*}{\rotatebox{90}{\textbf{Output}}}
+\tablehline
+\multirow{6}{*}{\rotatebox{90}{\textbf{Output}}}
 & \uti{org.tug.tex.dvi}          & DVI Document      & \uti{public.data}       & .dvi  & application/x-dvi   & \multirow{4}{0.5in}{DDVI\\ ODVI\\ $*$DVI\\ DVI2} \\
 \\
 \\
 \\
 & \uti{org.tug.tex.xdv}          & XDV Document      & \uti{public.data}       & .xdv  & application/octet-stream & \\
+\tablehline
+\multirow{7}{*}{\rotatebox{90}{\textbf{Intermediate}}}
+\\
+\\
+\\
 & \uti{org.tug.tex.aux}          & LaTeX Auxiliary   & \uti{public.plain-text} & .aux  & text/plain          & TEXT \\
-\noalign{\smallskip}
-\hline
-\noalign{\smallskip}
+\\
+\\
+\\
+\tablehline
 \end{tabular}
 \begin{tablenotes}
 \item [a] \texttt{UTTypeIdentifier}
@@ -448,6 +458,12 @@ UTIs. If a developer needs a UTI for a type not on this list, there is
 no need to wait for us to “approve” its addition. However, if you create
 a new \uti{org.tug.tex} UTI, please inform us via e-mail at
 \href{mailto:mactex@tug.org}{mactex@tug.org} and provide a definition of the UTI.
+
+The usage categories (input/system/output/intermediate) are only
+cosmetic, as a user can certainly have a .sty file as part of the
+input for a project. The intermediate files are files which are
+output as part of the typesetting process and can be deleted with
+no loss of user-entered data.
 
 \subsection{UTI creation guidelines}
 When adding a new UTI, first consider that the primary usage is by
