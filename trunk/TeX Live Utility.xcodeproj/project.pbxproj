@@ -100,9 +100,6 @@
 		F9C0D3E7125ECF3700B1FBE5 /* LaunchAgentSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = F9C0D3E6125ECF3700B1FBE5 /* LaunchAgentSheet.xib */; };
 		F9C7F177139E8E550031774F /* NSString_TLMExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = F9C7F176139E8E550031774F /* NSString_TLMExtensions.m */; };
 		F9C7F188139E91E40031774F /* NSString_TLMExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = F9C7F176139E8E550031774F /* NSString_TLMExtensions.m */; };
-		F9C7F1F313A003660031774F /* Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F9C7F1F113A003660031774F /* Debug.xcconfig */; };
-		F9C7F1F413A003660031774F /* Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F9C7F1F213A003660031774F /* Release.xcconfig */; };
-		F9C7F23113A0041B0031774F /* Common.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F9C7F23013A0041B0031774F /* Common.xcconfig */; };
 		F9C7F37113A124C30031774F /* parse_tlpdb.py in Copy aux executables */ = {isa = PBXBuildFile; fileRef = F9C7F37013A124B70031774F /* parse_tlpdb.py */; };
 		F9C8920C1453366300131F23 /* LionBlueProgress.png in Resources */ = {isa = PBXBuildFile; fileRef = F9C8920A1453366300131F23 /* LionBlueProgress.png */; };
 		F9C8920D1453366300131F23 /* LionGraphiteProgress.png in Resources */ = {isa = PBXBuildFile; fileRef = F9C8920B1453366300131F23 /* LionGraphiteProgress.png */; };
@@ -356,8 +353,8 @@
 		F97EBB381440971C00E79859 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Japanese.lproj/LogWindow.xib; sourceTree = "<group>"; };
 		F97EBB3B1440975200E79859 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Japanese.lproj/LaunchAgentSheet.xib; sourceTree = "<group>"; };
 		F97EBB3C1440975A00E79859 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Japanese.lproj/AutobackupSheet.xib; sourceTree = "<group>"; };
-		F97EBB3D1440976200E79859 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Japanese; path = Japanese.lproj/Localizable.strings; sourceTree = "<group>"; };
-		F97EBB3E1440976B00E79859 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Japanese; path = Japanese.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		F97EBB3D1440976200E79859 /* Japanese */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = Japanese; path = Japanese.lproj/Localizable.strings; sourceTree = "<group>"; };
+		F97EBB3E1440976B00E79859 /* Japanese */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = Japanese; path = Japanese.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		F97EBB3F1440977100E79859 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Japanese.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		F97EBB401440977900E79859 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Japanese.lproj/MainWindow.xib; sourceTree = "<group>"; };
 		F97EBB411440977F00E79859 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Japanese.lproj/Preferences.xib; sourceTree = "<group>"; };
@@ -916,6 +913,9 @@
 /* Begin PBXProject section */
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0420;
+			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "TeX Live Utility" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
@@ -1050,9 +1050,6 @@
 				F9C0D3E7125ECF3700B1FBE5 /* LaunchAgentSheet.xib in Resources */,
 				F925D1B112957B5600D75BB4 /* Mirrors.xib in Resources */,
 				F925D1BB12957C1B00D75BB4 /* CTAN.sites.plist in Resources */,
-				F9C7F1F313A003660031774F /* Debug.xcconfig in Resources */,
-				F9C7F1F413A003660031774F /* Release.xcconfig in Resources */,
-				F9C7F23113A0041B0031774F /* Common.xcconfig in Resources */,
 				F96203EB13D36ACC00932965 /* LogWindow.xib in Resources */,
 				F983F97114438F00001C0A42 /* HelpBook in Resources */,
 				F9C8920C1453366300131F23 /* LionBlueProgress.png in Resources */,
@@ -1343,7 +1340,6 @@
 				CODE_SIGN_IDENTITY = "TeX Live Utility Signing Certificate";
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TeX Live Manager_Prefix.pch";

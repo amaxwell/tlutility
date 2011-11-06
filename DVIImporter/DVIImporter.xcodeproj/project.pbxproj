@@ -39,9 +39,6 @@
 		8D576314048677EA00EA77CD /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AA1909FFE8422F4C02AAC07 /* CoreFoundation.framework */; };
 		8D5B49A804867FD3000E48DA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8D5B49A704867FD3000E48DA /* InfoPlist.strings */; };
 		C86B05270671AA6E00DD9006 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C86B05260671AA6E00DD9006 /* CoreServices.framework */; };
-		F9C7F26113A007850031774F /* Common.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F9C7F25E13A007850031774F /* Common.xcconfig */; };
-		F9C7F26213A007850031774F /* Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F9C7F25F13A007850031774F /* Debug.xcconfig */; };
-		F9C7F26313A007850031774F /* Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F9C7F26013A007850031774F /* Release.xcconfig */; };
 		F9E3C0AC0F44EDDF00552045 /* dvistuff.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F9E3C0AB0F44EDDF00552045 /* dvistuff.cpp */; };
 		F9F5298F0F42A0CE00C7A5F4 /* dvi2tty.h in Headers */ = {isa = PBXBuildFile; fileRef = F9F5298B0F42A0CE00C7A5F4 /* dvi2tty.h */; };
 		F9F529910F42A0CE00C7A5F4 /* commands.h in Headers */ = {isa = PBXBuildFile; fileRef = F9F5298D0F42A0CE00C7A5F4 /* commands.h */; };
@@ -195,6 +192,9 @@
 /* Begin PBXProject section */
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0420;
+			};
 			buildConfigurationList = F976620C0861BEF900829F8B /* Build configuration list for PBXProject "DVIImporter" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
@@ -222,9 +222,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D5B49A804867FD3000E48DA /* InfoPlist.strings in Resources */,
-				F9C7F26113A007850031774F /* Common.xcconfig in Resources */,
-				F9C7F26213A007850031774F /* Debug.xcconfig in Resources */,
-				F9C7F26313A007850031774F /* Release.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -339,7 +336,6 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
 				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				OTHER_CFLAGS = "";
@@ -359,7 +355,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				LIBRARY_STYLE = STATIC;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
@@ -396,7 +391,6 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
 				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				OTHER_CFLAGS = "";
@@ -416,7 +410,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				LIBRARY_STYLE = STATIC;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";

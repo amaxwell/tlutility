@@ -20,9 +20,6 @@
 		F9A1A75D0F38F63A00232371 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9A1A75C0F38F63A00232371 /* Foundation.framework */; };
 		F9A1A7630F38F69700232371 /* DVIPDFTask.h in Headers */ = {isa = PBXBuildFile; fileRef = F9A1A7610F38F69700232371 /* DVIPDFTask.h */; };
 		F9A1A7640F38F69700232371 /* DVIPDFTask.m in Sources */ = {isa = PBXBuildFile; fileRef = F9A1A7620F38F69700232371 /* DVIPDFTask.m */; };
-		F9C7F24C13A0074A0031774F /* Common.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F9C7F24913A0074A0031774F /* Common.xcconfig */; };
-		F9C7F24D13A0074A0031774F /* Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F9C7F24A13A0074A0031774F /* Debug.xcconfig */; };
-		F9C7F24E13A0074A0031774F /* Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F9C7F24B13A0074A0031774F /* Release.xcconfig */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -168,6 +165,9 @@
 /* Begin PBXProject section */
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0420;
+			};
 			buildConfigurationList = 2CA326220896AD4900168862 /* Build configuration list for PBXProject "DVI" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
@@ -193,9 +193,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D5B49A804867FD3000E48DA /* InfoPlist.strings in Resources */,
-				F9C7F24C13A0074A0031774F /* Common.xcconfig in Resources */,
-				F9C7F24D13A0074A0031774F /* Debug.xcconfig in Resources */,
-				F9C7F24E13A0074A0031774F /* Release.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
