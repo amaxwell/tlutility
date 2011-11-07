@@ -171,7 +171,7 @@ static void __TLMFaviconCacheInit() { _sharedCache = [TLMFaviconCache new]; }
 {
     _TLMFaviconQueueItem *item = [self _currentItem];
     if (timer)
-        TLMLog(__func__, @"Stopping attempted download of %@ due to timeout", [item iconURL]);
+        TLMLog(__func__, @"Stopping favicon download from %@ due to timeout", [item iconURL]);
     // can run into partial URLs from editing, though the formatter should disallow that...
     if ([[item iconURL] host])
         [_iconsByURL setObject:[NSNull null] forKey:[[item iconURL] host]];
@@ -192,7 +192,7 @@ static void __TLMFaviconCacheInit() { _sharedCache = [TLMFaviconCache new]; }
 
 - (void)webView:(WebView *)sender didFailLoadWithError:(NSError *)error forFrame:(WebFrame *)frame;
 {
-    TLMLog(__func__, @"Failed to download icon for %@", [[self _currentItem] iconURL]);
+    TLMLog(__func__, @"Failed to download favicon for %@", [[self _currentItem] iconURL]);
     [self _cancelFaviconLoad:nil];
 }
 
