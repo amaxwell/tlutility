@@ -76,8 +76,8 @@ static double        _dataTimeout = URL_TIMEOUT;
         
         // some servers may have a quick URL response, but be terribly slow to return data (indian.cse.msu.edu)
         NSNumber *dataTimeout = [[NSUserDefaults standardUserDefaults] objectForKey:@"TLMDatabaseDownloadTimeout"];
-        if (dataTimeout && [dataTimeout doubleValue] > 0) {
-            _dataTimeout = [dataTimeout doubleValue];
+        if (dataTimeout && round([dataTimeout doubleValue]) > 0) {
+            _dataTimeout = round([dataTimeout doubleValue]);
             TLMLog(__func__, @"Using custom database download timeout of %.0f seconds", _dataTimeout);
         }
     }
@@ -329,8 +329,10 @@ static double        _dataTimeout = URL_TIMEOUT;
             if (kCFRunLoopRunFinished == ret || kCFRunLoopRunStopped == ret)
                 break;
             
-            if (CFAbsoluteTimeGetCurrent() >= stopTime)
+            if (CFAbsoluteTimeGetCurrent() >= stopTime) {
+                TLMLog(__func__, @"%@ took more than %.0f seconds to respond.  Cancelling request.", [self _tlpdbURL], _dataTimeout);
                 break;
+            }
             
             if (_failed)
                 break;
