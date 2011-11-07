@@ -337,6 +337,9 @@ static double        _dataTimeout = URL_TIMEOUT;
             
         } while ([[self tlpdbData] length] < MIN_DATA_LENGTH);
         TLMLog(__func__, @"Downloaded %lu bytes of tlpdb for version check", (unsigned long)[[self tlpdbData] length]);
+        // in case of exceeding stopTime
+        if ([[self tlpdbData] length] < MIN_DATA_LENGTH)
+            _failed = YES;
         [connection cancel];
         [connection release];
     }
