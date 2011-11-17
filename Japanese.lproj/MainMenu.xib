@@ -12,7 +12,7 @@
     </object>
     <object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
       <bool key="EncodedWithXMLCoder">YES</bool>
-      <integer value="57"/>
+      <integer value="622"/>
     </object>
     <object class="NSArray" key="IBDocument.PluginDependencies">
       <bool key="EncodedWithXMLCoder">YES</bool>
@@ -1110,7 +1110,7 @@
                 </object>
                 <object class="NSMenuItem" id="1235359">
                   <reference key="NSMenu" ref="882484711"/>
-                  <string key="NSTitle">ミラーサーバーを管理</string>
+                  <string key="NSTitle">リポジトリを管理</string>
                   <string key="NSKeyEquiv"/>
                   <int key="NSMnemonicLoc">2147483647</int>
                   <reference key="NSOnImage" ref="35465992"/>
@@ -1118,7 +1118,7 @@
                 </object>
                 <object class="NSMenuItem" id="169531676">
                   <reference key="NSMenu" ref="882484711"/>
-                  <string key="NSTitle">既定ミラーサーバーに設定</string>
+                  <string key="NSTitle">既定リポジトリに設定</string>
                   <string key="NSKeyEquiv"/>
                   <int key="NSMnemonicLoc">2147483647</int>
                   <reference key="NSOnImage" ref="35465992"/>
@@ -3396,7 +3396,7 @@
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <integer value="1"/>
           <string>{{525, 802}, {197, 73}}</string>
-          <string>{{21, 510}, {566, 20}}</string>
+          <string>{{51, 784}, {566, 20}}</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <integer value="1"/>
           <string>{74, 862}</string>
@@ -3417,7 +3417,7 @@
           <integer value="1"/>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-          <string>{{335, 247}, {337, 263}}</string>
+          <string>{{350, 187}, {337, 263}}</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <object class="NSMutableDictionary">
             <string key="NS.key.0">ToolTip</string>
@@ -3543,7 +3543,7 @@
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-          <string>{{33, 307}, {305, 203}}</string>
+          <string>{{48, 247}, {305, 203}}</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <integer value="1"/>
           <string>{{23, 794}, {245, 183}}</string>
@@ -3579,7 +3579,7 @@
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-          <string>{{381, 347}, {289, 163}}</string>
+          <string>{{411, 621}, {289, 163}}</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <object class="NSMutableDictionary">
             <string key="NS.key.0">ToolTip</string>
