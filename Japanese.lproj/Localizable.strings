@@ -93,7 +93,7 @@
 "Downloading release notes" = "リリースノートをダウンロードしています";
 
 /* alert text */
-"Either a network problem exists or the TeX Live version on the server does not match.  If this problem persists on further attempts, you may need to try a different mirror." = "ネットワークに問題があるか、サーバー上の TeX Live のバージョンが一致しません。何度か繰り返しても問題が解決しないならば、別のミラーサーバーを試みる必要があるでしょう。";
+"Either a network problem exists or the TeX Live version on the server does not match.  If this problem persists on further attempts, you may need to try a different repository." = "ネットワークに問題があるか、サーバー上の TeX Live のバージョンが一致しません。何度か繰り返しても問題が解決しないならば、別のミラーサーバーを試みる必要があるでしょう。";
 
 /* error message for unreadable package */
 "Error parsing output line" = "出力行の解析エラー";
@@ -106,9 +106,6 @@
 
 /* alert message */
 "Failed to authorize operation" = "操作を認証するのに失敗しました";
-
-/* alert message text */
-"Follow the instructions for Unix disaster recovery on the TeX Live web site at %@.  Would you like to go to that page now?  You can also open it later from the Help menu." = "TeX Live ウェブサイト(%@)にあるUNIX緊急事態からの回復方法の説明に従ってください。直ちにそのページを開きますか？後でヘルプメニューから開くこともできます。";
 
 /* status for package */
 "Forcibly removed" = "強制削除";
@@ -158,9 +155,6 @@
 /* button title */
 "Keep Waiting" = "待ち続ける";
 
-/* button title */
-"Later" = "あとで";
-
 /* heading in info panel */
 "Link: " = "リンク: ";
 
@@ -179,20 +173,14 @@
 /* single trailing space */
 "Local version is newer " = "ローカル版の方が新しい ";
 
-/* alert title */
-"Mirror has a different TeX Live version" = "ミラーサーバーの TeX Live はバージョンが違います";
-
-/* No comment provided by engineer. */
-"Mirror URL has a newer TeX Live version" = "ミラー URL の TeX Live のバージョンの方が新しいです";
-
-/* No comment provided by engineer. */
-"Mirror URL has an older TeX Live version" = "ミラー URL の TeX Live のバージョンの方が旧いです";
-
 /* value in tableview */
 "Missing short description" = "短い説明が不備です";
 
 /* status for expandable outline row with installed and uninstalled packages */
 "Mixed" = "混在";
+
+/* the user's repository group title */
+"My Repositories" = "My Repositories";
 
 /* alert title in preferences */
 "Necessary programs for TeX Live do not exist in that folder" = "TeX Live に必要なプログラムがフォルダ中にありません";
@@ -202,6 +190,9 @@
 
 /* update alert message text part 3 (optional) */
 "New packages will be installed." = "新しいパッケージが導入されます。";
+
+/* button title */
+"No" = "No";
 
 /* main window status string */
 "No Backups Available" = "利用できるバックアップがありません";
@@ -218,14 +209,8 @@
 /* No comment provided by engineer. */
 "Nothing selected." = "何も選択されていません。";
 
-/* button title */
-"Open Now" = "直ちに開く";
-
 /* menu title */
 "Open With" = "以下を使って開く: ";
-
-/* mirror group title */
-"Other Mirrors" = "他のミラーサーバー";
 
 /* heading in info panel */
 "Package:" = "パッケージ:";
@@ -239,8 +224,14 @@
 /* status message */
 "Paper Size Change Failed" = "用紙寸法の変更に失敗しました";
 
+/* alert message */
+"Please quit and relaunch TeX Live Utility.  If this problem occurs again, please submit a bug report using the link on the Help menu." = "Please quit and relaunch TeX Live Utility.  If this problem occurs again, please submit a bug report using the link on the Help menu.";
+
 /* alert title */
 "Possible update failure." = "更新に失敗した可能性があります。";
+
+/* toolbar item palette label */
+"Progress" = "Progress";
 
 /* button title */
 "Reinstall" = "再導入";
@@ -260,6 +251,15 @@
 /* status message */
 "Removal Succeeded" = "削除に成功しました";
 
+/* alert title */
+"Repository has a different TeX Live version" = "ミラーサーバーの TeX Live はバージョンが違います";
+
+/* No comment provided by engineer. */
+"Repository URL has a newer TeX Live version" = "ミラー URL の TeX Live のバージョンの方が新しいです";
+
+/* No comment provided by engineer. */
+"Repository URL has an older TeX Live version" = "ミラー URL の TeX Live のバージョンの方が旧いです";
+
 /* button title
    small button title */
 "Restore" = "復元";
@@ -277,7 +277,7 @@
 "Searching%C" = "%Cを検索中";
 
 /* context menu */
-"Set Default Mirror" = "既定ミラーに設定";
+"Set Default Repository" = "既定ミラーに設定";
 
 /* context menu */
 "Show Info" = "情報を表示";
@@ -315,11 +315,11 @@
 /* No comment provided by engineer. */
 "The location in the TeX Live database was not changed" = "TeX Live データベース中での場所は変更されませんでした。";
 
-/* alert text, two integer format specifiers */
-"The mirror at %@ has TeX Live %d, but you have TeX Live %d installed.  You need to adjust your preferences in order to continue." = "%1$@ のミラーサイトには TeX Live %2$d がありますが、ここに導入されているのは TeX Live %3$d です。続行するには環境設定を調整しなくてはなりません。";
-
 /* alert message text */
 "The removal process appears to have failed. Would you like to show the log now or ignore this warning?" = "削除過程で失敗が発生したようです。ログを今表示しますか、あるいはこの警告を無視しますか？";
+
+/* alert text, two integer format specifiers */
+"The repository at %@ has TeX Live %lu, but you have TeX Live %lu installed.  You need to switch repositories in order to continue." = "%1$@ のミラーサイトには TeX Live %2$d がありますが、ここに導入されているのは TeX Live %3$d です。続行するには環境設定を調整しなくてはなりません。";
 
 /* alert message text */
 "The restore process appears to have failed. Would you like to show the log now or ignore this warning?" = "復元過程で失敗が発生したようです。ログを今表示しますか、あるいはこの警告を無視しますか？";
@@ -332,9 +332,6 @@
 
 /* alert message text */
 "The tlmgr tool does not exist at %@.  Please set the correct location in preferences or install TeX Live." = "tlmgr ツールが %@ にありません。環境設定で正しい場所を設定するか、TeX Live を導入するかしてください。";
-
-/* alert title */
-"The tlmgr tool no longer exists, possibly due to an update failure." = "tlmgr ツールがなくなってしまいました。おそらく更新の失敗によるものです。";
 
 /* No comment provided by engineer. */
 "The tlu_ipctask helper application may have been tampered with." = "tlu_ipctask ヘルパーアプリケーションに手が加えられています。";
@@ -361,6 +358,9 @@
 "Unable to convert to a number" = "数値へ変換することができません";
 
 /* alert title */
+"Unable to determine your TeX Live version" = "Unable to determine your TeX Live version";
+
+/* alert title */
 "Unable to find a valid update server" = "有効な更新サーバーを見つけることができません";
 
 /* error message for info panel */
@@ -374,6 +374,9 @@
 
 /* button title */
 "Update" = "更新";
+
+/* context menu */
+"Update All Packages" = "Update All Packages";
 
 /* alert title */
 "Update all packages?" = "全パッケージを更新しますか？";
@@ -393,9 +396,6 @@
 /* single trailing space */
 "Updating " = "更新中 ";
 
-/* button title */
-"Use" = "使用する";
-
 /* alert message */
 "User cancelled operation" = "ユーザーが操作をキャンセルしました";
 
@@ -411,6 +411,9 @@
 /* alert text */
 "Would you like to use this as the default value for the command-line tlmgr tool as well?" = "これをコマンドラインツールの tlmgr の既定値としても使用したいですか？";
 
+/* button title */
+"Yes" = "Yes";
+
 /* alert message text */
 "You are attempting to remove critical parts of the underlying TeX Live infrastructure, and I won't help you do that." = "TeX Live 基盤部の必須部分を削除しようとしています。この操作の手助けはしません。";
 
@@ -421,8 +424,8 @@
 "You will need to manually quit and relaunch TeX Live Utility to complete installation of the new version." = "新しい版の導入を完了するには、手動で TeX Live ユーティリティを終了して再起動する必要があります。";
 
 /* two integer specifiers */
-"Your TeX Live version is %d, but your default mirror URL appears to be for TeX Live %d.  You need to choose an appropriate mirror." = "現在お持ちの TeX Live は第 %1$d 版ですが、既定ミラー URL には TeX Live %2$d があります。適切なミラーをお選びください。";
+"Your TeX Live version is %lu, but your default repository URL appears to be for TeX Live %lu.  You need to choose an appropriate repository." = "現在お持ちの TeX Live は第 %1$d 版ですが、既定ミラー URL には TeX Live %2$d があります。適切なミラーをお選びください。";
 
 /* two integer specifiers */
-"Your TeX Live version is %d, but your default mirror URL appears to be for TeX Live %d.  You need to manually upgrade to a newer version of TeX Live, as there will be no further updates for your version." = "現在お持ちの TeX Live は第 %1$d 版ですが、既定ミラー URL には TeX Live %2$d があります。お持ちの版にはこれ以上の更新がないため、手動で新しい版の TeX Live にアップグレードする必要があります。";
+"Your TeX Live version is %lu, but your default repository URL appears to be for TeX Live %lu.  You need to manually upgrade to a newer version of TeX Live, as there will be no further updates for your version." = "現在お持ちの TeX Live は第 %1$d 版ですが、既定ミラー URL には TeX Live %2$d があります。お持ちの版にはこれ以上の更新がないため、手動で新しい版の TeX Live にアップグレードする必要があります。";
 
