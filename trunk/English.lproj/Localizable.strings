@@ -1,0 +1,431 @@
+/* partial alert text, with double space in front, only used with tlmgr2 */
+"  Total download size will be %@." = "  Total download size will be %@.";
+
+/* Menu item title, Need a single leading space */
+" (Default)" = " (Default)";
+
+/* alert message text */
+"%lu packages are available for update.  Of these, the TeX Live installer packages listed here must be updated first.  Update now?" = "%lu packages are available for update.  Of these, the TeX Live installer packages listed here must be updated first.  Update now?";
+
+/* heading in info panel */
+"\nDoc Files:\n" = "\nDoc Files:\n";
+
+/* heading in info panel */
+"\nDocumentation:\n" = "\nDocumentation:\n";
+
+/* heading in info panel */
+"\nRun Files:\n" = "\nRun Files:\n";
+
+/* heading in info panel */
+"\nSource Files:\n" = "\nSource Files:\n";
+
+/* single trailing space */
+"Adding " = "Adding ";
+
+/* alert title */
+"An installation is running!" = "An installation is running!";
+
+/* alert title */
+"Are you sure you want to restore %@ from backup?" = "Are you sure you want to restore %@ from backup?";
+
+/* main window status string */
+"Backup Listing Cancelled" = "Backup Listing Cancelled";
+
+/* main window status string */
+"Backup Listing Failed" = "Backup Listing Failed";
+
+/* status message */
+"Backup Pruning Failed" = "Backup Pruning Failed";
+
+/* tab title */
+"Backups" = "Backups";
+
+/* No comment provided by engineer. */
+"Beginning download and installation of packages" = "Beginning download and installation of packages";
+
+/* No comment provided by engineer. */
+"Beginning download of %.1f kbytes" = "Beginning download of %.1f kbytes";
+
+/* button title */
+"Cancel" = "Cancel";
+
+/* button title */
+"Cancel Anyway" = "Cancel Anyway";
+
+/* alert title */
+"Change command-line default?" = "Change command-line default?";
+
+/* button title in open panel (must be short)
+   Menu item title */
+"Choose" = "Choose";
+
+/* Prompt for Choose panel */
+"Choose Viewer" = "Choose Viewer";
+
+/* context menu */
+"Copy" = "Copy";
+
+/* alert title */
+"Critical updates available." = "Critical updates available.";
+
+/* main window status string */
+"Database Loading Cancelled" = "Database Loading Cancelled";
+
+/* main window status string */
+"Database Loading Failed" = "Database Loading Failed";
+
+/* status for package */
+"Deleted on server" = "Deleted on server";
+
+/* single trailing space */
+"Deleting " = "Deleting ";
+
+/* heading in info panel */
+"Description:\n" = "Description:\n";
+
+/* all caps tableview group title */
+"DOC FILES" = "DOC FILES";
+
+/* No comment provided by engineer. */
+"Download complete" = "Download complete";
+
+/* No comment provided by engineer. */
+"Downloading release notes" = "Downloading release notes";
+
+/* alert text */
+"Either a network problem exists or the TeX Live version on the server does not match.  If this problem persists on further attempts, you may need to try a different repository." = "Either a network problem exists or the TeX Live version on the server does not match.  If this problem persists on further attempts, you may need to try a different repository.";
+
+/* error message for unreadable package */
+"Error parsing output line" = "Error parsing output line";
+
+/* No comment provided by engineer. */
+"Error reading location from TeX Live" = "Error reading location from TeX Live";
+
+/* No comment provided by engineer. */
+"Error: no release notes for selected version." = "Error: no release notes for selected version.";
+
+/* alert message */
+"Failed to authorize operation" = "Failed to authorize operation";
+
+/* status for package */
+"Forcibly removed" = "Forcibly removed";
+
+/* single trailing space */
+"Forcibly removed " = "Forcibly removed ";
+
+/* alert message text */
+"If you cancel the installation process, it may leave your TeX installation in an unknown state.  You can ignore this warning and cancel anyway, or keep waiting until the installation finishes." = "If you cancel the installation process, it may leave your TeX installation in an unknown state.  You can ignore this warning and cancel anyway, or keep waiting until the installation finishes.";
+
+/* alert message text */
+"If you close the window, the installation process may leave your TeX installation in an unknown state.  You can ignore this warning and close the window, or wait until the installation finishes." = "If you close the window, the installation process may leave your TeX installation in an unknown state.  You can ignore this warning and close the window, or wait until the installation finishes.";
+
+/* button title */
+"Ignore" = "Ignore";
+
+/* status message */
+"Infrastructure Update Succeeded" = "Infrastructure Update Succeeded";
+
+/* tab title */
+"Install" = "Install";
+
+/* alert title */
+"Install failed." = "Install failed.";
+
+/* status message */
+"Install Succeeded" = "Install Succeeded";
+
+/* No comment provided by engineer. */
+"Installation complete; reconfiguring TeX Live" = "Installation complete; reconfiguring TeX Live";
+
+/* alert title */
+"Installation in progress!" = "Installation in progress!";
+
+/* status for package */
+"Installed" = "Installed";
+
+/* single trailing space */
+"Installing " = "Installing ";
+
+/* alert title */
+"Invalid URL" = "Invalid URL";
+
+/* alert title */
+"Invalid URL entered" = "Invalid URL entered";
+
+/* button title */
+"Keep Waiting" = "Keep Waiting";
+
+/* heading in info panel */
+"Link: " = "Link: ";
+
+/* main window status string */
+"Listing Cancelled" = "Listing Cancelled";
+
+/* main window status string */
+"Listing Failed" = "Listing Failed";
+
+/* status message */
+"Loading Database" = "Loading Database";
+
+/* status for package */
+"Local version is newer" = "Local version is newer";
+
+/* single trailing space */
+"Local version is newer " = "Local version is newer ";
+
+/* value in tableview */
+"Missing short description" = "Missing short description";
+
+/* status for expandable outline row with installed and uninstalled packages */
+"Mixed" = "Mixed";
+
+/* the user's repository group title */
+"My Repositories" = "My Repositories";
+
+/* alert title in preferences */
+"Necessary programs for TeX Live do not exist in that folder" = "Necessary programs for TeX Live do not exist in that folder";
+
+/* No comment provided by engineer. */
+"Network is unavailable" = "Network is unavailable";
+
+/* update alert message text part 3 (optional) */
+"New packages will be installed." = "New packages will be installed.";
+
+/* button title */
+"No" = "No";
+
+/* main window status string */
+"No Backups Available" = "No Backups Available";
+
+/* main window status string */
+"No Updates Available" = "No Updates Available";
+
+/* status for package */
+"Not installed" = "Not installed";
+
+/* info panel title */
+"Nothing Selected" = "Nothing Selected";
+
+/* No comment provided by engineer. */
+"Nothing selected." = "Nothing selected.";
+
+/* menu title */
+"Open With" = "Open With";
+
+/* heading in info panel */
+"Package:" = "Package:";
+
+/* tab title */
+"Packages" = "Packages";
+
+/* update alert message text part 2 (optional) */
+"Packages that no longer exist on the server will be removed." = "Packages that no longer exist on the server will be removed.";
+
+/* status message */
+"Paper Size Change Failed" = "Paper Size Change Failed";
+
+/* alert message */
+"Please quit and relaunch TeX Live Utility.  If this problem occurs again, please submit a bug report using the link on the Help menu." = "Please quit and relaunch TeX Live Utility.  If this problem occurs again, please submit a bug report using the link on the Help menu.";
+
+/* alert title */
+"Possible update failure." = "Possible update failure.";
+
+/* toolbar item palette label */
+"Progress" = "Progress";
+
+/* button title */
+"Reinstall" = "Reinstall";
+
+/* alert title */
+"Reinstall packages?" = "Reinstall packages?";
+
+/* single trailing space */
+"Reinstalling " = "Reinstalling ";
+
+/* Window title */
+"Release Notes" = "Release Notes";
+
+/* alert title */
+"Removal failed." = "Removal failed.";
+
+/* status message */
+"Removal Succeeded" = "Removal Succeeded";
+
+/* alert title */
+"Repository has a different TeX Live version" = "Repository has a different TeX Live version";
+
+/* No comment provided by engineer. */
+"Repository URL has a newer TeX Live version" = "Repository URL has a newer TeX Live version";
+
+/* No comment provided by engineer. */
+"Repository URL has an older TeX Live version" = "Repository URL has an older TeX Live version";
+
+/* button title
+   small button title */
+"Restore" = "Restore";
+
+/* alert title */
+"Restore failed." = "Restore failed.";
+
+/* status message */
+"Restore Succeeded" = "Restore Succeeded";
+
+/* all caps tableview group title */
+"RUN FILES" = "RUN FILES";
+
+/* info panel title */
+"Searching%C" = "Searching%C";
+
+/* context menu */
+"Set Default Repository" = "Set Default Repository";
+
+/* context menu */
+"Show Info" = "Show Info";
+
+/* button title */
+"Show Log" = "Show Log";
+
+/* alert message text */
+"Some of the packages you have selected are already installed.  Would you like to reinstall them?" = "Some of the packages you have selected are already installed.  Would you like to reinstall them?";
+
+/* alert title */
+"Some of these packages cannot be removed." = "Some of these packages cannot be removed.";
+
+/* all caps tableview group title */
+"SOURCE FILES" = "SOURCE FILES";
+
+/* heading in info panel */
+"Status:" = "Status:";
+
+/* heading in info panel */
+"Summary:" = "Summary:";
+
+/* alert sheet title */
+"TeX installation not found." = "TeX installation not found.";
+
+/* No comment provided by engineer. */
+"TeX Live 2008 is not supported" = "TeX Live 2008 is not supported";
+
+/* No comment provided by engineer. */
+"The current location is:" = "The current location is:";
+
+/* alert message text */
+"The install process appears to have failed. Would you like to show the log now or ignore this warning?" = "The install process appears to have failed. Would you like to show the log now or ignore this warning?";
+
+/* No comment provided by engineer. */
+"The location in the TeX Live database was not changed" = "The location in the TeX Live database was not changed";
+
+/* alert message text */
+"The removal process appears to have failed. Would you like to show the log now or ignore this warning?" = "The removal process appears to have failed. Would you like to show the log now or ignore this warning?";
+
+/* alert text, two integer format specifiers */
+"The repository at %@ has TeX Live %lu, but you have TeX Live %lu installed.  You need to switch repositories in order to continue." = "The repository at %1$@ has TeX Live %2$lu, but you have TeX Live %3$lu installed.  You need to switch repositories in order to continue.";
+
+/* alert message text */
+"The restore process appears to have failed. Would you like to show the log now or ignore this warning?" = "The restore process appears to have failed. Would you like to show the log now or ignore this warning?";
+
+/* alert message text */
+"The TeX Live infrastructure packages have the same version after updating.  This could be a packaging problem on the server.  If you see this message repeatedly, wait until the problem is resolved in TeX Live before attempting another update." = "The TeX Live infrastructure packages have the same version after updating.  This could be a packaging problem on the server.  If you see this message repeatedly, wait until the problem is resolved in TeX Live before attempting another update.";
+
+/* alert message text in preferences */
+"The tlmgr and kpsewhich tools must be present in this folder for basic functionality." = "The tlmgr and kpsewhich tools must be present in this folder for basic functionality.";
+
+/* alert message text */
+"The tlmgr tool does not exist at %@.  Please set the correct location in preferences or install TeX Live." = "The tlmgr tool does not exist at %@.  Please set the correct location in preferences or install TeX Live.";
+
+/* No comment provided by engineer. */
+"The tlu_ipctask helper application may have been tampered with." = "The tlu_ipctask helper application may have been tampered with.";
+
+/* alert title */
+"The update failed." = "The update failed.";
+
+/* alert message text */
+"The update process appears to have failed. Would you like to show the log now or ignore this warning?" = "The update process appears to have failed. Would you like to show the log now or ignore this warning?";
+
+/* error message */
+"This URL is missing a scheme, such as http." = "This URL is missing a scheme, such as http.";
+
+/* error message */
+"This URL was not valid." = "This URL was not valid.";
+
+/* No comment provided by engineer. */
+"This version of TeX Live Utility will not work correctly with TeX Live 2008.  You need to download TeX Live Utility version 0.74 or earlier, or upgrade to a newer TeX Live.  I recommend the latter." = "This version of TeX Live Utility will not work correctly with TeX Live 2008.  You need to download TeX Live Utility version 0.74 or earlier, or upgrade to a newer TeX Live.  I recommend the latter.";
+
+/* update alert message text part 1 */
+"This will install all available updates." = "This will install all available updates.";
+
+/* No comment provided by engineer. */
+"Unable to convert to a number" = "Unable to convert to a number";
+
+/* alert title */
+"Unable to determine your TeX Live version" = "Unable to determine your TeX Live version";
+
+/* alert title */
+"Unable to find a valid update server" = "Unable to find a valid update server";
+
+/* error message for info panel */
+"Unable to find info for %@" = "Unable to find info for %@";
+
+/* alert title */
+"Unable to relaunch" = "Unable to relaunch";
+
+/* error message */
+"Unsupported URL scheme for TeX Live.  Must be one of:" = "Unsupported URL scheme for TeX Live.  Must be one of:";
+
+/* button title */
+"Update" = "Update";
+
+/* context menu */
+"Update All Packages" = "Update All Packages";
+
+/* alert title */
+"Update all packages?" = "Update all packages?";
+
+/* context menu */
+"Update Selected Packages" = "Update Selected Packages";
+
+/* status message */
+"Update Succeeded" = "Update Succeeded";
+
+/* status for package */
+"Updated on server" = "Updated on server";
+
+/* tab title */
+"Updates" = "Updates";
+
+/* single trailing space */
+"Updating " = "Updating ";
+
+/* alert message */
+"User cancelled operation" = "User cancelled operation";
+
+/* status message */
+"Validating Server" = "Validating Server";
+
+/* No comment provided by engineer. */
+"Version %@" = "Version %@";
+
+/* button title */
+"Wait" = "Wait";
+
+/* alert text */
+"Would you like to use this as the default value for the command-line tlmgr tool as well?" = "Would you like to use this as the default value for the command-line tlmgr tool as well?";
+
+/* button title */
+"Yes" = "Yes";
+
+/* alert message text */
+"You are attempting to remove critical parts of the underlying TeX Live infrastructure, and I won't help you do that." = "You are attempting to remove critical parts of the underlying TeX Live infrastructure, and I won't help you do that.";
+
+/* alert message */
+"You can always update to the latest version or restore a different one to undo this change." = "You can always update to the latest version or restore a different one to undo this change.";
+
+/* alert text */
+"You will need to manually quit and relaunch TeX Live Utility to complete installation of the new version." = "You will need to manually quit and relaunch TeX Live Utility to complete installation of the new version.";
+
+/* two integer specifiers */
+"Your TeX Live version is %lu, but your default repository URL appears to be for TeX Live %lu.  You need to choose an appropriate repository." = "Your TeX Live version is %1$lu, but your default repository URL appears to be for TeX Live %2$lu.  You need to choose an appropriate repository.";
+
+/* two integer specifiers */
+"Your TeX Live version is %lu, but your default repository URL appears to be for TeX Live %lu.  You need to manually upgrade to a newer version of TeX Live, as there will be no further updates for your version." = "Your TeX Live version is %1$lu, but your default repository URL appears to be for TeX Live %2$lu.  You need to manually upgrade to a newer version of TeX Live, as there will be no further updates for your version.";
+

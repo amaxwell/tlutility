@@ -353,7 +353,7 @@
 		F97EBB381440971C00E79859 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Japanese.lproj/LogWindow.xib; sourceTree = "<group>"; };
 		F97EBB3B1440975200E79859 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Japanese.lproj/LaunchAgentSheet.xib; sourceTree = "<group>"; };
 		F97EBB3C1440975A00E79859 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Japanese.lproj/AutobackupSheet.xib; sourceTree = "<group>"; };
-		F97EBB3D1440976200E79859 /* Japanese */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = Japanese; path = Japanese.lproj/Localizable.strings; sourceTree = "<group>"; };
+		F97EBB3D1440976200E79859 /* Japanese */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = Japanese; path = Japanese.lproj/Localizable.strings; sourceTree = "<group>"; };
 		F97EBB3E1440976B00E79859 /* Japanese */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = Japanese; path = Japanese.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		F97EBB3F1440977100E79859 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Japanese.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		F97EBB401440977900E79859 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Japanese.lproj/MainWindow.xib; sourceTree = "<group>"; };
@@ -394,7 +394,7 @@
 		F9AAC11B126798F6003D665F /* TLMBackupNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMBackupNode.h; sourceTree = "<group>"; };
 		F9AAC11C126798F6003D665F /* TLMBackupNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMBackupNode.m; sourceTree = "<group>"; };
 		F9ABAA5D0EF198D500497E0F /* Credits.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = Credits.rtf; sourceTree = "<group>"; };
-		F9B061FD0F0F387700BB03D3 /* English */ = {isa = PBXFileReference; fileEncoding = 2483028224; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/Localizable.strings; sourceTree = "<group>"; };
+		F9B061FD0F0F387700BB03D3 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/Localizable.strings; sourceTree = "<group>"; };
 		F9B1345F0EEB1894007C0046 /* TLMAppController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMAppController.h; sourceTree = "<group>"; };
 		F9B134600EEB1894007C0046 /* TLMAppController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMAppController.m; sourceTree = "<group>"; };
 		F9B134660EEB19CB007C0046 /* TLMMainWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMMainWindowController.h; sourceTree = "<group>"; };
@@ -1112,7 +1112,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd ${SOURCE_ROOT}\n\n/usr/bin/genstrings -o \"${SOURCE_ROOT}/English.lproj\" *.m";
+			shellScript = "cd ${SOURCE_ROOT}\n\n/usr/bin/genstrings -o English.lproj *.m\n\niconv -f UTF-16 -t UTF-8 English.lproj/Localizable.strings > English.lproj/Localizable.strings.utf8\n\nmv English.lproj/Localizable.strings.utf8 English.lproj/Localizable.strings";
 		};
 /* End PBXShellScriptBuildPhase section */
 
