@@ -400,10 +400,11 @@ static NSString *__TLMTemporaryFile()
         [[self tlpdbData] writeToFile:tlpdbPath atomically:NO];
         
         NSString *plistPath = __TLMTemporaryFile();
+        NSString *parserPath = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"parse_tlpdb.py"];
         
         TLMTask *parseTask = [[TLMTask new] autorelease];
-        [parseTask setLaunchPath:[[NSBundle mainBundle] pathForAuxiliaryExecutable:@"parse_tlpdb.py"]];
-        [parseTask setArguments:[NSArray arrayWithObjects:@"-o", plistPath, @"-f", @"plist", tlpdbPath, nil]];
+        [parseTask setLaunchPath:@"/usr/bin/python"];
+        [parseTask setArguments:[NSArray arrayWithObjects:parserPath, @"-o", plistPath, @"-f", @"plist", tlpdbPath, nil]];
         [parseTask launch];
         [parseTask waitUntilExit];
 
