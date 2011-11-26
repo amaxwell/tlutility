@@ -104,18 +104,17 @@ def rewrite_version(newVersion):
 def clean_and_build():
     
     # clean and rebuild the Xcode project
-    buildCmd = ["/usr/bin/xcodebuild", "-configuration", "Release", "-target", "TeX Live Utility", "clean", "build"]
+    buildCmd = ["/Xcode3/usr/bin/xcodebuild", "-configuration", "Release", "-target", "TeX Live Utility", "clean", "build"]
     nullDevice = open("/dev/null", "r")
     x = Popen(buildCmd, cwd=SOURCE_DIR, stdout=nullDevice, stderr=nullDevice)
     rc = x.wait()
     assert rc == 0, "xcodebuild failed"
     nullDevice.close()
 
-def create_tarball_of_application():
+def create_tarball_of_application(newVersionNumber):
     
-    # create a name for the tarball based on today's date
-    tarballName = strftime("%Y%m%d", localtime())
-    tarballName = os.path.join(BUILD_DIR, os.path.basename(BUILT_APP) + "-" + tarballName + ".tgz")
+    # Create a name for the tarball based on version number
+    tarballName = os.path.join(BUILD_DIR, os.path.basename(BUILT_APP) + "-" + newVersionNumber + ".tgz")
 
     # create a tarfile object
     tarball = tarfile.open(tarballName, "w:gz")
@@ -253,7 +252,7 @@ if __name__ == '__main__':
 
     oldVersion = rewrite_version(newVersion)
     clean_and_build()
-    tarballPath = create_tarball_of_application()
+    tarballPath = create_tarball_of_application(newVersion)
     appcastSignature, fileSize = signature_and_size(tarballPath)    
     update_appcast(oldVersion, newVersion, appcastSignature, tarballPath, fileSize)
     
