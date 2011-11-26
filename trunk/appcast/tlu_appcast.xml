@@ -479,5 +479,35 @@
             <pubDate>Sun, 09 Oct 2011 23:39:18 +0000</pubDate>
             <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-20111009.tgz" sparkle:version="0.93" length="2154676" type="application/octet-stream" sparkle:dsaSignature="MCwCFEKDXI+rRGqtCzofZ8EGFJU/Mi6IAhQ6864mIDn7+Jh83h4FwYE4w/l9qg=="></enclosure>
         </item>
+        <item>
+            <title>Version 0.94</title>
+            <description>
+                <h3>Changes Since 0.93</h3>
+                <li>Added help book (see the Help menu)</li>
+                <li>Fixed a font problem in the installer outline view</li>
+                <li>Fixed a bug where the log window showed up when it was supposed to be hidden</li>
+                <li>Use repository instead of mirror in user interface</li>
+                <li>Fixed an exception in the favicon manager when it had an invalid URL</li>
+                <li>User repos that do not appear in the internal plist are handled correctly</li>
+                <li>Custom repos are now correctly shown as default</li>
+                <li>Address autocomplete handles custom repos correctly</li>
+                <li>Removed the keyboard shortcut for Remove, so Forcibly Remove is hidden again</li>
+                <li>Clear selection when switching logs, to avoid exceptions</li>
+                <li>Clear status messages more consistently on the main window</li>
+                <li>Timeout of a repo is now considered an error when using the CTAN multiplexer, so you get multiple attempts</li>
+                <li>Progress for updating is now shown in the address field, and the status bar is gone</li>
+                <li>Sparkle has been updated with fixes from Christiaan Hofman</li>
+                <li>Restored the toolbar, with optional text-based buttons for common actions</li>
+                <li>Revised custom tabview drawing</li>
+                <li>Now attempt to dock the log window when it is moved or resized</li>
+                <li>More logging and a separate alert if determining the local version number fails</li>
+                <li>Default repo can be changed from the main window</li>
+                <li>Fixed some spurious clang warnings</li>
+                <li>Explicitly exec /usr/bin/python when running parse_tlpdb.py instead of relying on /usr/bin/env</li>
+                <li>Updated repository list based on latest CTAN.sites file</li>
+            </description>
+            <pubDate>Sat, 26 Nov 2011 18:28:57 +0000</pubDate>
+            <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-0.94.tgz" sparkle:version="0.94" length="3182721" type="application/octet-stream" sparkle:dsaSignature="MCwCFEpwRswukMgxZL95xtFwDc0g4KpbAhQjaw5qSKqYWMvL29Q5bF/JZmk1Ug=="></enclosure>
+        </item>
     </channel>
 </rss>
