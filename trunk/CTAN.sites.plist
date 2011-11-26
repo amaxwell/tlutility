@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
 	<key>sites</key>
@@ -1008,6 +1008,17 @@
 			</dict>
 			<dict>
 				<key>country</key>
+				<string>Costa Rica</string>
+				<key>name</key>
+				<string>mirrors.ucr.ac.cr</string>
+				<key>urls</key>
+				<array>
+					<string>ftp://mirrors.ucr.ac.cr/CTAN/</string>
+					<string>http://mirrors.ucr.ac.cr/CTAN/</string>
+				</array>
+			</dict>
+			<dict>
+				<key>country</key>
 				<string>Mexico</string>
 				<key>name</key>
 				<string>tezcatl.fciencias.unam.mx</string>
@@ -1142,6 +1153,16 @@
 					<string>rsync://mirror.unl.edu/ctan/</string>
 				</array>
 			</dict>
+			<dict>
+				<key>country</key>
+				<string>USA</string>
+				<key>name</key>
+				<string>www.math.washington.edu</string>
+				<key>urls</key>
+				<array>
+					<string>http://www.math.washington.edu/tex-archive/</string>
+				</array>
+			</dict>
 		</array>
 		<key>South America</key>
 		<array>
@@ -1235,6 +1256,6 @@
 		</array>
 	</dict>
 	<key>timestamp</key>
-	<real>1318015009.785269</real>
+	<real>1322274653.79515</real>
 </dict>
 </plist>
