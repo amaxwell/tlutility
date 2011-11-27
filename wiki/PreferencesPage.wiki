@@ -1,5 +1,7 @@
 #summary TeX Live Utility Preferences.
 
+*This page is no longer authoritative, now that TeX Live Utility has a help book. Please use the Help menu to access it.*
+
 = Settings =
 
 TeX Live Utility is designed to have as few settings as possible.  Window setup such as table column widths should be preserved, along with the split view bar location.

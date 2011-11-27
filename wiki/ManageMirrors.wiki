@@ -1,9 +1,10 @@
-#summary Managing Mirrors
-#labels Featured
+#summary Managing Repositories
+
+*This page is no longer authoritative, now that TeX Live Utility has a help book. Please use the Help menu to access it.*
 
 = Introduction =
 
-TeX Live Utility can be used with any CTAN mirror.  Most users should use the default URL of [http://mirror.ctan.org] which picks a nearby host for you to spread out the load, but sometimes you need to use a particular URL.
+TeX Live Utility can be used with any TeX Live repository, which typically resides on a CTAN mirror.  Most users should use the default URL of [http://mirror.ctan.org] which picks a nearby host for you to spread out the load, but sometimes you need to use a particular URL.
 
 To change the URL, you can edit the address field at the top of the main window, or drag-and-drop a URL from another source, such as a web browser or the Finder.  If the URL is invalid or does not have the correct TeX Live version, an alert will be presented.
 
@@ -11,16 +12,16 @@ The address field has autocompletion, so if you start typing any part of a known
 
 In general, the user interface is inspired by web browsers, but has additional validation steps for URLs.
 
-= Mirror Window =
+= Repository Window =
 
-To manage the list of known mirrors, choose the *Configure->Manage Mirrors* menu item.  This will give a window similar to this one:
+To manage the list of known mirrors, choose the *Configure->Manage Repositories* menu item.  This will give a window similar to this one:
 
 http://mactlmgr.googlecode.com/svn/wiki/images/Mirrors.png
 
-== Home Mirror ==
+== Home Repository ==
 
-Your home mirror (the one used when TeX Live Utility starts up) is shown in boldface.  To change it, use the button at the bottom of the window, or the *Configure->Set as Home Mirror* menu item.  You can use the Home button next to the address field in Tex Live Utility's main window to reload using the home mirror, which may be useful if you temporarily edited the field.
+Your home repository (the one used when TeX Live Utility starts up) is shown in boldface.  To change it, use the button at the bottom of the window, or the *Configure->Set as Home Mirror* menu item.  You can use the Home button next to the address field in Tex Live Utility's main window to reload using the home mirror, which may be useful if you temporarily edited the field.
 
 == Adding Mirrors ==
 
-To add a new mirror, you can use the “+” button at the bottom of the window, or drop it under the “OTHER MIRRORS” outline heading.  This is where you should add a URL for [http://tlcontrib.metatex.org/ TLContrib], for instance, or a private repository.  The by-continent list of mirrors comes from parsing [http://www.ctan.org/tex-archive/CTAN.sites CTAN.sites] and is not editable.
+To add a new mirror, you can use the “+” button at the bottom of the window, or drop it under the “MY REPOSITORIES” outline heading.  This is where you should add a URL for [http://tlcontrib.metatex.org/ TLContrib], for instance, or a private repository.  The by-continent list of mirrors comes from parsing [http://www.ctan.org/tex-archive/CTAN.sites CTAN.sites] and is not editable.

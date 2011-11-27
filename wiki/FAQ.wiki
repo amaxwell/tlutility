@@ -23,7 +23,7 @@ The were removed because I can't draw icons, and the previous set was a misuse o
 
 === 6.  Will you add a button for updates? ===
 
-Not unless someone comes up with a really nice set of icons.  There's not enough room for text-based buttons.  Really, though, how much harder is it to use the main menu or a context menu?  Did you also like Word 6.0 for the Mac? 
+As of 0.94, there are text-based buttons available if you customize the toolbar.  Really, though, how much harder is it to use the main menu or a context menu?  Did you also like Word 6.0 for the Mac? 
 
 === 7.  Why did you redo the interface? ===
 

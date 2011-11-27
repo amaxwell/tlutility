@@ -1,6 +1,8 @@
 #summary Basic features of TeX Live Utility.
 #labels Featured
 
+*This page only provides a limited feature overview.  Please use the Help menu to access TeX Live Utility's documentation.*
+
 = Introduction =
 
 The primary feature of TeX Live Utility is updating a MacTeX installation.  When first launching the program, this is the screen that will be visible:
@@ -25,13 +27,13 @@ Note that some packages have multiple architectures, and you generally only want
 
 = Paper Size =
 
-Use the Actions menu to change paper size.  The current paper size is given by pdftex, but changing paper size will change it for _all_ TeX programs.  If you want to change paper size for a single program, e.g. dvips, use the tlmgr command-line tool.
+Use the Configure menu to change paper size.  The current paper size is given by pdftex, but changing paper size will change it for _all_ TeX programs.  If you want to change paper size for a single program, e.g. dvips, use the tlmgr command-line tool.
 
 = Backups =
 
 TeX Live Manager will automatically keep backups for you when it installs a new package, which can be very useful if an update suddenly keeps your documents from compiling!  
 
-Use the Actions menu to change automatic backup settings.  If you want to keep all backups, enter ∞ (opt-5) for the number to keep.  If the “Prune backups” box is checked, old backups will be removed, excluding the number specified for keeping.
+Use the Configure menu to change automatic backup settings.  If you want to keep all backups, enter ∞ (opt-5) for the number to keep.  If the “Prune backups” box is checked, old backups will be removed, excluding the number specified for keeping.
 
 http://mactlmgr.googlecode.com/svn/wiki/images/AutobackupSheet.png
 
