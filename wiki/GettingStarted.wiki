@@ -1,7 +1,7 @@
 #summary Basic features of TeX Live Utility.
 #labels Featured
 
-*This page only provides a limited feature overview.  Please use the Help menu to access TeX Live Utility's documentation.*
+= This page only provides a limited feature overview.  Please use the Help menu to access TeX Live Utility's documentation. =
 
 = Introduction =
 

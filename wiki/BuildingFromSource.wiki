@@ -5,6 +5,8 @@
 
 Apple removed the recently-added capabilities for Interface Builder plugins, and has not responded to developer requests for adding that feature back; their recommended solution is to use Xcode 3.x, which is not compatible with Lion (10.7).  Consequently, you need to use Snow Leopard (10.6.x) and Xcode 3.2.x (earlier versions may work as well).  This also avoids the [http://inessential.com/2011/09/02/the_part_of_xcode_4_that_tires_me_out painful UI of Xcode 4], so it's not all bad.
 
+Update: it now compiles with Xcode 4.2 on Lion.  As far as I know, you still can't compile with Xcode 4 on Snow Leopard, but I'm not paying the developer fee to try 4.2 on Snow Leopard.  Note that xib files modified with Xcode on Lion may not be backwards compatible with Interface Builder on 10.6.8, regardless of the compatibility settings.
+
 == Get The Source ==
 
 Follow the instructions here: http://code.google.com/p/mactlmgr/source/checkout

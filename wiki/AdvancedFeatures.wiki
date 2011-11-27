@@ -1,5 +1,6 @@
+#summary Advanced features and settings.
 
-*This page is no longer authoritative, now that TeX Live Utility has a help book. Please use the Help menu to access it.*
+= This page is no longer authoritative, now that TeX Live Utility has a help book. Please use the Help menu to access it. =
 
 TeX Live Utility is intended to have very few advanced features, and be as basic as possible.  So-called power users are advised to use the command line interface.  However, there are a few features that are not for everyday usage.
 

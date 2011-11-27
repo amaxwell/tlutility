@@ -1,6 +1,6 @@
 #summary Managing Repositories
 
-*This page is no longer authoritative, now that TeX Live Utility has a help book. Please use the Help menu to access it.*
+= This page is no longer authoritative, now that TeX Live Utility has a help book. Please use the Help menu to access it. =
 
 = Introduction =
 
