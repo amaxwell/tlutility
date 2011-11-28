@@ -1250,7 +1250,7 @@
 								</object>
 								<object class="NSMenuItem" id="449584271">
 									<reference key="NSMenu" ref="374024848"/>
-									<string key="NSTitle">Support Request</string>
+									<string key="NSTitle">Problems or Questions</string>
 									<string key="NSKeyEquiv"/>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="35465992"/>
@@ -3325,7 +3325,7 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
-					<string>{{522, 638}, {207, 133}}</string>
+					<string>{{522, 638}, {226, 133}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
 					<string>{{596, 852}, {216, 23}}</string>
