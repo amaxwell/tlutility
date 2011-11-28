@@ -41,7 +41,7 @@
 
 @implementation TLMAddressTextFieldCell
 
-#define FAVICON_INSET ((NSSize) { 2, 2 })
+#define FAVICON_INSET ((NSSize) { 3, 3 })
 
 @synthesize icon = _icon;
 @synthesize progressValue = _progressValue;
