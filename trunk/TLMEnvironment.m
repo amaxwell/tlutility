@@ -575,7 +575,7 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
     }
     
     // Moved this check out of _getValidServer:repositoryYear: to avoid issues in the loop above
-    if (nil == validURL && NO == dbFailed) {
+    if ((nil == validURL || repositoryYear != _installedYear) && NO == dbFailed) {
         [self performSelectorOnMainThread:@selector(_displayFallbackServerAlertForRepositoryYear:) 
                                withObject:[NSNumber numberWithInteger:repositoryYear] 
                             waitUntilDone:NO];
