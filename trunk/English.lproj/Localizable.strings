@@ -396,6 +396,9 @@
 /* single trailing space */
 "Updating " = "Updating ";
 
+/* button title */
+"Upgrade" = "Upgrade";
+
 /* alert message */
 "User cancelled operation" = "User cancelled operation";
 
