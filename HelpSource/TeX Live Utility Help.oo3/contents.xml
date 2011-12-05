@@ -162,9 +162,12 @@
     </print-info>
     <auto-generate-level-styles>no</auto-generate-level-styles>
   </settings>
-  <editor content-size="{654, 760}" scroll-position="{0, 284}" column-titles-display-mode="off" status-visible="no">
+  <editor content-size="{654, 760}" column-titles-display-mode="off" status-visible="no">
     <drawer display="sections" width="236" palette-height="379"/>
-    <hoisted-rows ids="h2f6xuYZ-Sl"/>
+    <hoisted-rows ids="c7F_mB7Iwc0"/>
+    <selected-rows ids="nmTz-p8V31t"/>
+    <selected-columns ids="jFqHUGd_Dg1"/>
+    <selected-characters range="{0, 12}"/>
     <toolbar>{
     &quot;TB Display Mode&quot; = 2;
     &quot;TB Icon Size Mode&quot; = 2;
@@ -2052,6 +2055,20 @@
                 </text>
               </values>
               <children>
+                <item id="nmTz-p8V31t">
+                  <style>
+                    <inherited-style name="Anchor" idref="aUm3924E6__"/>
+                  </style>
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit>installation</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
                 <item id="oFP4nTHigc4">
                   <values>
                     <text>

@@ -405,10 +405,18 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
     return [[NSURL URLWithString:[[NSUserDefaults standardUserDefaults] objectForKey:TLMFullServerURLPreferenceKey]] tlm_normalizedURL];    
 }
 
+#define UPGRADE_TAG 'UPGR'
+
 - (void)versionWarningDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
 {
-    if ([[alert suppressionButton] state] == NSOnState)
+    if ([alert showsSuppressionButton] && [[alert suppressionButton] state] == NSOnState)
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:TLMDisableVersionMismatchWarningKey];
+    
+    // point users to main TL page, which has a link to MacTeX
+    if (UPGRADE_TAG == returnCode) {
+        NSURL *aURL = [NSURL URLWithString:@"http://tug.org/texlive/"];
+        [[NSWorkspace sharedWorkspace] openURL:aURL];
+    }
 }
 
 - (void)_displayFallbackServerAlertForRepositoryYear:(NSNumber *)repositoryYear
@@ -439,6 +447,12 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
         [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"Your TeX Live version is %lu, but your default repository URL appears to be for TeX Live %lu.  You need to manually upgrade to a newer version of TeX Live, as there will be no further updates for your version.", @"two integer specifiers"), _installedYear, remoteVersion]];
         // nag users into upgrading, to keep them from using ftp.tug.org willy-nilly
         allowSuppression = NO;
+        [alert addButtonWithTitle:NSLocalizedString(@"Ignore", @"button title")];
+        [alert addButtonWithTitle:NSLocalizedString(@"Upgrade", @"button title")];
+        [[[alert buttons] lastObject] setTag:UPGRADE_TAG];
+        [alert setShowsHelp:YES];
+        // !!! Doesn't seem to work; error sez "Help Viewer cannot open this content."  Furrfu.
+        [alert setHelpAnchor:@"installation"];
     }
     else {
         [alert setMessageText:NSLocalizedString(@"Repository URL has an older TeX Live version", @"")];
@@ -449,18 +463,14 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
     
     
     if (NO == allowSuppression || [[NSUserDefaults standardUserDefaults] boolForKey:TLMDisableVersionMismatchWarningKey] == NO) {
-        
-        SEL endSel = NULL;
-        
-        if (allowSuppression) {
-            endSel = @selector(versionWarningDidEnd:returnCode:contextInfo:);
+                
+        if (allowSuppression)
             [alert setShowsSuppressionButton:YES];
-        }
         
         // always show on the main window
         [alert beginSheetModalForWindow:[[[NSApp delegate] mainWindowController] window] 
                           modalDelegate:self 
-                         didEndSelector:endSel 
+                         didEndSelector:@selector(versionWarningDidEnd:returnCode:contextInfo:) 
                             contextInfo:NULL];            
     }
 }
