@@ -203,16 +203,28 @@ static void __TLMFaviconCacheInit() { _sharedCache = [TLMFaviconCache new]; }
         if (nil == icon)
             icon = [NSNull null];
         _TLMFaviconQueueItem *item = [self _currentItem];
-        [_iconsByURL setObject:icon forKey:[[item iconURL] host]];
-                
-        // take care of redirects
-        for (NSURL *otherURL in [item otherURLs])
-            [_iconsByURL setObject:icon forKey:[otherURL host]];
-        
-        if (icon != [NSNull null]) {
-            for (id <TLMFaviconCacheDelegate> obj in [item delegates])
-                [obj iconCache:self downloadedIcon:icon forURL:[item iconURL]];
+
+        /*
+         Hit an exception here once when item was nil; no idea why, but likely the delegate
+         messages are sent when I don't expect them.  Or something.  Maybe when download is
+         cancelled by the timer?
+        */
+        if (item ) {
+            [_iconsByURL setObject:icon forKey:[[item iconURL] host]];
+                    
+            // take care of redirects
+            for (NSURL *otherURL in [item otherURLs])
+                [_iconsByURL setObject:icon forKey:[otherURL host]];
+            
+            if (icon != [NSNull null]) {
+                for (id <TLMFaviconCacheDelegate> obj in [item delegates])
+                    [obj iconCache:self downloadedIcon:icon forURL:[item iconURL]];
+            }
         }
+        else {
+            TLMLog(__func__, @"No current item loading for main frame URL %@", [sender mainFrameURL]);
+        }
+
         [_webview stopLoading:nil];
         if ([_queue count])
             [_queue removeLastObject];
