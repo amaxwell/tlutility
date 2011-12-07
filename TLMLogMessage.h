@@ -58,6 +58,7 @@ typedef NSUInteger TLMLogMessageFlags;
 }
 
 - (id)initWithPropertyList:(NSDictionary *)plist;
+- (BOOL)matchesSearchString:(NSString *)searchTerm;
 
 @property (readwrite, copy) NSDate *date;
 @property (readwrite, copy) NSString *message;

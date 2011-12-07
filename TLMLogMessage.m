@@ -135,5 +135,6 @@
 }
 - (NSString *)description { return [NSString stringWithFormat:@"%@ %@ %@[%lu]\t%@", _date, _level, _sender, (unsigned long)_pid, _message]; }
 - (NSComparisonResult)compare:(TLMLogMessage *)other { return [_date compare:[other date]]; }
+- (BOOL)matchesSearchString:(NSString *)searchTerm { return [[self description] rangeOfString:searchTerm options:NSCaseInsensitiveSearch].length; }
 
 @end
