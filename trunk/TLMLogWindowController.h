@@ -59,13 +59,18 @@
     NSMutableDictionary           *_messagesByDate;
     NSUInteger                     _lastArchiveCount;
     id <TLMDockingWindowDelegate>  _dockingDelegate;
+    NSSearchField                 *_searchField;
+    NSMutableArray                *_displayedMessages;
 }
 
 @property (nonatomic, retain) IBOutlet TLMTableView *_messageTableView;
 @property (nonatomic, retain) IBOutlet TLMTableView *_sessionTableView;
 @property (nonatomic, retain) IBOutlet TLMSplitView *_splitView;
+@property (nonatomic, retain) IBOutlet NSSearchField *_searchField;
 @property (nonatomic, assign) id <TLMDockingWindowDelegate> dockingDelegate;
 @property (nonatomic, readonly) BOOL isWindowLoaded;
+
+- (void)search:(id)sender;
 
 @end
 

@@ -60,6 +60,7 @@ static NSDate *_currentSessionDate = nil;
 @synthesize _messageTableView;
 @synthesize _sessionTableView;
 @synthesize _splitView;
+@synthesize _searchField;
 @synthesize dockingDelegate = _dockingDelegate;
 @synthesize isWindowLoaded = _windowDidLoad;
 
@@ -112,6 +113,7 @@ static NSString *__TLMLogStringFromDate(NSDate *date)
         _messagesByDate = [NSMutableDictionary new];
         [_messagesByDate setObject:[NSMutableArray array] forKey:_currentSessionDate];
         _displayedSessionDate = [_currentSessionDate copy];
+        _displayedMessages = [NSMutableArray new];
 
         NSDictionary *archive = [NSDictionary dictionaryWithContentsOfFile:__TLMLogArchivePath()];
         
@@ -167,6 +169,9 @@ static NSString *__TLMLogStringFromDate(NSDate *date)
     if (_rowHeights) CFRelease(_rowHeights);
     [_splitView setDelegate:nil];
     [_splitView release];
+    
+    [_searchField release];
+    [_displayedMessages release];
     
     [super dealloc];
 }
@@ -295,14 +300,37 @@ static NSString *__TLMLogStringFromDate(NSDate *date)
 - (void)showWindow:(id)sender
 {
     [super showWindow:sender];
-    [_messageTableView reloadData];
+    [self search:nil];
     
     // showWindow is called in response to user action, so it's okay to force an update and scroll
     TLMLogServerSync();
     [_messageTableView scrollRowToVisible:([_messageTableView numberOfRows] - 1)];
     
     // send unconditionally, since this isn't in response to the parent window moving
-    [_dockingDelegate dockableWindowGeometryDidChange:[self window]];
+    [_dockingDelegate dockableWindowGeometryDidChange:[self window]];    
+}
+
+- (void)_searchAndScroll:(BOOL)scroll
+{
+    [_displayedMessages removeAllObjects];
+    if ([[_searchField stringValue] isEqualToString:@""]) {
+        [_displayedMessages setArray:[_messagesByDate objectForKey:_displayedSessionDate]];
+    }
+    else {
+        for (TLMLogMessage *msg in [_messagesByDate objectForKey:_displayedSessionDate]) {
+            if ([msg matchesSearchString:[_searchField stringValue]])
+                [_displayedMessages addObject:msg];
+        }
+    }
+    [_messageTableView reloadData];
+    if (scroll)
+        [_messageTableView scrollRowToVisible:([_messageTableView numberOfRows] - 1)];
+}
+
+- (void)search:(id)sender;
+{
+    // Console.app always scrolls to end when searching
+    [self _searchAndScroll:YES];
 }
 
 - (void)_update
@@ -326,11 +354,7 @@ static NSString *__TLMLogStringFromDate(NSDate *date)
         if (0 == rowCount || (rowCount > 0 && NSIntersectsRect([_messageTableView visibleRect], [_messageTableView rectOfRow:(rowCount - 1)])))
             shouldScroll = YES; 
         
-        [_messageTableView reloadData];
-        
-        // remember to call -numberOfRows again since it just changed...
-        if (shouldScroll)
-            [_messageTableView scrollRowToVisible:([_messageTableView numberOfRows] - 1)];
+        [self _searchAndScroll:shouldScroll];
     }
     else {
         /*
@@ -367,7 +391,7 @@ static NSString *__TLMLogStringFromDate(NSDate *date)
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView;
 {
     if (tableView == _messageTableView)
-        return [[_messagesByDate objectForKey:_displayedSessionDate] count];
+        return [_displayedMessages count];
     return [_messagesByDate count];
 }
 
@@ -384,7 +408,7 @@ static NSString *__TLMLogStringFromDate(NSDate *date)
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row;
 {
     if (tableView == _messageTableView) {
-        TLMLogMessage *msg = [[_messagesByDate objectForKey:_displayedSessionDate] objectAtIndex:row];
+        TLMLogMessage *msg = [_displayedMessages objectAtIndex:row];
         return [msg valueForKey:[tableColumn identifier]];
     }
     else {
@@ -402,7 +426,7 @@ static NSString *__TLMLogStringFromDate(NSDate *date)
     NSParameterAssert(tableView == _messageTableView);
     [pboard declareTypes:[NSArray arrayWithObject:NSStringPboardType] owner:nil];
     if ([[tableView selectedRowIndexes] count]) {
-        NSArray *messages = [[_messagesByDate objectForKey:_displayedSessionDate] objectsAtIndexes:[tableView selectedRowIndexes]];
+        NSArray *messages = [_displayedMessages objectsAtIndexes:[tableView selectedRowIndexes]];
         [pboard setString:[messages componentsJoinedByString:@"\n"] forType:NSStringPboardType];
     }
     else if ([[tableView selectedColumnIndexes] count]) {
@@ -421,7 +445,7 @@ static NSString *__TLMLogStringFromDate(NSDate *date)
 {
     // changing width will change height, but tableview doesn't know that
     CFDictionaryRemoveAllValues(_rowHeights);
-    [_messageTableView noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [[_messagesByDate objectForKey:_displayedSessionDate] count])]];
+    [_messageTableView noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [_displayedMessages count])]];
 }
 
 - (void)tableViewSelectionDidChange:(NSNotification *)notification
