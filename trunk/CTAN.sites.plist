@@ -339,6 +339,16 @@
 					<string>rsync://shadow.ind.ntou.edu.tw/ctan/</string>
 				</array>
 			</dict>
+			<dict>
+				<key>country</key>
+				<string>Thailand</string>
+				<key>name</key>
+				<string>ctan.megagod.net</string>
+				<key>urls</key>
+				<array>
+					<string>http://ctan.megagod.net/tex-archive/</string>
+				</array>
+			</dict>
 		</array>
 		<key>Australasia</key>
 		<array>
@@ -1063,6 +1073,17 @@
 				<key>country</key>
 				<string>USA</string>
 				<key>name</key>
+				<string>ctan.mirrorcatalogs.com</string>
+				<key>urls</key>
+				<array>
+					<string>http://ctan.mirrorcatalogs.com/</string>
+					<string>ftp://ctan.mirrorcatalogs.com/ctan/</string>
+				</array>
+			</dict>
+			<dict>
+				<key>country</key>
+				<string>USA</string>
+				<key>name</key>
 				<string>ctan.unixbrain.com</string>
 				<key>urls</key>
 				<array>
@@ -1256,6 +1277,6 @@
 		</array>
 	</dict>
 	<key>timestamp</key>
-	<real>1322274653.79515</real>
+	<real>1323319642.408435</real>
 </dict>
 </plist>
