@@ -112,8 +112,14 @@ static void __TLMPrefControllerInit() { _sharedInstance = [TLMPreferenceControll
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *texbinPath = [defaults objectForKey:TLMTexBinPathPreferenceKey];
-    [_texbinPathControl setURL:[NSURL fileURLWithPath:texbinPath]];    
+    [_texbinPathControl setURL:[NSURL fileURLWithPath:texbinPath]];
+    [_texbinPathControl setDoubleAction:@selector(openTexbinAction:)];
     [self updateUI];    
+}
+
+- (void)openTexbinAction:(id)sender
+{
+    [[NSWorkspace sharedWorkspace] openFile:[[NSUserDefaults standardUserDefaults] objectForKey:TLMTexBinPathPreferenceKey]];
 }
 
 - (IBAction)toggleUseRootHome:(id)sender;
