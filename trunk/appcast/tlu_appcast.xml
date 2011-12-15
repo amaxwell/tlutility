@@ -509,5 +509,21 @@
             <pubDate>Sat, 26 Nov 2011 18:28:57 +0000</pubDate>
             <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-0.94.tgz" sparkle:version="0.94" length="3182721" type="application/octet-stream" sparkle:dsaSignature="MCwCFEpwRswukMgxZL95xtFwDc0g4KpbAhQjaw5qSKqYWMvL29Q5bF/JZmk1Ug=="></enclosure>
         </item>
+        <item>
+            <title>Version 0.95</title>
+            <description>
+                <h3>Changes Since 0.94</h3>
+                <li>Updated Japanese localization</li>
+                <li>Increased favicon inset in address field</li>
+                <li>Fixed version mismatch warning for older TeX Live versions</li>
+                <li>Fixed an exception in favicon loading under some conditions</li>
+                <li>Added search support for log window</li>
+                <li>Mirror list updated</li>
+                <li>Double-click now opens the tlmgr path setting in preferences</li>
+                <li>Preferences window no longer shows resize thumb</li>
+            </description>
+            <pubDate>Thu, 15 Dec 2011 00:40:32 +0000</pubDate>
+            <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-0.95.tgz" sparkle:version="0.95" length="3195163" type="application/octet-stream" sparkle:dsaSignature="MC0CFQCLz/DZue9l5DWmC9ROiuEx7xTKHAIUATRnHpfnWCQ3g1ulWpIucUjmOak="></enclosure>
+        </item>
     </channel>
 </rss>
