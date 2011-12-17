@@ -525,5 +525,14 @@
             <pubDate>Thu, 15 Dec 2011 00:40:32 +0000</pubDate>
             <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-0.95.tgz" sparkle:version="0.95" length="3195163" type="application/octet-stream" sparkle:dsaSignature="MC0CFQCLz/DZue9l5DWmC9ROiuEx7xTKHAIUATRnHpfnWCQ3g1ulWpIucUjmOak="></enclosure>
         </item>
+        <item>
+            <title>Version 0.96</title>
+            <description>
+                <h3>Changes Since 0.95</h3>
+                <li>Fixed source list selection changes in log window</li>
+            </description>
+            <pubDate>Sat, 17 Dec 2011 01:43:41 +0000</pubDate>
+            <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-0.96.tgz" sparkle:version="0.96" length="3195375" type="application/octet-stream" sparkle:dsaSignature="MCwCFBorQBaQpQcAcU6OduSx19jwR+pCAhQKTZDRxoP1L1+OXQTMbCV+t0wVkA=="></enclosure>
+        </item>
     </channel>
 </rss>
