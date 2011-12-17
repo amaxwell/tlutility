@@ -457,7 +457,7 @@ static NSString *__TLMLogStringFromDate(NSDate *date)
         [_displayedSessionDate autorelease];
         _displayedSessionDate = [[[self _sortedSessionDates] objectAtIndex:[_sessionTableView selectedRow]] copy];
         CFDictionaryRemoveAllValues(_rowHeights);
-        [_messageTableView reloadData];
+        [self _searchAndScroll:NO];
     }
 }
 
