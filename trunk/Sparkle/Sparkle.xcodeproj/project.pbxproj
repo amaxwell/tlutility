@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		159A067514A3191200081DF3 /* SUUpdatePermissionPrompt.nib in Resources */ = {isa = PBXBuildFile; fileRef = 61C46F330D9C54F300B06326 /* SUUpdatePermissionPrompt.nib */; };
 		610134730DD250470049ACDF /* SUUpdateDriver.h in Headers */ = {isa = PBXBuildFile; fileRef = 610134710DD250470049ACDF /* SUUpdateDriver.h */; settings = {ATTRIBUTES = (); }; };
 		610134740DD250470049ACDF /* SUUpdateDriver.m in Sources */ = {isa = PBXBuildFile; fileRef = 610134720DD250470049ACDF /* SUUpdateDriver.m */; };
 		6101347B0DD2541A0049ACDF /* SUProbingUpdateDriver.h in Headers */ = {isa = PBXBuildFile; fileRef = 610134790DD2541A0049ACDF /* SUProbingUpdateDriver.h */; settings = {ATTRIBUTES = (); }; };
@@ -144,6 +145,10 @@
 /* Begin PBXFileReference section */
 		0867D69BFE84028FC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		0867D6A5FE840307C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
+		159A067014A312FB00081DF3 /* ja */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ja; path = ja.lproj/SUUpdateAlert.nib; sourceTree = "<group>"; };
+		159A067214A3148A00081DF3 /* ja */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ja; path = ja.lproj/SUAutomaticUpdateAlert.nib; sourceTree = "<group>"; };
+		159A067314A3152300081DF3 /* ja */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ja; path = ja.lproj/SUUpdatePermissionPrompt.nib; sourceTree = "<group>"; };
+		159A067414A3191200081DF3 /* ja */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Sparkle.strings; sourceTree = "<group>"; };
 		610134710DD250470049ACDF /* SUUpdateDriver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SUUpdateDriver.h; sourceTree = "<group>"; };
 		610134720DD250470049ACDF /* SUUpdateDriver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SUUpdateDriver.m; sourceTree = "<group>"; };
 		610134790DD2541A0049ACDF /* SUProbingUpdateDriver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SUProbingUpdateDriver.h; sourceTree = "<group>"; };
@@ -732,6 +737,7 @@
 				61AAE82A0A321A8000D8810D /* SUUpdateAlert.nib in Resources */,
 				615AE3D00D64DC40001CA7BD /* SUModelTranslation.plist in Resources */,
 				61C46F340D9C54F300B06326 /* SUUpdatePermissionPrompt.nib in Resources */,
+				159A067514A3191200081DF3 /* SUUpdatePermissionPrompt.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -861,6 +867,7 @@
 			children = (
 				61AAE8230A321A7F00D8810D /* en */,
 				61AAE8590A321B0400D8810D /* fr */,
+				159A067414A3191200081DF3 /* ja */,
 			);
 			name = Sparkle.strings;
 			sourceTree = "<group>";
@@ -870,6 +877,7 @@
 			children = (
 				61AAE8250A321A7F00D8810D /* en */,
 				61F365300E18988F007ECA02 /* fr */,
+				159A067214A3148A00081DF3 /* ja */,
 			);
 			name = SUAutomaticUpdateAlert.nib;
 			sourceTree = "<group>";
@@ -879,6 +887,7 @@
 			children = (
 				61AAE8270A321A7F00D8810D /* en */,
 				61F3652F0E18988F007ECA02 /* fr */,
+				159A067014A312FB00081DF3 /* ja */,
 			);
 			name = SUUpdateAlert.nib;
 			sourceTree = "<group>";
@@ -904,6 +913,7 @@
 			children = (
 				61C46F350D9C54F300B06326 /* en */,
 				61F3652E0E18988F007ECA02 /* fr */,
+				159A067314A3152300081DF3 /* ja */,
 			);
 			name = SUUpdatePermissionPrompt.nib;
 			sourceTree = "<group>";
