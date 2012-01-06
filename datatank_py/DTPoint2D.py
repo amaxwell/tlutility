@@ -30,6 +30,12 @@ class DTPoint2D(object):
         
     def __dt_write__(self, datafile, name):
         datafile.write_anonymous((self.x, self.y), name)
+        
+    @classmethod
+    def from_data_file(self, datafile, name):
+        
+        (x, y) = datafile[name]
+        return DTPoint2D(x, y)
 
 if __name__ == '__main__':
     
