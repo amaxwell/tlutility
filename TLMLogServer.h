@@ -74,7 +74,7 @@ extern NSString * const TLMLogStatusMessage;
 @end
 
 __BEGIN_DECLS
-extern void TLMLog(const char *sender, NSString *format, ...);
+extern void TLMLog(const char *sender, NSString *format, ...) NS_FORMAT_FUNCTION(2,3);
 // force an update of the log display clients; use sparingly
 extern void TLMLogServerSync();
 __END_DECLS
