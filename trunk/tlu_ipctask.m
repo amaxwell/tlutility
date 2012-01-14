@@ -123,6 +123,7 @@ static void vlog_message_with_level(TLMLogMessageFlags flags, const char *asl_st
 }
 
 // informational messages that can't be parsed
+static void log_notice_noparse(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 static void log_notice_noparse(NSString *format, ...)
 {
     va_list args;
@@ -132,6 +133,7 @@ static void log_notice_noparse(NSString *format, ...)
 }
 
 // messages get parsed if _messageFlags is set approriately
+static void log_notice(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 static void log_notice(NSString *format, ...)
 {
     va_list list;
@@ -141,6 +143,7 @@ static void log_notice(NSString *format, ...)
 }
 
 // for messages that are ambiguous; may be error or notice
+static void log_warning(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 static void log_warning(NSString *format, ...)
 {
     va_list list;
@@ -156,6 +159,7 @@ static void log_warning(NSString *format, ...)
 }
 
 // for messages that are clearly an error
+static void log_error(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 static void log_error(NSString *format, ...)
 {
     va_list list;
