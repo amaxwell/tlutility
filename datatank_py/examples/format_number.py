@@ -5,7 +5,7 @@
 
 import os, sys
 from datatank_py.DTDataFile import DTDataFile
-from time import clock
+from time import time
 
 if __name__ == '__main__':
     
@@ -20,7 +20,7 @@ if __name__ == '__main__':
     input_file.close()
     
     # record start time and create a list for errors
-    start_time = clock()
+    start_time = time()
     errors = []
     
     # run the computation, here using an exception handler to catch problems
@@ -33,7 +33,7 @@ if __name__ == '__main__':
     # create or truncate the output file    
     with DTDataFile("Output.dtbin", truncate=True) as output_file:
         # record computation time
-        output_file.write_anonymous(clock() - start_time, "ExecutionTime")
+        output_file.write_anonymous(time() - start_time, "ExecutionTime")
         
         # DataTank seems to display stderr instead of the error list, so
         # make sure to write to both.

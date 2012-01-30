@@ -7,7 +7,7 @@ import os
 import numpy as np
 from datatank_py.DTDataFile import DTDataFile
 from datatank_py.DTBitmap2D import DTBitmap2D
-from time import clock
+from time import time
 
 if __name__ == '__main__':
     
@@ -39,7 +39,7 @@ if __name__ == '__main__':
 
     input_file.close()
     
-    start_time = clock()
+    start_time = time()
     errors = []
     
     if image_path:
@@ -54,12 +54,12 @@ if __name__ == '__main__':
         errors.append("Unable to open as an image file")
         with DTDataFile("Output.dtbin", truncate=True) as output_file:
             output_file.write_anonymous(errors, "ExecutionErrors")
-            output_file.write_anonymous(clock() - start_time, "ExecutionTime")
+            output_file.write_anonymous(time() - start_time, "ExecutionTime")
             exit(1)
                         
     with DTDataFile("Output.dtbin", truncate=True) as output_file:
         
-        output_file.write_anonymous(clock() - start_time, "ExecutionTime")
+        output_file.write_anonymous(time() - start_time, "ExecutionTime")
         output_file["Var"] = img
                         
         # need to save a StringList of execution errors as Seq_ExecutionErrors

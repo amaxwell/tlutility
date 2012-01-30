@@ -6,7 +6,7 @@
 import os, sys
 from datatank_py.DTDataFile import DTDataFile
 from datatank_py.DTMesh2D import DTMesh2D
-from time import clock
+from time import time
 
 from osgeo import gdal
 from osgeo import osr

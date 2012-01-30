@@ -7,7 +7,7 @@ from datatank_py.DTDataFile import DTDataFile
 from datatank_py.DTProgress import DTProgress
 from datatank_py.DTSeries import DTSeriesGroup
 from datatank_py.DTMesh2D import DTMesh2D
-from time import clock
+from time import time
 import numpy as np
 
 if __name__ == '__main__':
@@ -17,7 +17,7 @@ if __name__ == '__main__':
     COUNT = input_file["count"]
     input_file.close()
     
-    start_time = clock()
+    start_time = time()
     
     with DTDataFile("Output.dtbin", truncate=True) as df:
         
@@ -48,5 +48,5 @@ if __name__ == '__main__':
             
         # save execution time, and errors as a string list
         df.write_anonymous([""], "ExecutionErrors")
-        df.write_anonymous(clock() - start_time, "ExecutionTime")
+        df.write_anonymous(time() - start_time, "ExecutionTime")
                     

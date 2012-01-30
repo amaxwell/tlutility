@@ -6,7 +6,7 @@
 from datatank_py.DTDataFile import DTDataFile
 from datatank_py.DTProgress import DTProgress
 from datatank_py.DTSeries import DTSeriesGroup
-from time import clock
+from time import time
 
 if __name__ == '__main__':
     
@@ -15,7 +15,7 @@ if __name__ == '__main__':
     input_string = input_file["InputString"]
     input_file.close()
     
-    start_time = clock()
+    start_time = time()
     
     # module is set to expect this filename, instead of the default "Output.dtbin"
     with DTDataFile("GEOutput.dtbin", truncate=True) as df:
@@ -52,4 +52,4 @@ if __name__ == '__main__':
         
         # save execution time, and errors as a string list
         df.write_anonymous([""], "ExecutionErrors")
-        df.write_anonymous(clock() - start_time, "ExecutionTime")                    
+        df.write_anonymous(time() - start_time, "ExecutionTime")                    
