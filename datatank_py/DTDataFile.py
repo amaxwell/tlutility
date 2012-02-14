@@ -175,6 +175,10 @@ def _dtarray_type_and_size_from_object(obj):
     # default case is an error
     _log_warning("unable to determine DT type for object %s" % (type(obj)))
     return (None, None)
+
+def _debug_log(msg):
+    from syslog import syslog, LOG_ERR, LOG_USER
+    syslog(LOG_ERR | LOG_USER, msg)
             
 class DTDataFile(object):
     """This class roughly corresponds to the C++ DTDataFile class.
@@ -234,6 +238,8 @@ class DTDataFile(object):
         
         super(DTDataFile, self).__init__()
         self._file_path = file_path
+        # ensure __del__ works in case of failure in __init__        
+        self._file = None
         if readonly:
             assert truncate == False, "truncate and readonly are mutually exclusive"
             filemode = "rb"
@@ -241,8 +247,9 @@ class DTDataFile(object):
             assert readonly == False, "truncate and readonly are mutually exclusive"
             filemode = "wb+"
         else:
-            assert readonly == False, "truncate and readonly are mutually exclusive"
+            assert readonly == False, "append and readonly are mutually exclusive"
             filemode = "ab+"
+            
         self._file = open(file_path, filemode)
         self._length = os.path.getsize(file_path)
         self._name_offset_map = {}
