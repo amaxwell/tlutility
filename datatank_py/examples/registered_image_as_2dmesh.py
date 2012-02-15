@@ -23,8 +23,6 @@ if __name__ == '__main__':
     # converted to 32-bit floats. 
     #
     
-    input_file = DTDataFile("Input.dtbin")
-    
     # DT creates this hard link in the working directory, if passed a file
     # this is preferred, as it's fewer variables in DataTank, but if you
     # have a world file, GDAL needs to be able to find it in the original
@@ -33,10 +31,13 @@ if __name__ == '__main__':
         
     # if no path set, then use the file itself (preferable)
     if os.path.exists(image_path) == False:
-        image_path = input_file["Image Path"]
-    
-    input_file.close()
-    
+        try:
+            input_file = DTDataFile("Input.dtbin", readonly=True)
+            image_path = input_file["Image Path"]
+            input_file.close()
+        except Exception, e:
+            syslog(LOG_WARNING, "No Input.dtbin file exists")
+            
     start_time = time()
     errors = []
     
@@ -45,7 +46,13 @@ if __name__ == '__main__':
     if image_path is None or os.path.exists(image_path) is False:
         errors.append("\"%s\" does not exist" % (image_path))
     
-    img = DTBitmap2D(image_path)
+    try:
+        img = DTBitmap2D(image_path)
+    except Exception, e:
+        errors.append("Failed to open image at %s with exception %s" % (image_path, e))
+        img = None
+        syslog(LOG_WARNING, "failed to open image at %s with exception %s" % (image_path, e))
+
     if img is None:
         # set an error and bail out; DataTank doesn't appear to use this, but displays
         # stderr output instead, so print them also
