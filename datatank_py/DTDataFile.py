@@ -240,9 +240,12 @@ class DTDataFile(object):
         self._file_path = file_path
         # ensure __del__ works in case of failure in __init__        
         self._file = None
+        self._readonly = False
+        
         if readonly:
             assert truncate == False, "truncate and readonly are mutually exclusive"
             filemode = "rb"
+            self._readonly = True
         elif truncate:
             assert readonly == False, "truncate and readonly are mutually exclusive"
             filemode = "wb+"
@@ -294,8 +297,9 @@ class DTDataFile(object):
         """
         
         self._name_offset_map = {}
-        # ensure we have a consistent file
-        self._file.flush()
+        # ensure we have a consistent file unless we're read-only
+        if self._readonly == False:
+            self._file.flush()
         self._file.seek(0)
         # all headers are the same length
         default_file_header = "DataTank Binary File LE\0"
