@@ -46,6 +46,7 @@ class _DTBitmap2D(type):
                 except Exception, e:
                     sys.stderr.write("Failed to create GDAL representation: %s\n" % (e))
                     obj = None
+                    raise e
             
             # if GDAL failed or we had a PIL image, try PIL
             if obj == None:
@@ -321,14 +322,21 @@ class _DTGDALBitmap2D(DTBitmap2D):
             
         dataset = gdal.Open(image_path, GA_ReadOnly)
         (xmin, dx, rot1, ymax, rot2, dy) = dataset.GetGeoTransform()
-        mesh = dataset.ReadAsArray()
+        
+        channel_count = dataset.RasterCount
+        bands = []
+        for band_index in range(1, channel_count + 1):
+            band = dataset.GetRasterBand(band_index)
+            if band == None:
+                break
+            bands.append(band)
+            
         ymin = ymax + dy * dataset.RasterYSize
         self.grid = (xmin, ymin, dx, abs(dy))
-        
-        # e.g., (3, 900, 1440) for an RGB
-        if len(mesh.shape) == 3:
+                
+        # RGB or RGBA
+        if channel_count in (3, 4):
 
-            channel_count = mesh.shape[0]
             name_map = {}
             
             if channel_count == 2:
@@ -344,16 +352,20 @@ class _DTGDALBitmap2D(DTBitmap2D):
                 name_map = {0:"red", 1:"green", 2:"blue", 3:"alpha"}
 
             for idx in name_map:
-                channel = np.flipud(mesh[idx,:])
+                band = bands[idx]
+                channel = band.ReadAsArray()
+                channel = np.flipud(channel)
                 setattr(self, name_map[idx], channel)
 
-        elif len(mesh.shape) == 2:
+        elif channel_count == 1:
             
-            mesh = np.flipud(mesh)
-
             # we only have one band anyway on this path, so see if we have an indexed image,
-            band = dataset.GetRasterBand(1)
+            band = bands[0]
+            mesh = band.ReadAsArray()
+
+            mesh = np.flipud(mesh)
             ctab = band.GetRasterColorTable()
+            
             if ctab != None:
                                 
                 # indexed images have to be expanded to RGB, and this is pretty slow
@@ -385,6 +397,9 @@ class _DTGDALBitmap2D(DTBitmap2D):
             else:
                 # Gray (tested with int16)
                 self.gray = mesh
+                
+        else:
+            sys.stderr.write("Unable to decode an image with %d raster bands" % (channel_count))
             
         del dataset
 
