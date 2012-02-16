@@ -35,23 +35,12 @@ class DTMask(object):
         n = self._n
         o = self._o
         
-        flat_mask = mask_values.flatten()
-        how_many_intervals = 0
-        for k in xrange(o):
-            for j in xrange(n):
-                ijk = j * m + k * n * m
-                until = ijk + m
-                while ijk < until:
-                    # find the first entry that contains a zero
-                    while ijk < until and flat_mask[ijk] == False:
-                        ijk += 1
-                    if ijk < until:
-                        # look for the end
-                        while ijk < until and flat_mask[ijk] == True:
-                            ijk += 1
-                        how_many_intervals += 1
-        
-        self._intervals = np.zeros((2, how_many_intervals), dtype=np.int32) if how_many_intervals > 0 else np.array([], np.int32)
+        # This costs us some memory, but it's a big gain for large masks
+        # since the iteration/comparison of numpy arrays is really slow,
+        # and it seems to spend a lot of time in PyObject_HashNotImplemented.
+        flat_mask = mask_values.flatten().tolist()
+        iv0 = []
+        iv1 = []
         location = 0
         for k in xrange(o):
             for j in xrange(n):
@@ -59,19 +48,24 @@ class DTMask(object):
                 until = ijk + m
                 while ijk < until:
                     # find the first entry that contains a zero
-                    while ijk < until and flat_mask[ijk] == False:
+                    while ijk < until and flat_mask[ijk] == 0:
                         ijk += 1
-                    
                     start = ijk
                     if ijk < until:
                         # look for the end
-                        while ijk < until and flat_mask[ijk] == True:
+                        while ijk < until and flat_mask[ijk] != 0:
                             ijk += 1
                         
-                        self._intervals[0, location] = start
-                        self._intervals[1, location] = ijk - 1
+                        iv0.append(start)
+                        iv1.append(ijk - 1)
                         location += 1       
-                                 
+        
+        if len(iv0):
+            self._intervals = np.zeros((2, len(iv0)), dtype=np.int32)
+            self._intervals[0,:] = iv0
+            self._intervals[1,:] = iv1
+        else:
+            self._intervals = np.array([], np.int32)
         # row/column mismatch (remember that intervals is always 2 x N)
         self._intervals = self._intervals.swapaxes(0, 1)
         
