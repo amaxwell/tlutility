@@ -46,7 +46,6 @@ class _DTBitmap2D(type):
                 except Exception, e:
                     sys.stderr.write("Failed to create GDAL representation: %s\n" % (e))
                     obj = None
-                    raise e
             
             # if GDAL failed or we had a PIL image, try PIL
             if obj == None:
@@ -106,6 +105,7 @@ class DTBitmap2D(object):
         """
         super(DTBitmap2D, self).__init__()
         self.grid = (0, 0, 1, 1)
+        self.nodata = None
         for n in DTBitmap2D.CHANNEL_NAMES:
             setattr(self, n, None)
     
@@ -182,8 +182,15 @@ class DTBitmap2D(object):
         
         """
         
-        import datatank_py.DTMesh2D
-        return datatank_py.DTMesh2D.DTMesh2D(getattr(self, channel), grid=self.grid)
+        from datatank_py.DTMesh2D import DTMesh2D
+        from datatank_py.DTMask import DTMask
+        values = getattr(self, channel)
+        mask = None
+        if self.nodata != None:
+            mask_array = np.zeros(values.shape, dtype=np.int8)
+            mask_array[np.where(values != self.nodata)] = 1
+            mask = DTMask(mask_array)
+        return DTMesh2D(values, grid=self.grid, mask=mask)
         
     def raster_size(self):
         """Size in pixels, 2-tuple ordered as (horizontal, vertical)."""
@@ -325,8 +332,11 @@ class _DTGDALBitmap2D(DTBitmap2D):
         
         channel_count = dataset.RasterCount
         bands = []
+        self.nodata = None
         for band_index in range(1, channel_count + 1):
             band = dataset.GetRasterBand(band_index)
+            if self.nodata == None:
+                self.nodata = band.GetNoDataValue()
             if band == None:
                 break
             bands.append(band)
@@ -507,4 +517,4 @@ class _DTPILBitmap2D(DTBitmap2D):
                 self.alpha = np.flipud(array[:,:,3])
         
         del image
-                
+
