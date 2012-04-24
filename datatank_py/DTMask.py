@@ -112,9 +112,9 @@ class DTMask(object):
     def from_data_file(self, datafile, name):
         """Instantiates a DTMask from a DTDataFile with the given variable name"""
         intervals = datafile[name]
-        
+                
         # return None if there is no mask
-        if intervals == None:
+        if intervals == None or len(intervals) == 0:
             return None
             
         dims = datafile[name + "_dim"].tolist()
