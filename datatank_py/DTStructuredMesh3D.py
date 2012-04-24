@@ -35,6 +35,13 @@ class DTStructuredMesh3D(object):
         self._grid = grid
         self._values = values
     
+    def slice_xy(self, zero_based_slice_index):
+        """Slice the mesh based on index in the Z dimension."""
+        from DTStructuredMesh2D import DTStructuredMesh2D
+        grid = self._grid.slice_xy(zero_based_slice_index)
+        values = self._values[zero_based_slice_index,:,:]
+        return DTStructuredMesh2D(values, grid=grid)
+        
     def __dt_type__(self):
         return "3D Structured Mesh"
                 
@@ -44,6 +51,13 @@ class DTStructuredMesh3D(object):
     def __dt_write__(self, datafile, name):
         datafile.write_anonymous(self._grid, name)
         datafile.write_anonymous(self._values, name + "_V")
+        
+    @classmethod
+    def from_data_file(self, datafile, name):
+        
+        grid = DTStructuredGrid3D.from_data_file(datafile, name) if name in datafile else None
+        values = datafile[name + "_V"]
+        return DTStructuredMesh3D(values, grid=grid)
 
 if __name__ == '__main__':
     
@@ -62,4 +76,9 @@ if __name__ == '__main__':
         df["3D mesh"] = mesh
     
         print mesh
+        print mesh.slice_xy(0)
+        
+        print "grid shapes:", np.shape(grid._x), np.shape(grid._y), np.shape(grid._z)
+        
+        print DTStructuredMesh3D.from_data_file(df, "3D mesh")
 

@@ -4,6 +4,7 @@
 # This software is under a BSD license.  See LICENSE.txt for details.
 
 from DTRegion3D import DTRegion3D
+from DTMask import DTMask
 import numpy as np
 
 class DTStructuredGrid3D(object):
@@ -22,9 +23,13 @@ class DTStructuredGrid3D(object):
         for compatibility with DataTank.  When using vectors, this is handled
         automatically.
                 
-        """                   
+        """       
+        
+        sx = np.shape(x)
+        sy = np.shape(y)
+        sz = np.shape(z)
                    
-        if (len(np.shape(x)) == 1 and len(np.shape(y)) == 1 and len(np.shape(z)) == 1):
+        if (len(sx) == 1 and len(sy) == 1 and len(sz) == 1):
             
             # If we pass in vectors, DataTank expects them to have a 3D shape,
             # which is kind of peculiar.  This does avoid expanding the full
@@ -40,13 +45,16 @@ class DTStructuredGrid3D(object):
             self._logical_shape = (len(z), len(y), len(x))
             
         else:
-            assert np.shape(x) == np.shape(y)
-            assert np.shape(x) == np.shape(z)
-            assert np.shape(y) == np.shape(z)
+            assert len(sx) == 3
+            assert len(sy) == 3
+            assert len(sz) == 3
+            # Shapes are not required to be identical, and will not be if initializing
+            # from a DTDataFile that was saved by DataTank in vector form with singleton
+            # dimensions.
             self._x = np.array(x, dtype=np.float32)
             self._y = np.array(y, dtype=np.float32)
             self._z = np.array(z, dtype=np.float32)
-            self._logical_shape = np.shape(x)
+            self._logical_shape = (sz[0], sy[1], sx[2])
             
         self._mask = mask if mask != None else np.array([], dtype=np.int32)
     
@@ -60,8 +68,21 @@ class DTStructuredGrid3D(object):
     def bounding_box(self):
         return DTRegion3D(np.nanmin(self._x), np.nanmax(self._x), np.nanmin(self._y), np.nanmax(self._y), np.nanmin(self._z), np.nanmax(self._z))
         
+    def slice_xy(self, zero_based_slice_index):
+        """Slice the grid based on index in the Z dimension."""
+        from DTStructuredGrid2D import DTStructuredGrid2D
+        if np.shape(self._x)[0] == 1:
+            assert np.shape(self._y)[0] == 1, "inconsistent x and y shapes"
+            x = np.squeeze(self._x)
+            y = np.squeeze(self._y)
+            return DTStructuredGrid2D(x, y)
+        else:
+            x = self._x[zero_based_slice_index,:,:]
+            y = self._y[zero_based_slice_index,:,:]
+            return DTStructuredGrid2D(x, y)
+        
     def __str__(self):
-        return self.__dt_type__() + ": " + str(self.bounding_box())
+        return self.__dt_type__() + ":\n  Bounding Box: " + str(self.bounding_box()) + "\n  Shape: " + str(self.shape())
         
     def __dt_write__(self, datafile, name):
         datafile.write_anonymous(self.bounding_box(), name + "_bbox3D")
@@ -69,7 +90,18 @@ class DTStructuredGrid3D(object):
         datafile.write_anonymous(self._y, name + "_Y")
         datafile.write_anonymous(self._z, name + "_Z")
         datafile.write_anonymous(self._mask, name)
-
+        
+    @classmethod
+    def from_data_file(self, datafile, name):
+        
+        # bbox is computed dynamically, so ignore it
+        x = datafile[name + "_X"]
+        y = datafile[name + "_Y"]
+        z = datafile[name + "_Z"]
+        
+        mask = DTMask.from_data_file(datafile, name)
+        return DTStructuredGrid3D(x, y, z, mask=mask)
+        
 if __name__ == '__main__':
     
     from DTDataFile import DTDataFile
@@ -79,4 +111,6 @@ if __name__ == '__main__':
         df["grid"] = grid
     
         print grid
+        print grid.slice_xy(0)
+        
 
