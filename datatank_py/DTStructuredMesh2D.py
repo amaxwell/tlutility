@@ -3,7 +3,7 @@
 
 # This software is under a BSD license.  See LICENSE.txt for details.
 
-from DTStructuredGrid2D import DTStructuredGrid2D
+from DTStructuredGrid2D import DTStructuredGrid2D, _squeeze2d
 import numpy as np
 
 class DTStructuredMesh2D(object):
@@ -22,6 +22,7 @@ class DTStructuredMesh2D(object):
                 
         """                   
         
+        values = _squeeze2d(values)
         shape = np.shape(values)
         assert len(shape) == 2, "values array must be 2D"
 
@@ -35,15 +36,28 @@ class DTStructuredMesh2D(object):
         self._grid = grid
         self._values = values
     
+    def grid(self):
+        return self._grid
+        
+    def values(self):
+        return self._values
+        
     def __dt_type__(self):
         return "2D Structured Mesh"
                 
     def __str__(self):
-        return self.__dt_type__() + ": " + str(self._grid)
+        return self.__dt_type__() + ":\n " + str(self._grid) + "\n" + " Values:\n " + str(self._values)
         
     def __dt_write__(self, datafile, name):
         datafile.write_anonymous(self._grid, name)
         datafile.write_anonymous(self._values, name + "_V")
+        
+    @classmethod
+    def from_data_file(self, datafile, name):
+    
+        grid = DTStructuredGrid2D.from_data_file(datafile, name)
+        values = datafile[name + "_V"]
+        return DTStructuredMesh2D(values, grid=grid)
 
 if __name__ == '__main__':
     
