@@ -443,6 +443,9 @@ class DTDataFile(object):
                 
                 # !!! reentrancy here
                 offsets = self.variable_named(name + "_offs")
+                
+                # singleton dimensions are now saved, but mess things up here
+                offsets = np.squeeze(offsets)
 
                 assert offsets != None, "invalid StringList: no offsets found for %s" % (name)
                 string_list = []
@@ -468,23 +471,27 @@ class DTDataFile(object):
             data_type = byte_order + data_type
         
         element_count = m * n * o
+        
+        # We end up returning an array containing an empty array if element_count
+        # is zero, and that's not what I want; an empty vector is more appropriate.
+        if element_count == 0:
+            return np.array([], dtype=np.dtype(data_type))
+            
         self._file.seek(data_start)
         values = np.fromfile(self._file, dtype=np.dtype(data_type), count=element_count)
         assert values.size == element_count, "unable to read all data"
-        
+                
         # handle scalar values specially
         if m == 1 and n == 1 and o == 1:
             return values[0]
         
-        # ignore trailing dimensions == 1    
-        shape = [m]
-        if n > 1 or o > 1:
-            shape.append(n)
-        if o > 1:
-            shape.append(o)
+        # !!! Original code ignored singleton dimensions in determining shape, 
+        # but this caused major problems when reading objects from DataTank
+        # files; not sure if preexisting code accounts for singletons correctly.
+        
+        # see the array writing code for order of these elements
+        shape = (o, n, m)
             
-        # see the array writing code
-        shape.reverse()
         return values.reshape(shape, order="C")        
         
     def __iter__(self):
@@ -494,6 +501,11 @@ class DTDataFile(object):
     def __getitem__(self, key):
         # support for dictionary-style getting
         return self.variable_named(key)
+        
+    def __contains__(self, item):
+        # direct (fast) support for in statement
+        self._reload_content_if_needed()
+        return item in self._name_offset_map
     
     def __enter__(self):
         # support for with statement
