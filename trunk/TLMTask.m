@@ -37,7 +37,6 @@
  */
 
 #import "TLMTask.h"
-#import "TLMLogServer.h"
 #include <sys/event.h>
 
 
@@ -95,7 +94,7 @@
     
     // hopefully this never happens...
     if (fdo < 0 || fde < 0) {
-        TLMLog(__func__, @"invalid stdio channels in task %@", self);
+        NSLog(@"invalid stdio channels in task %@", self);
         [pool release];
         return;
     }
