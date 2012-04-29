@@ -191,7 +191,7 @@
 - (NSString *)stringForObjectValue:(id)obj;
 {
     if ([obj isEqual:[NSNumber numberWithInteger:-1]])
-        return [NSString stringWithFormat:@"%C", 0x221e]; // \infty
+        return [NSString stringWithFormat:@"%C", (unichar)0x221e]; // \infty
     else if ([obj respondsToSelector:@selector(stringValue)])
         return [obj stringValue];
     else
@@ -201,7 +201,7 @@
 - (NSString *)editingStringForObjectValue:(id)obj;
 {        
     if ([obj isEqual:[NSNumber numberWithInteger:-1]])
-        return [NSString stringWithFormat:@"%C", 0x221e]; // \infty
+        return [NSString stringWithFormat:@"%C", (unichar)0x221e]; // \infty
     else if ([obj respondsToSelector:@selector(stringValue)])
         return [obj stringValue];
     else
@@ -210,7 +210,7 @@
 
 - (BOOL)getObjectValue:(out id *)obj forString:(NSString *)string errorDescription:(out NSString **)error;
 {
-    if ([string isEqualToString:@"-1"] || [string isEqualToString:[NSString stringWithFormat:@"%C", 0x221e]]) {
+    if ([string isEqualToString:@"-1"] || [string isEqualToString:[NSString stringWithFormat:@"%C", (unichar)0x221e]]) {
         *obj = [NSNumber numberWithInteger:-1];
         return YES;
     }

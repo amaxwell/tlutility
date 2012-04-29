@@ -130,7 +130,7 @@ static NSString            *_currentEnvironmentKey = nil;
             
             TLMEnvironment *env = [_environments objectForKey:_currentEnvironmentKey];
             if (nil == env) {
-                TLMLog(__func__, @"Setting up a new environment for %@%C", installDir, 0x2026);
+                TLMLog(__func__, @"Setting up a new environment for %@%C", installDir, (unichar)0x2026);
                 [self updatePathEnvironment];
                 env = [[self alloc] initWithInstallDirectory:_currentEnvironmentKey];
                 [_environments setObject:env forKey:_currentEnvironmentKey];
@@ -376,7 +376,7 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
         }
         else {
             // log anyway, since it's a huge PITA to diagnose a screwed up environment
-            TLMLog(__func__, @"Found ~/.MacOSX/environment.plist%Cdidn't look too evil.", 0x2026);
+            TLMLog(__func__, @"Found ~/.MacOSX/environment.plist%Cdidn't look too evil.", (unichar)0x2026);
         }
         TLMLog(__func__, @"~/.MacOSX/environment.plist = %@", env);
     }
@@ -670,7 +670,7 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
    
     // check for writable top-level directory, before doing any traversal
     if ([fm isWritableFileAtPath:path]) {
-        TLMLog(__func__, @"Recursive check of installation privileges. This will happen once per launch, and may be slow if %@ is on a network filesystem%C", path, 0x2026);
+        TLMLog(__func__, @"Recursive check of installation privileges. This will happen once per launch, and may be slow if %@ is on a network filesystem%C", path, (unichar)0x2026);
         TLMLogServerSync();
         CFAbsoluteTime start = CFAbsoluteTimeGetCurrent();
         

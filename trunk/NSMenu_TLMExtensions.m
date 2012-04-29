@@ -78,7 +78,7 @@ static NSString *TLMMenuApplicationURL = @"TLMMenuApplicationURL";
     [submenu setDelegate:controller];
     
     // add the choose... item, the other items are inserted lazily by TLMOpenWithMenuController
-    item = [submenu addItemWithTitle:[NSString stringWithFormat:@"%@%C", NSLocalizedString(@"Choose", @"Menu item title"), 0x2026] action:@selector(openURLWithApplication:) keyEquivalent:@""];
+    item = [submenu addItemWithTitle:[NSString stringWithFormat:@"%@%C", NSLocalizedString(@"Choose", @"Menu item title"), (unichar)0x2026] action:@selector(openURLWithApplication:) keyEquivalent:@""];
     [item setTarget:controller];
     representedObject = [[NSDictionary alloc] initWithObjectsAndKeys:theURL, TLMMenuTargetURL, nil];
     [item setRepresentedObject:representedObject];

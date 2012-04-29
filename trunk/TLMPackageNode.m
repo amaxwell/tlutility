@@ -54,7 +54,7 @@ static NSString *_separatorString = nil;
 + (void)initialize
 {
     if (nil == _separatorString)
-        _separatorString = [[NSString alloc] initWithFormat:@"%C", 0x271D];
+        _separatorString = [[NSString alloc] initWithFormat:@"%C", (unichar)0x271D];
 }
 
 + (NSSet *)keyPathsForValuesAffectingStatus

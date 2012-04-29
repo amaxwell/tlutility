@@ -39,7 +39,7 @@
 #import <Cocoa/Cocoa.h>
 #import "TLMAuthorizedOperation.h"
 
-@interface TLMInfraUpdateOperation : TLMAuthorizedOperation
+@interface TLMInfraUpdateOperation : TLMAuthorizedOperation <NSURLDownloadDelegate>
 {
 @private
     NSString      *_updateDirectory;
