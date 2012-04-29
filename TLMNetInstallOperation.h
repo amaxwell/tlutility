@@ -39,7 +39,7 @@
 #import <Cocoa/Cocoa.h>
 #import "TLMAuthorizedOperation.h"
 
-@interface TLMNetInstallOperation : TLMAuthorizedOperation 
+@interface TLMNetInstallOperation : TLMAuthorizedOperation <NSURLDownloadDelegate>
 {
 @private
     NSURL         *_location;

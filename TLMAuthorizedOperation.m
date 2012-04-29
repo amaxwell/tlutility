@@ -324,12 +324,12 @@ static NSArray * __TLMOptionArrayFromArguments(char **nullTerminatedArguments)
                 }
                 // set failure flag if ipctask failed
                 [self setFailed:(EXIT_SUCCESS != ret)];
-                TLMLog(__func__, @"kqueue noted that tlu_ipctask (pid = %d) exited with status %d", event.ident, ret);
+                TLMLog(__func__, @"kqueue noted that tlu_ipctask (pid = %ld) exited with status %d", event.ident, ret);
             }
             else if ((pid_t)event.ident == _internal->_underlying_pid) {
                 
                 // we only log the tlmgr PID for diagnostic purposes, since we can't get its exit status directly
-                TLMLog(__func__, @"kqueue noted that pid %d exited (%@)", event.ident, [self _underlyingCommand]);
+                TLMLog(__func__, @"kqueue noted that pid %ld exited (%@)", event.ident, [self _underlyingCommand]);
                 
                 // can no longer kill this process
                 _internal->_underlying_pid = 0;
@@ -342,7 +342,7 @@ static NSArray * __TLMOptionArrayFromArguments(char **nullTerminatedArguments)
                 timeoutCount++;
             
             if (timeoutCount > 10) {
-                TLMLog(__func__, @"No child process on kqueue after %.1f seconds%Cbailing out.", timeoutCount * 0.5, 0x2026);
+                TLMLog(__func__, @"No child process on kqueue after %.1f seconds%Cbailing out.", timeoutCount * 0.5, (unichar)0x2026);
                 [self setFailed:YES];
             }
         }
@@ -408,7 +408,7 @@ static BOOL __TLMCheckSignature()
 {
     NSAutoreleasePool *pool = [NSAutoreleasePool new];
         
-    TLMLog(__func__, @"Checking code signature before running %@ as root%C", [__TLMCwrapperPath() lastPathComponent], 0x2026);
+    TLMLog(__func__, @"Checking code signature before running %@ as root%C", [__TLMCwrapperPath() lastPathComponent], (unichar)0x2026);
     if (__TLMCheckSignature() == NO) {
         TLMLog(__func__, @"*** ERROR *** The tlu_ipctask has been modified after signing!\nRefusing to run child process with invalid signature.");
         [self _appendStringToErrorData:NSLocalizedString(@"The tlu_ipctask helper application may have been tampered with.", @"")];

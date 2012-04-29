@@ -224,7 +224,7 @@ static void __TLMSetProxyEnvironment(const char *var, NSString *proxy, const uin
     if (r.length) {
         NSMutableString *stars = [NSMutableString stringWithCapacity:[pass length]];
         for (NSUInteger idx = 0; idx < [pass length]; idx++)
-            [stars appendFormat:@"%C", 0x2022];
+            [stars appendFormat:@"%C", (unichar)0x2022];
         [displayProxy replaceCharactersInRange:r withString:stars];
     }
     else if (pass) {
@@ -309,7 +309,7 @@ static void __TLMProxySettingsChanged(SCDynamicStoreRef store, CFArrayRef change
             NSURL *mirrorURL = [self targetURL];
             NSCParameterAssert(mirrorURL);
             
-            TLMLog(__func__, @"Trying to find a proxy for %@ using PAC %@%C", [mirrorURL absoluteString], proxy, 0x2026);
+            TLMLog(__func__, @"Trying to find a proxy for %@ using PAC %@%C", [mirrorURL absoluteString], proxy, (unichar)0x2026);
             TLMLogServerSync();
             
             // NB: CFNetworkExecuteProxyAutoConfigurationURL crashes if you pass a NULL context

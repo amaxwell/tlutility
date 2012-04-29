@@ -204,7 +204,7 @@
     if (pkgName) {
         
         TLMPackage *toRemove = [[_allPackages filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"name LIKE %@", pkgName]] lastObject];
-        [toRemove setStatus:[NSString stringWithFormat:@"%@%C", [[aNote userInfo] objectForKey:TLMLogStatusMessage], 0x2026]];
+        [toRemove setStatus:[NSString stringWithFormat:@"%@%C", [[aNote userInfo] objectForKey:TLMLogStatusMessage], (unichar)0x2026]];
         
         if (_updatingPackage) {
             [self _deselectUpdatingPackage];
