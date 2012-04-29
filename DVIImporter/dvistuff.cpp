@@ -550,11 +550,12 @@ static linetype *findline(DVIParser *parser)            /* find best fit line we
     /* temp->vv < v < temp->next->vv --- temp is above, temp->next is below */
     topd = parser->v - temp->vv;
     botd = temp->next->vv - parser->v;
-    if ((topd < VERTICALEPSILON) || (botd < VERTICALEPSILON))
+    if ((topd < VERTICALEPSILON) || (botd < VERTICALEPSILON)) {
         if (topd < botd)                           /* take best fit */
             return temp;
         else
             return temp->next;
+    }
 
     /* no line fits suitable, generate a new one */
     parser->currentline = getline(parser);
