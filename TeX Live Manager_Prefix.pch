@@ -6,6 +6,11 @@
     #import <Cocoa/Cocoa.h>
     #import "NSString_TLMExtensions.h"
     #import "NSURL_TLMExtensions.h"
+
+    #ifndef MAC_OS_X_VERSION_10_7
+        @protocol NSURLDownloadDelegate <NSObject>
+        @end
+    #endif
 #endif
 
 // http://src.chromium.org/svn/trunk/src/base/eintr_wrapper.h
