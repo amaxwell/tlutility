@@ -54,15 +54,24 @@
 
 @end
 
+#ifndef MAC_OS_X_VERSION_10_6
+enum {
+    NSTaskTerminationReasonExit = 1,
+    NSTaskTerminationReasonUncaughtSignal = 2
+};
+typedef NSInteger NSTaskTerminationReason;
+#endif
+
 struct BDSKTaskInternal {
-    int32_t            _terminationStatus;
-    int32_t            _running;
-    int32_t            _launched;
-    int32_t            _canNotify;
-    struct kevent      _event;
-    CFRunLoopRef       _rl;
-    CFRunLoopSourceRef _rlsource;
-    pthread_mutex_t    _lock;
+    int32_t                 _terminationStatus;
+    NSTaskTerminationReason _terminationReason;
+    int32_t                 _running;
+    int32_t                 _launched;
+    volatile int32_t        _canNotify;
+    struct kevent           _event;
+    CFRunLoopRef            _rl;
+    CFRunLoopSourceRef      _rlsource;
+    pthread_mutex_t         _lock;
 };
 
 @implementation BDSKTask
@@ -233,7 +242,7 @@ static char *__BDSKCopyFileSystemRepresentation(NSString *str)
 - (void)launch;
 {
     ASSERT_NOTLAUNCHED;
-
+    
     const NSUInteger argCount = [_arguments count];
     char *workingDir = __BDSKCopyFileSystemRepresentation(_currentDirectoryPath);
     
@@ -359,12 +368,13 @@ static char *__BDSKCopyFileSystemRepresentation(NSString *str)
     }
     else if (-1 == _processIdentifier) {
         // parent: error
-        perror("fork() failed");
+        int forkError = errno;
+        NSLog(@"fork() failed in task %@: %s", self, strerror(forkError));
         _internal->_terminationStatus = 2;
     }
     else {        
         // parent process
-        
+                
         // CASB probably not necessary anymore...
         OSAtomicCompareAndSwap32Barrier(0, 1, &_internal->_running);
         OSAtomicCompareAndSwap32Barrier(0, 1, &_internal->_launched);
@@ -372,8 +382,8 @@ static char *__BDSKCopyFileSystemRepresentation(NSString *str)
         // NSTask docs say that these descriptors are closed in the parent task; required to make pipes work properly
         [handlesToClose makeObjectsPerformSelector:@selector(closeFile)];
         
-        if (-1 != fd_null) close(fd_null);
-        
+        if (-1 != fd_null) (void) close(fd_null);
+
         /*
          The kevent will have a weak reference to this task, so -dealloc can occur without waiting for notification.
          This behavior is documented for NSTask, presumably so you can fire it off and not have any resources hanging
@@ -458,6 +468,13 @@ static char *__BDSKCopyFileSystemRepresentation(NSString *str)
     return _internal->_terminationStatus; 
 }
 
+- (NSTaskTerminationReason)terminationReason; 
+{ 
+    ASSERT_LAUNCH;
+    if ([self isRunning]) [NSException raise:NSInternalInconsistencyException format:@"Task is still running"];
+    return _internal->_terminationReason; 
+}
+
 - (void)waitUntilExit;
 {
     ASSERT_LAUNCH;
@@ -481,26 +498,30 @@ static char *__BDSKCopyFileSystemRepresentation(NSString *str)
         
         if (HANDLE_EINTR(kevent(_kqueue, NULL, 0, &evt, 1, NULL))) {
             
-            BDSKTask *task = evt.udata;
+            /* 
+             Retain to make sure we hold a reference to the task long enough to handle these calls,
+             so we're guaranteed that _disableNotification will not be called during another callout.
+             */
+            BDSKTask *task = [(id)evt.udata retain];
+            
+            // for task->_internal->_canNotify
             OSMemoryBarrier();
             
             // can only fail if _disableNotification is called immediately after kevent unblocks
-            if (task->_internal->_canNotify && pthread_mutex_trylock(&task->_internal->_lock) == 0) {
+            if (task->_internal->_canNotify) {
                 
-                /* 
-                 Retain to make sure we hold a reference to the task long enough to handle these calls,
-                 so we're guaranteed that _disableNotification will not be called during another callout.
-                 */
-                task = [task retain];
-                pthread_mutex_unlock(&task->_internal->_lock);
-                
-                if ((evt.fflags & NOTE_EXIT) == NOTE_EXIT)
-                    [task _taskExited];
-                else if ((evt.fflags & NOTE_SIGNAL) == NOTE_SIGNAL)
+                if (evt.fflags & NOTE_SIGNAL)
                     [task _taskSignaled];
                 
-                [task release];
+                if (evt.fflags & NOTE_EXIT)
+                    [task _taskExited];
+                
             }
+            else {
+                NSLog(@"Ignoring kqueue event for deallocated task %p", task);
+            }
+            
+            [task release];
             
         }
         [pool drain];
@@ -594,6 +615,8 @@ static char *__BDSKCopyFileSystemRepresentation(NSString *str)
         NSLog(@"*** ERROR *** task %@ (child pid = %d) still running", self, _processIdentifier);
     
     _processIdentifier = -1;
+    
+    _internal->_terminationReason = WIFSIGNALED(status) ? NSTaskTerminationReasonUncaughtSignal : NSTaskTerminationReasonExit;
     
     ret = WIFEXITED(status) ? WEXITSTATUS(status) : 1;
     bool swap;

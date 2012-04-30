@@ -66,3 +66,14 @@
 + (BDSKTask *)launchedTaskWithLaunchPath:(NSString *)path arguments:(NSArray *)arguments;
 
 @end
+
+#ifndef HANDLE_EINTR
+// http://src.chromium.org/svn/trunk/src/base/eintr_wrapper.h
+#define HANDLE_EINTR(x) ({ \
+    typeof(x) __eintr_result__; \
+    do { \
+        __eintr_result__ = x; \
+    } while (__eintr_result__ == -1 && errno == EINTR); \
+    __eintr_result__;\
+})
+#endif
