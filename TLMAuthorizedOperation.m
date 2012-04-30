@@ -280,7 +280,7 @@ static NSArray * __TLMOptionArrayFromArguments(char **nullTerminatedArguments)
         int eventCount = HANDLE_EINTR(kevent(_internal->_kqueue, NULL, 0, &event, 1, &timeout));
                     
         // eventCount == 0 indicates a timeout
-        if (0 != eventCount && event.filter == EVFILT_PROC && (event.fflags & NOTE_EXIT) == NOTE_EXIT) {
+        if (0 != eventCount && event.filter == EVFILT_PROC && (event.fflags & NOTE_EXIT)) {
                         
             if ((pid_t)event.ident == _internal->_cwrapper_pid) {
                 
