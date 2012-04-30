@@ -418,7 +418,7 @@ int main(int argc, char *argv[]) {
             
             NSAutoreleasePool *innerPool = [NSAutoreleasePool new];
             
-            if (event.filter == EVFILT_PROC && (event.fflags & NOTE_EXIT) == NOTE_EXIT) {
+            if (event.filter == EVFILT_PROC && (event.fflags & NOTE_EXIT)) {
                 
                 stillRunning = false;
                 log_notice_noparse(@"child process pid = %d exited", child);
