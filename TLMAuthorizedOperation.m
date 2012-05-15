@@ -342,7 +342,7 @@ static NSArray * __TLMOptionArrayFromArguments(char **nullTerminatedArguments)
                 timeoutCount++;
             
             if (timeoutCount > 10) {
-                TLMLog(__func__, @"No child process on kqueue after %.1f seconds%Cbailing out.", timeoutCount * 0.5, (unichar)0x2026);
+                TLMLog(__func__, @"No child process on kqueue after %.1f seconds%Cbailing out.", timeoutCount * 0.5, TLM_ELLIPSIS);
                 [self setFailed:YES];
             }
         }
@@ -408,7 +408,7 @@ static BOOL __TLMCheckSignature()
 {
     NSAutoreleasePool *pool = [NSAutoreleasePool new];
         
-    TLMLog(__func__, @"Checking code signature before running %@ as root%C", [__TLMCwrapperPath() lastPathComponent], (unichar)0x2026);
+    TLMLog(__func__, @"Checking code signature before running %@ as root%C", [__TLMCwrapperPath() lastPathComponent], TLM_ELLIPSIS);
     if (__TLMCheckSignature() == NO) {
         TLMLog(__func__, @"*** ERROR *** The tlu_ipctask has been modified after signing!\nRefusing to run child process with invalid signature.");
         [self _appendStringToErrorData:NSLocalizedString(@"The tlu_ipctask helper application may have been tampered with.", @"")];

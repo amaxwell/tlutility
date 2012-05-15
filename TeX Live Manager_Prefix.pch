@@ -11,6 +11,8 @@
         @protocol NSURLDownloadDelegate <NSObject>
         @end
     #endif
+
+    #define TLM_ELLIPSIS ((unichar)0x2026)
 #endif
 
 // http://src.chromium.org/svn/trunk/src/base/eintr_wrapper.h
