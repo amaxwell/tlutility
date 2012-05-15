@@ -247,7 +247,7 @@ static NSURL *__TLMTLNetURL(NSString *mirrorURLString)
 - (void)awakeFromNib
 {        
     [_outlineView reloadData];
-    [_outlineView registerForDraggedTypes:[NSArray arrayWithObjects:(id)kUTTypeURL, NSURLPboardType, nil]];
+    [_outlineView registerForDraggedTypes:[NSArray arrayWithObjects:(id)kUTTypeURL, NSURLPboardType, NSStringPboardType, nil]];
     [_outlineView setDoubleAction:@selector(doubleClickAction:)];
     [_outlineView setTarget:self];
 }
