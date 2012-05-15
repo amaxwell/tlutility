@@ -116,7 +116,7 @@ static NSString *__TLMGetTemporaryDirectory()
 {
     _expectedLength = [response expectedContentLength];    
     if (NSURLResponseUnknownLength != _expectedLength)
-        TLMLog(__func__, @"Will download %lld bytes%C", _expectedLength, (unichar)0x2026);
+        TLMLog(__func__, @"Will download %lld bytes%C", _expectedLength, TLM_ELLIPSIS);
 }
 
 - (void)download:(NSURLDownload *)download didReceiveDataOfLength:(NSUInteger)length
@@ -126,7 +126,7 @@ static NSString *__TLMGetTemporaryDirectory()
         if ((CGFloat)(_receivedLength - _lastLoggedLength) / _expectedLength >= 0.20) {
             CGFloat pct = (CGFloat)_receivedLength / _expectedLength * 100;
             _lastLoggedLength = _receivedLength;
-            TLMLog(__func__, @"Received %.0f%% of %lld bytes%C", pct, _expectedLength, (unichar)0x2026);
+            TLMLog(__func__, @"Received %.0f%% of %lld bytes%C", pct, _expectedLength, TLM_ELLIPSIS);
         }
     }
 }
@@ -253,7 +253,7 @@ static NSString *__TLMGetTemporaryDirectory()
                 [self setFailed:YES];
             }      
             else if (firstLine) {
-                TLMLog(__func__, @"First line of downloaded file is: \"%s\"%Cgood!", firstLine, (unichar)0x2026);
+                TLMLog(__func__, @"First line of downloaded file is: \"%s\"%Cgood!", firstLine, TLM_ELLIPSIS);
             }
             
             fclose(strm);

@@ -49,6 +49,8 @@
 @synthesize backupCount = _backupCount;
 @synthesize initialBackupCount = _initialBackupCount;
 
+#define TLM_INFINITY ((unichar)0x221e)
+
 - (id)init
 {
     self = [super initWithWindowNibName:[self windowNibName]];
@@ -191,7 +193,7 @@
 - (NSString *)stringForObjectValue:(id)obj;
 {
     if ([obj isEqual:[NSNumber numberWithInteger:-1]])
-        return [NSString stringWithFormat:@"%C", (unichar)0x221e]; // \infty
+        return [NSString stringWithFormat:@"%C", TLM_INFINITY]; // \infty
     else if ([obj respondsToSelector:@selector(stringValue)])
         return [obj stringValue];
     else
@@ -201,7 +203,7 @@
 - (NSString *)editingStringForObjectValue:(id)obj;
 {        
     if ([obj isEqual:[NSNumber numberWithInteger:-1]])
-        return [NSString stringWithFormat:@"%C", (unichar)0x221e]; // \infty
+        return [NSString stringWithFormat:@"%C", TLM_INFINITY]; // \infty
     else if ([obj respondsToSelector:@selector(stringValue)])
         return [obj stringValue];
     else
@@ -210,7 +212,7 @@
 
 - (BOOL)getObjectValue:(out id *)obj forString:(NSString *)string errorDescription:(out NSString **)error;
 {
-    if ([string isEqualToString:@"-1"] || [string isEqualToString:[NSString stringWithFormat:@"%C", (unichar)0x221e]]) {
+    if ([string isEqualToString:@"-1"] || [string isEqualToString:[NSString stringWithFormat:@"%C", TLM_INFINITY]]) {
         *obj = [NSNumber numberWithInteger:-1];
         return YES;
     }

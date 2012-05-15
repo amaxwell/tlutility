@@ -88,8 +88,8 @@
 
 static char _TLMOperationQueueOperationContext;
 
-#define DB_LOAD_STATUS_STRING      ([NSString stringWithFormat:@"%@%C", NSLocalizedString(@"Loading Database", @"status message"), (unichar)0x2026])
-#define URL_VALIDATE_STATUS_STRING ([NSString stringWithFormat:@"%@%C", NSLocalizedString(@"Validating Server", @"status message"), (unichar)0x2026])
+#define DB_LOAD_STATUS_STRING      ([NSString stringWithFormat:@"%@%C", NSLocalizedString(@"Loading Database", @"status message"), TLM_ELLIPSIS])
+#define URL_VALIDATE_STATUS_STRING ([NSString stringWithFormat:@"%@%C", NSLocalizedString(@"Validating Server", @"status message"), TLM_ELLIPSIS])
 
 /*
  Increment this when/if toolbar configuration changes.
@@ -745,7 +745,7 @@ static char _TLMOperationQueueOperationContext;
  */
 - (BOOL)_isCorrectDatabaseVersionAtURL:(NSURL *)aURL
 {
-    TLMLog(__func__, @"Checking database version in case preferences have been changed%C", (unichar)0x2026);
+    TLMLog(__func__, @"Checking database version in case preferences have been changed%C", TLM_ELLIPSIS);
     // should be cached, unless the user has screwed up (and that's the case we're trying to catch)
     TLMDatabase *db = [TLMDatabase databaseForMirrorURL:aURL];
     const TLMDatabaseYear year = [[TLMEnvironment currentEnvironment] texliveYear];
@@ -915,7 +915,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
         TLMListUpdatesOperation *op = [[TLMListUpdatesOperation alloc] initWithLocation:location];
         [self _addOperation:op selector:@selector(_handleListUpdatesFinishedNotification:) setRefreshingForDataSource:_updateListDataSource];
         [op release];
-        TLMLog(__func__, @"Refreshing list of updated packages%C", (unichar)0x2026);
+        TLMLog(__func__, @"Refreshing list of updated packages%C", TLM_ELLIPSIS);
     }
     else {
         // happens when network is down; this can be a 10-12 minute timeout with TL 2011
@@ -1236,7 +1236,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     [self _displayStatusString:nil dataSource:_packageListDataSource];
     // disable refresh action for this view
     [_packageListDataSource setRefreshing:YES];
-    TLMLog(__func__, @"Refreshing list of all packages%C", (unichar)0x2026);
+    TLMLog(__func__, @"Refreshing list of all packages%C", TLM_ELLIPSIS);
     
     if ([[TLMEnvironment currentEnvironment] tlmgrSupportsDumpTlpdb] == NO) {
         TLMLog(__func__, @"Using legacy code for listing packages.  Hopefully it still works.");
@@ -1572,7 +1572,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 - (void)updateInfrastructure:(id)sender;
 {
     [self _displayStatusString:nil dataSource:_updateListDataSource];
-    TLMLog(__func__, @"Beginning user-requested infrastructure update%C", (unichar)0x2026);
+    TLMLog(__func__, @"Beginning user-requested infrastructure update%C", TLM_ELLIPSIS);
     _infrastructureNeedsUpdate = YES;
     [self _updateAllPackages];
 }
@@ -1580,7 +1580,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 - (void)updateInfrastructureFromCriticalRepository:(id)sender
 {
     [self _displayStatusString:nil dataSource:_updateListDataSource];
-    TLMLog(__func__, @"Beginning user-requested infrastructure update from tlcritical repo%C", (unichar)0x2026);
+    TLMLog(__func__, @"Beginning user-requested infrastructure update from tlcritical repo%C", TLM_ELLIPSIS);
     _infrastructureNeedsUpdate = YES;
     NSURL *repo = [NSURL URLWithString:[[NSUserDefaults standardUserDefaults] objectForKey:TLMTLCriticalRepository]];
     [self _updateAllPackagesFromRepository:repo];
@@ -1624,7 +1624,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
         // this is basically a dummy URL that we pass through in offline mode
         serverURL = [NSURL fileURLWithPath:[[TLMEnvironment currentEnvironment] installDirectory] isDirectory:YES];
         if (NULL == desc) desc = CFRetain(CFSTR("unknown error"));
-        TLMLog(__func__, @"Network connection is down (%@).  Trying local install database %@%C", desc, serverURL, (unichar)0x2026);
+        TLMLog(__func__, @"Network connection is down (%@).  Trying local install database %@%C", desc, serverURL, TLM_ELLIPSIS);
         [(id)desc autorelease];
         [self _displayStatusString:NSLocalizedString(@"Network is unavailable", @"") dataSource:_packageListDataSource];
         [self _refreshFullPackageListFromLocation:serverURL offline:YES];

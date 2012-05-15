@@ -498,7 +498,7 @@ static NSArray * __TLMURLsFromTexdocOutput2(NSString *outputString)
         if (op) {
             
             // clear previous title and file proxy icon
-            [[self window] setTitle:[NSString stringWithFormat:NSLocalizedString(@"Searching%C", @"info panel title"), 0x2026]];
+            [[self window] setTitle:[NSString stringWithFormat:NSLocalizedString(@"Searching%C", @"info panel title"), TLM_ELLIPSIS]];
             [[self window] setRepresentedURL:nil];
             
             NSMutableSet *packages = [NSMutableSet set];

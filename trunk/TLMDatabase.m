@@ -308,7 +308,7 @@ static double        _dataTimeout = URL_TIMEOUT;
         NSURLRequest *request = [NSURLRequest requestWithURL:[self _tlpdbURL] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:URL_TIMEOUT];
         _failed = NO;
         TLMLog(__func__, @"Checking the repository version.  Please be patient.");
-        TLMLog(__func__, @"Downloading at least %d bytes of tlpdb for a version check%C", MIN_DATA_LENGTH, (unichar)0x2026);
+        TLMLog(__func__, @"Downloading at least %d bytes of tlpdb for a version check%C", MIN_DATA_LENGTH, TLM_ELLIPSIS);
         TLMLogServerSync();
 
         NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
