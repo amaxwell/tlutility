@@ -2,13 +2,13 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="8.00">
 	<data>
 		<int key="IBDocument.SystemTarget">1050</int>
-		<string key="IBDocument.SystemVersion">11C74</string>
-		<string key="IBDocument.InterfaceBuilderVersion">1617</string>
-		<string key="IBDocument.AppKitVersion">1138.23</string>
-		<string key="IBDocument.HIToolboxVersion">567.00</string>
+		<string key="IBDocument.SystemVersion">10K549</string>
+		<string key="IBDocument.InterfaceBuilderVersion">1938</string>
+		<string key="IBDocument.AppKitVersion">1038.36</string>
+		<string key="IBDocument.HIToolboxVersion">461.00</string>
 		<dictionary class="NSMutableDictionary" key="IBDocument.PluginVersions">
-			<string key="com.apple.InterfaceBuilder.CocoaPlugin">1617</string>
-			<string key="com.apple.WebKitIBPlugin">518</string>
+			<string key="com.apple.InterfaceBuilder.CocoaPlugin">1938</string>
+			<string key="com.apple.WebKitIBPlugin">822</string>
 		</dictionary>
 		<array key="IBDocument.IntegratedClassDependencies">
 			<string>NSButton</string>
@@ -28,7 +28,10 @@
 			<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 			<string>com.apple.WebKitIBPlugin</string>
 		</array>
-		<dictionary class="NSMutableDictionary" key="IBDocument.Metadata"/>
+		<object class="NSMutableDictionary" key="IBDocument.Metadata">
+			<string key="NS.key.0">PluginDependencyRecalculationVersion</string>
+			<integer value="1" key="NS.object.0"/>
+		</object>
 		<array class="NSMutableArray" key="IBDocument.RootObjects" id="992130177">
 			<object class="NSCustomObject" id="882743980">
 				<string key="NSClassName">SUUpdateAlert</string>
@@ -49,7 +52,6 @@
 				<object class="NSMutableString" key="NSViewClass">
 					<characters key="NS.bytes">View</characters>
 				</object>
-				<nil key="NSUserInterfaceItemIdentifier"/>
 				<string key="NSWindowContentMinSize">{586, 370}</string>
 				<object class="NSView" key="NSWindowView" id="105305018">
 					<reference key="NSNextResponder"/>
@@ -207,7 +209,6 @@
 							<string key="NSFrame">{{443, 12}, {131, 32}}</string>
 							<reference key="NSSuperview" ref="105305018"/>
 							<reference key="NSWindow"/>
-							<reference key="NSNextKeyView"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="548438566">
 								<int key="NSCellFlags">-2080244224</int>
@@ -367,11 +368,10 @@
 					<reference key="NSWindow"/>
 					<reference key="NSNextKeyView" ref="438919577"/>
 				</object>
-				<string key="NSScreenRect">{{0, 0}, {1280, 778}}</string>
+				<string key="NSScreenRect">{{0, 0}, {1920, 1178}}</string>
 				<string key="NSMinSize">{586, 392}</string>
-				<string key="NSMaxSize">{10000000000000, 10000000000000}</string>
+				<string key="NSMaxSize">{1e+13, 1e+13}</string>
 				<string key="NSFrameAutosaveName"/>
-				<bool key="NSWindowIsRestorable">YES</bool>
 			</object>
 			<object class="NSUserDefaultsController" id="1010922435">
 				<bool key="NSSharedInstance">YES</bool>
@@ -379,6 +379,62 @@
 		</array>
 		<object class="IBObjectContainer" key="IBDocument.Objects">
 			<array class="NSMutableArray" key="connectionRecords">
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">releaseNotesView</string>
+						<reference key="source" ref="882743980"/>
+						<reference key="destination" ref="142197856"/>
+					</object>
+					<int key="connectionID">32</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">skipThisVersion:</string>
+						<reference key="source" ref="882743980"/>
+						<reference key="destination" ref="896050004"/>
+					</object>
+					<int key="connectionID">33</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">remindMeLater:</string>
+						<reference key="source" ref="882743980"/>
+						<reference key="destination" ref="66106524"/>
+					</object>
+					<int key="connectionID">34</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">window</string>
+						<reference key="source" ref="882743980"/>
+						<reference key="destination" ref="904110218"/>
+					</object>
+					<int key="connectionID">69</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">installUpdate:</string>
+						<reference key="source" ref="882743980"/>
+						<reference key="destination" ref="472735795"/>
+					</object>
+					<int key="connectionID">77</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">description</string>
+						<reference key="source" ref="882743980"/>
+						<reference key="destination" ref="610997016"/>
+					</object>
+					<int key="connectionID">105</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">delegate</string>
+						<reference key="source" ref="904110218"/>
+						<reference key="destination" ref="882743980"/>
+					</object>
+					<int key="connectionID">50</int>
+				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
 						<string key="label">value: applicationIcon</string>
@@ -412,46 +468,6 @@
 					<int key="connectionID">11</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">releaseNotesView</string>
-						<reference key="source" ref="882743980"/>
-						<reference key="destination" ref="142197856"/>
-					</object>
-					<int key="connectionID">32</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">skipThisVersion:</string>
-						<reference key="source" ref="882743980"/>
-						<reference key="destination" ref="896050004"/>
-					</object>
-					<int key="connectionID">33</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">remindMeLater:</string>
-						<reference key="source" ref="882743980"/>
-						<reference key="destination" ref="66106524"/>
-					</object>
-					<int key="connectionID">34</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">delegate</string>
-						<reference key="source" ref="904110218"/>
-						<reference key="destination" ref="882743980"/>
-					</object>
-					<int key="connectionID">50</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">window</string>
-						<reference key="source" ref="882743980"/>
-						<reference key="destination" ref="904110218"/>
-					</object>
-					<int key="connectionID">69</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
 						<string key="label">hidden: showsReleaseNotes</string>
 						<reference key="source" ref="988574776"/>
@@ -470,74 +486,6 @@
 						</object>
 					</object>
 					<int key="connectionID">72</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">installUpdate:</string>
-						<reference key="source" ref="882743980"/>
-						<reference key="destination" ref="472735795"/>
-					</object>
-					<int key="connectionID">77</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: descriptionText</string>
-						<reference key="source" ref="610997016"/>
-						<reference key="destination" ref="882743980"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="610997016"/>
-							<reference key="NSDestination" ref="882743980"/>
-							<string key="NSLabel">value: descriptionText</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">descriptionText</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">103</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">description</string>
-						<reference key="source" ref="882743980"/>
-						<reference key="destination" ref="610997016"/>
-					</object>
-					<int key="connectionID">105</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: values.SUAutomaticallyUpdate</string>
-						<reference key="source" ref="694121635"/>
-						<reference key="destination" ref="1010922435"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="694121635"/>
-							<reference key="NSDestination" ref="1010922435"/>
-							<string key="NSLabel">value: values.SUAutomaticallyUpdate</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">values.SUAutomaticallyUpdate</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">135</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">hidden: allowsAutomaticUpdates</string>
-						<reference key="source" ref="694121635"/>
-						<reference key="destination" ref="882743980"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="694121635"/>
-							<reference key="NSDestination" ref="882743980"/>
-							<string key="NSLabel">hidden: allowsAutomaticUpdates</string>
-							<string key="NSBinding">hidden</string>
-							<string key="NSKeyPath">allowsAutomaticUpdates</string>
-							<object class="NSDictionary" key="NSOptions">
-								<string key="NS.key.0">NSValueTransformerName</string>
-								<string key="NS.object.0">NSNegateBoolean</string>
-							</object>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">141</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
@@ -578,6 +526,58 @@
 						</object>
 					</object>
 					<int key="connectionID">164</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: descriptionText</string>
+						<reference key="source" ref="610997016"/>
+						<reference key="destination" ref="882743980"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="610997016"/>
+							<reference key="NSDestination" ref="882743980"/>
+							<string key="NSLabel">value: descriptionText</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">descriptionText</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">103</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: values.SUAutomaticallyUpdate</string>
+						<reference key="source" ref="694121635"/>
+						<reference key="destination" ref="1010922435"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="694121635"/>
+							<reference key="NSDestination" ref="1010922435"/>
+							<string key="NSLabel">value: values.SUAutomaticallyUpdate</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">values.SUAutomaticallyUpdate</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">135</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">hidden: allowsAutomaticUpdates</string>
+						<reference key="source" ref="694121635"/>
+						<reference key="destination" ref="882743980"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="694121635"/>
+							<reference key="NSDestination" ref="882743980"/>
+							<string key="NSLabel">hidden: allowsAutomaticUpdates</string>
+							<string key="NSBinding">hidden</string>
+							<string key="NSKeyPath">allowsAutomaticUpdates</string>
+							<object class="NSDictionary" key="NSOptions">
+								<string key="NS.key.0">NSValueTransformerName</string>
+								<string key="NS.object.0">NSNegateBoolean</string>
+							</object>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">141</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -864,6 +864,10 @@
 		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDependencies">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin.macosx</string>
 			<integer value="1050" key="NS.object.0"/>
+		</object>
+		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDevelopmentDependencies">
+			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin.InterfaceBuilder3</string>
+			<real value="3200" key="NS.object.0"/>
 		</object>
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
