@@ -543,15 +543,24 @@
                 <li>Fixed stupid compiler warnings in Xcode 4</li>
                 <li>Implemented -[BDSKTask terminationReason]</li>
                 <li>Reduced race window in BDSKTask kevent handler</li>
-				<li>Updated default list of CTAN repos</li>
-				<li>Can now drop string URLs on the repository window, not just URL types</li>
-				<li>Attempted workaround for a 10.7 crashing bug in icons drawing.  Maybe Apple will care enough to fix it someday.</li>
-				<li>Documentation icon view now draws background when it is main, not just key window</li>
-				<li>Workaround for 10.7 bug that caused a blocky background in documentation icon view</li>
-				<li>Added fallback repo for now-frozen TL 2011</li>
+                <li>Updated default list of CTAN repos</li>
+                <li>Can now drop string URLs on the repository window, not just URL types</li>
+                <li>Attempted workaround for a 10.7 crashing bug in icons drawing.  Maybe Apple will care enough to fix it someday.</li>
+                <li>Documentation icon view now draws background when it is main, not just key window</li>
+                <li>Workaround for 10.7 bug that caused a blocky background in documentation icon view</li>
+                <li>Added fallback repo for now-frozen TL 2011</li>
             </description>
             <pubDate>Thu, 17 May 2012 23:40:52 +0000</pubDate>
             <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-0.98.tgz" sparkle:version="0.98" length="3215357" type="application/octet-stream" sparkle:dsaSignature="MCwCFD9fEr5bW+U0TdfRbuRoc891wOFsAhQGabW0iYRoQ1TtmjGnyfSBzbMnCg=="></enclosure>
+        </item>
+        <item>
+            <title>Version 0.98.1</title>
+            <description>
+                <h3>Changes Since 0.98</h3>
+                <li>Fixed Sparkle nibs, so hopefully English users will not see the Japanese update message again</li>
+            </description>
+            <pubDate>Fri, 18 May 2012 23:20:21 +0000</pubDate>
+            <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-0.98.1.tgz" sparkle:version="0.98.1" length="3217435" type="application/octet-stream" sparkle:dsaSignature="MCwCFAQnBXfgJle9Hy5PnWNskQ02VwVnAhQ4Aly1Gg1hkdQXgJCrqudr/pAvOQ=="></enclosure>
         </item>
     </channel>
 </rss>
