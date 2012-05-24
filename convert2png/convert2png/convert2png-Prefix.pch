@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'convert2png' target in the 'convert2png' project
+//
+
+#ifdef __OBJC__
+    #import <Foundation/Foundation.h>
+#endif

@@ -1,0 +1,242 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		F9AEF5EE156C796B003CB69E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9AEF5ED156C796B003CB69E /* Foundation.framework */; };
+		F9AEF5F1156C796B003CB69E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F9AEF5F0156C796B003CB69E /* main.m */; };
+		F9AEF5F5156C796B003CB69E /* convert2png.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = F9AEF5F4156C796B003CB69E /* convert2png.1 */; };
+		F9AEF5FC156C799F003CB69E /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9AEF5FB156C799F003CB69E /* AppKit.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		F9AEF5E7156C796B003CB69E /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+				F9AEF5F5156C796B003CB69E /* convert2png.1 in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		F9AEF5E9156C796B003CB69E /* convert2png */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = convert2png; sourceTree = BUILT_PRODUCTS_DIR; };
+		F9AEF5ED156C796B003CB69E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		F9AEF5F0156C796B003CB69E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		F9AEF5F3156C796B003CB69E /* convert2png-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "convert2png-Prefix.pch"; sourceTree = "<group>"; };
+		F9AEF5F4156C796B003CB69E /* convert2png.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = convert2png.1; sourceTree = "<group>"; };
+		F9AEF5FB156C799F003CB69E /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = ../../../../../../System/Library/Frameworks/AppKit.framework; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F9AEF5E6156C796B003CB69E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F9AEF5EE156C796B003CB69E /* Foundation.framework in Frameworks */,
+				F9AEF5FC156C799F003CB69E /* AppKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		F9AEF5DE156C796B003CB69E = {
+			isa = PBXGroup;
+			children = (
+				F9AEF5EF156C796B003CB69E /* convert2png */,
+				F9AEF5EC156C796B003CB69E /* Frameworks */,
+				F9AEF5EA156C796B003CB69E /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		F9AEF5EA156C796B003CB69E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F9AEF5E9156C796B003CB69E /* convert2png */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F9AEF5EC156C796B003CB69E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F9AEF5FB156C799F003CB69E /* AppKit.framework */,
+				F9AEF5ED156C796B003CB69E /* Foundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F9AEF5EF156C796B003CB69E /* convert2png */ = {
+			isa = PBXGroup;
+			children = (
+				F9AEF5F0156C796B003CB69E /* main.m */,
+				F9AEF5F4156C796B003CB69E /* convert2png.1 */,
+				F9AEF5F2156C796B003CB69E /* Supporting Files */,
+			);
+			path = convert2png;
+			sourceTree = "<group>";
+		};
+		F9AEF5F2156C796B003CB69E /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				F9AEF5F3156C796B003CB69E /* convert2png-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		F9AEF5E8156C796B003CB69E /* convert2png */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F9AEF5F8156C796B003CB69E /* Build configuration list for PBXNativeTarget "convert2png" */;
+			buildPhases = (
+				F9AEF5E5156C796B003CB69E /* Sources */,
+				F9AEF5E6156C796B003CB69E /* Frameworks */,
+				F9AEF5E7156C796B003CB69E /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = convert2png;
+			productName = convert2png;
+			productReference = F9AEF5E9156C796B003CB69E /* convert2png */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		F9AEF5E0156C796B003CB69E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0440;
+				ORGANIZATIONNAME = "Adam R. Maxwell";
+			};
+			buildConfigurationList = F9AEF5E3156C796B003CB69E /* Build configuration list for PBXProject "convert2png" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = F9AEF5DE156C796B003CB69E;
+			productRefGroup = F9AEF5EA156C796B003CB69E /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				F9AEF5E8156C796B003CB69E /* convert2png */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		F9AEF5E5156C796B003CB69E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F9AEF5F1156C796B003CB69E /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		F9AEF5F6156C796B003CB69E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+					NS_BUILD_32_LIKE_64,
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		F9AEF5F7156C796B003CB69E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = NS_BUILD_32_LIKE_64;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		F9AEF5F9156C796B003CB69E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "convert2png/convert2png-Prefix.pch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		F9AEF5FA156C796B003CB69E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "convert2png/convert2png-Prefix.pch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		F9AEF5E3156C796B003CB69E /* Build configuration list for PBXProject "convert2png" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F9AEF5F6156C796B003CB69E /* Debug */,
+				F9AEF5F7156C796B003CB69E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F9AEF5F8156C796B003CB69E /* Build configuration list for PBXNativeTarget "convert2png" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F9AEF5F9156C796B003CB69E /* Debug */,
+				F9AEF5FA156C796B003CB69E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = F9AEF5E0156C796B003CB69E /* Project object */;
+}
