@@ -12,7 +12,7 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="1"/>
+			<integer value="2"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -41,13 +41,13 @@
 			<object class="NSWindowTemplate" id="1005">
 				<int key="NSWindowStyleMask">7</int>
 				<int key="NSWindowBacking">2</int>
-				<string key="NSWindowRect">{{200, 348}, {498, 152}}</string>
+				<string key="NSWindowRect">{{200, 364}, {498, 136}}</string>
 				<int key="NSWTFlags">536872960</int>
 				<string key="NSWindowTitle">Preferences</string>
 				<string key="NSWindowClass">NSWindow</string>
 				<nil key="NSViewClass"/>
-				<string key="NSWindowContentMaxSize">{498, 152}</string>
-				<string key="NSWindowContentMinSize">{498, 152}</string>
+				<string key="NSWindowContentMaxSize">{498, 136}</string>
+				<string key="NSWindowContentMinSize">{498, 136}</string>
 				<object class="NSView" key="NSWindowView" id="1006">
 					<reference key="NSNextResponder"/>
 					<int key="NSvFlags">256</int>
@@ -64,7 +64,7 @@
 									<string>NSFilenamesPboardType</string>
 								</object>
 							</object>
-							<string key="NSFrame">{{119, 112}, {265, 17}}</string>
+							<string key="NSFrame">{{119, 96}, {265, 17}}</string>
 							<reference key="NSSuperview" ref="1006"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSPathCell" key="NSCell" id="643462285">
@@ -139,7 +139,7 @@
 						<object class="NSTextField" id="291202169">
 							<reference key="NSNextResponder" ref="1006"/>
 							<int key="NSvFlags">268</int>
-							<string key="NSFrame">{{17, 112}, {97, 17}}</string>
+							<string key="NSFrame">{{17, 96}, {97, 17}}</string>
 							<reference key="NSSuperview" ref="1006"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="133169307">
@@ -163,7 +163,7 @@
 						<object class="NSButton" id="539070639">
 							<reference key="NSNextResponder" ref="1006"/>
 							<int key="NSvFlags">265</int>
-							<string key="NSFrame">{{384, 104}, {100, 32}}</string>
+							<string key="NSFrame">{{384, 88}, {100, 32}}</string>
 							<reference key="NSSuperview" ref="1006"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="888053622">
@@ -174,33 +174,6 @@
 								<reference key="NSControlView" ref="539070639"/>
 								<int key="NSButtonFlags">-2038284033</int>
 								<int key="NSButtonFlags2">129</int>
-								<string key="NSAlternateContents"/>
-								<string key="NSKeyEquivalent"/>
-								<int key="NSPeriodicDelay">200</int>
-								<int key="NSPeriodicInterval">25</int>
-							</object>
-						</object>
-						<object class="NSButton" id="724848870">
-							<reference key="NSNextResponder" ref="1006"/>
-							<int key="NSvFlags">268</int>
-							<string key="NSFrame">{{18, 78}, {198, 18}}</string>
-							<reference key="NSSuperview" ref="1006"/>
-							<bool key="NSEnabled">YES</bool>
-							<object class="NSButtonCell" key="NSCell" id="979286908">
-								<int key="NSCellFlags">-2080244224</int>
-								<int key="NSCellFlags2">0</int>
-								<string key="NSContents">Install updates for all users.</string>
-								<reference key="NSSupport" ref="1028275521"/>
-								<reference key="NSControlView" ref="724848870"/>
-								<int key="NSButtonFlags">1211912703</int>
-								<int key="NSButtonFlags2">2</int>
-								<object class="NSCustomResource" key="NSNormalImage" id="838717842">
-									<string key="NSClassName">NSImage</string>
-									<string key="NSResourceName">NSSwitch</string>
-								</object>
-								<object class="NSButtonImageSource" key="NSAlternateImage" id="571343608">
-									<string key="NSImageName">NSSwitch</string>
-								</object>
 								<string key="NSAlternateContents"/>
 								<string key="NSKeyEquivalent"/>
 								<int key="NSPeriodicDelay">200</int>
@@ -221,8 +194,13 @@
 								<reference key="NSControlView" ref="360276239"/>
 								<int key="NSButtonFlags">1211912703</int>
 								<int key="NSButtonFlags2">2</int>
-								<reference key="NSNormalImage" ref="838717842"/>
-								<reference key="NSAlternateImage" ref="571343608"/>
+								<object class="NSCustomResource" key="NSNormalImage" id="189148512">
+									<string key="NSClassName">NSImage</string>
+									<string key="NSResourceName">NSSwitch</string>
+								</object>
+								<object class="NSButtonImageSource" key="NSAlternateImage" id="571343608">
+									<string key="NSImageName">NSSwitch</string>
+								</object>
 								<string key="NSAlternateContents"/>
 								<string key="NSKeyEquivalent"/>
 								<int key="NSPeriodicDelay">200</int>
@@ -243,7 +221,7 @@
 								<reference key="NSControlView" ref="641012591"/>
 								<int key="NSButtonFlags">1211912703</int>
 								<int key="NSButtonFlags2">2</int>
-								<reference key="NSNormalImage" ref="838717842"/>
+								<reference key="NSNormalImage" ref="189148512"/>
 								<reference key="NSAlternateImage" ref="571343608"/>
 								<string key="NSAlternateContents"/>
 								<string key="NSKeyEquivalent"/>
@@ -265,7 +243,7 @@
 								<reference key="NSControlView" ref="37454118"/>
 								<int key="NSButtonFlags">1211912703</int>
 								<int key="NSButtonFlags2">2</int>
-								<reference key="NSNormalImage" ref="838717842"/>
+								<reference key="NSNormalImage" ref="189148512"/>
 								<reference key="NSAlternateImage" ref="571343608"/>
 								<string key="NSAlternateContents"/>
 								<string key="NSKeyEquivalent"/>
@@ -274,12 +252,12 @@
 							</object>
 						</object>
 					</object>
-					<string key="NSFrameSize">{498, 152}</string>
+					<string key="NSFrameSize">{498, 136}</string>
 					<reference key="NSSuperview"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1680, 1028}}</string>
-				<string key="NSMinSize">{498, 174}</string>
-				<string key="NSMaxSize">{498, 174}</string>
+				<string key="NSMinSize">{498, 158}</string>
+				<string key="NSMaxSize">{498, 158}</string>
 				<string key="NSFrameAutosaveName">Preferences Window</string>
 			</object>
 		</object>
@@ -325,22 +303,6 @@
 						<reference key="destination" ref="1001"/>
 					</object>
 					<int key="connectionID">26</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">_rootHomeCheckBox</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="724848870"/>
-					</object>
-					<int key="connectionID">31</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">toggleUseRootHome:</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="724848870"/>
-					</object>
-					<int key="connectionID">32</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
@@ -435,7 +397,6 @@
 							<reference ref="1014802659"/>
 							<reference ref="291202169"/>
 							<reference ref="539070639"/>
-							<reference ref="724848870"/>
 							<reference ref="360276239"/>
 							<reference ref="641012591"/>
 							<reference ref="37454118"/>
@@ -483,20 +444,6 @@
 						<int key="objectID">24</int>
 						<reference key="object" ref="888053622"/>
 						<reference key="parent" ref="539070639"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">29</int>
-						<reference key="object" ref="724848870"/>
-						<object class="NSMutableArray" key="children">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<reference ref="979286908"/>
-						</object>
-						<reference key="parent" ref="1006"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">30</int>
-						<reference key="object" ref="979286908"/>
-						<reference key="parent" ref="724848870"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">33</int>
@@ -565,10 +512,6 @@
 					<string>23.IBPluginDependency</string>
 					<string>23.IBViewBoundsToFrameTransform</string>
 					<string>24.IBPluginDependency</string>
-					<string>29.IBAttributePlaceholdersKey</string>
-					<string>29.IBPluginDependency</string>
-					<string>29.IBViewBoundsToFrameTransform</string>
-					<string>30.IBPluginDependency</string>
 					<string>33.IBAttributePlaceholdersKey</string>
 					<string>33.IBPluginDependency</string>
 					<string>33.IBViewBoundsToFrameTransform</string>
@@ -587,16 +530,16 @@
 				</object>
 				<object class="NSMutableArray" key="dict.values">
 					<bool key="EncodedWithXMLCoder">YES</bool>
-					<string>{{260, 640}, {498, 152}}</string>
+					<string>{{260, 656}, {498, 136}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{260, 640}, {498, 152}}</string>
+					<string>{{260, 656}, {498, 136}}</string>
 					<integer value="1"/>
 					<string>{196, 240}</string>
 					<string>{{202, 428}, {480, 270}}</string>
 					<boolean value="YES"/>
 					<boolean value="YES"/>
-					<string>{498, 152}</string>
-					<string>{498, 152}</string>
+					<string>{498, 136}</string>
+					<string>{498, 136}</string>
 					<object class="NSMutableArray">
 						<bool key="EncodedWithXMLCoder">YES</bool>
 					</object>
@@ -610,19 +553,6 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<object class="NSAffineTransform">
 						<bytes key="NSTransformStruct">P4AAAL+AAABDwAAAwwYAAA</bytes>
-					</object>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<object class="NSMutableDictionary">
-						<string key="NS.key.0">ToolTip</string>
-						<object class="IBToolTipAttribute" key="NS.object.0">
-							<string key="name">ToolTip</string>
-							<reference key="object" ref="724848870"/>
-							<string key="toolTip">Equivalent to using `sudo -H` in Terminal to avoid reading config files from your home directory.</string>
-						</object>
-					</object>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<object class="NSAffineTransform">
-						<bytes key="NSTransformStruct">P4AAAL+AAABBkAAAwrwAAA</bytes>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<object class="NSMutableDictionary">
@@ -716,12 +646,10 @@
 							<string>changeTexBinPath:</string>
 							<string>toggleAutoinstall:</string>
 							<string>toggleAutoremove:</string>
-							<string>toggleUseRootHome:</string>
 							<string>toggleUseSyslog:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -735,7 +663,6 @@
 							<string>changeTexBinPath:</string>
 							<string>toggleAutoinstall:</string>
 							<string>toggleAutoremove:</string>
-							<string>toggleUseRootHome:</string>
 							<string>toggleUseSyslog:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
@@ -753,10 +680,6 @@
 								<string key="candidateClassName">id</string>
 							</object>
 							<object class="IBActionInfo">
-								<string key="name">toggleUseRootHome:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
 								<string key="name">toggleUseSyslog:</string>
 								<string key="candidateClassName">id</string>
 							</object>
@@ -768,13 +691,11 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>_autoinstallCheckBox</string>
 							<string>_autoremoveCheckBox</string>
-							<string>_rootHomeCheckBox</string>
 							<string>_texbinPathControl</string>
 							<string>_useSyslogCheckBox</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>NSButton</string>
 							<string>NSButton</string>
 							<string>NSButton</string>
 							<string>NSPathControl</string>
@@ -787,7 +708,6 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>_autoinstallCheckBox</string>
 							<string>_autoremoveCheckBox</string>
-							<string>_rootHomeCheckBox</string>
 							<string>_texbinPathControl</string>
 							<string>_useSyslogCheckBox</string>
 						</object>
@@ -799,10 +719,6 @@
 							</object>
 							<object class="IBToOneOutletInfo">
 								<string key="name">_autoremoveCheckBox</string>
-								<string key="candidateClassName">NSButton</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">_rootHomeCheckBox</string>
 								<string key="candidateClassName">NSButton</string>
 							</object>
 							<object class="IBToOneOutletInfo">

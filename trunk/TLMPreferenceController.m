@@ -44,7 +44,6 @@
 #import <pthread.h>
 
 NSString * const TLMTexBinPathPreferenceKey = @"TLMTexBinPathPreferenceKey";       /* /usr/texbin                      */
-NSString * const TLMUseRootHomePreferenceKey = @"TLMUseRootHomePreferenceKey";     /* YES                              */
 NSString * const TLMInfraPathPreferenceKey = @"TLMInfraPathPreferenceKey";         /* update-tlmgr-latest.sh           */
 NSString * const TLMUseSyslogPreferenceKey = @"TLMUseSyslogPreferenceKey";         /* NO                               */
 NSString * const TLMFullServerURLPreferenceKey = @"TLMFullServerURLPreferenceKey"; /* composed URL                     */
@@ -62,7 +61,6 @@ NSString * const TLMShowLogWindowPreferenceKey = @"TLMShowLogWindowPreferenceKey
 @implementation TLMPreferenceController
 
 @synthesize _texbinPathControl;
-@synthesize _rootHomeCheckBox;
 @synthesize _useSyslogCheckBox;
 @synthesize _autoremoveCheckBox;
 @synthesize _autoinstallCheckBox;
@@ -86,7 +84,6 @@ static void __TLMPrefControllerInit() { _sharedInstance = [TLMPreferenceControll
 - (void)dealloc
 {
     [_texbinPathControl release];
-    [_rootHomeCheckBox release];
     [_useSyslogCheckBox release];
     [_autoremoveCheckBox release];
     [_autoinstallCheckBox release];
@@ -96,7 +93,6 @@ static void __TLMPrefControllerInit() { _sharedInstance = [TLMPreferenceControll
 - (void)updateUI
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [_rootHomeCheckBox setState:[defaults boolForKey:TLMUseRootHomePreferenceKey]];
     [_useSyslogCheckBox setState:[defaults boolForKey:TLMUseSyslogPreferenceKey]];
     [_autoinstallCheckBox setState:[defaults boolForKey:TLMAutoInstallPreferenceKey]];
     [_autoremoveCheckBox setState:[defaults boolForKey:TLMAutoRemovePreferenceKey]];   
@@ -120,11 +116,6 @@ static void __TLMPrefControllerInit() { _sharedInstance = [TLMPreferenceControll
 - (void)openTexbinAction:(id)sender
 {
     [[NSWorkspace sharedWorkspace] openFile:[[NSUserDefaults standardUserDefaults] objectForKey:TLMTexBinPathPreferenceKey]];
-}
-
-- (IBAction)toggleUseRootHome:(id)sender;
-{
-    [[NSUserDefaults standardUserDefaults] setBool:([sender state] == NSOnState) forKey:TLMUseRootHomePreferenceKey];
 }
 
 - (IBAction)toggleUseSyslog:(id)sender;
