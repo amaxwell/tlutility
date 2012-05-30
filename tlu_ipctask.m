@@ -200,17 +200,15 @@ static void log_lines_and_clear(NSMutableData *data, bool is_warning)
  argv[0]: tlu_ipctask
  argv[1]: DO server name for IPC
  argv[2]: log message flags
- argv[3]: y or n
- argv[4]: tlmgr
+ argv[3]: tlmgr
  argv[n]: tlmgr arguments
  */
 
 #define ARG_SELF        0
 #define ARG_SERVER_NAME 1
 #define ARG_LOG_FLAGS   2
-#define ARG_SET_HOME    3
-#define ARG_CMD         4
-#define ARG_CMD_ARGS    5
+#define ARG_CMD         3
+#define ARG_CMD_ARGS    4
     
 int main(int argc, char *argv[]) {
     
@@ -236,27 +234,18 @@ int main(int argc, char *argv[]) {
         log_error(@"second argument '%s' was not an unsigned long value", argv[ARG_LOG_FLAGS]);
         exit(1);
     }
-        
-    /* Require a single character argument 'y' || 'n'.      */
-    /* Don't accept 'yes' or 'no' or 'nitwit' as arguments. */
-    char *c = argv[ARG_SET_HOME];
-    if (strlen(c) != 1 || ('y' != *c && 'n' != *c)) {
-        log_error(@"third argument '%s' was not recognized", c);
-        exit(1);
-    }
     
-    /* If yes, do what sudo -H does: change HOME. */
-    if ('y' == *c) {    
+    /* Do what sudo -H does: change HOME. */
+    if (geteuid() == 0) {    
         
-        /* 
-         Formerly read root's passwd entry and used that directory.
-         What we really want to do, however, is just change it
-         to anything other than the console users's home directory,
-         so fonts won't be picked up there.  In order to enable
-         non-root usage, then, we can use a temp directory that is
-         guaranteed writeable by this process/user.
-         */
-        setenv("HOME", [NSTemporaryDirectory() saneFileSystemRepresentation], 1);
+        /* note that getuid() may no longer return 0 */
+        struct passwd *pw = getpwuid(0);
+        if (NULL == pw) {
+            log_error(@"getpwuid failed in tlu_ipctask");
+            exit(1);
+        }
+        
+        setenv("HOME", pw->pw_dir, 1);
     }
     
     /* copy this for later logging */

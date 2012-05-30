@@ -39,7 +39,6 @@
 #import <Cocoa/Cocoa.h>
 
 extern NSString * const TLMTexBinPathPreferenceKey;
-extern NSString * const TLMUseRootHomePreferenceKey;
 extern NSString * const TLMInfraPathPreferenceKey;
 extern NSString * const TLMUseSyslogPreferenceKey;
 extern NSString * const TLMFullServerURLPreferenceKey;
@@ -59,18 +58,15 @@ extern NSString * const TLMShowLogWindowPreferenceKey;
     NSButton            *_useSyslogCheckBox;
     NSButton            *_autoinstallCheckBox;
     NSButton            *_autoremoveCheckBox;
-    NSButton            *_rootHomeCheckBox;
 }
 
 + (TLMPreferenceController *)sharedPreferenceController;
 - (IBAction)changeTexBinPath:(id)sender;
-- (IBAction)toggleUseRootHome:(id)sender;
 - (IBAction)toggleUseSyslog:(id)sender;
 - (IBAction)toggleAutoinstall:(id)sender;
 - (IBAction)toggleAutoremove:(id)sender;
 
 @property (nonatomic, retain) IBOutlet NSPathControl *_texbinPathControl;
-@property (nonatomic, retain) IBOutlet NSButton *_rootHomeCheckBox;
 @property (nonatomic, retain) IBOutlet NSButton *_useSyslogCheckBox;
 @property (nonatomic, retain) IBOutlet NSButton *_autoinstallCheckBox;
 @property (nonatomic, retain) IBOutlet NSButton *_autoremoveCheckBox;
