@@ -164,10 +164,8 @@
   </settings>
   <editor content-size="{654, 760}" column-titles-display-mode="off" status-visible="no">
     <drawer display="sections" width="236" palette-height="379"/>
-    <hoisted-rows ids="c7F_mB7Iwc0"/>
-    <selected-rows ids="nmTz-p8V31t"/>
-    <selected-columns ids="jFqHUGd_Dg1"/>
-    <selected-characters range="{0, 12}"/>
+    <hoisted-rows ids="aLvRpQYwVsb"/>
+    <selected-rows ids="ltN_2UpUJG6"/>
     <toolbar>{
     &quot;TB Display Mode&quot; = 2;
     &quot;TB Icon Size Mode&quot; = 2;
@@ -1786,12 +1784,12 @@
                     </text>
                   </values>
                 </item>
-                <item id="a64z4CqJq-a">
+                <item id="k_fO8h6mGBS">
                   <values>
                     <text>
                       <p>
                         <run>
-                          <lit><cell refid="att9" name="Preferences" expanded="yes" type="image" width="373" height="130"/></lit>
+                          <lit><cell refid="att9" name="Preferences" expanded="yes" type="image" width="378" height="123"/></lit>
                         </run>
                       </p>
                     </text>
@@ -1835,71 +1833,6 @@
                             </run>
                             <run>
                               <lit> is correct, but other distributions may require you to change this.</lit>
-                            </run>
-                          </p>
-                        </text>
-                      </values>
-                    </item>
-                  </children>
-                </item>
-                <item id="fK3JP_8K0x5" expanded="yes">
-                  <values>
-                    <text>
-                      <p>
-                        <run>
-                          <style>
-                            <inherited-style name="UI" idref="a0as48_ttlo"/>
-                          </style>
-                          <lit>Install updates for all users</lit>
-                        </run>
-                      </p>
-                    </text>
-                  </values>
-                  <children>
-                    <item id="a0oGjHlHcVg">
-                      <values>
-                        <text>
-                          <p>
-                            <run>
-                              <lit>This is the equivalent of using </lit>
-                            </run>
-                            <run>
-                              <style>
-                                <inherited-style name="Verbatim" idref="a-WJm12exYM"/>
-                              </style>
-                              <lit>`sudo -H`</lit>
-                            </run>
-                            <run>
-                              <lit>, which changes your home directory environment variable when running a command as root.</lit>
-                            </run>
-                          </p>
-                        </text>
-                      </values>
-                    </item>
-                    <item id="loF5nAUhusl">
-                      <values>
-                        <text>
-                          <p>
-                            <run>
-                              <lit>Unchecking this box can lead to strange problems with fonts that I don&apos;t understand well enough to explain here.  However, if you have manually installed fonts in your personal tree (typically </lit>
-                            </run>
-                            <run>
-                              <style>
-                                <inherited-style name="Verbatim" idref="a-WJm12exYM"/>
-                              </style>
-                              <lit>~/Library/texmf</lit>
-                            </run>
-                            <run>
-                              <lit>) and run </lit>
-                            </run>
-                            <run>
-                              <style>
-                                <inherited-style name="Verbatim" idref="a-WJm12exYM"/>
-                              </style>
-                              <lit>updmap</lit>
-                            </run>
-                            <run>
-                              <lit> in Terminal, you may need to uncheck this box.</lit>
                             </run>
                           </p>
                         </text>
