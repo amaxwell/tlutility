@@ -328,16 +328,12 @@ static char *__BDSKCopyFileSystemRepresentation(NSString *str)
         
         // set process group for killpg()
         (void)setpgid(getpid(), getpid());
-        
-        int fd_null = open("/dev/null", O_WRONLY);
-        
+                
         // setup stdio descriptors (if not inheriting from parent)
-        if (-1 != fd_inp) dup2(fd_inp == -2 ? fd_null : fd_inp, STDIN_FILENO);        
-        if (-1 != fd_out) dup2(fd_out == -2 ? fd_null : fd_out, STDOUT_FILENO);
-        if (-1 != fd_err) dup2(fd_err == -2 ? fd_null : fd_err, STDERR_FILENO);
-        
-        close(fd_null);
-        
+        if (-1 != fd_inp) dup2(fd_inp, STDIN_FILENO);        
+        if (-1 != fd_out) dup2(fd_out, STDOUT_FILENO);
+        if (-1 != fd_err) dup2(fd_err, STDERR_FILENO);
+                
         if (workingDir) chdir(workingDir);
         
         /*         
