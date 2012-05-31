@@ -276,6 +276,7 @@ static char *__BDSKCopyFileSystemRepresentation(NSString *str)
     // the end of a pipe passed to the child needs to be closed in the parent process
     NSMutableSet *handlesToClose = [NSMutableSet set];
     NSFileHandle *nullHandle = [NSFileHandle fileHandleWithNullDevice];
+    [handlesToClose addObject:nullHandle];
     
     fh = [self standardInput];
     if ([fh isKindOfClass:[NSPipe class]]) {
@@ -303,7 +304,6 @@ static char *__BDSKCopyFileSystemRepresentation(NSString *str)
     else if (nil != fh) {
         fd_err = [fh isEqual:nullHandle] ? fd_null : [fh fileDescriptor];
     }
-    [nullHandle closeFile];
     
     // avoid a race between exec and setting up our kqueue
     int blockpipe[2] = { -1, -1 };
