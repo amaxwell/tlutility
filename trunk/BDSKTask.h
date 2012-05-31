@@ -50,6 +50,15 @@
  
  */
 
+#ifndef MAC_OS_X_VERSION_10_6
+enum {
+    NSTaskTerminationReasonExit = 1,
+    NSTaskTerminationReasonUncaughtSignal = 2
+};
+typedef NSInteger NSTaskTerminationReason;
+#endif
+
+
 @interface BDSKTask : NSTask {
 @private
     NSString                *_launchPath;
@@ -60,6 +69,10 @@
     id                       _standardOutput;
     id                       _standardError;
     pid_t                    _processIdentifier;    
+    int32_t                  _terminationStatus;
+    NSTaskTerminationReason  _terminationReason;
+    int32_t                  _running;
+    int32_t                  _launched;
     struct BDSKTaskInternal *_internal;
 }
 
