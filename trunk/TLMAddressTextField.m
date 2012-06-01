@@ -361,6 +361,42 @@ static inline BOOL forwardSelectorForCompletionInTextView(SEL selector, NSTextVi
     _dragChangedText = YES;
 }
 
+- (BOOL)becomeFirstResponder
+{
+    /* 
+     Don't become first responder on a mouse down unless the user clicks inside the text area,
+     or else the field editor ends up selecting all text.  This messes up the progress bar
+     drawing, and irritates me since clicking a button cell shouldn't affect selection in
+     the textfield.  In fact, it might be better if clicking the button to reload/cancel
+     would deselect text.
+     
+     Note that mouseDown: is implemented for the same purpose; it looks like there are a
+     couple of different paths on which the field editor will select all.
+     */
+    NSEvent *evt = [NSApp currentEvent];
+    if ([evt type] == NSLeftMouseDown || [evt type] == NSRightMouseDown) {
+        NSPoint mouseLoc = [self convertPoint:[evt locationInWindow] fromView:nil];
+        if (NSMouseInRect(mouseLoc, [[self cell] textRectForBounds:[self bounds]], [self isFlipped]) == NO)
+            return NO;
+    }
+    return [super becomeFirstResponder];
+}
+
+- (void)mouseDown:(NSEvent *)evt
+{
+    if ([evt type] == NSLeftMouseDown || [evt type] == NSRightMouseDown) {
+        NSPoint mouseLoc = [self convertPoint:[evt locationInWindow] fromView:nil];
+        if (NSMouseInRect(mouseLoc, [[self cell] textRectForBounds:[self bounds]], [self isFlipped]))
+            [super mouseDown:evt];
+        else
+            [[self cell] trackMouse:evt inRect:[self bounds] ofView:self untilMouseUp:YES];
+    }
+    else {
+        [super mouseDown:evt];
+    }
+
+}
+
 /*
  The _dragChangedText business is to avoid sending spurious action messages
  when text hasn't actually changed due to drag-and-drop or direct editing.
