@@ -1,0 +1,434 @@
+﻿/* partial alert text, with double space in front, only used with tlmgr2 */
+"  Total download size will be %@." = "  一共需要下载 %@。";
+
+/* Menu item title, Need a single leading space */
+" (Default)" = " (默认値)";
+
+/* alert message text */
+"%lu packages are available for update.  Of these, the TeX Live installer packages listed here must be updated first.  Update now?" = "一共有%lu个软件包可以更新。其中 TeX Live 的安装包必须首先更新。现在开始更新吗？";
+
+/* heading in info panel */
+"\nDoc Files:\n" = "\n文档文件：\n";
+
+/* heading in info panel */
+"\nDocumentation:\n" = "\n文档：\n";
+
+/* heading in info panel */
+"\nRun Files:\n" = "\n运行文件：\n";
+
+/* heading in info panel */
+"\nSource Files:\n" = "\n源文件：\n";
+
+/* single trailing space */
+"Adding " = "追加中 ";
+
+/* alert title */
+"An installation is running!" = "安装程序正在运行！";
+
+/* alert title */
+"Are you sure you want to restore %@ from backup?" = "确定要从备份中恢复 %@ 吗？";
+
+/* main window status string */
+"Backup Listing Cancelled" = "列出备份操作被取消";
+
+/* main window status string */
+"Backup Listing Failed" = "列出备份操作失败";
+
+/* status message */
+"Backup Pruning Failed" = "清除备份失败";
+
+/* tab title */
+"Backups" = "备份";
+
+/* No comment provided by engineer. */
+"Beginning download and installation of packages" = "开始下载并安装软件包";
+
+/* No comment provided by engineer. */
+"Beginning download of %.1f kbytes" = "开始下载 %.1f 千字节";
+
+/* button title */
+"Cancel" = "取消";
+
+/* button title */
+"Cancel Anyway" = "强制取消";
+
+/* alert title */
+"Change command-line default?" = "修改默认命令行？";
+
+/* button title in open panel (must be short)
+   Menu item title */
+"Choose" = "选择";
+
+/* Prompt for Choose panel */
+"Choose Viewer" = "选择查看器";
+
+/* context menu */
+"Copy" = "拷贝";
+
+/* alert title */
+"Critical updates available." = "重要更新可用。";
+
+/* main window status string */
+"Database Loading Cancelled" = "数据库加载操作被取消";
+
+/* main window status string */
+"Database Loading Failed" = "数据库加载失败";
+
+/* status for package */
+"Deleted on server" = "服务器端已删除";
+
+/* single trailing space */
+"Deleting " = "删除中 ";
+
+/* heading in info panel */
+"Description:\n" = "描述:\n";
+
+/* all caps tableview group title */
+"DOC FILES" = "文档文件";
+
+/* No comment provided by engineer. */
+"Download complete" = "下载完毕";
+
+/* No comment provided by engineer. */
+"Downloading release notes" = "正在下载发行说明";
+
+/* alert text */
+"Either a network problem exists or the TeX Live version on the server does not match.  If this problem persists on further attempts, you may need to try a different repository." = "发生网络错误或服务器上的 TeX Live 版本不符。如果问题持续出现，请尝试使用其他软件源。";
+
+/* error message for unreadable package */
+"Error parsing output line" = "解析输出错误";
+
+/* No comment provided by engineer. */
+"Error reading location from TeX Live" = "TeX Live 位置读取错误";
+
+/* No comment provided by engineer. */
+"Error: no release notes for selected version." = "错误: 未找到所选版本的发行说明。";
+
+/* alert message */
+"Failed to authorize operation" = "操作授权失败";
+
+/* status for package */
+"Forcibly removed" = "被強制删除";
+
+/* single trailing space */
+"Forcibly removed " = "被強制删除 ";
+
+/* alert message text */
+"If you cancel the installation process, it may leave your TeX installation in an unknown state.  You can ignore this warning and cancel anyway, or keep waiting until the installation finishes." = "如果停止安装过程，您的 TeX 系统将处于未知状态。您可以忽略这个警告并强制取消安装， 或者等待直到安装结束。";
+
+/* alert message text */
+"If you close the window, the installation process may leave your TeX installation in an unknown state.  You can ignore this warning and close the window, or wait until the installation finishes." = "如果关闭这个窗口，您的 TeX 系统将处于未知状态。您可以忽略这个警告并关闭窗口， 或者等待直到安装结束。";
+
+/* button title */
+"Ignore" = "忽略";
+
+/* status message */
+"Infrastructure Update Succeeded" = "基础组件成功更新";
+
+/* tab title */
+"Install" = "安装";
+
+/* alert title */
+"Install failed." = "安装失败。";
+
+/* status message */
+"Install Succeeded" = "安装成功。";
+
+/* No comment provided by engineer. */
+"Installation complete; reconfiguring TeX Live" = "安装完毕。正在重新配置 TeX Live。";
+
+/* alert title */
+"Installation in progress!" = "正在安装！";
+
+/* status for package */
+"Installed" = "已安装";
+
+/* single trailing space */
+"Installing " = "正在安装 ";
+
+/* alert title */
+"Invalid URL" = "无效 URL";
+
+/* alert title */
+"Invalid URL entered" = "输入了无效的 URL";
+
+/* button title */
+"Keep Waiting" = "继续等待";
+
+/* heading in info panel */
+"Link: " = "链接: ";
+
+/* main window status string */
+"Listing Cancelled" = "列表操作被取消";
+
+/* main window status string */
+"Listing Failed" = "列表操作失败";
+
+/* status message */
+"Loading Database" = "正在加载数据库";
+
+/* status for package */
+"Local version is newer" = "本地版本更新";
+
+/* single trailing space */
+"Local version is newer " = "本地版本更新 ";
+
+/* value in tableview */
+"Missing short description" = "缺少简要说明";
+
+/* status for expandable outline row with installed and uninstalled packages */
+"Mixed" = "混合";
+
+/* the user's repository group title */
+"My Repositories" = "我的源";
+
+/* alert title in preferences */
+"Necessary programs for TeX Live do not exist in that folder" = "该目录不存在 TeX Live 必需的程序";
+
+/* No comment provided by engineer. */
+"Network is unavailable" = "网络不可用";
+
+/* update alert message text part 3 (optional) */
+"New packages will be installed." = "新的软件包将被安装。";
+
+/* button title */
+"No" = "No";
+
+/* main window status string */
+"No Backups Available" = "无可用备份";
+
+/* main window status string */
+"No Updates Available" = "无可用更新";
+
+/* status for package */
+"Not installed" = "未被安装";
+
+/* info panel title */
+"Nothing Selected" = "未选择任何项目";
+
+/* No comment provided by engineer. */
+"Nothing selected." = "未选择任何项目。";
+
+/* menu title */
+"Open With" = "打开使用: ";
+
+/* heading in info panel */
+"Package:" = "软件包：";
+
+/* tab title */
+"Packages" = "软件包";
+
+/* update alert message text part 2 (optional) */
+"Packages that no longer exist on the server will be removed." = "软件包。";
+
+/* status message */
+"Paper Size Change Failed" = "改变纸张大小失败";
+
+/* alert message */
+"Please quit and relaunch TeX Live Utility.  If this problem occurs again, please submit a bug report using the link on the Help menu." = "请退出并重新启动 TeX Live Utility。如果问题依然存在，请使用帮助菜单立的链接提交一个错误报告。";
+
+/* alert title */
+"Possible update failure." = "更新有可能失败。";
+
+/* toolbar item palette label */
+"Progress" = "进度";
+
+/* button title */
+"Reinstall" = "重新安装";
+
+/* alert title */
+"Reinstall packages?" = "重新安装软件包？";
+
+/* single trailing space */
+"Reinstalling " = "正在重新安装 ";
+
+/* Window title */
+"Release Notes" = "发行说明";
+
+/* alert title */
+"Removal failed." = "卸载失败。";
+
+/* status message */
+"Removal Succeeded" = "卸载成功";
+
+/* alert title */
+"Repository has a different TeX Live version" = "源有一个不同版本的 TeX Live";
+
+/* No comment provided by engineer. */
+"Repository URL has a newer TeX Live version" = "源地址有一个更新版本的 TeX Live";
+
+/* No comment provided by engineer. */
+"Repository URL has an older TeX Live version" = "源地址有一个较老版本的 TeX Live";
+
+/* button title
+   small button title */
+"Restore" = "恢复";
+
+/* alert title */
+"Restore failed." = "恢复失败。";
+
+/* status message */
+"Restore Succeeded" = "恢复成功";
+
+/* all caps tableview group title */
+"RUN FILES" = "运行文件";
+
+/* info panel title */
+"Searching%C" = "正在搜索 %C";
+
+/* context menu */
+"Set Default Repository" = "设置默认源";
+
+/* context menu */
+"Show Info" = "显示信息";
+
+/* button title */
+"Show Log" = "显示日志";
+
+/* alert message text */
+"Some of the packages you have selected are already installed.  Would you like to reinstall them?" = "所选项目中有已安装软件包。要重新安装这些软件包吗？";
+
+/* alert title */
+"Some of these packages cannot be removed." = "某些软件包无法卸载。";
+
+/* all caps tableview group title */
+"SOURCE FILES" = "源文件";
+
+/* heading in info panel */
+"Status:" = "状态:";
+
+/* heading in info panel */
+"Summary:" = "综述:";
+
+/* alert sheet title */
+"TeX installation not found." = "未找到 TeX 系统。";
+
+/* No comment provided by engineer. */
+"TeX Live 2008 is not supported" = "不支持 TeX Live 2008";
+
+/* No comment provided by engineer. */
+"The current location is:" = "目前位置：";
+
+/* alert message text */
+"The install process appears to have failed. Would you like to show the log now or ignore this warning?" = "安装过程似乎失败了。要查看日志或者忽略这个警告吗？";
+
+/* No comment provided by engineer. */
+"The location in the TeX Live database was not changed" = "TeX Live 数据库中的位置没有改变。";
+
+/* alert message text */
+"The removal process appears to have failed. Would you like to show the log now or ignore this warning?" = "删除过程似乎失败了。要查看日志或者忽略这个警告吗？";
+
+/* alert text, two integer format specifiers */
+"The repository at %@ has TeX Live %lu, but you have TeX Live %lu installed.  You need to switch repositories in order to continue." = "位于 %@ 的源 TeX Live 版本是 %lu，但是您安装的是 TeX Live %lu。 您需要切换源地址以便继续。";
+
+/* alert message text */
+"The restore process appears to have failed. Would you like to show the log now or ignore this warning?" = "復元過程で失敗が発生したようです。ログを今表示しますか、あるいはこの警告を無視しますか？";
+
+/* alert message text */
+"The TeX Live infrastructure packages have the same version after updating.  This could be a packaging problem on the server.  If you see this message repeatedly, wait until the problem is resolved in TeX Live before attempting another update." = "TeX Live 基盤部パッケージのバージョンが、更新後も同じままです。これはサーバー側のパッケージ化の不具合である可能性があります。このメッセージが繰り返し表示される場合には、他の更新に進む前に、TeX Live 側で問題が解消されるまでお待ちください。";
+
+/* alert message text in preferences */
+"The tlmgr and kpsewhich tools must be present in this folder for basic functionality." = "tlmgr 和 kpsewhich 辅助程序必须位于这个目录才能执行基本的功能。";
+
+/* alert message text */
+"The tlmgr tool does not exist at %@.  Please set the correct location in preferences or install TeX Live." = "无法在 %@ 找到 tlmgr。请在首选项中设置正确的路径或者安装 TeX Live。";
+
+/* No comment provided by engineer. */
+"The tlu_ipctask helper application may have been tampered with." = "tlu_ipctask 辅助程序有可能被篡改了。";
+
+/* alert title */
+"The update failed." = "更新失败。";
+
+/* alert message text */
+"The update process appears to have failed. Would you like to show the log now or ignore this warning?" = "更新过程似乎失败了。要查看日志或者忽略这个警告吗？";
+
+/* error message */
+"This URL is missing a scheme, such as http." = "这个 URL 缺少协议部分，例如 http。";
+
+/* error message */
+"This URL was not valid." = "这个 URL 是无效的。";
+
+/* No comment provided by engineer. */
+"This version of TeX Live Utility will not work correctly with TeX Live 2008.  You need to download TeX Live Utility version 0.74 or earlier, or upgrade to a newer TeX Live.  I recommend the latter." = "这个版本的 TeX Live Utility 无法和 TeX Live 2008 正常协作。 您需要下载 0.74 或者更早版本的 TeX Live Utility， 或者升级到更新版本的 TeX Live。 建议升级 TeX Live。";
+
+/* update alert message text part 1 */
+"This will install all available updates." = "这将安装所有可用更新。";
+
+/* No comment provided by engineer. */
+"Unable to convert to a number" = "无法转换为数字";
+
+/* alert title */
+"Unable to determine your TeX Live version" = "无法判断您的 TeX Live 版本";
+
+/* alert title */
+"Unable to find a valid update server" = "无法找到一个有效的更新服务器";
+
+/* error message for info panel */
+"Unable to find info for %@" = "无法找到关于 %@ 的信息";
+
+/* alert title */
+"Unable to relaunch" = "无法重新启动";
+
+/* error message */
+"Unsupported URL scheme for TeX Live.  Must be one of:" = "TeX Live 不支持所给 URL。必须是下面其中之一:";
+
+/* button title */
+"Update" = "更新";
+
+/* context menu */
+"Update All Packages" = "更新所有软件包";
+
+/* alert title */
+"Update all packages?" = "更新所有软件包？";
+
+/* context menu */
+"Update Selected Packages" = "更新所选软件包";
+
+/* status message */
+"Update Succeeded" = "更新成功";
+
+/* status for package */
+"Updated on server" = "服务器已更新";
+
+/* tab title */
+"Updates" = "更新";
+
+/* single trailing space */
+"Updating " = "更新中 ";
+
+/* button title */
+"Upgrade" = "升级";
+
+/* alert message */
+"User cancelled operation" = "用户中止了操作";
+
+/* status message */
+"Validating Server" = "验证服务器";
+
+/* No comment provided by engineer. */
+"Version %@" = "第 %@ 版";
+
+/* button title */
+"Wait" = "等待";
+
+/* alert text */
+"Would you like to use this as the default value for the command-line tlmgr tool as well?" = "您愿意也使用这个作为命令行工具 tlmgr 的默认值吗？";
+
+/* button title */
+"Yes" = "Yes";
+
+/* alert message text */
+"You are attempting to remove critical parts of the underlying TeX Live infrastructure, and I won't help you do that." = "您正试图卸载 TeX Live 基础架构的关键组件，这是 TeX Live Utility 所无法完成的。";
+
+/* alert message */
+"You can always update to the latest version or restore a different one to undo this change." = "您任何时候都可以更新到最新版本或者恢复到以前的版本以撤销这个操作。";
+
+/* alert text */
+"You will need to manually quit and relaunch TeX Live Utility to complete installation of the new version." = "您需要手动退出并重新启动 TeX Live Utility 以完成新版本的安装。";
+
+/* two integer specifiers */
+"Your TeX Live version is %lu, but your default repository URL appears to be for TeX Live %lu.  You need to choose an appropriate repository." = "您的 TeX Live 版本是 %lu，但是您所设定的默认源地址上 TeX Live 版本似乎是 %lu。您需要选择另外一个源地址。";
+
+/* two integer specifiers */
+"Your TeX Live version is %lu, but your default repository URL appears to be for TeX Live %lu.  You need to manually upgrade to a newer version of TeX Live, as there will be no further updates for your version." = "您的 TeX Live 版本是 %lu，但是您所设定的默认源地址上 TeX Live 版本似乎是 %lu。 您需要手动升级到新版本的 TeX Live， 因为您现有的版本将不再更新。";
+

@@ -60,7 +60,6 @@
 		F9963EC50F0490E9005F0174 /* TLMRemoveOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F9963EC40F0490E9005F0174 /* TLMRemoveOperation.m */; };
 		F9963FEF0F054999005F0174 /* TLMInstallOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F9963FEE0F054999005F0174 /* TLMInstallOperation.m */; };
 		F9999F9C10D1C33800F594CB /* TLMProxyManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F9999F9B10D1C33800F594CB /* TLMProxyManager.m */; };
-		F9999FE510D2AAFF00F594CB /* PapersizeSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = F9999FE410D2AAFF00F594CB /* PapersizeSheet.xib */; };
 		F99CCDE70F0EB56E00D67ED0 /* DefaultMirrors.plist in Resources */ = {isa = PBXBuildFile; fileRef = F99CCDDA0F0EAFB300D67ED0 /* DefaultMirrors.plist */; };
 		F99D9B0B0F01731E00A1DCCB /* TLMTabView.m in Sources */ = {isa = PBXBuildFile; fileRef = F99D9B0A0F01731E00A1DCCB /* TLMTabView.m */; };
 		F99E51980EEE4AD5006E6B39 /* TLMURLFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = F99E51970EEE4AD5006E6B39 /* TLMURLFormatter.m */; };
@@ -111,6 +110,7 @@
 		F9D85F7A125E865E00C0FEC5 /* update_check.py in Resources */ = {isa = PBXBuildFile; fileRef = F9D85F75125E85FD00C0FEC5 /* update_check.py */; };
 		F9D85F7B125E866100C0FEC5 /* com.googlecode.mactlmgr.update_check.plist in Resources */ = {isa = PBXBuildFile; fileRef = F9D85F73125E85FD00C0FEC5 /* com.googlecode.mactlmgr.update_check.plist */; };
 		F9DAAB8213D0DE26004055A0 /* NSURL_TLMExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = F9DAAB8113D0DE26004055A0 /* NSURL_TLMExtensions.m */; };
+		F9DBEE6E157848A500EFADE5 /* PapersizeSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = F9DBEE6D157848A500EFADE5 /* PapersizeSheet.xib */; };
 		F9DCD36C0F06F0A200600DD2 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9DCD3650F06F08C00600DD2 /* Sparkle.framework */; };
 		F9DCD3700F06F0F400600DD2 /* Sparkle.framework in copy frameworks */ = {isa = PBXBuildFile; fileRef = F9DCD3650F06F08C00600DD2 /* Sparkle.framework */; };
 		F9DCD43F0F06F76F00600DD2 /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = F9DCD43E0F06F76F00600DD2 /* dsa_pub.pem */; };
@@ -358,7 +358,6 @@
 		F97EBB3F1440977100E79859 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Japanese.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		F97EBB401440977900E79859 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Japanese.lproj/MainWindow.xib; sourceTree = "<group>"; };
 		F97EBB411440977F00E79859 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Japanese.lproj/Preferences.xib; sourceTree = "<group>"; };
-		F97EBB421440978500E79859 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Japanese.lproj/PapersizeSheet.xib; sourceTree = "<group>"; };
 		F97EBB431440978E00E79859 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Japanese.lproj/Mirrors.xib; sourceTree = "<group>"; };
 		F982551E125045980018CB73 /* TLMAutobackupController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMAutobackupController.h; sourceTree = "<group>"; };
 		F982551F125045980018CB73 /* TLMAutobackupController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMAutobackupController.m; sourceTree = "<group>"; };
@@ -453,6 +452,17 @@
 		F9D9AEB60F0D7EED00CB1A2F /* tlu_ipctask-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "tlu_ipctask-Info.plist"; sourceTree = "<group>"; };
 		F9DAAB8013D0DE26004055A0 /* NSURL_TLMExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSURL_TLMExtensions.h; sourceTree = "<group>"; };
 		F9DAAB8113D0DE26004055A0 /* NSURL_TLMExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSURL_TLMExtensions.m; sourceTree = "<group>"; };
+		F9DBEE631578482D00EFADE5 /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_CN; path = zh_CN.lproj/LogWindow.xib; sourceTree = "<group>"; };
+		F9DBEE641578485A00EFADE5 /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_CN; path = zh_CN.lproj/LaunchAgentSheet.xib; sourceTree = "<group>"; };
+		F9DBEE651578486300EFADE5 /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_CN; path = zh_CN.lproj/AutobackupSheet.xib; sourceTree = "<group>"; };
+		F9DBEE661578486D00EFADE5 /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_CN; path = zh_CN.lproj/Localizable.strings; sourceTree = "<group>"; };
+		F9DBEE671578487500EFADE5 /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_CN; path = zh_CN.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		F9DBEE681578488300EFADE5 /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_CN; path = zh_CN.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		F9DBEE691578488900EFADE5 /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_CN; path = zh_CN.lproj/MainWindow.xib; sourceTree = "<group>"; };
+		F9DBEE6A1578489000EFADE5 /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_CN; path = zh_CN.lproj/Preferences.xib; sourceTree = "<group>"; };
+		F9DBEE6F157848AD00EFADE5 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Japanese.lproj/PapersizeSheet.xib; sourceTree = "<group>"; };
+		F9DBEE70157848B100EFADE5 /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_CN; path = zh_CN.lproj/PapersizeSheet.xib; sourceTree = "<group>"; };
+		F9DBEE71157848C600EFADE5 /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_CN; path = zh_CN.lproj/Mirrors.xib; sourceTree = "<group>"; };
 		F9DCD3590F06F08C00600DD2 /* Sparkle.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Sparkle.xcodeproj; path = Sparkle/Sparkle.xcodeproj; sourceTree = "<group>"; };
 		F9DCD43E0F06F76F00600DD2 /* dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dsa_pub.pem; sourceTree = "<group>"; };
 		F9DCD4A10F07126F00600DD2 /* tlu_appcast.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = tlu_appcast.xml; path = appcast/tlu_appcast.xml; sourceTree = "<group>"; };
@@ -613,7 +623,7 @@
 				F9B134700EEB1B13007C0046 /* MainWindow.xib */,
 				F9B13B2A0EECEB05007C0046 /* InfoPanel.xib */,
 				F9F130550EED94D800D9968D /* Preferences.xib */,
-				F9999FE410D2AAFF00F594CB /* PapersizeSheet.xib */,
+				F9DBEE6D157848A500EFADE5 /* PapersizeSheet.xib */,
 				F99CCDDA0F0EAFB300D67ED0 /* DefaultMirrors.plist */,
 				F96249D40F1C516F007F3D70 /* ReleaseNotes.xib */,
 				F925D1B012957B5600D75BB4 /* Mirrors.xib */,
@@ -925,6 +935,8 @@
 				Japanese,
 				French,
 				German,
+				zh_CN,
+				zy,
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* TeX Live Utility */;
 			projectDirPath = "";
@@ -1041,7 +1053,7 @@
 				F9ABAA5E0EF198D500497E0F /* Credits.rtf in Resources */,
 				F97E85740EFA18F400862882 /* TeXDistTool.icns in Resources */,
 				F97E860C0EFA3BFD00862882 /* TeXDistDocument.icns in Resources */,
-				F9999FE510D2AAFF00F594CB /* PapersizeSheet.xib in Resources */,
+				F9DBEE6E157848A500EFADE5 /* PapersizeSheet.xib in Resources */,
 				F9DCD43F0F06F76F00600DD2 /* dsa_pub.pem in Resources */,
 				F9B062000F0F388500BB03D3 /* Localizable.strings in Resources */,
 				F96249D50F1C516F007F3D70 /* ReleaseNotes.xib in Resources */,
@@ -1236,6 +1248,7 @@
 			children = (
 				089C165DFE840E0CC02AAC07 /* English */,
 				F97EBB3E1440976B00E79859 /* Japanese */,
+				F9DBEE671578487500EFADE5 /* zh_CN */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -1245,6 +1258,7 @@
 			children = (
 				1DDD58150DA1D0A300B32029 /* English */,
 				F97EBB3F1440977100E79859 /* Japanese */,
+				F9DBEE681578488300EFADE5 /* zh_CN */,
 			);
 			name = MainMenu.xib;
 			sourceTree = "<group>";
@@ -1254,6 +1268,7 @@
 			children = (
 				F925D1AE12957B4C00D75BB4 /* English */,
 				F97EBB431440978E00E79859 /* Japanese */,
+				F9DBEE71157848C600EFADE5 /* zh_CN */,
 			);
 			name = Mirrors.xib;
 			sourceTree = "<group>";
@@ -1263,6 +1278,7 @@
 			children = (
 				F96203CE13D3677600932965 /* English */,
 				F97EBB381440971C00E79859 /* Japanese */,
+				F9DBEE631578482D00EFADE5 /* zh_CN */,
 			);
 			name = LogWindow.xib;
 			sourceTree = "<group>";
@@ -1272,6 +1288,7 @@
 			children = (
 				F982553C12504E040018CB73 /* English */,
 				F97EBB3C1440975A00E79859 /* Japanese */,
+				F9DBEE651578486300EFADE5 /* zh_CN */,
 			);
 			name = AutobackupSheet.xib;
 			sourceTree = "<group>";
@@ -1284,20 +1301,12 @@
 			name = HelpBook;
 			sourceTree = "<group>";
 		};
-		F9999FE410D2AAFF00F594CB /* PapersizeSheet.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				F905217E0EFEA98600B489FE /* English */,
-				F97EBB421440978500E79859 /* Japanese */,
-			);
-			name = PapersizeSheet.xib;
-			sourceTree = "<group>";
-		};
 		F9B061FF0F0F388500BB03D3 /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
 				F9B061FD0F0F387700BB03D3 /* English */,
 				F97EBB3D1440976200E79859 /* Japanese */,
+				F9DBEE661578486D00EFADE5 /* zh_CN */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -1307,6 +1316,7 @@
 			children = (
 				F9B1346D0EEB1AFE007C0046 /* English */,
 				F97EBB401440977900E79859 /* Japanese */,
+				F9DBEE691578488900EFADE5 /* zh_CN */,
 			);
 			name = MainWindow.xib;
 			sourceTree = "<group>";
@@ -1316,8 +1326,19 @@
 			children = (
 				F9C0D3D1125ECEDB00B1FBE5 /* English */,
 				F97EBB3B1440975200E79859 /* Japanese */,
+				F9DBEE641578485A00EFADE5 /* zh_CN */,
 			);
 			name = LaunchAgentSheet.xib;
+			sourceTree = "<group>";
+		};
+		F9DBEE6D157848A500EFADE5 /* PapersizeSheet.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F905217E0EFEA98600B489FE /* English */,
+				F9DBEE6F157848AD00EFADE5 /* Japanese */,
+				F9DBEE70157848B100EFADE5 /* zh_CN */,
+			);
+			name = PapersizeSheet.xib;
 			sourceTree = "<group>";
 		};
 		F9F130550EED94D800D9968D /* Preferences.xib */ = {
@@ -1325,6 +1346,7 @@
 			children = (
 				F9F130530EED94CC00D9968D /* English */,
 				F97EBB411440977F00E79859 /* Japanese */,
+				F9DBEE6A1578489000EFADE5 /* zh_CN */,
 			);
 			name = Preferences.xib;
 			sourceTree = "<group>";
