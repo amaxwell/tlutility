@@ -469,14 +469,15 @@
 - (NSMenu *)tableView:(NSTableView *)tableView contextMenuForRow:(NSInteger)row column:(NSInteger)column;
 {
     NSZone *zone = [NSMenu menuZone];
-    NSMenu *menu = [[NSMenu allocWithZone:zone] init];
+    NSMenu *menu = [[[NSMenu allocWithZone:zone] init] autorelease];
     
     NSMenuItem *item = [[NSMenuItem allocWithZone:zone] initWithTitle:NSLocalizedString(@"Update Selected Packages", @"context menu")
                                                                action:@selector(updateSelectedRows:)
                                                         keyEquivalent:@""];
     [item setAction:@selector(updateSelectedRows:)];
     [item setTarget:self];
-    [menu addItem:item];
+    if ([self validateUserInterfaceItem:item])
+        [menu addItem:item];
     [item release];
     
     item = [[NSMenuItem allocWithZone:zone] initWithTitle:NSLocalizedString(@"Update All Packages", @"context menu")
@@ -484,20 +485,23 @@
                                             keyEquivalent:@""];
     [item setAction:@selector(updateAll:)];
     [item setTarget:self];
-    [menu addItem:item];
+    if ([self validateUserInterfaceItem:item])
+        [menu addItem:item];
     [item release];
     
-    [menu addItem:[NSMenuItem separatorItem]];
+    if ([menu numberOfItems])
+        [menu addItem:[NSMenuItem separatorItem]];
     
     item = [[NSMenuItem allocWithZone:zone] initWithTitle:NSLocalizedString(@"Show Info", @"context menu")
                                                    action:@selector(showInfo:)
                                             keyEquivalent:@""];
     [item setAction:@selector(showInfo:)];
     [item setTarget:self];
-    [menu addItem:item];
+    if ([self validateUserInterfaceItem:item])
+        [menu addItem:item];
     [item release];
     
-    return [menu autorelease];
+    return [menu numberOfItems] ? menu : nil;
 }
     
 @end

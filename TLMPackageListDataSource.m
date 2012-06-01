@@ -293,4 +293,65 @@
     [[[_controller window] toolbar] validateVisibleItems];
 }
 
+- (NSMenu *)tableView:(NSTableView *)tableView contextMenuForRow:(NSInteger)row column:(NSInteger)column;
+{
+    NSZone *zone = [NSMenu menuZone];
+    NSMenu *menu = [[[NSMenu allocWithZone:zone] init] autorelease];
+    
+    NSMenuItem *item = [[NSMenuItem allocWithZone:zone] initWithTitle:NSLocalizedString(@"Install Selected Packages", @"context menu")
+                                                               action:@selector(installSelectedRows:)
+                                                        keyEquivalent:@""];
+    [item setAction:@selector(installSelectedRows:)];
+    [item setTarget:self];
+    if ([self validateUserInterfaceItem:item])
+        [menu addItem:item];
+    [item release];
+    
+    item = [[NSMenuItem allocWithZone:zone] initWithTitle:NSLocalizedString(@"Reinstall Selected Packages", @"context menu")
+                                                   action:@selector(reinstallSelectedRows:)
+                                            keyEquivalent:@""];
+    [item setAction:@selector(reinstallSelectedRows:)];
+    [item setTarget:self];
+    if ([self validateUserInterfaceItem:item])
+        [menu addItem:item];
+    [item release];
+    
+    item = [[NSMenuItem allocWithZone:zone] initWithTitle:NSLocalizedString(@"Remove Selected Packages", @"context menu")
+                                                   action:@selector(removeSelectedRows:)
+                                            keyEquivalent:@""];
+    [item setAction:@selector(removeSelectedRows:)];
+    [item setTarget:self];
+    
+    // if we add remove, let's try to add forcible removal as the alternate, same as in the main menu
+    if ([self validateUserInterfaceItem:item]) {
+        [menu addItem:item];
+        [item release];
+
+        item = [[NSMenuItem allocWithZone:zone] initWithTitle:NSLocalizedString(@"Forcibly Remove Selected Packages", @"context menu")
+                                                       action:@selector(forciblyRemoveSelectedRows:)
+                                                keyEquivalent:@""];
+        [item setAction:@selector(forciblyRemoveSelectedRows:)];
+        [item setTarget:self];
+        [item setAlternate:YES];
+        [item setKeyEquivalentModifierMask:NSAlternateKeyMask];
+        if ([self validateUserInterfaceItem:item])
+            [menu addItem:item];
+    }
+    [item release];
+    
+    if ([menu numberOfItems])
+        [menu addItem:[NSMenuItem separatorItem]];
+    
+    item = [[NSMenuItem allocWithZone:zone] initWithTitle:NSLocalizedString(@"Show Info", @"context menu")
+                                                   action:@selector(showInfo:)
+                                            keyEquivalent:@""];
+    [item setAction:@selector(showInfo:)];
+    [item setTarget:self];
+    if ([self validateUserInterfaceItem:item])
+        [menu addItem:item];
+    [item release];
+    
+    return [menu numberOfItems] ? menu : nil;
+}
+
 @end
