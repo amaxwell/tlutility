@@ -97,11 +97,11 @@
 		F9B6B5F80EF469A600CF767F /* TLMLogServer.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B6B5F70EF469A600CF767F /* TLMLogServer.m */; };
 		F9C0D3CB125ECCE600B1FBE5 /* TLMLaunchAgentController.m in Sources */ = {isa = PBXBuildFile; fileRef = F9C0D3CA125ECCE600B1FBE5 /* TLMLaunchAgentController.m */; };
 		F9C0D3E7125ECF3700B1FBE5 /* LaunchAgentSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = F9C0D3E6125ECF3700B1FBE5 /* LaunchAgentSheet.xib */; };
+		F9C7260C157931E8000DF90F /* TLMToolbarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = F9C7260B157931E8000DF90F /* TLMToolbarItem.m */; };
 		F9C7F177139E8E550031774F /* NSString_TLMExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = F9C7F176139E8E550031774F /* NSString_TLMExtensions.m */; };
 		F9C7F188139E91E40031774F /* NSString_TLMExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = F9C7F176139E8E550031774F /* NSString_TLMExtensions.m */; };
 		F9C7F37113A124C30031774F /* parse_tlpdb.py in Copy aux executables */ = {isa = PBXBuildFile; fileRef = F9C7F37013A124B70031774F /* parse_tlpdb.py */; };
 		F9C8920C1453366300131F23 /* LionBlueProgress.png in Resources */ = {isa = PBXBuildFile; fileRef = F9C8920A1453366300131F23 /* LionBlueProgress.png */; };
-		F9C8920D1453366300131F23 /* LionGraphiteProgress.png in Resources */ = {isa = PBXBuildFile; fileRef = F9C8920B1453366300131F23 /* LionGraphiteProgress.png */; };
 		F9D37C9A0F01A80800FB755E /* TLMGradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D37C990F01A80800FB755E /* TLMGradientView.m */; };
 		F9D37D640F01EA8900FB755E /* TLMUpdateListDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D37D630F01EA8900FB755E /* TLMUpdateListDataSource.m */; };
 		F9D37E7B0F02B5F700FB755E /* TLMOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D37E7A0F02B5F700FB755E /* TLMOutlineView.m */; };
@@ -429,6 +429,8 @@
 		F9C0D3C9125ECCE500B1FBE5 /* TLMLaunchAgentController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMLaunchAgentController.h; sourceTree = "<group>"; };
 		F9C0D3CA125ECCE600B1FBE5 /* TLMLaunchAgentController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMLaunchAgentController.m; sourceTree = "<group>"; };
 		F9C0D3D1125ECEDB00B1FBE5 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/LaunchAgentSheet.xib; sourceTree = "<group>"; };
+		F9C7260A157931E8000DF90F /* TLMToolbarItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMToolbarItem.h; sourceTree = "<group>"; };
+		F9C7260B157931E8000DF90F /* TLMToolbarItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMToolbarItem.m; sourceTree = "<group>"; };
 		F9C7F175139E8E550031774F /* NSString_TLMExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSString_TLMExtensions.h; sourceTree = "<group>"; };
 		F9C7F176139E8E550031774F /* NSString_TLMExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSString_TLMExtensions.m; sourceTree = "<group>"; };
 		F9C7F1F113A003660031774F /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
@@ -674,6 +676,8 @@
 				F97EBA05143D449000E79859 /* TLMLogWindow.m */,
 				F918B747145526F90038476C /* TLMSearchFieldCell.h */,
 				F918B748145526F90038476C /* TLMSearchFieldCell.m */,
+				F9C7260A157931E8000DF90F /* TLMToolbarItem.h */,
+				F9C7260B157931E8000DF90F /* TLMToolbarItem.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -1065,7 +1069,6 @@
 				F96203EB13D36ACC00932965 /* LogWindow.xib in Resources */,
 				F983F97114438F00001C0A42 /* HelpBook in Resources */,
 				F9C8920C1453366300131F23 /* LionBlueProgress.png in Resources */,
-				F9C8920D1453366300131F23 /* LionGraphiteProgress.png in Resources */,
 				F918B78614552A9B0038476C /* AddressFieldCapLeft.png in Resources */,
 				F918B78714552A9B0038476C /* AddressFieldCapLeftInactive.png in Resources */,
 				F918B78814552A9B0038476C /* AddressFieldCapRight.png in Resources */,
@@ -1199,6 +1202,7 @@
 				F96737A713E8E577008C2B3E /* TLMAddressTextFieldCell.m in Sources */,
 				F97EBA06143D449000E79859 /* TLMLogWindow.m in Sources */,
 				F918B749145526F90038476C /* TLMSearchFieldCell.m in Sources */,
+				F9C7260C157931E8000DF90F /* TLMToolbarItem.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
