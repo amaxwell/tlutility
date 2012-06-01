@@ -91,7 +91,7 @@ def rewrite_version():
         base, beta = oldVersion.split("b")
         newVersion = "%sb%d" % (base, int(beta) + 1)
     else:
-        newVersion = "%.2f" % (float(oldVersion) + 0.01) + "b1"
+        newVersion = "%.2f" % (float(".".join(oldVersion.split(".")[0:2])) + 0.01) + "b1"
 
     infoPlist["CFBundleVersion"] = newVersion
     infoPlist["CFBundleShortVersionString"] = newVersion
