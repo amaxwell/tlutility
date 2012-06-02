@@ -532,8 +532,16 @@ static bool __ismultiplexer(TLMMirrorNode *node)
 {
     NSArray *selectedItems = [_outlineView selectedItems];
     if ([selectedItems count] == 1 && [(TLMMirrorNode *)[selectedItems lastObject] type] == TLMMirrorNodeURL) {
-        [TLMEnvironment setDefaultRepository:[(TLMMirrorNode *)[selectedItems lastObject] value]];
-        // notification handler should take care of UI updates
+        NSURL *newDefault = [(TLMMirrorNode *)[selectedItems lastObject] value];
+        [TLMEnvironment setDefaultRepository:newDefault];
+        /*
+         Users expect a button titled "Use As Home" to change the current mirror, too,
+         which seems reasonable.  However, this action can be called for the current
+         mirror, and we don't want to do a spurious reload in that case.
+         */
+        if ([[[[NSApp delegate] mainWindowController] serverURL] isEqual:newDefault] == NO)
+            [[[NSApp delegate] mainWindowController] refreshUpdatedPackageListWithURL:newDefault];
+        // notification handler should take care of UI updates for mirror window
     }
     else {
         NSBeep();
