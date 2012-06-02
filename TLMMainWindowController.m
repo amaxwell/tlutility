@@ -128,8 +128,7 @@ static char _TLMOperationQueueOperationContext;
         if ([[NSUserDefaults standardUserDefaults] integerForKey:@"MainWindowToolbarVersion"] != TOOLBAR_VERSION) {
             [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"NSToolbar Configuration Main window toolbar"];
             [[NSUserDefaults standardUserDefaults] setInteger:TOOLBAR_VERSION forKey:@"MainWindowToolbarVersion"];
-        }
-        
+        }        
     }
     return self;
 }
@@ -880,6 +879,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
         statusString = NSLocalizedString(@"No Updates Available", @"main window status string");
     
     [self _displayStatusString:statusString dataSource:_updateListDataSource];
+    [[[self window] toolbar] validateVisibleItems];
 }
 
 - (void)_handleRefreshLocalDatabaseFinishedNotification:(NSNotification *)aNote
@@ -889,6 +889,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     // only clear this status message, which is intended to be ephemeral
     if ([[[_updateListDataSource statusWindow] statusString] isEqualToString:DB_LOAD_STATUS_STRING])
         [self _displayStatusString:nil dataSource:_updateListDataSource];
+    [[[self window] toolbar] validateVisibleItems];
 }
 
 - (void)_refreshLocalDatabase
@@ -964,6 +965,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
         [self _displayStatusString:NSLocalizedString(@"Update Succeeded", @"status message") dataSource:_updateListDataSource];
 
     }
+    [[[self window] toolbar] validateVisibleItems];
 }
 
 - (void)_handleInfrastructureUpdateFinishedNotification:(NSNotification *)aNote
@@ -1017,6 +1019,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     }
     
     _updatingInfrastructure = NO;
+    [[[self window] toolbar] validateVisibleItems];
 }
 
 - (void)_cancelAllOperations
@@ -1039,6 +1042,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
         TLMLog(__func__, @"Failed to change paper size.  Error was: %@", [op errorMessages]);
         [self _displayStatusString:NSLocalizedString(@"Paper Size Change Failed", @"status message") dataSource:_updateListDataSource];
     }
+    [[[self window] toolbar] validateVisibleItems];
 }
 
 - (void)papersizeSheetDidEnd:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)context
@@ -1065,6 +1069,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     if ([op failed]) {
         TLMLog(__func__, @"Autobackup change failed.  Error was: %@", [op errorMessages]);
     }
+    [[[self window] toolbar] validateVisibleItems];
 }
 
 - (void)_handleBackupPruningFinishedNotification:(NSNotification *)aNote
@@ -1079,6 +1084,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
         [_backupDataSource setNeedsUpdate:YES];
         [self _refreshCurrentDataSourceIfNeeded];
     }
+    [[[self window] toolbar] validateVisibleItems];
 }
 
 - (void)autobackupSheetDidEnd:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)context
@@ -1116,6 +1122,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     [[NSNotificationCenter defaultCenter] removeObserver:self name:TLMOperationFinishedNotification object:op];
     if ([op isCancelled] == NO)
         TLMLog(__func__, @"Finished running launchd agent installer script");
+    [[[self window] toolbar] validateVisibleItems];
 }
 
 - (void)launchAgentControllerSheetDidEnd:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)context
@@ -1184,6 +1191,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
         statusString = NSLocalizedString(@"Listing Failed", @"main window status string");
     
     [self _displayStatusString:statusString dataSource:_packageListDataSource];
+    [[[self window] toolbar] validateVisibleItems];
 }
 
 - (void)_handleLoadDatabaseFinishedNotification:(NSNotification *)aNote
@@ -1203,6 +1211,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
         statusString = NSLocalizedString(@"Database Loading Failed", @"main window status string");
     
     [self _displayStatusString:statusString dataSource:_packageListDataSource];
+    [[[self window] toolbar] validateVisibleItems];
 }
 
 - (void)_handleListBackupsFinishedNotification:(NSNotification *)aNote
@@ -1223,6 +1232,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
         
     [self _displayStatusString:statusString dataSource:_backupDataSource];
     [_backupDataSource setRefreshing:NO];
+    [[[self window] toolbar] validateVisibleItems];
 }
 
 - (void)_refreshFullPackageListFromLocation:(NSURL *)location offline:(BOOL)offline
@@ -1249,6 +1259,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
         [self _addOperation:op selector:@selector(_handleLoadDatabaseFinishedNotification:) setRefreshingForDataSource:_packageListDataSource];
         [op release];
     }
+    [[[self window] toolbar] validateVisibleItems];
 }
 
 - (void)alertForLogWindowDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
@@ -1289,6 +1300,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
         [self _displayStatusString:NSLocalizedString(@"Install Succeeded", @"status message") dataSource:_packageListDataSource];
 
     }    
+    [[[self window] toolbar] validateVisibleItems];
 }
 
 - (void)_installPackagesWithNames:(NSArray *)packageNames reinstall:(BOOL)reinstall
@@ -1329,6 +1341,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
         [self _refreshCurrentDataSourceIfNeeded];
         [self _displayStatusString:NSLocalizedString(@"Removal Succeeded", @"status message") dataSource:_packageListDataSource];
     }    
+    [[[self window] toolbar] validateVisibleItems];
 }
 
 - (void)_handleRestoreFinishedNotification:(NSNotification *)aNote
@@ -1359,6 +1372,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
         [self _displayStatusString:NSLocalizedString(@"Restore Succeeded", @"status message") dataSource:_backupDataSource];
 
     }        
+    [[[self window] toolbar] validateVisibleItems];
 }
 
 - (void)_handleNetInstallFinishedNotification:(NSNotification *)aNote
