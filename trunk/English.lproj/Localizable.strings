@@ -107,6 +107,9 @@
 /* alert message */
 "Failed to authorize operation" = "Failed to authorize operation";
 
+/* context menu */
+"Forcibly Remove Selected Packages" = "Forcibly Remove Selected Packages";
+
 /* status for package */
 "Forcibly removed" = "Forcibly removed";
 
@@ -130,6 +133,9 @@
 
 /* alert title */
 "Install failed." = "Install failed.";
+
+/* context menu */
+"Install Selected Packages" = "Install Selected Packages";
 
 /* status message */
 "Install Succeeded" = "Install Succeeded";
@@ -239,6 +245,9 @@
 /* alert title */
 "Reinstall packages?" = "Reinstall packages?";
 
+/* context menu */
+"Reinstall Selected Packages" = "Reinstall Selected Packages";
+
 /* single trailing space */
 "Reinstalling " = "Reinstalling ";
 
@@ -250,6 +259,9 @@
 
 /* status message */
 "Removal Succeeded" = "Removal Succeeded";
+
+/* context menu */
+"Remove Selected Packages" = "Remove Selected Packages";
 
 /* alert title */
 "Repository has a different TeX Live version" = "Repository has a different TeX Live version";
