@@ -562,5 +562,21 @@
             <pubDate>Fri, 18 May 2012 23:20:21 +0000</pubDate>
             <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-0.98.1.tgz" sparkle:version="0.98.1" length="3217435" type="application/octet-stream" sparkle:dsaSignature="MCwCFAQnBXfgJle9Hy5PnWNskQ02VwVnAhQ4Aly1Gg1hkdQXgJCrqudr/pAvOQ=="></enclosure>
         </item>
+        <item>
+            <title>Version 0.99</title>
+            <description>
+                <h3>Changes Since 0.98.1</h3>
+                <li>Checkbox to install for all users removed for compatibility with TeX Live 2012</li>
+                <li>Major rewrite of BDSKTask to fix a race condition between child process exit and dealloc</li>
+                <li>Chinese localization, thanks to LiFeng</li>
+                <li>Toolbar items are now validated properly</li>
+                <li>Text in address field is no longer selected when pressing the refresh/cancel button</li>
+                <li>Added context menu to package list</li>
+                <li>Context menus are now validated properly</li>
+                <li>Button to set home URL now changes the active URL as well as the default</li>
+            </description>
+            <pubDate>Sat, 02 Jun 2012 19:01:57 +0000</pubDate>
+            <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-0.99.tgz" sparkle:version="0.99" length="3379073" type="application/octet-stream" sparkle:dsaSignature="MC4CFQCI36LsNExSU3ARhI1SDw4Ej0ixrQIVAINyT9aCOnTIWPA4Zm7+8RUjtmp4"></enclosure>
+        </item>
     </channel>
 </rss>
