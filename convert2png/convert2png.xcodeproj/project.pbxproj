@@ -11,6 +11,7 @@
 		F9AEF5F1156C796B003CB69E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F9AEF5F0156C796B003CB69E /* main.m */; };
 		F9AEF5F5156C796B003CB69E /* convert2png.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = F9AEF5F4156C796B003CB69E /* convert2png.1 */; };
 		F9AEF5FC156C799F003CB69E /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9AEF5FB156C799F003CB69E /* AppKit.framework */; };
+		F9D85AB6157BF8A100EDAA82 /* NSBitmapImageRep_SKExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D85AB5157BF8A100EDAA82 /* NSBitmapImageRep_SKExtensions.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -33,6 +34,8 @@
 		F9AEF5F3156C796B003CB69E /* convert2png-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "convert2png-Prefix.pch"; sourceTree = "<group>"; };
 		F9AEF5F4156C796B003CB69E /* convert2png.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = convert2png.1; sourceTree = "<group>"; };
 		F9AEF5FB156C799F003CB69E /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = ../../../../../../System/Library/Frameworks/AppKit.framework; sourceTree = "<group>"; };
+		F9D85AB4157BF8A100EDAA82 /* NSBitmapImageRep_SKExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSBitmapImageRep_SKExtensions.h; sourceTree = "<group>"; };
+		F9D85AB5157BF8A100EDAA82 /* NSBitmapImageRep_SKExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSBitmapImageRep_SKExtensions.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +80,8 @@
 		F9AEF5EF156C796B003CB69E /* convert2png */ = {
 			isa = PBXGroup;
 			children = (
+				F9D85AB4157BF8A100EDAA82 /* NSBitmapImageRep_SKExtensions.h */,
+				F9D85AB5157BF8A100EDAA82 /* NSBitmapImageRep_SKExtensions.m */,
 				F9AEF5F0156C796B003CB69E /* main.m */,
 				F9AEF5F4156C796B003CB69E /* convert2png.1 */,
 				F9AEF5F2156C796B003CB69E /* Supporting Files */,
@@ -144,6 +149,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F9AEF5F1156C796B003CB69E /* main.m in Sources */,
+				F9D85AB6157BF8A100EDAA82 /* NSBitmapImageRep_SKExtensions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
