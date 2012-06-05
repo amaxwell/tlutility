@@ -71,6 +71,7 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
 #define TLMGR_CMD     @"tlmgr"
 #define TEXDOC_CMD    @"texdoc"
 #define KPSEWHICH_CMD @"kpsewhich"
+#define UPDMAP_CMD    @"updmap"
 #define TEXDIST_PATH  @"/Library/TeX"
 
 #define PERMISSION_CHECK_IN_PROGRESS 1
@@ -721,6 +722,12 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
 - (BOOL)tlmgrSupportsDumpTlpdb
 {
     return (_tlmgrVersion.revision >= 22912);
+}
+
+- (NSString *)updmapAbsolutePath
+{
+    NSString *texbinPath = [[NSUserDefaults standardUserDefaults] objectForKey:TLMTexBinPathPreferenceKey];
+    return [[texbinPath stringByAppendingPathComponent:UPDMAP_CMD] stringByStandardizingPath];
 }
 
 - (NSString *)tlmgrAbsolutePath
