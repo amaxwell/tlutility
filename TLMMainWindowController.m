@@ -701,6 +701,45 @@ static char _TLMOperationQueueOperationContext;
 #pragma mark -
 #pragma mark Operations
 
+- (void)_runUpdmapIfNeeded
+{
+    TLMTask *task = [[TLMTask new] autorelease];
+    [task setLaunchPath:[[TLMEnvironment currentEnvironment] kpsewhichAbsolutePath]];
+    [task setArguments:[NSArray arrayWithObject:@"-var-value=TEXMFHOME"]];
+    [task launch];
+    [task waitUntilExit];
+    NSString *texmfHome = nil;
+    if ([task terminationStatus] == 0 && [task outputString]) {
+        texmfHome = [[task outputString] stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+    }
+    else {
+        TLMLog(__func__, @"kpsewhich returned an error: %@", [task errorString]);
+    }
+    
+    NSString *updmapCfgPath = [[texmfHome stringByAppendingPathComponent:@"web2c"] stringByAppendingPathComponent:@"updmap.cfg"];
+    if (updmapCfgPath && [[NSFileManager defaultManager] fileExistsAtPath:updmapCfgPath]) {
+        [self _displayStatusString:NSLocalizedString(@"Running updmap…", @"") dataSource:_currentListDataSource];
+        TLMLog(__func__, @"Found local map file %@", updmapCfgPath);
+        task = [[TLMTask new] autorelease];
+        [task setLaunchPath:[[TLMEnvironment currentEnvironment] updmapAbsolutePath]];
+        [task launch];
+        [task waitUntilExit];
+        
+        if ([task terminationStatus] == 0) {
+            if ([[task outputString] length])
+                TLMLog(__func__, @"%@", [task outputString]);
+            if ([[task errorString] length])
+                TLMLog(__func__, @"%@", [task errorString]);
+        }
+        else if ([task terminationStatus]) {
+            TLMLog(__func__, @"updmap had problems:\n%@", [task errorString]);
+        }
+    }
+    else {
+        TLMLog(__func__, @"No file at %@, so no reason to run updmap.", updmapCfgPath);
+    }
+}
+
 - (BOOL)_checkCommandPathAndWarn:(BOOL)displayWarning
 {
     NSString *cmdPath = [[TLMEnvironment currentEnvironment] tlmgrAbsolutePath];
@@ -946,6 +985,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     }
     else if ([op isCancelled] == NO) {
             
+        [self _runUpdmapIfNeeded];
         [self _refreshLocalDatabase];
         
         /*
@@ -1288,6 +1328,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     }
     else if ([op isCancelled] == NO) {
                 
+        [self _runUpdmapIfNeeded];
         [self _refreshLocalDatabase];
         
         [_updateListDataSource setNeedsUpdate:YES];
@@ -1333,7 +1374,8 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
                             contextInfo:NULL];                 
     }
     else if ([op isCancelled] == NO) {
-                
+        
+        [self _runUpdmapIfNeeded];
         [_updateListDataSource setNeedsUpdate:YES];
         [_packageListDataSource setNeedsUpdate:YES];
         [_backupDataSource setNeedsUpdate:YES];
@@ -1363,6 +1405,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     }
     else if ([op isCancelled] == NO) {
                 
+        [self _runUpdmapIfNeeded];
         [_updateListDataSource setNeedsUpdate:YES];
         
         // no reason to refresh backups or package list after a restore

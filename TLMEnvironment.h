@@ -91,12 +91,16 @@ extern NSString * const TLMDefaultRepositoryChangedNotification;
 // adds tlmgr to TLMTexBinPathPreferenceKey, standardizes path
 @property (readonly) NSString *tlmgrAbsolutePath;
 
+// adds updmap to TLMTexBinPathPreferenceKey, standardizes path
+@property (readonly) NSString *updmapAbsolutePath;
+
 // absolute URL to backupdir option
 @property (readonly) NSURL *backupDirectory;
 
 // adds texdoc to TLMTexBinPathPreferenceKey, standardizes path
 @property (readonly) NSString *texdocAbsolutePath;
 
+// adds kpsewhich to TLMTexBinPathPreferenceKey, standardizes path
 @property (readonly) NSString *kpsewhichAbsolutePath;
 
 // checks permission on installDirectory
