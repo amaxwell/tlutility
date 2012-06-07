@@ -703,6 +703,7 @@ static char _TLMOperationQueueOperationContext;
 
 - (void)_runUpdmapIfNeeded
 {
+#warning TL 2012 only
     TLMTask *task = [[TLMTask new] autorelease];
     [task setLaunchPath:[[TLMEnvironment currentEnvironment] kpsewhichAbsolutePath]];
     [task setArguments:[NSArray arrayWithObject:@"-var-value=TEXMFHOME"]];
