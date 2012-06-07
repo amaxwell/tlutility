@@ -702,42 +702,62 @@ static char _TLMOperationQueueOperationContext;
 #pragma mark Operations
 
 - (void)_runUpdmapIfNeeded
-{
-#warning TL 2012 only
+{    
+    // !!! early return
+    if ([[TLMEnvironment currentEnvironment] texliveYear] < 2012) {
+        TLMLog(__func__, @"Not doing user updmap.cfg check for old TeX Live versions");
+        return;
+    }
+        
     TLMTask *task = [[TLMTask new] autorelease];
     [task setLaunchPath:[[TLMEnvironment currentEnvironment] kpsewhichAbsolutePath]];
-    [task setArguments:[NSArray arrayWithObject:@"-var-value=TEXMFHOME"]];
+    [task setArguments:[NSArray arrayWithObject:@"-all updmap.cfg"]];
     [task launch];
     [task waitUntilExit];
-    NSString *texmfHome = nil;
+    NSArray *updmapCfgPaths = nil;
     if ([task terminationStatus] == 0 && [task outputString]) {
-        texmfHome = [[task outputString] stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+        NSString *outputString = [[task outputString] stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+        updmapCfgPaths = [outputString componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
     }
     else {
         TLMLog(__func__, @"kpsewhich returned an error: %@", [task errorString]);
     }
     
-    NSString *updmapCfgPath = [[texmfHome stringByAppendingPathComponent:@"web2c"] stringByAppendingPathComponent:@"updmap.cfg"];
-    if (updmapCfgPath && [[NSFileManager defaultManager] fileExistsAtPath:updmapCfgPath]) {
-        [self _displayStatusString:NSLocalizedString(@"Running updmap…", @"") dataSource:_currentListDataSource];
-        TLMLog(__func__, @"Found local map file %@", updmapCfgPath);
-        task = [[TLMTask new] autorelease];
-        [task setLaunchPath:[[TLMEnvironment currentEnvironment] updmapAbsolutePath]];
-        [task launch];
-        [task waitUntilExit];
-        
-        if ([task terminationStatus] == 0) {
-            if ([[task outputString] length])
-                TLMLog(__func__, @"%@", [task outputString]);
-            if ([[task errorString] length])
-                TLMLog(__func__, @"%@", [task errorString]);
+    for (NSString *updmapCfgPath in updmapCfgPaths) {
+        // now see if any of these files exist
+        if ([[NSFileManager defaultManager] fileExistsAtPath:updmapCfgPath]) {
+            
+            /*
+             show alert if preference is not enabled && (not previously shown for this TL year || user has not checked box to disable warning)
+             */
+            NSAlert *alert = [[NSAlert new] autorelease];
+            [alert setMessageText:NSLocalizedString(@"Local fonts were found", @"alert title")];
+            [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"You appear to have installed fonts in your home directory.  Would you like them to be automatically activated in TeX Live %d?", @"alert text, integer format specifier"), [[TLMEnvironment currentEnvironment] texliveYear]]];
+            
+            
+            [self _displayStatusString:NSLocalizedString(@"Running updmap…", @"") dataSource:_currentListDataSource];
+            TLMLog(__func__, @"Found local map file %@", updmapCfgPath);
+            task = [[TLMTask new] autorelease];
+            [task setLaunchPath:[[TLMEnvironment currentEnvironment] updmapAbsolutePath]];
+            [task launch];
+            [task waitUntilExit];
+            
+            if ([task terminationStatus] == 0) {
+                if ([[task outputString] length])
+                    TLMLog(__func__, @"%@", [task outputString]);
+                if ([[task errorString] length])
+                    TLMLog(__func__, @"%@", [task errorString]);
+            }
+            else if ([task terminationStatus]) {
+                TLMLog(__func__, @"updmap had problems:\n%@", [task errorString]);
+            }
+            
+            // only need to run it once
+            break;
         }
-        else if ([task terminationStatus]) {
-            TLMLog(__func__, @"updmap had problems:\n%@", [task errorString]);
+        else {
+            TLMLog(__func__, @"No file at %@", updmapCfgPath);
         }
-    }
-    else {
-        TLMLog(__func__, @"No file at %@, so no reason to run updmap.", updmapCfgPath);
     }
 }
 
