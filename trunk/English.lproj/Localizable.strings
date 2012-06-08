@@ -173,6 +173,9 @@
 /* status message */
 "Loading Database" = "Loading Database";
 
+/* alert title */
+"Local fonts were found" = "Local fonts were found";
+
 /* status for package */
 "Local version is newer" = "Local version is newer";
 
@@ -284,6 +287,9 @@
 
 /* all caps tableview group title */
 "RUN FILES" = "RUN FILES";
+
+/* No comment provided by engineer. */
+"Running updmap…" = "Running updmap…";
 
 /* info panel title */
 "Searching%C" = "Searching%C";
@@ -428,6 +434,9 @@
 
 /* button title */
 "Yes" = "Yes";
+
+/* alert text, integer format specifier */
+"You appear to have installed fonts in your home directory.  Would you like them to be automatically activated in TeX Live %d?" = "You appear to have installed fonts in your home directory.  Would you like them to be automatically activated in TeX Live %d?";
 
 /* alert message text */
 "You are attempting to remove critical parts of the underlying TeX Live infrastructure, and I won't help you do that." = "You are attempting to remove critical parts of the underlying TeX Live infrastructure, and I won't help you do that.";
