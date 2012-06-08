@@ -50,6 +50,14 @@ class DTPointValueCollection2D(object):
             s += "(%s, %s, %s)\n" % (x, y, v)
         s += "}\n"
         return s
+        
+    def points(self):
+        """returns DTPointCollection2D object"""
+        return self._points
+        
+    def values(self):
+        """returns vector of values"""
+        return self._values
     
     def __dt_type__(self):
         return "2D Point Value Collection"
@@ -57,6 +65,15 @@ class DTPointValueCollection2D(object):
     def __dt_write__(self, datafile, name):
         datafile.write_anonymous(self._values, name + "_V")
         datafile.write_anonymous(self._points, name)
+        
+    @classmethod
+    def from_data_file(self, datafile, name):
+        
+        from DTPointCollection2D import DTPointCollection2D
+
+        points = DTPointCollection2D.from_data_file(datafile, name)
+        values = np.squeeze(datafile[name + "_V"])
+        return DTPointValueCollection2D(points, values)
 
 if __name__ == '__main__':
     

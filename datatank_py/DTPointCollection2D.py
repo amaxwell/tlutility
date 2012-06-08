@@ -73,6 +73,16 @@ class DTPointCollection2D(object):
         datafile.write_anonymous(self.bounding_box(), name + "_bbox2D")
         datafile.write_anonymous(np.dstack((self._xvalues, self._yvalues)), name)
 
+    @classmethod
+    def from_data_file(self, datafile, name):
+        
+        # 1 x length x 2
+        values = datafile[name]
+        # now length x 2
+        values = np.squeeze(values)
+        return DTPointCollection2D(values[:, 0], values[:, 1])
+        
+
 if __name__ == '__main__':
     
     from datatank_py.DTDataFile import DTDataFile
