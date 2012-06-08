@@ -50,6 +50,9 @@ extern NSString * const TLMShouldListTLCritical;
 extern NSString * const TLMTLCriticalRepository;
 extern NSString * const TLMEnableNetInstall;
 extern NSString * const TLMShowLogWindowPreferenceKey;
+extern NSString * const TLMLastUpdmapVersionShownKey;
+extern NSString * const TLMEnableUserUpdmapPreferenceKey;
+extern NSString * const TLMDisableUpdmapAlertPreferenceKey;
 
 @interface TLMPreferenceController : NSWindowController <NSComboBoxDataSource, NSOpenSavePanelDelegate>
 {

@@ -144,6 +144,11 @@ static void __TLMMigrateBundleIdentifier()
     // Lion only: http://lists.apple.com/archives/cocoa-dev/2011/Sep/msg00914.html
     [defaults setObject:[NSNumber numberWithBool:YES] forKey:@"NSApplicationShowExceptions"];
     
+    // only useful in TL 2012 and later
+    [defaults setObject:[NSNumber numberWithInt:0] forKey:TLMLastUpdmapVersionShownKey];
+    [defaults setObject:[NSNumber numberWithBool:NO] forKey:TLMEnableUserUpdmapPreferenceKey];
+    [defaults setObject:[NSNumber numberWithBool:NO] forKey:TLMDisableUpdmapAlertPreferenceKey];
+    
     [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];   
 }
 
