@@ -701,10 +701,43 @@ static char _TLMOperationQueueOperationContext;
 #pragma mark -
 #pragma mark Operations
 
+- (void)_runUpdmap
+{
+    [self _displayStatusString:NSLocalizedString(@"Running updmap…", @"") dataSource:_currentListDataSource];
+    TLMTask *task = [[TLMTask new] autorelease];
+    [task setLaunchPath:[[TLMEnvironment currentEnvironment] updmapAbsolutePath]];
+    [task launch];
+    [task waitUntilExit];
+    
+    if ([task terminationStatus] == 0) {
+        if ([[task outputString] length])
+            TLMLog(__func__, @"%@", [task outputString]);
+        if ([[task errorString] length])
+            TLMLog(__func__, @"%@", [task errorString]);
+    }
+    else if ([task terminationStatus]) {
+        TLMLog(__func__, @"updmap had problems:\n%@", [task errorString]);
+    }    
+}
+
+- (void)_updmapAlertDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
+{    
+    if (NSAlertFirstButtonReturn == returnCode)
+        [self _runUpdmap];
+    else
+        TLMLog(__func__, @"User declined to run updmap in spite of having the config file; whatever.");
+
+    if ([[alert suppressionButton] state] == NSOnState)
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:TLMDisableUpdmapAlertPreferenceKey];
+}
+
 - (void)_runUpdmapIfNeeded
 {    
+    
+    const TLMDatabaseYear texliveYear = [[TLMEnvironment currentEnvironment] texliveYear];
+    
     // !!! early return
-    if ([[TLMEnvironment currentEnvironment] texliveYear] < 2012) {
+    if (texliveYear < 2012) {
         TLMLog(__func__, @"Not doing user updmap.cfg check for old TeX Live versions");
         return;
     }
@@ -727,30 +760,34 @@ static char _TLMOperationQueueOperationContext;
         // now see if any of these files exist
         if ([[NSFileManager defaultManager] fileExistsAtPath:updmapCfgPath]) {
             
+            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+            TLMLog(__func__, @"Found local map file %@", updmapCfgPath);
+
             /*
              show alert if preference is not enabled && (not previously shown for this TL year || user has not checked box to disable warning)
              */
-            NSAlert *alert = [[NSAlert new] autorelease];
-            [alert setMessageText:NSLocalizedString(@"Local fonts were found", @"alert title")];
-            [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"You appear to have installed fonts in your home directory.  Would you like them to be automatically activated in TeX Live %d?", @"alert text, integer format specifier"), [[TLMEnvironment currentEnvironment] texliveYear]]];
-            
-            
-            [self _displayStatusString:NSLocalizedString(@"Running updmap…", @"") dataSource:_currentListDataSource];
-            TLMLog(__func__, @"Found local map file %@", updmapCfgPath);
-            task = [[TLMTask new] autorelease];
-            [task setLaunchPath:[[TLMEnvironment currentEnvironment] updmapAbsolutePath]];
-            [task launch];
-            [task waitUntilExit];
-            
-            if ([task terminationStatus] == 0) {
-                if ([[task outputString] length])
-                    TLMLog(__func__, @"%@", [task outputString]);
-                if ([[task errorString] length])
-                    TLMLog(__func__, @"%@", [task errorString]);
+            if ([defaults boolForKey:TLMEnableUserUpdmapPreferenceKey]) {
+                [self _runUpdmap];
             }
-            else if ([task terminationStatus]) {
-                TLMLog(__func__, @"updmap had problems:\n%@", [task errorString]);
+            else if ([defaults integerForKey:TLMLastUpdmapVersionShownKey] != texliveYear || [defaults boolForKey:TLMDisableUpdmapAlertPreferenceKey] == NO) {
+                    
+                NSAlert *alert = [[NSAlert new] autorelease];
+                [alert setMessageText:NSLocalizedString(@"Local fonts were found", @"alert title")];
+                [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"You appear to have installed fonts in your home directory.  Would you like them to be automatically activated in TeX Live %d?", @"alert text, integer format specifier"), texliveYear]];
+                [alert addButtonWithTitle:NSLocalizedString(@"No", @"button title")];
+                [alert addButtonWithTitle:NSLocalizedString(@"Yes", @"button title")];
+                
+                // don't bother showing current state, so user doesn't disable accidentally
+                [alert setShowsSuppressionButton:YES];
+                [alert beginSheetModalForWindow:[self window]
+                                  modalDelegate:self
+                                 didEndSelector:@selector(_updmapAlertDidEnd:returnCode:contextInfo:)
+                                    contextInfo:NULL];
+
             }
+            
+            // set this whether we run updmap or not
+            [defaults setInteger:texliveYear forKey:TLMLastUpdmapVersionShownKey];
             
             // only need to run it once
             break;
