@@ -55,6 +55,9 @@ NSString * const TLMShouldListTLCritical = @"TLMShouldListTLCritical";          
 NSString * const TLMTLCriticalRepository = @"TLMTLCriticalRepository";             /* ftp://tug.org/texlive/tlcritical */
 NSString * const TLMEnableNetInstall = @"TLMEnableNetInstall";                     /* NO                               */
 NSString * const TLMShowLogWindowPreferenceKey = @"TLMShowLogWindowPreferenceKey"; /* NO                               */
+NSString * const TLMLastUpdmapVersionShownKey = @"TLMLastUpdmapVersionShownKey";             /* 0                      */
+NSString * const TLMEnableUserUpdmapPreferenceKey = @"TLMEnableUserUpdmapPreferenceKey";     /* NO                     */
+NSString * const TLMDisableUpdmapAlertPreferenceKey = @"TLMDisableUpdmapAlertPreferenceKey"; /* NO                     */
 
 #define URL_TIMEOUT   30.0
 
