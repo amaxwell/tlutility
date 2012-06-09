@@ -201,7 +201,7 @@
 "No Updates Available" = "无可用更新";
 
 /* status for package */
-"Not installed" = "未被安装";
+"Not installed" = "未安装";
 
 /* info panel title */
 "Nothing Selected" = "未选择任何项目";
@@ -433,22 +433,22 @@
 "Your TeX Live version is %lu, but your default repository URL appears to be for TeX Live %lu.  You need to manually upgrade to a newer version of TeX Live, as there will be no further updates for your version." = "您的 TeX Live 版本是 %lu，但是您所设定的默认源地址上 TeX Live 版本似乎是 %lu。 您需要手动升级到新版本的 TeX Live， 因为您现有的版本将不再更新。";
 
 /* context menu */
-"Install Selected Packages" = "Install Selected Packages";
+"Install Selected Packages" = "安装所选软件包";
 
 /* context menu */
-"Remove Selected Packages" = "Remove Selected Packages";
+"Remove Selected Packages" = "卸载所选软件包";
 
 /* alert title */
-"Local fonts were found" = "Local fonts were found";
+"Local fonts were found" = "未找到本地字体";
 
 /* context menu */
-"Reinstall Selected Packages" = "Reinstall Selected Packages";
+"Reinstall Selected Packages" = "重新安装所选软件包";
 
 /* context menu */
-"Forcibly Remove Selected Packages" = "Forcibly Remove Selected Packages";
+"Forcibly Remove Selected Packages" = "强制卸载所选软件包";
 
 /* No comment provided by engineer. */
-"Running updmap…" = "Running updmap…";
+"Running updmap…" = "正在运行 updmap…";
 
 /* alert text, integer format specifier */
-"You appear to have installed fonts in your home directory.  Would you like them to be automatically activated in TeX Live %d?" = "You appear to have installed fonts in your home directory.  Would you like them to be automatically activated in TeX Live %d?";
+"You appear to have installed fonts in your home directory.  Would you like them to be automatically activated in TeX Live %d?" = "您似乎在 Home 目录安装了字体。要在 TeX Live %d 中自动激活这些字体吗？";
