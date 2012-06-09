@@ -432,3 +432,23 @@
 /* two integer specifiers */
 "Your TeX Live version is %lu, but your default repository URL appears to be for TeX Live %lu.  You need to manually upgrade to a newer version of TeX Live, as there will be no further updates for your version." = "現在お持ちの TeX Live は第 %1$d 版ですが、既定リポジトリ URL には TeX Live %2$d があります。お持ちの版にはこれ以上の更新がないため、手動で新しい版の TeX Live にアップグレードする必要があります。";
 
+/* context menu */
+"Install Selected Packages" = "Install Selected Packages";
+
+/* context menu */
+"Remove Selected Packages" = "Remove Selected Packages";
+
+/* alert title */
+"Local fonts were found" = "Local fonts were found";
+
+/* context menu */
+"Reinstall Selected Packages" = "Reinstall Selected Packages";
+
+/* context menu */
+"Forcibly Remove Selected Packages" = "Forcibly Remove Selected Packages";
+
+/* No comment provided by engineer. */
+"Running updmap…" = "Running updmap…";
+
+/* alert text, integer format specifier */
+"You appear to have installed fonts in your home directory.  Would you like them to be automatically activated in TeX Live %d?" = "You appear to have installed fonts in your home directory.  Would you like them to be automatically activated in TeX Live %d?";
