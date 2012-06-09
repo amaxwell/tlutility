@@ -64,6 +64,7 @@ NSString * const TLMDisableUpdmapAlertPreferenceKey = @"TLMDisableUpdmapAlertPre
 @implementation TLMPreferenceController
 
 @synthesize _texbinPathControl;
+@synthesize _runUpdmapCheckBox;
 @synthesize _useSyslogCheckBox;
 @synthesize _autoremoveCheckBox;
 @synthesize _autoinstallCheckBox;
@@ -87,6 +88,7 @@ static void __TLMPrefControllerInit() { _sharedInstance = [TLMPreferenceControll
 - (void)dealloc
 {
     [_texbinPathControl release];
+    [_runUpdmapCheckBox release];
     [_useSyslogCheckBox release];
     [_autoremoveCheckBox release];
     [_autoinstallCheckBox release];
@@ -96,6 +98,9 @@ static void __TLMPrefControllerInit() { _sharedInstance = [TLMPreferenceControll
 - (void)updateUI
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [_runUpdmapCheckBox setState:[defaults boolForKey:TLMEnableUserUpdmapPreferenceKey]];
+    if ([[TLMEnvironment currentEnvironment] texliveYear] < 2012)
+        [_runUpdmapCheckBox setEnabled:NO];
     [_useSyslogCheckBox setState:[defaults boolForKey:TLMUseSyslogPreferenceKey]];
     [_autoinstallCheckBox setState:[defaults boolForKey:TLMAutoInstallPreferenceKey]];
     [_autoremoveCheckBox setState:[defaults boolForKey:TLMAutoRemovePreferenceKey]];   
@@ -119,6 +124,11 @@ static void __TLMPrefControllerInit() { _sharedInstance = [TLMPreferenceControll
 - (void)openTexbinAction:(id)sender
 {
     [[NSWorkspace sharedWorkspace] openFile:[[NSUserDefaults standardUserDefaults] objectForKey:TLMTexBinPathPreferenceKey]];
+}
+
+- (IBAction)toggleRunUpdmap:(id)sender;
+{
+    [[NSUserDefaults standardUserDefaults] setBool:([sender state] == NSOnState) forKey:TLMEnableUserUpdmapPreferenceKey];
 }
 
 - (IBAction)toggleUseSyslog:(id)sender;
