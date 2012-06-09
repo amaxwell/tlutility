@@ -707,6 +707,8 @@ static char _TLMOperationQueueOperationContext;
     TLMTask *task = [[TLMTask new] autorelease];
     [task setLaunchPath:[[TLMEnvironment currentEnvironment] updmapAbsolutePath]];
     [task launch];
+    
+    // so we can check/log messages and clear the status overlay
     [task waitUntilExit];
     
     if ([task terminationStatus] == 0) {
@@ -717,18 +719,23 @@ static char _TLMOperationQueueOperationContext;
     }
     else if ([task terminationStatus]) {
         TLMLog(__func__, @"updmap had problems:\n%@", [task errorString]);
-    }    
+    }
+    [self _displayStatusString:nil dataSource:_currentListDataSource];
 }
 
 - (void)_updmapAlertDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
 {    
-    if (NSAlertFirstButtonReturn == returnCode)
-        [self _runUpdmap];
-    else
-        TLMLog(__func__, @"User declined to run updmap in spite of having the config file; whatever.");
-
     if ([[alert suppressionButton] state] == NSOnState)
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:TLMDisableUpdmapAlertPreferenceKey];
+
+    if (NSAlertFirstButtonReturn == returnCode) {
+        [[alert window] orderOut:nil];
+        [self _runUpdmap];
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:TLMEnableUserUpdmapPreferenceKey];
+    }
+    else {
+        TLMLog(__func__, @"User declined to run updmap in spite of having the config file; whatever.");
+    }
 }
 
 - (void)_runUpdmapIfNeeded
@@ -744,7 +751,7 @@ static char _TLMOperationQueueOperationContext;
         
     TLMTask *task = [[TLMTask new] autorelease];
     [task setLaunchPath:[[TLMEnvironment currentEnvironment] kpsewhichAbsolutePath]];
-    [task setArguments:[NSArray arrayWithObject:@"-all updmap.cfg"]];
+    [task setArguments:[NSArray arrayWithObjects:@"-all", @"updmap.cfg", nil]];
     [task launch];
     [task waitUntilExit];
     NSArray *updmapCfgPaths = nil;
@@ -753,12 +760,39 @@ static char _TLMOperationQueueOperationContext;
         updmapCfgPaths = [outputString componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
     }
     else {
-        TLMLog(__func__, @"kpsewhich returned an error: %@", [task errorString]);
+        TLMLog(__func__, @"%@ %@ returned an error: %@", [task launchPath], [[task arguments] componentsJoinedByString:@" "], [task errorString]);
+    }
+    
+    task = [[TLMTask new] autorelease];
+    [task setLaunchPath:[[TLMEnvironment currentEnvironment] kpsewhichAbsolutePath]];
+    [task setArguments:[NSArray arrayWithObject:@"-var-value=TEXMFHOME"]];
+    [task launch];
+    [task waitUntilExit];
+    NSArray *texmfHomePaths = nil;
+    if ([task terminationStatus] == 0 && [task outputString]) {
+        NSString *outputString = [[task outputString] stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+        texmfHomePaths = [outputString componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+    }
+    else {
+        TLMLog(__func__, @"%@ %@ returned an error: %@", [task launchPath], [[task arguments] componentsJoinedByString:@" "], [task errorString]);
     }
     
     for (NSString *updmapCfgPath in updmapCfgPaths) {
-        // now see if any of these files exist
-        if ([[NSFileManager defaultManager] fileExistsAtPath:updmapCfgPath]) {
+        
+        BOOL isSubpathOfHome = NO;
+        
+        for (NSString *texmfHomePath in texmfHomePaths) {
+            if ([updmapCfgPath hasPrefix:texmfHomePath]) {
+                isSubpathOfHome = YES;
+                break;
+            }
+        }
+        
+        if (NO == isSubpathOfHome) {
+            TLMLog(__func__, @"%@ is not in %@; ignoring", updmapCfgPath, texmfHomePaths);
+        }
+        // now see if any of these files exist (should exist if kpsewhich returns anything)
+        else if ([[NSFileManager defaultManager] fileExistsAtPath:updmapCfgPath]) {
             
             NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
             TLMLog(__func__, @"Found local map file %@", updmapCfgPath);
@@ -774,8 +808,8 @@ static char _TLMOperationQueueOperationContext;
                 NSAlert *alert = [[NSAlert new] autorelease];
                 [alert setMessageText:NSLocalizedString(@"Local fonts were found", @"alert title")];
                 [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"You appear to have installed fonts in your home directory.  Would you like them to be automatically activated in TeX Live %d?", @"alert text, integer format specifier"), texliveYear]];
-                [alert addButtonWithTitle:NSLocalizedString(@"No", @"button title")];
                 [alert addButtonWithTitle:NSLocalizedString(@"Yes", @"button title")];
+                [alert addButtonWithTitle:NSLocalizedString(@"No", @"button title")];
                 
                 // don't bother showing current state, so user doesn't disable accidentally
                 [alert setShowsSuppressionButton:YES];
@@ -793,7 +827,7 @@ static char _TLMOperationQueueOperationContext;
             break;
         }
         else {
-            TLMLog(__func__, @"No file at %@", updmapCfgPath);
+            TLMLog(__func__, @"WARNING: updmap returned nonexistent path at %@", updmapCfgPath);
         }
     }
 }
