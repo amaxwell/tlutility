@@ -58,6 +58,7 @@ extern NSString * const TLMDisableUpdmapAlertPreferenceKey;
 {
 @private
     NSPathControl       *_texbinPathControl;
+    NSButton            *_runUpdmapCheckBox;
     NSButton            *_useSyslogCheckBox;
     NSButton            *_autoinstallCheckBox;
     NSButton            *_autoremoveCheckBox;
@@ -65,11 +66,13 @@ extern NSString * const TLMDisableUpdmapAlertPreferenceKey;
 
 + (TLMPreferenceController *)sharedPreferenceController;
 - (IBAction)changeTexBinPath:(id)sender;
+- (IBAction)toggleRunUpdmap:(id)sender;
 - (IBAction)toggleUseSyslog:(id)sender;
 - (IBAction)toggleAutoinstall:(id)sender;
 - (IBAction)toggleAutoremove:(id)sender;
 
 @property (nonatomic, retain) IBOutlet NSPathControl *_texbinPathControl;
+@property (nonatomic, retain) IBOutlet NSButton *_runUpdmapCheckBox;
 @property (nonatomic, retain) IBOutlet NSButton *_useSyslogCheckBox;
 @property (nonatomic, retain) IBOutlet NSButton *_autoinstallCheckBox;
 @property (nonatomic, retain) IBOutlet NSButton *_autoremoveCheckBox;
