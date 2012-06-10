@@ -578,5 +578,16 @@
             <pubDate>Sat, 02 Jun 2012 19:01:57 +0000</pubDate>
             <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-0.99.tgz" sparkle:version="0.99" length="3379073" type="application/octet-stream" sparkle:dsaSignature="MC4CFQCI36LsNExSU3ARhI1SDw4Ej0ixrQIVAINyT9aCOnTIWPA4Zm7+8RUjtmp4"></enclosure>
         </item>
+        <item>
+            <title>Version 1.0</title>
+            <description>
+                <h3>Changes Since 0.99</h3>
+                <li>Version number is no longer less than one.  Unfortunately, this has absolutely no significance.</li>
+				<li>Added an option to run updmap after operations which modify the TeX install.  TeX Live 2012 only, and only meaningful for users who have installed fonts in their home directory.</li>
+                <li>Updated Chinese translation</li>
+            </description>
+            <pubDate>Sun, 10 Jun 2012 17:34:58 +0000</pubDate>
+            <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-1.0.tgz" sparkle:version="1.0" length="3407098" type="application/octet-stream" sparkle:dsaSignature="MCwCFBbtNfDuWCY79PqrDMnZT+I57pbyAhRyhzD3lNjHumebp0ZC8eKSO88itw=="></enclosure>
+        </item>
     </channel>
 </rss>
