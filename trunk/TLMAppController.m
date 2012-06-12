@@ -176,6 +176,13 @@ static void __TLMMigrateBundleIdentifier()
     }
 }
 
+- (BOOL)applicationShouldHandleReopen:(NSApplication *)theApplication hasVisibleWindows:(BOOL)flag
+{
+    [[self mainWindowController] showWindow:nil];
+    // let NSApp order in the log window if needed
+    return flag;
+}
+
 - (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender
 {
     return ([[self mainWindowController] windowShouldClose:sender]) ? NSTerminateNow : NSTerminateCancel;
