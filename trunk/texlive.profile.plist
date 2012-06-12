@@ -298,7 +298,7 @@
 	<key>com.googlecode.mactlmgr</key>
 	<dict>
 		<key>texliveyear</key>
-		<integer>2011</integer>
+		<integer>2012</integer>
 	</dict>
 	<key>documentation</key>
 	<array>
@@ -860,6 +860,16 @@
 	<array>
 		<dict>
 			<key>key</key>
+			<string>option_adjustrepo</string>
+			<key>name</key>
+			<string>option_adjustrepo</string>
+			<key>type</key>
+			<string>option</string>
+			<key>value</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>key</key>
 			<string>option_autobackup</string>
 			<key>name</key>
 			<string>option_autobackup</string>
@@ -1072,7 +1082,7 @@
 			<key>type</key>
 			<string>variable</string>
 			<key>value</key>
-			<string>/usr/local/texlive/2011</string>
+			<string>/usr/local/texlive/2012</string>
 		</dict>
 		<dict>
 			<key>key</key>
@@ -1082,7 +1092,7 @@
 			<key>type</key>
 			<string>variable</string>
 			<key>value</key>
-			<string>~/Library/texlive/2011/texmf-config</string>
+			<string>~/Library/texlive/2012/texmf-config</string>
 		</dict>
 		<dict>
 			<key>key</key>
@@ -1112,7 +1122,7 @@
 			<key>type</key>
 			<string>variable</string>
 			<key>value</key>
-			<string>/usr/local/texlive/2011/texmf-config</string>
+			<string>/usr/local/texlive/2012/texmf-config</string>
 		</dict>
 		<dict>
 			<key>key</key>
@@ -1122,7 +1132,7 @@
 			<key>type</key>
 			<string>variable</string>
 			<key>value</key>
-			<string>/usr/local/texlive/2011/texmf-var</string>
+			<string>/usr/local/texlive/2012/texmf-var</string>
 		</dict>
 		<dict>
 			<key>key</key>
@@ -1132,7 +1142,7 @@
 			<key>type</key>
 			<string>variable</string>
 			<key>value</key>
-			<string>~/Library/texlive/2011/texmf-var</string>
+			<string>~/Library/texlive/2012/texmf-var</string>
 		</dict>
 	</array>
 </dict>
