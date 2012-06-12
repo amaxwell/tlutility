@@ -561,6 +561,7 @@ static char _TLMOperationQueueOperationContext;
 
 - (NSRect)window:(NSWindow *)window willPositionSheet:(NSWindow *)sheet usingRect:(NSRect)rect
 {
+#warning is this really needed?
     [self performSelector:@selector(_fixOverlayWindowOrder) withObject:nil afterDelay:0];
     TLMLogServerSync();
     return rect;
