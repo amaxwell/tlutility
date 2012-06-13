@@ -561,8 +561,14 @@ static char _TLMOperationQueueOperationContext;
 
 - (NSRect)window:(NSWindow *)window willPositionSheet:(NSWindow *)sheet usingRect:(NSRect)rect
 {
-#warning is this really needed?
-    [self performSelector:@selector(_fixOverlayWindowOrder) withObject:nil afterDelay:0];
+    /*
+     I think this is here in case the overlay window is added while the sheet
+     is being positioned.  The sheet seems to work fine if the overlay window
+     is up first, and in fact this call causes some flickering when the sheet
+     is repositioned.  Avoid it if we definitely have the overlay now.
+     */
+    if (nil == [_currentListDataSource statusWindow])
+        [self performSelector:@selector(_fixOverlayWindowOrder) withObject:nil afterDelay:0];
     TLMLogServerSync();
     return rect;
 }
