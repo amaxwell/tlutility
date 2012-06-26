@@ -399,6 +399,10 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
     
     setenv("PATH", [newPath saneFileSystemRepresentation], 1);
     TLMLog(__func__, @"Using PATH = \"%@\"", systemPaths);
+    
+    TLMTask *envTask = [TLMTask launchedTaskWithLaunchPath:@"/usr/bin/env" arguments:nil];
+    [envTask waitUntilExit];
+    TLMLog(__func__, @"/usr/bin/env\n%@", [envTask outputString]);
 }
 
 - (NSURL *)defaultServerURL
