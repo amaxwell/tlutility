@@ -335,6 +335,15 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
     return [paths count] ? paths : nil;
 }
 
+static void __TLMTestAndClearEnvironmentVariable(const char *name)
+{
+    const char *value = getenv(name);
+    if (NULL != value) {
+        TLMLog(__func__, @"*** WARNING *** ignoring environment variable %s=%s", name, value);
+        unsetenv(name);
+    }
+}
+
 + (void)updatePathEnvironment;
 {
     /*
@@ -400,9 +409,20 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
     setenv("PATH", [newPath saneFileSystemRepresentation], 1);
     TLMLog(__func__, @"Using PATH = \"%@\"", systemPaths);
     
+    /*
+     I have a user on Lion who removed his environment.plist file, yet still has some bizarre
+     paths for various environment variables, including TEXINPUTS with /opt/local/share/texmf/
+     in its path.  I think this is why he's having problems with kpsewhich hanging.     
+     */
     TLMTask *envTask = [TLMTask launchedTaskWithLaunchPath:@"/usr/bin/env" arguments:nil];
     [envTask waitUntilExit];
-    TLMLog(__func__, @"/usr/bin/env\n%@", [envTask outputString]);
+    if ([envTask outputString])
+        TLMLog(__func__, @"/usr/bin/env\n%@", [envTask outputString]);
+    
+    __TLMTestAndClearEnvironmentVariable("BIBINPUTS");
+    __TLMTestAndClearEnvironmentVariable("TEXINPUTS");
+    __TLMTestAndClearEnvironmentVariable("BSTINPUTS");
+    __TLMTestAndClearEnvironmentVariable("MFINPUTS");
 }
 
 - (NSURL *)defaultServerURL
