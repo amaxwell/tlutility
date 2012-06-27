@@ -339,7 +339,11 @@ static void __TLMTestAndClearEnvironmentVariable(const char *name)
 {
     const char *value = getenv(name);
     if (NULL != value) {
-        TLMLog(__func__, @"*** WARNING *** ignoring environment variable %s=%s", name, value);
+        static bool didWarn = false;
+        if (false == didWarn)
+            TLMLog(__func__, @"*** WARNING *** \nModified environment variables are not supported by TeX Live Utility, and most users have no business setting them.  This means you!");
+        didWarn = true;
+        TLMLog(__func__, @"Clearing environment variable %s=%s", name, value);
         unsetenv(name);
     }
 }
@@ -409,18 +413,72 @@ static void __TLMTestAndClearEnvironmentVariable(const char *name)
     setenv("PATH", [newPath saneFileSystemRepresentation], 1);
     TLMLog(__func__, @"Using PATH = \"%@\"", systemPaths);
     
-    /*
-     I have a user on Lion who removed his environment.plist file, yet still has some bizarre
-     paths for various environment variables, including TEXINPUTS with /opt/local/share/texmf/
-     in its path.  I think this is why he's having problems with kpsewhich hanging.     
-     */
+    // Even though we now have a sane PATH, log the environment in case something is screwy.
     TLMTask *envTask = [TLMTask launchedTaskWithLaunchPath:@"/usr/bin/env" arguments:nil];
     [envTask waitUntilExit];
     if ([envTask outputString])
         TLMLog(__func__, @"/usr/bin/env\n%@", [envTask outputString]);
     
-    __TLMTestAndClearEnvironmentVariable("BIBINPUTS");
+    
+    /*
+     I have a user on Lion who removed his environment.plist file, yet still has some bizarre
+     paths for various environment variables, including TEXINPUTS.  I suspect this is set from
+     launchd.conf or similar.  Sadly, users are finding and documenting this:
+     
+     http://stackoverflow.com/questions/603785/environment-variables-in-mac-os-x/4567308#4567308
+     
+     The man page on 10.6.8 sez $HOME/.launchd.conf is unsupported, so I expect this will only
+     be a problem on 10.7 and later systems, especially if/when environment.plist is phased out.
+     */
+    NSString *launchdConfig = [NSString stringWithContentsOfFile:[@"~/.launchd.conf" stringByStandardizingPath]  encoding:NSUTF8StringEncoding error:NULL];
+    if (launchdConfig && [launchdConfig rangeOfString:@"setenv"].length) {
+        TLMLog(__func__, @"*** WARNING *** User has ~/.launchd.conf file with setenv commands");
+        TLMLog(__func__, @"~/.launchd.conf = (\n%@\n)", launchdConfig);
+    }
+    
+    launchdConfig = [NSString stringWithContentsOfFile:[@"/etc/launchd.conf" stringByStandardizingPath]  encoding:NSUTF8StringEncoding error:NULL];
+    if (launchdConfig && [launchdConfig rangeOfString:@"setenv"].length) {
+        TLMLog(__func__, @"*** WARNING *** System has /etc/launchd.conf file with setenv commands");
+        TLMLog(__func__, @"/etc/launchd.conf = (\n%@\n)", launchdConfig);
+    }
+    
+    /*
+     Here's a concrete case where setting environment variables for all GUI applications
+     led to problems for TLU.
+     
+     http://tug.org/pipermail/tex-live/2012-June/031800.html
+     
+     BIBINPUTS=.:/DropBox/Bibliography//:
+     BSTINPUTS=.//:/Users/xxx/Library/texmf//:/Users/xxx/Documents/Figures//:/opt/local/share/texmf//:
+     TEXINPUTS=.//:/Users/xxx/Library/texmf//:/Users/xxx/Documents/Figures//:/opt/local/share/texmf//:
+     
+     When a user tries to set paper size in TLU, I run
+     
+     $ tlmgr pdftex paper --list
+     
+     to see what the user's default paper size is, and allow changing
+     it to other values in the list.  Apparently this invokes
+     
+     kpsewhich --progname=pdftex --format="tex" pdftexconfig.tex
+     
+     at some point, and it ended up walking the entire filesystem in this case
+     due to the leading .//: in his TEXINPUTS variable.  The user was
+     overriding these vars in shell config files, so did not experience the
+     problem with tlmgr on the command line.  Aargh!
+     
+     Discussion with Karl on mactex list on 27 June 2012 confirms that
+     setting a clean environment should be safe, so that may be an option in
+     future.  Recall that the proxy envvars must be preserved, though!
+     In the meantime, TEXCONFIG and TEXMFCONFIG are also potential problems,
+     so we'll clear those.
+     
+     */
     __TLMTestAndClearEnvironmentVariable("TEXINPUTS");
+    __TLMTestAndClearEnvironmentVariable("TEXCONFIG");
+    __TLMTestAndClearEnvironmentVariable("TEXMFCONFIG");
+
+    // probably irrelevant, but the user having problems was setting them
+    __TLMTestAndClearEnvironmentVariable("BIBINPUTS");
     __TLMTestAndClearEnvironmentVariable("BSTINPUTS");
     __TLMTestAndClearEnvironmentVariable("MFINPUTS");
 }
