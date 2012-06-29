@@ -583,11 +583,24 @@
             <description>
                 <h3>Changes Since 0.99</h3>
                 <li>Version number is no longer less than one.  Unfortunately, this has absolutely no significance.</li>
-				<li>Added an option to run updmap after operations which modify the TeX install.  TeX Live 2012 only, and only meaningful for users who have installed fonts in their home directory.</li>
+                <li>Added an option to run updmap after operations which modify the TeX install.  TeX Live 2012 only, and only meaningful for users who have installed fonts in their home directory.</li>
                 <li>Updated Chinese translation</li>
             </description>
             <pubDate>Sun, 10 Jun 2012 17:34:58 +0000</pubDate>
             <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-1.0.tgz" sparkle:version="1.0" length="3407098" type="application/octet-stream" sparkle:dsaSignature="MCwCFBbtNfDuWCY79PqrDMnZT+I57pbyAhRyhzD3lNjHumebp0ZC8eKSO88itw=="></enclosure>
+        </item>
+        <item>
+            <title>Version 1.01</title>
+            <description>
+                <h3>Changes Since 1.0</h3>
+                <li>Main window is now always shown when reactivating the application (issue 71)</li>
+                <li>Can now install TeX Live 2012 using hidden feature</li>
+                <li>Fixed cosmetic issue with sheets</li>
+                <li>Output of /usr/bin/env is now logged, and some critical environment variables are unset if overly clever users have been modifying them</li>
+                <li>Updated Japanese translation</li>
+            </description>
+            <pubDate>Fri, 29 Jun 2012 15:04:24 +0000</pubDate>
+            <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-1.01.tgz" sparkle:version="1.01" length="3409232" type="application/octet-stream" sparkle:dsaSignature="MCsCE0r4Bb4oC/1R46IFsA/o8IPxDG8CFBux2/hZY1vXRU6cuzSNX0/HeGRR"></enclosure>
         </item>
     </channel>
 </rss>
