@@ -765,6 +765,7 @@ static void __TLMTestAndClearEnvironmentVariable(const char *name)
             subpath = [path stringByAppendingPathComponent:subpath];
             if ([fm fileExistsAtPath:subpath]) {
                 if ([fm isWritableFileAtPath:subpath] == NO) {
+                    TLMLog(__func__, @"*** WARNING *** mixed permissions found.  Install directory %@ is writeable by this user, but child directory %@ is not writeable.", path, subpath);
                     _rootRequired = YES;
                     [innerPool release];
                     break;
