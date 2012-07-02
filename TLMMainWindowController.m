@@ -1919,4 +1919,82 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     [op release];    
 }
 
+#define SUPPRESS_PAPERSIZE_ALERT @"SuppressPaperSizeAlert"
+
+- (void)_paperSizeMismatchAlertDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
+{
+    if (NSAlertFirstButtonReturn == returnCode) {
+        [[alert window] orderOut:nil];
+        [self changePapersize:nil];
+    }        
+    if ([[alert suppressionButton] state] == NSOnState)
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:SUPPRESS_PAPERSIZE_ALERT];
+}
+
+- (void)_paperSizeCheckTerminated:(NSNotification *)note
+{
+    TLMTask *task = [note object];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSTaskDidTerminateNotification object:task];
+    
+    NSString *currentSize = nil;
+    NSInteger ret = [task terminationStatus];
+    if (0 != ret) {
+        TLMLog(__func__, @"Unable to determine current paper size for pdftex");
+    }
+    else if ([task outputString]) {
+        NSArray *sizes = [[task outputString] componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+        if ([sizes count])
+            currentSize = [sizes objectAtIndex:0];
+    }
+    
+    /*
+     MacTeX installer checks paper size using this:
+     
+     PAPER=`sudo -u $USER defaults read com.apple.print.PrintingPrefs DefaultPaperID | perl -pe 's/^iso-//; s/^na-//'`
+     
+     Unfortunately, it apparently fails on Lion systems with a clean install, so this
+     preference is likely being phased out or is just unreliable.  We now check at launch
+     to avoid user confusion from this being set properly on some systems vs. others.
+     */
+    NSString *systemPaperSize = [[[[NSPrintInfo sharedPrintInfo] paperName] componentsSeparatedByString:@"-"] lastObject];
+    TLMLog(__func__, @"System paper size = %@, pdftex paper size = %@", systemPaperSize, currentSize);
+    
+    if (currentSize && systemPaperSize && [systemPaperSize isEqualToString:currentSize] == NO) {
+        NSAlert *alert = [[NSAlert new] autorelease];
+        [alert setMessageText:NSLocalizedString(@"TeX Live paper size does not match system default", @"alert title")];
+        [alert setInformativeText:NSLocalizedString(@"Would you like to set the TeX Live paper size now?", @"alert text")];
+        [alert addButtonWithTitle:NSLocalizedString(@"Yes", @"")];
+        [alert addButtonWithTitle:NSLocalizedString(@"No", @"")];
+        [alert setShowsSuppressionButton:YES];
+        [alert beginSheetModalForWindow:[self window]
+                          modalDelegate:self
+                         didEndSelector:@selector(_paperSizeMismatchAlertDidEnd:returnCode:contextInfo:)
+                            contextInfo:NULL];
+    }
+    [task release];
+}
+
+- (void)checkSystemPaperSize;
+{
+    // ignore the suppression key if we haven't checked this TL version
+    NSString *lastSizeCheckVersionKey = @"TLMLastPaperSizeAlertVersionKey";
+    const TLMDatabaseYear lastCheckedYear = [[NSUserDefaults standardUserDefaults] integerForKey:lastSizeCheckVersionKey];
+    const TLMDatabaseYear currentYear = [[TLMEnvironment currentEnvironment] texliveYear];
+    
+    // !!! early return
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SUPPRESS_PAPERSIZE_ALERT] && lastCheckedYear == currentYear)
+        return;
+    
+    [[NSUserDefaults standardUserDefaults] setInteger:currentYear forKey:lastSizeCheckVersionKey];
+    
+    TLMTask *task = [TLMTask new];
+    [task setLaunchPath:[[TLMEnvironment currentEnvironment] tlmgrAbsolutePath]];
+    [task setArguments:[NSArray arrayWithObjects:@"pdftex", @"paper", @"--list", nil]];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(_paperSizeCheckTerminated:)
+                                                 name:NSTaskDidTerminateNotification 
+                                               object:task];
+    [task launch];
+}
+
 @end
