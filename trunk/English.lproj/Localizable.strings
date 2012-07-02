@@ -324,6 +324,9 @@
 /* No comment provided by engineer. */
 "TeX Live 2008 is not supported" = "TeX Live 2008 is not supported";
 
+/* alert title */
+"TeX Live paper size does not match system default" = "TeX Live paper size does not match system default";
+
 /* No comment provided by engineer. */
 "The current location is:" = "The current location is:";
 
@@ -428,6 +431,9 @@
 
 /* button title */
 "Wait" = "Wait";
+
+/* alert text */
+"Would you like to set the TeX Live paper size now?" = "Would you like to set the TeX Live paper size now?";
 
 /* alert text */
 "Would you like to use this as the default value for the command-line tlmgr tool as well?" = "Would you like to use this as the default value for the command-line tlmgr tool as well?";

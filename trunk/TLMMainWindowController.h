@@ -125,4 +125,6 @@ typedef NSUInteger TLMDockedEdge;
 
 - (void)refreshBackupList;
 
+- (void)checkSystemPaperSize;
+
 @end
