@@ -145,6 +145,10 @@ def user_and_pass_for_upload():
     return username, password
     
 if __name__ == '__main__':
+    
+    svn_task = Popen(["/usr/bin/svn", "up"], cwd=SOURCE_DIR)
+    rc = svn_task.wait()
+    assert rc == 0, "update failed"
 
     newVersion = rewrite_version()
     clean_and_build()
@@ -156,4 +160,7 @@ if __name__ == '__main__':
     # make sure it's not Featured!
     labels = ["Type-Archive", "OpSys-OSX"]
     googlecode_upload.upload(tarballPath, "mactlmgr", username, password, summary, labels)
+
+    svn_task = Popen(["/usr/bin/svn", "commit", "-m", "bump beta version"], cwd=SOURCE_DIR)
+    svn_task.wait()
 
