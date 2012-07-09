@@ -104,7 +104,7 @@ def mirmon_sites():
     ret = launch_task(["/usr/bin/rsync", "rsync://comedy.dante.de/MirMon/mirmon.state", outname])
     
     if ret:
-        return None
+        return []
     
     mirror_urls = []
     
