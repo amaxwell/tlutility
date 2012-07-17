@@ -340,8 +340,11 @@ static double        _dataTimeout = URL_TIMEOUT;
         } while ([[self tlpdbData] length] < MIN_DATA_LENGTH);
         TLMLog(__func__, @"Downloaded %lu bytes of tlpdb for version check", (unsigned long)[[self tlpdbData] length]);
         // in case of exceeding stopTime
-        if ([[self tlpdbData] length] < MIN_DATA_LENGTH)
+        if ([[self tlpdbData] length] < MIN_DATA_LENGTH) {
             _failed = YES;
+            [self setTlpdbData:nil];
+            _failureTime = CFAbsoluteTimeGetCurrent();
+        }
         [connection cancel];
         [connection release];
     }
@@ -381,13 +384,13 @@ static NSString *__TLMTemporaryFile()
          */
         if (checkInterval < (URL_TIMEOUT * 3)) {
             // !!! early return: avoid multiple timeouts for successive requests
-            TLMLog(__func__, @"Failed to contact this repository %.1f seconds ago.  Using that result.", checkInterval);
+            TLMLog(__func__, @"Failed to use this repository %.1f seconds ago.  Using that result.", checkInterval);
             [_downloadLock unlock];
             return TLMDatabaseUnknownYear;
         }
         else {
             // log and try again
-            TLMLog(__func__, @"Failed to contact this repository %.1f seconds ago.  Trying again.", checkInterval);
+            TLMLog(__func__, @"Failed to use this repository %.1f seconds ago.  Trying again.", checkInterval);
         }
     }    
     
