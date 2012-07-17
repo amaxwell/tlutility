@@ -265,6 +265,16 @@ static double        _dataTimeout = URL_TIMEOUT;
     return [[NSURL databaseURLForTLNetURL:[self mirrorURL]] tlm_normalizedURL];
 }
 
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
+{
+    NSAssert1([_downloadLock tryLock] == NO, @"acquire lock before calling %s", __func__);
+    if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
+        NSHTTPURLResponse *httpResponse = (id)response;
+        if ([httpResponse statusCode] != 200)
+            TLMLog(__func__, @"%@: %@", httpResponse, [httpResponse allHeaderFields]);
+    }
+}
+
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
     NSAssert1([_downloadLock tryLock] == NO, @"acquire lock before calling %s", __func__);
@@ -306,6 +316,7 @@ static double        _dataTimeout = URL_TIMEOUT;
         [self setTlpdbData:[NSMutableData data]];
         
         NSURLRequest *request = [NSURLRequest requestWithURL:[self _tlpdbURL] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:URL_TIMEOUT];
+        
         _failed = NO;
         TLMLog(__func__, @"Checking the repository version.  Please be patient.");
         TLMLog(__func__, @"Downloading at least %d bytes of tlpdb for a version check%C", MIN_DATA_LENGTH, TLM_ELLIPSIS);
