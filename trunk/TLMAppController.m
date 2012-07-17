@@ -268,8 +268,8 @@ static void __TLMMigrateBundleIdentifier()
 #warning disabled auto refresh
 #else
         [[self mainWindowController] refreshUpdatedPackageList];
-        [[self mainWindowController] checkSystemPaperSize];
 #endif
+        [[self mainWindowController] checkSystemPaperSize];
     }
     
 }
