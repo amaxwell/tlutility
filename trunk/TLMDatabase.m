@@ -43,6 +43,7 @@
 #import "TLMDatabasePackage.h"
 #import "TLMPackageNode.h"
 #import "TLMEnvironment.h"
+#import <WebKit/WebKit.h>
 
 #define MIN_DATA_LENGTH 2048
 #define URL_TIMEOUT     30
@@ -67,6 +68,7 @@ NSString * const TLMDatabaseVersionCheckComplete = @"TLMDatabaseVersionCheckComp
 static NSMutableSet *_databases = nil;
 static NSLock       *_databasesLock = nil;
 static double        _dataTimeout = URL_TIMEOUT;
+static NSString     *_userAgent = nil;
 
 + (void)initialize
 {
@@ -80,6 +82,11 @@ static double        _dataTimeout = URL_TIMEOUT;
             _dataTimeout = round([dataTimeout doubleValue]);
             TLMLog(__func__, @"Using custom database download timeout of %.0f seconds", _dataTimeout);
         }
+        
+        // get a user-agent for the default URL, to avoid hardcoding any framework versions
+        WebView *wv = [[WebView alloc] initWithFrame:NSMakeRect(0, 0, 1, 1)];
+        _userAgent = [[wv userAgentForURL:[[TLMEnvironment currentEnvironment] defaultServerURL]] copy];
+        [wv release];
     }
 }
 
@@ -270,8 +277,11 @@ static double        _dataTimeout = URL_TIMEOUT;
     NSAssert1([_downloadLock tryLock] == NO, @"acquire lock before calling %s", __func__);
     if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
         NSHTTPURLResponse *httpResponse = (id)response;
-        if ([httpResponse statusCode] != 200)
+        const NSInteger statusCode = [httpResponse statusCode];
+        if (statusCode != 200) {
+            TLMLog(__func__, @"received status code %lu (%@)", statusCode, [NSHTTPURLResponse localizedStringForStatusCode:statusCode]);
             TLMLog(__func__, @"%@: %@", httpResponse, [httpResponse allHeaderFields]);
+        }
     }
 }
 
@@ -315,7 +325,16 @@ static double        _dataTimeout = URL_TIMEOUT;
         
         [self setTlpdbData:[NSMutableData data]];
         
-        NSURLRequest *request = [NSURLRequest requestWithURL:[self _tlpdbURL] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:URL_TIMEOUT];
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[self _tlpdbURL]];
+        [request setTimeoutInterval:URL_TIMEOUT];
+        // useful for debugging when behind a caching proxy
+#if 0
+        [request addValue:@"no-cache" forHTTPHeaderField:@"Pragma"];
+        [request addValue:@"no-cache" forHTTPHeaderField:@"Cache-Control"];
+#endif
+        // for bug #73; that mirror was returning an http 400 with the default user agent set by CFNetwork
+        [request addValue:_userAgent ? _userAgent : @"TeX Live Utility" forHTTPHeaderField:@"User-Agent"];
+
         
         _failed = NO;
         TLMLog(__func__, @"Checking the repository version.  Please be patient.");
