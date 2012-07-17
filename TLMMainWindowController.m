@@ -1941,6 +1941,8 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:SUPPRESS_PAPERSIZE_ALERT];
 }
 
+#define TLM_PAPERSIZE_CHECK_TASK_KEY @"paper size check task key"
+
 - (void)_paperSizeCheckTerminated:(NSNotification *)note
 {
     TLMTask *task = [note object];
@@ -1981,7 +1983,9 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
                          didEndSelector:@selector(_paperSizeMismatchAlertDidEnd:returnCode:contextInfo:)
                             contextInfo:NULL];
     }
-    [task release];
+    
+    NSParameterAssert([[[NSThread currentThread] threadDictionary] objectForKey:TLM_PAPERSIZE_CHECK_TASK_KEY]);
+    [[[NSThread currentThread] threadDictionary] removeObjectForKey:TLM_PAPERSIZE_CHECK_TASK_KEY];
 }
 
 - (void)checkSystemPaperSize;
@@ -2005,6 +2009,15 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
                                                  name:NSTaskDidTerminateNotification 
                                                object:task];
     [task launch];
+
+    /*
+     Need to keep the task around long enough to pick up the notification, and
+     clang squawks if I release in the callback.  Associated objects would be
+     another way to do this.
+     */
+    [[[NSThread currentThread] threadDictionary] setObject:task forKey:TLM_PAPERSIZE_CHECK_TASK_KEY];
+    [task release];
+    
 }
 
 @end
