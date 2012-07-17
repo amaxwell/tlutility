@@ -379,6 +379,9 @@
 "Unable to convert to a number" = "Unable to convert to a number";
 
 /* alert title */
+"Unable to determine repository version" = "Unable to determine repository version";
+
+/* alert title */
 "Unable to determine your TeX Live version" = "Unable to determine your TeX Live version";
 
 /* alert title */
@@ -449,6 +452,9 @@
 
 /* alert message */
 "You can always update to the latest version or restore a different one to undo this change." = "You can always update to the latest version or restore a different one to undo this change.";
+
+/* alert text, integer and string format specifiers */
+"You have TeX Live %lu installed, but the version at %@ cannot be determined." = "You have TeX Live %1$lu installed, but the version at %2$@ cannot be determined.";
 
 /* alert text */
 "You will need to manually quit and relaunch TeX Live Utility to complete installation of the new version." = "You will need to manually quit and relaunch TeX Live Utility to complete installation of the new version.";
