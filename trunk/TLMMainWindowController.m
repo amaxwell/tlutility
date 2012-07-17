@@ -886,6 +886,7 @@ static char _TLMOperationQueueOperationContext;
     // should be cached, unless the user has screwed up (and that's the case we're trying to catch)
     TLMDatabase *db = [TLMDatabase databaseForMirrorURL:aURL];
     const TLMDatabaseYear year = [[TLMEnvironment currentEnvironment] texliveYear];
+#warning failures must be handled here
     if ([db texliveYear] != year) {
         NSAlert *alert = [[NSAlert new] autorelease];
         [alert setMessageText:NSLocalizedString(@"Repository has a different TeX Live version", @"alert title")];

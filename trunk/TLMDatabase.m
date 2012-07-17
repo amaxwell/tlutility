@@ -428,7 +428,7 @@ static NSString *__TLMTemporaryFile()
     }
     
     // !!! minrelease not currently used, but tlcontrib isn't using it (yet) either
-    int32_t release = TLMDatabaseUnknownYear, minrelease = TLMDatabaseUnknownYear;
+    TLMDatabaseYear release = TLMDatabaseUnknownYear, minrelease = TLMDatabaseUnknownYear;
     
     for (NSString *depend in [[self packageNamed:@"00texlive.config"] depends]) {
         
@@ -436,7 +436,7 @@ static NSString *__TLMTemporaryFile()
         if ([depend hasPrefix:@"release/"]) {
             NSScanner *scanner = [NSScanner scannerWithString:depend];
             [scanner scanString:@"release/" intoString:NULL];
-            if ([scanner scanInt:&release] == NO)
+            if ([scanner scanInteger:&release] == NO)
                 TLMLog(__func__, @"Unable to determine year from depend line: %@", depend);
             if ([scanner isAtEnd] == NO) {
                 _isOfficial = NO;
@@ -447,9 +447,15 @@ static NSString *__TLMTemporaryFile()
             // minrelease is the lower limit for which this database applies
             NSScanner *scanner = [NSScanner scannerWithString:depend];
             [scanner scanString:@"minrelease/" intoString:NULL];
-            if ([scanner scanInt:&minrelease] == NO)
+            if ([scanner scanInteger:&minrelease] == NO)
                 TLMLog(__func__, @"Unable to determine year from depend line: %@", depend);
         }
+    }
+    
+    if (TLMDatabaseUnknownYear == release) {
+        TLMLog(__func__, @"Unable to determine year from 00texlive.config");
+        _failed = YES;
+        _failureTime = CFAbsoluteTimeGetCurrent();
     }
     
     _year = release;
