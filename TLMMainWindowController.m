@@ -879,6 +879,9 @@ static char _TLMOperationQueueOperationContext;
  handles correctly, so this is just an extra precaution).  Note that changing mirrors
  should not be an issue since we always use the last (already validated) mirror.  However,
  changing the the tlmgr path or TeX Dist in system prefs can cause problems.
+ 
+ Note: also called when manually entering a mirror in the address field, so we can also
+ get uncached/unvalidated mirrors here.
  */
 - (BOOL)_isCorrectDatabaseVersionAtURL:(NSURL *)aURL
 {
@@ -886,8 +889,14 @@ static char _TLMOperationQueueOperationContext;
     // should be cached, unless the user has screwed up (and that's the case we're trying to catch)
     TLMDatabase *db = [TLMDatabase databaseForMirrorURL:aURL];
     const TLMDatabaseYear year = [[TLMEnvironment currentEnvironment] texliveYear];
-#warning failures must be handled here
-    if ([db texliveYear] != year) {
+    if ([db failed] || [db texliveYear] == TLMDatabaseUnknownYear) {
+        NSAlert *alert = [[NSAlert new] autorelease];
+        [alert setMessageText:NSLocalizedString(@"Unable to determine repository version", @"alert title")];
+        [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"You have TeX Live %lu installed, but the version at %@ cannot be determined.", @"alert text, integer and string format specifiers"), year, [aURL absoluteString]]];
+        [alert beginSheetModalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
+        return NO;
+    }
+    else if ([db texliveYear] != year) {
         NSAlert *alert = [[NSAlert new] autorelease];
         [alert setMessageText:NSLocalizedString(@"Repository has a different TeX Live version", @"alert title")];
         [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"The repository at %@ has TeX Live %lu, but you have TeX Live %lu installed.  You need to switch repositories in order to continue.", @"alert text, two integer format specifiers"), [aURL absoluteString], [db texliveYear], year]];
