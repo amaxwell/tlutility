@@ -40,6 +40,58 @@ from glob import glob
 from Foundation import NSString
 import sys
 
+class StringsEntry(object):
+    """docstring for StringsEntry"""
+    def __init__(self):
+        super(StringsEntry, self).__init__()
+        self.key = None
+        self.value = None
+        self.comment = ""
+        self.order = None
+        
+    def string_value(self):
+        return "%s\"%s\" = \"%s\";\n" % (self.comment, self.key, self.value)
+
+IN_COMMENT = 0
+IN_VALUE   = 1
+
+def _english_strings_at_path(path):
+    
+    content, encoding, error = NSString.stringWithContentsOfFile_usedEncoding_error_(path, None, None)
+    entries = []
+    current_entry = None
+    state = IN_COMMENT
+    
+    for line in content.split("\n"):
+        line = line.strip("\n")
+        
+        if line.startswith("/*"):
+            state = IN_COMMENT
+
+        if state == IN_COMMENT:
+            
+            current_entry = StringsEntry() if current_entry is None else current_entry
+            current_entry.comment += line + "\n"
+            current_entry.order = len(entries)
+            
+            if line.endswith("*/"):
+                state = IN_VALUE
+                continue
+            
+        if state == IN_VALUE and len(line):
+            key, ignored, value = line.partition("\" = \"")
+            assert key, "invalid key"
+            assert value, "invalid value"
+            assert current_entry.comment, "no comment found"
+            assert current_entry, "no current entry"
+            current_entry.key = key[1:]
+            current_entry.value = value[:-2]
+            entries.append(current_entry)
+            current_entry = None            
+            
+    return entries
+            
+
 def _strings_dictionary_at_path(path):
     content, encoding, error = NSString.stringWithContentsOfFile_usedEncoding_error_(path, None, None)
     return content.propertyListFromStringsFileFormat()
@@ -47,6 +99,7 @@ def _strings_dictionary_at_path(path):
 def _check_strings_at_path(path, english_strings):
     sys.stdout.write("checking %s\n" % (path))
     strings = _strings_dictionary_at_path(path)
+    missing = []
     for key in english_strings:
         if key not in strings:
             sys.stderr.write(("%s: missing %s\n" % (path, key)))
@@ -60,5 +113,10 @@ if __name__ == '__main__':
         
     english_strings = _strings_dictionary_at_path(english_strings_path)
     
+    estr = _english_strings_at_path(english_strings_path)
+    for x in estr:
+        print x.string_value().encode("utf-8")
+
+    exit(0)
     for path in paths_to_check:
         _check_strings_at_path(path, english_strings)
