@@ -452,3 +452,11 @@
 
 /* alert text, integer format specifier */
 "You appear to have installed fonts in your home directory.  Would you like them to be automatically activated in TeX Live %d?" = "您似乎在 Home 目录安装了字体。要在 TeX Live %d 中自动激活这些字体吗？";
+/* alert title */
+"TeX Live paper size does not match system default" = "TeX Live paper size does not match system default";
+/* alert title */
+"Unable to determine repository version" = "Unable to determine repository version";
+/* alert text */
+"Would you like to set the TeX Live paper size now?" = "Would you like to set the TeX Live paper size now?";
+/* alert text, integer and string format specifiers */
+"You have TeX Live %lu installed, but the version at %@ cannot be determined." = "You have TeX Live %1$lu installed, but the version at %2$@ cannot be determined.";
