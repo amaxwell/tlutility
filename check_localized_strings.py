@@ -37,7 +37,7 @@
 
 
 from glob import glob
-from Foundation import NSString
+from Foundation import NSString, NSUTF8StringEncoding
 import sys
 
 class StringsEntry(object):
@@ -50,15 +50,24 @@ class StringsEntry(object):
         self.order = None
         
     def string_value(self):
-        return "%s\"%s\" = \"%s\";\n" % (self.comment, self.key, self.value)
+        return ("%s\"%s\" = \"%s\";\n" % (self.comment, self.key, self.value)).encode("utf-8")
+        
+    def __repr__(self):
+        return self.string_value()
 
 IN_COMMENT = 0
 IN_VALUE   = 1
 
-def _english_strings_at_path(path):
+def _normalize_key(key):
+    key = key.encode("raw_unicode_escape").encode("utf-8").decode("string_escape")
+    if "\\u" in key:
+        key = key.replace("\\u", "\\U")
+    return key
+
+def _strings_entries_at_path(path):
     
     content, encoding, error = NSString.stringWithContentsOfFile_usedEncoding_error_(path, None, None)
-    entries = []
+    entries = {}
     current_entry = None
     state = IN_COMMENT
     
@@ -84,9 +93,12 @@ def _english_strings_at_path(path):
             assert value, "invalid value"
             assert current_entry.comment, "no comment found"
             assert current_entry, "no current entry"
-            current_entry.key = key[1:]
+            # strip leading quote
+            key = _normalize_key(key[1:])
+            current_entry.key = key
+            # strip trailing semicolon and quote
             current_entry.value = value[:-2]
-            entries.append(current_entry)
+            entries[key] = current_entry
             current_entry = None            
             
     return entries
@@ -94,15 +106,36 @@ def _english_strings_at_path(path):
 
 def _strings_dictionary_at_path(path):
     content, encoding, error = NSString.stringWithContentsOfFile_usedEncoding_error_(path, None, None)
+    assert encoding == NSUTF8StringEncoding, "%s is not UTF-8 encoded" % (path)
     return content.propertyListFromStringsFileFormat()
+    
 
 def _check_strings_at_path(path, english_strings):
-    sys.stdout.write("checking %s\n" % (path))
+    sys.stderr.write("checking %s\n" % (path))
     strings = _strings_dictionary_at_path(path)
+    pystrings = {}
+    for nskey in strings:
+        pystrings[_normalize_key(nskey)] = strings[nskey]
+    strings = pystrings
+
     missing = []
+    #print strings.keys()
     for key in english_strings:
         if key not in strings:
-            sys.stderr.write(("%s: missing %s\n" % (path, key)))
+            missing.append(key)
+    
+    def _sort_by_order(a, b):
+        return cmp(a.order, b.order)
+    
+    to_add = [english_strings[key] for key in missing]
+    to_add = sorted(to_add, _sort_by_order)
+    
+    sys.stderr.write("found %d missing strings\n" % (len(to_add)))
+    
+    with open(path, "ab") as output_file:
+        for x in to_add:
+            output_file.write(x.string_value())
+
 
 if __name__ == '__main__':
     
@@ -110,13 +143,8 @@ if __name__ == '__main__':
     paths_to_check = glob("*.lproj/Localizable.strings")
     assert english_strings_path in paths_to_check, "english strings file not found at %s" % (english_strings)
     paths_to_check.remove(english_strings_path)
-        
-    english_strings = _strings_dictionary_at_path(english_strings_path)
     
-    estr = _english_strings_at_path(english_strings_path)
-    for x in estr:
-        print x.string_value().encode("utf-8")
+    english_strings = _strings_entries_at_path(english_strings_path)
 
-    exit(0)
     for path in paths_to_check:
         _check_strings_at_path(path, english_strings)
