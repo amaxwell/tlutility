@@ -23,6 +23,8 @@ class DTStructuredVectorField2D(object):
                         
         """                   
         
+        u = np.squeeze(u)
+        v = np.squeeze(v)
         shape = np.shape(u)
         assert len(shape) == 2, "values array must be 2D"
         assert np.shape(u) == np.shape(v), "inconsistent array shapes"
