@@ -8,6 +8,7 @@ from DTMask import DTMask
 import numpy as np
 
 def _squeeze2d(array):
+    assert array != None, "DTStructuredGrid2D: nonexistent array passed to _squeeze2d"
     array = np.asarray(array)
     shape = np.shape(array)
     if len(shape) == 2:
@@ -85,6 +86,9 @@ class DTStructuredGrid2D(object):
     def bounding_box(self):
         return DTRegion2D(np.nanmin(self._x), np.nanmax(self._x), np.nanmin(self._y), np.nanmax(self._y))
         
+    def mask(self):
+        return self._mask
+        
     def full_x(self):
         if self._logical_shape == np.shape(self._x):
             return self._x
@@ -115,9 +119,12 @@ class DTStructuredGrid2D(object):
     @classmethod
     def from_data_file(self, datafile, name):
         
+        name = datafile.resolve_name(name)
         gridx = datafile[name + "_X"]
         gridy = datafile[name + "_Y"]
         mask = DTMask.from_data_file(datafile, name + "_dom")
+        assert gridx != None, "DTStructuredGrid2D: no such variable %s in %s" % (name + "_X", datafile.path())
+        assert gridy != None, "DTStructuredGrid2D: no such variable %s in %s" % (name + "_Y", datafile)
         return DTStructuredGrid2D(gridx, gridy, mask=mask)
 
 if __name__ == '__main__':

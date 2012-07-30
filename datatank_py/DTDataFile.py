@@ -382,6 +382,55 @@ class DTDataFile(object):
             
         self._name_offset_map = {}
         
+    def path(self):
+        """Returns the file path."""
+        return self._file_path
+        
+    def resolve_name(self, name):
+        """Resolve a name in case of shared variables.
+        
+        Arguments:
+        name -- A potentially shared variable name
+        
+        Returns:
+        The underlying variable name, with all references resolved
+        
+        This is pretty efficient in the common case of no redirect, as
+        it only reads the header.  Other cases are a bit more expensive,
+        but too tricky to be worth rewriting at the moment.
+        
+        """
+        
+        self._reload_content_if_needed()
+
+        if name not in self._name_offset_map:
+            # exception here would be more pythonic, but this is consistent
+            return name
+        
+        block_start = self._name_offset_map[name]
+        (block_length, var_type, m, n, o, name_length) = self._read_object_header_at_offset(block_start)
+        
+        # if this isn't a string, return the name without munging it
+        if var_type != 20:
+            return name
+            
+        underlying_name = self.variable_named(name)
+        
+        # shortcut for a one step redirect
+        if isinstance(underlying_name, basestring) == False:
+            return underlying_name
+        
+        # deeper redirect, so avoid circular references
+        names_seen = set()
+        names_seen.add(underlying_name)
+        
+        while isinstance(underlying_name, basestring) == False:
+            underlying_name = self.variable_named(underlying_name)
+            assert underlying_name not in names_seen, "DTDataFile: circular name reference for %s" % (name)
+            names_seen.add(underlying_name)
+            
+        return underlying_name
+                
     def variable_names(self):
         """Unsorted list of variable names."""
         
