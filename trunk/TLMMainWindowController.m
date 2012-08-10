@@ -1808,6 +1808,12 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 - (void)refreshUpdatedPackageListWithURL:(NSURL *)aURL;
 {
     if (aURL && [_updateListDataSource isRefreshing] == NO) {
+        // make sure it's okay to call this with the multiplexer, just in case
+        if ([aURL isMultiplexer])
+            aURL = [[TLMEnvironment currentEnvironment] validServerURL];
+        // if no valid URL, bad things are about to happen...
+        if (nil == aURL)
+            aURL = [[TLMEnvironment currentEnvironment] defaultServerURL];
         [self setServerURL:aURL];
         [self _refreshUpdatedPackageListFromLocation:aURL];  
     }
