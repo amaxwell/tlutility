@@ -271,6 +271,11 @@ static void __TLMMigrateBundleIdentifier()
 #endif
         [[self mainWindowController] checkSystemPaperSize];
     }
+
+    // NB: have to include the .app extension here
+    NSString *notifierPath = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"TLUNotifier.app"];
+    if (notifierPath)
+        LSRegisterURL((CFURLRef)[NSURL fileURLWithPath:notifierPath], TRUE);    
     
 }
 

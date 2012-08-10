@@ -132,7 +132,8 @@ def macosx_update_check():
     from LaunchServices import LSFindApplicationForInfo, LSOpenFromURLSpec
     from LaunchServices import kLSUnknownCreator, LSLaunchURLSpec
 
-    from Foundation import NSURL
+    from Foundation import NSURL, NSFoundationVersionNumber
+    from math import floor
     
     # http://developer.apple.com/library/mac/#documentation/MacOSX/Conceptual/BPMultipleUsers/BPMultipleUsers.html
     sessionInfo = CGSessionCopyCurrentDictionary()
@@ -171,28 +172,47 @@ def macosx_update_check():
 
     if update_count == 0:
         return 0
-     
-    title = "TeX Live updates available"
-    msg = "Updates for %d %s are available for TeX Live.  Would you like to update with TeX Live Utility now, or at a later time?" % (update_count, "packages" if update_count > 1 else "package")
-    
-    # see if we can find TeX Live Utility...hopefully LaunchServices is working today
-    ret, tlu_fsref, tlu_url = LSFindApplicationForInfo(kLSUnknownCreator, bundle_id, None, None, None)
-            
-    bundle = CFBundleCreate(None, tlu_url) if ret == 0 else None
-    icon_url = CFBundleCopyResourceURL(bundle, "TeXDistTool", "icns", None) if bundle else None
-    
-    # show a modal alert, with options to update now or later
-    cancel, response = CFUserNotificationDisplayAlert(_ALERT_TIMEOUT, kCFUserNotificationNoteAlertLevel, icon_url, None, None, title, msg, "Later", "Update", None, None)    
-    if kCFUserNotificationAlternateResponse == response:
         
-        # launch TeX Live Utility, passing the URL as an odoc Apple Event
-        spec = LSLaunchURLSpec()
-        spec.appURL = tlu_url
-        spec.itemURLs = [NSURL.URLWithString_(actual_repository)] if actual_repository else None
-        ret, launchedURL = LSOpenFromURLSpec(spec, None)
+    if floor(NSFoundationVersionNumber) > 833:
 
+        bundle_id = "com.googlecode.mactlmgr.TLUNotifier"
+        ret, tln_fsref, tln_url = LSFindApplicationForInfo(kLSUnknownCreator, bundle_id, None, None, None)
+
+        # launch TLUNotifier, passing the URL as an odoc Apple Event
+        if ret == 0 and tln_url:
+            log_message("using notifier %s with URL %s" % (tln_url, actual_repository))
+            spec = LSLaunchURLSpec()
+            spec.appURL = tln_url
+            spec.itemURLs = [NSURL.URLWithString_(actual_repository)] if actual_repository else None
+            ret, launchedURL = LSOpenFromURLSpec(spec, None)
+            if ret:
+                log_message("unable to launch TLUNotifier at %s (%d)" % (tln_url, ret))
+        else:
+            log_message("unable to find TLUNotifier")
+        
     else:
-        log_message("user postponed TeX Live updates")
+     
+        title = "TeX Live updates available"
+        msg = "Updates for %d %s are available for TeX Live.  Would you like to update with TeX Live Utility now, or at a later time?" % (update_count, "packages" if update_count > 1 else "package")
+    
+        # see if we can find TeX Live Utility...hopefully LaunchServices is working today
+        ret, tlu_fsref, tlu_url = LSFindApplicationForInfo(kLSUnknownCreator, bundle_id, None, None, None)
+            
+        bundle = CFBundleCreate(None, tlu_url) if ret == 0 else None
+        icon_url = CFBundleCopyResourceURL(bundle, "TeXDistTool", "icns", None) if bundle else None
+    
+        # show a modal alert, with options to update now or later
+        cancel, response = CFUserNotificationDisplayAlert(_ALERT_TIMEOUT, kCFUserNotificationNoteAlertLevel, icon_url, None, None, title, msg, "Later", "Update", None, None)    
+        if kCFUserNotificationAlternateResponse == response:
+        
+            # launch TeX Live Utility, passing the URL as an odoc Apple Event
+            spec = LSLaunchURLSpec()
+            spec.appURL = tlu_url
+            spec.itemURLs = [NSURL.URLWithString_(actual_repository)] if actual_repository else None
+            ret, launchedURL = LSOpenFromURLSpec(spec, None)
+
+        else:
+            log_message("user postponed TeX Live updates")
         
     return 0
 
