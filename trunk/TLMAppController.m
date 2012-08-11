@@ -272,10 +272,17 @@ static void __TLMMigrateBundleIdentifier()
         [[self mainWindowController] checkSystemPaperSize];
     }
 
-    // NB: have to include the .app extension here
-    NSString *notifierPath = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"TLUNotifier.app"];
-    if (notifierPath)
-        LSRegisterURL((CFURLRef)[NSURL fileURLWithPath:notifierPath], TRUE);    
+    if (floor(NSAppKitVersionNumber) > 1138 /* NSAppKitVersionNumber10_7 */) {
+        // NB: have to include the .app extension here
+        NSString *notifierPath = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"TLUNotifier.app"];
+        if (notifierPath)
+            LSRegisterURL((CFURLRef)[NSURL fileURLWithPath:notifierPath], TRUE);
+        
+        NSArray *runningNotifiers = [NSRunningApplication runningApplicationsWithBundleIdentifier:@"com.googlecode.mactlmgr.TLUNotifier"];
+        if ([runningNotifiers count])
+            TLMLog(__func__, @"Terminating %d instance(s) of TLUNotifier.app in case of update", [runningNotifiers count]);
+        [runningNotifiers makeObjectsPerformSelector:@selector(terminate)];
+    }
     
 }
 
