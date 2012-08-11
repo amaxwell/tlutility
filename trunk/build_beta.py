@@ -8,8 +8,8 @@ Running build_beta.py does the following:
 
 1) bump the version in Info.plist by 0.1 if it is not a beta, and appends b1;
    otherwise, it increments bN to b(N+1)
-2) does a clean/build, creating SYMROOT/Release/TeX Live Utility.app-DATE.tgz
-3) uploads the .tgz file to the project page
+2) does a clean/build, creating SYMROOT/Release/TeX Live Utility.app-DATE.tar.gz
+3) uploads the .tar.gz file to the project page
 
 The appcast is not modified, the description starts with BETA, and it will
 not be featured when uploaded.
@@ -113,7 +113,7 @@ def create_tarball_of_application(newVersionNumber):
     
     # Create a name for the tarball based on version number, instead
     # of date, since I sometimes want to upload multiple betas per day.
-    tarballName = os.path.join(BUILD_DIR, os.path.basename(BUILT_APP) + "-" + newVersionNumber + ".tgz")
+    tarballName = os.path.join(BUILD_DIR, os.path.basename(BUILT_APP) + "-" + newVersionNumber + ".tar.gz")
 
     # create a tarfile object
     tarball = tarfile.open(tarballName, "w:gz")

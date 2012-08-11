@@ -9,8 +9,8 @@
 # new tarball.  
 # 
 # 1) python build_tlu.py 0.3
-# 2) step 1 created SYMROOT/Release/TeX Live Utility.app-DATE.tgz
-# 3) upload the .tgz file to the project page
+# 2) step 1 created SYMROOT/Release/TeX Live Utility.app-DATE.tar.tz
+# 3) upload the .tar.gz file to the project page
 # 4) svn commit sources and tag as necessary, recalling that the appcast is
 #    live as soon as it is checked in
 #
@@ -114,7 +114,7 @@ def clean_and_build():
 def create_tarball_of_application(newVersionNumber):
     
     # Create a name for the tarball based on version number
-    tarballName = os.path.join(BUILD_DIR, os.path.basename(BUILT_APP) + "-" + newVersionNumber + ".tgz")
+    tarballName = os.path.join(BUILD_DIR, os.path.basename(BUILT_APP) + "-" + newVersionNumber + ".tar.gz")
 
     # create a tarfile object
     tarball = tarfile.open(tarballName, "w:gz")
