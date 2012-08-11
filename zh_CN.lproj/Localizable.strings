@@ -460,3 +460,7 @@
 "Would you like to set the TeX Live paper size now?" = "Would you like to set the TeX Live paper size now?";
 /* alert text, integer and string format specifiers */
 "You have TeX Live %lu installed, but the version at %@ cannot be determined." = "You have TeX Live %1$lu installed, but the version at %2$@ cannot be determined.";
+/* alert text */
+"A newer version of the scheduled update script is available.  Would you like to install it now?" = "A newer version of the scheduled update script is available.  Would you like to install it now?";
+/* alert title */
+"Newer update checker is available" = "Newer update checker is available";

@@ -19,6 +19,9 @@
 /* heading in info panel */
 "\nSource Files:\n" = "\nSource Files:\n";
 
+/* alert text */
+"A newer version of the scheduled update script is available.  Would you like to install it now?" = "A newer version of the scheduled update script is available.  Would you like to install it now?";
+
 /* single trailing space */
 "Adding " = "Adding ";
 
@@ -199,6 +202,9 @@
 
 /* update alert message text part 3 (optional) */
 "New packages will be installed." = "New packages will be installed.";
+
+/* alert title */
+"Newer update checker is available" = "Newer update checker is available";
 
 /* button title */
 "No" = "No";
