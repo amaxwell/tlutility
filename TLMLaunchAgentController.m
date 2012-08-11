@@ -38,6 +38,7 @@
 
 #import "TLMLaunchAgentController.h"
 #import "TLMLogServer.h"
+#import "TLMTask.h"
 
 enum {
     TLMScheduleMatrixNever  = 0,
@@ -123,6 +124,53 @@ static NSString * __TLMGetTemporaryDirectory()
         *domains |= NSUserDomainMask;
     }
     return (*domains != 0);
+}
+
+CGFloat __TLMAgentVersionAtPath(NSString *absolutePath)
+{
+    NSString *parent = [absolutePath stringByDeletingLastPathComponent];
+    NSString *script = [NSString stringWithFormat:@"import sys; sys.path.append(\"%@\"); import update_check as uc; sys.stdout.write(str(uc.VERSION))", parent];
+    TLMTask *task = [TLMTask launchedTaskWithLaunchPath:@"/usr/bin/python" arguments:[NSArray arrayWithObjects:@"-c", script, nil]];
+    [task waitUntilExit];
+    CGFloat version = 0;
+    if ([task terminationStatus] == 0) {
+        version = [[task outputString] floatValue];
+    }
+    else {
+        TLMLog(__func__, @"Failed to get version of script at %@", absolutePath);
+    }
+    return version;
+}
+
++ (BOOL)agentNeedsUpdateInDomains:(NSSearchPathDomainMask *)domains;
+{
+    NSSearchPathDomainMask installedDomains;
+    BOOL needsUpdate = NO;
+    *domains = 0;
+    if ([self agentInstalled:&installedDomains]) {
+        
+        NSString *internalScript = [[NSBundle mainBundle] pathForResource:@"update_check" ofType:@"py"];
+        CGFloat internalVersion = __TLMAgentVersionAtPath(internalScript);        
+        
+        NSArray *applicationSupportPaths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, installedDomains, YES);
+        for (NSString *appSupportPath in applicationSupportPaths) {
+            appSupportPath = [appSupportPath stringByAppendingPathComponent:@"TeX Live Utility"];
+            appSupportPath = [appSupportPath stringByAppendingPathComponent:@"update_check.py"];
+            if ([[NSFileManager defaultManager] fileExistsAtPath:appSupportPath]) {
+                CGFloat version = __TLMAgentVersionAtPath(appSupportPath);
+                if (version < internalVersion) {
+                    Boolean isUserDomain;
+                    if (noErr == DetermineIfPathIsEnclosedByFolder(kUserDomain, kDomainLibraryFolderType, (const uint8_t *)[appSupportPath fileSystemRepresentation], TRUE, &isUserDomain) && isUserDomain)
+                        *domains |= NSUserDomainMask;
+                    else
+                        *domains |= NSLocalDomainMask;
+                    TLMLog(__func__, @"Agent v%1.1f at %@ needs to be updated to v%1.1f", version, appSupportPath, internalVersion);
+                    needsUpdate = YES;
+                }
+            }
+        }
+    }
+    return needsUpdate;
 }
 
 - (id)init { return [self initWithWindowNibName:[self windowNibName]]; }
