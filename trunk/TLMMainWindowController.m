@@ -328,6 +328,19 @@ static char _TLMOperationQueueOperationContext;
     
     // for info window; TL 2011 and later only
     [self _refreshLocalDatabase];
+    
+    NSSearchPathDomainMask domains;
+    if ([TLMLaunchAgentController scriptNeedsUpdateInDomains:&domains]) {
+        NSAlert *alert = [[NSAlert new] autorelease];
+        [alert setMessageText:NSLocalizedString(@"Newer update checker is available", @"alert title")];
+        [alert setInformativeText:NSLocalizedString(@"A newer version of the scheduled update script is available.  Would you like to install it now?", @"alert text")];
+        [alert addButtonWithTitle:NSLocalizedString(@"Yes", @"button title")];
+        [alert addButtonWithTitle:NSLocalizedString(@"No", @"button title")];
+        [alert beginSheetModalForWindow:[self window] 
+                          modalDelegate:self
+                         didEndSelector:@selector(launchAgentScriptUpdateAlertDidEnd:returnCode:contextInfo:)
+                            contextInfo:(void *)domains];
+    }
 }
 
 - (NSString *)windowNibName { return @"MainWindow"; }
@@ -1272,6 +1285,38 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     if ([op isCancelled] == NO)
         TLMLog(__func__, @"Finished running launchd agent installer script");
     [[[self window] toolbar] validateVisibleItems];
+}
+
+- (void)launchAgentScriptUpdateAlertDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)context
+{
+    NSSearchPathDomainMask domains = (NSUInteger)context;
+    if (NSAlertFirstButtonReturn == returnCode) {
+        NSMutableArray *options = [NSMutableArray arrayWithObject:[[NSBundle mainBundle] pathForAuxiliaryExecutable:@"agent_installer.py"]];
+        [options addObject:@"--install"];
+        [options addObject:@"--script"];
+        [options addObject:[[NSBundle mainBundle] pathForResource:@"update_check" ofType:@"py"]];     
+        TLMOperation *installOp = nil;
+
+        if (domains & NSLocalDomainMask) {
+            // ??? how about uninstalling or unloading from ~/Library?
+            installOp = [[TLMAuthorizedOperation alloc] initWithAuthorizedCommand:@"/usr/bin/python" options:options];
+            if (domains & NSUserDomainMask) {
+                TLMLog(__func__, @"*** WARNING *** agent is also installed in ~/Library/LaunchAgents");
+            }
+            [self _addOperation:installOp selector:@selector(_handleLaunchAgentInstallFinishedNotification:) setRefreshingForDataSource:nil];
+            [installOp release];
+        }
+        
+        if (domains & NSUserDomainMask) {
+            // ??? how about uninstalling or unloading from /Library?
+            installOp = [[TLMOperation alloc] initWithCommand:@"/usr/bin/python" options:options];
+            if (domains & NSLocalDomainMask) {
+                TLMLog(__func__, @"*** WARNING *** agent is also installed in /Library/LaunchAgents");
+            }
+            [self _addOperation:installOp selector:@selector(_handleLaunchAgentInstallFinishedNotification:) setRefreshingForDataSource:nil];
+            [installOp release];
+        }  
+    }
 }
 
 - (void)launchAgentControllerSheetDidEnd:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)context
