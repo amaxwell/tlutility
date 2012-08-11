@@ -163,7 +163,7 @@ if __name__ == '__main__':
     parser.add_option("-i", "--install", help="install agent", action="store_true", dest="install", default=False)
     parser.add_option("-r", "--remove", help="remove agent", action="store_true", dest="remove", default=False)
     parser.add_option("-p", "--plist", help="path of property list to install", action="store", type="string", dest="source_plist")
-    parser.add_option("-s", "--script", help="path of script to execute", action="store", type="string", dest="source_script")
+    parser.add_option("-s", "--script", help="path of script to install", action="store", type="string", dest="source_script")
     
     (options, args) = parser.parse_args()
     
@@ -174,17 +174,16 @@ if __name__ == '__main__':
             parser.error("only one action may be specified")
     
     if options.install:
-        if options.source_plist is None:
-            parser.error("option -p is required")
-        if options.source_script is None:
-            parser.error("option -s is required")
+        if options.source_plist is None and options.source_script is None:
+            parser.error("at least one of option -p or -s is required")
         # if os.path.isabs(options.source_plist) == False or os.path.isabs(options.source_script) == False:
         #     parser.error("path arguments must be absolute")
-        if os.path.isfile(options.source_plist) == False or os.path.isfile(options.source_script) == False:
+        if options.source_plist and not os.path.isfile(options.source_plist):
             parser.error("path arguments cannot point to a directory")
-      
-        assert os.path.basename(options.source_script) == SCRIPT_NAME, "incorrect script name defined"
-        assert os.path.basename(options.source_plist) == PLIST_NAME, "incorrect plist name defined"
+            assert os.path.basename(options.source_plist) == PLIST_NAME, "incorrect plist name defined"
+        if options.source_script and not os.path.isfile(options.source_script):
+            parser.error("path arguments cannot point to a directory")
+            assert os.path.basename(options.source_script) == SCRIPT_NAME, "incorrect script name defined"
         
     status = 0
       
@@ -194,12 +193,17 @@ if __name__ == '__main__':
     else:
         assert options.install, "inconsistent option checking"
         # unload a previous version before installing
-        status = unload_agent()
-        status += install_script(options.source_script)
-        if status == 0:
+        if options.source_plist:
+            status += unload_agent()
+            
+        if options.source_script:
+            status += install_script(options.source_script)
+            
+        # if unloaded and we have a plist, now try to install and load it
+        if status == 0 and options.source_plist:
             status = install_agent(options.source_plist)
-        if status == 0:
-            status = load_agent()
+            if status == 0:
+                status = load_agent()
     
     exit(status)
     
