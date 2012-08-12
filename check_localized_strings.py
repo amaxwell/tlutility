@@ -38,7 +38,7 @@
 
 from glob import glob
 from Foundation import NSString, NSUTF8StringEncoding
-import sys
+import os, sys
 
 class StringsEntry(object):
     """docstring for StringsEntry"""
@@ -139,7 +139,8 @@ def _check_strings_at_path(path, english_strings):
 
 if __name__ == '__main__':
     
-    english_strings_path = "English.lproj/Localizable.strings"
+    english_lproj = "English.lproj" if os.path.exists("English.lproj") else "en.lproj"
+    english_strings_path = os.path.join(english_lproj, "Localizable.strings")
     paths_to_check = glob("*.lproj/Localizable.strings")
     assert english_strings_path in paths_to_check, "english strings file not found at %s" % (english_strings)
     paths_to_check.remove(english_strings_path)
