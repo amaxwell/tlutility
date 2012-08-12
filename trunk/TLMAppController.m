@@ -168,6 +168,16 @@ static void __TLMMigrateBundleIdentifier()
     }
 }
 
+- (void)_killNotifier
+{
+    if (floor(NSAppKitVersionNumber) > 1138 /* NSAppKitVersionNumber10_7 */) {
+        NSArray *runningNotifiers = [NSRunningApplication runningApplicationsWithBundleIdentifier:@"com.googlecode.mactlmgr.TLUNotifier"];
+        if ([runningNotifiers count])
+            TLMLog(__func__, @"Terminating %d instance(s) of TLUNotifier.app in case of update", [runningNotifiers count]);
+        [runningNotifiers makeObjectsPerformSelector:@selector(terminate)];
+    }
+}    
+
 - (void)_setSparkleUpdateInvocation:(NSInvocation *)inv
 {
     if (inv != _sparkleUpdateInvocation) {
@@ -214,6 +224,7 @@ static void __TLMMigrateBundleIdentifier()
         if (sheet)
             [NSApp endSheet:sheet returnCode:NSRunAbortedResponse];
     }
+    [self _killNotifier];
     return NO;
 }
 
@@ -278,12 +289,8 @@ static void __TLMMigrateBundleIdentifier()
         if (notifierPath)
             LSRegisterURL((CFURLRef)[NSURL fileURLWithPath:notifierPath], TRUE);
         
-        NSArray *runningNotifiers = [NSRunningApplication runningApplicationsWithBundleIdentifier:@"com.googlecode.mactlmgr.TLUNotifier"];
-        if ([runningNotifiers count])
-            TLMLog(__func__, @"Terminating %d instance(s) of TLUNotifier.app in case of update", [runningNotifiers count]);
-        [runningNotifiers makeObjectsPerformSelector:@selector(terminate)];
-    }
-    
+        [self _killNotifier];
+    }    
 }
 
 - (TLMMainWindowController *)mainWindowController { 
