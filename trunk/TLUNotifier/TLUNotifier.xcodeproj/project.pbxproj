@@ -115,6 +115,7 @@
 				F9C5E35915D49A2B006C293A /* Sources */,
 				F9C5E35A15D49A2B006C293A /* Frameworks */,
 				F9C5E35B15D49A2B006C293A /* Resources */,
+				F92EC91D15D834500040C39D /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -165,6 +166,22 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		F92EC91D15D834500040C39D /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cd ${SOURCE_ROOT}/TLUNotifier\nEN_LPROJ=en.lproj\n\n/usr/bin/genstrings -o $EN_LPROJ *.m\n\niconv -f UTF-16 -t UTF-8 $EN_LPROJ/Localizable.strings > $EN_LPROJ/Localizable.strings.utf8\n\nmv $EN_LPROJ/Localizable.strings.utf8 $EN_LPROJ/Localizable.strings\n\n# PyObjC squawks about this\nunset MACOSX_DEPLOYMENT_TARGET\n/usr/bin/python ../../check_localized_strings.py\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		F9C5E35915D49A2B006C293A /* Sources */ = {
