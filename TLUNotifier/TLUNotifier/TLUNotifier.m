@@ -38,6 +38,8 @@
 
 #import "TLUNotifier.h"
 
+#define TLU_BUNDLE "com.googlecode.mactlmgr.tlu"
+
 @implementation TLUNotifier
 
 @synthesize repository = _repository;
@@ -46,7 +48,7 @@
 {
     if ([notification activationType] == NSUserNotificationActivationTypeActionButtonClicked) {
         CFURLRef appURL;
-        if (noErr == LSFindApplicationForInfo(kLSUnknownCreator, CFSTR("com.googlecode.mactlmgr.tlu"), NULL, NULL, &appURL)) {
+        if (noErr == LSFindApplicationForInfo(kLSUnknownCreator, CFSTR(TLU_BUNDLE), NULL, NULL, &appURL)) {
             LSLaunchURLSpec spec;
             memset(&spec, 0, sizeof(LSLaunchURLSpec));
             spec.appURL = appURL;
@@ -61,7 +63,9 @@
 
 - (BOOL)userNotificationCenter:(NSUserNotificationCenter *)center shouldPresentNotification:(NSUserNotification *)notification;
 {
-    return YES;
+    // don't present if TLU is frontmost
+    NSRunningApplication *tlu = [[NSRunningApplication runningApplicationsWithBundleIdentifier:@TLU_BUNDLE] lastObject];
+    return [tlu isActive] == NO;
 }
 
 - (void)_notifyUser
@@ -73,16 +77,10 @@
     [note setTitle:NSLocalizedString(@"TeX Live Updates", @"alert title")];
     [note setInformativeText:NSLocalizedString(@"Launch TeX Live Utility to install updates", @"alert message")];
     [note setHasActionButton:YES];
-    [note setActionButtonTitle:NSLocalizedString(@"Update", @"Button title")];
+    [note setActionButtonTitle:NSLocalizedString(@"Launch", @"Button title")];
     [note setOtherButtonTitle:NSLocalizedString(@"Ignore", @"Button title")];
     [nc deliverNotification:note];
-
-}
-
-- (void)updatesAvailableFromRepository:(in bycopy NSString *)repository;
-{
-    [self setRepository:[NSURL URLWithString:repository]];
-    [self _notifyUser];
+    
 }
 
 - (void)handleGetURLEvent:(NSAppleEventDescriptor *)event withReplyEvent:(NSAppleEventDescriptor *)replyEvent
@@ -97,7 +95,7 @@
     [[NSAppleEventManager sharedAppleEventManager] setEventHandler:self
                                                        andSelector:@selector(handleGetURLEvent:withReplyEvent:)
                                                      forEventClass:kInternetEventClass
-                                                        andEventID:kAEGetURL];    
+                                                        andEventID:kAEGetURL];
 }
 
 @end
