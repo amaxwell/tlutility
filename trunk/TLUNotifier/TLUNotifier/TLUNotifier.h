@@ -38,6 +38,8 @@
 
 #import <Cocoa/Cocoa.h>
 
+#ifdef MAC_OS_X_VERSION_10_8
+
 @interface TLUNotifier : NSObject <NSApplicationDelegate, NSUserNotificationCenterDelegate>
 {
 @private
@@ -47,3 +49,10 @@
 @property (copy) NSURL *repository;
 
 @end
+
+#else
+
+@interface TLUNotifier
+@end
+
+#endif
