@@ -38,9 +38,12 @@
 
 #import "TLUNotifier.h"
 
+
 #define TLU_BUNDLE "com.googlecode.mactlmgr.tlu"
 
 @implementation TLUNotifier
+
+#ifdef MAC_OS_X_VERSION_10_8
 
 @synthesize repository = _repository;
 
@@ -97,5 +100,7 @@
                                                      forEventClass:kInternetEventClass
                                                         andEventID:kAEGetURL];
 }
+
+#endif // 10.8
 
 @end
