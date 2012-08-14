@@ -124,6 +124,8 @@
 		F9F1C11310C5ABA300D32C17 /* NSMenu_TLMExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F1C11210C5ABA300D32C17 /* NSMenu_TLMExtensions.m */; };
 		F9F1C14E10C6EEC200D32C17 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9F1C14D10C6EEC200D32C17 /* SystemConfiguration.framework */; };
 		F9F56B4C0EF31F8800E934A9 /* TLMLogMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F56B4B0EF31F8800E934A9 /* TLMLogMessage.m */; };
+		F9F8BB4815DB09F900B5D1F3 /* uninstall_local_agent.sh in Resources */ = {isa = PBXBuildFile; fileRef = F9F8BB4715DB09F900B5D1F3 /* uninstall_local_agent.sh */; };
+		F9F8BB4915DB0A1100B5D1F3 /* uninstall_local_agent.sh in Copy aux executables */ = {isa = PBXBuildFile; fileRef = F9F8BB4715DB09F900B5D1F3 /* uninstall_local_agent.sh */; };
 		F9FAA44E0EFCBECD0040EAB2 /* TLMPapersizeController.m in Sources */ = {isa = PBXBuildFile; fileRef = F9FAA44D0EFCBECD0040EAB2 /* TLMPapersizeController.m */; };
 		F9FE58B4123EB80800B6008F /* TLMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = F9FE58B3123EB80800B6008F /* TLMDatabase.m */; };
 /* End PBXBuildFile section */
@@ -246,6 +248,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 6;
 			files = (
+				F9F8BB4915DB0A1100B5D1F3 /* uninstall_local_agent.sh in Copy aux executables */,
 				F9947DFF15D5B69B00CA6559 /* TLUNotifier.app in Copy aux executables */,
 				F9C7F37113A124C30031774F /* parse_tlpdb.py in Copy aux executables */,
 				F97B37B2128B4FE600B49CA7 /* agent_installer.py in Copy aux executables */,
@@ -368,7 +371,7 @@
 		F983F96D14438EFB001C0A42 /* English */ = {isa = PBXFileReference; lastKnownFileType = folder; name = English; path = English.lproj/HelpBook; sourceTree = "<group>"; };
 		F98FADA710672943002C1972 /* TLMNetInstallOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMNetInstallOperation.h; sourceTree = "<group>"; };
 		F98FADA810672943002C1972 /* TLMNetInstallOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMNetInstallOperation.m; sourceTree = "<group>"; };
-		F9947DFD15D5B68100CA6559 /* TLUNotifier.app */ = {isa = PBXFileReference; lastKnownFileType = wrapper.application; name = TLUNotifier.app; path = ../Release/TLUNotifier.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F9947DFD15D5B68100CA6559 /* TLUNotifier.app */ = {isa = PBXFileReference; lastKnownFileType = wrapper.application; name = TLUNotifier.app; path = ../../BuildProducts/Release/TLUNotifier.app; sourceTree = SOURCE_ROOT; };
 		F994A5A91267E97F007EF95F /* TLMBackupListOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMBackupListOperation.h; sourceTree = "<group>"; };
 		F994A5AA1267E97F007EF95F /* TLMBackupListOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMBackupListOperation.m; sourceTree = "<group>"; };
 		F9963EC30F0490E9005F0174 /* TLMRemoveOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMRemoveOperation.h; sourceTree = "<group>"; };
@@ -485,6 +488,7 @@
 		F9F1C14D10C6EEC200D32C17 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = /System/Library/Frameworks/SystemConfiguration.framework; sourceTree = "<absolute>"; };
 		F9F56B4A0EF31F8800E934A9 /* TLMLogMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMLogMessage.h; sourceTree = "<group>"; };
 		F9F56B4B0EF31F8800E934A9 /* TLMLogMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMLogMessage.m; sourceTree = "<group>"; };
+		F9F8BB4715DB09F900B5D1F3 /* uninstall_local_agent.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = uninstall_local_agent.sh; sourceTree = "<group>"; };
 		F9FAA44C0EFCBECD0040EAB2 /* TLMPapersizeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMPapersizeController.h; sourceTree = "<group>"; };
 		F9FAA44D0EFCBECD0040EAB2 /* TLMPapersizeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMPapersizeController.m; sourceTree = "<group>"; };
 		F9FE58B2123EB80800B6008F /* TLMDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMDatabase.h; sourceTree = "<group>"; };
@@ -841,6 +845,7 @@
 		F9D85F72125E85FD00C0FEC5 /* agent */ = {
 			isa = PBXGroup;
 			children = (
+				F9F8BB4715DB09F900B5D1F3 /* uninstall_local_agent.sh */,
 				F97B37B0128B4FCC00B49CA7 /* agent_installer.py */,
 				F9D85F73125E85FD00C0FEC5 /* com.googlecode.mactlmgr.update_check.plist */,
 				F9D85F75125E85FD00C0FEC5 /* update_check.py */,
@@ -1086,6 +1091,7 @@
 				F918B78E14552A9B0038476C /* TextFieldStretch.png in Resources */,
 				F918B78F14552A9B0038476C /* TextFieldStretchInactive.png in Resources */,
 				F9947DFE15D5B68100CA6559 /* TLUNotifier.app in Resources */,
+				F9F8BB4815DB09F900B5D1F3 /* uninstall_local_agent.sh in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
