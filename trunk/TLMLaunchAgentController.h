@@ -60,6 +60,7 @@ typedef NSInteger TLMLaunchAgentReturnCode;
 
 + (BOOL)agentInstalled:(NSSearchPathDomainMask *)domains;
 + (BOOL)scriptNeedsUpdateInDomains:(NSSearchPathDomainMask *)domains;
++ (void)migrateLocalToUserIfNeeded;
 
 @property (nonatomic, retain) IBOutlet NSMatrix *_scheduleMatrix;
 @property (nonatomic, retain) IBOutlet NSButton *_allUsersCheckbox;

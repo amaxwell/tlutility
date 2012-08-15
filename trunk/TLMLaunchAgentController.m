@@ -39,6 +39,8 @@
 #import "TLMLaunchAgentController.h"
 #import "TLMLogServer.h"
 #import "TLMTask.h"
+#import "TLMAuthorizedOperation.h"
+#import "TLMReadWriteOperationQueue.h"
 
 enum {
     TLMScheduleMatrixNever  = 0,
@@ -124,6 +126,45 @@ static NSString * __TLMGetTemporaryDirectory()
         *domains |= NSUserDomainMask;
     }
     return (*domains != 0);
+}
+
++ (void)migrateLocalToUserIfNeeded;
+{
+    NSSearchPathDomainMask domains;
+    if ([self agentInstalled:&domains] && (domains & NSLocalDomainMask)) {
+        
+        NSMutableArray *options = [NSMutableArray array];
+        TLMOperation *copyOperation = nil;
+            
+        if ((domains & NSUserDomainMask) == 0) {
+            // have to copy local to user before removing the local one
+
+            [options addObject:[[NSBundle mainBundle] pathForAuxiliaryExecutable:@"agent_installer.py"]];
+            [options addObject:@"--install"];
+            
+            [options addObject:@"--plist"];
+            [options addObject:__TLMPlistPath(NSLocalDomainMask)];
+            
+            [options addObject:@"--script"];
+            [options addObject:[[NSBundle mainBundle] pathForResource:@"update_check" ofType:@"py"]];
+        
+            copyOperation = [[TLMOperation alloc] initWithCommand:@"/usr/bin/python" options:options];
+        }
+        
+        // always remove the local agent
+        [options removeAllObjects];
+        [options addObject:[[NSBundle mainBundle] pathForAuxiliaryExecutable:@"uninstall_local_agent.sh"]];
+        TLMAuthorizedOperation *removeOperation = [[TLMAuthorizedOperation alloc] initWithCommand:@"/bin/sh" options:options];
+        if (copyOperation) {
+            [removeOperation addDependency:copyOperation];
+            [[TLMReadWriteOperationQueue defaultQueue] addOperation:copyOperation];
+        }
+        [[TLMReadWriteOperationQueue defaultQueue] addOperation:removeOperation];
+        
+        [copyOperation release];
+        [removeOperation release];
+                
+    }
 }
 
 CGFloat __TLMScriptVersionAtPath(NSString *absolutePath)
