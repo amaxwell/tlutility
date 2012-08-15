@@ -21,6 +21,8 @@ if [ -f "$PLIST_PATH" ]; then
     else
         echo "failed to remove $PLIST_PATH" >&2
     fi
+else
+    echo "no file at $PLIST_PATH" >&2
 fi
 
 if [ -f "$SCRIPT_PATH" ]; then
@@ -29,5 +31,7 @@ if [ -f "$SCRIPT_PATH" ]; then
     else
         echo "failed to remove $SCRIPT_PATH" >&2
     fi
+else
+    echo "no file at $SCRIPT_PATH" >&2
 fi
 
