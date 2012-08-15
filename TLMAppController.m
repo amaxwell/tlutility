@@ -287,9 +287,7 @@ static void __TLMMigrateBundleIdentifier()
         // NB: have to include the .app extension here
         NSString *notifierPath = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"TLUNotifier.app"];
         if (notifierPath)
-            LSRegisterURL((CFURLRef)[NSURL fileURLWithPath:notifierPath], TRUE);
-        
-        [self _killNotifier];
+            LSRegisterURL((CFURLRef)[NSURL fileURLWithPath:notifierPath], TRUE);        
     }    
 }
 
