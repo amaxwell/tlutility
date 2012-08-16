@@ -41,16 +41,14 @@
 enum {
     TLMLaunchAgentCancelled   = 0,
     TLMLaunchAgentChanged     = (1 << 1),
-    TLMLaunchAgentAllUsers    = (1 << 2),
-    TLMLaunchAgentEnabled     = (1 << 3),
-    TLMLaunchAgentDaily       = (1 << 4)
+    TLMLaunchAgentEnabled     = (1 << 2),
+    TLMLaunchAgentDaily       = (1 << 3)
 };
 typedef NSInteger TLMLaunchAgentReturnCode;
 
 @interface TLMLaunchAgentController : NSWindowController 
 {
     NSMatrix                 *_scheduleMatrix;
-    NSButton                 *_allUsersCheckbox;
     NSDatePicker             *_datePicker;
     NSTextField              *_dayField;
     TLMLaunchAgentReturnCode  _status;
@@ -58,19 +56,18 @@ typedef NSInteger TLMLaunchAgentReturnCode;
     NSCalendar               *_gregorianCalendar;
 }
 
-+ (BOOL)agentInstalled:(NSSearchPathDomainMask *)domains;
-+ (BOOL)scriptNeedsUpdateInDomains:(NSSearchPathDomainMask *)domains;
-+ (void)migrateLocalToUserIfNeeded;
++ (BOOL)agentInstalled;
++ (BOOL)scriptNeedsUpdate;
+// returns YES if migration was done (installs new agent & script)
++ (BOOL)migrateLocalToUserIfNeeded;
 
 @property (nonatomic, retain) IBOutlet NSMatrix *_scheduleMatrix;
-@property (nonatomic, retain) IBOutlet NSButton *_allUsersCheckbox;
 @property (nonatomic, retain) IBOutlet NSTextField *_dayField;
 @property (nonatomic, retain) IBOutlet NSDatePicker *_datePicker;
 
 @property (nonatomic, readonly, copy) NSString *propertyListPath;
 
 - (IBAction)enableAction:(id)sender;
-- (IBAction)allUsersAction:(id)sender;
 - (IBAction)changeDay:(id)sender;
 - (IBAction)changeTime:(id)sender;
 - (IBAction)cancel:(id)sender;
