@@ -1814,7 +1814,6 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 
 - (void)refreshUpdatedPackageListWithURL:(NSURL *)aURL;
 {
-#warning why not push another one in the queue?
     if (aURL && [_updateListDataSource isRefreshing] == NO) {
         // make sure it's okay to call this with the multiplexer, just in case
         if ([aURL isMultiplexer])
