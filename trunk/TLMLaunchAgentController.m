@@ -55,7 +55,6 @@ enum {
 @implementation TLMLaunchAgentController
 
 @synthesize _scheduleMatrix;
-@synthesize _allUsersCheckbox;
 @synthesize _dayField;
 @synthesize _datePicker;
 @synthesize propertyListPath =_propertyListPath;
@@ -116,22 +115,26 @@ static NSString * __TLMGetTemporaryDirectory()
     }
 }
 
-+ (BOOL)agentInstalled:(NSSearchPathDomainMask *)domains;
++ (BOOL)_agentInstalled:(NSSearchPathDomainMask *)outDomains;
 {
-    *domains = 0;
+    NSSearchPathDomainMask domains = 0;
     if ([[NSFileManager defaultManager] fileExistsAtPath:__TLMPlistPath(NSLocalDomainMask)]) {
-        *domains |= NSLocalDomainMask;
+        domains |= NSLocalDomainMask;
     }
     if ([[NSFileManager defaultManager] fileExistsAtPath:__TLMPlistPath(NSUserDomainMask)]) {
-        *domains |= NSUserDomainMask;
+        domains |= NSUserDomainMask;
     }
-    return (*domains != 0);
+    if (outDomains) *outDomains = domains;
+    return (domains != 0);
 }
 
-+ (void)migrateLocalToUserIfNeeded;
++ (BOOL)agentInstalled { return [self _agentInstalled:NULL]; }
+
++ (BOOL)migrateLocalToUserIfNeeded;
 {
     NSSearchPathDomainMask domains;
-    if ([self agentInstalled:&domains] && (domains & NSLocalDomainMask)) {
+    BOOL ret = NO;
+    if ([self _agentInstalled:&domains] && (domains & NSLocalDomainMask)) {
         
         NSMutableArray *options = [NSMutableArray array];
         TLMOperation *copyOperation = nil;
@@ -163,8 +166,9 @@ static NSString * __TLMGetTemporaryDirectory()
         
         [copyOperation release];
         [removeOperation release];
-                
+        ret = YES;
     }
+    return ret;
 }
 
 CGFloat __TLMScriptVersionAtPath(NSString *absolutePath)
@@ -183,32 +187,21 @@ CGFloat __TLMScriptVersionAtPath(NSString *absolutePath)
     return version;
 }
 
-+ (BOOL)scriptNeedsUpdateInDomains:(NSSearchPathDomainMask *)domains;
++ (BOOL)scriptNeedsUpdate;
 {
-    NSSearchPathDomainMask installedDomains;
     BOOL needsUpdate = NO;
-    *domains = 0;
-    if ([self agentInstalled:&installedDomains]) {
+    if ([self agentInstalled]) {
         
         NSString *internalScript = [[NSBundle mainBundle] pathForResource:@"update_check" ofType:@"py"];
         CGFloat internalVersion = __TLMScriptVersionAtPath(internalScript);        
         
-        NSArray *applicationSupportPaths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, installedDomains, YES);
-        for (NSString *appSupportPath in applicationSupportPaths) {
-            appSupportPath = [appSupportPath stringByAppendingPathComponent:@"TeX Live Utility"];
-            appSupportPath = [appSupportPath stringByAppendingPathComponent:@"update_check.py"];
-            if ([[NSFileManager defaultManager] fileExistsAtPath:appSupportPath]) {
-                CGFloat version = __TLMScriptVersionAtPath(appSupportPath);
-                if (version < internalVersion) {
-                    Boolean isUserDomain;
-                    if (noErr == DetermineIfPathIsEnclosedByFolder(kUserDomain, kDomainLibraryFolderType, (const uint8_t *)[appSupportPath fileSystemRepresentation], TRUE, &isUserDomain) && isUserDomain)
-                        *domains |= NSUserDomainMask;
-                    else
-                        *domains |= NSLocalDomainMask;
-                    TLMLog(__func__, @"Update checker v%1.1f at %@ needs to be updated to v%1.1f", version, [appSupportPath stringByAbbreviatingWithTildeInPath], internalVersion);
-                    needsUpdate = YES;
-                }
-            }
+        NSArray *applicationSupportPaths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
+        NSString *appSupportPath = [[applicationSupportPaths lastObject] stringByAppendingPathComponent:@"TeX Live Utility"];
+        appSupportPath = [appSupportPath stringByAppendingPathComponent:@"update_check.py"];
+        CGFloat version = __TLMScriptVersionAtPath(appSupportPath);
+        if (version < internalVersion) {
+            TLMLog(__func__, @"Update checker v%1.1f at %@ needs to be updated to v%1.1f", version, [appSupportPath stringByAbbreviatingWithTildeInPath], internalVersion);
+            needsUpdate = YES;
         }
     }
     return needsUpdate;
@@ -219,7 +212,6 @@ CGFloat __TLMScriptVersionAtPath(NSString *absolutePath)
 - (void)dealloc
 {
     [_scheduleMatrix release];
-    [_allUsersCheckbox release];
     [_dayField release];
     [_datePicker release];
     [_propertyListPath release];
@@ -232,7 +224,6 @@ CGFloat __TLMScriptVersionAtPath(NSString *absolutePath)
 #define AGENT_DISABLED ((_status & TLMLaunchAgentEnabled) == 0)
 #define AGENT_ENABLED  ((_status & TLMLaunchAgentEnabled) != 0)
 #define CHECK_WEEKLY   ((_status & TLMLaunchAgentDaily) == 0)
-#define ALL_USERS      ((_status & TLMLaunchAgentAllUsers) != 0)
 
 - (void)_updateUI
 {
@@ -254,9 +245,7 @@ CGFloat __TLMScriptVersionAtPath(NSString *absolutePath)
             [_dayField setEnabled:NO];
         }
         
-    }
-    
-    [_allUsersCheckbox setState:(ALL_USERS ? NSOnState : NSOffState)];
+    }    
 }
 
 - (void)awakeFromNib
@@ -272,7 +261,6 @@ CGFloat __TLMScriptVersionAtPath(NSString *absolutePath)
     NSDictionary *plist = __TLMGetPlist(&isInstalled, &allUsers, &plistPath);
     // user could have disabled with launchctl, but that's not my problem (yet)
     if (isInstalled) _status |= TLMLaunchAgentEnabled;
-    if (allUsers) _status |= TLMLaunchAgentAllUsers;
     
     // need to set from a full date, or the day of week ends up being off by one
     NSDateComponents *comps = [_gregorianCalendar components:NSWeekdayCalendarUnit|NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit fromDate:[NSDate date]];
@@ -361,22 +349,6 @@ CGFloat __TLMScriptVersionAtPath(NSString *absolutePath)
     if (AGENT_ENABLED)
         [self _savePropertyList];
 
-    [self _updateUI];
-}
-
-- (IBAction)allUsersAction:(id)sender;
-{
-    _status |= TLMLaunchAgentChanged;
-    switch ([_allUsersCheckbox state]) {
-        case NSOnState:
-            _status |= TLMLaunchAgentAllUsers;
-            break;
-        case NSOffState:
-            _status &= ~TLMLaunchAgentAllUsers;
-            break;
-        default:
-            break;
-    }
     [self _updateUI];
 }
 
