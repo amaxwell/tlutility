@@ -89,8 +89,10 @@ static OSErr FindRunningAppBySignature( OSType sig, ProcessSerialNumber *psn, FS
             [event setParamDescriptor:keyDesc forKeyword:keyDirectObject];
             AppleEvent replyEvent = { typeNull, NULL };
             err = AESendMessage([event aeDesc], &replyEvent, kAENoReply, 0);
+#pragma clang diagnostic ignored "-Wdeprecated"
             if (noErr != err)
                 NSLog(@"Failed to send URL to TeX Live Utility with error %s", GetMacOSStatusErrorString(err));
+#pragma clang diagnostic pop
 
         }
         else {
