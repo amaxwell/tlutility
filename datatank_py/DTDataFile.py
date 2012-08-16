@@ -237,7 +237,9 @@ class DTDataFile(object):
         """
         
         super(DTDataFile, self).__init__()
-        self._file_path = file_path
+        # store absolute path, in case someone calls chdir after creation
+        # with a relative path
+        self._file_path = os.path.abspath(file_path)
         # ensure __del__ works in case of failure in __init__        
         self._file = None
         self._readonly = False
