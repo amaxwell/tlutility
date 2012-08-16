@@ -1110,7 +1110,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd ${SOURCE_ROOT}/TLUNotifier\nenv - /bin/sh -c \\\n\"/usr/bin/xcodebuild -configuration Release\"\n\n#cp -Rp $(BUILT_PRODUCTS_DIR)/Release/TLUNotifier.app";
+			shellScript = "cd ${SOURCE_ROOT}/TLUNotifier\nunset SOURCE_ROOT\nenv - /bin/sh -c \\\n\"/usr/bin/xcodebuild -configuration Release\"\n\n#cp -Rp $(BUILT_PRODUCTS_DIR)/Release/TLUNotifier.app";
 		};
 		F9ACDA3814434DBC005DA800 /* Create help book */ = {
 			isa = PBXShellScriptBuildPhase;
