@@ -81,6 +81,52 @@ class DTStructuredGrid3D(object):
             y = self._y[zero_based_slice_index,:,:]
             return DTStructuredGrid2D(x, y)
         
+    def full_x(self):
+        if self._logical_shape == np.shape(self._x):
+            return self._x
+
+        xy_full_x = self.slice_xy(0).full_x()
+        full_x = np.zeros(self._logical_shape, dtype=np.float32)
+        for zidx in xrange(self._logical_shape[0]):
+            full_x[zidx,:,:] = xy_full_x
+        return full_x
+ 
+    def full_y(self):
+        if self._logical_shape == np.shape(self._y):
+            return self._y
+
+        xy_full_y = self.slice_xy(0).full_y()
+        full_y = np.zeros(self._logical_shape, dtype=np.float32)
+        for zidx in xrange(self._logical_shape[0]):
+            full_y[zidx,:,:] = xy_full_y
+        return full_y
+
+    def full_z(self):
+        if self._logical_shape == np.shape(self._z):
+            return self._z
+        
+        # not sure if this is correct for all cases
+        full_z = np.zeros(self._logical_shape, dtype=np.float32)
+        zvec = np.squeeze(self._z)
+        for zidx in xrange(self._logical_shape[0]):
+            full_z[zidx:,:,] = zvec[zidx]
+        full_z[np.where(np.isnan(full_z))] = 0
+        return full_z
+
+    def slice_yz(self, zero_based_slice_index):
+        """Slice the grid based on index in the Y dimension."""
+        from DTStructuredGrid2D import DTStructuredGrid2D
+        x = self.full_y()[:,:,zero_based_slice_index]
+        y = self.full_z()[:,:,zero_based_slice_index]
+        return DTStructuredGrid2D(x, y)
+        
+    def slice_xz(self, zero_based_slice_index):
+        """Slice the grid based on index in the X dimension."""
+        from DTStructuredGrid2D import DTStructuredGrid2D
+        x = self.full_x()[:,zero_based_slice_index,:]
+        y = self.full_z()[:,zero_based_slice_index,:]
+        return DTStructuredGrid2D(x, y)
+
     def __str__(self):
         return self.__dt_type__() + ":\n  Bounding Box: " + str(self.bounding_box()) + "\n  Shape: " + str(self.shape())
         
@@ -112,5 +158,15 @@ if __name__ == '__main__':
     
         print grid
         print grid.slice_xy(0)
+        df["xy"] = grid.slice_xy(0)
+        
+        gsyz = grid.slice_yz(0)
+        print gsyz
+        df["yz"] = gsyz
+        
+        print "gsyz x (actual y):", gsyz.full_x(), gsyz.full_x().shape
+        print "gsyz y (actual z):", gsyz.full_y(), gsyz.full_y().shape
+        
+        df["xz"] = grid.slice_xz(0)
         
 

@@ -111,7 +111,7 @@ class DTStructuredGrid2D(object):
         return self.__dt_type__() + ":\n  Bounding Box: " + str(self.bounding_box()) + "\n  Shape: " + str(self.shape())
         
     def __dt_write__(self, datafile, name):
-        datafile.write_anonymous(self.bounding_box(), name + "_bbox2D")
+        #datafile.write_anonymous(self.bounding_box(), name + "_bbox2D")
         datafile.write_anonymous(self._x, name + "_X")
         datafile.write_anonymous(self._y, name + "_Y")
         datafile.write_anonymous(self._mask, name)

@@ -42,6 +42,20 @@ class DTStructuredMesh3D(object):
         values = self._values[zero_based_slice_index,:,:]
         return DTStructuredMesh2D(values, grid=grid)
         
+    def slice_yz(self, zero_based_slice_index):
+        """Slice the mesh based on index in the Y dimension."""
+        from DTStructuredMesh2D import DTStructuredMesh2D
+        grid = self._grid.slice_yz(zero_based_slice_index)
+        values = self._values[:,:,zero_based_slice_index]
+        return DTStructuredMesh2D(values, grid=grid)
+
+    def slice_xz(self, zero_based_slice_index):
+        """Slice the mesh based on index in the X dimension."""
+        from DTStructuredMesh2D import DTStructuredMesh2D
+        grid = self._grid.slice_xz(zero_based_slice_index)
+        values = self._values[:,zero_based_slice_index,:]
+        return DTStructuredMesh2D(values, grid=grid)
+
     def __dt_type__(self):
         return "3D Structured Mesh"
                 
