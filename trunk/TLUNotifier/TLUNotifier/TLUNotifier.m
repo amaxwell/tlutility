@@ -76,7 +76,7 @@ static OSErr FindRunningAppBySignature( OSType sig, ProcessSerialNumber *psn, FS
         FSRef runningApp;
         OSStatus err = FindRunningAppBySignature('TLUm', &psn, &runningApp);
         if (noErr == err) {
-
+            NSLog(@"TeX Live Utility is already running; sending kAEGetURL");
             NSAppleEventDescriptor *tluProcess = [NSAppleEventDescriptor descriptorWithDescriptorType:typeProcessSerialNumber
                                                                                                 bytes:&psn
                                                                                                 length:sizeof(ProcessSerialNumber)];
@@ -87,8 +87,7 @@ static OSErr FindRunningAppBySignature( OSType sig, ProcessSerialNumber *psn, FS
                                                                                transactionID:kAnyTransactionID];
             NSAppleEventDescriptor *keyDesc = [NSAppleEventDescriptor descriptorWithString:[[self repository] absoluteString]];
             [event setParamDescriptor:keyDesc forKeyword:keyDirectObject];
-            AppleEvent replyEvent = { typeNull, NULL };
-            err = AESendMessage([event aeDesc], &replyEvent, kAENoReply, 0);
+            err = AESendMessage([event aeDesc], NULL, kAENoReply, 0);
 #pragma clang diagnostic ignored "-Wdeprecated"
             if (noErr != err)
                 NSLog(@"Failed to send URL to TeX Live Utility with error %s", GetMacOSStatusErrorString(err));
@@ -142,6 +141,16 @@ static OSErr FindRunningAppBySignature( OSType sig, ProcessSerialNumber *psn, FS
 
 - (void)applicationWillFinishLaunching:(NSNotification *)aNotification
 {
+    /*
+     Likely only a problem on my development system, but I had 3 instances of
+     this running one morning, and each one launched a separate instance of TLU,
+     which was kind of hilarious.
+     */
+    NSMutableArray *runningNotifiers = [[NSRunningApplication runningApplicationsWithBundleIdentifier:@"com.googlecode.mactlmgr.TLUNotifier"] mutableCopy];
+    [runningNotifiers removeObject:[NSRunningApplication currentApplication]];
+    if ([runningNotifiers count])
+        NSLog(@"Terminating %lu previously launched instances of TLUNotifier", [runningNotifiers count]);
+    [runningNotifiers makeObjectsPerformSelector:@selector(terminate)];
     [[NSAppleEventManager sharedAppleEventManager] setEventHandler:self
                                                        andSelector:@selector(handleGetURLEvent:withReplyEvent:)
                                                      forEventClass:kInternetEventClass
