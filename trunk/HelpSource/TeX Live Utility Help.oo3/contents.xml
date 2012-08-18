@@ -129,10 +129,11 @@
     <attachment id="att5" href="InstallTab.png"/>
     <attachment id="att6" href="LogWindow.png"/>
     <attachment id="att7" href="Mirrors.png"/>
-    <attachment id="att8" href="PackageTab.png"/>
-    <attachment id="att9" href="Prefs.png"/>
-    <attachment id="att10" href="UpdateCheckAlert.png"/>
-    <attachment id="att11" href="UpdateTab.png"/>
+    <attachment id="att8" href="NotificationCenterUpdate.png"/>
+    <attachment id="att9" href="PackageTab.png"/>
+    <attachment id="att10" href="Prefs.png"/>
+    <attachment id="att11" href="UpdateCheckAlert.png"/>
+    <attachment id="att12" href="UpdateTab.png"/>
   </attachments>
   <settings>
     <base-style>
@@ -162,12 +163,10 @@
     </print-info>
     <auto-generate-level-styles>no</auto-generate-level-styles>
   </settings>
-  <editor content-size="{654, 760}" scroll-position="{0, 124}" column-titles-display-mode="off" status-visible="no">
-    <drawer display="sections" width="236" palette-height="379"/>
-    <hoisted-rows ids="aLvRpQYwVsb"/>
-    <selected-rows ids="ivt0Tk6rSkJ"/>
-    <selected-columns ids="jFqHUGd_Dg1"/>
-    <selected-characters range="{330, 0}"/>
+  <editor content-size="{664, 701}" scroll-position="{0, 360}" column-titles-display-mode="off" ruler-visible="yes" status-visible="no">
+    <drawer display="sections" width="236" scroll-position="34" palette-height="346"/>
+    <hoisted-rows ids="hJb5KZPUKnx"/>
+    <selected-rows ids="a1g_yQxf2ud"/>
     <toolbar>{
     &quot;TB Display Mode&quot; = 2;
     &quot;TB Icon Size Mode&quot; = 2;
@@ -200,7 +199,7 @@
         </text>
       </title>
     </column>
-    <column id="jFqHUGd_Dg1" type="text" width="618" minimum-width="13" maximum-width="1000000" text-export-width="72" is-outline-column="yes">
+    <column id="jFqHUGd_Dg1" type="text" width="628" minimum-width="13" maximum-width="1000000" text-export-width="72" is-outline-column="yes">
       <title>
         <text>
           <p>
@@ -522,7 +521,7 @@
                     <text>
                       <p>
                         <run>
-                          <lit><cell refid="att11" name="UpdateTab" expanded="yes" type="image" width="495" height="366"/></lit>
+                          <lit><cell refid="att12" name="UpdateTab" expanded="yes" type="image" width="495" height="366"/></lit>
                         </run>
                       </p>
                     </text>
@@ -699,7 +698,7 @@
                     <text>
                       <p>
                         <run>
-                          <lit><cell refid="att8" name="PackageTab" expanded="yes" type="image" width="495" height="366"/></lit>
+                          <lit><cell refid="att9" name="PackageTab" expanded="yes" type="image" width="495" height="366"/></lit>
                         </run>
                       </p>
                     </text>
@@ -1211,36 +1210,75 @@
                     </text>
                   </values>
                 </item>
-                <item id="arb44Z5S1Ib">
+                <item id="nOViIVu7LZ0" expanded="yes">
                   <values>
                     <text>
                       <p>
                         <run>
-                          <lit>The checkbox for </lit>
-                        </run>
-                        <run>
-                          <style>
-                            <inherited-style name="UI" idref="a0as48_ttlo"/>
-                          </style>
-                          <lit>Show alerts to any user</lit>
-                        </run>
-                        <run>
-                          <lit> means that any user logged in to the system will see the update check alert.  If unchecked, each user must schedule the check individually.  The alert itself allows you to launch TeX Live Utility, or ignore it and update manually at a later time.</lit>
+                          <lit>10.8 and later</lit>
                         </run>
                       </p>
                     </text>
                   </values>
+                  <children>
+                    <item id="cldEV22OLyy">
+                      <values>
+                        <text>
+                          <p>
+                            <run>
+                              <lit><cell refid="att8" name="NotificationCenterUpdate" expanded="yes" type="image" width="232" height="57"/></lit>
+                            </run>
+                          </p>
+                        </text>
+                      </values>
+                    </item>
+                    <item id="bzsZM4dIl8m" expanded="yes">
+                      <style>
+                        <inherited-style name="Pro" idref="klRPa19kyJm"/>
+                        <inherited-style name="Box" idref="mRPR-6uEuRb"/>
+                      </style>
+                      <values>
+                        <null/>
+                      </values>
+                      <children>
+                        <item id="a1g_yQxf2ud">
+                          <values>
+                            <text>
+                              <p>
+                                <run>
+                                  <lit>To get the &quot;Ignore&quot; and &quot;Launch&quot; buttons to show, you have to allow the update to run at least once, then change the style to &quot;Alerts&quot; in the Notifications pane of System Preferences.</lit>
+                                </run>
+                              </p>
+                            </text>
+                          </values>
+                        </item>
+                      </children>
+                    </item>
+                  </children>
                 </item>
-                <item id="mLqAnVh-8hg">
+                <item id="nsJ_KJ2wes8" expanded="yes">
                   <values>
                     <text>
                       <p>
                         <run>
-                          <lit><cell refid="att10" name="UpdateCheckAlert" expanded="yes" type="image" width="315" height="120"/></lit>
+                          <lit>10.7 and earlier</lit>
                         </run>
                       </p>
                     </text>
                   </values>
+                  <children>
+                    <item id="mLqAnVh-8hg">
+                      <values>
+                        <text>
+                          <p>
+                            <run>
+                              <lit><cell refid="att11" name="UpdateCheckAlert" expanded="yes" type="image" width="315" height="120"/></lit>
+                            </run>
+                          </p>
+                        </text>
+                      </values>
+                    </item>
+                  </children>
                 </item>
                 <item id="aQ1ftjLLw_V" expanded="yes">
                   <style>
@@ -1255,13 +1293,13 @@
                         <text>
                           <p>
                             <run>
-                              <lit>The update check does not actually update anything or modify your system.  If you install for &quot;any user,&quot; the update checker and launchd property list are installed as </lit>
+                              <lit>The update check does not actually update anything or modify your system.  The update checker and launchd property list are installed as </lit>
                             </run>
                             <run>
                               <style>
                                 <inherited-style name="Verbatim" idref="a-WJm12exYM"/>
                               </style>
-                              <lit>/Library/Application Support/TeX Live Utility/update_check.py </lit>
+                              <lit>~/Library/Application Support/TeX Live Utility/update_check.py </lit>
                             </run>
                             <run>
                               <lit>and </lit>
@@ -1270,19 +1308,10 @@
                               <style>
                                 <inherited-style name="Verbatim" idref="a-WJm12exYM"/>
                               </style>
-                              <lit>/Library/LaunchAgents/com.googlecode.mactlmgr.update_check.plist</lit>
+                              <lit>~/Library/LaunchAgents/com.googlecode.mactlmgr.update_check.plist</lit>
                             </run>
                             <run>
-                              <lit>, respectively.  Otherwise, they are installed in your home directory (prepend </lit>
-                            </run>
-                            <run>
-                              <style>
-                                <inherited-style name="Verbatim" idref="a-WJm12exYM"/>
-                              </style>
-                              <lit>~</lit>
-                            </run>
-                            <run>
-                              <lit> to the paths above).</lit>
+                              <lit>, respectively.</lit>
                             </run>
                           </p>
                         </text>
@@ -1293,7 +1322,7 @@
                         <text>
                           <p>
                             <run>
-                              <lit>It is best to schedule update checks for a time when you are likely to be idle, as the alert can steal focus while you are typing.  At worst, though, all it does is launch TeX Live Utility; nothing is updated automatically!</lit>
+                              <lit>It is best to schedule update checks for a time when you are likely to be idle, as the alert can steal focus while you are typing.  At worst, though, all it does is launch TeX Live Utility; nothing is updated automatically!  This is not a problem with the Notification Center alert on 10.8 and later.</lit>
                             </run>
                           </p>
                         </text>
@@ -1791,7 +1820,7 @@
                     <text>
                       <p>
                         <run>
-                          <lit><cell refid="att9" name="Preferences" expanded="yes" type="image" width="373" height="137"/></lit>
+                          <lit><cell refid="att10" name="Preferences" expanded="yes" type="image" width="373" height="137"/></lit>
                         </run>
                       </p>
                     </text>
@@ -2260,6 +2289,103 @@
                       </values>
                     </item>
                   </children>
+                </item>
+              </children>
+            </item>
+            <item id="bOKL8x_NI9t" expanded="yes">
+              <style>
+                <inherited-style name="Destination" idref="oQxEDq66I5w"/>
+              </style>
+              <values>
+                <text>
+                  <p>
+                    <run>
+                      <lit>Beta Testing</lit>
+                    </run>
+                  </p>
+                </text>
+              </values>
+              <children>
+                <item id="eZQwaKc7FnH">
+                  <style>
+                    <inherited-style name="Anchor" idref="aUm3924E6__"/>
+                  </style>
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit>betatesting</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
+                <item id="n5xvA8hQLpV">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit>If you hold down the option key (alt on some keyboards) while the </lit>
+                        </run>
+                        <run>
+                          <style>
+                            <inherited-style name="UI" idref="a0as48_ttlo"/>
+                          </style>
+                          <lit>Actions</lit>
+                        </run>
+                        <run>
+                          <lit> menu is active, you&apos;ll see an option to </lit>
+                        </run>
+                        <run>
+                          <style>
+                            <inherited-style name="UI" idref="a0as48_ttlo"/>
+                          </style>
+                          <lit>Install TeX Live Manager From Critical Repository</lit>
+                        </run>
+                        <run>
+                          <lit>. This peculiar-sounding item allows you to install the latest TeX Live Manager test version. If you do this, please report any problems encountered to the TeX Live team via the  </lit>
+                        </run>
+                        <run>
+                          <lit><cell href="http://lists.tug.org/tex-live" name="mailing list" type="link"/></lit>
+                        </run>
+                        <run>
+                          <lit>. In addition, you can revert to a non-beta version of tlmgr by using the </lit>
+                        </run>
+                        <run>
+                          <style>
+                            <inherited-style name="UI" idref="a0as48_ttlo"/>
+                          </style>
+                          <lit>Reinstall TeX Live Manager</lit>
+                        </run>
+                        <run>
+                          <lit> menu item.</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
+                <item id="p-jQQMHd8SK">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit>Beta versions of TeX Live Utility are occasionally available at the </lit>
+                        </run>
+                        <run>
+                          <lit><cell href="http://code.google.com/p/mactlmgr/downloads/list." name="download site" type="link"/></lit>
+                        </run>
+                        <run>
+                          <lit>.  Bugs should be reported using the </lit>
+                        </run>
+                        <run>
+                          <lit><cell href="http://code.google.com/p/mactlmgr/issues/list" name="issue tracker" type="link"/></lit>
+                        </run>
+                        <run>
+                          <lit>.</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
                 </item>
               </children>
             </item>
