@@ -602,5 +602,19 @@
             <pubDate>Fri, 29 Jun 2012 15:04:24 +0000</pubDate>
             <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-1.01.tgz" sparkle:version="1.01" length="3409232" type="application/octet-stream" sparkle:dsaSignature="MCsCE0r4Bb4oC/1R46IFsA/o8IPxDG8CFBux2/hZY1vXRU6cuzSNX0/HeGRR"></enclosure>
         </item>
+        <item>
+            <title>Version 1.02</title>
+            <description>
+                <h3>Changes Since 1.01</h3>
+                <li>Improved log message when mixed permissions are found at install location</li>
+                <li>Check paper size at launch, as the MacTeX installer check for this can fail on 10.7 and later</li>
+                <li>Improved error handling in database version checking</li>
+                <li>Set user agent in URL request headers for database version check (fixes issue 73)</li>
+                <li>Use Notification Center to display update notices on 10.8</li>
+                <li>Elminate the local domain install option for the automated update check (/Library)</li>
+            </description>
+            <pubDate>Sat, 18 Aug 2012 01:39:14 +0000</pubDate>
+            <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-1.02.tar.gz" sparkle:version="1.02" length="3553661" type="application/octet-stream" sparkle:dsaSignature="MC0CFQCCLQ+TsuYjdiw3vUUSRZmb8X4OBQIUGHmYgMfntz8ybqY4r+AMVBW/N1Y="></enclosure>
+        </item>
     </channel>
 </rss>
