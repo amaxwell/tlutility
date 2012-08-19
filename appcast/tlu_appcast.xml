@@ -616,5 +616,14 @@
             <pubDate>Sat, 18 Aug 2012 01:39:14 +0000</pubDate>
             <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-1.02.tar.gz" sparkle:version="1.02" length="3553661" type="application/octet-stream" sparkle:dsaSignature="MC0CFQCCLQ+TsuYjdiw3vUUSRZmb8X4OBQIUGHmYgMfntz8ybqY4r+AMVBW/N1Y="></enclosure>
         </item>
+        <item>
+            <title>Version 1.03</title>
+            <description>
+                <h3>Changes Since 1.02</h3>
+                <li>Fix crash on launch under Mac OS X 10.5</li>
+            </description>
+            <pubDate>Sun, 19 Aug 2012 03:46:04 +0000</pubDate>
+            <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-1.03.tar.gz" sparkle:version="1.03" length="3553973" type="application/octet-stream" sparkle:dsaSignature="MCwCFAynpzh3WRgRYocbyGW8trG7nDNFAhQ2yz/jzPvWerEWbdtVehh3mrpY9Q=="></enclosure>
+        </item>
     </channel>
 </rss>
