@@ -171,7 +171,9 @@ static void __TLMMigrateBundleIdentifier()
 - (void)_killNotifier
 {
     if (floor(NSAppKitVersionNumber) > 1138 /* NSAppKitVersionNumber10_7 */) {
-        NSArray *runningNotifiers = [NSRunningApplication runningApplicationsWithBundleIdentifier:@"com.googlecode.mactlmgr.TLUNotifier"];
+        Class RA = NSClassFromString(@"NSRunningApplication");
+        NSParameterAssert(Nil != RA);
+        NSArray *runningNotifiers = [RA runningApplicationsWithBundleIdentifier:@"com.googlecode.mactlmgr.TLUNotifier"];
         if ([runningNotifiers count])
             TLMLog(__func__, @"Terminating %d instance(s) of TLUNotifier.app in case of update", [runningNotifiers count]);
         [runningNotifiers makeObjectsPerformSelector:@selector(terminate)];
