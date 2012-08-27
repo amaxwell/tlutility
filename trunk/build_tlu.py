@@ -94,12 +94,13 @@ def rewrite_version(newVersion):
     assert oldVersion is not None, "unable to read old version from Info.plist"
     infoPlist["CFBundleVersion"] = newVersion
     infoPlist["CFBundleShortVersionString"] = newVersion
+    minimumSystemVersion = infoPlist["LSMinimumSystemVersion"]
     plistlib.writePlist(infoPlist, PLIST_PATH)
 
     # sanity check to avoid screwing up the appcast
     assert oldVersion != newVersion, "CFBundleVersion is already at " + newVersion
     
-    return oldVersion
+    return oldVersion, minimumSystemVersion
 
 def clean_and_build():
     
@@ -163,7 +164,7 @@ def signature_and_size(tarballName):
     
     return appcastSignature, fileSize
     
-def update_appcast(oldVersion, newVersion, appcastSignature, tarballName, fileSize):
+def update_appcast(oldVersion, newVersion, appcastSignature, tarballName, fileSize, minimumSystemVersion):
     
     appcastDate = strftime("%a, %d %b %Y %H:%M:%S +0000", gmtime())
     theURL = "http://mactlmgr.googlecode.com/files/" + urllib.pathname2url(os.path.basename(tarballName))
@@ -180,6 +181,7 @@ def update_appcast(oldVersion, newVersion, appcastSignature, tarballName, fileSi
     	        <li></li>
             </description>
             <pubDate>""" + appcastDate + """</pubDate>
+            <sparkle:minimumSystemVersion>""" + minimumSystemVersion + """</sparkle:minimumSystemVersion>
             <enclosure url=\"""" + theURL + """\" sparkle:version=\"""" + newVersion + """\" length=\"""" + fileSize + """\" type="application/octet-stream" sparkle:dsaSignature=\"""" + appcastSignature + """\" />
         </item>
         </channel>
@@ -250,11 +252,11 @@ if __name__ == '__main__':
     assert len(sys.argv) > 1, "missing new version argument"
     newVersion = sys.argv[-1]
 
-    oldVersion = rewrite_version(newVersion)
+    oldVersion, minimumSystemVersion = rewrite_version(newVersion)
     clean_and_build()
     tarballPath = create_tarball_of_application(newVersion)
     appcastSignature, fileSize = signature_and_size(tarballPath)    
-    update_appcast(oldVersion, newVersion, appcastSignature, tarballPath, fileSize)
+    update_appcast(oldVersion, newVersion, appcastSignature, tarballPath, fileSize, minimumSystemVersion)
     
     username, password = user_and_pass_for_upload()
     summary = "%s build (%s)" % (strftime("%Y%m%d", localtime()), newVersion)
