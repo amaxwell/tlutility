@@ -40,7 +40,7 @@
 	<key>CFBundleVersion</key>
 	<string>1.03</string>
 	<key>LSMinimumSystemVersion</key>
-	<string>10.5.7</string>
+	<string>10.6.8</string>
 	<key>NSAppleScriptEnabled</key>
 	<string>YES</string>
 	<key>NSHumanReadableCopyright</key>
