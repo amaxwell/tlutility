@@ -254,7 +254,7 @@ static void __adjust_text_rect(NSRect *textRect, NSView *controlView)
     [self drawInteriorWithFrame:cellFrame inView:controlView];
 }
 
-- (NSFocusRingType)focusRingType { return floor(NSAppKitVersionNumber) < 1100 ? NSFocusRingTypeNone : [super focusRingType]; }
+- (NSFocusRingType)focusRingType { return floor(NSAppKitVersionNumber) < NSAppKitVersionNumber10_7 ? NSFocusRingTypeNone : [super focusRingType]; }
 
 - (NSSize)cellSize;
 {
