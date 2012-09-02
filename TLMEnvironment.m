@@ -314,7 +314,7 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
     if (installedYear)
         *installedYear = texliveYear;
     
-    TLMLog(__func__, @"Looks like you're using TeX Live %lu", texliveYear);
+    TLMLog(__func__, @"Looks like you're using TeX Live %lu", (unsigned long)texliveYear);
     
     return YES;
 }
@@ -589,7 +589,7 @@ static void __TLMTestAndClearEnvironmentVariable(const char *name)
         // no fallback URL for unofficial repos, so just warn and let the user deal with it
         TLMLog(__func__, @"This appears to be a 3rd party TeX Live repository");
         if (repositoryYear != _installedYear)
-            TLMLog(__func__, @"*** WARNING *** This repository is for TeX Live %lu, but you are using TeX Live %lu", repositoryYear, _installedYear);
+            TLMLog(__func__, @"*** WARNING *** This repository is for TeX Live %lu, but you are using TeX Live %lu", (unsigned long)repositoryYear, (unsigned long)_installedYear);
     }
     else if (repositoryYear != _installedYear) {
         
@@ -623,7 +623,7 @@ static void __TLMTestAndClearEnvironmentVariable(const char *name)
         TLMDatabaseYear age = currentDate.year - repositoryYear;
         NSString *ageString = age == 0 ? @"a young TeX Live" : @"a mature TeX Live";
         
-        TLMLog(__func__, @"Repository version appears to be %lu; %@", repositoryYear, ageString);
+        TLMLog(__func__, @"Repository version appears to be %lu; %@", (unsigned long)repositoryYear, ageString);
     }
         
     *outURL = validURL;

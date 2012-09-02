@@ -223,7 +223,7 @@ static NSArray * __TLMOptionArrayFromArguments(char **nullTerminatedArguments)
         
         if (noErr != status) {
             NSString *errStr;
-            errStr = [NSString stringWithFormat:@"AuthorizationExecuteWithPrivileges error: %d (%s)", status, GetMacOSStatusErrorString(status)];
+            errStr = [NSString stringWithFormat:@"AuthorizationExecuteWithPrivileges error: %d (%s)", (int32_t)status, GetMacOSStatusErrorString(status)];
             [self _appendStringToErrorData:errStr];
         }
     }
@@ -501,7 +501,7 @@ static BOOL __TLMCheckSignature()
         }
         else if (_internal->_authorizationRequired) {
             NSString *errStr;
-            errStr = [NSString stringWithFormat:@"AuthorizationExecuteWithPrivileges error: %d (%s)", status, GetMacOSStatusErrorString(status)];
+            errStr = [NSString stringWithFormat:@"AuthorizationExecuteWithPrivileges error: %d (%s)", (int32_t)status, GetMacOSStatusErrorString(status)];
             [self _appendStringToErrorData:errStr];
             [self setFailed:YES];
         }

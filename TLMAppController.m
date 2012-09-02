@@ -173,7 +173,7 @@ static void __TLMMigrateBundleIdentifier()
     if (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_7) {
         NSArray *runningNotifiers = [NSRunningApplication runningApplicationsWithBundleIdentifier:@"com.googlecode.mactlmgr.TLUNotifier"];
         if ([runningNotifiers count])
-            TLMLog(__func__, @"Terminating %ld instance(s) of TLUNotifier.app in case of update", [runningNotifiers count]);
+            TLMLog(__func__, @"Terminating %ld instance(s) of TLUNotifier.app in case of update", (unsigned long)[runningNotifiers count]);
         [runningNotifiers makeObjectsPerformSelector:@selector(terminate)];
     }
 }    
@@ -256,7 +256,7 @@ static void __TLMMigrateBundleIdentifier()
     NSProcessInfo *pInfo = [NSProcessInfo processInfo];
     NSFormatter *memsizeFormatter = [[TLMSizeFormatter new] autorelease];
     NSString *memsize = [memsizeFormatter stringForObjectValue:[NSNumber numberWithUnsignedLongLong:[pInfo physicalMemory]]];
-    TLMLog(__func__, @"Welcome to %@ %@, running under Mac OS X %@ with %lu/%lu processors active and %@ physical memory.", [infoPlist objectForKey:(id)kCFBundleNameKey], [infoPlist objectForKey:(id)kCFBundleVersionKey], [pInfo operatingSystemVersionString], [pInfo activeProcessorCount], [pInfo processorCount], memsize);
+    TLMLog(__func__, @"Welcome to %@ %@, running under Mac OS X %@ with %lu/%lu processors active and %@ physical memory.", [infoPlist objectForKey:(id)kCFBundleNameKey], [infoPlist objectForKey:(id)kCFBundleVersionKey], [pInfo operatingSystemVersionString], (unsigned long)[pInfo activeProcessorCount], (unsigned long)[pInfo processorCount], memsize);
         
     // call before anything uses tlmgr
     [[TLMProxyManager sharedManager] updateProxyEnvironmentForURL:nil];
