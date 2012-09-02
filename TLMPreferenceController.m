@@ -181,12 +181,6 @@ static void __TLMPrefControllerInit() { _sharedInstance = [TLMPreferenceControll
     return YES;
 }
 
-// 10.5
-- (BOOL)panel:(id)sender isValidFilename:(NSString *)filename;
-{
-    return [TLMEnvironment isValidTexbinPath:filename];
-}
-
 - (IBAction)changeTexBinPath:(id)sender
 {
     NSOpenPanel *openPanel = [NSOpenPanel openPanel];
@@ -197,9 +191,14 @@ static void __TLMPrefControllerInit() { _sharedInstance = [TLMPreferenceControll
     [openPanel setAllowsMultipleSelection:NO];
     [openPanel setPrompt:NSLocalizedString(@"Choose", @"button title in open panel (must be short)")];
     [openPanel setDelegate:self];
-    [openPanel beginSheetForDirectory:@"/usr" file:nil 
-                       modalForWindow:[self window] modalDelegate:self 
-                       didEndSelector:@selector(openPanelDidEnd:returnCode:contextInfo:) contextInfo:NULL];
+    [openPanel setDirectoryURL:[NSURL fileURLWithPath:@"/usr"]];
+    [openPanel beginSheetModalForWindow:[self window] completionHandler:^(NSInteger returnCode){
+        [openPanel orderOut:self];
+        
+        if (NSOKButton == returnCode) {
+            [self updateTeXBinPathWithURL:[openPanel URL]];
+        }
+    }];
 }
 
 - (NSString *)windowNibName { return @"Preferences"; }

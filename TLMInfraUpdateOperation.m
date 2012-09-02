@@ -58,10 +58,11 @@ static NSString *__TLMGetTemporaryDirectory()
     // mkstemp needs a writable string
     char *tempName = strdup(tmpPath);
     
+#ifndef __clang_analyzer__
     // use mkdtemp to avoid race conditions
     tempName = mkdtemp(tempName);
     assert(tempName);
-    
+#endif
     // create a subdirectory that we can remove entirely
     NSString *updateDirectory = (NSString *)CFStringCreateWithFileSystemRepresentation(CFAllocatorGetDefault(), tempName);
     free(tempName);

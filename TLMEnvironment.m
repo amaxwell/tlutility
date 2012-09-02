@@ -551,7 +551,7 @@ static void __TLMTestAndClearEnvironmentVariable(const char *name)
             [alert setShowsSuppressionButton:YES];
         
         // always show on the main window
-        [alert beginSheetModalForWindow:[[[NSApp delegate] mainWindowController] window] 
+        [alert beginSheetModalForWindow:[(NSWindowController *)[[NSApp delegate] mainWindowController] window]
                           modalDelegate:self 
                          didEndSelector:@selector(versionWarningDidEnd:returnCode:contextInfo:) 
                             contextInfo:NULL];            
