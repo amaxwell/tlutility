@@ -459,7 +459,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
-				SDKROOT = macosx10.6;
 			};
 			name = Default;
 		};
