@@ -101,7 +101,7 @@ static NSString     *_userAgent = nil;
     TLMDatabase *local = [self localDatabase];
     NSAssert([[local packages] count], @"No packages in local database");
     
-    TLMLog(__func__, @"%ld packages in repository database, %ld packages in local database", [[mirror packages] count], [[local packages] count]);
+    TLMLog(__func__, @"%ld packages in repository database, %ld packages in local database", (unsigned long)[[mirror packages] count], (unsigned long)[[local packages] count]);
     
     NSSet *localPackageSet = [NSSet setWithArray:[local packages]];
     
@@ -279,7 +279,7 @@ static NSString     *_userAgent = nil;
         NSHTTPURLResponse *httpResponse = (id)response;
         const NSInteger statusCode = [httpResponse statusCode];
         if (statusCode != 200) {
-            TLMLog(__func__, @"received status code %lu (%@)", statusCode, [NSHTTPURLResponse localizedStringForStatusCode:statusCode]);
+            TLMLog(__func__, @"received status code %lu (%@)", (long)statusCode, [NSHTTPURLResponse localizedStringForStatusCode:statusCode]);
             TLMLog(__func__, @"%@: %@", httpResponse, [httpResponse allHeaderFields]);
         }
     }

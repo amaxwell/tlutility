@@ -905,16 +905,16 @@ static char _TLMOperationQueueOperationContext;
     if ([db failed] || [db texliveYear] == TLMDatabaseUnknownYear) {
         NSAlert *alert = [[NSAlert new] autorelease];
         [alert setMessageText:NSLocalizedString(@"Unable to determine repository version", @"alert title")];
-        [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"You have TeX Live %lu installed, but the version at %@ cannot be determined.", @"alert text, integer and string format specifiers"), year, [aURL absoluteString]]];
+        [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"You have TeX Live %lu installed, but the version at %@ cannot be determined.", @"alert text, integer and string format specifiers"), (long)year, [aURL absoluteString]]];
         [alert beginSheetModalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
         return NO;
     }
     else if ([db texliveYear] != year) {
         NSAlert *alert = [[NSAlert new] autorelease];
         [alert setMessageText:NSLocalizedString(@"Repository has a different TeX Live version", @"alert title")];
-        [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"The repository at %@ has TeX Live %lu, but you have TeX Live %lu installed.  You need to switch repositories in order to continue.", @"alert text, two integer format specifiers"), [aURL absoluteString], [db texliveYear], year]];
+        [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"The repository at %@ has TeX Live %lu, but you have TeX Live %lu installed.  You need to switch repositories in order to continue.", @"alert text, two integer format specifiers"), [aURL absoluteString], (long)[db texliveYear], (long)year]];
         [alert beginSheetModalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
-        TLMLog(__func__, @"Well, this is not going to work:  %@ has TeX Live %lu, and the installed version is TeX Live %lu", [aURL absoluteString], [db texliveYear], year);
+        TLMLog(__func__, @"Well, this is not going to work:  %@ has TeX Live %lu, and the installed version is TeX Live %lu", [aURL absoluteString], (long)[db texliveYear], (long)year);
         return NO;
     }
     return YES;

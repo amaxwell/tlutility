@@ -470,7 +470,7 @@ static NSString *__TLMLogStringFromDate(NSDate *date)
     const NSInteger nr = [self numberOfRowsInTableView:tableView];
     if (row >= nr || nr < 0) {
         // !!! workaround for 10.5.8 bug: can't call -reloadData here
-        TLMLog(__func__, @"Working around a crash: %@ asked for row index %ld, but the datasource has %ld rows.", [tableView class], row, nr);
+        TLMLog(__func__, @"Working around a crash: %@ asked for row index %ld, but the datasource has %ld rows.", [tableView class], (long)row, (long)nr);
         return [[[[tableView tableColumns] lastObject] dataCell] cellSize].height;
     }
     

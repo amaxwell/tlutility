@@ -65,7 +65,7 @@
 {
     // ASCII plist description
     NSMutableString *desc = [NSMutableString string];
-    [desc appendFormat:@"{\n\ttype = %ld;\n\tvalue = \"%@\";", _type, _value];
+    [desc appendFormat:@"{\n\ttype = %ld;\n\tvalue = \"%@\";", (long)_type, _value];
     if (_children) [desc appendFormat:@"\n\tchildren = %@", _children];
     [desc appendString:@"\n}"];
     return desc;
