@@ -550,6 +550,8 @@ def main():
 
                 # On 10.6 and later we can use the hiutil tool and avoid the stuck UI that
                 # occurs when using "Help Indexer".
+                indexerToolPath = ("./hiutil")
+                assert os.path.exists(indexerToolPath), "Unable to find hiutil at %s" % (os.path.abspath(indexerToolPath))
                 indexerToolPath = "/usr/bin/hiutil"
                 if os.path.exists(indexerToolPath): 
                     helpBookOutputFileName = bookTitle.replace(' ', '\ ') + ".helpindex"

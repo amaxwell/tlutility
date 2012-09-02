@@ -149,11 +149,12 @@ static bool __TLMGetUserAndPassForProxy(NSString *host, const uint16_t port, NSS
     // keychain items appear to have no introspection, so we just have to loop until we find the right tag
     for (ix = 0; ix < attrInfo->count; ix++) {
         
-        UInt32 tag = attrInfo->tag[ix];
         UInt32 format = attrInfo->format[ix];
         SecKeychainAttribute *attribute = &attrList->attr[ix];
+#ifndef __clang_analyzer__
+        UInt32 tag = attrInfo->tag[ix];
         assert(tag == attribute->tag);
-        
+#endif
         // CSSM_DB_ATTRIBUTE_FORMAT_BLOB determined by debugging
         if (CSSM_DB_ATTRIBUTE_FORMAT_BLOB != format && CSSM_DB_ATTRIBUTE_FORMAT_STRING != format) continue;
         
