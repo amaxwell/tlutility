@@ -173,7 +173,7 @@ static void __TLMMigrateBundleIdentifier()
     if (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_7) {
         NSArray *runningNotifiers = [NSRunningApplication runningApplicationsWithBundleIdentifier:@"com.googlecode.mactlmgr.TLUNotifier"];
         if ([runningNotifiers count])
-            TLMLog(__func__, @"Terminating %d instance(s) of TLUNotifier.app in case of update", [runningNotifiers count]);
+            TLMLog(__func__, @"Terminating %ld instance(s) of TLUNotifier.app in case of update", [runningNotifiers count]);
         [runningNotifiers makeObjectsPerformSelector:@selector(terminate)];
     }
 }    
@@ -281,6 +281,9 @@ static void __TLMMigrateBundleIdentifier()
         [[self mainWindowController] refreshUpdatedPackageList];
 #endif
         [[self mainWindowController] checkSystemPaperSize];
+    }
+    else if ([NSApp isActive] && [[NSUserDefaults standardUserDefaults] boolForKey:TLMShowLogWindowPreferenceKey]) {
+        [[[self mainWindowController] window] makeKeyAndOrderFront:nil];
     }
 
     if (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_7) {
