@@ -13,4 +13,8 @@
 #ifdef __OBJC__
 #import <Cocoa/Cocoa.h>
 #import "SUConstants.h"
+#ifndef MAC_OS_X_VERSION_10_7
+@protocol NSURLDownloadDelegate <NSObject>
+@end
+#endif
 #endif
