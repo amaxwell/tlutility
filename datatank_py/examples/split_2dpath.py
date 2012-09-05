@@ -44,7 +44,7 @@ def _divide_path_with_segment_spacing(path, required_distance):
     point resolution, results for curved paths may be adequate.
     
     """
-    
+        
     points = path.point_list()
     distances = []
     
@@ -94,6 +94,8 @@ def _test():
     
 if __name__ == '__main__':
     
+    import traceback
+    
     #
     # This is a DataTank plugin that is intended to find points on a path
     # that are some user-specified distance apart.  It works well with a
@@ -117,6 +119,7 @@ if __name__ == '__main__':
         point_values = _divide_path_with_segment_spacing(path, float(required_distance))
     except Exception, e:
         errors.append(str(e))
+        traceback.print_exc(file=sys.stderr)
     
     # create or truncate the output file    
     with DTDataFile("Output.dtbin", truncate=True) as output_file:

@@ -54,7 +54,7 @@ class DTPath2D(object):
         """
         
         assert xvalues != None and yvalues != None, "DTPath2D: both x and y arrays are required"
-        assert len(xvalues) == len(yvalues), "DTPath2D: inconsistent lengths"   
+        assert len(xvalues) == len(yvalues), "DTPath2D: inconsistent lengths"
         
         xvalues = np.array(xvalues).astype(np.double)
         yvalues = np.array(yvalues).astype(np.double)
@@ -204,6 +204,8 @@ class DTPath2D(object):
     def from_data_file(self, datafile, name):
         
         packed_values = datafile[name]
+        packed_values = np.squeeze(packed_values)
+        
         # no bbox in test file saved from DataTank
         bbox = datafile[name + "_bbox2D"]
         xvalues = packed_values[:,0]
@@ -249,6 +251,8 @@ if __name__ == '__main__':
         yvalues = yvalues * 0.5
         path.add_loop(xvalues, yvalues)
         df["Path 4"] = path
+        
+        print "%d loops" % (path.number_of_loops())
         
         for idx, subpath in enumerate(path):
             df["Subpath %d" % (idx)] = path
