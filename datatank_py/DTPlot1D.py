@@ -192,6 +192,8 @@ class DTPlot1D(object):
     def from_data_file(self, datafile, name):
         
         packed_values = datafile[name]
+        packed_values = np.squeeze(packed_values)
+        
         xvalues = packed_values[:,0]
         yvalues = packed_values[:,1]
         path = DTPlot1D(xvalues, yvalues, points_only=False)
