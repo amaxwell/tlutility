@@ -282,28 +282,13 @@ static char _TLMOperationQueueOperationContext;
     [[[self window] toolbar] setAutosavesConfiguration:YES];   
 }
 
-- (void)showWindow:(id)sender
+- (void)_goHome
 {
-    [super showWindow:sender];
-    
-    [[[NSApp delegate] logWindowController] setDockingDelegate:self];
-
-    static BOOL __windowDidShow = NO;
-    if (__windowDidShow) return;
-    __windowDidShow = YES;
-    
-    // set the dirty bit on all datasources
-    [_updateListDataSource setNeedsUpdate:YES];
-    [_packageListDataSource setNeedsUpdate:YES];
-    [_backupDataSource setNeedsUpdate:YES];
-    [_installDataSource setNeedsUpdate:YES];
-    
-    // do this after the window loads, so something is visible right away
     if ([[[TLMEnvironment currentEnvironment] defaultServerURL] isMultiplexer])
-        [self _displayStatusString:URL_VALIDATE_STATUS_STRING dataSource:_updateListDataSource];
+        [self _displayStatusString:URL_VALIDATE_STATUS_STRING dataSource:_currentListDataSource];
     _serverURL = [[[TLMEnvironment currentEnvironment] validServerURL] copy];
-    if ([[[_updateListDataSource statusWindow] statusString] isEqualToString:URL_VALIDATE_STATUS_STRING])
-        [self _displayStatusString:nil dataSource:_updateListDataSource];
+    if ([[[_currentListDataSource statusWindow] statusString] isEqualToString:URL_VALIDATE_STATUS_STRING])
+        [self _displayStatusString:nil dataSource:_currentListDataSource];
     
     // !!! end up with a bad environment if this is the multiplexer, and the UI gets out of sync
     if (nil == _serverURL)
@@ -325,6 +310,27 @@ static char _TLMOperationQueueOperationContext;
     // I don't like having this selected and highlighted at launch, for some reason
     [[_URLField currentEditor] setSelectedRange:NSMakeRange(0, 0)];
     [[self window] makeFirstResponder:nil];
+    
+}
+
+- (void)showWindow:(id)sender
+{
+    [super showWindow:sender];
+    
+    [[[NSApp delegate] logWindowController] setDockingDelegate:self];
+
+    static BOOL __windowDidShow = NO;
+    if (__windowDidShow) return;
+    __windowDidShow = YES;
+    
+    // set the dirty bit on all datasources
+    [_updateListDataSource setNeedsUpdate:YES];
+    [_packageListDataSource setNeedsUpdate:YES];
+    [_backupDataSource setNeedsUpdate:YES];
+    [_installDataSource setNeedsUpdate:YES];
+    
+    // do this after the window loads, so something is visible right away
+    [self _goHome];
     
     // for info window; TL 2011 and later only
     [self _refreshLocalDatabase];
@@ -1729,12 +1735,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 
 - (IBAction)goHome:(id)sender;
 {
-    if ([[[TLMEnvironment currentEnvironment] defaultServerURL] isMultiplexer])
-        [self _displayStatusString:URL_VALIDATE_STATUS_STRING dataSource:_currentListDataSource];
-    [_URLField setStringValue:[[[TLMEnvironment currentEnvironment] validServerURL] absoluteString]];
-    if ([[[_currentListDataSource statusWindow] statusString] isEqualToString:URL_VALIDATE_STATUS_STRING])
-        [self _displayStatusString:nil dataSource:_currentListDataSource];
-    [self changeServerURL:nil];
+    [self _goHome];
     
     // web browser expectations
     [_updateListDataSource setNeedsUpdate:YES];
