@@ -166,7 +166,7 @@
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0420;
+				LastUpgradeCheck = 0450;
 			};
 			buildConfigurationList = 2CA326220896AD4900168862 /* Build configuration list for PBXProject "DVI" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -239,6 +239,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F9C7F24A13A0074A0031774F /* Debug.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = Info.plist;
@@ -252,6 +253,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F9C7F24B13A0074A0031774F /* Release.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				DSTROOT = "$(HOME)";
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = "";
