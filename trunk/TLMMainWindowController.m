@@ -1296,7 +1296,8 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 - (void)launchAgentScriptUpdateAlertDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)context
 {
     if (NSAlertFirstButtonReturn == returnCode) {
-        NSMutableArray *options = [NSMutableArray arrayWithObject:[[NSBundle mainBundle] pathForAuxiliaryExecutable:@"agent_installer.py"]];
+        NSMutableArray *options = [NSMutableArray arrayWithObject:@"-E"];
+        [options addObject:[[NSBundle mainBundle] pathForAuxiliaryExecutable:@"agent_installer.py"]];
         [options addObject:@"--install"];
         [options addObject:@"--script"];
         [options addObject:[[NSBundle mainBundle] pathForResource:@"update_check" ofType:@"py"]];     
@@ -1313,7 +1314,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     [lac autorelease];
     if (returnCode & TLMLaunchAgentChanged) {
         
-        NSMutableArray *options = [NSMutableArray arrayWithObject:[[NSBundle mainBundle] pathForAuxiliaryExecutable:@"agent_installer.py"]];
+        NSMutableArray *options = [NSMutableArray arrayWithObjects:@"-E", [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"agent_installer.py"], nil];
                         
         if ((returnCode & TLMLaunchAgentEnabled) != 0) {
             

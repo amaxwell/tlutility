@@ -141,6 +141,9 @@ static NSString * __TLMGetTemporaryDirectory()
             
         if ((domains & NSUserDomainMask) == 0) {
             // have to copy local to user before removing the local one
+            
+            // ignore PYTHON* envvars
+            [options addObject:@"-E"];
 
             [options addObject:[[NSBundle mainBundle] pathForAuxiliaryExecutable:@"agent_installer.py"]];
             [options addObject:@"--install"];

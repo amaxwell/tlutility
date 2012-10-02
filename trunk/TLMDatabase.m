@@ -437,7 +437,7 @@ static NSString *__TLMTemporaryFile()
         
         TLMTask *parseTask = [[TLMTask new] autorelease];
         [parseTask setLaunchPath:@"/usr/bin/python"];
-        [parseTask setArguments:[NSArray arrayWithObjects:parserPath, @"-o", plistPath, @"-f", @"plist", tlpdbPath, nil]];
+        [parseTask setArguments:[NSArray arrayWithObjects:@"-E", parserPath, @"-o", plistPath, @"-f", @"plist", tlpdbPath, nil]];
         [parseTask launch];
         [parseTask waitUntilExit];
 

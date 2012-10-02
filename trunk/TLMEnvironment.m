@@ -481,6 +481,18 @@ static void __TLMTestAndClearEnvironmentVariable(const char *name)
     __TLMTestAndClearEnvironmentVariable("BIBINPUTS");
     __TLMTestAndClearEnvironmentVariable("BSTINPUTS");
     __TLMTestAndClearEnvironmentVariable("MFINPUTS");
+    
+    /*
+     See email from Justin to mactex on 2 Oct 2012.
+     Passing -E as first arg to /usr/bin/python should
+     take care of the problem, as it ignores all PYTHON*
+     vars.  However, I think it's useful to have an obnoxious
+     warning message to reinforce the idea that setting envvars
+     can cause problems for GUI programs.
+     */
+    __TLMTestAndClearEnvironmentVariable("PYTHONHOME");
+    __TLMTestAndClearEnvironmentVariable("PYTHONPATH");
+
 }
 
 - (NSURL *)defaultServerURL
