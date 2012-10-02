@@ -38,6 +38,12 @@
 
 #import "TLMStatusWindow.h"
 
+#ifndef MAC_OS_X_VERSION_10_7
+@interface NSWindow (Lion)
+- (NSRect)convertRectToScreen:(NSRect)r;
+@end
+#endif
+
 @interface _TLMStatusView : NSView 
 {
 @private
