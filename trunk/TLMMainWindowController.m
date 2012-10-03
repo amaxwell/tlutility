@@ -97,6 +97,9 @@ static char _TLMOperationQueueOperationContext;
  */
 #define TOOLBAR_VERSION ((int)1)
 
+static Class _UserNotificationCenterClass;
+static Class _UserNotificationClass;
+
 @implementation TLMMainWindowController
 
 @synthesize _progressIndicator;
@@ -109,6 +112,12 @@ static char _TLMOperationQueueOperationContext;
 @synthesize updatingInfrastructure = _updatingInfrastructure;
 @synthesize _backupDataSource;
 @synthesize serverURL = _serverURL;
+
++ (void)initialize
+{
+    _UserNotificationCenterClass = NSClassFromString(@"NSUserNotificationCenter");
+    _UserNotificationClass = NSClassFromString(@"NSUserNotification");
+}
 
 - (id)init
 {
@@ -989,6 +998,13 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     return versions;
 }
 
+- (void)_postUserNotificationWithTitle:(NSString *)title
+{
+    NSUserNotification *note = [[_UserNotificationClass new] autorelease];
+    [note setTitle:title];
+    [[_UserNotificationCenterClass defaultUserNotificationCenter] deliverNotification:note];
+}
+
 - (void)_handleListUpdatesFinishedNotification:(NSNotification *)aNote
 {
     NSParameterAssert([NSThread isMainThread]);
@@ -1040,10 +1056,14 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     
     if ([op isCancelled])
         statusString = NSLocalizedString(@"Listing Cancelled", @"main window status string");
-    else if ([op failed])
+    else if ([op failed]) {
         statusString = NSLocalizedString(@"Listing Failed", @"main window status string");
-    else if ([allPackages count] == 0)
+        [self _postUserNotificationWithTitle:statusString];
+    }
+    else if ([allPackages count] == 0) {
         statusString = NSLocalizedString(@"No Updates Available", @"main window status string");
+        [self _postUserNotificationWithTitle:statusString];
+    }
     
     [self _displayStatusString:statusString dataSource:_updateListDataSource];
     [[[self window] toolbar] validateVisibleItems];
@@ -1130,7 +1150,9 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
         [self setServerURL:[op updateURL]];
         
         [self _refreshCurrentDataSourceIfNeeded];
-        [self _displayStatusString:NSLocalizedString(@"Update Succeeded", @"status message") dataSource:_updateListDataSource];
+        NSString *statusString = NSLocalizedString(@"Update Succeeded", @"status message");
+        [self _displayStatusString:statusString dataSource:_updateListDataSource];
+        [self _postUserNotificationWithTitle:statusString];
 
     }
     [[[self window] toolbar] validateVisibleItems];
@@ -1182,7 +1204,9 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
             [_updateListDataSource removePackageNamed:@"texlive.infra"];
             // formerly called _refreshUpdatedPackageListFromLocation here
             [_updateListDataSource setPackageFilter:nil];
-            [self _displayStatusString:NSLocalizedString(@"Infrastructure Update Succeeded", @"status message") dataSource:_updateListDataSource];
+            NSString *statusString = NSLocalizedString(@"Infrastructure Update Succeeded", @"status message");
+            [self _displayStatusString:statusString dataSource:_updateListDataSource];
+            [self _postUserNotificationWithTitle:statusString];
         }
     }
     
@@ -1208,7 +1232,9 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     [[NSNotificationCenter defaultCenter] removeObserver:self name:TLMOperationFinishedNotification object:op];
     if ([op failed]) {
         TLMLog(__func__, @"Failed to change paper size.  Error was: %@", [op errorMessages]);
-        [self _displayStatusString:NSLocalizedString(@"Paper Size Change Failed", @"status message") dataSource:_updateListDataSource];
+        NSString *statusString = NSLocalizedString(@"Paper Size Change Failed", @"status message");
+        [self _displayStatusString:statusString dataSource:_updateListDataSource];
+        [self _postUserNotificationWithTitle:statusString];
     }
     [[[self window] toolbar] validateVisibleItems];
 }
@@ -1246,7 +1272,9 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     [[NSNotificationCenter defaultCenter] removeObserver:self name:TLMOperationFinishedNotification object:op];
     if ([op failed]) {
         TLMLog(__func__, @"Pruning failed.  Error was: %@", [op errorMessages]);
-        [self _displayStatusString:NSLocalizedString(@"Backup Pruning Failed", @"status message") dataSource:_backupDataSource];
+        NSString *statusString = NSLocalizedString(@"Backup Pruning Failed", @"status message");
+        [self _displayStatusString:statusString dataSource:_backupDataSource];
+        [self _postUserNotificationWithTitle:statusString];
     }
     else {
         [_backupDataSource setNeedsUpdate:YES];
@@ -1350,8 +1378,10 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     
     if ([op isCancelled])
         statusString = NSLocalizedString(@"Listing Cancelled", @"main window status string");
-    else if ([op failed])
+    else if ([op failed]) {
         statusString = NSLocalizedString(@"Listing Failed", @"main window status string");
+        [self _postUserNotificationWithTitle:statusString];
+    }
     
     [self _displayStatusString:statusString dataSource:_packageListDataSource];
     [[[self window] toolbar] validateVisibleItems];
@@ -1370,8 +1400,10 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     
     if ([op isCancelled])
         statusString = NSLocalizedString(@"Database Loading Cancelled", @"main window status string");
-    else if ([op failed])
+    else if ([op failed]) {
         statusString = NSLocalizedString(@"Database Loading Failed", @"main window status string");
+        [self _postUserNotificationWithTitle:statusString];
+    }
     
     [self _displayStatusString:statusString dataSource:_packageListDataSource];
     [[[self window] toolbar] validateVisibleItems];
@@ -1388,8 +1420,10 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     
     if ([op isCancelled])
         statusString = NSLocalizedString(@"Backup Listing Cancelled", @"main window status string");
-    else if ([op failed])
+    else if ([op failed]) {
         statusString = NSLocalizedString(@"Backup Listing Failed", @"main window status string");
+        [self _postUserNotificationWithTitle:statusString];
+    }
     else if ([[op backupNodes] count] ==0)
         statusString = NSLocalizedString(@"No Backups Available", @"main window status string");
         
@@ -1461,9 +1495,11 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
         [self _refreshCurrentDataSourceIfNeeded];
         
         // _handleInstallFinishedNotification: also gets called for _installDataSource, but that's pretty rare
-        [self _displayStatusString:NSLocalizedString(@"Install Succeeded", @"status message") dataSource:_packageListDataSource];
+        NSString *statusString = NSLocalizedString(@"Install Succeeded", @"status message");
+        [self _displayStatusString:statusString dataSource:_packageListDataSource];
+        [self _postUserNotificationWithTitle:statusString];
 
-    }    
+    }
     [[[self window] toolbar] validateVisibleItems];
 }
 
@@ -1504,8 +1540,10 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
         [_backupDataSource setNeedsUpdate:YES];
         
         [self _refreshCurrentDataSourceIfNeeded];
-        [self _displayStatusString:NSLocalizedString(@"Removal Succeeded", @"status message") dataSource:_packageListDataSource];
-    }    
+        NSString *statusString = NSLocalizedString(@"Removal Succeeded", @"status message");
+        [self _displayStatusString:statusString dataSource:_packageListDataSource];
+        [self _postUserNotificationWithTitle:statusString];
+    }
     [[[self window] toolbar] validateVisibleItems];
 }
 
@@ -1535,7 +1573,9 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
         [self _refreshCurrentDataSourceIfNeeded];
         
         // will get blown away by the refresh if backup isn't the current datasource, but that's okay
-        [self _displayStatusString:NSLocalizedString(@"Restore Succeeded", @"status message") dataSource:_backupDataSource];
+        NSString *statusString = NSLocalizedString(@"Restore Succeeded", @"status message");
+        [self _displayStatusString:statusString dataSource:_backupDataSource];
+        [self _postUserNotificationWithTitle:statusString];
 
     }        
     [[[self window] toolbar] validateVisibleItems];
