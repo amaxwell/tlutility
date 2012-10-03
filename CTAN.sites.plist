@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
 	<key>sites</key>
@@ -26,6 +26,18 @@
 				<key>urls</key>
 				<array>
 					<string>ftp://ftp.sun.ac.za/CTAN</string>
+				</array>
+			</dict>
+			<dict>
+				<key>country</key>
+				<string>South Africa</string>
+				<key>name</key>
+				<string>mirror.ac.za</string>
+				<key>urls</key>
+				<array>
+					<string>ftp://ctan.mirror.ac.za/</string>
+					<string>http://ctan.mirror.ac.za/</string>
+					<string>rsync://ctan.mirror.ac.za/CTAN/</string>
 				</array>
 			</dict>
 		</array>
@@ -138,6 +150,16 @@
 				<key>urls</key>
 				<array>
 					<string>http://ctan.um.ac.ir/</string>
+				</array>
+			</dict>
+			<dict>
+				<key>country</key>
+				<string>Iran</string>
+				<key>name</key>
+				<string>ctan.yazd.ac.ir</string>
+				<key>urls</key>
+				<array>
+					<string>http://ctan.yazd.ac.ir/</string>
 				</array>
 			</dict>
 			<dict>
@@ -264,10 +286,10 @@
 				<key>country</key>
 				<string>Singapore</string>
 				<key>name</key>
-				<string>raffles.nus.edu.sg</string>
+				<string>download.nus.edu.sg</string>
 				<key>urls</key>
 				<array>
-					<string>http://raffles.nus.edu.sg/mirror/tex-archive/</string>
+					<string>http://download.nus.edu.sg/mirror/CTAN/</string>
 				</array>
 			</dict>
 			<dict>
@@ -290,18 +312,6 @@
 				<key>urls</key>
 				<array>
 					<string>ftp://ftp.ccu.edu.tw/pub/tex</string>
-				</array>
-			</dict>
-			<dict>
-				<key>country</key>
-				<string>Taiwan</string>
-				<key>name</key>
-				<string>ftp.cs.pu.edu.tw</string>
-				<key>urls</key>
-				<array>
-					<string>ftp://ftp.cs.pu.edu.tw/pub/CTAN</string>
-					<string>http://ftp.cs.pu.edu.tw/pub/CTAN</string>
-					<string>rsync://ftp.cs.pu.edu.tw/CTAN</string>
 				</array>
 			</dict>
 			<dict>
@@ -651,17 +661,6 @@
 					<string>ftp://ctan.uib.no/pub/CTAN/</string>
 					<string>http://ctan.uib.no/</string>
 					<string>rsync://ctan.uib.no/ctan/</string>
-				</array>
-			</dict>
-			<dict>
-				<key>country</key>
-				<string>Norway</string>
-				<key>name</key>
-				<string>ftp.fagskolen.gjovik.no</string>
-				<key>urls</key>
-				<array>
-					<string>ftp://ftp.fagskolen.gjovik.no/pub/tex-archive/</string>
-					<string>http://ftp.fagskolen.gjovik.no/pub/tex-archive/</string>
 				</array>
 			</dict>
 			<dict>
@@ -1104,10 +1103,32 @@
 				<key>country</key>
 				<string>USA</string>
 				<key>name</key>
+				<string>mirror.jmu.edu</string>
+				<key>urls</key>
+				<array>
+					<string>ftp://mirror.jmu.edu/pub/CTAN/</string>
+					<string>http://mirror.jmu.edu/pub/CTAN/</string>
+					<string>rsync://mirror.jmu.edu/CTAN/</string>
+				</array>
+			</dict>
+			<dict>
+				<key>country</key>
+				<string>USA</string>
+				<key>name</key>
 				<string>mirror.math.ku.edu</string>
 				<key>urls</key>
 				<array>
 					<string>http://mirror.math.ku.edu/tex-archive/</string>
+				</array>
+			</dict>
+			<dict>
+				<key>country</key>
+				<string>USA</string>
+				<key>name</key>
+				<string>mirrors.cicku.me</string>
+				<key>urls</key>
+				<array>
+					<string>http://mirrors.cicku.me/CTAN/</string>
 				</array>
 			</dict>
 			<dict>
@@ -1257,6 +1278,6 @@
 		</array>
 	</dict>
 	<key>timestamp</key>
-	<real>1341848757.3770239</real>
+	<real>1349229622.346105</real>
 </dict>
 </plist>
