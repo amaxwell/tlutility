@@ -625,5 +625,22 @@
             <pubDate>Sun, 19 Aug 2012 03:46:04 +0000</pubDate>
             <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-1.03.tar.gz" sparkle:version="1.03" length="3553973" type="application/octet-stream" sparkle:dsaSignature="MCwCFAynpzh3WRgRYocbyGW8trG7nDNFAhQ2yz/jzPvWerEWbdtVehh3mrpY9Q=="></enclosure>
         </item>
+        <item>
+            <title>Version 1.10</title>
+            <description>
+                <h3>Changes Since 1.03</h3>
+                <li>Clarified Notification Center behavior in the help book</li>
+                <li>Dropped 10.5 and PowerPC support</li>
+                <li>Fixed window ordering problem when launching with a specified URL</li>
+                <li>Fixed a crash when using the Home button with an unresponsive server</li>
+                <li>Fixed coordinate problem with the status overlay on retina display</li>
+                <li>Ignore PYTHONPATH and PYTHONHOME envvars if set</li>
+                <li>Update list of possible CTAN mirror sites</li>
+                <li>Added more Notification Center notifications</li>
+            </description>
+            <pubDate>Wed, 03 Oct 2012 02:25:15 +0000</pubDate>
+            <sparkle:minimumSystemVersion>10.6.8</sparkle:minimumSystemVersion>
+            <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-1.10.tar.gz" sparkle:version="1.10" length="2962620" type="application/octet-stream" sparkle:dsaSignature="MCwCFBhrDvhhLe13cIYMy/j25aIYc19uAhQa2z6TtiO7l+yymVIQ/tkVuAonTQ=="></enclosure>
+        </item>
     </channel>
 </rss>
