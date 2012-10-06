@@ -160,7 +160,7 @@ static NSString * __TLMGetTemporaryDirectory()
         // always remove the local agent
         [options removeAllObjects];
         [options addObject:[[NSBundle mainBundle] pathForAuxiliaryExecutable:@"uninstall_local_agent.sh"]];
-        TLMAuthorizedOperation *removeOperation = [[TLMAuthorizedOperation alloc] initWithCommand:@"/bin/sh" options:options];
+        TLMAuthorizedOperation *removeOperation = [[TLMAuthorizedOperation alloc] initWithAuthorizedCommand:@"/bin/sh" options:options];
         if (copyOperation) {
             [removeOperation addDependency:copyOperation];
             [[TLMReadWriteOperationQueue defaultQueue] addOperation:copyOperation];
