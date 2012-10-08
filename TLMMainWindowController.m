@@ -100,6 +100,16 @@ static char _TLMOperationQueueOperationContext;
 static Class _UserNotificationCenterClass;
 static Class _UserNotificationClass;
 
+#ifndef MAC_OS_X_VERSION_10_8
+@interface NSUserNotification : NSObject
+@property (readwrite, copy) NSString *title;
+@end
+@interface NSUserNotificationCenter : NSObject
++ (id)defaultUserNotificationCenter;
++ (void)deliverNotification:(NSUserNotification *)note;
+@end
+#endif
+
 @implementation TLMMainWindowController
 
 @synthesize _progressIndicator;
