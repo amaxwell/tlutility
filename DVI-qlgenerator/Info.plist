@@ -70,14 +70,14 @@
 			<string>DVI Document</string>
 			<key>UTTypeIdentifier</key>
 			<string>org.tug.tex.dvi</string>
-            <key>com.apple.ostype</key>
-            <string>DDVI</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
 				<array>
 					<string>dvi</string>
 				</array>
+                <key>com.apple.ostype</key>
+                <string>DDVI</string>
 			</dict>
 		</dict>
 	</array>
