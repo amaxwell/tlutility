@@ -13,19 +13,19 @@
 			<string>DVI Document</string>
 			<key>UTTypeIdentifier</key>
 			<string>org.tug.tex.dvi</string>
-            <key>com.apple.ostype</key>
-            <array>
-                <string>DDVI</string>
-                <string>ODVI</string>
-                <string>*DVI</string>
-                <string>DVI2</string>
-            </array>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
 				<array>
 					<string>dvi</string>
 				</array>
+                <key>com.apple.ostype</key>
+                <array>
+                    <string>DDVI</string>
+                    <string>ODVI</string>
+                    <string>*DVI</string>
+                    <string>DVI2</string>
+                </array>
 			</dict>
 		</dict>
 	</array>
