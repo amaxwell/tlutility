@@ -34,6 +34,10 @@ class DTStructuredMesh3D(object):
             
         self._grid = grid
         self._values = values
+        
+    def grid(self):
+        """DTStructuredGrid3D instance"""
+        return self._grid
     
     def slice_xy(self, zero_based_slice_index):
         """Slice the mesh based on index in the Z dimension."""

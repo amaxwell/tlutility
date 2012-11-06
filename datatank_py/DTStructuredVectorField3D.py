@@ -39,6 +39,18 @@ class DTStructuredVectorField3D(object):
         self._v = v
         self._w = w
     
+    def grid(self):
+        return self._grid
+        
+    def u(self):
+        return self._u
+        
+    def v(self):
+        return self._v
+
+    def w(self):
+        return self._w
+
     def __dt_type__(self):
         return "3D Structured Vector Field"
                 
@@ -50,6 +62,18 @@ class DTStructuredVectorField3D(object):
         datafile.write_anonymous(self._v, name + "_VY")
         datafile.write_anonymous(self._w, name + "_VZ")
         datafile.write_anonymous(self._grid, name)
+
+    @classmethod
+    def from_data_file(self, datafile, name):
+        
+        grid = DTStructuredGrid3D.from_data_file(datafile, name)
+        u = datafile[name + "_VX"]
+        v = datafile[name + "_VY"]
+        w = datafile[name + "_VZ"]
+        assert u != None, "Unable to find %s" (name + "_VX")
+        assert v != None, "Unable to find %s" (name + "_VY")
+        assert w != None, "Unable to find %s" (name + "_VZ")
+        return DTStructuredVectorField3D(u, v, w, grid=grid)
 
 if __name__ == '__main__':
     
