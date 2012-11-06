@@ -68,19 +68,6 @@ class DTStructuredGrid3D(object):
     def bounding_box(self):
         return DTRegion3D(np.nanmin(self._x), np.nanmax(self._x), np.nanmin(self._y), np.nanmax(self._y), np.nanmin(self._z), np.nanmax(self._z))
         
-    def slice_xy(self, zero_based_slice_index):
-        """Slice the grid based on index in the Z dimension."""
-        from DTStructuredGrid2D import DTStructuredGrid2D
-        if np.shape(self._x)[0] == 1:
-            assert np.shape(self._y)[0] == 1, "inconsistent x and y shapes"
-            x = np.squeeze(self._x)
-            y = np.squeeze(self._y)
-            return DTStructuredGrid2D(x, y)
-        else:
-            x = self._x[zero_based_slice_index,:,:]
-            y = self._y[zero_based_slice_index,:,:]
-            return DTStructuredGrid2D(x, y)
-        
     def full_x(self):
         if self._logical_shape == np.shape(self._x):
             return self._x
@@ -113,11 +100,30 @@ class DTStructuredGrid3D(object):
         full_z[np.where(np.isnan(full_z))] = 0
         return full_z
 
+    def slice_xy(self, zero_based_slice_index):
+        """Slice the grid based on index in the Z dimension."""
+        from DTStructuredGrid2D import DTStructuredGrid2D
+        if np.shape(self._x)[0] == 1:
+            assert np.shape(self._y)[0] == 1, "inconsistent x and y shapes"
+            x = np.squeeze(self._x)
+            y = np.squeeze(self._y)
+            return DTStructuredGrid2D(x, y)
+        else:
+            x = self._x[zero_based_slice_index,:,:]
+            y = self._y[zero_based_slice_index,:,:]
+            return DTStructuredGrid2D(x, y)
+        
     def slice_yz(self, zero_based_slice_index):
         """Slice the grid based on index in the Y dimension."""
         from DTStructuredGrid2D import DTStructuredGrid2D
         x = self.full_y()[:,:,zero_based_slice_index]
         y = self.full_z()[:,:,zero_based_slice_index]
+        #dy = 0.5 * np.diff(y, axis=0)
+        #print y
+        #print dy
+        #print dy.shape, y.shape
+        #y[1:,:] += dy
+        #y[0,:] = -10
         return DTStructuredGrid2D(x, y)
         
     def slice_xz(self, zero_based_slice_index):
