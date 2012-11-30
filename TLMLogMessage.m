@@ -46,6 +46,7 @@
 @synthesize pid = _pid;
 @synthesize level = _level;
 @synthesize flags = _flags;
+@synthesize operationAddress = _operationAddress;
 
 - (void)dealloc
 {
@@ -68,6 +69,7 @@
      and I don't want to worry about endianness (which should not be a problem on
      the same host...but still).
      */
+    [coder encodeObject:[NSNumber numberWithUnsignedLong:_operationAddress]];
     [coder encodeObject:[NSNumber numberWithUnsignedInteger:_pid]];
     [coder encodeObject:[NSNumber numberWithUnsignedInteger:_flags]];
 }
@@ -80,6 +82,7 @@
         _message = [[coder decodeObject] copy];
         _sender = [[coder decodeObject] copy];
         _level = [[coder decodeObject] copy];
+        _operationAddress = [[coder decodeObject] unsignedLongValue];
         _pid = [[coder decodeObject] unsignedIntegerValue];
         _flags = [[coder decodeObject] unsignedIntegerValue];
     }
@@ -118,6 +121,16 @@
 }
 
 - (NSUInteger)hash { return [_date hash]; }
+
+- (id)operation
+{
+    /*
+     NSZoneFromPointer ensures that we won't try and dereference a pointer in 
+     the wrong process, but doesn't ensure that it's a valid object. This is
+     a weak reference if there ever was one.
+     */
+    return NSZoneFromPointer((void *)[self operationAddress]) ? (id)[self operationAddress] : nil;
+}
 
 - (BOOL)isEqual:(id)other
 {

@@ -54,6 +54,7 @@ typedef NSUInteger TLMLogMessageFlags;
     NSString           *_sender;
     NSString           *_level;
     pid_t               _pid;  
+    uintptr_t           _operationAddress;
     TLMLogMessageFlags  _flags;
 }
 
@@ -67,6 +68,8 @@ typedef NSUInteger TLMLogMessageFlags;
 @property (readwrite) pid_t pid;
 @property (readwrite) TLMLogMessageFlags flags;
 @property (readonly) NSDictionary *propertyList;
+@property (readonly) id operation;
+@property (readwrite) uintptr_t operationAddress;
 
 @end
 

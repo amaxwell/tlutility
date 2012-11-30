@@ -48,6 +48,9 @@
 // designated initializer; packageNames must be non-nil
 - (id)initWithPackageNames:(NSArray *)packageNames force:(BOOL)force;
 
+// append a message from the remote process to this object's stderr buffer
+- (void)appendRemoteMessage:(NSString *)msg;
+
 @property(readonly, copy) NSArray *packageNames;
 
 @end
