@@ -65,6 +65,7 @@ extern char **environ;
 
 static id _logServer = nil;
 static TLMLogMessageFlags _messageFlags = TLMLogDefault;
+static uintptr_t _operation = 0;
 
 static void establish_log_connection()
 {
@@ -99,6 +100,7 @@ static void log_message_with_level(const char *level, NSString *message, NSUInte
     [msg setLevel:[NSString stringWithFileSystemRepresentation:level]];
     [msg setPid:getpid()];
     [msg setFlags:flags];
+    [msg setOperationAddress:_operation];
     
     @try {
         [_logServer logMessage:msg];
@@ -200,15 +202,17 @@ static void log_lines_and_clear(NSMutableData *data, bool is_warning)
  argv[0]: tlu_ipctask
  argv[1]: DO server name for IPC
  argv[2]: log message flags
- argv[3]: tlmgr
+ argv[3]: address of parent TLMOperation
+ argv[4]: tlmgr
  argv[n]: tlmgr arguments
  */
 
 #define ARG_SELF        0
 #define ARG_SERVER_NAME 1
 #define ARG_LOG_FLAGS   2
-#define ARG_CMD         3
-#define ARG_CMD_ARGS    4
+#define ARG_OP_ADDRESS  3
+#define ARG_CMD         4
+#define ARG_CMD_ARGS    5
     
 int main(int argc, char *argv[]) {
     
@@ -231,7 +235,14 @@ int main(int argc, char *argv[]) {
     char *invalid = NULL;
     _messageFlags = strtoul(argv[ARG_LOG_FLAGS], &invalid, 10);
     if (invalid && '\0' != *invalid) {
-        log_error(@"second argument '%s' was not an unsigned long value", argv[ARG_LOG_FLAGS]);
+        log_error(@"ARG_LOG_FLAGS '%s' was not an unsigned long value", argv[ARG_LOG_FLAGS]);
+        exit(1);
+    }
+    
+    invalid = NULL;
+    _operation = strtoul(argv[ARG_OP_ADDRESS], &invalid, 10);
+    if (invalid && '\0' != *invalid) {
+        log_error(@"ARG_OP_ADDRESS '%s' was not an unsigned long value", argv[ARG_LOG_FLAGS]);
         exit(1);
     }
     

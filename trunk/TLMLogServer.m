@@ -39,6 +39,7 @@
 #import "TLMPreferenceController.h"
 #import "TLMLogServer.h"
 #import "TLMLogMessage.h"
+#import "TLMRemoveOperation.h"
 #import <asl.h>
 #import <pthread.h>
 
@@ -307,6 +308,9 @@ static NSConnection * __TLMLSCreateAndRegisterConnectionForServer(TLMLogServer *
     if ([message flags] & TLMLogMachineReadable) {
         // guaranteed to be non-nil if the original message was non-nil
         [message setMessage:[self _parseMessageAndNotify:message]];
+    }
+    else if ([[message operation] respondsToSelector:@selector(appendRemoteMessage:)]) {
+        [[message operation] appendRemoteMessage:[message message]];
     }
     
     @synchronized(_messages) {

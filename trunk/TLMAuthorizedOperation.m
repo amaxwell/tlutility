@@ -440,7 +440,7 @@ static BOOL __TLMCheckSignature()
          Use calloc to zero the arg vector, then add the two required options for tlu_ipctask
          before adding the subprocess path and options.  A terminating 0 is required.
          */
-        char **args = NSZoneCalloc([self zone], ([_internal->_options count] + 3), sizeof(char *));
+        char **args = NSZoneCalloc([self zone], ([_internal->_options count] + 4), sizeof(char *));
         int i = 0;
         
         // first argument is the DO server name for IPC
@@ -448,6 +448,9 @@ static BOOL __TLMCheckSignature()
         
         // second argument is log message flags
         args[i++] = (char *)[[NSString stringWithFormat:@"%lu", (unsigned long)[self messageFlags]] saneFileSystemRepresentation];
+        
+        // third argument is address of the operation
+        args[i++] = (char *)[[NSString stringWithFormat:@"%lu", (unsigned long)self] saneFileSystemRepresentation];
         
         // remaining options are the command to execute and its options
         for (NSString *option in _internal->_options) {
