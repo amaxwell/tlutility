@@ -318,16 +318,6 @@
 				<key>country</key>
 				<string>Taiwan</string>
 				<key>name</key>
-				<string>mirror.cs.nctu.edu.tw</string>
-				<key>urls</key>
-				<array>
-					<string>ftp://mirror.cs.nctu.edu.tw/pub/CTAN/</string>
-				</array>
-			</dict>
-			<dict>
-				<key>country</key>
-				<string>Taiwan</string>
-				<key>name</key>
 				<string>shadow.ind.ntou.edu.tw</string>
 				<key>urls</key>
 				<array>
@@ -750,18 +740,6 @@
 			</dict>
 			<dict>
 				<key>country</key>
-				<string>Romania</string>
-				<key>name</key>
-				<string>ftp.roedu.net</string>
-				<key>urls</key>
-				<array>
-					<string>ftp://ftp.roedu.net/mirrors/ctan.org/</string>
-					<string>http://ftp.roedu.net/mirrors/ctan.org/</string>
-					<string>rsync://ftp.roedu.net/mirrors/ctan.org/</string>
-				</array>
-			</dict>
-			<dict>
-				<key>country</key>
 				<string>Russia</string>
 				<key>name</key>
 				<string>ctan.uni-altai.ru</string>
@@ -812,16 +790,6 @@
 				<array>
 					<string>ftp://tex.ihep.su/pub/TeX/CTAN</string>
 					<string>http://tex.ihep.su/</string>
-				</array>
-			</dict>
-			<dict>
-				<key>country</key>
-				<string>Serbia and Montenegro</string>
-				<key>name</key>
-				<string>rpm.scl.rs</string>
-				<key>urls</key>
-				<array>
-					<string>http://rpm.scl.rs/CTAN/</string>
 				</array>
 			</dict>
 			<dict>
@@ -1278,6 +1246,6 @@
 		</array>
 	</dict>
 	<key>timestamp</key>
-	<real>1349229622.346105</real>
+	<real>1354409101.184732</real>
 </dict>
 </plist>
