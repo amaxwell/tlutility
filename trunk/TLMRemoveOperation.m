@@ -53,7 +53,8 @@
 
     self = [self initWithCommand:cmd options:options];
     if (self) {
-        _packageNames = [packageNames copy];        
+        _packageNames = [packageNames copy];
+        _outputLines = [NSMutableArray new];
     }
     return self;
 }
@@ -61,17 +62,15 @@
 - (void)dealloc
 {
     [_packageNames release];
+    [_outputLines release];
     [super dealloc];
 }
 
 - (void)server:(TLMLogServer *)server receivedLine:(NSString *)msg;
 {
-    NSMutableData *outputData = [NSMutableData data];
-    [outputData appendData:[self outputData]];
-    if ([outputData length])
-        [outputData appendBytes:"\n" length:1];
-    [outputData appendData:[msg dataUsingEncoding:NSUTF8StringEncoding]];
-    [self setOutputData:outputData];
+    @synchronized(_outputLines) {
+        if (msg) [_outputLines addObject:msg];
+    }
 }
 
 - (void)main
@@ -99,27 +98,25 @@
 	     running mtxrun --generate ...
 	     done running mtxrun --generate.
      
-     This is a moderately fragile system:
-     
-     1) we are parsing standard output that is not machine-readable
-     
-     2) appending to stderr is not thread-safe
-     
-     Thread safety is a non-issue, since TLMAuthorizedOperation doesn't expect stdout,
-     and TLMLogMessageServer is running in a dedicated thread.
+     This is a moderately fragile system, as we are parsing output that is
+     not guaranteed to be machine-readable.
 
      */
     
     NSAutoreleasePool *pool = [NSAutoreleasePool new];
+    
+    // stop receiving messages as soon as -main is completed
     [[TLMLogServer sharedServer] registerClient:self withIdentifier:(uintptr_t)self];
     [super main];
-    NSString *outputString = [[[NSString alloc] initWithData:[self outputData] encoding:NSUTF8StringEncoding] autorelease];
-    NSArray *errorLines = [outputString componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+    [[TLMLogServer sharedServer] unregisterClientWithIdentifier:(uintptr_t)self];
+    
+    [self setOutputData:[[_outputLines componentsJoinedByString:@"\n"] dataUsingEncoding:NSUTF8StringEncoding]];
+
     NSMutableSet *unremovedPackages = [NSMutableSet setWithArray:[self packageNames]];
 
 #define REMOVE_TOKEN @"remove "
 
-    for (NSString *line in errorLines) {
+    for (NSString *line in _outputLines) {
         
         if ([line hasPrefix:REMOVE_TOKEN]) {
             NSString *package = [line substringFromIndex:[REMOVE_TOKEN length]];
@@ -135,7 +132,6 @@
         TLMLog(__func__, @"ERROR: failed to remove packages %@ (requested removal of %@)", unremovedPackages, [self packageNames]);
     }
 
-    [[TLMLogServer sharedServer] unregisterClientWithIdentifier:(uintptr_t)self];
     [pool release];
 }
 

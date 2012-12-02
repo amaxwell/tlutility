@@ -43,7 +43,8 @@
 @interface TLMRemoveOperation : TLMAuthorizedOperation <TLMLogUpdateClient>
 {
 @private
-    NSArray *_packageNames;
+    NSArray        *_packageNames;
+    NSMutableArray *_outputLines;
 }
 
 // designated initializer; packageNames must be non-nil
