@@ -38,18 +38,16 @@
 
 #import <Cocoa/Cocoa.h>
 #import "TLMAuthorizedOperation.h"
+#import "TLMLogServer.h"
 
-@interface TLMRemoveOperation : TLMAuthorizedOperation
+@interface TLMRemoveOperation : TLMAuthorizedOperation <TLMLogUpdateClient>
 {
 @private
-    NSArray  *_packageNames;
+    NSArray *_packageNames;
 }
 
 // designated initializer; packageNames must be non-nil
 - (id)initWithPackageNames:(NSArray *)packageNames force:(BOOL)force;
-
-// append a message from the remote process to this object's stderr buffer
-- (void)appendRemoteMessage:(NSString *)msg;
 
 @property(readonly, copy) NSArray *packageNames;
 

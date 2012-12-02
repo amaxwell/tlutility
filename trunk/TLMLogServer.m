@@ -39,7 +39,6 @@
 #import "TLMPreferenceController.h"
 #import "TLMLogServer.h"
 #import "TLMLogMessage.h"
-#import "TLMRemoveOperation.h"
 #import <asl.h>
 #import <pthread.h>
 
@@ -103,6 +102,7 @@ static NSConnection * __TLMLSCreateAndRegisterConnectionForServer(TLMLogServer *
                                                      name:NSApplicationWillTerminateNotification
                                                    object:nil];
         _messages = [NSMutableArray new];
+        _updateClients = CFDictionaryCreateMutable(CFAllocatorGetDefault(), 0, NULL, &kCFTypeDictionaryValueCallBacks);
     }
     return self;
 }
@@ -147,6 +147,7 @@ static NSConnection * __TLMLSCreateAndRegisterConnectionForServer(TLMLogServer *
     [self _destroyConnection];
     [_messages release];
     [_nextNotification release];
+    if (_updateClients) CFRelease(_updateClients);
     [super dealloc];
 }
 
@@ -302,6 +303,23 @@ static NSConnection * __TLMLSCreateAndRegisterConnectionForServer(TLMLogServer *
     return parsedMessage;
 }
 
+- (id <TLMLogUpdateClient>)_clientForIdentifier:(uintptr_t)ident
+{
+    return (id)CFDictionaryGetValue(_updateClients, (void *)ident);
+}
+
+- (void)registerClient:(id <TLMLogUpdateClient>)obj withIdentifier:(uintptr_t)ident;
+{
+    NSParameterAssert([obj respondsToSelector:@selector(server:receivedLine:)]);
+    NSParameterAssert(0 != ident);
+    CFDictionarySetValue(_updateClients, (void *)ident, (const void *)obj);
+}
+
+- (void)unregisterClientWithIdentifier:(uintptr_t)ident;
+{
+    CFDictionaryRemoveValue(_updateClients, (void *)ident);
+}
+
 - (void)logMessage:(in bycopy TLMLogMessage *)message;
 {
     // if the message is machine readable, parse it and post notifications, then reset the message text for display
@@ -309,9 +327,8 @@ static NSConnection * __TLMLSCreateAndRegisterConnectionForServer(TLMLogServer *
         // guaranteed to be non-nil if the original message was non-nil
         [message setMessage:[self _parseMessageAndNotify:message]];
     }
-    else if ([[message operation] respondsToSelector:@selector(appendRemoteMessage:)]) {
-        [[message operation] appendRemoteMessage:[message message]];
-    }
+    
+    [[self _clientForIdentifier:[message identifier]] server:self receivedLine:[message message]];
     
     @synchronized(_messages) {
         [_messages addObject:message];

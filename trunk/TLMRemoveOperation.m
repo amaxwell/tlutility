@@ -38,7 +38,6 @@
 
 #import "TLMRemoveOperation.h"
 #import "TLMEnvironment.h"
-#import "TLMLogServer.h"
 
 @implementation TLMRemoveOperation
 
@@ -65,7 +64,7 @@
     [super dealloc];
 }
 
-- (void)appendRemoteMessage:(NSString *)msg
+- (void)server:(TLMLogServer *)server receivedLine:(NSString *)msg;
 {
     NSMutableData *outputData = [NSMutableData data];
     [outputData appendData:[self outputData]];
@@ -100,19 +99,11 @@
 	     running mtxrun --generate ...
 	     done running mtxrun --generate.
      
-     This is a really fragile system, for multiple reasons:
+     This is a moderately fragile system:
      
      1) we are parsing standard output that is not machine-readable
      
-     2) we pass the address of this object to tlu_ipctask and read it
-        back over DO, then dereference it in TLMLogMessageServer
-     
-     3) appending to stderr is not thread-safe
-     
-     However, the only dangerous assumption is implicit in the second point above,
-     namely that this operation object is still live when TLMLogMessageServer gets
-     the incoming message. In general, that should always be a reasonable assumption,
-     but it would be safer to have an external lookup table.
+     2) appending to stderr is not thread-safe
      
      Thread safety is a non-issue, since TLMAuthorizedOperation doesn't expect stdout,
      and TLMLogMessageServer is running in a dedicated thread.
@@ -120,6 +111,7 @@
      */
     
     NSAutoreleasePool *pool = [NSAutoreleasePool new];
+    [[TLMLogServer sharedServer] registerClient:self withIdentifier:(uintptr_t)self];
     [super main];
     NSString *outputString = [[[NSString alloc] initWithData:[self outputData] encoding:NSUTF8StringEncoding] autorelease];
     NSArray *errorLines = [outputString componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
@@ -143,6 +135,7 @@
         TLMLog(__func__, @"ERROR: failed to remove packages %@ (requested removal of %@)", unremovedPackages, [self packageNames]);
     }
 
+    [[TLMLogServer sharedServer] unregisterClientWithIdentifier:(uintptr_t)self];
     [pool release];
 }
 

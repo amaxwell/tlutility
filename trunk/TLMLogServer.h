@@ -55,12 +55,15 @@ extern NSString * const TLMLogSize;
 extern NSString * const TLMLogPackageName;
 extern NSString * const TLMLogStatusMessage;
 
+@protocol TLMLogUpdateClient;
+
 @interface TLMLogServer : NSObject 
 {
 @private
-    NSMutableArray *_messages;
-    NSConnection   *_connection;
-    NSNotification *_nextNotification;
+    NSMutableArray         *_messages;
+    NSConnection           *_connection;
+    NSNotification         *_nextNotification;
+    CFMutableDictionaryRef  _updateClients;
 }
 
 + (TLMLogServer *)sharedServer;
@@ -68,9 +71,16 @@ extern NSString * const TLMLogStatusMessage;
 // returns messages in range (anIndex, end) or nil if anIndex is out of range
 - (NSArray *)messagesFromIndex:(NSUInteger)anIndex;
 
+- (void)registerClient:(id <TLMLogUpdateClient>)obj withIdentifier:(uintptr_t)ident;
+- (void)unregisterClientWithIdentifier:(uintptr_t)ident;
+
 // returns a snapshot of all messages
 @property(readonly, retain) NSArray *messages;
 
+@end
+
+@protocol TLMLogUpdateClient <NSObject>
+- (void)server:(TLMLogServer *)server receivedLine:(NSString *)msg;
 @end
 
 __BEGIN_DECLS
