@@ -100,7 +100,7 @@ static void log_message_with_level(const char *level, NSString *message, NSUInte
     [msg setLevel:[NSString stringWithFileSystemRepresentation:level]];
     [msg setPid:getpid()];
     [msg setFlags:flags];
-    [msg setOperationAddress:_operation];
+    [msg setIdentifier:_operation];
     
     @try {
         [_logServer logMessage:msg];
