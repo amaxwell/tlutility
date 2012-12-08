@@ -137,8 +137,20 @@
                                                   object:[[dumpTask standardError] fileHandleForReading]];       
     
     // get any residual data
-    [_parseError appendData:[[[parseTask standardError] fileHandleForReading] availableData]];
-    [_dumpError appendData:[[[dumpTask standardError] fileHandleForReading] availableData]];
+    @try {
+        [_parseError appendData:[[[parseTask standardError] fileHandleForReading] availableData]];
+    }
+    @catch (NSException *exc) {
+        TLMLog(__func__, @"Caught exception in reading stderr for parse task: %@", exc);        
+    }
+    
+    @try {
+        [_dumpError appendData:[[[dumpTask standardError] fileHandleForReading] availableData]];
+
+    }
+    @catch (NSException *exc) {
+        TLMLog(__func__, @"Caught exception in reading stderr for dump task: %@", exc);
+    }
     
     if ([_parseError length]) {
         TLMLog(__func__, @"Parse error: %@",[[[NSString alloc] initWithData:_parseError encoding:NSUTF8StringEncoding] autorelease]);
