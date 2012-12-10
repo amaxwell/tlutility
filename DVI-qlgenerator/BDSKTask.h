@@ -50,6 +50,15 @@
  
  */
 
+#ifndef MAC_OS_X_VERSION_10_6
+enum {
+    NSTaskTerminationReasonExit = 1,
+    NSTaskTerminationReasonUncaughtSignal = 2
+};
+typedef NSInteger NSTaskTerminationReason;
+#endif
+
+
 @interface BDSKTask : NSTask {
 @private
     NSString                *_launchPath;
@@ -60,9 +69,24 @@
     id                       _standardOutput;
     id                       _standardError;
     pid_t                    _processIdentifier;    
+    int32_t                  _terminationStatus;
+    NSTaskTerminationReason  _terminationReason;
+    int32_t                  _running;
+    int32_t                  _launched;
     struct BDSKTaskInternal *_internal;
 }
 
 + (BDSKTask *)launchedTaskWithLaunchPath:(NSString *)path arguments:(NSArray *)arguments;
 
 @end
+
+#ifndef HANDLE_EINTR
+// http://src.chromium.org/svn/trunk/src/base/eintr_wrapper.h
+#define HANDLE_EINTR(x) ({ \
+    typeof(x) __eintr_result__; \
+    do { \
+        __eintr_result__ = x; \
+    } while (__eintr_result__ == -1 && errno == EINTR); \
+    __eintr_result__;\
+})
+#endif
