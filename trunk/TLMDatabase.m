@@ -99,7 +99,8 @@ static NSString     *_userAgent = nil;
         TLMLog(__func__, @"No packages loaded for repository %@", mirror);
     
     TLMDatabase *local = [self localDatabase];
-    NSAssert([[local packages] count], @"No packages in local database");
+    if ([[local packages] count] == 0)
+        TLMLog(__func__, @"*** ERROR *** No packages in local database");
     
     TLMLog(__func__, @"%ld packages in repository database, %ld packages in local database", (unsigned long)[[mirror packages] count], (unsigned long)[[local packages] count]);
     
