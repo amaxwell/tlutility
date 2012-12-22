@@ -642,5 +642,20 @@
             <sparkle:minimumSystemVersion>10.6.8</sparkle:minimumSystemVersion>
             <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-1.10.tar.gz" sparkle:version="1.10" length="2962620" type="application/octet-stream" sparkle:dsaSignature="MCwCFBhrDvhhLe13cIYMy/j25aIYc19uAhQa2z6TtiO7l+yymVIQ/tkVuAonTQ=="></enclosure>
         </item>
+        <item>
+            <title>Version 1.11</title>
+            <description>
+                <h3>Changes Since 1.10</h3>
+                <li>Unconditionally require authorization to migrate old launchd agent</li>
+                <li>Workaround for tlmgr lying about removal (bugs #72 and #76)</li>
+                <li>Update CTAN mirror list</li>
+                <li>Wrap -[NSFileHandle availableData] in exception handler because NSFilehandle is lame</li>
+                <li>Use latest version of BDSKTask in DVI Quick Look generator</li>
+                <li>Log instead of crashing when local database could not be loaded (vain attempt to work around bug #77)</li>
+            </description>
+            <pubDate>Sat, 22 Dec 2012 17:29:46 +0000</pubDate>
+            <sparkle:minimumSystemVersion>10.6.8</sparkle:minimumSystemVersion>
+            <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-1.11.tar.gz" sparkle:version="1.11" length="2970299" type="application/octet-stream" sparkle:dsaSignature="MCwCFAnp5yqEy77b3vIrzFR4fLkQjlvbAhQakRnMKhr6NpwN1Bj7XsL3AHS4Rg=="></enclosure>
+        </item>
     </channel>
 </rss>
