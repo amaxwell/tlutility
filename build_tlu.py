@@ -105,7 +105,7 @@ def rewrite_version(newVersion):
 def clean_and_build():
     
     # clean and rebuild the Xcode project
-    buildCmd = ["/Xcode3/usr/bin/xcodebuild", "-configuration", "Release", "-target", "TeX Live Utility", "clean", "build"]
+    buildCmd = ["/usr/bin/xcodebuild", "-configuration", "Release", "-target", "TeX Live Utility", "clean", "build"]
     nullDevice = open("/dev/null", "r")
     x = Popen(buildCmd, cwd=SOURCE_DIR, stdout=nullDevice, stderr=nullDevice)
     rc = x.wait()
