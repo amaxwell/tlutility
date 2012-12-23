@@ -657,5 +657,15 @@
             <sparkle:minimumSystemVersion>10.6.8</sparkle:minimumSystemVersion>
             <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-1.11.tar.gz" sparkle:version="1.11" length="2970299" type="application/octet-stream" sparkle:dsaSignature="MCwCFAnp5yqEy77b3vIrzFR4fLkQjlvbAhQakRnMKhr6NpwN1Bj7XsL3AHS4Rg=="></enclosure>
         </item>
+        <item>
+            <title>Version 1.12</title>
+            <description>
+                <h3>Changes Since 1.11</h3>
+                <li>Fixed build script to compile using latest Xcode instead of Xcode 3</li>
+            </description>
+            <pubDate>Sun, 23 Dec 2012 13:57:11 +0000</pubDate>
+            <sparkle:minimumSystemVersion>10.6.8</sparkle:minimumSystemVersion>
+            <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-1.12.tar.gz" sparkle:version="1.12" length="2950094" type="application/octet-stream" sparkle:dsaSignature="MCwCFBbwh5N/MUJZyK2hxr5aBxA3DR8hAhQhQqwqWFNmtfGGakUYt880Sk5VaA=="></enclosure>
+        </item>
     </channel>
 </rss>
