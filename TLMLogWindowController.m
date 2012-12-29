@@ -193,8 +193,13 @@ static NSString *__TLMLogStringFromDate(NSDate *date)
     
     [_messageTableView setDataSource:self];
     [_messageTableView setDelegate:self];
+    [_messageTableView setFontNamePreferenceKey:@"TLMLogWindowMessageFontName"
+                              sizePreferenceKey:@"TLMLogWindowMessageFontSize"];
+    
     [_sessionTableView setDataSource:self];
     [_sessionTableView setDelegate:self];
+    [_sessionTableView setFontNamePreferenceKey:@"TLMLogWindowSessionFontName"
+                              sizePreferenceKey:@"TLMLogWindowSessionFontSize"];
     
     [_messageTableView reloadData];
     [_sessionTableView reloadData];
