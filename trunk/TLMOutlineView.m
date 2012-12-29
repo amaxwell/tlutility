@@ -116,6 +116,9 @@
     [self setRowHeight:[lm defaultLineHeightForFont:aFont] + 2.0f];
     [lm release];
     
+    if ([[self delegate] respondsToSelector:@selector(outlineViewFontChanged:)])
+        [(id <TLMOutlineViewDelegate>)[self delegate] outlineViewFontChanged:self];
+    
     [self tile];
     [self reloadData];     
 }

@@ -58,6 +58,11 @@
 
 @end
 
+@protocol TLMOutlineViewDelegate <NSOutlineViewDelegate>
+@optional
+- (void)outlineViewFontChanged:(TLMOutlineView *)outlineView;
+@end
+
 @protocol TLMOutlineViewDataSource <NSOutlineViewDataSource>
 @optional
 - (void)outlineView:(TLMOutlineView *)outlineView writeSelectedRowsToPasteboard:(NSPasteboard *)pboard;

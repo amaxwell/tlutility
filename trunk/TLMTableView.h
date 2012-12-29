@@ -52,6 +52,11 @@
 
 @end
 
+@protocol TLMTableDelegate <NSTableViewDelegate>
+@optional
+- (void)tableViewFontChanged:(TLMTableView *)tableView;
+@end
+
 @protocol TLMTableDataSource <NSTableViewDataSource>
 @optional
 - (void)tableView:(TLMTableView *)tableView writeSelectedRowsToPasteboard:(NSPasteboard *)pboard;

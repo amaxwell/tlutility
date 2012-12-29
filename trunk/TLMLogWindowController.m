@@ -466,6 +466,12 @@ static NSString *__TLMLogStringFromDate(NSDate *date)
     }
 }
 
+- (void)tableViewFontChanged:(TLMTableView *)tableView
+{
+    if (tableView == _messageTableView)
+        CFDictionaryRemoveAllValues(_rowHeights);
+}
+
 - (CGFloat)tableView:(NSTableView *)tableView heightOfRow:(NSInteger)row;
 {
     
