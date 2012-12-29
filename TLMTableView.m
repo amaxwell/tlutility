@@ -91,6 +91,9 @@
     NSLayoutManager *lm = [NSLayoutManager new];
     [self setRowHeight:[lm defaultLineHeightForFont:aFont] + 2.0f];
     [lm release];
+
+    if ([[self delegate] respondsToSelector:@selector(tableViewFontChanged:)])
+        [(id <TLMTableDelegate>)[self delegate] tableViewFontChanged:self];
     
     [self tile];
     [self reloadData];     
@@ -108,7 +111,8 @@
         // if not set, use the font from the nib
         if (fontName) {
             font = [NSFont fontWithName:fontName size:fontSize];
-        }  
+        }
+        
     }
     return font ? font : _defaultFont;
 }
@@ -141,6 +145,7 @@
     NSParameterAssert(name && size);
     [self setFontNamePreferenceKey:name];
     [self setFontSizePreferenceKey:size];
+    [self updateFontFromPreferences];
 }
 
 - (void)viewDidMoveToWindow
