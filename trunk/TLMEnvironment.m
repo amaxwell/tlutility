@@ -512,6 +512,7 @@ static void __TLMTestAndClearEnvironmentVariable(const char *name)
         NSURL *aURL = [NSURL URLWithString:@"http://tug.org/texlive/"];
         [[NSWorkspace sharedWorkspace] openURL:aURL];
     }
+    [self release];
 }
 
 - (void)_displayFallbackServerAlertForRepositoryYear:(NSNumber *)repositoryYear
@@ -563,8 +564,9 @@ static void __TLMTestAndClearEnvironmentVariable(const char *name)
             [alert setShowsSuppressionButton:YES];
         
         // always show on the main window
+        // ended up messaging a zombie TLMEnvironment when I had an alert due to a bad /usr/texbin path
         [alert beginSheetModalForWindow:[(NSWindowController *)[[NSApp delegate] mainWindowController] window]
-                          modalDelegate:self 
+                          modalDelegate:[self retain]
                          didEndSelector:@selector(versionWarningDidEnd:returnCode:contextInfo:) 
                             contextInfo:NULL];            
     }
