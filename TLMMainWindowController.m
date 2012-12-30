@@ -1117,7 +1117,9 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     }
     else {
         // happens when network is down; this can be a 10-12 minute timeout with TL 2011
-        TLMLog(__func__, @"Not updating package list, since the repository database version is unknown");
+        TLMLog(__func__, @"Not updating package list, since the repository database version could not be determined");
+        [self _displayStatusString:NSLocalizedString(@"Listing Failed", @"main window status string")
+                        dataSource:_updateListDataSource];
     }
 }
 
