@@ -163,11 +163,21 @@
     }
 }
 
+- (BOOL)becomeFirstResponder
+{
+    const BOOL ret = [super becomeFirstResponder];
+    if (ret)
+        [[NSFontManager sharedFontManager] setSelectedFont:[self font] isMultiple:NO];
+    return ret;
+}
+
 - (void)setFontNamePreferenceKey:(NSString *)name sizePreferenceKey:(NSString *)size;
 {
     NSParameterAssert(name && size);
     [self setFontNamePreferenceKey:name];
     [self setFontSizePreferenceKey:size];
+    // need to update now, or we can end up clobbering this if it's set after -viewDidMoveToWindow
+    [self updateFontFromPreferences];
 }
 
 - (void)viewDidMoveToWindow
