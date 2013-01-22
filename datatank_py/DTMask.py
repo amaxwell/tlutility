@@ -116,10 +116,14 @@ class DTMask(object):
         # return None if there is no mask
         if intervals == None or len(intervals) == 0:
             return None
+        
+        intervals = np.squeeze(intervals)    
+        
+        dims = datafile[name + "_dim"]
+        dims = np.squeeze(dims)
             
-        dims = datafile[name + "_dim"].tolist()
-        if len(dims) == 2:
-            dims.append(0)
+        # ensure that the list has at least 3 elements (we access only 0,1,2)
+        dims = dims.tolist() + [0, 0, 0]
         mask = DTMask(np.array([]))
         mask._intervals = intervals
         mask._m = dims[0]

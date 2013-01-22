@@ -67,8 +67,8 @@ class DTMesh2D(object):
     @classmethod
     def from_data_file(self, datafile, name):
         
-        values = datafile[name]
-        grid = datafile[name + "_loc"]
+        values = np.squeeze(datafile[name])
+        grid = np.squeeze(datafile[name + "_loc"])
         # TODO: make sure this is correct; should be writing a packed array instead in __dt_write__?
         mask = DTMask.from_data_file(datafile, name + "_dom")
         if mask != None:
