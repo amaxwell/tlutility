@@ -932,6 +932,7 @@
 			baseConfigurationReference = FA1941CA0D94A70100DD942E /* ConfigFrameworkDebug.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
+				VALID_ARCHS = "i386 x86_64";
 			};
 			name = Debug;
 		};
@@ -941,6 +942,7 @@
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_DEBUGGING_SYMBOLS = full;
+				VALID_ARCHS = "i386 x86_64";
 			};
 			name = Release;
 		};
@@ -962,6 +964,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_VERSION = "";
+				STRIP_INSTALLED_PRODUCT = NO;
 				WARNING_CFLAGS = "-Wundeclared-selector";
 			};
 			name = "Release (GC dual-mode; 10.5-only)";
@@ -972,6 +975,9 @@
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				INSTALL_PATH = "@loader_path/../Frameworks";
+				SEPARATE_STRIP = NO;
+				STRIP_INSTALLED_PRODUCT = NO;
+				VALID_ARCHS = "i386 x86_64";
 			};
 			name = "Release (GC dual-mode; 10.5-only)";
 		};
