@@ -42,7 +42,7 @@
 @property (readonly, copy) NSString *infoName;
 @end
 
-@interface TLMPackage : NSObject <TLMInfo>
+@interface TLMPackage : NSObject <TLMInfo, NSCopying>
 {
 @private
     NSString   *_name;
@@ -50,6 +50,8 @@
     NSString   *_remoteVersion;
     NSString   *_localVersion;
     NSNumber   *_size;
+    NSString   *_localCatalogueVersion;
+    NSString   *_remoteCatalogueVersion;
     
     BOOL        _willBeRemoved;
     BOOL        _installed;
@@ -66,6 +68,8 @@
 @property (copy, readwrite) NSString *remoteVersion;
 @property (copy, readwrite) NSString *localVersion;
 @property (copy, readwrite) NSNumber *size;
+@property (copy, readwrite) NSString *localCatalogueVersion;
+@property (copy, readwrite) NSString *remoteCatalogueVersion;
 
 // true if no longer present on the server
 @property (readwrite) BOOL willBeRemoved;

@@ -62,7 +62,8 @@ extern NSString * const TLMDatabaseVersionCheckComplete;
 + (TLMDatabase *)localDatabase;
 + (TLMDatabase *)databaseForMirrorURL:(NSURL *)aURL;
 
-+ (NSArray *)packagesByMergingLocalWithMirror:(NSURL *)aURL;
++ (NSArray *)packagesByAddingVersionsFromMirror:(NSURL *)aURL toPackages:(NSArray *)packages;
++ (NSArray *)packageNodesByMergingLocalWithMirror:(NSURL *)aURL;
 - (void)reloadDatabaseFromPath:(NSString *)absolutePath;
 
 @property (readonly) TLMDatabaseYear texliveYear;

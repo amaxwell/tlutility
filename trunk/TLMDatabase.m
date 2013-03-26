@@ -90,7 +90,46 @@ static NSString     *_userAgent = nil;
     }
 }
 
-+ (NSArray *)packagesByMergingLocalWithMirror:(NSURL *)aURL;
++ (TLMDatabasePackage *)_packageNamed:(NSString *)name inDatabase:(TLMDatabase *)db
+{
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name == %@", name];
+    return [[[db packages] filteredArrayUsingPredicate:predicate] lastObject];
+}
+
++ (NSArray *)packagesByAddingVersionsFromMirror:(NSURL *)aURL toPackages:(NSArray *)packages;
+{
+    NSParameterAssert(aURL);
+    NSParameterAssert(packages);
+    
+    TLMDatabase *mirror = [self databaseForMirrorURL:aURL];
+    
+    // was asserting this, but that's not going to work well with offline mode
+    if ([[mirror packages] count] == 0)
+        TLMLog(__func__, @"No packages loaded for repository %@", mirror);
+    
+    TLMDatabase *local = [self localDatabase];
+    if ([[local packages] count] == 0)
+        TLMLog(__func__, @"*** ERROR *** No packages in local database");
+    
+    TLMLog(__func__, @"%ld packages in repository database, %ld packages in local database", (unsigned long)[[mirror packages] count], (unsigned long)[[local packages] count]);
+    
+    NSMutableArray *newPackages = [NSMutableArray arrayWithCapacity:[packages count]];
+    
+    for (TLMPackage *pkg in packages) {
+        
+        TLMPackage *newPkg = [pkg copy];
+        TLMDatabasePackage *localPkg = [self _packageNamed:[pkg name] inDatabase:local];
+        TLMDatabasePackage *remotePkg = [self _packageNamed:[pkg name] inDatabase:mirror];
+        [newPkg setLocalCatalogueVersion:[localPkg catalogueVersion]];
+        [newPkg setRemoteCatalogueVersion:[remotePkg catalogueVersion]];
+        [newPackages addObject:newPkg];
+        [newPkg release];
+    }
+    
+    return newPackages;
+}
+
++ (NSArray *)packageNodesByMergingLocalWithMirror:(NSURL *)aURL;
 {
     TLMDatabase *mirror = [self databaseForMirrorURL:aURL];
     

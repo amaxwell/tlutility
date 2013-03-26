@@ -164,4 +164,11 @@ static NSDictionary *__TLMHeaderDictionaryWithLines(NSArray *headerLines)
     return _packages;
 }
 
+- (NSURL *)updateURL
+{
+    // set lazily after parsing lines; call -packages to make sure that's done
+    (void)[self packages];
+    return _updateURL;
+}
+
 @end
