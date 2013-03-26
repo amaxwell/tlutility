@@ -49,6 +49,8 @@
 @synthesize needsUpdate = _needsUpdate;
 @synthesize failedToParse = _failedToParse;
 @synthesize size = _size;
+@synthesize localCatalogueVersion = _localCatalogueVersion;
+@synthesize remoteCatalogueVersion = _remoteCatalogueVersion;
 @synthesize wasForciblyRemoved = _wasForciblyRemoved;
 
 + (TLMPackage *)package;
@@ -83,6 +85,28 @@ static NSString *_separatorString = nil;
     return matches;
 }
 
+- (id)copyWithZone:(NSZone *)zone
+{
+    TLMPackage *new = [TLMPackage new];
+    
+    new->_name = [_name copyWithZone:zone];
+    new->_status = [_status copyWithZone:zone];
+    new->_remoteVersion = [_remoteVersion copyWithZone:zone];
+    new->_localVersion = [_localVersion copyWithZone:zone];
+    new->_size = [_size retain];
+    new->_localCatalogueVersion = [_localCatalogueVersion copyWithZone:zone];
+    new->_remoteCatalogueVersion = [_remoteCatalogueVersion copyWithZone:zone];
+    
+    new->_willBeRemoved = _willBeRemoved;
+    new->_installed = _installed;
+    new->_needsUpdate = _needsUpdate;
+    new->_failedToParse = _failedToParse;
+    new->_wasForciblyRemoved = _wasForciblyRemoved;
+    
+    return new;
+    
+}
+
 - (void)dealloc
 {
     [_status release];
@@ -90,6 +114,8 @@ static NSString *_separatorString = nil;
     [_remoteVersion release];
     [_localVersion release];
     [_size release];
+    [_localCatalogueVersion release];
+    [_remoteCatalogueVersion release];
     [super dealloc];
 }
 

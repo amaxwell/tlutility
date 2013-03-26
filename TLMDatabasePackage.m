@@ -124,6 +124,25 @@ TLM_METHOD(NSNumber*, relocated)
 TLM_METHOD(NSNumber*, revision)
 TLM_METHOD(NSArray*, depends);
 
+/*
+ <key>catalogueData</key>
+ <dict>
+ <key>ctan</key>
+ <string>/fonts/Asana-Math</string>
+ <key>date</key>
+ <string>2012-06-11 11:02:36 +0200</string>
+ <key>license</key>
+ <string>ofl</string>
+ <key>version</key>
+ <string>000.949</string>
+ </dict>
+ */
+
+- (NSString *)catalogueVersion;
+{
+    return [[_dictionary objectForKey:@"catalogueData"] objectForKey:@"version"];
+}
+
 // override to return arrays of URL objects (only for files that exist on-disk)
 - (NSArray *)runFiles
 {

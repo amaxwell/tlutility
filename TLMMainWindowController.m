@@ -1020,8 +1020,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     NSParameterAssert([NSThread isMainThread]);
     TLMListUpdatesOperation *op = [aNote object];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:TLMOperationFinishedNotification object:op];
-    
-    NSArray *allPackages = [op packages];
+    NSArray *allPackages = [TLMDatabase packagesByAddingVersionsFromMirror:[op updateURL] toPackages:[op packages]];
 
     /*
      TL 2009: 'bin-texlive' is gone, and we now have 'texlive.infra' and 'texlive.infra.universal-darwin' 
@@ -1404,7 +1403,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     TLMLoadDatabaseOperation *op = [aNote object];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:TLMOperationFinishedNotification object:op];
     
-    [_packageListDataSource setPackageNodes:[TLMDatabase packagesByMergingLocalWithMirror:[op updateURL]]];
+    [_packageListDataSource setPackageNodes:[TLMDatabase packageNodesByMergingLocalWithMirror:[op updateURL]]];
     [_packageListDataSource setRefreshing:NO];
     [_packageListDataSource setNeedsUpdate:NO];
     

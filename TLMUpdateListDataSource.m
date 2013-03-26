@@ -386,7 +386,20 @@
 
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row;
 {
-    return [[_displayedPackages objectAtIndex:row] valueForKey:[tableColumn identifier]];
+    NSString *tcID = [tableColumn identifier];
+    TLMPackage *pkg = [_displayedPackages objectAtIndex:row];
+    id baseValue = [pkg valueForKey:tcID];
+    if ([tcID isEqualToString:@"remoteVersion"]) {
+        NSString *catVers = [pkg remoteCatalogueVersion];
+        if (catVers)
+            return [NSString stringWithFormat:@"%@ (%@)", baseValue, catVers];
+    }
+    else if ([tcID isEqualToString:@"localVersion"]) {
+        NSString *catVers = [pkg localCatalogueVersion];
+        if (catVers)
+            return [NSString stringWithFormat:@"%@ (%@)", baseValue, catVers];
+    }
+    return baseValue;
 }
 
 - (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row;
