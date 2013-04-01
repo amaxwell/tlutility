@@ -38,12 +38,12 @@
 
 #import "TLMDatabase.h"
 #import "TLMTask.h"
-#import <regex.h>
 #import "TLMLogServer.h"
 #import "TLMDatabasePackage.h"
 #import "TLMPackageNode.h"
 #import "TLMEnvironment.h"
 #import <WebKit/WebKit.h>
+#import "TLMSizeFormatter.h"
 
 #define MIN_DATA_LENGTH 2048
 #define URL_TIMEOUT     30
@@ -53,6 +53,7 @@ NSString * const TLMDatabaseVersionCheckComplete = @"TLMDatabaseVersionCheckComp
 
 @interface TLMDatabase ()
 @property (readwrite, retain) NSMutableData *tlpdbData;
+- (void)_fullDownload;
 @end
 
 @implementation TLMDatabase
@@ -102,6 +103,7 @@ static NSString     *_userAgent = nil;
     NSParameterAssert(packages);
     
     TLMDatabase *mirror = [self databaseForMirrorURL:aURL];
+    [mirror _fullDownload];
     
     // was asserting this, but that's not going to work well with offline mode
     if ([[mirror packages] count] == 0)
@@ -420,12 +422,107 @@ static NSString     *_userAgent = nil;
     }
 }
 
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection
+{
+    TLMLog(__func__, @"Finished downloading database");
+    _hasFullDownload = YES;
+}
+
 static NSString *__TLMTemporaryFile()
 {
     CFUUIDRef uuid = CFUUIDCreate(NULL);
     NSString *absolutePath = [NSTemporaryDirectory() stringByAppendingPathComponent:[(id)CFUUIDCreateString(NULL, uuid) autorelease]];
     if (uuid) CFRelease(uuid);
     return absolutePath;
+}
+
+- (void)_fullDownload
+{
+    NSParameterAssert(_mirrorURL);
+    [_downloadLock lock];
+    
+    // !!! early return here
+    if (_hasFullDownload) {
+        [_downloadLock unlock];
+        return;
+    }
+        
+    [self setTlpdbData:[NSMutableData data]];
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[self _tlpdbURL]];
+    [request setTimeoutInterval:URL_TIMEOUT];
+    // useful for debugging when behind a caching proxy
+#if 0
+    [request addValue:@"no-cache" forHTTPHeaderField:@"Pragma"];
+    [request addValue:@"no-cache" forHTTPHeaderField:@"Cache-Control"];
+#endif
+    // for bug #73; that mirror was returning an http 400 with the default user agent set by CFNetwork
+    [request addValue:_userAgent ? _userAgent : @"TeX Live Utility" forHTTPHeaderField:@"User-Agent"];
+    
+    
+    _failed = NO;
+    TLMLog(__func__, @"Downloading remote package database.");
+    TLMLogServerSync();
+    
+    NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
+    NSString *rlmode = @"__TLMDatabaseDownloadRunLoopMode";
+    [connection scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:rlmode];
+    [connection start];
+    const CFAbsoluteTime startTime = CFAbsoluteTimeGetCurrent();
+#define FULL_DOWNLOAD_TIMEOUT 60.0
+    const CFAbsoluteTime stopTime = startTime + FULL_DOWNLOAD_TIMEOUT;
+    do {
+        const SInt32 ret = CFRunLoopRunInMode((CFStringRef)rlmode, 0.3, TRUE);
+        
+        if (kCFRunLoopRunFinished == ret || kCFRunLoopRunStopped == ret)
+            break;
+        
+        if (CFAbsoluteTimeGetCurrent() >= stopTime) {
+            TLMLog(__func__, @"%@ took more than %.0f seconds to respond.  Cancelling request.", [self _tlpdbURL], FULL_DOWNLOAD_TIMEOUT);
+            break;
+        }
+        
+        if (_failed)
+            break;
+        
+    } while (NO == _hasFullDownload);
+    
+    NSString *dataSizeString = [[[TLMSizeFormatter new] autorelease] stringForObjectValue:[NSNumber numberWithUnsignedLong:[[self tlpdbData] length]]];
+    TLMLog(__func__, @"Downloaded %@ tlpdb for package version display in %.1f seconds.", dataSizeString, CFAbsoluteTimeGetCurrent() - startTime);
+    // in case of exceeding stopTime
+    if (_hasFullDownload) {
+        NSString *tlpdbPath = __TLMTemporaryFile();
+        [[self tlpdbData] writeToFile:tlpdbPath atomically:NO];
+        
+        NSString *plistPath = __TLMTemporaryFile();
+        NSString *parserPath = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"parse_tlpdb.py"];
+        
+        TLMTask *parseTask = [[TLMTask new] autorelease];
+        [parseTask setLaunchPath:@"/usr/bin/python"];
+        [parseTask setArguments:[NSArray arrayWithObjects:@"-E", parserPath, @"-o", plistPath, @"-f", @"plist", tlpdbPath, nil]];
+        [parseTask launch];
+        [parseTask waitUntilExit];
+        
+        if ([parseTask terminationStatus] == EXIT_SUCCESS) {
+            [self reloadDatabaseFromPath:plistPath];
+        }
+        else {
+            TLMLog(__func__, @"Parsing the database from this repository failed with the following error: %@", [parseTask errorString]);
+            _failed = YES;
+            _failureTime = CFAbsoluteTimeGetCurrent();
+        }
+        
+        unlink([plistPath saneFileSystemRepresentation]);
+        unlink([tlpdbPath saneFileSystemRepresentation]);
+        
+        [self setTlpdbData:nil];
+    }
+    else {
+        TLMLog(__func__, @"Failed to download remote package database. Package versions will not be displayed.");
+    }
+    [connection cancel];
+    [connection release];
+    [_downloadLock unlock];
 }
 
 - (BOOL)isOfficial
