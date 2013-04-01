@@ -43,7 +43,7 @@
 #import "TLMEnvironment.h"
 
 @interface TLMListUpdatesOperation()
-@property (readwrite, copy) NSURL *updateURL;
+@property (nonatomic, readwrite, copy) NSURL *updateURL;
 @end
 
 
