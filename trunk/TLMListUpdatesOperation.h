@@ -52,6 +52,6 @@
 @property (readonly) NSArray *packages;
 
 // mirror URL that was used for listing updates
-@property (readonly, copy) NSURL *updateURL;
+@property (nonatomic, readonly, copy) NSURL *updateURL;
 
 @end
