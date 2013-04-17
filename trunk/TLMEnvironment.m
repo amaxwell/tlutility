@@ -305,6 +305,8 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
             [scanner setCharactersToBeSkipped:[[NSCharacterSet decimalDigitCharacterSet] invertedSet]];
             if ([scanner scanInteger:tlmgrVersion] == NO)
                 *tlmgrVersion = -1;
+            if ([versionString rangeOfString:@"$Date$"].length)
+                *isDev = YES;
         }
     }
     
@@ -813,12 +815,12 @@ static void __TLMTestAndClearEnvironmentVariable(const char *name)
 
 - (BOOL)tlmgrSupportsPersistentDownloads;
 {
-    return (_tlmgrVersion.revision >= 16424);
+    return _tlmgrVersion.isDevelopment || (_tlmgrVersion.revision >= 16424);
 }
 
 - (BOOL)tlmgrSupportsDumpTlpdb
 {
-    return (_tlmgrVersion.revision >= 22912);
+    return _tlmgrVersion.isDevelopment || (_tlmgrVersion.revision >= 22912);
 }
 
 - (NSString *)updmapAbsolutePath
