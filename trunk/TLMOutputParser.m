@@ -97,15 +97,30 @@
  
  */
 
-#define MAX_COLUMNS 5
+/* max number of columns from original machine-readable output through 2012 */
+#define MIN_COLUMNS 5
 
 enum {
-    TLMNameIndex          = 0,
-    TLMStatusIndex        = 1,
-    TLMLocalVersionIndex  = 2,
-    TLMRemoteVersionIndex = 3,
-    TLMSizeIndex          = 4
+    TLMNameIndex             = 0,
+    TLMStatusIndex           = 1,
+    TLMLocalVersionIndex     = 2,
+    TLMRemoteVersionIndex    = 3,
+    TLMSizeIndex             = 4,
+    /* stuff we ignore */
+    TLMLocalCatVersionIndex  = 8,
+    TLMRemoteCatVersionIndex = 9
 };
+
+static NSString * __TLMStringFromComponentsAtIndex(NSArray *components, NSUInteger idx)
+{
+    NSString *ret = nil;
+    if ([components count] > idx) {
+        ret = [components objectAtIndex:idx];
+        if ([ret isEqualToString:@"-"])
+            ret = nil;
+    }
+    return ret;
+}
 
 + (TLMPackage *)packageWithUpdateLine:(NSString *)outputLine;
 {
@@ -115,8 +130,8 @@ enum {
     NSArray *components = [outputLine componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     
     // !!! early return here after a sanity check
-    if ([components count] < MAX_COLUMNS) {
-        TLMLog(__func__, @"Unexpected number of tokens in line \"%@\"", outputLine);
+    if ([components count] < MIN_COLUMNS) {
+        TLMLog(__func__, @"Too few tokens in line \"%@\"; may be an older tlmgr", outputLine);
         [package setName:NSLocalizedString(@"Error parsing output line", @"error message for unreadable package")];
         [package setStatus:outputLine];
         [package setFailedToParse:YES];
@@ -140,17 +155,17 @@ enum {
     if ('f' == ch)
         [package setWasForciblyRemoved:YES];
     
-    if (NO == [[components objectAtIndex:TLMLocalVersionIndex] isEqualToString:@"-"])
-        [package setLocalVersion:[components objectAtIndex:TLMLocalVersionIndex]];
+    [package setLocalVersion:__TLMStringFromComponentsAtIndex(components, TLMLocalVersionIndex)];
     
-    if (NO == [[components objectAtIndex:TLMRemoteVersionIndex] isEqualToString:@"-"])
-        [package setRemoteVersion:[components objectAtIndex:TLMRemoteVersionIndex]];
+    [package setRemoteVersion:__TLMStringFromComponentsAtIndex(components, TLMRemoteVersionIndex)];
     
-    if (NO == [[components objectAtIndex:TLMSizeIndex] isEqualToString:@"-"]) {
-        NSInteger s = [[components objectAtIndex:TLMSizeIndex] integerValue];
-        if (s > 0) [package setSize:[NSNumber numberWithUnsignedInteger:s]];
-    }
+    NSInteger s = [__TLMStringFromComponentsAtIndex(components, TLMSizeIndex) integerValue];
+    if (s > 0) [package setSize:[NSNumber numberWithUnsignedInteger:s]];
     
+    [package setLocalCatalogueVersion:__TLMStringFromComponentsAtIndex(components, TLMLocalCatVersionIndex)];
+
+    [package setRemoteCatalogueVersion:__TLMStringFromComponentsAtIndex(components, TLMRemoteCatVersionIndex)];
+
     return package;
 }
 
