@@ -71,6 +71,7 @@ static int _kqueue = -1;
 {
     if ([BDSKTask class] != self) return;
     _kqueue = kqueue();
+
     // persistent thread to watch all tasks
     [NSThread detachNewThreadSelector:@selector(_watchQueue) toTarget:self withObject:nil];
 }
@@ -500,59 +501,78 @@ static char *__BDSKCopyFileSystemRepresentation(NSString *str)
 {
     do {
         
-        NSAutoreleasePool *pool = [NSAutoreleasePool new];
         struct kevent evt;
         
-        if (HANDLE_EINTR(kevent(_kqueue, NULL, 0, &evt, 1, NULL))) {
+        // block indefinitely
+        const int eventCount = HANDLE_EINTR(kevent(_kqueue, NULL, 0, &evt, 1, NULL));
+
+        if (eventCount == -1) {
+            /*
+             This is a total bandaid for a problem I'm seeing, as I've no idea
+             why a kqueue file descriptor could go invalid. I suspect it's a side
+             effect of a memory smasher somewhere.
+             */
+            int err = errno;
+            NSLog(@"kevent failed in %s with error: %s", __func__, strerror(err));
+            (void) close(_kqueue);
+            _kqueue = kqueue();
+            continue;
+        }        
             
-            struct BDSKTaskInternal *internal = evt.udata;
-            pthread_mutex_lock(&internal->_lock);
+        if (evt.flags & EV_ERROR || EVFILT_PROC != evt.filter) {
+            NSLog(@"Skipping bad event from kqueue: flags=%d, filter=%d, data=%ld", evt.flags, evt.filter, evt.data);
+            continue;
+        }
             
-            // can only fail if _disableNotification is called immediately after kevent unblocks
-            if (internal->_canNotify) {
-                                
-                // retain a pointer to the task before unlocking
-                BDSKTask *task = [internal->_task retain];
-                pthread_mutex_unlock(&internal->_lock);
+        struct BDSKTaskInternal *internal = evt.udata;
+        pthread_mutex_lock(&internal->_lock);
+        
+        // can only fail if _disableNotification is called immediately after kevent unblocks
+        if (internal->_canNotify) {
+            
+            NSAutoreleasePool *pool = [NSAutoreleasePool new];
+            
+            // retain a pointer to the task before unlocking
+            BDSKTask *task = [internal->_task retain];
+            pthread_mutex_unlock(&internal->_lock);
 
-                // may be called multiple times; no need to free anything
-                if (evt.fflags & NOTE_SIGNAL)
-                    [task _taskSignaled];
-                
-                /*
-                 Only called once; can free stuff on this code path, as -dealloc will not be called
-                 while it's executing because we have a retain on the task.
-                 */
-                if (evt.fflags & NOTE_EXIT)
-                    [task _taskExited];
-                
-                [task release];
-                
-            }
-            else {
-
-                NSLog(@"Not posting NSTaskDidTerminateNotification for deallocated task %p", internal->_task);
-
-                // delete this event to make sure we don't get anything else
-                internal->_event.flags = EV_DELETE;
-                (void) HANDLE_EINTR(kevent(_kqueue, &internal->_event, 1, NULL, 0, NULL));
-
-                /*
-                 -dealloc or -finalize have called _disableNotification, and it
-                 is now our responsibility to free the _internal pointer.
-                 */
-                pthread_mutex_unlock(&internal->_lock);
-                pthread_mutex_destroy(&internal->_lock);
-
-                // runloop and source were freed in _disableNotification
-                NSParameterAssert(NULL == internal->_rl);
-                NSParameterAssert(NULL == internal->_rlsource);
-                NSZoneFree(NSZoneFromPointer(internal), internal);
-                
-            }            
+            // may be called multiple times; no need to free anything
+            if (evt.fflags & NOTE_SIGNAL)
+                [task _taskSignaled];
+            
+            /*
+             Only called once; can free stuff on this code path, as -dealloc will not be called
+             while it's executing because we have a retain on the task.
+             */
+            if (evt.fflags & NOTE_EXIT)
+                [task _taskExited];
+            
+            [task release];
+            
+            [pool drain];
             
         }
-        [pool drain];
+        else {
+
+            NSLog(@"Not posting NSTaskDidTerminateNotification for deallocated task %p", internal->_task);
+
+            // delete this event to make sure we don't get anything else
+            internal->_event.flags = EV_DELETE;
+            (void) HANDLE_EINTR(kevent(_kqueue, &internal->_event, 1, NULL, 0, NULL));
+
+            /*
+             -dealloc or -finalize have called _disableNotification, and it
+             is now our responsibility to free the _internal pointer.
+             */
+            pthread_mutex_unlock(&internal->_lock);
+            pthread_mutex_destroy(&internal->_lock);
+
+            // runloop and source were freed in _disableNotification
+            NSParameterAssert(NULL == internal->_rl);
+            NSParameterAssert(NULL == internal->_rlsource);
+            NSZoneFree(NSZoneFromPointer(internal), internal);
+            
+        }      
         
     } while (1);
 }
