@@ -305,7 +305,7 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
             [scanner setCharactersToBeSkipped:[[NSCharacterSet decimalDigitCharacterSet] invertedSet]];
             if ([scanner scanInteger:tlmgrVersion] == NO)
                 *tlmgrVersion = -1;
-            if ([versionString rangeOfString:@"$Date$"].length)
+            if (isDev && [versionString rangeOfString:@"$Date$"].length)
                 *isDev = YES;
         }
     }
