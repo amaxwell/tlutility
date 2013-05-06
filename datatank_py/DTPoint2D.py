@@ -3,6 +3,8 @@
 
 # This software is under a BSD license.  See LICENSE.txt for details.
 
+import numpy as np
+
 class DTPoint2D(object):
     """2D Point object."""
     
@@ -34,7 +36,7 @@ class DTPoint2D(object):
     @classmethod
     def from_data_file(self, datafile, name):
         
-        (x, y) = datafile[name]
+        (x, y) = np.squeeze(datafile[name])
         return DTPoint2D(x, y)
 
 if __name__ == '__main__':
