@@ -667,5 +667,21 @@
             <sparkle:minimumSystemVersion>10.6.8</sparkle:minimumSystemVersion>
             <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-1.12.tar.gz" sparkle:version="1.12" length="2950094" type="application/octet-stream" sparkle:dsaSignature="MCwCFBbwh5N/MUJZyK2hxr5aBxA3DR8hAhQhQqwqWFNmtfGGakUYt880Sk5VaA=="></enclosure>
         </item>
+        <item>
+            <title>Version 1.13</title>
+            <description>
+                <h3>Changes Since 1.12</h3>
+                <li>Enable font changes in the log tableview</li>
+                <li>Fix a crash when TeX binary path was bad</li>
+                <li>Update the font panel when selection changes, so the selected font should be current</li>
+                <li>Show a status message when database version check fails</li>
+                <li>Do not check version numbers when running development versions of tlmgr</li>
+                <li>Show catalogue version numbers (requires TeX Live 2013)</li>
+                <li>Update CTAN mirror list</li>
+            </description>
+            <pubDate>Tue, 28 May 2013 02:50:03 +0000</pubDate>
+            <sparkle:minimumSystemVersion>10.6.8</sparkle:minimumSystemVersion>
+            <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-1.13.tar.gz" sparkle:version="1.13" length="2952802" type="application/octet-stream" sparkle:dsaSignature="MCwCFDN7jiijoM5q2qqmsecQjlsHDDwHAhRIq5weWIzZPPIl4Ke+itvRiFH7GQ=="></enclosure>
+        </item>
     </channel>
 </rss>
