@@ -580,15 +580,15 @@ static NSString *__TLMTemporaryFile()
 
         if ([parseTask terminationStatus] == EXIT_SUCCESS) {
             [self reloadDatabaseFromPath:plistPath];
+            unlink([plistPath saneFileSystemRepresentation]);
+            unlink([tlpdbPath saneFileSystemRepresentation]);
         }
         else {
             TLMLog(__func__, @"Parsing the database from this repository failed with the following error: %@", [parseTask errorString]);
+            TLMLog(__func__, @"The database can be viewed with a text editor at \"%@\"", tlpdbPath);
             _failed = YES;
             _failureTime = CFAbsoluteTimeGetCurrent();
         }
-        
-        unlink([plistPath saneFileSystemRepresentation]);
-        unlink([tlpdbPath saneFileSystemRepresentation]);
         
         [self setTlpdbData:nil];
 
