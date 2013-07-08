@@ -415,7 +415,11 @@ if __name__ == '__main__':
     # "/usr/local/texlive/2011/tlpkg/texlive.tlpdb"
     flat_tlpdb = open(args[0], "r") if len(args) else sys.stdin
     all_packages, index_map = packages_from_tlpdb(flat_tlpdb)
-        
+
+    if len(all_packages) == 0:
+        sys.stderr.write("Did not find any packages in TeX Live Database\n")
+        exit(1)
+
     if options.output_format == "sqlite3":
         _save_as_sqlite(all_packages, options.output_path)
     elif options.output_format == "plist":
