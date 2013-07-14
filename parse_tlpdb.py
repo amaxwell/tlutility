@@ -338,7 +338,7 @@ def _save_as_sqlite(packages, absolute_path):
     # instead of adding rows
     try:
         os.remove(absolute_path)
-    except OSError, e:
+    except OSError as e:
         if e.errno != errno.ENOENT:
             raise e
             

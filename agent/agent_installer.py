@@ -96,7 +96,7 @@ def uninstall_agent():
     if os.path.exists(plist_path):  
         try:
             os.remove(plist_path)
-        except Exception, e:
+        except Exception as e:
             log_message("ERROR: failed to remove %s" % (plist_path))
             ret = 1
     else:
@@ -114,7 +114,7 @@ def install_agent(source_path):
     if os.path.exists(plist_dir) == False:
         try:
             os.makedirs(plist_dir)
-        except Exception, e:
+        except Exception as e:
             log_message("ERROR: failed to create %s" % (plist_dir))
             ret = 1
     
@@ -127,7 +127,7 @@ def install_agent(source_path):
             plist = readPlist(source_path)
             plist["ProgramArguments"][-1] = installed_script_path()
             writePlist(plist, plist_path)
-        except Exception, e:
+        except Exception as e:
             log_message("ERROR: failed to copy %s --> %s" % (source_path, plist_path))
             ret = 1
             
@@ -143,7 +143,7 @@ def install_script(source_path):
     if os.path.exists(script_dir) == False:
         try:
             os.makedirs(script_dir)
-        except Exception, e:
+        except Exception as e:
             log_message("ERROR: failed to create %s" % (script_dir))
             ret = 1
     
@@ -151,7 +151,7 @@ def install_script(source_path):
         assert os.path.isdir(script_dir), "%s is not a directory" % (script_dir)
         try:
             copyfile(source_path, script_path)
-        except Exception, e:
+        except Exception as e:
             log_message("ERROR: failed to copy %s --> %s" % (source_path, script_path))
             ret = 1
             
