@@ -246,11 +246,47 @@ static void __TLMMigrateBundleIdentifier()
                                                         andEventID:kAEGetURL];
 }
 
+- (void)_checkSystemPythonVersion
+{
+#define PYTHON_PATH @"/usr/bin/python"
+    
+    // !!! early return
+    if ([[NSFileManager defaultManager] isExecutableFileAtPath:PYTHON_PATH] == NO) {
+        TLMLog(__func__, @"You have removed the system's python interpreter at %@. This program will not work.", PYTHON_PATH);
+        return;
+    }
+    
+    NSString *script = [NSString stringWithFormat:@"import sys; sys.stdout.write(str(sys.version))"];
+    TLMTask *task = [TLMTask launchedTaskWithLaunchPath:PYTHON_PATH arguments:[NSArray arrayWithObjects:@"-c", script, nil]];
+    [task waitUntilExit];
+    if ([task terminationStatus] == 0) {
+        NSString *versionString = [task outputString];
+        TLMLog(__func__, @"%@ is %@", [task launchPath], versionString);
+    }
+    else {
+        TLMLog(__func__, @"Failed to get string version of python at %@", [task launchPath]);
+    }
+
+    script = [NSString stringWithFormat:@"import sys; sys.stdout.write(str(sys.version_info[0]))"];
+    task = [TLMTask launchedTaskWithLaunchPath:PYTHON_PATH arguments:[NSArray arrayWithObjects:@"-c", script, nil]];
+    [task waitUntilExit];
+    if ([task terminationStatus] == 0) {
+        NSInteger majorVersion = [[task outputString] integerValue];
+        if (majorVersion > 2)
+            TLMLog(__func__, @"*** ERROR *** Replacing the system's version of python is unsupported and will likely fail. This was not one of your better ideas.");
+    }
+    else {
+        TLMLog(__func__, @"Failed to get numeric version of python at %@", [task launchPath]);
+    }
+}
+
 - (void)applicationDidFinishLaunching:(NSNotification *)notification;
 {
     // make sure this gets hooked up early enough that it collects messages
     if (nil == _logWindowController)
         _logWindowController = [TLMLogWindowController new];
+    
+    [self _checkSystemPythonVersion];
     
     NSDictionary *infoPlist = [[NSBundle mainBundle] infoDictionary];
     NSProcessInfo *pInfo = [NSProcessInfo processInfo];
