@@ -141,11 +141,7 @@ static NSString * __TLMGetTemporaryDirectory()
             
         if ((domains & NSUserDomainMask) == 0) {
             // have to copy local to user before removing the local one
-            
-            // ignore PYTHON* envvars
-            [options addObject:@"-E"];
 
-            [options addObject:[[NSBundle mainBundle] pathForAuxiliaryExecutable:@"agent_installer.py"]];
             [options addObject:@"--install"];
             
             [options addObject:@"--plist"];
@@ -154,7 +150,7 @@ static NSString * __TLMGetTemporaryDirectory()
             [options addObject:@"--script"];
             [options addObject:[[NSBundle mainBundle] pathForResource:@"update_check" ofType:@"py"]];
         
-            copyOperation = [[TLMOperation alloc] initWithCommand:@"/usr/bin/python" options:options];
+            copyOperation = [[TLMOperation alloc] initWithCommand:[[NSBundle mainBundle] pathForAuxiliaryExecutable:@"agent_installer.py"] options:options];
         }
         
         // always remove the local agent
