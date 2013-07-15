@@ -498,8 +498,8 @@ static NSString *__TLMTemporaryFile()
         NSString *parserPath = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"parse_tlpdb.py"];
         
         TLMTask *parseTask = [[TLMTask new] autorelease];
-        [parseTask setLaunchPath:@"/usr/bin/python"];
-        [parseTask setArguments:[NSArray arrayWithObjects:@"-E", parserPath, @"-o", plistPath, @"-f", @"plist", tlpdbPath, nil]];
+        [parseTask setLaunchPath:parserPath];
+        [parseTask setArguments:[NSArray arrayWithObjects:@"-o", plistPath, @"-f", @"plist", tlpdbPath, nil]];
         [parseTask launch];
         [parseTask waitUntilExit];
         
@@ -573,8 +573,8 @@ static NSString *__TLMTemporaryFile()
         NSString *parserPath = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"parse_tlpdb.py"];
         
         TLMTask *parseTask = [[TLMTask new] autorelease];
-        [parseTask setLaunchPath:@"/usr/bin/python"];
-        [parseTask setArguments:[NSArray arrayWithObjects:@"-E", parserPath, @"-o", plistPath, @"-f", @"plist", tlpdbPath, nil]];
+        [parseTask setLaunchPath:parserPath];
+        [parseTask setArguments:[NSArray arrayWithObjects:@"-o", plistPath, @"-f", @"plist", tlpdbPath, nil]];
         [parseTask launch];
         [parseTask waitUntilExit];
 
