@@ -345,7 +345,7 @@ class _DTGDALBitmap2D(DTBitmap2D):
         self.grid = (xmin, ymin, dx, abs(dy))
                 
         # RGB or RGBA
-        if channel_count in (3, 4):
+        if channel_count in (2, 3, 4):
 
             name_map = {}
             
