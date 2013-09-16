@@ -3,14 +3,9 @@
 
 # This software is under a BSD license.  See LICENSE.txt for details.
 
-from Foundation import NSData
-from AppKit import NSBitmapImageRep, NSCalibratedRGBColorSpace, NSGraphicsContext
-from Quartz import CGColorSpaceCreateWithName, kCGColorSpaceGenericRGB
-from Quartz import CGDataProviderCreateWithCFData, CGImageCreate, CGRectMake
-from Quartz import kCGImageAlphaNone, kCGBitmapByteOrderDefault, kCGRenderingIntentDefault, CGPointZero
-from Quartz import CIImage, CIFilter
+# NB: loading all of the bridged modules up front results in a
+# pretty huge performance hit (~ 1 second just in importing).
 
-from datatank_py.DTBitmap2D import DTBitmap2D
 import numpy as np
 
 def __interleaved_rgb_from_planes(red, green, blue):
@@ -30,6 +25,8 @@ def __interleaved_rgb_from_planes(red, green, blue):
     return mesh_data
     
 def __ns_data_from_array(a):
+    
+    from Foundation import NSData
     
     a = np.asarray(a).flatten()
     if a.dtype == np.uint8 or a.dtype == np.int8:
@@ -61,6 +58,10 @@ def __bitmap_planes_from_imagerep(image_rep):
     
 def ci_image_from_planes(red, green, blue):
     
+    from Quartz import CIImage
+    from Quartz import CGDataProviderCreateWithCFData, CGImageCreate, CGColorSpaceCreateWithName
+    from Quartz import kCGImageAlphaNone, kCGBitmapByteOrderDefault, kCGRenderingIntentDefault, kCGColorSpaceGenericRGB
+    
     # convert to 8 bits, just to simplify life a bit
     red = red.astype(np.uint8)
     green = green.astype(np.uint8)
@@ -90,6 +91,10 @@ def ci_image_from_planes(red, green, blue):
     
 def dt_bitmap2d_from_ci_image(ci_image, width, height, grid):
     
+    from datatank_py.DTBitmap2D import DTBitmap2D
+    from Quartz import CGRectMake, CGPointZero
+    from AppKit import NSBitmapImageRep, NSCalibratedRGBColorSpace, NSGraphicsContext
+    
     # No matter what, I can't get NSBitmapImageRep to create a rep from planar data or
     # a passed-in buffer, so I have to let it manage the buffer.  Constraining row bytes
     # seems to work properly, so at least I don't have to deal with that.  I really think
@@ -111,5 +116,6 @@ def dt_bitmap2d_from_ci_image(ci_image, width, height, grid):
     return dt_bitmap
     
 def ci_filter_named(filter_name):
+    from Quartz import CIFilter
     return CIFilter.filterWithName_(filter_name)
 

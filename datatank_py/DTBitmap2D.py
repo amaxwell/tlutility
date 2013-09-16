@@ -3,24 +3,8 @@
 
 # This software is under a BSD license.  See LICENSE.txt for details.
 
-try:
-    from PIL import Image
-except Exception, e:
-    Image = None
-    pass
-try:
-    from osgeo import gdal, osr
-    # throw instead of printing to stderr
-    gdal.UseExceptions()
-    osr.UseExceptions()
-    from osgeo.gdalconst import GA_ReadOnly, GDT_UInt16, GDT_Byte
-except Exception, e:
-    gdal = None
-    osr = None
-    pass
 import numpy as np
 import sys
-from DTProgress import DTProgress
 
 class _DTBitmap2D(type):
     """Metaclass of DTBitmap2D which implements __call__ in order to
@@ -70,7 +54,8 @@ class DTBitmap2D(object):
     
     __metaclass__ = _DTBitmap2D
     CHANNEL_NAMES = ("red", "green", "blue", "alpha", "gray")
-            
+    dt_type = ("2D Bitmap",)
+    
     def __init__(self, path_or_image=None):
         """Initializes a new DTBitmap2D object.
         
@@ -138,7 +123,9 @@ class DTBitmap2D(object):
         
         """
         
-        if Image == None:
+        try:
+            from PIL import Image
+        except Exception, e:
             return None
             
         if self.is_gray():
@@ -218,8 +205,13 @@ class DTBitmap2D(object):
         
         """
         
-        assert osr != None and gdal != None, "GDAL not available"
+        from osgeo import gdal, osr
+        from osgeo.gdalconst import GDT_UInt16, GDT_Byte
         
+        # throw instead of printing to stderr
+        gdal.UseExceptions()
+        osr.UseExceptions()
+                
         # gdal doesn't like unicode objects...
         output_path = output_path.encode(sys.getfilesystemencoding())
         projection_name = projection_name.encode("utf-8")
@@ -280,7 +272,7 @@ class DTBitmap2D(object):
         dst = None
         
     def __dt_type__(self):
-            return "2D Bitmap"
+            return DTBitmap2D.dt_type[0]
 
     def __dt_write__(self, datafile, name):
         
@@ -324,6 +316,14 @@ class _DTGDALBitmap2D(DTBitmap2D):
         
         super(_DTGDALBitmap2D, self).__init__()
         
+        from osgeo import gdal
+        from osgeo.gdalconst import GA_ReadOnly
+        
+        # throw instead of printing to stderr
+        gdal.UseExceptions()
+        
+        from DTProgress import DTProgress
+
         # NB: GDAL craps out if you pass a unicode object as a path
         image_path = image_path.encode(sys.getfilesystemencoding())
             
@@ -483,6 +483,7 @@ class _DTPILBitmap2D(DTBitmap2D):
         
         super(_DTPILBitmap2D, self).__init__()
         
+        from PIL import Image
         image = Image.open(image_or_path) if isinstance(image_or_path, basestring) else image_or_path
         
         array = _array_from_image(image)
