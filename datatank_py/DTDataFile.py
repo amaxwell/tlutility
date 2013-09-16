@@ -40,9 +40,51 @@ from struct import Struct
 import numpy as np
 from DTPyWrite import dt_writer
 
+# see doc for _load_modules
+_CLASSES_BY_TYPE = {}
+
 def _log_warning(msg):
     """Write a message to standard error"""
     sys.stderr.write("DTDataFile: %s\n" % (msg))
+    
+def _load_modules():
+    """Creates a cache mapping DataTank type names to datatank_py classes.
+    
+    For instance, this will have something like
+    
+    "2D Point" = <class 'datatank_py.DTPoint2D.DTPoint2D'>
+    "2D Path"  = <class 'datatank_py.DTPath2D.DTPath2D'>
+    "Path2D"   = <class 'datatank_py.DTPath2D.DTPath2D'>
+    
+    where the class objects will have attribute dt_type (iterable)
+    and class method from_data_file (DTPyWrite).
+    
+    """
+    if len(_CLASSES_BY_TYPE) == 0:
+        from glob import glob
+        import datatank_py
+        
+        # try to load all modules in the datatank_py module directory
+        for module_name in glob(os.path.join(os.path.dirname(datatank_py.__file__), "DT*.py")):
+            # e.g. DTPath2D.py
+            module_name = os.path.basename(module_name)
+            # DTPath2D
+            class_name = os.path.splitext(module_name)[0]
+            # datatank_py.DTPath2D
+            module_name = "datatank_py." + class_name
+            # import datatank_py.DTPath2D
+            module = __import__(module_name, fromlist=[])
+            # ignore modules that don't have a class with the same name
+            if hasattr(module, class_name):
+                mcls = getattr(module, class_name)
+                if hasattr(mcls, class_name):
+                    # finally, an instance of the class itself
+                    mcls = getattr(mcls, class_name)
+                    # check for class attribute of dt_type and class method from_data_file
+                    if hasattr(mcls, "dt_type") and hasattr(mcls, "from_data_file"):
+                        # DataTank and DTSource use different constants. Sometimes.
+                        for dt_type in mcls.dt_type:
+                            _CLASSES_BY_TYPE[dt_type] = mcls
 
 # from cProfile, these are surprisingly expensive to get
 try:
@@ -444,18 +486,19 @@ class DTDataFile(object):
         self._reload_content_if_needed()
         return self._name_offset_map.keys()
 
-    def variable_named(self, name):
+    def variable_named(self, name, use_modules=False):
         """Procedural API for getting a value from disk.
         
         Arguments:
         name -- the variable name as user-visible in the file (without the trailing nul)
+        use_modules -- try to convert to abstract type by introspection of available modules
         
         Returns:
         A string, scalar, or numpy array.
         
-        This returns values as strings, scalars, or numpy arrays.  No attempt is made to
-        convert a given array to its abstract type (so you can retrieve each plane of a
-        2D Bitmap object by name, but not as a PIL image).
+        This returns values as strings, scalars, or numpy arrays.  By default, no 
+        attempt is made to convert a given array to its abstract type (so you can
+        retrieve each plane of a 2D Bitmap object by name, but not as a PIL image).
         
         """
         
@@ -511,6 +554,14 @@ class DTDataFile(object):
                     string_list.append(string)
                 
                 return string_list
+            elif use_modules:
+                _load_modules()
+                # could log and continue, but this is currently only be explicit request
+                assert dt_type in _CLASSES_BY_TYPE, "Class %s is not in %s" % (dt_type, _CLASSES_BY_TYPE)
+                
+                dt_cls = _CLASSES_BY_TYPE[dt_type]
+                # !!! early return here
+                return dt_cls.from_data_file(self, name)
                             
         # everything else is a DTArray type
         data_type = _type_string_from_dtarray_type(var_type)
@@ -544,6 +595,12 @@ class DTDataFile(object):
         shape = (o, n, m)
             
         return values.reshape(shape, order="C")        
+    
+    def dt_object_named(self, key):
+        # Tried to make this the default in __getitem__, but too many of the
+        # modules use dictionary-style getters in from_data_file methods,
+        # and that would be a compatibility nightmare.
+        return self.variable_named(key, use_modules=True)
         
     def __iter__(self):
         # unordered iteration
