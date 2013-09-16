@@ -18,6 +18,7 @@ def _bounding_box(xvalues, yvalues):
 
 class DTPath2D(object):
     """2D Path object."""
+    dt_type = ("2D Path", "Path2D")
     
     def __init__(self, xvalues, yvalues, points_only=True):
         super(DTPath2D, self).__init__()
@@ -194,7 +195,7 @@ class DTPath2D(object):
         return total_length
 
     def __dt_type__(self):
-        return "2D Path"
+        return DTPath2D.dt_type[0]
         
     def __dt_write__(self, datafile, name):
         datafile.write_anonymous(self.bounding_box(), name + "_bbox2D")

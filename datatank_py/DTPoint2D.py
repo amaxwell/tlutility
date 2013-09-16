@@ -7,6 +7,7 @@ import numpy as np
 
 class DTPoint2D(object):
     """2D Point object."""
+    dt_type = ("2D Point",)
     
     def __init__(self, x, y):
         super(DTPoint2D, self).__init__()
@@ -28,7 +29,7 @@ class DTPoint2D(object):
         return "(%f, %f)" % (self.x, self.y)
     
     def __dt_type__(self):
-        return "2D Point"
+        return DTPoint2D.dt_type[0]
         
     def __dt_write__(self, datafile, name):
         datafile.write_anonymous((self.x, self.y), name)
@@ -47,3 +48,7 @@ if __name__ == '__main__':
         
         for x in xrange(10):
             df["Point %d" % x] = DTPoint2D(x, x)
+
+    with DTDataFile("point2d.dtbin") as df:
+        
+        print df.dt_object_named("Point 1")
