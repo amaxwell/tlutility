@@ -33,6 +33,18 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
     
+# Python 2.x and 3.x handle strings differently.  In python 3.x, all strings are unicode instances.  That means they
+# don't have the decode() method.  As a hack, I'm testing the version number and using decode() only if the python
+# version number is less than 3.
+import sys
+python_major_version = sys.version_info[0]
+    
+# sys.stdout has been changed between python 2 and 3.  The result is that when you write to sys.stdout, it accepts bytes
+# rather than strings now.  This trips up plistlib.PlistWriter, which expects to be writing strings.  As a hack around
+# that, I'm writing to a StringIO object, and then writing that to sys.stdout.  Not the best way of doing things, but
+# until I know of something better, this is it.
+import io
+    
 class TLPackage(object):
     """TeX Live Package
     
@@ -249,10 +261,16 @@ def packages_from_tlpdb(flat_tlpdb):
             elif key == "relocated":
                 package.relocated = int(value)
             elif key == "shortdesc":
-                package.shortdesc = value.decode("utf-8")
+                if python_major_version < 3:
+                    package.shortdesc = value.decode("utf-8")
+                else:
+                    package.shortdesc = value
             elif key == "longdesc":
                 oldvalue = "" if package.longdesc == None else package.longdesc
-                package.longdesc = oldvalue + " " + value.decode("utf-8")
+                if python_major_version < 3:
+                    package.longdesc = oldvalue + " " + value.decode("utf-8")
+                else:
+                    package.longdesc = oldvalue + " " + value
             elif key == "depend":
                 package.depends.append(value)
             elif key == "catalogue":
@@ -372,7 +390,6 @@ def _save_as_plist(packages, path_or_file):
     of TLPackage dictionary values.
     
     """
-    
     import plistlib
     plist = {}
     # only for remote tlpdb
@@ -382,7 +399,16 @@ def _save_as_plist(packages, path_or_file):
     for pkg in all_packages:
         plist["packages"].append(pkg.dictionary_value())
     
-    plistlib.writePlist(plist, path_or_file)
+    if python_major_version < 3:
+        plistlib.writePlist(plist, path_or_file)
+    else:
+        bytes_output = plistlib.writePlistToBytes(plist)
+        str_output = bytes_output.decode("UTF-8")
+        if path_or_file == sys.stdout:
+            sys.stdout.write(str_output)
+        else:
+            output_file = open(path_or_file, 'w')
+            output_file.write(str_output)
     
 if __name__ == '__main__':
     
