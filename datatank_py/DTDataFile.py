@@ -68,6 +68,8 @@ def _load_modules():
         for module_name in glob(os.path.join(os.path.dirname(datatank_py.__file__), "DT*.py")):
             # e.g. DTPath2D.py
             module_name = os.path.basename(module_name)
+            if "DTDataFile" in module_name:
+                continue
             # DTPath2D
             class_name = os.path.splitext(module_name)[0]
             # datatank_py.DTPath2D
