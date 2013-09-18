@@ -505,6 +505,8 @@ static NSString *__TLMTemporaryFile()
         
         if ([parseTask terminationStatus] == EXIT_SUCCESS) {
             [self reloadDatabaseFromPath:plistPath];
+            if ([parseTask errorString])
+                TLMLog(__func__, @"parse_tlpdb.py noted the following problems: %@", [parseTask errorString]);
         }
         else {
             TLMLog(__func__, @"Parsing the database from this repository failed with the following error: %@", [parseTask errorString]);
@@ -582,6 +584,8 @@ static NSString *__TLMTemporaryFile()
             [self reloadDatabaseFromPath:plistPath];
             unlink([plistPath saneFileSystemRepresentation]);
             unlink([tlpdbPath saneFileSystemRepresentation]);
+            if ([parseTask errorString])
+                TLMLog(__func__, @"parse_tlpdb.py noted the following problems: %@", [parseTask errorString]);
         }
         else {
             TLMLog(__func__, @"Parsing the database from this repository failed with the following error: %@", [parseTask errorString]);
