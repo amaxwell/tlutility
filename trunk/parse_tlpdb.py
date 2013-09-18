@@ -141,6 +141,7 @@ def _attributes_from_line(line):
     
         arch=x86_64-darwin size=1
         details="Package introduction" language="de"
+        RELOC/doc/platex/pxbase/README details="Readme" language="ja"
     
     """
     
@@ -278,15 +279,23 @@ def packages_from_tlpdb(flat_tlpdb):
                     oldvalue.append(value)
                     package.binfiles[last_arch] = oldvalue
             elif key == "docfiles":
-                if line_has_key:
-                    attrs = _attributes_from_line(value)
-                    assert "size" in attrs, "missing size for %s : %s" % (package.name, key)
-                    package.docsize = int(attrs["size"])
-                else:
-                    values = value.split(" ")
-                    if len(values) > 1:
-                        package.docfiledata[values[0]] = _attributes_from_line(" ".join(values[1:]))
-                    package.docfiles.append(values[0])
+                # There's an exception handler here because a TL update introduced this abomination:
+                #   texmf-dist/doc/latex/pythontex/pythontex_quickstart.pdf details=""Quick start" documentation"
+                # due to a bug in the TeX Catalogue. TLPOBJ.pm uses a gruesome special case to handle this, but
+                # I'm just going to ignore it unless/until it happens again, since it's supposed to be fixed in
+                # the tlpdb at some point.
+                try:
+                    if line_has_key:
+                        attrs = _attributes_from_line(value)
+                        assert "size" in attrs, "missing size for %s : %s" % (package.name, key)
+                        package.docsize = int(attrs["size"])
+                    else:
+                        values = value.split(" ")
+                        if len(values) > 1:
+                            package.docfiledata[values[0]] = _attributes_from_line(" ".join(values[1:]))
+                        package.docfiles.append(values[0])
+                except Exception, e:
+                    sys.stderr.write("skipping bad docfile line %d in package %s: %s\n" % (line_idx, package.name, line))
             elif key == "runfiles":
                 if line_has_key:
                     attrs = _attributes_from_line(value)
