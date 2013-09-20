@@ -260,7 +260,8 @@ static void CenterRectInRect(NSRect *toCenter, NSRect enclosingRect)
 
 - (void)fadeIn;
 {
-    [self orderFront:nil];
+    // Had orderFront here, but that was causing the main window to order front
+    // when the app was hidden (at least on 10.8).
     [[self animator] setAlphaValue:1.0];
 }
 
