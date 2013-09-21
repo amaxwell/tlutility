@@ -683,5 +683,20 @@
             <sparkle:minimumSystemVersion>10.6.8</sparkle:minimumSystemVersion>
             <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-1.13.tar.gz" sparkle:version="1.13" length="2952802" type="application/octet-stream" sparkle:dsaSignature="MCwCFDN7jiijoM5q2qqmsecQjlsHDDwHAhRIq5weWIzZPPIl4Ke+itvRiFH7GQ=="></enclosure>
         </item>
+        <item>
+            <title>Version 1.14</title>
+            <description>
+                <h3>Changes Since 1.13</h3>
+                <li>Added more debug logging for TeX Live database parsing</li>
+                <li>Added more debug logging for python versions</li>
+                <li>Python scripts should now be compatible with Python 3</li>
+                <li>Once again, allow users to run their default Python environment, which I will probably regret</li>
+                <li>TeX Live database parser is now tolerant of certain syntax errors</li>
+                <li>The application should no longer come to the foreground after updating if it was hidden</li>
+            </description>
+            <pubDate>Sat, 21 Sep 2013 17:04:07 +0000</pubDate>
+            <sparkle:minimumSystemVersion>10.6.8</sparkle:minimumSystemVersion>
+            <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-1.14.tar.gz" sparkle:version="1.14" length="2953812" type="application/octet-stream" sparkle:dsaSignature="MCwCFFJPLn5262UPuml+uILz2l1gQoHXAhQqT4xIj5nFwICJg3KtR3i4z5v4UA=="></enclosure>
+        </item>
     </channel>
 </rss>
