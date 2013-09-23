@@ -248,35 +248,21 @@ static void __TLMMigrateBundleIdentifier()
 
 - (void)_checkSystemPythonVersion
 {
-#define PYTHON_PATH @"/usr/bin/python"
+    NSString *versionCheckPath = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"python_version.py"];
     
-    // !!! early return
-    if ([[NSFileManager defaultManager] isExecutableFileAtPath:PYTHON_PATH] == NO) {
-        TLMLog(__func__, @"You have removed the system's python interpreter at %@. This program will not work.", PYTHON_PATH);
-        return;
-    }
+    TLMTask *versionCheckTask = [[TLMTask new] autorelease];
+    [versionCheckTask setLaunchPath:versionCheckPath];
+    [versionCheckTask launch];
+    [versionCheckTask waitUntilExit];
     
-    NSString *script = [NSString stringWithFormat:@"import sys; sys.stdout.write(str(sys.version))"];
-    TLMTask *task = [TLMTask launchedTaskWithLaunchPath:PYTHON_PATH arguments:[NSArray arrayWithObjects:@"-c", script, nil]];
-    [task waitUntilExit];
-    if ([task terminationStatus] == 0) {
-        NSString *versionString = [task outputString];
-        TLMLog(__func__, @"%@ is %@", [task launchPath], versionString);
+    if ([versionCheckTask terminationStatus] == EXIT_SUCCESS) {
+        if ([versionCheckTask outputString])
+            TLMLog(__func__, @"%@", [versionCheckTask outputString]);
+        if ([versionCheckTask errorString])
+            TLMLog(__func__, @"%@", [versionCheckTask errorString]);
     }
     else {
-        TLMLog(__func__, @"Failed to get string version of python at %@", [task launchPath]);
-    }
-
-    script = [NSString stringWithFormat:@"import sys; sys.stdout.write(str(sys.version_info[0]))"];
-    task = [TLMTask launchedTaskWithLaunchPath:PYTHON_PATH arguments:[NSArray arrayWithObjects:@"-c", script, nil]];
-    [task waitUntilExit];
-    if ([task terminationStatus] == 0) {
-        NSInteger majorVersion = [[task outputString] integerValue];
-        if (majorVersion > 2)
-            TLMLog(__func__, @"*** ERROR *** Replacing the system's version of python is unsupported and will likely fail. This was not one of your better ideas.");
-    }
-    else {
-        TLMLog(__func__, @"Failed to get numeric version of python at %@", [task launchPath]);
+        TLMLog(__func__, @"*** ERROR *** Unable to run a Python task: %@", [versionCheckTask errorString]);
     }
 }
 
