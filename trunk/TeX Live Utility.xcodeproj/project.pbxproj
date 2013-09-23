@@ -27,6 +27,7 @@
 		F918B78D14552A9B0038476C /* SearchFieldCapRightInactive.png in Resources */ = {isa = PBXBuildFile; fileRef = F918B78314552A9B0038476C /* SearchFieldCapRightInactive.png */; };
 		F918B78E14552A9B0038476C /* TextFieldStretch.png in Resources */ = {isa = PBXBuildFile; fileRef = F918B78414552A9B0038476C /* TextFieldStretch.png */; };
 		F918B78F14552A9B0038476C /* TextFieldStretchInactive.png in Resources */ = {isa = PBXBuildFile; fileRef = F918B78514552A9B0038476C /* TextFieldStretchInactive.png */; };
+		F92034E217F0A6E300796A10 /* python_version.py in Copy aux executables */ = {isa = PBXBuildFile; fileRef = F92034D817F0A45A00796A10 /* python_version.py */; };
 		F922D79E1038B1E1004E9B12 /* TLMDownload.m in Sources */ = {isa = PBXBuildFile; fileRef = F922D79D1038B1E1004E9B12 /* TLMDownload.m */; };
 		F925D1AB12957B1800D75BB4 /* TLMMirrorController.m in Sources */ = {isa = PBXBuildFile; fileRef = F925D1AA12957B1800D75BB4 /* TLMMirrorController.m */; };
 		F925D1B112957B5600D75BB4 /* Mirrors.xib in Resources */ = {isa = PBXBuildFile; fileRef = F925D1B012957B5600D75BB4 /* Mirrors.xib */; };
@@ -56,7 +57,6 @@
 		F982553F12504E210018CB73 /* AutobackupSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = F982553E12504E210018CB73 /* AutobackupSheet.xib */; };
 		F983F97114438F00001C0A42 /* HelpBook in Resources */ = {isa = PBXBuildFile; fileRef = F983F97014438F00001C0A42 /* HelpBook */; };
 		F98FADA910672943002C1972 /* TLMNetInstallOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F98FADA810672943002C1972 /* TLMNetInstallOperation.m */; };
-		F9947DFE15D5B68100CA6559 /* TLUNotifier.app in Resources */ = {isa = PBXBuildFile; fileRef = F9947DFD15D5B68100CA6559 /* TLUNotifier.app */; };
 		F9947DFF15D5B69B00CA6559 /* TLUNotifier.app in Copy aux executables */ = {isa = PBXBuildFile; fileRef = F9947DFD15D5B68100CA6559 /* TLUNotifier.app */; };
 		F994A5AB1267E97F007EF95F /* TLMBackupListOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F994A5AA1267E97F007EF95F /* TLMBackupListOperation.m */; };
 		F9963EC50F0490E9005F0174 /* TLMRemoveOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F9963EC40F0490E9005F0174 /* TLMRemoveOperation.m */; };
@@ -124,7 +124,6 @@
 		F9F1C11310C5ABA300D32C17 /* NSMenu_TLMExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F1C11210C5ABA300D32C17 /* NSMenu_TLMExtensions.m */; };
 		F9F1C14E10C6EEC200D32C17 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9F1C14D10C6EEC200D32C17 /* SystemConfiguration.framework */; };
 		F9F56B4C0EF31F8800E934A9 /* TLMLogMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F56B4B0EF31F8800E934A9 /* TLMLogMessage.m */; };
-		F9F8BB4815DB09F900B5D1F3 /* uninstall_local_agent.sh in Resources */ = {isa = PBXBuildFile; fileRef = F9F8BB4715DB09F900B5D1F3 /* uninstall_local_agent.sh */; };
 		F9F8BB4915DB0A1100B5D1F3 /* uninstall_local_agent.sh in Copy aux executables */ = {isa = PBXBuildFile; fileRef = F9F8BB4715DB09F900B5D1F3 /* uninstall_local_agent.sh */; };
 		F9FAA44E0EFCBECD0040EAB2 /* TLMPapersizeController.m in Sources */ = {isa = PBXBuildFile; fileRef = F9FAA44D0EFCBECD0040EAB2 /* TLMPapersizeController.m */; };
 		F9FE58B4123EB80800B6008F /* TLMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = F9FE58B3123EB80800B6008F /* TLMDatabase.m */; };
@@ -248,6 +247,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 6;
 			files = (
+				F92034E217F0A6E300796A10 /* python_version.py in Copy aux executables */,
 				F9F8BB4915DB0A1100B5D1F3 /* uninstall_local_agent.sh in Copy aux executables */,
 				F9947DFF15D5B69B00CA6559 /* TLUNotifier.app in Copy aux executables */,
 				F9C7F37113A124C30031774F /* parse_tlpdb.py in Copy aux executables */,
@@ -314,6 +314,7 @@
 		F918B78314552A9B0038476C /* SearchFieldCapRightInactive.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = SearchFieldCapRightInactive.png; path = TextFieldBorders/SearchFieldCapRightInactive.png; sourceTree = "<group>"; };
 		F918B78414552A9B0038476C /* TextFieldStretch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = TextFieldStretch.png; path = TextFieldBorders/TextFieldStretch.png; sourceTree = "<group>"; };
 		F918B78514552A9B0038476C /* TextFieldStretchInactive.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = TextFieldStretchInactive.png; path = TextFieldBorders/TextFieldStretchInactive.png; sourceTree = "<group>"; };
+		F92034D817F0A45A00796A10 /* python_version.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = python_version.py; sourceTree = "<group>"; };
 		F922D79C1038B1E1004E9B12 /* TLMDownload.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMDownload.h; sourceTree = "<group>"; };
 		F922D79D1038B1E1004E9B12 /* TLMDownload.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMDownload.m; sourceTree = "<group>"; };
 		F925D1A912957B1800D75BB4 /* TLMMirrorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMMirrorController.h; sourceTree = "<group>"; };
@@ -573,8 +574,8 @@
 		29B97314FDCFA39411CA2CEA /* TeX Live Utility */ = {
 			isa = PBXGroup;
 			children = (
-				F9C7F1F013A003660031774F /* Configurations */,
 				F9DCD4A10F07126F00600DD2 /* tlu_appcast.xml */,
+				F9C7F1F013A003660031774F /* Configurations */,
 				080E96DDFE201D6D7F000001 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				F9D85F72125E85FD00C0FEC5 /* agent */,
@@ -594,6 +595,7 @@
 		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
+				F92034D817F0A45A00796A10 /* python_version.py */,
 				F9C7F37013A124B70031774F /* parse_tlpdb.py */,
 				F9B139D30EECBE23007C0046 /* tlu_ipctask.m */,
 				32CA4F630368D1EE00C91783 /* TeX Live Manager_Prefix.pch */,
@@ -1090,8 +1092,6 @@
 				F918B78D14552A9B0038476C /* SearchFieldCapRightInactive.png in Resources */,
 				F918B78E14552A9B0038476C /* TextFieldStretch.png in Resources */,
 				F918B78F14552A9B0038476C /* TextFieldStretchInactive.png in Resources */,
-				F9947DFE15D5B68100CA6559 /* TLUNotifier.app in Resources */,
-				F9F8BB4815DB09F900B5D1F3 /* uninstall_local_agent.sh in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
