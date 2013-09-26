@@ -2,8 +2,9 @@
     /* 
       This dictionary only has legacy mirrors now.
     */
-    2008 = "ftp://ftp.tug.org/historic//systems//texlive//2008//tlnet";
-    2009 = "ftp://ftp.tug.org/historic//systems//texlive//2009//tlnet";
-    2010 = "ftp://ftp.tug.org/historic//systems//texlive//2010//tlnet-final";
+    2008 = "ftp://ftp.tug.org/historic//systems//texlive//2008//tlnet/";
+    2009 = "ftp://ftp.tug.org/historic//systems//texlive//2009//tlnet/";
+    2010 = "ftp://ftp.tug.org/historic//systems//texlive//2010//tlnet-final/";
 	2011 = "ftp://ftp.tug.org/historic/systems/texlive/2011/tlnet-final/";
+    2012 = "ftp://ftp.tug.org/historic/systems/texlive/2012//tlnet-final/";
 }
