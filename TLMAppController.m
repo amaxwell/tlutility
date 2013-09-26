@@ -266,6 +266,23 @@ static void __TLMMigrateBundleIdentifier()
     }
 }
 
+- (void)_checkProcessUmask
+{
+    TLMTask *umaskTask = [[TLMTask new] autorelease];
+    [umaskTask setLaunchPath:@"/usr/bin/umask"];
+    [umaskTask launch];
+    [umaskTask waitUntilExit];
+    
+    if ([umaskTask terminationStatus] == EXIT_SUCCESS) {
+        NSString *umaskString = [[umaskTask outputString] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        if (umaskString)
+            TLMLog(__func__, @"Process umask: %@", umaskString);
+    }
+    else {
+        TLMLog(__func__, @"*** ERROR *** Unable to run %@: %@", [umaskTask launchPath], [umaskTask errorString]);
+    }
+}
+
 - (void)applicationDidFinishLaunching:(NSNotification *)notification;
 {
     // make sure this gets hooked up early enough that it collects messages
@@ -273,6 +290,7 @@ static void __TLMMigrateBundleIdentifier()
         _logWindowController = [TLMLogWindowController new];
     
     [self _checkSystemPythonVersion];
+    [self _checkProcessUmask];
     
     NSDictionary *infoPlist = [[NSBundle mainBundle] infoDictionary];
     NSProcessInfo *pInfo = [NSProcessInfo processInfo];
