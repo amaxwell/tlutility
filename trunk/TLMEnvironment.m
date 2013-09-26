@@ -445,8 +445,10 @@ static void __TLMTestAndClearEnvironmentVariable(const char *name)
     NSArray *launchdConfigPaths = [NSArray arrayWithObjects:@"~/.launchd.conf", @"/etc/launchd.conf", @"/etc/launchd-user.conf", nil];
     for (NSString *launchdConfigPath in launchdConfigPaths) {
         NSString *launchdConfig = [NSString stringWithContentsOfFile:[launchdConfigPath stringByStandardizingPath] encoding:NSUTF8StringEncoding error:NULL];
-        if (launchdConfig && [launchdConfig rangeOfString:@"setenv"].length) {
-            TLMLog(__func__, @"*** WARNING *** User has %@ file with setenv commands", launchdConfigPath);
+        
+        // used to check for setenv, but umask doesn't require that
+        if (launchdConfig) {
+            TLMLog(__func__, @"*** WARNING *** User has %@ file", launchdConfigPath);
             TLMLog(__func__, @"%@ = (\n%@\n)", launchdConfigPath, launchdConfig);
         }
     }
