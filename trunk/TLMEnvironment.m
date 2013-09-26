@@ -431,17 +431,24 @@ static void __TLMTestAndClearEnvironmentVariable(const char *name)
      
      The man page on 10.6.8 sez $HOME/.launchd.conf is unsupported, so I expect this will only
      be a problem on 10.7 and later systems, especially if/when environment.plist is phased out.
+     
+     Damn Apple for documenting this online and not updating the manual page as of 10.8.5.
+     Apparently they decided to use /etc/launchd-user.conf.
+     
+     http://support.apple.com/kb/HT2202?viewlocale=en_US&locale=en_US
+     
+     Thanks to a user who set umask to 077 (WTF?) and at least pointed to this KB article as
+     the source of his…inspiration.
+     
      */
-    NSString *launchdConfig = [NSString stringWithContentsOfFile:[@"~/.launchd.conf" stringByStandardizingPath]  encoding:NSUTF8StringEncoding error:NULL];
-    if (launchdConfig && [launchdConfig rangeOfString:@"setenv"].length) {
-        TLMLog(__func__, @"*** WARNING *** User has ~/.launchd.conf file with setenv commands");
-        TLMLog(__func__, @"~/.launchd.conf = (\n%@\n)", launchdConfig);
-    }
     
-    launchdConfig = [NSString stringWithContentsOfFile:[@"/etc/launchd.conf" stringByStandardizingPath]  encoding:NSUTF8StringEncoding error:NULL];
-    if (launchdConfig && [launchdConfig rangeOfString:@"setenv"].length) {
-        TLMLog(__func__, @"*** WARNING *** System has /etc/launchd.conf file with setenv commands");
-        TLMLog(__func__, @"/etc/launchd.conf = (\n%@\n)", launchdConfig);
+    NSArray *launchdConfigPaths = [NSArray arrayWithObjects:@"~/.launchd.conf", @"/etc/launchd.conf", @"/etc/launchd-user.conf", nil];
+    for (NSString *launchdConfigPath in launchdConfigPaths) {
+        NSString *launchdConfig = [NSString stringWithContentsOfFile:[launchdConfigPath stringByStandardizingPath] encoding:NSUTF8StringEncoding error:NULL];
+        if (launchdConfig && [launchdConfig rangeOfString:@"setenv"].length) {
+            TLMLog(__func__, @"*** WARNING *** User has %@ file with setenv commands", launchdConfigPath);
+            TLMLog(__func__, @"%@ = (\n%@\n)", launchdConfigPath, launchdConfig);
+        }
     }
     
     /*
