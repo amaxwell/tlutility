@@ -464,3 +464,9 @@
 "A newer version of the scheduled update script is available.  Would you like to install it now?" = "A newer version of the scheduled update script is available.  Would you like to install it now?";
 /* alert title */
 "Newer update checker is available" = "Newer update checker is available";
+/* alert text, two string format specifiers */
+"The normal umask is %@ and yours is set to %@. This may cause permission problems with TeX Live." = "The normal umask is %1$@ and yours is set to %2$@. This may cause permission problems with TeX Live.";
+/* alert title */
+"You have altered the system's umask" = "You have altered the system's umask";
+/* alert text, two string format specifiers */
+"The normal umask is %@ and yours is set to %@. If you have set a more restrictive umask, it may cause permission problems with TeX Live." = "The normal umask is %1$@ and yours is set to %2$@. If you have set a more restrictive umask, it may cause permission problems with TeX Live.";

@@ -266,6 +266,8 @@ static void __TLMMigrateBundleIdentifier()
     }
 }
 
+#define NORMAL_UMASK @"0022"
+
 - (void)_checkProcessUmask
 {
     TLMTask *umaskTask = [[TLMTask new] autorelease];
@@ -277,6 +279,20 @@ static void __TLMMigrateBundleIdentifier()
         NSString *umaskString = [[umaskTask outputString] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
         if (umaskString)
             TLMLog(__func__, @"Process umask: %@", umaskString);
+        if ([umaskString isEqualToString:NORMAL_UMASK] == NO) {
+            TLMLog(__func__, @"*** WARNING *** You have altered the system's umask. If you have made it more restrictive, installing updates with TeX Live Utility may cause TeX Live to become unusable.");
+            
+            // allow suppression on this, since a 0002 mask is recommended in various places on the internet
+            if ([[NSUserDefaults standardUserDefaults] boolForKey:TLMDisableUmaskWarningKey] == NO) {
+                NSAlert *alert = [[NSAlert new] autorelease];
+                [alert setShowsSuppressionButton:YES];
+                [alert setMessageText:NSLocalizedString(@"You have altered the system's umask", @"alert title")];
+                [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"The normal umask is %@ and yours is set to %@. If you have set a more restrictive umask, it may cause permission problems with TeX Live.", @"alert text, two string format specifiers"), NORMAL_UMASK, umaskString]];
+                [alert runModal];
+                if ([[alert suppressionButton] state] == NSOnState)
+                    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:TLMDisableUmaskWarningKey];
+            }
+        }
     }
     else {
         TLMLog(__func__, @"*** ERROR *** Unable to run %@: %@", [umaskTask launchPath], [umaskTask errorString]);
