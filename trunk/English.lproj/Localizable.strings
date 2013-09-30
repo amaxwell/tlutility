@@ -342,6 +342,9 @@
 /* No comment provided by engineer. */
 "The location in the TeX Live database was not changed" = "The location in the TeX Live database was not changed";
 
+/* alert text, two string format specifiers */
+"The normal umask is %@ and yours is set to %@. If you have set a more restrictive umask, it may cause permission problems with TeX Live." = "The normal umask is %1$@ and yours is set to %2$@. If you have set a more restrictive umask, it may cause permission problems with TeX Live.";
+
 /* alert message text */
 "The removal process appears to have failed. Would you like to show the log now or ignore this warning?" = "The removal process appears to have failed. Would you like to show the log now or ignore this warning?";
 
@@ -458,6 +461,9 @@
 
 /* alert message */
 "You can always update to the latest version or restore a different one to undo this change." = "You can always update to the latest version or restore a different one to undo this change.";
+
+/* alert title */
+"You have altered the system's umask" = "You have altered the system's umask";
 
 /* alert text, integer and string format specifiers */
 "You have TeX Live %lu installed, but the version at %@ cannot be determined." = "You have TeX Live %1$lu installed, but the version at %2$@ cannot be determined.";
