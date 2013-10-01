@@ -698,5 +698,18 @@
             <sparkle:minimumSystemVersion>10.6.8</sparkle:minimumSystemVersion>
             <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-1.14.tar.gz" sparkle:version="1.14" length="2953812" type="application/octet-stream" sparkle:dsaSignature="MCwCFFJPLn5262UPuml+uILz2l1gQoHXAhQqT4xIj5nFwICJg3KtR3i4z5v4UA=="></enclosure>
         </item>
+        <item>
+            <title>Version 1.15</title>
+            <description>
+                <h3>Changes Since 1.14</h3>
+                <li>Check python version as used by /usr/bin/env</li>
+                <li>Check and log umask at startup</li>
+                <li>Check for presence of yet another evil launchd config file</li>
+                <li>Added the TL 2012 fallback mirror</li>
+            </description>
+            <pubDate>Tue, 01 Oct 2013 14:10:52 +0000</pubDate>
+            <sparkle:minimumSystemVersion>10.6.8</sparkle:minimumSystemVersion>
+            <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-1.15.tar.gz" sparkle:version="1.15" length="2891490" type="application/octet-stream" sparkle:dsaSignature="MCwCFG9xn68wA3RYSaSn61VZ6KMsmZJZAhQ+r2JtxtOMb596xplyts6/4F4wpw=="></enclosure>
+        </item>
     </channel>
 </rss>
