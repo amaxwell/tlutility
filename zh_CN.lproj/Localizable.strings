@@ -470,3 +470,5 @@
 "You have altered the system's umask" = "You have altered the system's umask";
 /* alert text, two string format specifiers */
 "The normal umask is %@ and yours is set to %@. If you have set a more restrictive umask, it may cause permission problems with TeX Live." = "The normal umask is %1$@ and yours is set to %2$@. If you have set a more restrictive umask, it may cause permission problems with TeX Live.";
+/* alert text, two string format specifiers */
+"The normal umask is %@ and yours is set to %@. This more restrictive umask may cause permission problems with TeX Live." = "The normal umask is %1$@ and yours is set to %2$@. This more restrictive umask may cause permission problems with TeX Live.";
