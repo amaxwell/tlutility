@@ -282,7 +282,7 @@ static void __TLMMigrateBundleIdentifier()
         TLMLog(__func__, @"*** WARNING *** You have altered the system's umask. If you have made it more restrictive, installing updates with TeX Live Utility may cause TeX Live to become unusable.");
 
     // check for g=rx, o=rx permissions
-    if ((currentMask & S_IROTH) == 0 || (currentMask & S_IRGRP) == 0 || (currentMask & S_IXGRP) == 0 || (currentMask & S_IXOTH) == 0) {
+    if ((currentMask & S_IROTH) != 0 || (currentMask & S_IRGRP) != 0 || (currentMask & S_IXGRP) != 0 || (currentMask & S_IXOTH) != 0) {
         // allow suppression on this, since it may be installed with user ownership, not root
         if ([[NSUserDefaults standardUserDefaults] boolForKey:TLMDisableUmaskWarningKey] == NO) {
             NSAlert *alert = [[NSAlert new] autorelease];
