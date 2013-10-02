@@ -711,5 +711,15 @@
             <sparkle:minimumSystemVersion>10.6.8</sparkle:minimumSystemVersion>
             <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-1.15.tar.gz" sparkle:version="1.15" length="2891490" type="application/octet-stream" sparkle:dsaSignature="MCwCFG9xn68wA3RYSaSn61VZ6KMsmZJZAhQ+r2JtxtOMb596xplyts6/4F4wpw=="></enclosure>
         </item>
+        <item>
+            <title>Version 1.16</title>
+            <description>
+                <h3>Changes Since 1.15</h3>
+                <li>Fixed umask check</li>
+            </description>
+            <pubDate>Wed, 02 Oct 2013 14:25:55 +0000</pubDate>
+            <sparkle:minimumSystemVersion>10.6.8</sparkle:minimumSystemVersion>
+            <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-1.16.tar.gz" sparkle:version="1.16" length="2891490" type="application/octet-stream" sparkle:dsaSignature="MCwCFCSB6IubBYKMKkU2jddk+vZpiDM0AhQP/ekP8idksxNulTrMY3Z5hti9zA=="></enclosure>
+        </item>
     </channel>
 </rss>
