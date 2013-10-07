@@ -267,20 +267,22 @@ static void __TLMMigrateBundleIdentifier()
     }
 }
 
-#define DEFAULT_UMASK @"022"
-
 - (void)_checkProcessUmask
 {
-    mode_t currentMask = umask(0);
+    const mode_t currentMask = umask(0);
     (void) umask(currentMask);
     
+    // don't reset umask; that's the user or sysadmin's prerogative
+    const mode_t defaultMask = (S_IRWXU | S_IRWXG | S_IRWXO) & ~S_IRWXU & ~S_IRGRP & ~S_IROTH & ~S_IXGRP & ~S_IXOTH;
+
     NSString *umaskString = [NSString stringWithFormat:@"%03o", currentMask];
+    NSString *defaultMaskString = [NSString stringWithFormat:@"%03o", defaultMask];
     
     TLMLog(__func__, @"Process umask = %@", umaskString);
     
-    if ([umaskString isEqualToString:DEFAULT_UMASK] == NO)
-        TLMLog(__func__, @"*** WARNING *** You have altered the system's umask. If you have made it more restrictive, installing updates with TeX Live Utility may cause TeX Live to become unusable.");
-
+    if (defaultMask != currentMask)
+        TLMLog(__func__, @"*** WARNING *** You have altered the system's umask from %@ to %@. If you have made it more restrictive, installing updates with TeX Live Utility may cause TeX Live to become unusable.", defaultMaskString, umaskString);
+    
     // check for g=rx, o=rx permissions
     if ((currentMask & S_IROTH) != 0 || (currentMask & S_IRGRP) != 0 || (currentMask & S_IXGRP) != 0 || (currentMask & S_IXOTH) != 0) {
         // allow suppression on this, since it may be installed with user ownership, not root
@@ -288,7 +290,7 @@ static void __TLMMigrateBundleIdentifier()
             NSAlert *alert = [[NSAlert new] autorelease];
             [alert setShowsSuppressionButton:YES];
             [alert setMessageText:NSLocalizedString(@"You have altered the system's umask", @"alert title")];
-            [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"The normal umask is %@ and yours is set to %@. This more restrictive umask may cause permission problems with TeX Live.", @"alert text, two string format specifiers"), DEFAULT_UMASK, umaskString]];
+            [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"The normal umask is %@ and yours is set to %@. This more restrictive umask may cause permission problems with TeX Live.", @"alert text, two string format specifiers"), defaultMaskString, umaskString]];
             [alert runModal];
             if ([[alert suppressionButton] state] == NSOnState)
                 [[NSUserDefaults standardUserDefaults] setBool:YES forKey:TLMDisableUmaskWarningKey];
