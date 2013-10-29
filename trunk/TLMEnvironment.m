@@ -421,6 +421,14 @@ static void __TLMTestAndClearEnvironmentVariable(const char *name)
     if ([envTask outputString])
         TLMLog(__func__, @"/usr/bin/env\n%@", [envTask outputString]);
     
+    /*
+     Config.guess uses a really stupid test for 64 bit, and invokes the compiler
+     stub on 10.9, prompting the user to install dev tools. Setting this envvar
+     bypasses that test, so config.guess reports that we are
+     i386-apple-darwin12.5.0 vs. x86_64-apple-darwin12.5.0
+     for a Mac Pro running 10.8.
+     */
+    setenv("CC_FOR_BUILD", "no_compiler_found", 1);
     
     /*
      I have a user on Lion who removed his environment.plist file, yet still has some bizarre
