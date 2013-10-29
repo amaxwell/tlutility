@@ -3,7 +3,7 @@
 #
 # Created by Adam Maxwell on 12/28/08.
 #
-# This software is Copyright (c) 2008-2011
+# This software is Copyright (c) 2008-2013
 # Adam Maxwell. All rights reserved.
 # 
 # Redistribution and use in source and binary forms, with or without
@@ -48,6 +48,7 @@ class StringsEntry(object):
         self.value = None
         self.comment = ""
         self.order = None
+        self.line_number = 0
         
     def string_value(self):
         return ("%s\"%s\" = \"%s\";\n" % (self.comment, self.key, self.value)).encode("utf-8")
@@ -71,15 +72,21 @@ def _strings_entries_at_path(path):
     current_entry = None
     state = IN_COMMENT
     
-    for line in content.split("\n"):
+    for line_number, line in enumerate(content.split("\n")):
         line = line.strip("\n")
+        
+        # make this 1-based everywhere
+        line_number = line_number + 1
         
         if line.startswith("/*"):
             state = IN_COMMENT
 
         if state == IN_COMMENT:
             
-            current_entry = StringsEntry() if current_entry is None else current_entry
+            if current_entry is None:
+                current_entry = StringsEntry()
+                current_entry.line_number = line_number
+                
             current_entry.comment += line + "\n"
             current_entry.order = len(entries)
             
@@ -91,8 +98,10 @@ def _strings_entries_at_path(path):
             key, ignored, value = line.partition("\" = \"")
             assert key, "invalid key"
             assert value, "invalid value"
-            assert current_entry.comment, "no comment found"
-            assert current_entry, "no current entry"
+            if current_entry is None:
+                sys.stderr.write("%s:%d:0: error: missing comment in strings file\n" % (path, line_number))
+                exit(1)
+            assert current_entry.comment, "empty comment found"
             # strip leading quote
             key = _normalize_key(key[1:])
             current_entry.key = key
@@ -112,16 +121,11 @@ def _strings_dictionary_at_path(path):
 
 def _check_strings_at_path(path, english_strings):
     sys.stderr.write("checking %s\n" % (path))
-    strings = _strings_dictionary_at_path(path)
-    pystrings = {}
-    for nskey in strings:
-        pystrings[_normalize_key(nskey)] = strings[nskey]
-    strings = pystrings
+    non_english_entries = _strings_entries_at_path(path)
 
     missing = []
-    #print strings.keys()
     for key in english_strings:
-        if key not in strings:
+        if key not in non_english_entries:
             missing.append(key)
     
     def _sort_by_order(a, b):
@@ -130,12 +134,26 @@ def _check_strings_at_path(path, english_strings):
     to_add = [english_strings[key] for key in missing]
     to_add = sorted(to_add, _sort_by_order)
     
-    sys.stderr.write("found %d missing strings\n" % (len(to_add)))
+    # now add to the strings file
+    if len(to_add):
+        sys.stderr.write("%s:0:0: warning: added %d missing strings\n" % (path, len(to_add)))
     
-    with open(path, "ab") as output_file:
-        for x in to_add:
-            output_file.write(x.string_value())
+        with open(path, "ab") as output_file:
+            for x in to_add:
+                output_file.write("\n" + x.string_value())
 
+    # This is a later addition, once I realized that intermediate versions
+    # of alert messages were being appended to the file. If manual intervention
+    # gets annoying, we can edit the table manually, but it would have to be
+    # re-parsed in order to account for anything we just added in the previous
+    # step. Line numbers should still be current here, as anything we've added
+    # comes later.
+    to_remove = []
+    for key in non_english_entries:
+        if key not in english_strings:
+            to_remove.append(key)
+            bad_entry = non_english_entries[key]
+            sys.stderr.write("%s:%d:0: warning: remove %s\n" % (path, bad_entry.line_number, key))
 
 if __name__ == '__main__':
     
