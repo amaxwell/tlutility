@@ -450,25 +450,29 @@
 /* No comment provided by engineer. */
 "Running updmap…" = "updmapを実行中です…";
 
-/* alert text, integer format specifier */
-"You appear to have installed fonts in your home directory.  Would you like them to be automatically activated in TeX Live %d?" = "ホームディレクトリにフォントが導入されているようです。これらのフォントを TeX Live %d 中で自動的に有効にしたいですか？";
-/* alert title */
-"TeX Live paper size does not match system default" = "TeX Live paper size does not match system default";
-/* alert title */
-"Unable to determine repository version" = "Unable to determine repository version";
-/* alert text */
-"Would you like to set the TeX Live paper size now?" = "Would you like to set the TeX Live paper size now?";
-/* alert text, integer and string format specifiers */
-"You have TeX Live %lu installed, but the version at %@ cannot be determined." = "You have TeX Live %1$lu installed, but the version at %2$@ cannot be determined.";
 /* alert text */
 "A newer version of the scheduled update script is available.  Would you like to install it now?" = "A newer version of the scheduled update script is available.  Would you like to install it now?";
+
 /* alert title */
 "Newer update checker is available" = "Newer update checker is available";
-/* alert text, two string format specifiers */
-"The normal umask is %@ and yours is set to %@. This may cause permission problems with TeX Live." = "The normal umask is %1$@ and yours is set to %2$@. This may cause permission problems with TeX Live.";
+
 /* alert title */
-"You have altered the system's umask" = "You have altered the system's umask";
-/* alert text, two string format specifiers */
-"The normal umask is %@ and yours is set to %@. If you have set a more restrictive umask, it may cause permission problems with TeX Live." = "The normal umask is %1$@ and yours is set to %2$@. If you have set a more restrictive umask, it may cause permission problems with TeX Live.";
+"TeX Live paper size does not match system default" = "TeX Live paper size does not match system default";
+
 /* alert text, two string format specifiers */
 "The normal umask is %@ and yours is set to %@. This more restrictive umask may cause permission problems with TeX Live." = "The normal umask is %1$@ and yours is set to %2$@. This more restrictive umask may cause permission problems with TeX Live.";
+
+/* alert title */
+"Unable to determine repository version" = "Unable to determine repository version";
+
+/* alert text */
+"Would you like to set the TeX Live paper size now?" = "Would you like to set the TeX Live paper size now?";
+
+/* alert text, integer format specifier */
+"You appear to have installed fonts in your home directory.  Would you like them to be automatically activated in TeX Live %d?" = "You appear to have installed fonts in your home directory.  Would you like them to be automatically activated in TeX Live %d?";
+
+/* alert title */
+"You have altered the system's umask" = "You have altered the system's umask";
+
+/* alert text, integer and string format specifiers */
+"You have TeX Live %lu installed, but the version at %@ cannot be determined." = "You have TeX Live %1$lu installed, but the version at %2$@ cannot be determined.";
