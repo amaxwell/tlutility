@@ -193,7 +193,7 @@
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0450;
+				LastUpgradeCheck = 0500;
 			};
 			buildConfigurationList = F976620C0861BEF900829F8B /* Build configuration list for PBXProject "DVIImporter" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -452,6 +452,7 @@
 		F976620D0861BEF900829F8B /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "TeX Live Utility Signing Certificate";
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 			};
 			name = Development;
@@ -460,6 +461,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F9C7F26013A007850031774F /* Release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "TeX Live Utility Signing Certificate";
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 			};
 			name = Deployment;
@@ -467,6 +469,7 @@
 		F976620F0861BEF900829F8B /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "TeX Live Utility Signing Certificate";
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 			};
 			name = Default;

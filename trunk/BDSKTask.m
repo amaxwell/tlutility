@@ -316,10 +316,10 @@ static char *__BDSKCopyFileSystemRepresentation(NSString *str)
      async-signal safe in the sigaction(2) man page, so we assume it's not safe to call after 
      fork().  The fork(2) page says that child rlimits are set to zero.
      */
-    rlim_t maxOpenFiles = OPEN_MAX;
+    int maxOpenFiles = OPEN_MAX;
     struct rlimit openFileLimit;
     if (getrlimit(RLIMIT_NOFILE, &openFileLimit) == 0)
-        maxOpenFiles = openFileLimit.rlim_cur;
+        maxOpenFiles = (int)openFileLimit.rlim_cur;
     
     // !!! No CF or Cocoa after this point in the child process!
     _processIdentifier = fork();
@@ -352,11 +352,11 @@ static char *__BDSKCopyFileSystemRepresentation(NSString *str)
          since inheriting other descriptors could possibly be useful, but I don't need to share arbitrary file 
          descriptors, whereas I do need subclassing and threads to work properly.
          */
-        rlim_t j;
+        int j;
         for (j = (STDERR_FILENO + 1); j < maxOpenFiles; j++) {
             
             // don't close this until we're done reading from it!
-            if ((unsigned)blockpipe[0] != j)
+            if (blockpipe[0] != j)
                 (void) close(j);
         }
         
