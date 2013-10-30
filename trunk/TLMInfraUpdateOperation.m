@@ -298,7 +298,7 @@ static NSString *__TLMGetTemporaryDirectory()
         
         (void)fcntl(fd, F_NOCACHE, 1);
         
-        char *buffer = mmap(0, sb.st_size, PROT_READ, MAP_SHARED, fd, 0);
+        char *buffer = mmap(0, (size_t)sb.st_size, PROT_READ, MAP_SHARED, fd, 0);
         close(fd);    
         if (buffer == (void *)-1) {
             perror("failed to mmap file");
@@ -309,7 +309,7 @@ static NSString *__TLMGetTemporaryDirectory()
         // digest the entire file at once
         unsigned char digest[CC_SHA256_DIGEST_LENGTH] = { '\0' };
         (void) CC_SHA256(buffer, (CC_LONG)sb.st_size, digest);
-        munmap(buffer, sb.st_size);
+        munmap(buffer, (size_t)sb.st_size);
                 
         // the downloaded digest is a hex string, so convert to hex for comparison
         NSMutableString *scriptHashHexString = [NSMutableString stringWithCapacity:CC_SHA256_DIGEST_LENGTH];
