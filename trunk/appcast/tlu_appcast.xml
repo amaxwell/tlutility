@@ -721,5 +721,18 @@
             <sparkle:minimumSystemVersion>10.6.8</sparkle:minimumSystemVersion>
             <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-1.16.tar.gz" sparkle:version="1.16" length="2891490" type="application/octet-stream" sparkle:dsaSignature="MCwCFCSB6IubBYKMKkU2jddk+vZpiDM0AhQP/ekP8idksxNulTrMY3Z5hti9zA=="></enclosure>
         </item>
+        <item>
+            <title>Version 1.17</title>
+            <description>
+                <h3>Changes Since 1.16</h3>
+                <li>Update mirror list, notably because U of Washington made a gratuitous server name change and then whined about it</li>
+                <li>Sign frameworks and helper applications for (hopefully) better compatibility with Mavericks. Thanks for nothing, Apple (meaning your documentation of this).</li>
+                <li>Remove some cruft from Localizable.strings files</li>
+                <li>Workaround for prompt to install developer tools on Mavericks. This will still be an issue if you run tlmgr from the command line.</li>
+            </description>
+            <pubDate>Wed, 30 Oct 2013 02:01:59 +0000</pubDate>
+            <sparkle:minimumSystemVersion>10.6.8</sparkle:minimumSystemVersion>
+            <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-1.17.tar.gz" sparkle:version="1.17" length="2968699" type="application/octet-stream" sparkle:dsaSignature="MCwCFE3RLM0MF9qYYWpDcrGXBcU/XNR6AhRi+bhKQcqGJ5LQwTRaw7dqk6nwuA=="></enclosure>
+        </item>
     </channel>
 </rss>
