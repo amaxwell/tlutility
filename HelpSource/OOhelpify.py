@@ -559,7 +559,8 @@ def main():
                     indexerToolPath = developerDirPath + """/Applications/Utilities/Help\ Indexer.app/Contents/MacOS/Help\ Indexer"""                    
                     indexerCommandLine = """%s %s""" % (indexerToolPath, escapedOutputPath)
                 
-                print commands.getoutput(indexerCommandLine)
+                sys.stderr.write("%s\n" % (commands.getoutput(indexerCommandLine))) 
+                print indexerCommandLine
         
         # check that all links are hooked up
         links.sort()
