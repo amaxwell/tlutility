@@ -899,10 +899,12 @@
 				8D11072C0486CEB800E47090 /* Sources */,
 				8D11072E0486CEB800E47090 /* Frameworks */,
 				F9B139DD0EECBEEB007C0046 /* Copy aux executables */,
+				F96562A718121C75000B1464 /* Sign auxiliary executables */,
 				F9DCD37C0F06F11300600DD2 /* copy frameworks */,
 				F9E2C9BE0F3C00EE00D5EC49 /* CopyFiles */,
 				F9A057B70F507642008C804E /* CopyFiles */,
 				F9B396400F340E45007F95E9 /* FileView install name */,
+				F965629E1812189E000B1464 /* Sign frameworks */,
 			);
 			buildRules = (
 			);
@@ -1098,6 +1100,34 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		F965629E1812189E000B1464 /* Sign frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Sign frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "LOCATION=\"${BUILT_PRODUCTS_DIR}\"/\"${FRAMEWORKS_FOLDER_PATH}\"\nIDENTITY=\"TeX Live Utility Signing Certificate\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/Sparkle.framework/Versions/A\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/FileView.framework/Versions/A\"\n";
+		};
+		F96562A718121C75000B1464 /* Sign auxiliary executables */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Sign auxiliary executables";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "LOCATION=\"${BUILT_PRODUCTS_DIR}\"/\"${EXECUTABLE_FOLDER_PATH}\"\nIDENTITY=\"TeX Live Utility Signing Certificate\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/python_version.py\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/uninstall_local_agent.sh\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/parse_tlpdb.py\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/agent_installer.py\"\n\n\n\n";
+		};
 		F9947DEC15D5AD3900CA6559 /* Build TLUNotifier */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
