@@ -151,7 +151,7 @@
 
             char sbuf[2048];
             char *buf = (len > sizeof(sbuf)) ? malloc(len) : sbuf;
-            len = HANDLE_EINTR(read(event.ident, buf, len));
+            len = HANDLE_EINTR(read((int)event.ident, buf, len));
                     
             if (event.ident == (unsigned)fdo) {
                 [outBuffer appendBytes:buf length:len];

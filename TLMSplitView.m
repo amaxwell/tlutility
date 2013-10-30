@@ -45,7 +45,7 @@
     BOOL inDivider = NO;
     NSPoint mouseLoc = [self convertPoint:[theEvent locationInWindow] fromView:nil];
     NSArray *subviews = [self subviews];
-    int i, count = [subviews count];
+    NSUInteger i, count = [subviews count];
     id view;
     NSRect divRect;
     

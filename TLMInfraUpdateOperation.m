@@ -308,7 +308,7 @@ static NSString *__TLMGetTemporaryDirectory()
         
         // digest the entire file at once
         unsigned char digest[CC_SHA256_DIGEST_LENGTH] = { '\0' };
-        (void) CC_SHA256(buffer, sb.st_size, digest);
+        (void) CC_SHA256(buffer, (CC_LONG)sb.st_size, digest);
         munmap(buffer, sb.st_size);
                 
         // the downloaded digest is a hex string, so convert to hex for comparison

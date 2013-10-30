@@ -70,7 +70,7 @@
      the same host...but still).
      */
     [coder encodeObject:[NSNumber numberWithUnsignedLong:_identifier]];
-    [coder encodeObject:[NSNumber numberWithUnsignedInteger:_pid]];
+    [coder encodeObject:[NSNumber numberWithInt:_pid]];
     [coder encodeObject:[NSNumber numberWithUnsignedInteger:_flags]];
 }
 
@@ -83,7 +83,7 @@
         _sender = [[coder decodeObject] copy];
         _level = [[coder decodeObject] copy];
         _identifier = [[coder decodeObject] unsignedLongValue];
-        _pid = [[coder decodeObject] unsignedIntegerValue];
+        _pid = [[coder decodeObject] intValue];
         _flags = [[coder decodeObject] unsignedIntegerValue];
     }
     return self;
@@ -97,7 +97,7 @@
         _message = [[plist objectForKey:@"_message"] copy];
         _sender = [[plist objectForKey:@"_sender"] copy];
         _level = [[plist objectForKey:@"_level"] copy];
-        _pid = [[plist objectForKey:@"_pid"] unsignedIntegerValue];
+        _pid = [[plist objectForKey:@"_pid"] intValue];
         _flags = [[plist objectForKey:@"_flags"] unsignedIntegerValue];
     }
     return self;
