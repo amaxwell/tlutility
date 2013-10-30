@@ -428,7 +428,7 @@ int main(int argc, char *argv[]) {
                 size_t len = event.data;
                 char sbuf[2048];
                 char *buf = (len > sizeof(sbuf)) ? buf = malloc(len) : sbuf;
-                len = HANDLE_EINTR(read(event.ident, buf, len));
+                len = HANDLE_EINTR(read((int)event.ident, buf, len));
                 
                 if (event.ident == (unsigned)outpipe[0]) {
                 

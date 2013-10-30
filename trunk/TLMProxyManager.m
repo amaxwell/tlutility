@@ -69,7 +69,7 @@ static bool __TLMGetUserAndPassForProxy(NSString *host, const uint16_t port, NSS
      However, that doesn't work, so we go with the more general rule of being as vague as reasonably
      possible when finding the password.
      */
-    err = SecKeychainFindInternetPassword(NULL, strlen(server), server, 0, NULL, 0, NULL, 0, NULL, port, kSecProtocolTypeAny, kSecAuthenticationTypeAny, &len, &pw, &item);
+    err = SecKeychainFindInternetPassword(NULL, (UInt32)strlen(server), server, 0, NULL, 0, NULL, 0, NULL, port, kSecProtocolTypeAny, kSecAuthenticationTypeAny, &len, &pw, &item);
     
     /*
      Should return failure if the user's proxy doesn't have a password in the keychain.  Note that
