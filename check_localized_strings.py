@@ -38,6 +38,7 @@
 
 from glob import glob
 from Foundation import NSString, NSUTF8StringEncoding
+from CoreFoundation import CFStringConvertNSStringEncodingToEncoding, CFStringConvertEncodingToIANACharSetName
 import os, sys
 
 class StringsEntry(object):
@@ -50,11 +51,11 @@ class StringsEntry(object):
         self.order = None
         self.line_number = 0
         
-    def string_value(self):
-        return ("%s\"%s\" = \"%s\";\n" % (self.comment, self.key, self.value)).encode("utf-8")
+    def string_value(self, destination_encoding):
+        return ("%s\"%s\" = \"%s\";\n" % (self.comment, self.key, self.value)).encode(destination_encoding)
         
     def __repr__(self):
-        return self.string_value()
+        return self.string_value("utf-8")
 
 IN_COMMENT = 0
 IN_VALUE   = 1
@@ -67,7 +68,16 @@ def _normalize_key(key):
 
 def _strings_entries_at_path(path):
     
-    content, encoding, error = NSString.stringWithContentsOfFile_usedEncoding_error_(path, None, None)
+    content, nsencoding, error = NSString.stringWithContentsOfFile_usedEncoding_error_(path, None, None)
+    if nsencoding == 0:
+        sys.stderr.write("%s:0:0: error: could not determine file's encoding\n" % (path))
+        exit(1)
+        
+    cfencoding = CFStringConvertNSStringEncodingToEncoding(nsencoding)
+    iana_encoding = CFStringConvertEncodingToIANACharSetName(cfencoding)
+    if nsencoding != NSUTF8StringEncoding:
+        sys.stderr.write("%s:0:0: warning: file is using %s encoding instead of utf-8\n" % (path, iana_encoding))
+    
     entries = {}
     current_entry = None
     state = IN_COMMENT
@@ -96,8 +106,12 @@ def _strings_entries_at_path(path):
             
         if state == IN_VALUE and len(line):
             key, ignored, value = line.partition("\" = \"")
-            assert key, "invalid key"
-            assert value, "invalid value"
+            if key is None or len(key) == 0:
+                sys.stderr.write("%s:%d:0: error: missing key in strings file\n" % (path, line_number))
+                exit(1)
+            if value is None or len(value) == 0:
+                sys.stderr.write("%s:%d:0: error: missing value for key in strings file\n" % (path, line_number))
+                exit(1)
             if current_entry is None:
                 sys.stderr.write("%s:%d:0: error: missing comment in strings file\n" % (path, line_number))
                 exit(1)
@@ -110,7 +124,7 @@ def _strings_entries_at_path(path):
             entries[key] = current_entry
             current_entry = None            
             
-    return entries
+    return iana_encoding, entries
             
 
 def _strings_dictionary_at_path(path):
@@ -121,7 +135,7 @@ def _strings_dictionary_at_path(path):
 
 def _check_strings_at_path(path, english_strings):
     sys.stderr.write("checking %s\n" % (path))
-    non_english_entries = _strings_entries_at_path(path)
+    destination_encoding, non_english_entries = _strings_entries_at_path(path)
 
     missing = []
     for key in english_strings:
@@ -140,7 +154,7 @@ def _check_strings_at_path(path, english_strings):
     
         with open(path, "ab") as output_file:
             for x in to_add:
-                output_file.write("\n" + x.string_value())
+                output_file.write("\n" + x.string_value(destination_encoding))
 
     # This is a later addition, once I realized that intermediate versions
     # of alert messages were being appended to the file. If manual intervention
@@ -163,7 +177,7 @@ if __name__ == '__main__':
     assert english_strings_path in paths_to_check, "english strings file not found at %s" % (english_strings)
     paths_to_check.remove(english_strings_path)
     
-    english_strings = _strings_entries_at_path(english_strings_path)
+    iana_encoding, english_strings = _strings_entries_at_path(english_strings_path)
 
     for path in paths_to_check:
         _check_strings_at_path(path, english_strings)
