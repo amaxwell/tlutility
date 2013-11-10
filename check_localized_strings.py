@@ -57,8 +57,9 @@ class StringsEntry(object):
     def __repr__(self):
         return self.string_value("utf-8")
 
-IN_COMMENT = 0
-IN_VALUE   = 1
+IN_COMMENT          = 0
+IN_VALUE            = 1
+SINGLE_LINE_COMMENT = 2
 
 def _normalize_key(key):
     key = key.encode("raw_unicode_escape").encode("utf-8").decode("string_escape")
@@ -75,6 +76,8 @@ def _strings_entries_at_path(path):
         
     cfencoding = CFStringConvertNSStringEncodingToEncoding(nsencoding)
     iana_encoding = CFStringConvertEncodingToIANACharSetName(cfencoding)
+    
+    # Apple docs still say to use UTF-16, and that's what genstrings et al output
     if nsencoding != NSUTF8StringEncoding:
         sys.stderr.write("%s:0:0: warning: file is using %s encoding instead of utf-8\n" % (path, iana_encoding))
     
@@ -90,8 +93,10 @@ def _strings_entries_at_path(path):
         
         if line.startswith("/*"):
             state = IN_COMMENT
+        elif line.startswith("//"):
+            state = SINGLE_LINE_COMMENT
 
-        if state == IN_COMMENT:
+        if state in (IN_COMMENT, SINGLE_LINE_COMMENT):
             
             if current_entry is None:
                 current_entry = StringsEntry()
@@ -100,7 +105,9 @@ def _strings_entries_at_path(path):
             current_entry.comment += line + "\n"
             current_entry.order = len(entries)
             
-            if line.endswith("*/"):
+            # reset state for SINGLE_LINE_COMMENT also; next pass through the loop
+            # can set it back, in case we have consecutive comments
+            if line.endswith("*/") or state == SINGLE_LINE_COMMENT:
                 state = IN_VALUE
                 continue
             
