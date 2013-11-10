@@ -40,6 +40,7 @@ from glob import glob
 from Foundation import NSString, NSUTF8StringEncoding
 from CoreFoundation import CFStringConvertNSStringEncodingToEncoding, CFStringConvertEncodingToIANACharSetName
 import os, sys
+import codecs
 
 class StringsEntry(object):
     """docstring for StringsEntry"""
@@ -51,11 +52,11 @@ class StringsEntry(object):
         self.order = None
         self.line_number = 0
         
-    def string_value(self, destination_encoding):
-        return ("%s\"%s\" = \"%s\";\n" % (self.comment, self.key, self.value)).encode(destination_encoding)
+    def string_value(self):
+        return (u"%s\"%s\" = \"%s\";\n" % (self.comment, self.key, self.value))
         
     def __repr__(self):
-        return self.string_value("utf-8")
+        return self.string_value()
 
 IN_COMMENT          = 0
 IN_VALUE            = 1
@@ -159,9 +160,26 @@ def _check_strings_at_path(path, english_strings):
     if len(to_add):
         sys.stderr.write("%s:0:0: warning: added %d missing strings\n" % (path, len(to_add)))
     
-        with open(path, "ab") as output_file:
+        # This really sucks; NSString returns NSUTF16StringEncoding regardless of the
+        # endianness, and python's codec will insert a BOM before appending, using utf-16
+        # without explicit endianness. For utf-16, then, we sniff the encoding BOM and
+        # fully specify the utf-16 encoding, so python doesn't stuff BOM in the middle of
+        # our files.
+        if destination_encoding == "utf-16":
+            assert os.path.getsize(path) >= 2, "file is too short for utf-16 data"
+            with open(path, "rb") as output_file:
+                raw = output_file.read(2)
+                if raw.startswith(codecs.BOM_UTF16_LE):
+                    destination_encoding = "utf-16LE"
+                elif raw.startswith(codecs.BOM_UTF16_BE):
+                    destination_encoding = "utf-16BE"
+                else:
+                    sys.stderr.write("%s:0:0: error: failed to determine endianness of strings file\n" % (path))
+                    exit(1)
+            
+        with codecs.open(path, "ab", destination_encoding) as output_file:
             for x in to_add:
-                output_file.write("\n" + x.string_value(destination_encoding))
+                output_file.write(u"\n" + x.string_value())
 
     # This is a later addition, once I realized that intermediate versions
     # of alert messages were being appended to the file. If manual intervention
