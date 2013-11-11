@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 #
-# This software is Copyright (c) 2010-2011
+# This software is Copyright (c) 2010-2013
 # Adam Maxwell. All rights reserved.
 # 
 # Redistribution and use in source and binary forms, with or without
@@ -99,14 +99,14 @@ def mirmon_sites():
     dst.close()
     
     outname = dst.name
-    outname = "/Volumes/Local/Users/amaxwell/mirmon.state"
     
     ret = launch_task(["/usr/bin/rsync", "rsync://comedy.dante.de/MirMon/mirmon.state", outname])
     
     if ret:
-        return []
+        return [], []
     
-    mirror_urls = []
+    good_mirror_urls = []
+    bad_mirror_urls = []
     
     with open(outname) as mirmon_file:
         
@@ -117,25 +117,37 @@ def mirmon_sites():
             The state file consists of lines; one line per site. Each line consists of white space separated fields. The seven fields are :
 
             field 1 : url
-            The url as given in the mirror list.
+              The url as given in the mirror list.
             field 2 : age
-            The mirror's timestamp found by the last succesful probe, or 'undef' if no probe was ever successful.
+              The mirror's timestamp found by the last succesful probe, or 'undef' if no probe was ever successful.
             field 3 : status last probe
-            The status of the last probe, or 'undef' if the mirror was never probed.
+              The status of the last probe, or 'undef' if the mirror was never probed.
             field 4 : time last succesful probe
-            The timestamp of the last succesful probe or 'undef' if the mirror was never successfully probed.
+              The timestamp of the last succesful probe or 'undef' if the mirror was never successfully probed.
             field 5 : probe history
-            The probe history is a list of 's' (for success) and 'f' (for failure) characters indicating the result of the probe. New results are appended whenever the mirror is probed.
+              The probe history is a list of 's' (for success) and 'f' (for failure) characters indicating the 
+              result of the probe. New results are appended whenever the mirror is probed.
             field 6 : state history
-            The state history consists of a timestamp, a '-' char, and a list of chars indicating a past status: 's' (fresh), 'b' (oldish), 'f' (old), 'z' (bad) or 'x' (skip). The timestamp indicates when the state history was last updated. The current status of the mirror is determined by the mirror's age and a few configuration parameters (min_sync, max_sync, max_poll). The state history is updated when the mirror is probed. If the last update of the history was less than 24 hours ago, the last status is replaced by the current status. If the last update of the history was more than 24 hours ago, the current status is appended to the history. One or more 'skip's is inserted, if the timestamp is two or more days old (when mirmon hasn't run for more than two days).
+              The state history consists of a timestamp, a '-' char, and a list of chars indicating a past 
+              status: 's' (fresh), 'b' (oldish), 'f' (old), 'z' (bad) or 'x' (skip). The timestamp indicates 
+              when the state history was last updated. The current status of the mirror is determined by the 
+              mirror's age and a few configuration parameters (min_sync, max_sync, max_poll). The state 
+              history is updated when the mirror is probed. If the last update of the history was less than 
+              24 hours ago, the last status is replaced by the current status. If the last update of the 
+              history was more than 24 hours ago, the current status is appended to the history. One or 
+              more 'skip's is inserted, if the timestamp is two or more days old (when mirmon hasn't 
+              run for more than two days).
             field 7 : last probe
-            The timestamp of the last probe, or 'undef' if the mirror was never probed.
+              The timestamp of the last probe, or 'undef' if the mirror was never probed.
             """
             line = line.strip()
             (url, age, status, probe_time, probe_history, state_history, last_probe) = line.split()            
-            mirror_urls.append(url)
+            if state_history in ("f", "z", "x"):
+                bad_mirror_urls.append(url)
+            else:
+                good_mirror_urls.append(url)
 
-    return mirror_urls
+    return good_mirror_urls, bad_mirror_urls
     
 if __name__ == '__main__':
      
@@ -183,23 +195,19 @@ if __name__ == '__main__':
             saved_line = line
             
             
-        mirmon_urls = mirmon_sites()
-        mirmon_hosts = set([urlsplit(url).hostname for url in mirmon_urls])
-        site_hosts = set()
+        good_mirmon_urls, bad_mirmon_urls = mirmon_sites()
+        bad_mirmon_hosts = set([urlsplit(url).hostname for url in bad_mirmon_urls])
+        print bad_mirmon_urls
+        print good_mirmon_urls
         
         for continent in continents:
             
             for mirror in continent:
                 
                 hosts = [urlsplit(url).hostname for url in mirror.urls]
-                site_hosts = site_hosts.union(set(hosts))
-
-        print site_hosts - mirmon_hosts
-        print mirmon_hosts - site_hosts
-        #print mirmon_hosts
-        #print site_hosts
-        
-        
+                for host in hosts:
+                    if host in bad_mirmon_hosts:
+                        print "bad host:", host
 
         #urlcomps = urlsplit(url)
         #print urlcomps.hostname  
