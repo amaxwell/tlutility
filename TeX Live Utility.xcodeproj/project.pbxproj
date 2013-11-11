@@ -57,7 +57,6 @@
 		F982553F12504E210018CB73 /* AutobackupSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = F982553E12504E210018CB73 /* AutobackupSheet.xib */; };
 		F983F97114438F00001C0A42 /* HelpBook in Resources */ = {isa = PBXBuildFile; fileRef = F983F97014438F00001C0A42 /* HelpBook */; };
 		F98FADA910672943002C1972 /* TLMNetInstallOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F98FADA810672943002C1972 /* TLMNetInstallOperation.m */; };
-		F9947DFF15D5B69B00CA6559 /* TLUNotifier.app in Copy aux executables */ = {isa = PBXBuildFile; fileRef = F9947DFD15D5B68100CA6559 /* TLUNotifier.app */; };
 		F994A5AB1267E97F007EF95F /* TLMBackupListOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F994A5AA1267E97F007EF95F /* TLMBackupListOperation.m */; };
 		F9963EC50F0490E9005F0174 /* TLMRemoveOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F9963EC40F0490E9005F0174 /* TLMRemoveOperation.m */; };
 		F9963FEF0F054999005F0174 /* TLMInstallOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F9963FEE0F054999005F0174 /* TLMInstallOperation.m */; };
@@ -118,6 +117,7 @@
 		F9DCD43F0F06F76F00600DD2 /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = F9DCD43E0F06F76F00600DD2 /* dsa_pub.pem */; };
 		F9E22FD50EFCBD2A00B0BE38 /* TLMPapersizeOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F9E22FD40EFCBD2A00B0BE38 /* TLMPapersizeOperation.m */; };
 		F9E2C9BF0F3C00FA00D5EC49 /* DVI.qlgenerator in CopyFiles */ = {isa = PBXBuildFile; fileRef = F9E2C92D0F3C009400D5EC49 /* DVI.qlgenerator */; };
+		F9E3DDC1182F415B00800308 /* TLUNotifier.app in Copy aux executables */ = {isa = PBXBuildFile; fileRef = F9E3DDB0182F3FEA00800308 /* TLUNotifier.app */; };
 		F9F043030F180031008DFE8C /* TLMReadWriteOperationQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F043020F180031008DFE8C /* TLMReadWriteOperationQueue.m */; };
 		F9F130560EED94D800D9968D /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = F9F130550EED94D800D9968D /* Preferences.xib */; };
 		F9F1305B0EED94F700D9968D /* TLMPreferenceController.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F1305A0EED94F700D9968D /* TLMPreferenceController.m */; };
@@ -228,6 +228,20 @@
 			remoteGlobalIDString = 8D57630D048677EA00EA77CD;
 			remoteInfo = DVI;
 		};
+		F9E3DDAF182F3FEA00800308 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F9E3DDA3182F3FE800800308 /* TLUNotifier.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F9C5E35D15D49A2B006C293A;
+			remoteInfo = TLUNotifier;
+		};
+		F9E3DDB6182F414900800308 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F9E3DDA3182F3FE800800308 /* TLUNotifier.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = F9C5E35C15D49A2B006C293A;
+			remoteInfo = TLUNotifier;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -247,9 +261,9 @@
 			dstPath = "";
 			dstSubfolderSpec = 6;
 			files = (
+				F9E3DDC1182F415B00800308 /* TLUNotifier.app in Copy aux executables */,
 				F92034E217F0A6E300796A10 /* python_version.py in Copy aux executables */,
 				F9F8BB4915DB0A1100B5D1F3 /* uninstall_local_agent.sh in Copy aux executables */,
-				F9947DFF15D5B69B00CA6559 /* TLUNotifier.app in Copy aux executables */,
 				F9C7F37113A124C30031774F /* parse_tlpdb.py in Copy aux executables */,
 				F97B37B2128B4FE600B49CA7 /* agent_installer.py in Copy aux executables */,
 				F9B139DA0EECBECD007C0046 /* tlu_ipctask in Copy aux executables */,
@@ -372,7 +386,6 @@
 		F983F96D14438EFB001C0A42 /* English */ = {isa = PBXFileReference; lastKnownFileType = folder; name = English; path = English.lproj/HelpBook; sourceTree = "<group>"; };
 		F98FADA710672943002C1972 /* TLMNetInstallOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMNetInstallOperation.h; sourceTree = "<group>"; };
 		F98FADA810672943002C1972 /* TLMNetInstallOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMNetInstallOperation.m; sourceTree = "<group>"; };
-		F9947DFD15D5B68100CA6559 /* TLUNotifier.app */ = {isa = PBXFileReference; lastKnownFileType = wrapper.application; name = TLUNotifier.app; path = ../../BuildProducts/Release/TLUNotifier.app; sourceTree = SOURCE_ROOT; };
 		F994A5A91267E97F007EF95F /* TLMBackupListOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMBackupListOperation.h; sourceTree = "<group>"; };
 		F994A5AA1267E97F007EF95F /* TLMBackupListOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMBackupListOperation.m; sourceTree = "<group>"; };
 		F9963EC30F0490E9005F0174 /* TLMRemoveOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMRemoveOperation.h; sourceTree = "<group>"; };
@@ -479,6 +492,7 @@
 		F9E22FD30EFCBD2A00B0BE38 /* TLMPapersizeOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMPapersizeOperation.h; sourceTree = "<group>"; };
 		F9E22FD40EFCBD2A00B0BE38 /* TLMPapersizeOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMPapersizeOperation.m; sourceTree = "<group>"; };
 		F9E2C9250F3C009300D5EC49 /* DVI.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = DVI.xcodeproj; path = "DVI-qlgenerator/DVI.xcodeproj"; sourceTree = "<group>"; };
+		F9E3DDA3182F3FE800800308 /* TLUNotifier.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = TLUNotifier.xcodeproj; path = TLUNotifier/TLUNotifier.xcodeproj; sourceTree = "<group>"; };
 		F9F043010F180031008DFE8C /* TLMReadWriteOperationQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMReadWriteOperationQueue.h; sourceTree = "<group>"; };
 		F9F043020F180031008DFE8C /* TLMReadWriteOperationQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMReadWriteOperationQueue.m; sourceTree = "<group>"; };
 		F9F130530EED94CC00D9968D /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/Preferences.xib; sourceTree = "<group>"; };
@@ -586,8 +600,8 @@
 				F9E2C9250F3C009300D5EC49 /* DVI.xcodeproj */,
 				F9DCD3590F06F08C00600DD2 /* Sparkle.xcodeproj */,
 				F9A057A80F5075DD008C804E /* DVIImporter.xcodeproj */,
+				F9E3DDA3182F3FE800800308 /* TLUNotifier.xcodeproj */,
 				F9D9AEB60F0D7EED00CB1A2F /* tlu_ipctask-Info.plist */,
-				F9947DFD15D5B68100CA6559 /* TLUNotifier.app */,
 			);
 			name = "TeX Live Utility";
 			sourceTree = "<group>";
@@ -874,6 +888,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		F9E3DDA4182F3FE800800308 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F9E3DDB0182F3FEA00800308 /* TLUNotifier.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		F9F56B7E0EF32F3500E934A9 /* Logging */ = {
 			isa = PBXGroup;
 			children = (
@@ -892,7 +914,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "TeX Live Utility" */;
 			buildPhases = (
-				F9947DEC15D5AD3900CA6559 /* Build TLUNotifier */,
 				F9ACDA3814434DBC005DA800 /* Create help book */,
 				F9DCD5650F07EFF100600DD2 /* Run genstrings */,
 				8D1107290486CEB800E47090 /* Resources */,
@@ -909,6 +930,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				F9E3DDB7182F414900800308 /* PBXTargetDependency */,
 				F9B139D60EECBE8F007C0046 /* PBXTargetDependency */,
 				F9DCD40E0F06F1D900600DD2 /* PBXTargetDependency */,
 				F91E079A0F341CA2006F4D97 /* PBXTargetDependency */,
@@ -975,6 +997,10 @@
 				{
 					ProductGroup = F9DCD35A0F06F08C00600DD2 /* Products */;
 					ProjectRef = F9DCD3590F06F08C00600DD2 /* Sparkle.xcodeproj */;
+				},
+				{
+					ProductGroup = F9E3DDA4182F3FE800800308 /* Products */;
+					ProjectRef = F9E3DDA3182F3FE800800308 /* TLUNotifier.xcodeproj */;
 				},
 			);
 			projectRoots = (
@@ -1054,6 +1080,13 @@
 			remoteRef = F9E2C92C0F3C009400D5EC49 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		F9E3DDB0182F3FEA00800308 /* TLUNotifier.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = TLUNotifier.app;
+			remoteRef = F9E3DDAF182F3FEA00800308 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
@@ -1127,20 +1160,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "LOCATION=\"${BUILT_PRODUCTS_DIR}\"/\"${EXECUTABLE_FOLDER_PATH}\"\nIDENTITY=\"TeX Live Utility Signing Certificate\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/python_version.py\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/uninstall_local_agent.sh\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/parse_tlpdb.py\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/agent_installer.py\"\n\n\n\n";
-		};
-		F9947DEC15D5AD3900CA6559 /* Build TLUNotifier */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Build TLUNotifier";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "cd ${SOURCE_ROOT}/TLUNotifier\nunset SOURCE_ROOT\nenv - /bin/sh -c \\\n\"/usr/bin/xcodebuild -configuration Release\"\n\n#cp -Rp $(BUILT_PRODUCTS_DIR)/Release/TLUNotifier.app";
 		};
 		F9ACDA3814434DBC005DA800 /* Create help book */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1300,6 +1319,11 @@
 			isa = PBXTargetDependency;
 			name = DVI;
 			targetProxy = F9E2C9320F3C00AE00D5EC49 /* PBXContainerItemProxy */;
+		};
+		F9E3DDB7182F414900800308 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = TLUNotifier;
+			targetProxy = F9E3DDB6182F414900800308 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
