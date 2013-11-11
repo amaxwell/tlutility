@@ -579,16 +579,6 @@
 				<key>country</key>
 				<string>Germany</string>
 				<key>name</key>
-				<string>funnyshare.org</string>
-				<key>urls</key>
-				<array>
-					<string>http://funnyshare.org/mirrors/ctan/</string>
-				</array>
-			</dict>
-			<dict>
-				<key>country</key>
-				<string>Germany</string>
-				<key>name</key>
 				<string>mirror.informatik.uni-mannheim.de</string>
 				<key>urls</key>
 				<array>
@@ -1309,6 +1299,6 @@
 		</array>
 	</dict>
 	<key>timestamp</key>
-	<real>1383009059.025577</real>
+	<real>1384117932.695729</real>
 </dict>
 </plist>
