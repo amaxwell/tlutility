@@ -159,6 +159,7 @@ struct TLMAOInternal {
         [self setFailed:NO];
         [self cancel];
     } else if (errAuthorizationSuccess != status) {
+        [self _appendStringToErrorData:[NSString stringWithFormat:@"AuthorizationCopyRights error: %d (%s)", (int32_t)status, GetMacOSStatusErrorString(status)]];
         [self _appendStringToErrorData:NSLocalizedString(@"Failed to authorize operation", @"alert message")];
         [self setFailed:YES];
     }
