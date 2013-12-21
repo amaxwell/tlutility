@@ -31,6 +31,16 @@ class DTTriangularMesh2D(object):
     def bounding_box(self):
         return self._grid.bounding_box()
         
+    def write_with_shared_grid(self, datafile, name, grid_name, time, time_index):
+        if grid_name not in datafile:
+            datafile.write_anonymous(self._grid, grid_name)
+            datafile.write_anonymous(self.__dt_type__(), "Seq_" + name)
+            
+        varname = "%s_%d" % (name, time_index)
+        datafile.write_anonymous(grid_name, varname)
+        datafile.write_anonymous(self._values, varname + "_V")
+        datafile.write_anonymous(np.array((time,)), varname + "_time")
+        
     def __str__(self):
         return self.__dt_type__() + ":\n  grid = " + str(self._grid)
         
