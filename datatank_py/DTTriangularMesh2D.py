@@ -28,6 +28,10 @@ class DTTriangularMesh2D(object):
     def __dt_type__(self):
         return "2D Triangular Mesh"
         
+    def grid(self):
+        """returns DTTriangularGrid2D"""
+        return self._grid
+        
     def bounding_box(self):
         return self._grid.bounding_box()
         
