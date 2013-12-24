@@ -487,6 +487,12 @@ class DTDataFile(object):
         #
         self._reload_content_if_needed()
         return self._name_offset_map.keys()
+        
+    def ordered_variable_names(self):
+        """List of variable names ordered as in the file."""
+        
+        self._reload_content_if_needed()
+        return sorted(self._name_offset_map, key=self._name_offset_map.get)
 
     def variable_named(self, name, use_modules=False):
         """Procedural API for getting a value from disk.
