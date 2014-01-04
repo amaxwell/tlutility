@@ -3,8 +3,6 @@
 
 # This software is under a BSD license.  See LICENSE.txt for details.
 
-from DTRegion2D import DTRegion2D
-from DTMask import DTMask
 import numpy as np
 
 class DTTriangularMesh2D(object):
