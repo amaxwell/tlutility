@@ -307,6 +307,24 @@ class DTDataFile(object):
         self._struct = None
         self.DEBUG = False
     
+    def _flush(self):
+        """Flush and sync to storage"""
+        if self._readonly == False:
+            #
+            # Ran into an assertion failure where getsize had a different value from
+            # self_length in _read_in_content while writing to a CIFS network volume.
+            # I suspect this was due to delayed writes, either due to Python or the
+            # OS buffering. Hopefully fsync doesn't kill performance, though.
+            #
+            # This problem did not go away after adding the fsync call, but it did
+            # go away after a remount of the filesystem. Extremely skeptical at this
+            # point whether this was an actual problem that can be solved; it may be
+            # better just to make the final assert in _read_in_content only if .DEBUG
+            # is set.
+            #
+            self._file.flush()
+            os.fsync(self._file.fileno())
+        
     def _read_object_header_at_offset(self, offset):
         """Read DTDataFileStructure at the specified offset in the file.
         
@@ -344,8 +362,7 @@ class DTDataFile(object):
         
         self._name_offset_map = {}
         # ensure we have a consistent file unless we're read-only
-        if self._readonly == False:
-            self._file.flush()
+        self._flush()
         self._file.seek(0)
         # all headers are the same length
         default_file_header = "DataTank Binary File LE\0"
@@ -399,6 +416,8 @@ class DTDataFile(object):
         
         """
         
+        # !!! may not be current unless we flush first, but if there's a mismatch,
+        # _read_in_content will flush and sync.
         current_size = os.path.getsize(self._file_path)
         if (len(self._name_offset_map) == 0 and current_size > 0) or self._length != current_size:
             
@@ -665,7 +684,7 @@ class DTDataFile(object):
             # setting up a new file, so choose native byte order
             assert previous_offset == 0, "file is missing dtbinary header"
             self._file.write(file_header)
-            self._file.flush()
+            self._flush()
             self._length = self._file.tell()
             # DTDataFileStructure: long long followed by 5 ints
             # http://docs.python.org/library/struct.html
