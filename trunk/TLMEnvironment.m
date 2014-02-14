@@ -526,9 +526,9 @@ static void __TLMTestAndClearEnvironmentVariable(const char *name)
     if ([alert showsSuppressionButton] && [[alert suppressionButton] state] == NSOnState)
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:TLMDisableVersionMismatchWarningKey];
     
-    // point users to main TL page, which has a link to MacTeX
+    // point users to main MacTeX, as users get confused by the main TeX Live page
     if (UPGRADE_TAG == returnCode) {
-        NSURL *aURL = [NSURL URLWithString:@"http://tug.org/texlive/"];
+        NSURL *aURL = [NSURL URLWithString:@"http://tug.org/mactex/"];
         [[NSWorkspace sharedWorkspace] openURL:aURL];
     }
     [self release];
