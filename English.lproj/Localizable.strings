@@ -77,9 +77,6 @@
 /* main window status string */
 "Database Loading Failed" = "Database Loading Failed";
 
-/* status for package */
-"Deleted on server" = "Deleted on server";
-
 /* single trailing space */
 "Deleting " = "Deleting ";
 
@@ -196,6 +193,9 @@
 
 /* alert title in preferences */
 "Necessary programs for TeX Live do not exist in that folder" = "Necessary programs for TeX Live do not exist in that folder";
+
+/* status for package */
+"Needs removal" = "Needs removal";
 
 /* No comment provided by engineer. */
 "Network is unavailable" = "Network is unavailable";
@@ -414,14 +414,14 @@
 /* alert title */
 "Update all packages?" = "Update all packages?";
 
+/* status for package */
+"Update available" = "Update available";
+
 /* context menu */
 "Update Selected Packages" = "Update Selected Packages";
 
 /* status message */
 "Update Succeeded" = "Update Succeeded";
-
-/* status for package */
-"Updated on server" = "Updated on server";
 
 /* tab title */
 "Updates" = "Updates";

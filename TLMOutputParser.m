@@ -66,10 +66,10 @@
     NSString *status = nil;
     switch (ch) {
         case 'd':
-            status = NSLocalizedString(@"Deleted on server", @"status for package");
+            status = NSLocalizedString(@"Needs removal", @"status for package");
             break;
         case 'u':
-            status = NSLocalizedString(@"Updated on server", @"status for package");
+            status = NSLocalizedString(@"Update available", @"status for package");
             break;
         case 'a':
             status = NSLocalizedString(@"Not installed", @"status for package");
