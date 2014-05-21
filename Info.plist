@@ -60,6 +60,8 @@ All Rights Reserved.</string>
 	<string>http://mactlmgr.googlecode.com/svn/trunk/appcast/tlu_appcast.xml</string>
 	<key>SUPublicDSAKeyFile</key>
 	<string>dsa_pub.pem</string>
+	<key>NSUserNotificationAlertStyle</key>
+	<string>banner</string>
 	<key>UTImportedTypeDeclarations</key>
 	<array>
 		<dict>
