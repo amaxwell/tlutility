@@ -1,1814 +1,490 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="7.10">
-  <data>
-    <int key="IBDocument.SystemTarget">1060</int>
-    <string key="IBDocument.SystemVersion">11C74</string>
-    <string key="IBDocument.InterfaceBuilderVersion">851</string>
-    <string key="IBDocument.AppKitVersion">1138.23</string>
-    <string key="IBDocument.HIToolboxVersion">567.00</string>
-    <object class="NSMutableDictionary" key="IBDocument.PluginVersions">
-      <bool key="EncodedWithXMLCoder">YES</bool>
-      <object class="NSArray" key="dict.sortedKeys">
-        <bool key="EncodedWithXMLCoder">YES</bool>
-        <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-        <string>com.mac.amaxwell.FileViewIBPlugin</string>
-      </object>
-      <object class="NSMutableArray" key="dict.values">
-        <bool key="EncodedWithXMLCoder">YES</bool>
-        <string>851</string>
-        <string>1</string>
-      </object>
-    </object>
-    <object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
-      <bool key="EncodedWithXMLCoder">YES</bool>
-      <integer value="1"/>
-    </object>
-    <object class="NSArray" key="IBDocument.PluginDependencies">
-      <bool key="EncodedWithXMLCoder">YES</bool>
-      <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-      <string>com.mac.amaxwell.FileViewIBPlugin</string>
-    </object>
-    <object class="NSMutableDictionary" key="IBDocument.Metadata">
-      <bool key="EncodedWithXMLCoder">YES</bool>
-      <object class="NSArray" key="dict.sortedKeys" id="0">
-        <bool key="EncodedWithXMLCoder">YES</bool>
-      </object>
-      <object class="NSMutableArray" key="dict.values">
-        <bool key="EncodedWithXMLCoder">YES</bool>
-      </object>
-    </object>
-    <object class="NSMutableArray" key="IBDocument.RootObjects" id="1000">
-      <bool key="EncodedWithXMLCoder">YES</bool>
-      <object class="NSCustomObject" id="1001">
-        <string key="NSClassName">TLMInfoController</string>
-      </object>
-      <object class="NSCustomObject" id="1003">
-        <string key="NSClassName">FirstResponder</string>
-      </object>
-      <object class="NSCustomObject" id="1004">
-        <string key="NSClassName">NSApplication</string>
-      </object>
-      <object class="NSWindowTemplate" id="1005">
-        <int key="NSWindowStyleMask">31</int>
-        <int key="NSWindowBacking">2</int>
-        <string key="NSWindowRect">{{196, 0}, {500, 511}}</string>
-        <int key="NSWTFlags">-1602748416</int>
-        <string key="NSWindowTitle">Window</string>
-        <string key="NSWindowClass">NSPanel</string>
-        <nil key="NSViewClass"/>
-        <nil key="NSUserInterfaceItemIdentifier"/>
-        <string key="NSWindowContentMaxSize">{1.7976931348623157e+308, 1.7976931348623157e+308}</string>
-        <object class="NSView" key="NSWindowView" id="1006">
-          <reference key="NSNextResponder"/>
-          <int key="NSvFlags">256</int>
-          <object class="NSMutableArray" key="NSSubviews">
-            <bool key="EncodedWithXMLCoder">YES</bool>
-            <object class="NSTabView" id="325228349">
-              <reference key="NSNextResponder" ref="1006"/>
-              <int key="NSvFlags">274</int>
-              <string key="NSFrameSize">{500, 511}</string>
-              <reference key="NSSuperview" ref="1006"/>
-              <object class="NSMutableArray" key="NSTabViewItems">
-                <bool key="EncodedWithXMLCoder">YES</bool>
-                <object class="NSTabViewItem" id="522997988">
-                  <string key="NSIdentifier">1</string>
-                  <object class="NSView" key="NSView" id="723999534">
-                    <reference key="NSNextResponder" ref="325228349"/>
-                    <int key="NSvFlags">256</int>
-                    <object class="NSMutableArray" key="NSSubviews">
-                      <bool key="EncodedWithXMLCoder">YES</bool>
-                      <object class="NSSplitView" id="175162844">
-                        <reference key="NSNextResponder" ref="723999534"/>
-                        <int key="NSvFlags">274</int>
-                        <object class="NSMutableArray" key="NSSubviews">
-                          <bool key="EncodedWithXMLCoder">YES</bool>
-                          <object class="NSSplitView" id="502038598">
-                            <reference key="NSNextResponder" ref="175162844"/>
-                            <int key="NSvFlags">274</int>
-                            <object class="NSMutableArray" key="NSSubviews">
-                              <bool key="EncodedWithXMLCoder">YES</bool>
-                              <object class="NSScrollView" id="381397786">
-                                <reference key="NSNextResponder" ref="502038598"/>
-                                <int key="NSvFlags">274</int>
-                                <object class="NSMutableArray" key="NSSubviews">
-                                  <bool key="EncodedWithXMLCoder">YES</bool>
-                                  <object class="NSClipView" id="727294889">
-                                    <reference key="NSNextResponder" ref="381397786"/>
-                                    <int key="NSvFlags">2304</int>
-                                    <object class="NSMutableArray" key="NSSubviews">
-                                      <bool key="EncodedWithXMLCoder">YES</bool>
-                                      <object class="FileView" id="58691880">
-                                        <reference key="NSNextResponder" ref="727294889"/>
-                                        <int key="NSvFlags">274</int>
-                                        <string key="NSFrameSize">{175, 309}</string>
-                                        <reference key="NSSuperview" ref="727294889"/>
-                                        <object class="NSColor" key="backgroundColor">
-                                          <int key="NSColorSpace">6</int>
-                                          <string key="NSCatalogName">System</string>
-                                          <string key="NSColorName">_sourceListBackgroundColor</string>
-                                          <object class="NSColor" key="NSColor">
-                                            <int key="NSColorSpace">6</int>
-                                            <string key="NSCatalogName">System</string>
-                                            <string key="NSColorName">alternateSelectedControlColor</string>
-                                            <object class="NSColor" key="NSColor" id="252082112">
-                                              <int key="NSColorSpace">1</int>
-                                              <bytes key="NSRGB">MCAwIDEAA</bytes>
-                                            </object>
-                                          </object>
-                                        </object>
-                                        <bool key="editable">NO</bool>
-                                        <double key="minIconScale">0.5</double>
-                                        <double key="maxIconScale">10</double>
-                                        <double key="iconScale">1</double>
-                                      </object>
-                                    </object>
-                                    <string key="NSFrameSize">{175, 309}</string>
-                                    <reference key="NSSuperview" ref="381397786"/>
-                                    <reference key="NSNextKeyView" ref="58691880"/>
-                                    <reference key="NSDocView" ref="58691880"/>
-                                    <object class="NSColor" key="NSBGColor" id="369434350">
-                                      <int key="NSColorSpace">6</int>
-                                      <string key="NSCatalogName">System</string>
-                                      <string key="NSColorName">controlColor</string>
-                                      <object class="NSColor" key="NSColor" id="433453329">
-                                        <int key="NSColorSpace">3</int>
-                                        <bytes key="NSWhite">MC42NjY2NjY2NjY3AA</bytes>
-                                      </object>
-                                    </object>
-                                    <int key="NScvFlags">4</int>
-                                  </object>
-                                  <object class="NSScroller" id="714682327">
-                                    <reference key="NSNextResponder" ref="381397786"/>
-                                    <int key="NSvFlags">-2147483392</int>
-                                    <string key="NSFrame">{{334, 1}, {15, 616}}</string>
-                                    <reference key="NSSuperview" ref="381397786"/>
-                                    <reference key="NSTarget" ref="381397786"/>
-                                    <string key="NSAction">_doScroller:</string>
-                                    <double key="NSPercent">0.35939320921897888</double>
-                                  </object>
-                                  <object class="NSScroller" id="888306192">
-                                    <reference key="NSNextResponder" ref="381397786"/>
-                                    <int key="NSvFlags">-2147483392</int>
-                                    <string key="NSFrame">{{1, 602}, {333, 15}}</string>
-                                    <reference key="NSSuperview" ref="381397786"/>
-                                    <int key="NSsFlags">1</int>
-                                    <reference key="NSTarget" ref="381397786"/>
-                                    <string key="NSAction">_doScroller:</string>
-                                    <double key="NSPercent">0.91329479217529297</double>
-                                  </object>
-                                </object>
-                                <string key="NSFrameSize">{175, 309}</string>
-                                <reference key="NSSuperview" ref="502038598"/>
-                                <reference key="NSNextKeyView" ref="727294889"/>
-                                <int key="NSsFlags">133680</int>
-                                <reference key="NSVScroller" ref="714682327"/>
-                                <reference key="NSHScroller" ref="888306192"/>
-                                <reference key="NSContentView" ref="727294889"/>
-                              </object>
-                              <object class="NSScrollView" id="3841781">
-                                <reference key="NSNextResponder" ref="502038598"/>
-                                <int key="NSvFlags">274</int>
-                                <object class="NSMutableArray" key="NSSubviews">
-                                  <bool key="EncodedWithXMLCoder">YES</bool>
-                                  <object class="NSClipView" id="742901960">
-                                    <reference key="NSNextResponder" ref="3841781"/>
-                                    <int key="NSvFlags">2304</int>
-                                    <object class="NSMutableArray" key="NSSubviews">
-                                      <bool key="EncodedWithXMLCoder">YES</bool>
-                                      <object class="NSTextView" id="455628842">
-                                        <reference key="NSNextResponder" ref="742901960"/>
-                                        <int key="NSvFlags">2322</int>
-                                        <string key="NSFrameSize">{301, 132}</string>
-                                        <reference key="NSSuperview" ref="742901960"/>
-                                        <object class="NSTextContainer" key="NSTextContainer" id="478549311">
-                                          <object class="NSLayoutManager" key="NSLayoutManager">
-                                            <object class="NSTextStorage" key="NSTextStorage">
-                                              <object class="NSMutableString" key="NSString">
-                                                <characters key="NS.bytes">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum Et harumd und lookum like Greek to me, dereud facilis est er expedit distinct. Nam liber te conscient to factor tum poen legum odioque civiuda</characters>
-                                              </object>
-                                              <object class="NSMutableArray" key="NSAttributes">
-                                                <bool key="EncodedWithXMLCoder">YES</bool>
-                                                <object class="NSDictionary">
-                                                  <bool key="EncodedWithXMLCoder">YES</bool>
-                                                  <object class="NSArray" key="dict.sortedKeys">
-                                                    <bool key="EncodedWithXMLCoder">YES</bool>
-                                                    <string>NSFont</string>
-                                                    <string>NSParagraphStyle</string>
-                                                  </object>
-                                                  <object class="NSMutableArray" key="dict.values">
-                                                    <bool key="EncodedWithXMLCoder">YES</bool>
-                                                    <object class="NSFont">
-                                                      <string key="NSName">LucidaGrande</string>
-                                                      <double key="NSSize">10</double>
-                                                      <int key="NSfFlags">2832</int>
-                                                    </object>
-                                                    <object class="NSParagraphStyle">
-                                                      <int key="NSAlignment">3</int>
-                                                      <object class="NSArray" key="NSTabStops">
-                                                        <bool key="EncodedWithXMLCoder">YES</bool>
-                                                        <object class="NSTextTab" id="1056774585">
-                                                          <double key="NSLocation">0.0</double>
-                                                        </object>
-                                                        <object class="NSTextTab" id="964480338">
-                                                          <double key="NSLocation">56</double>
-                                                        </object>
-                                                        <object class="NSTextTab" id="494612929">
-                                                          <double key="NSLocation">112</double>
-                                                        </object>
-                                                        <object class="NSTextTab" id="907546564">
-                                                          <double key="NSLocation">168</double>
-                                                        </object>
-                                                        <object class="NSTextTab" id="1020122414">
-                                                          <double key="NSLocation">224</double>
-                                                        </object>
-                                                        <object class="NSTextTab" id="1051568310">
-                                                          <double key="NSLocation">280</double>
-                                                        </object>
-                                                        <object class="NSTextTab" id="547233756">
-                                                          <double key="NSLocation">336</double>
-                                                        </object>
-                                                        <object class="NSTextTab" id="596485952">
-                                                          <double key="NSLocation">392</double>
-                                                        </object>
-                                                        <object class="NSTextTab" id="1009724844">
-                                                          <double key="NSLocation">448</double>
-                                                        </object>
-                                                        <object class="NSTextTab" id="429738011">
-                                                          <double key="NSLocation">504</double>
-                                                        </object>
-                                                        <object class="NSTextTab" id="616285370">
-                                                          <double key="NSLocation">560</double>
-                                                        </object>
-                                                        <object class="NSTextTab" id="20405459">
-                                                          <double key="NSLocation">616</double>
-                                                        </object>
-                                                        <object class="NSTextTab" id="841776450">
-                                                          <double key="NSLocation">672</double>
-                                                        </object>
-                                                        <object class="NSTextTab" id="1064034558">
-                                                          <double key="NSLocation">728</double>
-                                                        </object>
-                                                        <object class="NSTextTab" id="1030086837">
-                                                          <double key="NSLocation">784</double>
-                                                        </object>
-                                                        <object class="NSTextTab" id="612215184">
-                                                          <double key="NSLocation">840</double>
-                                                        </object>
-                                                        <object class="NSTextTab" id="1032196138">
-                                                          <double key="NSLocation">896</double>
-                                                        </object>
-                                                        <object class="NSTextTab" id="78805074">
-                                                          <double key="NSLocation">952</double>
-                                                        </object>
-                                                        <object class="NSTextTab" id="308264242">
-                                                          <double key="NSLocation">1008</double>
-                                                        </object>
-                                                        <object class="NSTextTab" id="77241096">
-                                                          <double key="NSLocation">1064</double>
-                                                        </object>
-                                                        <object class="NSTextTab" id="526904624">
-                                                          <double key="NSLocation">1120</double>
-                                                        </object>
-                                                        <object class="NSTextTab" id="529515511">
-                                                          <double key="NSLocation">1176</double>
-                                                        </object>
-                                                        <object class="NSTextTab" id="617951949">
-                                                          <double key="NSLocation">1232</double>
-                                                        </object>
-                                                        <object class="NSTextTab" id="576280875">
-                                                          <double key="NSLocation">1288</double>
-                                                        </object>
-                                                        <object class="NSTextTab" id="992506032">
-                                                          <double key="NSLocation">1344</double>
-                                                        </object>
-                                                        <object class="NSTextTab" id="310904380">
-                                                          <double key="NSLocation">1400</double>
-                                                        </object>
-                                                        <object class="NSTextTab" id="583972015">
-                                                          <double key="NSLocation">1456</double>
-                                                        </object>
-                                                        <object class="NSTextTab" id="291858775">
-                                                          <double key="NSLocation">1512</double>
-                                                        </object>
-                                                        <object class="NSTextTab" id="1034902914">
-                                                          <double key="NSLocation">1568</double>
-                                                        </object>
-                                                        <object class="NSTextTab" id="587812796">
-                                                          <double key="NSLocation">1624</double>
-                                                        </object>
-                                                        <object class="NSTextTab" id="1034759735">
-                                                          <double key="NSLocation">1680</double>
-                                                        </object>
-                                                        <object class="NSTextTab" id="1017933676">
-                                                          <double key="NSLocation">1736</double>
-                                                        </object>
-                                                      </object>
-                                                    </object>
-                                                  </object>
-                                                </object>
-                                                <object class="NSDictionary">
-                                                  <bool key="EncodedWithXMLCoder">YES</bool>
-                                                  <object class="NSArray" key="dict.sortedKeys">
-                                                    <bool key="EncodedWithXMLCoder">YES</bool>
-                                                    <string>NSFont</string>
-                                                    <string>NSParagraphStyle</string>
-                                                  </object>
-                                                  <object class="NSMutableArray" key="dict.values">
-                                                    <bool key="EncodedWithXMLCoder">YES</bool>
-                                                    <object class="NSFont">
-                                                      <string key="NSName">LucidaGrande-Bold</string>
-                                                      <double key="NSSize">10</double>
-                                                      <int key="NSfFlags">16</int>
-                                                    </object>
-                                                    <object class="NSParagraphStyle">
-                                                      <int key="NSAlignment">3</int>
-                                                      <object class="NSArray" key="NSTabStops">
-                                                        <bool key="EncodedWithXMLCoder">YES</bool>
-                                                        <reference ref="1056774585"/>
-                                                        <reference ref="964480338"/>
-                                                        <reference ref="494612929"/>
-                                                        <reference ref="907546564"/>
-                                                        <reference ref="1020122414"/>
-                                                        <reference ref="1051568310"/>
-                                                        <reference ref="547233756"/>
-                                                        <reference ref="596485952"/>
-                                                        <reference ref="1009724844"/>
-                                                        <reference ref="429738011"/>
-                                                        <reference ref="616285370"/>
-                                                        <reference ref="20405459"/>
-                                                        <reference ref="841776450"/>
-                                                        <reference ref="1064034558"/>
-                                                        <reference ref="1030086837"/>
-                                                        <reference ref="612215184"/>
-                                                        <reference ref="1032196138"/>
-                                                        <reference ref="78805074"/>
-                                                        <reference ref="308264242"/>
-                                                        <reference ref="77241096"/>
-                                                        <reference ref="526904624"/>
-                                                        <reference ref="529515511"/>
-                                                        <reference ref="617951949"/>
-                                                        <reference ref="576280875"/>
-                                                        <reference ref="992506032"/>
-                                                        <reference ref="310904380"/>
-                                                        <reference ref="583972015"/>
-                                                        <reference ref="291858775"/>
-                                                        <reference ref="1034902914"/>
-                                                        <reference ref="587812796"/>
-                                                        <reference ref="1034759735"/>
-                                                        <reference ref="1017933676"/>
-                                                      </object>
-                                                    </object>
-                                                  </object>
-                                                </object>
-                                              </object>
-                                              <object class="NSMutableData" key="NSAttributeInfo">
-                                                <bytes key="NS.bytes">GQAEAQgADAEiAAcBhAQAA</bytes>
-                                              </object>
-                                              <nil key="NSDelegate"/>
-                                            </object>
-                                            <object class="NSMutableArray" key="NSTextContainers">
-                                              <bool key="EncodedWithXMLCoder">YES</bool>
-                                              <reference ref="478549311"/>
-                                            </object>
-                                            <int key="NSLMFlags">6</int>
-                                            <nil key="NSDelegate"/>
-                                          </object>
-                                          <reference key="NSTextView" ref="455628842"/>
-                                          <double key="NSWidth">301</double>
-                                          <int key="NSTCFlags">1</int>
-                                        </object>
-                                        <object class="NSTextViewSharedData" key="NSSharedData">
-                                          <int key="NSFlags">100936613</int>
-                                          <int key="NSTextCheckingTypes">0</int>
-                                          <nil key="NSMarkedAttributes"/>
-                                          <object class="NSColor" key="NSBackgroundColor" id="488081974">
-                                            <int key="NSColorSpace">3</int>
-                                            <bytes key="NSWhite">MQA</bytes>
-                                          </object>
-                                          <object class="NSDictionary" key="NSSelectedAttributes">
-                                            <bool key="EncodedWithXMLCoder">YES</bool>
-                                            <object class="NSArray" key="dict.sortedKeys">
-                                              <bool key="EncodedWithXMLCoder">YES</bool>
-                                              <string>NSBackgroundColor</string>
-                                              <string>NSColor</string>
-                                            </object>
-                                            <object class="NSMutableArray" key="dict.values">
-                                              <bool key="EncodedWithXMLCoder">YES</bool>
-                                              <object class="NSColor">
-                                                <int key="NSColorSpace">6</int>
-                                                <string key="NSCatalogName">System</string>
-                                                <string key="NSColorName">selectedTextBackgroundColor</string>
-                                                <reference key="NSColor" ref="433453329"/>
-                                              </object>
-                                              <object class="NSColor">
-                                                <int key="NSColorSpace">6</int>
-                                                <string key="NSCatalogName">System</string>
-                                                <string key="NSColorName">selectedTextColor</string>
-                                                <object class="NSColor" key="NSColor" id="1065496286">
-                                                  <int key="NSColorSpace">3</int>
-                                                  <bytes key="NSWhite">MAA</bytes>
-                                                </object>
-                                              </object>
-                                            </object>
-                                          </object>
-                                          <reference key="NSInsertionColor" ref="1065496286"/>
-                                          <object class="NSDictionary" key="NSLinkAttributes">
-                                            <bool key="EncodedWithXMLCoder">YES</bool>
-                                            <object class="NSArray" key="dict.sortedKeys">
-                                              <bool key="EncodedWithXMLCoder">YES</bool>
-                                              <string>NSColor</string>
-                                              <string>NSUnderline</string>
-                                            </object>
-                                            <object class="NSMutableArray" key="dict.values">
-                                              <bool key="EncodedWithXMLCoder">YES</bool>
-                                              <reference ref="252082112"/>
-                                              <integer value="1"/>
-                                            </object>
-                                          </object>
-                                          <nil key="NSDefaultParagraphStyle"/>
-                                          <nil key="NSTextFinder"/>
-                                          <int key="NSPreferredTextFinderStyle">1</int>
-                                        </object>
-                                        <int key="NSTVFlags">7</int>
-                                        <string key="NSMaxSize">{623, 10000000}</string>
-                                        <string key="NSMinize">{299, 0}</string>
-                                        <nil key="NSDelegate"/>
-                                      </object>
-                                    </object>
-                                    <string key="NSFrameSize">{309, 309}</string>
-                                    <reference key="NSSuperview" ref="3841781"/>
-                                    <reference key="NSNextKeyView" ref="455628842"/>
-                                    <reference key="NSDocView" ref="455628842"/>
-                                    <reference key="NSBGColor" ref="488081974"/>
-                                    <object class="NSCursor" key="NSCursor">
-                                      <string key="NSHotSpot">{4, -5}</string>
-                                      <int key="NSCursorType">1</int>
-                                    </object>
-                                    <int key="NScvFlags">4</int>
-                                  </object>
-                                  <object class="NSScroller" id="851738416">
-                                    <reference key="NSNextResponder" ref="3841781"/>
-                                    <int key="NSvFlags">256</int>
-                                    <string key="NSFrame">{{309, 0}, {15, 309}}</string>
-                                    <reference key="NSSuperview" ref="3841781"/>
-                                    <reference key="NSTarget" ref="3841781"/>
-                                    <string key="NSAction">_doScroller:</string>
-                                    <double key="NSPercent">0.16048090159893036</double>
-                                  </object>
-                                  <object class="NSScroller" id="424927902">
-                                    <reference key="NSNextResponder" ref="3841781"/>
-                                    <int key="NSvFlags">-2147483392</int>
-                                    <string key="NSFrame">{{-100, -100}, {87, 18}}</string>
-                                    <reference key="NSSuperview" ref="3841781"/>
-                                    <int key="NSsFlags">1</int>
-                                    <reference key="NSTarget" ref="3841781"/>
-                                    <string key="NSAction">_doScroller:</string>
-                                    <double key="NSCurValue">1</double>
-                                    <double key="NSPercent">0.94565218687057495</double>
-                                  </object>
-                                </object>
-                                <string key="NSFrame">{{176, 0}, {324, 309}}</string>
-                                <reference key="NSSuperview" ref="502038598"/>
-                                <reference key="NSNextKeyView" ref="742901960"/>
-                                <int key="NSsFlags">133136</int>
-                                <reference key="NSVScroller" ref="851738416"/>
-                                <reference key="NSHScroller" ref="424927902"/>
-                                <reference key="NSContentView" ref="742901960"/>
-                              </object>
-                            </object>
-                            <string key="NSFrameSize">{500, 309}</string>
-                            <reference key="NSSuperview" ref="175162844"/>
-                            <bool key="NSIsVertical">YES</bool>
-                            <int key="NSDividerStyle">2</int>
-                            <string key="NSAutosaveName">Info panel split view</string>
-                          </object>
-                          <object class="NSScrollView" id="25560736">
-                            <reference key="NSNextResponder" ref="175162844"/>
-                            <int key="NSvFlags">274</int>
-                            <object class="NSMutableArray" key="NSSubviews">
-                              <bool key="EncodedWithXMLCoder">YES</bool>
-                              <object class="NSClipView" id="73086436">
-                                <reference key="NSNextResponder" ref="25560736"/>
-                                <int key="NSvFlags">2304</int>
-                                <object class="NSMutableArray" key="NSSubviews">
-                                  <bool key="EncodedWithXMLCoder">YES</bool>
-                                  <object class="NSOutlineView" id="1043437177">
-                                    <reference key="NSNextResponder" ref="73086436"/>
-                                    <int key="NSvFlags">256</int>
-                                    <string key="NSFrameSize">{485, 202}</string>
-                                    <reference key="NSSuperview" ref="73086436"/>
-                                    <bool key="NSEnabled">YES</bool>
-                                    <object class="_NSCornerView" key="NSCornerView">
-                                      <nil key="NSNextResponder"/>
-                                      <int key="NSvFlags">256</int>
-                                      <string key="NSFrame">{{484, 0}, {16, 17}}</string>
-                                    </object>
-                                    <object class="NSMutableArray" key="NSTableColumns">
-                                      <bool key="EncodedWithXMLCoder">YES</bool>
-                                      <object class="NSTableColumn" id="603732700">
-                                        <double key="NSWidth">482</double>
-                                        <double key="NSMinWidth">16</double>
-                                        <double key="NSMaxWidth">1000</double>
-                                        <object class="NSTableHeaderCell" key="NSHeaderCell">
-                                          <int key="NSCellFlags">75628096</int>
-                                          <int key="NSCellFlags2">2048</int>
-                                          <string key="NSContents"/>
-                                          <object class="NSFont" key="NSSupport">
-                                            <string key="NSName">LucidaGrande</string>
-                                            <double key="NSSize">11</double>
-                                            <int key="NSfFlags">3088</int>
-                                          </object>
-                                          <object class="NSColor" key="NSBackgroundColor">
-                                            <int key="NSColorSpace">3</int>
-                                            <bytes key="NSWhite">MC4zMzMzMzI5ODU2AA</bytes>
-                                          </object>
-                                          <object class="NSColor" key="NSTextColor">
-                                            <int key="NSColorSpace">6</int>
-                                            <string key="NSCatalogName">System</string>
-                                            <string key="NSColorName">headerTextColor</string>
-                                            <reference key="NSColor" ref="1065496286"/>
-                                          </object>
-                                        </object>
-                                        <object class="NSTextFieldCell" key="NSDataCell" id="418317584">
-                                          <int key="NSCellFlags">337772096</int>
-                                          <int key="NSCellFlags2">2048</int>
-                                          <string key="NSContents">Text Cell</string>
-                                          <object class="NSFont" key="NSSupport" id="1010426922">
-                                            <string key="NSName">LucidaGrande</string>
-                                            <double key="NSSize">13</double>
-                                            <int key="NSfFlags">1040</int>
-                                          </object>
-                                          <reference key="NSControlView" ref="1043437177"/>
-                                          <object class="NSColor" key="NSBackgroundColor" id="783057929">
-                                            <int key="NSColorSpace">6</int>
-                                            <string key="NSCatalogName">System</string>
-                                            <string key="NSColorName">controlBackgroundColor</string>
-                                            <reference key="NSColor" ref="433453329"/>
-                                          </object>
-                                          <object class="NSColor" key="NSTextColor">
-                                            <int key="NSColorSpace">6</int>
-                                            <string key="NSCatalogName">System</string>
-                                            <string key="NSColorName">controlTextColor</string>
-                                            <reference key="NSColor" ref="1065496286"/>
-                                          </object>
-                                        </object>
-                                        <int key="NSResizingMask">3</int>
-                                        <bool key="NSIsResizeable">YES</bool>
-                                        <reference key="NSTableView" ref="1043437177"/>
-                                      </object>
-                                    </object>
-                                    <double key="NSIntercellSpacingWidth">3</double>
-                                    <double key="NSIntercellSpacingHeight">2</double>
-                                    <reference key="NSBackgroundColor" ref="488081974"/>
-                                    <object class="NSColor" key="NSGridColor">
-                                      <int key="NSColorSpace">6</int>
-                                      <string key="NSCatalogName">System</string>
-                                      <string key="NSColorName">gridColor</string>
-                                      <object class="NSColor" key="NSColor">
-                                        <int key="NSColorSpace">3</int>
-                                        <bytes key="NSWhite">MC41AA</bytes>
-                                      </object>
-                                    </object>
-                                    <double key="NSRowHeight">17</double>
-                                    <int key="NSTvFlags">-1698693120</int>
-                                    <reference key="NSDelegate"/>
-                                    <reference key="NSDataSource"/>
-                                    <int key="NSColumnAutoresizingStyle">4</int>
-                                    <int key="NSDraggingSourceMaskForLocal">15</int>
-                                    <int key="NSDraggingSourceMaskForNonLocal">0</int>
-                                    <bool key="NSAllowsTypeSelect">YES</bool>
-                                    <int key="NSTableViewDraggingDestinationStyle">0</int>
-                                    <int key="NSTableViewGroupRowStyle">1</int>
-                                    <bool key="NSOutlineViewAutoresizesOutlineColumnKey">NO</bool>
-                                  </object>
-                                </object>
-                                <string key="NSFrameSize">{485, 202}</string>
-                                <reference key="NSSuperview" ref="25560736"/>
-                                <reference key="NSNextKeyView" ref="1043437177"/>
-                                <reference key="NSDocView" ref="1043437177"/>
-                                <reference key="NSBGColor" ref="783057929"/>
-                                <int key="NScvFlags">4</int>
-                              </object>
-                              <object class="NSScroller" id="497381641">
-                                <reference key="NSNextResponder" ref="25560736"/>
-                                <int key="NSvFlags">256</int>
-                                <string key="NSFrame">{{485, 0}, {15, 202}}</string>
-                                <reference key="NSSuperview" ref="25560736"/>
-                                <reference key="NSTarget" ref="25560736"/>
-                                <string key="NSAction">_doScroller:</string>
-                                <double key="NSPercent">0.99476438760757446</double>
-                              </object>
-                              <object class="NSScroller" id="1002572398">
-                                <reference key="NSNextResponder" ref="25560736"/>
-                                <int key="NSvFlags">-2147483392</int>
-                                <string key="NSFrame">{{-100, -100}, {483, 15}}</string>
-                                <reference key="NSSuperview" ref="25560736"/>
-                                <int key="NSsFlags">1</int>
-                                <reference key="NSTarget" ref="25560736"/>
-                                <string key="NSAction">_doScroller:</string>
-                                <double key="NSPercent">0.99793392419815063</double>
-                              </object>
-                            </object>
-                            <string key="NSFrame">{{0, 310}, {500, 202}}</string>
-                            <reference key="NSSuperview" ref="175162844"/>
-                            <reference key="NSNextKeyView" ref="73086436"/>
-                            <int key="NSsFlags">133136</int>
-                            <reference key="NSVScroller" ref="497381641"/>
-                            <reference key="NSHScroller" ref="1002572398"/>
-                            <reference key="NSContentView" ref="73086436"/>
-                            <bytes key="NSScrollAmts">QSAAAEEgAABBmAAAQZgAAA</bytes>
-                          </object>
-                        </object>
-                        <string key="NSFrameSize">{500, 512}</string>
-                        <reference key="NSSuperview" ref="723999534"/>
-                        <int key="NSDividerStyle">2</int>
-                        <string key="NSAutosaveName">Info panel horizontal splitview</string>
-                      </object>
-                    </object>
-                    <string key="NSFrameSize">{500, 511}</string>
-                    <reference key="NSSuperview" ref="325228349"/>
-                  </object>
-                  <string key="NSLabel">TextView</string>
-                  <reference key="NSColor" ref="369434350"/>
-                  <reference key="NSTabView" ref="325228349"/>
-                </object>
-                <object class="NSTabViewItem" id="754965360">
-                  <string key="NSIdentifier">2</string>
-                  <object class="NSView" key="NSView" id="1021410856">
-                    <nil key="NSNextResponder"/>
-                    <int key="NSvFlags">256</int>
-                    <object class="NSMutableArray" key="NSSubviews">
-                      <bool key="EncodedWithXMLCoder">YES</bool>
-                      <object class="NSProgressIndicator" id="389838810">
-                        <reference key="NSNextResponder" ref="1021410856"/>
-                        <int key="NSvFlags">1325</int>
-                        <object class="NSPSMatrix" key="NSDrawMatrix"/>
-                        <string key="NSFrame">{{32, 135}, {32, 32}}</string>
-                        <reference key="NSSuperview" ref="1021410856"/>
-                        <int key="NSpiFlags">20490</int>
-                        <double key="NSMinValue">16</double>
-                        <double key="NSMaxValue">100</double>
-                      </object>
-                    </object>
-                    <string key="NSFrameSize">{500, 511}</string>
-                  </object>
-                  <string key="NSLabel">ProgressView</string>
-                  <reference key="NSColor" ref="369434350"/>
-                  <reference key="NSTabView" ref="325228349"/>
-                </object>
-              </object>
-              <reference key="NSSelectedTabViewItem" ref="522997988"/>
-              <reference key="NSFont" ref="1010426922"/>
-              <int key="NSTvFlags">6</int>
-              <bool key="NSAllowTruncatedLabels">YES</bool>
-              <object class="NSMutableArray" key="NSSubviews">
-                <bool key="EncodedWithXMLCoder">YES</bool>
-                <reference ref="723999534"/>
-              </object>
-            </object>
-          </object>
-          <string key="NSFrameSize">{500, 511}</string>
-          <reference key="NSSuperview"/>
-        </object>
-        <string key="NSScreenRect">{{0, 0}, {1680, 1028}}</string>
-        <string key="NSMaxSize">{1.7976931348623157e+308, 1.7976931348623157e+308}</string>
-        <string key="NSFrameAutosaveName"/>
-        <bool key="NSWindowIsRestorable">YES</bool>
-      </object>
-    </object>
-    <object class="IBObjectContainer" key="IBDocument.Objects">
-      <object class="NSMutableArray" key="connectionRecords">
-        <bool key="EncodedWithXMLCoder">YES</bool>
-        <object class="IBConnectionRecord">
-          <object class="IBOutletConnection" key="connection">
-            <string key="label">window</string>
-            <reference key="source" ref="1001"/>
-            <reference key="destination" ref="1005"/>
-          </object>
-          <int key="connectionID">3</int>
-        </object>
-        <object class="IBConnectionRecord">
-          <object class="IBOutletConnection" key="connection">
-            <string key="label">delegate</string>
-            <reference key="source" ref="1005"/>
-            <reference key="destination" ref="1001"/>
-          </object>
-          <int key="connectionID">4</int>
-        </object>
-        <object class="IBConnectionRecord">
-          <object class="IBOutletConnection" key="connection">
-            <string key="label">_spinner</string>
-            <reference key="source" ref="1001"/>
-            <reference key="destination" ref="389838810"/>
-          </object>
-          <int key="connectionID">32</int>
-        </object>
-        <object class="IBConnectionRecord">
-          <object class="IBOutletConnection" key="connection">
-            <string key="label">_tabView</string>
-            <reference key="source" ref="1001"/>
-            <reference key="destination" ref="325228349"/>
-          </object>
-          <int key="connectionID">33</int>
-        </object>
-        <object class="IBConnectionRecord">
-          <object class="IBOutletConnection" key="connection">
-            <string key="label">_textView</string>
-            <reference key="source" ref="1001"/>
-            <reference key="destination" ref="455628842"/>
-          </object>
-          <int key="connectionID">34</int>
-        </object>
-        <object class="IBConnectionRecord">
-          <object class="IBOutletConnection" key="connection">
-            <string key="label">delegate</string>
-            <reference key="source" ref="455628842"/>
-            <reference key="destination" ref="1001"/>
-          </object>
-          <int key="connectionID">35</int>
-        </object>
-        <object class="IBConnectionRecord">
-          <object class="IBOutletConnection" key="connection">
-            <string key="label">_fileView</string>
-            <reference key="source" ref="1001"/>
-            <reference key="destination" ref="58691880"/>
-          </object>
-          <int key="connectionID">40</int>
-        </object>
-        <object class="IBConnectionRecord">
-          <object class="IBOutletConnection" key="connection">
-            <string key="label">dataSource</string>
-            <reference key="source" ref="58691880"/>
-            <reference key="destination" ref="1001"/>
-          </object>
-          <int key="connectionID">41</int>
-        </object>
-        <object class="IBConnectionRecord">
-          <object class="IBOutletConnection" key="connection">
-            <string key="label">delegate</string>
-            <reference key="source" ref="58691880"/>
-            <reference key="destination" ref="1001"/>
-          </object>
-          <int key="connectionID">43</int>
-        </object>
-        <object class="IBConnectionRecord">
-          <object class="IBOutletConnection" key="connection">
-            <string key="label">dataSource</string>
-            <reference key="source" ref="1043437177"/>
-            <reference key="destination" ref="1001"/>
-          </object>
-          <int key="connectionID">54</int>
-        </object>
-        <object class="IBConnectionRecord">
-          <object class="IBOutletConnection" key="connection">
-            <string key="label">delegate</string>
-            <reference key="source" ref="1043437177"/>
-            <reference key="destination" ref="1001"/>
-          </object>
-          <int key="connectionID">55</int>
-        </object>
-        <object class="IBConnectionRecord">
-          <object class="IBOutletConnection" key="connection">
-            <string key="label">_outlineView</string>
-            <reference key="source" ref="1001"/>
-            <reference key="destination" ref="1043437177"/>
-          </object>
-          <int key="connectionID">56</int>
-        </object>
-      </object>
-      <object class="IBMutableOrderedSet" key="objectRecords">
-        <object class="NSArray" key="orderedObjects">
-          <bool key="EncodedWithXMLCoder">YES</bool>
-          <object class="IBObjectRecord">
-            <int key="objectID">0</int>
-            <reference key="object" ref="0"/>
-            <reference key="children" ref="1000"/>
-            <nil key="parent"/>
-          </object>
-          <object class="IBObjectRecord">
-            <int key="objectID">-2</int>
-            <reference key="object" ref="1001"/>
-            <reference key="parent" ref="0"/>
-            <string key="objectName">File's Owner</string>
-          </object>
-          <object class="IBObjectRecord">
-            <int key="objectID">-1</int>
-            <reference key="object" ref="1003"/>
-            <reference key="parent" ref="0"/>
-            <string key="objectName">First Responder</string>
-          </object>
-          <object class="IBObjectRecord">
-            <int key="objectID">-3</int>
-            <reference key="object" ref="1004"/>
-            <reference key="parent" ref="0"/>
-            <string key="objectName">Application</string>
-          </object>
-          <object class="IBObjectRecord">
-            <int key="objectID">1</int>
-            <reference key="object" ref="1005"/>
-            <object class="NSMutableArray" key="children">
-              <bool key="EncodedWithXMLCoder">YES</bool>
-              <reference ref="1006"/>
-            </object>
-            <reference key="parent" ref="0"/>
-          </object>
-          <object class="IBObjectRecord">
-            <int key="objectID">2</int>
-            <reference key="object" ref="1006"/>
-            <object class="NSMutableArray" key="children">
-              <bool key="EncodedWithXMLCoder">YES</bool>
-              <reference ref="325228349"/>
-            </object>
-            <reference key="parent" ref="1005"/>
-          </object>
-          <object class="IBObjectRecord">
-            <int key="objectID">22</int>
-            <reference key="object" ref="325228349"/>
-            <object class="NSMutableArray" key="children">
-              <bool key="EncodedWithXMLCoder">YES</bool>
-              <reference ref="522997988"/>
-              <reference ref="754965360"/>
-            </object>
-            <reference key="parent" ref="1006"/>
-          </object>
-          <object class="IBObjectRecord">
-            <int key="objectID">23</int>
-            <reference key="object" ref="522997988"/>
-            <object class="NSMutableArray" key="children">
-              <bool key="EncodedWithXMLCoder">YES</bool>
-              <reference ref="723999534"/>
-            </object>
-            <reference key="parent" ref="325228349"/>
-          </object>
-          <object class="IBObjectRecord">
-            <int key="objectID">24</int>
-            <reference key="object" ref="754965360"/>
-            <object class="NSMutableArray" key="children">
-              <bool key="EncodedWithXMLCoder">YES</bool>
-              <reference ref="1021410856"/>
-            </object>
-            <reference key="parent" ref="325228349"/>
-          </object>
-          <object class="IBObjectRecord">
-            <int key="objectID">25</int>
-            <reference key="object" ref="1021410856"/>
-            <object class="NSMutableArray" key="children">
-              <bool key="EncodedWithXMLCoder">YES</bool>
-              <reference ref="389838810"/>
-            </object>
-            <reference key="parent" ref="754965360"/>
-          </object>
-          <object class="IBObjectRecord">
-            <int key="objectID">31</int>
-            <reference key="object" ref="389838810"/>
-            <reference key="parent" ref="1021410856"/>
-          </object>
-          <object class="IBObjectRecord">
-            <int key="objectID">26</int>
-            <reference key="object" ref="723999534"/>
-            <object class="NSMutableArray" key="children">
-              <bool key="EncodedWithXMLCoder">YES</bool>
-              <reference ref="175162844"/>
-            </object>
-            <reference key="parent" ref="522997988"/>
-          </object>
-          <object class="IBObjectRecord">
-            <int key="objectID">57</int>
-            <reference key="object" ref="175162844"/>
-            <object class="NSMutableArray" key="children">
-              <bool key="EncodedWithXMLCoder">YES</bool>
-              <reference ref="502038598"/>
-              <reference ref="25560736"/>
-            </object>
-            <reference key="parent" ref="723999534"/>
-          </object>
-          <object class="IBObjectRecord">
-            <int key="objectID">42</int>
-            <reference key="object" ref="502038598"/>
-            <object class="NSMutableArray" key="children">
-              <bool key="EncodedWithXMLCoder">YES</bool>
-              <reference ref="3841781"/>
-              <reference ref="381397786"/>
-            </object>
-            <reference key="parent" ref="175162844"/>
-          </object>
-          <object class="IBObjectRecord">
-            <int key="objectID">27</int>
-            <reference key="object" ref="3841781"/>
-            <object class="NSMutableArray" key="children">
-              <bool key="EncodedWithXMLCoder">YES</bool>
-              <reference ref="851738416"/>
-              <reference ref="424927902"/>
-              <reference ref="455628842"/>
-            </object>
-            <reference key="parent" ref="502038598"/>
-          </object>
-          <object class="IBObjectRecord">
-            <int key="objectID">36</int>
-            <reference key="object" ref="381397786"/>
-            <object class="NSMutableArray" key="children">
-              <bool key="EncodedWithXMLCoder">YES</bool>
-              <reference ref="714682327"/>
-              <reference ref="888306192"/>
-              <reference ref="58691880"/>
-            </object>
-            <reference key="parent" ref="502038598"/>
-          </object>
-          <object class="IBObjectRecord">
-            <int key="objectID">37</int>
-            <reference key="object" ref="714682327"/>
-            <reference key="parent" ref="381397786"/>
-          </object>
-          <object class="IBObjectRecord">
-            <int key="objectID">38</int>
-            <reference key="object" ref="888306192"/>
-            <reference key="parent" ref="381397786"/>
-          </object>
-          <object class="IBObjectRecord">
-            <int key="objectID">39</int>
-            <reference key="object" ref="58691880"/>
-            <reference key="parent" ref="381397786"/>
-          </object>
-          <object class="IBObjectRecord">
-            <int key="objectID">28</int>
-            <reference key="object" ref="851738416"/>
-            <reference key="parent" ref="3841781"/>
-          </object>
-          <object class="IBObjectRecord">
-            <int key="objectID">29</int>
-            <reference key="object" ref="424927902"/>
-            <reference key="parent" ref="3841781"/>
-          </object>
-          <object class="IBObjectRecord">
-            <int key="objectID">30</int>
-            <reference key="object" ref="455628842"/>
-            <reference key="parent" ref="3841781"/>
-          </object>
-          <object class="IBObjectRecord">
-            <int key="objectID">44</int>
-            <reference key="object" ref="25560736"/>
-            <object class="NSMutableArray" key="children">
-              <bool key="EncodedWithXMLCoder">YES</bool>
-              <reference ref="1043437177"/>
-              <reference ref="1002572398"/>
-              <reference ref="497381641"/>
-            </object>
-            <reference key="parent" ref="175162844"/>
-          </object>
-          <object class="IBObjectRecord">
-            <int key="objectID">47</int>
-            <reference key="object" ref="1043437177"/>
-            <object class="NSMutableArray" key="children">
-              <bool key="EncodedWithXMLCoder">YES</bool>
-              <reference ref="603732700"/>
-            </object>
-            <reference key="parent" ref="25560736"/>
-          </object>
-          <object class="IBObjectRecord">
-            <int key="objectID">46</int>
-            <reference key="object" ref="1002572398"/>
-            <reference key="parent" ref="25560736"/>
-          </object>
-          <object class="IBObjectRecord">
-            <int key="objectID">45</int>
-            <reference key="object" ref="497381641"/>
-            <reference key="parent" ref="25560736"/>
-          </object>
-          <object class="IBObjectRecord">
-            <int key="objectID">49</int>
-            <reference key="object" ref="603732700"/>
-            <object class="NSMutableArray" key="children">
-              <bool key="EncodedWithXMLCoder">YES</bool>
-              <reference ref="418317584"/>
-            </object>
-            <reference key="parent" ref="1043437177"/>
-          </object>
-          <object class="IBObjectRecord">
-            <int key="objectID">52</int>
-            <reference key="object" ref="418317584"/>
-            <reference key="parent" ref="603732700"/>
-          </object>
-        </object>
-      </object>
-      <object class="NSMutableDictionary" key="flattenedProperties">
-        <bool key="EncodedWithXMLCoder">YES</bool>
-        <object class="NSArray" key="dict.sortedKeys">
-          <bool key="EncodedWithXMLCoder">YES</bool>
-          <string>1.IBEditorWindowLastContentRect</string>
-          <string>1.IBPluginDependency</string>
-          <string>1.IBWindowTemplateEditedContentRect</string>
-          <string>1.NSWindowTemplate.visibleAtLaunch</string>
-          <string>1.WindowOrigin</string>
-          <string>1.editorWindowContentRectSynchronizationRect</string>
-          <string>2.IBPluginDependency</string>
-          <string>22.IBAttributePlaceholdersKey</string>
-          <string>22.IBPluginDependency</string>
-          <string>23.IBPluginDependency</string>
-          <string>24.IBPluginDependency</string>
-          <string>25.IBPluginDependency</string>
-          <string>26.IBPluginDependency</string>
-          <string>27.IBPluginDependency</string>
-          <string>28.IBPluginDependency</string>
-          <string>29.IBPluginDependency</string>
-          <string>30.IBPluginDependency</string>
-          <string>31.IBPluginDependency</string>
-          <string>36.IBPluginDependency</string>
-          <string>37.IBPluginDependency</string>
-          <string>38.IBPluginDependency</string>
-          <string>39.IBPluginDependency</string>
-          <string>42.CustomClassName</string>
-          <string>44.IBPluginDependency</string>
-          <string>45.IBPluginDependency</string>
-          <string>46.IBPluginDependency</string>
-          <string>47.CustomClassName</string>
-          <string>47.IBPluginDependency</string>
-          <string>49.IBPluginDependency</string>
-          <string>52.IBPluginDependency</string>
-          <string>57.CustomClassName</string>
-        </object>
-        <object class="NSMutableArray" key="dict.values">
-          <bool key="EncodedWithXMLCoder">YES</bool>
-          <string>{{202, 351}, {500, 511}}</string>
-          <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-          <string>{{202, 351}, {500, 511}}</string>
-          <boolean value="NO"/>
-          <string>{196, 240}</string>
-          <string>{{202, 428}, {480, 270}}</string>
-          <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-          <object class="NSMutableDictionary">
-            <string key="NS.key.0">InitialTabViewItem</string>
-            <object class="IBInitialTabViewItemAttribute" key="NS.object.0">
-              <string key="name">InitialTabViewItem</string>
-              <reference key="object" ref="325228349"/>
-              <reference key="initialTabViewItem" ref="522997988"/>
-            </object>
-          </object>
-          <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-          <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-          <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-          <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-          <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-          <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-          <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-          <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-          <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-          <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-          <string>com.mac.amaxwell.FileViewIBPlugin</string>
-          <string>com.mac.amaxwell.FileViewIBPlugin</string>
-          <string>com.mac.amaxwell.FileViewIBPlugin</string>
-          <string>com.mac.amaxwell.FileViewIBPlugin</string>
-          <string>TLMSplitView</string>
-          <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-          <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-          <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-          <string>TLMOutlineView</string>
-          <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-          <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-          <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-          <string>TLMThinSplitView</string>
-        </object>
-      </object>
-      <object class="NSMutableDictionary" key="unlocalizedProperties">
-        <bool key="EncodedWithXMLCoder">YES</bool>
-        <reference key="dict.sortedKeys" ref="0"/>
-        <object class="NSMutableArray" key="dict.values">
-          <bool key="EncodedWithXMLCoder">YES</bool>
-        </object>
-      </object>
-      <nil key="activeLocalization"/>
-      <object class="NSMutableDictionary" key="localizations">
-        <bool key="EncodedWithXMLCoder">YES</bool>
-        <reference key="dict.sortedKeys" ref="0"/>
-        <object class="NSMutableArray" key="dict.values">
-          <bool key="EncodedWithXMLCoder">YES</bool>
-        </object>
-      </object>
-      <nil key="sourceID"/>
-      <int key="maxID">57</int>
-    </object>
-    <object class="IBClassDescriber" key="IBDocument.Classes">
-      <object class="NSMutableArray" key="referencedPartialClassDescriptions">
-        <bool key="EncodedWithXMLCoder">YES</bool>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSMenu</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBProjectSource</string>
-            <string key="minorKey">NSMenu_TLMExtensions.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSTextView</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBProjectSource</string>
-            <string key="minorKey">BDSKTextViewCompletionController.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">TLMInfoController</string>
-          <string key="superclassName">NSWindowController</string>
-          <object class="NSMutableDictionary" key="outlets">
-            <bool key="EncodedWithXMLCoder">YES</bool>
-            <object class="NSArray" key="dict.sortedKeys">
-              <bool key="EncodedWithXMLCoder">YES</bool>
-              <string>_fileView</string>
-              <string>_outlineView</string>
-              <string>_spinner</string>
-              <string>_tabView</string>
-              <string>_textView</string>
-            </object>
-            <object class="NSMutableArray" key="dict.values">
-              <bool key="EncodedWithXMLCoder">YES</bool>
-              <string>FileView</string>
-              <string>TLMOutlineView</string>
-              <string>NSProgressIndicator</string>
-              <string>NSTabView</string>
-              <string>NSTextView</string>
-            </object>
-          </object>
-          <object class="NSMutableDictionary" key="toOneOutletInfosByName">
-            <bool key="EncodedWithXMLCoder">YES</bool>
-            <object class="NSArray" key="dict.sortedKeys">
-              <bool key="EncodedWithXMLCoder">YES</bool>
-              <string>_fileView</string>
-              <string>_outlineView</string>
-              <string>_spinner</string>
-              <string>_tabView</string>
-              <string>_textView</string>
-            </object>
-            <object class="NSMutableArray" key="dict.values">
-              <bool key="EncodedWithXMLCoder">YES</bool>
-              <object class="IBToOneOutletInfo">
-                <string key="name">_fileView</string>
-                <string key="candidateClassName">FileView</string>
-              </object>
-              <object class="IBToOneOutletInfo">
-                <string key="name">_outlineView</string>
-                <string key="candidateClassName">TLMOutlineView</string>
-              </object>
-              <object class="IBToOneOutletInfo">
-                <string key="name">_spinner</string>
-                <string key="candidateClassName">NSProgressIndicator</string>
-              </object>
-              <object class="IBToOneOutletInfo">
-                <string key="name">_tabView</string>
-                <string key="candidateClassName">NSTabView</string>
-              </object>
-              <object class="IBToOneOutletInfo">
-                <string key="name">_textView</string>
-                <string key="candidateClassName">NSTextView</string>
-              </object>
-            </object>
-          </object>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBProjectSource</string>
-            <string key="minorKey">TLMInfoController.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">TLMOutlineView</string>
-          <string key="superclassName">NSOutlineView</string>
-          <object class="NSMutableDictionary" key="actions">
-            <string key="NS.key.0">copy:</string>
-            <string key="NS.object.0">id</string>
-          </object>
-          <object class="NSMutableDictionary" key="actionInfosByName">
-            <string key="NS.key.0">copy:</string>
-            <object class="IBActionInfo" key="NS.object.0">
-              <string key="name">copy:</string>
-              <string key="candidateClassName">id</string>
-            </object>
-          </object>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBProjectSource</string>
-            <string key="minorKey">TLMOutlineView.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">TLMSplitView</string>
-          <string key="superclassName">NSSplitView</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier" id="365668636">
-            <string key="majorKey">IBProjectSource</string>
-            <string key="minorKey">TLMSplitView.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">TLMThinSplitView</string>
-          <string key="superclassName">TLMSplitView</string>
-          <reference key="sourceIdentifier" ref="365668636"/>
-        </object>
-      </object>
-      <object class="NSMutableArray" key="referencedPartialClassDescriptionsV3.2+">
-        <bool key="EncodedWithXMLCoder">YES</bool>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSActionCell</string>
-          <string key="superclassName">NSCell</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">AppKit.framework/Headers/NSActionCell.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSApplication</string>
-          <string key="superclassName">NSResponder</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier" id="924489704">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">AppKit.framework/Headers/NSApplication.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSApplication</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier" id="179631148">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">AppKit.framework/Headers/NSApplicationScripting.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSApplication</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier" id="396768952">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">AppKit.framework/Headers/NSColorPanel.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSApplication</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">AppKit.framework/Headers/NSHelpManager.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSApplication</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">AppKit.framework/Headers/NSPageLayout.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSApplication</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">AppKit.framework/Headers/NSUserInterfaceItemSearching.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSApplication</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier" id="261596786">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">AppKit.framework/Headers/NSWindowRestoration.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSCell</string>
-          <string key="superclassName">NSObject</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">AppKit.framework/Headers/NSCell.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSControl</string>
-          <string key="superclassName">NSView</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier" id="548496812">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">AppKit.framework/Headers/NSControl.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSControl</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier" id="546976577">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">AppKit.framework/Headers/NSLayoutConstraint.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSFormatter</string>
-          <string key="superclassName">NSObject</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">Foundation.framework/Headers/NSFormatter.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSMenu</string>
-          <string key="superclassName">NSObject</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier" id="901834260">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">AppKit.framework/Headers/NSMenu.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSObject</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">AppKit.framework/Headers/NSAccessibility.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSObject</string>
-          <reference key="sourceIdentifier" ref="924489704"/>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSObject</string>
-          <reference key="sourceIdentifier" ref="179631148"/>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSObject</string>
-          <reference key="sourceIdentifier" ref="396768952"/>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSObject</string>
-          <reference key="sourceIdentifier" ref="548496812"/>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSObject</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">AppKit.framework/Headers/NSDictionaryController.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSObject</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">AppKit.framework/Headers/NSDragging.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSObject</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">AppKit.framework/Headers/NSFontManager.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSObject</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">AppKit.framework/Headers/NSFontPanel.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSObject</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">AppKit.framework/Headers/NSKeyValueBinding.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSObject</string>
-          <reference key="sourceIdentifier" ref="901834260"/>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSObject</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">AppKit.framework/Headers/NSNibLoading.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSObject</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">AppKit.framework/Headers/NSPasteboard.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSObject</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">AppKit.framework/Headers/NSSavePanel.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSObject</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier" id="261137386">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">AppKit.framework/Headers/NSTableView.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSObject</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">AppKit.framework/Headers/NSToolbarItem.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSObject</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier" id="485804014">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">AppKit.framework/Headers/NSView.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSObject</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">Foundation.framework/Headers/NSArchiver.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSObject</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">Foundation.framework/Headers/NSClassDescription.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSObject</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">Foundation.framework/Headers/NSError.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSObject</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">Foundation.framework/Headers/NSFileManager.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSObject</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">Foundation.framework/Headers/NSKeyValueCoding.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSObject</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">Foundation.framework/Headers/NSKeyValueObserving.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSObject</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">Foundation.framework/Headers/NSKeyedArchiver.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSObject</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">Foundation.framework/Headers/NSObject.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSObject</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">Foundation.framework/Headers/NSObjectScripting.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSObject</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">Foundation.framework/Headers/NSPortCoder.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSObject</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">Foundation.framework/Headers/NSRunLoop.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSObject</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">Foundation.framework/Headers/NSScriptClassDescription.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSObject</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">Foundation.framework/Headers/NSScriptKeyValueCoding.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSObject</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">Foundation.framework/Headers/NSScriptObjectSpecifiers.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSObject</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">Foundation.framework/Headers/NSScriptWhoseTests.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSObject</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">Foundation.framework/Headers/NSThread.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSObject</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">Foundation.framework/Headers/NSURL.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSObject</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">WebKit.framework/Headers/WebDownload.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSObject</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">WebKit.framework/Headers/WebEditingDelegate.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSObject</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">WebKit.framework/Headers/WebFrameLoadDelegate.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSObject</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">WebKit.framework/Headers/WebJavaPlugIn.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSObject</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">WebKit.framework/Headers/WebPlugin.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSObject</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">WebKit.framework/Headers/WebPluginContainer.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSObject</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">WebKit.framework/Headers/WebPolicyDelegate.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSObject</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">WebKit.framework/Headers/WebResourceLoadDelegate.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSObject</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">WebKit.framework/Headers/WebScriptObject.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSObject</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">WebKit.framework/Headers/WebUIDelegate.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSOutlineView</string>
-          <string key="superclassName">NSTableView</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">AppKit.framework/Headers/NSOutlineView.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSPanel</string>
-          <string key="superclassName">NSWindow</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">AppKit.framework/Headers/NSPanel.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSProgressIndicator</string>
-          <string key="superclassName">NSView</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">AppKit.framework/Headers/NSProgressIndicator.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSResponder</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">AppKit.framework/Headers/NSInterfaceStyle.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSResponder</string>
-          <string key="superclassName">NSObject</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">AppKit.framework/Headers/NSResponder.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSResponder</string>
-          <reference key="sourceIdentifier" ref="261596786"/>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSScrollView</string>
-          <string key="superclassName">NSView</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">AppKit.framework/Headers/NSScrollView.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSScroller</string>
-          <string key="superclassName">NSControl</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">AppKit.framework/Headers/NSScroller.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSSplitView</string>
-          <string key="superclassName">NSView</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">AppKit.framework/Headers/NSSplitView.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSTabView</string>
-          <string key="superclassName">NSView</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">AppKit.framework/Headers/NSTabView.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSTabViewItem</string>
-          <string key="superclassName">NSObject</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">AppKit.framework/Headers/NSTabViewItem.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSTableColumn</string>
-          <string key="superclassName">NSObject</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">AppKit.framework/Headers/NSTableColumn.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSTableView</string>
-          <string key="superclassName">NSControl</string>
-          <reference key="sourceIdentifier" ref="261137386"/>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSText</string>
-          <string key="superclassName">NSView</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">AppKit.framework/Headers/NSText.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSTextFieldCell</string>
-          <string key="superclassName">NSActionCell</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">AppKit.framework/Headers/NSTextFieldCell.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSTextView</string>
-          <string key="superclassName">NSText</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">AppKit.framework/Headers/NSTextView.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSView</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">AppKit.framework/Headers/NSClipView.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSView</string>
-          <reference key="sourceIdentifier" ref="546976577"/>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSView</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">AppKit.framework/Headers/NSMenuItem.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSView</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">AppKit.framework/Headers/NSOpenGLView.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSView</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">AppKit.framework/Headers/NSRulerView.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSView</string>
-          <string key="superclassName">NSResponder</string>
-          <reference key="sourceIdentifier" ref="485804014"/>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSWindow</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">AppKit.framework/Headers/NSDrawer.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSWindow</string>
-          <reference key="sourceIdentifier" ref="546976577"/>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSWindow</string>
-          <string key="superclassName">NSResponder</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">AppKit.framework/Headers/NSWindow.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSWindow</string>
-          <reference key="sourceIdentifier" ref="261596786"/>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSWindow</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">AppKit.framework/Headers/NSWindowScripting.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSWindowController</string>
-          <string key="superclassName">NSResponder</string>
-          <object class="NSMutableDictionary" key="actions">
-            <string key="NS.key.0">showWindow:</string>
-            <string key="NS.object.0">id</string>
-          </object>
-          <object class="NSMutableDictionary" key="actionInfosByName">
-            <string key="NS.key.0">showWindow:</string>
-            <object class="IBActionInfo" key="NS.object.0">
-              <string key="name">showWindow:</string>
-              <string key="candidateClassName">id</string>
-            </object>
-          </object>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">AppKit.framework/Headers/NSWindowController.h</string>
-          </object>
-        </object>
-      </object>
-    </object>
-    <int key="IBDocument.localizationMode">0</int>
-    <string key="IBDocument.TargetRuntimeIdentifier">IBCocoaFramework</string>
-    <object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDependencyDefaults">
-      <string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin.macosx</string>
-      <integer value="1060" key="NS.object.0"/>
-    </object>
-    <object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDevelopmentDependencies">
-      <string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin.InterfaceBuilder3</string>
-      <integer value="3000" key="NS.object.0"/>
-    </object>
-    <bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
-    <string key="IBDocument.LastKnownRelativeProjectPath">TeX Live Utility.xcodeproj</string>
-    <int key="IBDocument.defaultPropertyAccessControl">3</int>
-  </data>
-</archive>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="5056" systemVersion="13F7" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+    <dependencies>
+        <deployment defaultVersion="1060" identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="5056"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="TLMInfoController">
+            <connections>
+                <outlet property="_fileView" destination="39" id="40"/>
+                <outlet property="_outlineView" destination="47" id="56"/>
+                <outlet property="_spinner" destination="31" id="32"/>
+                <outlet property="_tabView" destination="22" id="33"/>
+                <outlet property="_textView" destination="30" id="34"/>
+                <outlet property="window" destination="1" id="3"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application"/>
+        <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" hidesOnDeactivate="YES" oneShot="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="1" customClass="NSPanel">
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" utility="YES"/>
+            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+            <rect key="contentRect" x="196" y="0.0" width="500" height="511"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1028"/>
+            <view key="contentView" id="2">
+                <rect key="frame" x="0.0" y="0.0" width="500" height="511"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <tabView drawsBackground="NO" type="noTabsNoBorder" initialItem="23" id="22">
+                        <rect key="frame" x="0.0" y="0.0" width="500" height="511"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <font key="font" metaFont="system"/>
+                        <tabViewItems>
+                            <tabViewItem label="TextView" identifier="1" id="23">
+                                <view key="view" id="26">
+                                    <rect key="frame" x="0.0" y="0.0" width="500" height="511"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <splitView autosaveName="Info panel horizontal splitview" dividerStyle="thin" id="57" customClass="TLMThinSplitView">
+                                            <rect key="frame" x="0.0" y="0.0" width="500" height="512"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            <subviews>
+                                                <splitView autosaveName="Info panel split view" dividerStyle="thin" vertical="YES" id="42" customClass="TLMSplitView">
+                                                    <rect key="frame" x="0.0" y="0.0" width="500" height="309"/>
+                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                    <subviews>
+                                                        <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="36">
+                                                            <rect key="frame" x="0.0" y="0.0" width="175" height="309"/>
+                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                            <clipView key="contentView" id="VdM-pJ-9rd">
+                                                                <rect key="frame" x="0.0" y="0.0" width="175" height="309"/>
+                                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                                <subviews>
+                                                                    <customView id="39" customClass="FileView">
+                                                                        <rect key="frame" x="0.0" y="0.0" width="175" height="309"/>
+                                                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                                        <userDefinedRuntimeAttributes>
+                                                                            <userDefinedRuntimeAttribute type="number" keyPath="maxIconScale">
+                                                                                <real key="value" value="10"/>
+                                                                            </userDefinedRuntimeAttribute>
+                                                                            <userDefinedRuntimeAttribute type="number" keyPath="minIconScale">
+                                                                                <real key="value" value="0.5"/>
+                                                                            </userDefinedRuntimeAttribute>
+                                                                            <userDefinedRuntimeAttribute type="number" keyPath="iconScale">
+                                                                                <real key="value" value="1"/>
+                                                                            </userDefinedRuntimeAttribute>
+                                                                            <userDefinedRuntimeAttribute type="number" keyPath="editable">
+                                                                                <bool key="value" value="NO"/>
+                                                                            </userDefinedRuntimeAttribute>
+                                                                        </userDefinedRuntimeAttributes>
+                                                                        <connections>
+                                                                            <outlet property="dataSource" destination="-2" id="41"/>
+                                                                            <outlet property="delegate" destination="-2" id="43"/>
+                                                                        </connections>
+                                                                    </customView>
+                                                                </subviews>
+                                                            </clipView>
+                                                            <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="38">
+                                                                <rect key="frame" x="1" y="602" width="333" height="15"/>
+                                                                <autoresizingMask key="autoresizingMask"/>
+                                                            </scroller>
+                                                            <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="37">
+                                                                <rect key="frame" x="334" y="1" width="15" height="616"/>
+                                                                <autoresizingMask key="autoresizingMask"/>
+                                                            </scroller>
+                                                        </scrollView>
+                                                        <scrollView borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="27">
+                                                            <rect key="frame" x="176" y="0.0" width="324" height="309"/>
+                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                            <clipView key="contentView" id="hdx-Nj-Web">
+                                                                <rect key="frame" x="0.0" y="0.0" width="324" height="309"/>
+                                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                                <subviews>
+                                                                    <textView editable="NO" importsGraphics="NO" horizontallyResizable="YES" findStyle="panel" continuousSpellChecking="YES" usesFontPanel="YES" verticallyResizable="YES" quoteSubstitution="YES" linkDetection="YES" dashSubstitution="YES" smartInsertDelete="YES" id="30">
+                                                                        <rect key="frame" x="0.0" y="0.0" width="324" height="309"/>
+                                                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                                        <size key="minSize" width="324" height="309"/>
+                                                                        <size key="maxSize" width="623" height="10000000"/>
+                                                                        <attributedString key="textStorage">
+                                                                            <fragment content="Lorem ipsum dolor sit er ">
+                                                                                <attributes>
+                                                                                    <font key="NSFont" metaFont="label"/>
+                                                                                    <paragraphStyle key="NSParagraphStyle" alignment="justified" lineBreakMode="wordWrapping" baseWritingDirection="natural">
+                                                                                        <tabStops>
+                                                                                            <textTab alignment="left" location="0.0"/>
+                                                                                            <textTab alignment="left" location="56"/>
+                                                                                            <textTab alignment="left" location="112"/>
+                                                                                            <textTab alignment="left" location="168"/>
+                                                                                            <textTab alignment="left" location="224"/>
+                                                                                            <textTab alignment="left" location="280"/>
+                                                                                            <textTab alignment="left" location="336"/>
+                                                                                            <textTab alignment="left" location="392"/>
+                                                                                            <textTab alignment="left" location="448"/>
+                                                                                            <textTab alignment="left" location="504"/>
+                                                                                            <textTab alignment="left" location="560"/>
+                                                                                            <textTab alignment="left" location="616"/>
+                                                                                            <textTab alignment="left" location="672"/>
+                                                                                            <textTab alignment="left" location="728"/>
+                                                                                            <textTab alignment="left" location="784"/>
+                                                                                            <textTab alignment="left" location="840"/>
+                                                                                            <textTab alignment="left" location="896"/>
+                                                                                            <textTab alignment="left" location="952"/>
+                                                                                            <textTab alignment="left" location="1008"/>
+                                                                                            <textTab alignment="left" location="1064"/>
+                                                                                            <textTab alignment="left" location="1120"/>
+                                                                                            <textTab alignment="left" location="1176"/>
+                                                                                            <textTab alignment="left" location="1232"/>
+                                                                                            <textTab alignment="left" location="1288"/>
+                                                                                            <textTab alignment="left" location="1344"/>
+                                                                                            <textTab alignment="left" location="1400"/>
+                                                                                            <textTab alignment="left" location="1456"/>
+                                                                                            <textTab alignment="left" location="1512"/>
+                                                                                            <textTab alignment="left" location="1568"/>
+                                                                                            <textTab alignment="left" location="1624"/>
+                                                                                            <textTab alignment="left" location="1680"/>
+                                                                                            <textTab alignment="left" location="1736"/>
+                                                                                        </tabStops>
+                                                                                    </paragraphStyle>
+                                                                                </attributes>
+                                                                            </fragment>
+                                                                            <fragment content="elit">
+                                                                                <attributes>
+                                                                                    <font key="NSFont" size="10" name="LucidaGrande-Bold"/>
+                                                                                    <paragraphStyle key="NSParagraphStyle" alignment="justified" lineBreakMode="wordWrapping" baseWritingDirection="natural">
+                                                                                        <tabStops>
+                                                                                            <textTab alignment="left" location="0.0"/>
+                                                                                            <textTab alignment="left" location="56"/>
+                                                                                            <textTab alignment="left" location="112"/>
+                                                                                            <textTab alignment="left" location="168"/>
+                                                                                            <textTab alignment="left" location="224"/>
+                                                                                            <textTab alignment="left" location="280"/>
+                                                                                            <textTab alignment="left" location="336"/>
+                                                                                            <textTab alignment="left" location="392"/>
+                                                                                            <textTab alignment="left" location="448"/>
+                                                                                            <textTab alignment="left" location="504"/>
+                                                                                            <textTab alignment="left" location="560"/>
+                                                                                            <textTab alignment="left" location="616"/>
+                                                                                            <textTab alignment="left" location="672"/>
+                                                                                            <textTab alignment="left" location="728"/>
+                                                                                            <textTab alignment="left" location="784"/>
+                                                                                            <textTab alignment="left" location="840"/>
+                                                                                            <textTab alignment="left" location="896"/>
+                                                                                            <textTab alignment="left" location="952"/>
+                                                                                            <textTab alignment="left" location="1008"/>
+                                                                                            <textTab alignment="left" location="1064"/>
+                                                                                            <textTab alignment="left" location="1120"/>
+                                                                                            <textTab alignment="left" location="1176"/>
+                                                                                            <textTab alignment="left" location="1232"/>
+                                                                                            <textTab alignment="left" location="1288"/>
+                                                                                            <textTab alignment="left" location="1344"/>
+                                                                                            <textTab alignment="left" location="1400"/>
+                                                                                            <textTab alignment="left" location="1456"/>
+                                                                                            <textTab alignment="left" location="1512"/>
+                                                                                            <textTab alignment="left" location="1568"/>
+                                                                                            <textTab alignment="left" location="1624"/>
+                                                                                            <textTab alignment="left" location="1680"/>
+                                                                                            <textTab alignment="left" location="1736"/>
+                                                                                        </tabStops>
+                                                                                    </paragraphStyle>
+                                                                                </attributes>
+                                                                            </fragment>
+                                                                            <fragment content=" lamet, ">
+                                                                                <attributes>
+                                                                                    <font key="NSFont" metaFont="label"/>
+                                                                                    <paragraphStyle key="NSParagraphStyle" alignment="justified" lineBreakMode="wordWrapping" baseWritingDirection="natural">
+                                                                                        <tabStops>
+                                                                                            <textTab alignment="left" location="0.0"/>
+                                                                                            <textTab alignment="left" location="56"/>
+                                                                                            <textTab alignment="left" location="112"/>
+                                                                                            <textTab alignment="left" location="168"/>
+                                                                                            <textTab alignment="left" location="224"/>
+                                                                                            <textTab alignment="left" location="280"/>
+                                                                                            <textTab alignment="left" location="336"/>
+                                                                                            <textTab alignment="left" location="392"/>
+                                                                                            <textTab alignment="left" location="448"/>
+                                                                                            <textTab alignment="left" location="504"/>
+                                                                                            <textTab alignment="left" location="560"/>
+                                                                                            <textTab alignment="left" location="616"/>
+                                                                                            <textTab alignment="left" location="672"/>
+                                                                                            <textTab alignment="left" location="728"/>
+                                                                                            <textTab alignment="left" location="784"/>
+                                                                                            <textTab alignment="left" location="840"/>
+                                                                                            <textTab alignment="left" location="896"/>
+                                                                                            <textTab alignment="left" location="952"/>
+                                                                                            <textTab alignment="left" location="1008"/>
+                                                                                            <textTab alignment="left" location="1064"/>
+                                                                                            <textTab alignment="left" location="1120"/>
+                                                                                            <textTab alignment="left" location="1176"/>
+                                                                                            <textTab alignment="left" location="1232"/>
+                                                                                            <textTab alignment="left" location="1288"/>
+                                                                                            <textTab alignment="left" location="1344"/>
+                                                                                            <textTab alignment="left" location="1400"/>
+                                                                                            <textTab alignment="left" location="1456"/>
+                                                                                            <textTab alignment="left" location="1512"/>
+                                                                                            <textTab alignment="left" location="1568"/>
+                                                                                            <textTab alignment="left" location="1624"/>
+                                                                                            <textTab alignment="left" location="1680"/>
+                                                                                            <textTab alignment="left" location="1736"/>
+                                                                                        </tabStops>
+                                                                                    </paragraphStyle>
+                                                                                </attributes>
+                                                                            </fragment>
+                                                                            <fragment content="consectetaur">
+                                                                                <attributes>
+                                                                                    <font key="NSFont" size="10" name="LucidaGrande-Bold"/>
+                                                                                    <paragraphStyle key="NSParagraphStyle" alignment="justified" lineBreakMode="wordWrapping" baseWritingDirection="natural">
+                                                                                        <tabStops>
+                                                                                            <textTab alignment="left" location="0.0"/>
+                                                                                            <textTab alignment="left" location="56"/>
+                                                                                            <textTab alignment="left" location="112"/>
+                                                                                            <textTab alignment="left" location="168"/>
+                                                                                            <textTab alignment="left" location="224"/>
+                                                                                            <textTab alignment="left" location="280"/>
+                                                                                            <textTab alignment="left" location="336"/>
+                                                                                            <textTab alignment="left" location="392"/>
+                                                                                            <textTab alignment="left" location="448"/>
+                                                                                            <textTab alignment="left" location="504"/>
+                                                                                            <textTab alignment="left" location="560"/>
+                                                                                            <textTab alignment="left" location="616"/>
+                                                                                            <textTab alignment="left" location="672"/>
+                                                                                            <textTab alignment="left" location="728"/>
+                                                                                            <textTab alignment="left" location="784"/>
+                                                                                            <textTab alignment="left" location="840"/>
+                                                                                            <textTab alignment="left" location="896"/>
+                                                                                            <textTab alignment="left" location="952"/>
+                                                                                            <textTab alignment="left" location="1008"/>
+                                                                                            <textTab alignment="left" location="1064"/>
+                                                                                            <textTab alignment="left" location="1120"/>
+                                                                                            <textTab alignment="left" location="1176"/>
+                                                                                            <textTab alignment="left" location="1232"/>
+                                                                                            <textTab alignment="left" location="1288"/>
+                                                                                            <textTab alignment="left" location="1344"/>
+                                                                                            <textTab alignment="left" location="1400"/>
+                                                                                            <textTab alignment="left" location="1456"/>
+                                                                                            <textTab alignment="left" location="1512"/>
+                                                                                            <textTab alignment="left" location="1568"/>
+                                                                                            <textTab alignment="left" location="1624"/>
+                                                                                            <textTab alignment="left" location="1680"/>
+                                                                                            <textTab alignment="left" location="1736"/>
+                                                                                        </tabStops>
+                                                                                    </paragraphStyle>
+                                                                                </attributes>
+                                                                            </fragment>
+                                                                            <fragment content=" cillium adipisicing pecu, sed do ">
+                                                                                <attributes>
+                                                                                    <font key="NSFont" metaFont="label"/>
+                                                                                    <paragraphStyle key="NSParagraphStyle" alignment="justified" lineBreakMode="wordWrapping" baseWritingDirection="natural">
+                                                                                        <tabStops>
+                                                                                            <textTab alignment="left" location="0.0"/>
+                                                                                            <textTab alignment="left" location="56"/>
+                                                                                            <textTab alignment="left" location="112"/>
+                                                                                            <textTab alignment="left" location="168"/>
+                                                                                            <textTab alignment="left" location="224"/>
+                                                                                            <textTab alignment="left" location="280"/>
+                                                                                            <textTab alignment="left" location="336"/>
+                                                                                            <textTab alignment="left" location="392"/>
+                                                                                            <textTab alignment="left" location="448"/>
+                                                                                            <textTab alignment="left" location="504"/>
+                                                                                            <textTab alignment="left" location="560"/>
+                                                                                            <textTab alignment="left" location="616"/>
+                                                                                            <textTab alignment="left" location="672"/>
+                                                                                            <textTab alignment="left" location="728"/>
+                                                                                            <textTab alignment="left" location="784"/>
+                                                                                            <textTab alignment="left" location="840"/>
+                                                                                            <textTab alignment="left" location="896"/>
+                                                                                            <textTab alignment="left" location="952"/>
+                                                                                            <textTab alignment="left" location="1008"/>
+                                                                                            <textTab alignment="left" location="1064"/>
+                                                                                            <textTab alignment="left" location="1120"/>
+                                                                                            <textTab alignment="left" location="1176"/>
+                                                                                            <textTab alignment="left" location="1232"/>
+                                                                                            <textTab alignment="left" location="1288"/>
+                                                                                            <textTab alignment="left" location="1344"/>
+                                                                                            <textTab alignment="left" location="1400"/>
+                                                                                            <textTab alignment="left" location="1456"/>
+                                                                                            <textTab alignment="left" location="1512"/>
+                                                                                            <textTab alignment="left" location="1568"/>
+                                                                                            <textTab alignment="left" location="1624"/>
+                                                                                            <textTab alignment="left" location="1680"/>
+                                                                                            <textTab alignment="left" location="1736"/>
+                                                                                        </tabStops>
+                                                                                    </paragraphStyle>
+                                                                                </attributes>
+                                                                            </fragment>
+                                                                            <fragment content="eiusmod">
+                                                                                <attributes>
+                                                                                    <font key="NSFont" size="10" name="LucidaGrande-Bold"/>
+                                                                                    <paragraphStyle key="NSParagraphStyle" alignment="justified" lineBreakMode="wordWrapping" baseWritingDirection="natural">
+                                                                                        <tabStops>
+                                                                                            <textTab alignment="left" location="0.0"/>
+                                                                                            <textTab alignment="left" location="56"/>
+                                                                                            <textTab alignment="left" location="112"/>
+                                                                                            <textTab alignment="left" location="168"/>
+                                                                                            <textTab alignment="left" location="224"/>
+                                                                                            <textTab alignment="left" location="280"/>
+                                                                                            <textTab alignment="left" location="336"/>
+                                                                                            <textTab alignment="left" location="392"/>
+                                                                                            <textTab alignment="left" location="448"/>
+                                                                                            <textTab alignment="left" location="504"/>
+                                                                                            <textTab alignment="left" location="560"/>
+                                                                                            <textTab alignment="left" location="616"/>
+                                                                                            <textTab alignment="left" location="672"/>
+                                                                                            <textTab alignment="left" location="728"/>
+                                                                                            <textTab alignment="left" location="784"/>
+                                                                                            <textTab alignment="left" location="840"/>
+                                                                                            <textTab alignment="left" location="896"/>
+                                                                                            <textTab alignment="left" location="952"/>
+                                                                                            <textTab alignment="left" location="1008"/>
+                                                                                            <textTab alignment="left" location="1064"/>
+                                                                                            <textTab alignment="left" location="1120"/>
+                                                                                            <textTab alignment="left" location="1176"/>
+                                                                                            <textTab alignment="left" location="1232"/>
+                                                                                            <textTab alignment="left" location="1288"/>
+                                                                                            <textTab alignment="left" location="1344"/>
+                                                                                            <textTab alignment="left" location="1400"/>
+                                                                                            <textTab alignment="left" location="1456"/>
+                                                                                            <textTab alignment="left" location="1512"/>
+                                                                                            <textTab alignment="left" location="1568"/>
+                                                                                            <textTab alignment="left" location="1624"/>
+                                                                                            <textTab alignment="left" location="1680"/>
+                                                                                            <textTab alignment="left" location="1736"/>
+                                                                                        </tabStops>
+                                                                                    </paragraphStyle>
+                                                                                </attributes>
+                                                                            </fragment>
+                                                                            <fragment>
+                                                                                <mutableString key="content"> tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum Et harumd und lookum like Greek to me, dereud facilis est er expedit distinct. Nam liber te conscient to factor tum poen legum odioque civiuda</mutableString>
+                                                                                <attributes>
+                                                                                    <font key="NSFont" metaFont="label"/>
+                                                                                    <paragraphStyle key="NSParagraphStyle" alignment="justified" lineBreakMode="wordWrapping" baseWritingDirection="natural">
+                                                                                        <tabStops>
+                                                                                            <textTab alignment="left" location="0.0"/>
+                                                                                            <textTab alignment="left" location="56"/>
+                                                                                            <textTab alignment="left" location="112"/>
+                                                                                            <textTab alignment="left" location="168"/>
+                                                                                            <textTab alignment="left" location="224"/>
+                                                                                            <textTab alignment="left" location="280"/>
+                                                                                            <textTab alignment="left" location="336"/>
+                                                                                            <textTab alignment="left" location="392"/>
+                                                                                            <textTab alignment="left" location="448"/>
+                                                                                            <textTab alignment="left" location="504"/>
+                                                                                            <textTab alignment="left" location="560"/>
+                                                                                            <textTab alignment="left" location="616"/>
+                                                                                            <textTab alignment="left" location="672"/>
+                                                                                            <textTab alignment="left" location="728"/>
+                                                                                            <textTab alignment="left" location="784"/>
+                                                                                            <textTab alignment="left" location="840"/>
+                                                                                            <textTab alignment="left" location="896"/>
+                                                                                            <textTab alignment="left" location="952"/>
+                                                                                            <textTab alignment="left" location="1008"/>
+                                                                                            <textTab alignment="left" location="1064"/>
+                                                                                            <textTab alignment="left" location="1120"/>
+                                                                                            <textTab alignment="left" location="1176"/>
+                                                                                            <textTab alignment="left" location="1232"/>
+                                                                                            <textTab alignment="left" location="1288"/>
+                                                                                            <textTab alignment="left" location="1344"/>
+                                                                                            <textTab alignment="left" location="1400"/>
+                                                                                            <textTab alignment="left" location="1456"/>
+                                                                                            <textTab alignment="left" location="1512"/>
+                                                                                            <textTab alignment="left" location="1568"/>
+                                                                                            <textTab alignment="left" location="1624"/>
+                                                                                            <textTab alignment="left" location="1680"/>
+                                                                                            <textTab alignment="left" location="1736"/>
+                                                                                        </tabStops>
+                                                                                    </paragraphStyle>
+                                                                                </attributes>
+                                                                            </fragment>
+                                                                        </attributedString>
+                                                                        <color key="insertionPointColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                                                        <size key="minSize" width="324" height="309"/>
+                                                                        <size key="maxSize" width="623" height="10000000"/>
+                                                                        <connections>
+                                                                            <outlet property="delegate" destination="-2" id="35"/>
+                                                                        </connections>
+                                                                    </textView>
+                                                                </subviews>
+                                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                            </clipView>
+                                                            <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="29">
+                                                                <rect key="frame" x="-100" y="-100" width="87" height="18"/>
+                                                                <autoresizingMask key="autoresizingMask"/>
+                                                            </scroller>
+                                                            <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="28">
+                                                                <rect key="frame" x="308" y="0.0" width="16" height="309"/>
+                                                                <autoresizingMask key="autoresizingMask"/>
+                                                            </scroller>
+                                                        </scrollView>
+                                                    </subviews>
+                                                    <holdingPriorities>
+                                                        <real value="250"/>
+                                                        <real value="250"/>
+                                                    </holdingPriorities>
+                                                </splitView>
+                                                <scrollView borderType="none" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="44">
+                                                    <rect key="frame" x="0.0" y="310" width="500" height="202"/>
+                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                    <clipView key="contentView" id="vQW-GM-DLZ">
+                                                        <rect key="frame" x="0.0" y="0.0" width="500" height="202"/>
+                                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                        <subviews>
+                                                            <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnResizing="NO" autosaveColumns="NO" indentationPerLevel="16" outlineTableColumn="49" id="47" customClass="TLMOutlineView">
+                                                                <rect key="frame" x="0.0" y="0.0" width="500" height="202"/>
+                                                                <autoresizingMask key="autoresizingMask"/>
+                                                                <size key="intercellSpacing" width="3" height="2"/>
+                                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                                <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
+                                                                <tableColumns>
+                                                                    <tableColumn editable="NO" width="497" minWidth="16" maxWidth="1000" id="49">
+                                                                        <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left">
+                                                                            <font key="font" metaFont="smallSystem"/>
+                                                                            <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
+                                                                            <color key="backgroundColor" white="0.33333298560000002" alpha="1" colorSpace="calibratedWhite"/>
+                                                                        </tableHeaderCell>
+                                                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="52">
+                                                                            <font key="font" metaFont="system"/>
+                                                                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                                            <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                                        </textFieldCell>
+                                                                        <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                                                    </tableColumn>
+                                                                </tableColumns>
+                                                                <connections>
+                                                                    <outlet property="dataSource" destination="-2" id="54"/>
+                                                                    <outlet property="delegate" destination="-2" id="55"/>
+                                                                </connections>
+                                                            </outlineView>
+                                                        </subviews>
+                                                        <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                    </clipView>
+                                                    <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="46">
+                                                        <rect key="frame" x="-100" y="-100" width="483" height="15"/>
+                                                        <autoresizingMask key="autoresizingMask"/>
+                                                    </scroller>
+                                                    <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="45">
+                                                        <rect key="frame" x="484" y="0.0" width="16" height="202"/>
+                                                        <autoresizingMask key="autoresizingMask"/>
+                                                    </scroller>
+                                                </scrollView>
+                                            </subviews>
+                                            <holdingPriorities>
+                                                <real value="250"/>
+                                                <real value="250"/>
+                                            </holdingPriorities>
+                                        </splitView>
+                                    </subviews>
+                                </view>
+                            </tabViewItem>
+                            <tabViewItem label="ProgressView" identifier="2" id="24">
+                                <view key="view" id="25">
+                                    <rect key="frame" x="0.0" y="0.0" width="500" height="511"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <progressIndicator horizontalHuggingPriority="750" verticalHuggingPriority="750" minValue="16" maxValue="100" doubleValue="16" bezeled="NO" indeterminate="YES" style="spinning" id="31">
+                                            <rect key="frame" x="32" y="135" width="32" height="32"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                        </progressIndicator>
+                                    </subviews>
+                                </view>
+                            </tabViewItem>
+                        </tabViewItems>
+                    </tabView>
+                </subviews>
+            </view>
+            <connections>
+                <outlet property="delegate" destination="-2" id="4"/>
+            </connections>
+        </window>
+    </objects>
+</document>
