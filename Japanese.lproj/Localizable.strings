@@ -74,9 +74,6 @@
 /* main window status string */
 "Database Loading Failed" = "データベース読み込みに失敗しました";
 
-/* status for package */
-"Deleted on server" = "サーバー側では削除済";
-
 /* single trailing space */
 "Deleting " = "削除中 ";
 
@@ -387,9 +384,6 @@
 /* status message */
 "Update Succeeded" = "更新に成功しました";
 
-/* status for package */
-"Updated on server" = "サーバーに更新があります";
-
 /* tab title */
 "Updates" = "更新分";
 
@@ -476,24 +470,6 @@
 
 /* alert text, integer and string format specifiers */
 "You have TeX Live %lu installed, but the version at %@ cannot be determined." = "You have TeX Live %1$lu installed, but the version at %2$@ cannot be determined.";
-
-/* status for package */
-"Needs to be installed" = "Needs to be installed";
-
-/* status for package */
-"Needs to be updated" = "Needs to be updated";
-
-/* status for package */
-"Will be deleted" = "Will be deleted";
-
-/* status for package */
-"Need to delete" = "Need to delete";
-
-/* status for package */
-"Need to install" = "Need to install";
-
-/* status for package */
-"Need to update" = "Need to update";
 
 /* status for package */
 "Needs removal" = "Needs removal";
