@@ -91,8 +91,6 @@
 		F9B13B240EECEA73007C0046 /* TLMInfoController.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B13B170EECE5AE007C0046 /* TLMInfoController.m */; };
 		F9B13B2B0EECEB05007C0046 /* InfoPanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = F9B13B2A0EECEB05007C0046 /* InfoPanel.xib */; };
 		F9B2F09913A2FFC400F37783 /* TLMLoadDatabaseOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B2F09813A2FFC400F37783 /* TLMLoadDatabaseOperation.m */; };
-		F9B3961C0F340A9C007F95E9 /* FileView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9B396150F340A71007F95E9 /* FileView.framework */; };
-		F9B3961D0F340AAA007F95E9 /* FileView.framework in copy frameworks */ = {isa = PBXBuildFile; fileRef = F9B396150F340A71007F95E9 /* FileView.framework */; };
 		F9B6B5630EF460A400CF767F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 29B97325FDCFA39411CA2CEA /* Foundation.framework */; };
 		F9B6B5EB0EF4647400CF767F /* TLMLogMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F56B4B0EF31F8800E934A9 /* TLMLogMessage.m */; };
 		F9B6B5F80EF469A600CF767F /* TLMLogServer.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B6B5F70EF469A600CF767F /* TLMLogServer.m */; };
@@ -130,12 +128,26 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		F91E07990F341CA2006F4D97 /* PBXContainerItemProxy */ = {
+		F96F06D2198ED9A9001CFD1C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F9B396090F340A71007F95E9 /* FileView.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = F9F04CE10CE260EB00F28ED2;
-			remoteInfo = "Framework + Plugins";
+			proxyType = 2;
+			remoteGlobalIDString = 8DC2EF5B0486A6940098B216;
+			remoteInfo = FileView;
+		};
+		F96F06D4198ED9A9001CFD1C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F9B396090F340A71007F95E9 /* FileView.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F94692510CA575F000AC2772;
+			remoteInfo = "FileView Program";
+		};
+		F96F06D6198ED9A9001CFD1C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F9B396090F340A71007F95E9 /* FileView.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F9F255FE0E14A3430059A21A;
+			remoteInfo = FileViewIBPlugin;
 		};
 		F9A057B10F5075DD008C804E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -157,27 +169,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = F9B139CA0EECBDFE007C0046;
 			remoteInfo = tlmgr_cwrapper;
-		};
-		F9B396140F340A71007F95E9 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F9B396090F340A71007F95E9 /* FileView.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 8DC2EF5B0486A6940098B216;
-			remoteInfo = FileView;
-		};
-		F9B396160F340A71007F95E9 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F9B396090F340A71007F95E9 /* FileView.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = F94692510CA575F000AC2772;
-			remoteInfo = "FileView Program";
-		};
-		F9B396180F340A71007F95E9 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F9B396090F340A71007F95E9 /* FileView.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = F9F255FE0E14A3430059A21A;
-			remoteInfo = FileViewIBPlugin;
 		};
 		F9DCD3640F06F08C00600DD2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -277,7 +268,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				F9B3961D0F340AAA007F95E9 /* FileView.framework in copy frameworks */,
 				F9DCD3700F06F0F400600DD2 /* Sparkle.framework in copy frameworks */,
 			);
 			name = "copy frameworks";
@@ -444,7 +434,7 @@
 		F9B13B2A0EECEB05007C0046 /* InfoPanel.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InfoPanel.xib; sourceTree = "<group>"; };
 		F9B2F09713A2FFC400F37783 /* TLMLoadDatabaseOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMLoadDatabaseOperation.h; sourceTree = "<group>"; };
 		F9B2F09813A2FFC400F37783 /* TLMLoadDatabaseOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMLoadDatabaseOperation.m; sourceTree = "<group>"; };
-		F9B396090F340A71007F95E9 /* FileView.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FileView.xcodeproj; path = vendorsrc/FileView/FileView.xcodeproj; sourceTree = "<group>"; };
+		F9B396090F340A71007F95E9 /* FileView.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FileView.xcodeproj; path = fileview/FileView.xcodeproj; sourceTree = "<group>"; };
 		F9B6B5F60EF469A600CF767F /* TLMLogServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMLogServer.h; sourceTree = "<group>"; };
 		F9B6B5F70EF469A600CF767F /* TLMLogServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMLogServer.m; sourceTree = "<group>"; };
 		F9C0D3C9125ECCE500B1FBE5 /* TLMLaunchAgentController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMLaunchAgentController.h; sourceTree = "<group>"; };
@@ -515,7 +505,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F9B3961C0F340A9C007F95E9 /* FileView.framework in Frameworks */,
 				F9DCD36C0F06F0A200600DD2 /* Sparkle.framework in Frameworks */,
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
 				F9B137330EEC4C6A007C0046 /* Security.framework in Frameworks */,
@@ -720,6 +709,16 @@
 			name = Categories;
 			sourceTree = "<group>";
 		};
+		F96F06CC198ED9A9001CFD1C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F96F06D3198ED9A9001CFD1C /* FileView.framework */,
+				F96F06D5198ED9A9001CFD1C /* FileView Program.app */,
+				F96F06D7198ED9A9001CFD1C /* FileViewIBPlugin.ibplugin */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		F98FAB3D105DF0D7002C1972 /* Datasources */ = {
 			isa = PBXGroup;
 			children = (
@@ -793,16 +792,6 @@
 				F967340413E10867008C2B3E /* TLMFaviconCache.m */,
 			);
 			name = Model;
-			sourceTree = "<group>";
-		};
-		F9B3960A0F340A71007F95E9 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				F9B396150F340A71007F95E9 /* FileView.framework */,
-				F9B396170F340A71007F95E9 /* FileView Program.app */,
-				F9B396190F340A71007F95E9 /* FileViewIBPlugin.ibplugin */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		F9C490D70EEEF44200E44FA6 /* Operations */ = {
@@ -933,7 +922,6 @@
 				F9E3DDB7182F414900800308 /* PBXTargetDependency */,
 				F9B139D60EECBE8F007C0046 /* PBXTargetDependency */,
 				F9DCD40E0F06F1D900600DD2 /* PBXTargetDependency */,
-				F91E079A0F341CA2006F4D97 /* PBXTargetDependency */,
 				F9E2C9330F3C00AE00D5EC49 /* PBXTargetDependency */,
 				F9A057C80F5076A2008C804E /* PBXTargetDependency */,
 			);
@@ -991,7 +979,7 @@
 					ProjectRef = F9A057A80F5075DD008C804E /* DVIImporter.xcodeproj */;
 				},
 				{
-					ProductGroup = F9B3960A0F340A71007F95E9 /* Products */;
+					ProductGroup = F96F06CC198ED9A9001CFD1C /* Products */;
 					ProjectRef = F9B396090F340A71007F95E9 /* FileView.xcodeproj */;
 				},
 				{
@@ -1017,32 +1005,32 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		F96F06D3198ED9A9001CFD1C /* FileView.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = FileView.framework;
+			remoteRef = F96F06D2198ED9A9001CFD1C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F96F06D5198ED9A9001CFD1C /* FileView Program.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = "FileView Program.app";
+			remoteRef = F96F06D4198ED9A9001CFD1C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F96F06D7198ED9A9001CFD1C /* FileViewIBPlugin.ibplugin */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = FileViewIBPlugin.ibplugin;
+			remoteRef = F96F06D6198ED9A9001CFD1C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		F9A057B20F5075DD008C804E /* DVIImporter.mdimporter */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
 			path = DVIImporter.mdimporter;
 			remoteRef = F9A057B10F5075DD008C804E /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		F9B396150F340A71007F95E9 /* FileView.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = FileView.framework;
-			remoteRef = F9B396140F340A71007F95E9 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		F9B396170F340A71007F95E9 /* FileView Program.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = "FileView Program.app";
-			remoteRef = F9B396160F340A71007F95E9 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		F9B396190F340A71007F95E9 /* FileViewIBPlugin.ibplugin */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = FileViewIBPlugin.ibplugin;
-			remoteRef = F9B396180F340A71007F95E9 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		F9DCD3650F06F08C00600DD2 /* Sparkle.framework */ = {
@@ -1295,11 +1283,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		F91E079A0F341CA2006F4D97 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "Framework + Plugins";
-			targetProxy = F91E07990F341CA2006F4D97 /* PBXContainerItemProxy */;
-		};
 		F9A057C80F5076A2008C804E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = DVIImporter;

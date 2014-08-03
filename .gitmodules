@@ -1,0 +1,9 @@
+[submodule "DVI-qlgenerator"]
+	path = DVI-qlgenerator
+	url = https://github.com/amaxwell/DVI-qlgenerator.git
+[submodule "DVIImporter"]
+	path = DVIImporter
+	url = https://github.com/amaxwell/DVIImporter.git
+[submodule "fileview"]
+	path = fileview
+	url = https://github.com/amaxwell/fileview.git
