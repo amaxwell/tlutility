@@ -33,6 +33,8 @@
 		F925D1B112957B5600D75BB4 /* Mirrors.xib in Resources */ = {isa = PBXBuildFile; fileRef = F925D1B012957B5600D75BB4 /* Mirrors.xib */; };
 		F925D1BB12957C1B00D75BB4 /* CTAN.sites.plist in Resources */ = {isa = PBXBuildFile; fileRef = F925D1BA12957C1B00D75BB4 /* CTAN.sites.plist */; };
 		F929DE8413DCE00000072DDA /* TLMAddressTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = F929DE8313DCE00000072DDA /* TLMAddressTextField.m */; };
+		F92A38B3198EFD64005C4B71 /* FileView.framework in copy frameworks */ = {isa = PBXBuildFile; fileRef = F96F06D3198ED9A9001CFD1C /* FileView.framework */; };
+		F92A38C4198F023F005C4B71 /* FileView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F92A38C3198F023F005C4B71 /* FileView.framework */; };
 		F942FFC513A08FD60008D8FD /* TLMDatabasePackage.m in Sources */ = {isa = PBXBuildFile; fileRef = F942FFC413A08FD60008D8FD /* TLMDatabasePackage.m */; };
 		F94E74A20EF4965100E0B78F /* TLMTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = F94E74A10EF4965100E0B78F /* TLMTableView.m */; };
 		F957A4E312514B040079E07F /* TLMBackupOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F957A4E212514B040079E07F /* TLMBackupOperation.m */; };
@@ -268,6 +270,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				F92A38B3198EFD64005C4B71 /* FileView.framework in copy frameworks */,
 				F9DCD3700F06F0F400600DD2 /* Sparkle.framework in copy frameworks */,
 			);
 			name = "copy frameworks";
@@ -327,6 +330,7 @@
 		F925D1BA12957C1B00D75BB4 /* CTAN.sites.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = CTAN.sites.plist; sourceTree = "<group>"; };
 		F929DE8213DCDFFF00072DDA /* TLMAddressTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMAddressTextField.h; sourceTree = "<group>"; };
 		F929DE8313DCE00000072DDA /* TLMAddressTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMAddressTextField.m; sourceTree = "<group>"; };
+		F92A38C3198F023F005C4B71 /* FileView.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FileView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F942FFC313A08FD60008D8FD /* TLMDatabasePackage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMDatabasePackage.h; sourceTree = "<group>"; };
 		F942FFC413A08FD60008D8FD /* TLMDatabasePackage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMDatabasePackage.m; sourceTree = "<group>"; };
 		F94E74A00EF4965100E0B78F /* TLMTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMTableView.h; sourceTree = "<group>"; };
@@ -505,6 +509,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F92A38C4198F023F005C4B71 /* FileView.framework in Frameworks */,
 				F9DCD36C0F06F0A200600DD2 /* Sparkle.framework in Frameworks */,
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
 				F9B137330EEC4C6A007C0046 /* Security.framework in Frameworks */,
@@ -650,6 +655,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F92A38C3198F023F005C4B71 /* FileView.framework */,
 				F967342613E10BB3008C2B3E /* WebKit.framework */,
 				F9F1C14D10C6EEC200D32C17 /* SystemConfiguration.framework */,
 				F9B137320EEC4C6A007C0046 /* Security.framework */,
