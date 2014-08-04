@@ -266,16 +266,6 @@
 		</dict>
 		<dict>
 			<key>key</key>
-			<string>collection-texinfo</string>
-			<key>name</key>
-			<string>texinfo</string>
-			<key>type</key>
-			<string>collection</string>
-			<key>value</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>key</key>
 			<string>collection-texworks</string>
 			<key>name</key>
 			<string>texworks</string>
@@ -298,251 +288,10 @@
 	<key>com.googlecode.mactlmgr</key>
 	<dict>
 		<key>texliveyear</key>
-		<integer>2012</integer>
+		<integer>2014</integer>
 	</dict>
 	<key>documentation</key>
-	<array>
-		<dict>
-			<key>key</key>
-			<string>collection-documentation-arabic</string>
-			<key>name</key>
-			<string>Arabic</string>
-			<key>type</key>
-			<string>documentation</string>
-			<key>value</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>key</key>
-			<string>collection-documentation-base</string>
-			<key>name</key>
-			<string>Base</string>
-			<key>type</key>
-			<string>documentation</string>
-			<key>value</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>key</key>
-			<string>collection-documentation-bulgarian</string>
-			<key>name</key>
-			<string>Bulgarian</string>
-			<key>type</key>
-			<string>documentation</string>
-			<key>value</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>key</key>
-			<string>collection-documentation-chinese</string>
-			<key>name</key>
-			<string>Chinese</string>
-			<key>type</key>
-			<string>documentation</string>
-			<key>value</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>key</key>
-			<string>collection-documentation-czechslovak</string>
-			<key>name</key>
-			<string>Czechslovak</string>
-			<key>type</key>
-			<string>documentation</string>
-			<key>value</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>key</key>
-			<string>collection-documentation-dutch</string>
-			<key>name</key>
-			<string>Dutch</string>
-			<key>type</key>
-			<string>documentation</string>
-			<key>value</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>key</key>
-			<string>collection-documentation-english</string>
-			<key>name</key>
-			<string>English</string>
-			<key>type</key>
-			<string>documentation</string>
-			<key>value</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>key</key>
-			<string>collection-documentation-finnish</string>
-			<key>name</key>
-			<string>Finnish</string>
-			<key>type</key>
-			<string>documentation</string>
-			<key>value</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>key</key>
-			<string>collection-documentation-french</string>
-			<key>name</key>
-			<string>French</string>
-			<key>type</key>
-			<string>documentation</string>
-			<key>value</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>key</key>
-			<string>collection-documentation-german</string>
-			<key>name</key>
-			<string>German</string>
-			<key>type</key>
-			<string>documentation</string>
-			<key>value</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>key</key>
-			<string>collection-documentation-italian</string>
-			<key>name</key>
-			<string>Italian</string>
-			<key>type</key>
-			<string>documentation</string>
-			<key>value</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>key</key>
-			<string>collection-documentation-japanese</string>
-			<key>name</key>
-			<string>Japanese</string>
-			<key>type</key>
-			<string>documentation</string>
-			<key>value</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>key</key>
-			<string>collection-documentation-korean</string>
-			<key>name</key>
-			<string>Korean</string>
-			<key>type</key>
-			<string>documentation</string>
-			<key>value</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>key</key>
-			<string>collection-documentation-mongolian</string>
-			<key>name</key>
-			<string>Mongolian</string>
-			<key>type</key>
-			<string>documentation</string>
-			<key>value</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>key</key>
-			<string>collection-documentation-polish</string>
-			<key>name</key>
-			<string>Polish</string>
-			<key>type</key>
-			<string>documentation</string>
-			<key>value</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>key</key>
-			<string>collection-documentation-portuguese</string>
-			<key>name</key>
-			<string>Portuguese</string>
-			<key>type</key>
-			<string>documentation</string>
-			<key>value</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>key</key>
-			<string>collection-documentation-russian</string>
-			<key>name</key>
-			<string>Russian</string>
-			<key>type</key>
-			<string>documentation</string>
-			<key>value</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>key</key>
-			<string>collection-documentation-serbian</string>
-			<key>name</key>
-			<string>Serbian</string>
-			<key>type</key>
-			<string>documentation</string>
-			<key>value</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>key</key>
-			<string>collection-documentation-slovenian</string>
-			<key>name</key>
-			<string>Slovenian</string>
-			<key>type</key>
-			<string>documentation</string>
-			<key>value</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>key</key>
-			<string>collection-documentation-spanish</string>
-			<key>name</key>
-			<string>Spanish</string>
-			<key>type</key>
-			<string>documentation</string>
-			<key>value</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>key</key>
-			<string>collection-documentation-thai</string>
-			<key>name</key>
-			<string>Thai</string>
-			<key>type</key>
-			<string>documentation</string>
-			<key>value</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>key</key>
-			<string>collection-documentation-turkish</string>
-			<key>name</key>
-			<string>Turkish</string>
-			<key>type</key>
-			<string>documentation</string>
-			<key>value</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>key</key>
-			<string>collection-documentation-ukrainian</string>
-			<key>name</key>
-			<string>Ukrainian</string>
-			<key>type</key>
-			<string>documentation</string>
-			<key>value</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>key</key>
-			<string>collection-documentation-vietnamese</string>
-			<key>name</key>
-			<string>Vietnamese</string>
-			<key>type</key>
-			<string>documentation</string>
-			<key>value</key>
-			<true/>
-		</dict>
-	</array>
+	<array/>
 	<key>languages</key>
 	<array>
 		<dict>
@@ -567,9 +316,9 @@
 		</dict>
 		<dict>
 			<key>key</key>
-			<string>collection-langarmenian</string>
+			<string>collection-langchinese</string>
 			<key>name</key>
-			<string>Armenian</string>
+			<string>Chinese</string>
 			<key>type</key>
 			<string>language</string>
 			<key>value</key>
@@ -580,16 +329,6 @@
 			<string>collection-langcjk</string>
 			<key>name</key>
 			<string>Cjk</string>
-			<key>type</key>
-			<string>language</string>
-			<key>value</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>key</key>
-			<string>collection-langcroatian</string>
-			<key>name</key>
-			<string>Croatian</string>
 			<key>type</key>
 			<string>language</string>
 			<key>value</key>
@@ -617,26 +356,6 @@
 		</dict>
 		<dict>
 			<key>key</key>
-			<string>collection-langdanish</string>
-			<key>name</key>
-			<string>Danish</string>
-			<key>type</key>
-			<string>language</string>
-			<key>value</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>key</key>
-			<string>collection-langdutch</string>
-			<key>name</key>
-			<string>Dutch</string>
-			<key>type</key>
-			<string>language</string>
-			<key>value</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>key</key>
 			<string>collection-langenglish</string>
 			<key>name</key>
 			<string>English</string>
@@ -647,9 +366,9 @@
 		</dict>
 		<dict>
 			<key>key</key>
-			<string>collection-langfinnish</string>
+			<string>collection-langeuropean</string>
 			<key>name</key>
-			<string>Finnish</string>
+			<string>European</string>
 			<key>type</key>
 			<string>language</string>
 			<key>value</key>
@@ -687,26 +406,6 @@
 		</dict>
 		<dict>
 			<key>key</key>
-			<string>collection-langhebrew</string>
-			<key>name</key>
-			<string>Hebrew</string>
-			<key>type</key>
-			<string>language</string>
-			<key>value</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>key</key>
-			<string>collection-langhungarian</string>
-			<key>name</key>
-			<string>Hungarian</string>
-			<key>type</key>
-			<string>language</string>
-			<key>value</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>key</key>
 			<string>collection-langindic</string>
 			<key>name</key>
 			<string>Indic</string>
@@ -727,9 +426,9 @@
 		</dict>
 		<dict>
 			<key>key</key>
-			<string>collection-langlatin</string>
+			<string>collection-langjapanese</string>
 			<key>name</key>
-			<string>Latin</string>
+			<string>Japanese</string>
 			<key>type</key>
 			<string>language</string>
 			<key>value</key>
@@ -737,39 +436,9 @@
 		</dict>
 		<dict>
 			<key>key</key>
-			<string>collection-langlatvian</string>
+			<string>collection-langkorean</string>
 			<key>name</key>
-			<string>Latvian</string>
-			<key>type</key>
-			<string>language</string>
-			<key>value</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>key</key>
-			<string>collection-langlithuanian</string>
-			<key>name</key>
-			<string>Lithuanian</string>
-			<key>type</key>
-			<string>language</string>
-			<key>value</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>key</key>
-			<string>collection-langmongolian</string>
-			<key>name</key>
-			<string>Mongolian</string>
-			<key>type</key>
-			<string>language</string>
-			<key>value</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>key</key>
-			<string>collection-langnorwegian</string>
-			<key>name</key>
-			<string>Norwegian</string>
+			<string>Korean</string>
 			<key>type</key>
 			<string>language</string>
 			<key>value</key>
@@ -810,46 +479,6 @@
 			<string>collection-langspanish</string>
 			<key>name</key>
 			<string>Spanish</string>
-			<key>type</key>
-			<string>language</string>
-			<key>value</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>key</key>
-			<string>collection-langswedish</string>
-			<key>name</key>
-			<string>Swedish</string>
-			<key>type</key>
-			<string>language</string>
-			<key>value</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>key</key>
-			<string>collection-langtibetan</string>
-			<key>name</key>
-			<string>Tibetan</string>
-			<key>type</key>
-			<string>language</string>
-			<key>value</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>key</key>
-			<string>collection-langturkmen</string>
-			<key>name</key>
-			<string>Turkmen</string>
-			<key>type</key>
-			<string>language</string>
-			<key>value</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>key</key>
-			<string>collection-langvietnamese</string>
-			<key>name</key>
-			<string>Vietnamese</string>
 			<key>type</key>
 			<string>language</string>
 			<key>value</key>
@@ -940,6 +569,16 @@
 		</dict>
 		<dict>
 			<key>key</key>
+			<string>option_menu_integration</string>
+			<key>name</key>
+			<string>option_menu_integration</string>
+			<key>type</key>
+			<string>option</string>
+			<key>value</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>key</key>
 			<string>option_path</string>
 			<key>name</key>
 			<string>option_path</string>
@@ -986,7 +625,7 @@
 			<key>type</key>
 			<string>option</string>
 			<key>value</key>
-			<string>/usr/local/info</string>
+			<string>/usr/local/share/info</string>
 		</dict>
 		<dict>
 			<key>key</key>
@@ -996,7 +635,7 @@
 			<key>type</key>
 			<string>option</string>
 			<key>value</key>
-			<string>/usr/local/man</string>
+			<string>/usr/local/share/man</string>
 		</dict>
 		<dict>
 			<key>key</key>
@@ -1082,7 +721,7 @@
 			<key>type</key>
 			<string>variable</string>
 			<key>value</key>
-			<string>/usr/local/texlive/2012</string>
+			<string>/usr/local/texlive/2014</string>
 		</dict>
 		<dict>
 			<key>key</key>
@@ -1092,7 +731,7 @@
 			<key>type</key>
 			<string>variable</string>
 			<key>value</key>
-			<string>~/Library/texlive/2012/texmf-config</string>
+			<string>~/Library/texlive/2014/texmf-config</string>
 		</dict>
 		<dict>
 			<key>key</key>
@@ -1122,7 +761,7 @@
 			<key>type</key>
 			<string>variable</string>
 			<key>value</key>
-			<string>/usr/local/texlive/2012/texmf-config</string>
+			<string>/usr/local/texlive/2014/texmf-config</string>
 		</dict>
 		<dict>
 			<key>key</key>
@@ -1132,7 +771,7 @@
 			<key>type</key>
 			<string>variable</string>
 			<key>value</key>
-			<string>/usr/local/texlive/2012/texmf-var</string>
+			<string>/usr/local/texlive/2014/texmf-var</string>
 		</dict>
 		<dict>
 			<key>key</key>
@@ -1142,7 +781,7 @@
 			<key>type</key>
 			<string>variable</string>
 			<key>value</key>
-			<string>~/Library/texlive/2012/texmf-var</string>
+			<string>~/Library/texlive/2014/texmf-var</string>
 		</dict>
 	</array>
 </dict>
