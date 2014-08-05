@@ -53,13 +53,14 @@ not be featured when uploaded.
 
 import os, sys
 from subprocess import Popen, PIPE
-from stat import ST_SIZE
 import tarfile
-from time import gmtime, strftime, localtime
-import urllib
+from time import strftime, localtime
 import plistlib
-import tempfile
-import googlecode_upload
+
+import requests
+from requests.auth import HTTPBasicAuth
+import json
+from uritemplate import expand as uri_expand 
 
 from Foundation import NSUserDefaults
 
@@ -73,7 +74,7 @@ assert len(SOURCE_DIR)
 assert SOURCE_DIR.startswith("/")
 
 # name of keychain item for svn/upload
-UPLOAD_KEYCHAIN_ITEM = "<https://mactlmgr.googlecode.com:443> Google Code Subversion Repository"
+UPLOAD_KEYCHAIN_ITEM = "github.com"
 
 # derived paths
 BUILD_DIR = os.path.join(GetSymRoot(), "Release")
@@ -124,7 +125,7 @@ def create_tarball_of_application(newVersionNumber):
 
 def user_and_pass_for_upload():
     
-    pwtask = Popen(["/usr/bin/security", "find-generic-password", "-g", "-s", UPLOAD_KEYCHAIN_ITEM], stdout=PIPE, stderr=PIPE)
+    pwtask = Popen(["/usr/bin/security", "find-internet-password", "-g", "-s", UPLOAD_KEYCHAIN_ITEM], stdout=PIPE, stderr=PIPE)
     [output, error] = pwtask.communicate()
     pwoutput = output + error
         
@@ -146,21 +147,49 @@ def user_and_pass_for_upload():
     
 if __name__ == '__main__':
     
-    svn_task = Popen(["/usr/bin/svn", "up"], cwd=SOURCE_DIR)
-    rc = svn_task.wait()
+    pull_task = Popen(["/usr/bin/git", "pull"], cwd=SOURCE_DIR)
+    rc = pull_task.wait()
     assert rc == 0, "update failed"
 
-    newVersion = rewrite_version()
+    new_version = rewrite_version()
+    commit_task = Popen(["/usr/bin/git", "commit", "-a", "-m", "bump beta version"], cwd=SOURCE_DIR)
+    commit_task.wait()
+    
+    push_task = Popen(["/usr/bin/git", "push"], cwd=SOURCE_DIR)
+    push_task.wait()
+    
+    # git tag -a 1.18b5 -m "beta 1.18b5"
+    tag_task = Popen(["/usr/bin/git", "tag", "-a", new_version, "-m", "beta " + new_version])
+    tag_task.wait()
+    
+    # git push origin --tags
+    push_task = Popen(["/usr/bin/git", "push", "origin", "--tags"], cwd=SOURCE_DIR)
+    push_task.wait()
+    
     clean_and_build()
-    tarballPath = create_tarball_of_application(newVersion)
+    tarball_path = create_tarball_of_application(new_version)
     
     username, password = user_and_pass_for_upload()
-    # same as regular build, prefixed with BETA
-    summary = "BETA: %s build (%s)" % (strftime("%Y%m%d", localtime()), newVersion)
-    # make sure it's not Featured!
-    labels = ["Type-Archive", "OpSys-OSX"]
-    googlecode_upload.upload(tarballPath, "mactlmgr", username, password, summary, labels)
-
-    svn_task = Popen(["/usr/bin/svn", "commit", "-m", "bump beta version"], cwd=SOURCE_DIR)
-    svn_task.wait()
+    auth = HTTPBasicAuth(username, password)
+    r = requests.get("https://api.github.com/user", auth=auth)
+    assert r.ok, "failed authentication"
+    
+    payload = {}
+    payload["tag_name"] = new_version
+    payload["target_commitish"] = "master"
+    payload["name"] = new_version
+    payload["body"] = "BETA: %s build (%s)" % (strftime("%Y%m%d", localtime()), new_version)
+    payload["draft"] = False
+    payload["prerelease"] = True
+    
+    r = requests.post("https://api.github.com/repos/amaxwell/tlutility/releases", data=json.dumps(payload), auth=auth)
+    post_response = json.loads(r.text or r.content)
+    upload_url = uri_expand(post_response["upload_url"], {"name" : os.path.basename(tarball_path)})
+    
+    file_data = open(tarball_path, "rb").read()
+    r = requests.post(upload_url, data=file_data, headers={"Content-Type" : "application/gzip"}, auth=auth)
+    asset_response = json.loads(r.text or r.content)
+    
+    for k in asset_response:
+        print k, "=", asset_response[k]
 
