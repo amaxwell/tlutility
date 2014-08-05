@@ -415,12 +415,6 @@ static void __TLMTestAndClearEnvironmentVariable(const char *name)
     setenv("PATH", [newPath saneFileSystemRepresentation], 1);
     TLMLog(__func__, @"Using PATH = \"%@\"", systemPaths);
     
-    // Even though we now have a sane PATH, log the environment in case something is screwy.
-    TLMTask *envTask = [TLMTask launchedTaskWithLaunchPath:@"/usr/bin/env" arguments:nil];
-    [envTask waitUntilExit];
-    if ([envTask outputString])
-        TLMLog(__func__, @"/usr/bin/env\n%@", [envTask outputString]);
-    
     /*
      Config.guess uses a really stupid test for 64 bit, and invokes the compiler
      stub on 10.9, prompting the user to install dev tools. Setting this envvar
@@ -514,6 +508,12 @@ static void __TLMTestAndClearEnvironmentVariable(const char *name)
     
     // !!! hopefully temporary workaround on Yosemite; wrong place for this
     setenv("NSUnbufferedIO", "YES", 1);
+    
+    // Even though we now have a sane PATH, log the environment in case something is screwy.
+    TLMTask *envTask = [TLMTask launchedTaskWithLaunchPath:@"/usr/bin/env" arguments:nil];
+    [envTask waitUntilExit];
+    if ([envTask outputString])
+        TLMLog(__func__, @"/usr/bin/env\n%@", [envTask outputString]);
 
 }
 
