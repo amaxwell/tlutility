@@ -192,5 +192,5 @@ if __name__ == '__main__':
     
     # should be part of appcast
     download_url = asset_response["browser_download_url"]
-    
+    print "download_url:", download_url
 
