@@ -190,6 +190,7 @@ if __name__ == '__main__':
     r = requests.post(upload_url, data=file_data, headers={"Content-Type" : "application/gzip"}, auth=auth)
     asset_response = json.loads(r.text or r.content)
     
-    for k in asset_response:
-        print k, "=", asset_response[k]
+    # should be part of appcast
+    download_url = [asset_response]["browser_download_url"]
+    
 
