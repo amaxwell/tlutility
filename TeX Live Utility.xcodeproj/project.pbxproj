@@ -235,6 +235,13 @@
 			remoteGlobalIDString = F9C5E35C15D49A2B006C293A;
 			remoteInfo = TLUNotifier;
 		};
+		F9ED4C0C1990AF6100B97370 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F9B396090F340A71007F95E9 /* FileView.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
+			remoteInfo = FileView;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -925,6 +932,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				F9ED4C0D1990AF6100B97370 /* PBXTargetDependency */,
 				F9E3DDB7182F414900800308 /* PBXTargetDependency */,
 				F9B139D60EECBE8F007C0046 /* PBXTargetDependency */,
 				F9DCD40E0F06F1D900600DD2 /* PBXTargetDependency */,
@@ -1313,6 +1321,11 @@
 			isa = PBXTargetDependency;
 			name = TLUNotifier;
 			targetProxy = F9E3DDB6182F414900800308 /* PBXContainerItemProxy */;
+		};
+		F9ED4C0D1990AF6100B97370 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = FileView;
+			targetProxy = F9ED4C0C1990AF6100B97370 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
