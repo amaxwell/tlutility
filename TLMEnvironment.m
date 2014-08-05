@@ -511,6 +511,9 @@ static void __TLMTestAndClearEnvironmentVariable(const char *name)
      */
     __TLMTestAndClearEnvironmentVariable("PYTHONHOME");
     __TLMTestAndClearEnvironmentVariable("PYTHONPATH");
+    
+    // !!! hopefully temporary workaround on Yosemite; wrong place for this
+    setenv("NSUnbufferedIO", "YES", 1);
 
 }
 
