@@ -191,6 +191,6 @@ if __name__ == '__main__':
     asset_response = json.loads(r.text or r.content)
     
     # should be part of appcast
-    download_url = [asset_response]["browser_download_url"]
+    download_url = asset_response["browser_download_url"]
     
 
