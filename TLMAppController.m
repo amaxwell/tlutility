@@ -41,15 +41,10 @@
 #import "TLMPreferenceController.h"
 #import "TLMLogServer.h"
 #import "TLMReleaseNotesController.h"
-#import "TLMTask.h"
 #import <Sparkle/Sparkle.h>
-#import "TLMProxyManager.h"
-#import "TLMDatabase.h"
 #import "TLMMirrorController.h"
 #import "TLMEnvironment.h"
 #import "TLMLogWindowController.h"
-#import "TLMSizeFormatter.h"
-#import <sys/stat.h>
 
 @implementation TLMAppController
 
@@ -247,74 +242,11 @@ static void __TLMMigrateBundleIdentifier()
                                                         andEventID:kAEGetURL];
 }
 
-- (void)_checkSystemPythonVersion
-{
-    NSString *versionCheckPath = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"python_version.py"];
-    
-    TLMTask *versionCheckTask = [[TLMTask new] autorelease];
-    [versionCheckTask setLaunchPath:versionCheckPath];
-    [versionCheckTask launch];
-    [versionCheckTask waitUntilExit];
-    
-    if ([versionCheckTask terminationStatus] == EXIT_SUCCESS) {
-        if ([versionCheckTask outputString])
-            TLMLog(__func__, @"%@", [versionCheckTask outputString]);
-        if ([versionCheckTask errorString])
-            TLMLog(__func__, @"%@", [versionCheckTask errorString]);
-    }
-    else {
-        TLMLog(__func__, @"*** ERROR *** Unable to run a Python task: %@", [versionCheckTask errorString]);
-    }
-}
-
-- (void)_checkProcessUmask
-{
-    const mode_t currentMask = umask(0);
-    (void) umask(currentMask);
-    
-    // don't reset umask; that's the user or sysadmin's prerogative
-    const mode_t defaultMask = (S_IRWXU | S_IRWXG | S_IRWXO) & ~S_IRWXU & ~S_IRGRP & ~S_IROTH & ~S_IXGRP & ~S_IXOTH;
-
-    NSString *umaskString = [NSString stringWithFormat:@"%03o", currentMask];
-    NSString *defaultMaskString = [NSString stringWithFormat:@"%03o", defaultMask];
-    
-    TLMLog(__func__, @"Process umask = %@", umaskString);
-    
-    if (defaultMask != currentMask)
-        TLMLog(__func__, @"*** WARNING *** You have altered the system's umask from %@ to %@. If you have made it more restrictive, installing updates with TeX Live Utility may cause TeX Live to become unusable.", defaultMaskString, umaskString);
-    
-    // check for g=rx, o=rx permissions
-    if ((currentMask & S_IROTH) != 0 || (currentMask & S_IRGRP) != 0 || (currentMask & S_IXGRP) != 0 || (currentMask & S_IXOTH) != 0) {
-        // allow suppression on this, since it may be installed with user ownership, not root
-        if ([[NSUserDefaults standardUserDefaults] boolForKey:TLMDisableUmaskWarningKey] == NO) {
-            NSAlert *alert = [[NSAlert new] autorelease];
-            [alert setShowsSuppressionButton:YES];
-            [alert setMessageText:NSLocalizedString(@"You have altered the system's umask", @"alert title")];
-            [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"The normal umask is %@ and yours is set to %@. This more restrictive umask may cause permission problems with TeX Live.", @"alert text, two string format specifiers"), defaultMaskString, umaskString]];
-            [alert runModal];
-            if ([[alert suppressionButton] state] == NSOnState)
-                [[NSUserDefaults standardUserDefaults] setBool:YES forKey:TLMDisableUmaskWarningKey];
-        }
-    }
-}
-
 - (void)applicationDidFinishLaunching:(NSNotification *)notification;
 {
     // make sure this gets hooked up early enough that it collects messages
     if (nil == _logWindowController)
         _logWindowController = [TLMLogWindowController new];
-    
-    [self _checkSystemPythonVersion];
-    [self _checkProcessUmask];
-    
-    NSDictionary *infoPlist = [[NSBundle mainBundle] infoDictionary];
-    NSProcessInfo *pInfo = [NSProcessInfo processInfo];
-    NSFormatter *memsizeFormatter = [[TLMSizeFormatter new] autorelease];
-    NSString *memsize = [memsizeFormatter stringForObjectValue:[NSNumber numberWithUnsignedLongLong:[pInfo physicalMemory]]];
-    TLMLog(__func__, @"Welcome to %@ %@, running under Mac OS X %@ with %lu/%lu processors active and %@ physical memory.", [infoPlist objectForKey:(id)kCFBundleNameKey], [infoPlist objectForKey:(id)kCFBundleVersionKey], [pInfo operatingSystemVersionString], (unsigned long)[pInfo activeProcessorCount], (unsigned long)[pInfo processorCount], memsize);
-        
-    // call before anything uses tlmgr
-    [[TLMProxyManager sharedManager] updateProxyEnvironmentForURL:nil];
     
     // make sure this is set up early enough to use tasks anywhere
     [TLMEnvironment updateEnvironment]; 

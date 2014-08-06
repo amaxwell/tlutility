@@ -43,7 +43,10 @@
 #import "TLMReadWriteOperationQueue.h"
 #import "TLMTask.h"
 #import "TLMLogServer.h"
+#import "TLMSizeFormatter.h"
+#import "TLMProxyManager.h"
 #import <pthread.h>
+#import <sys/stat.h>
 
 NSString * const TLMDefaultRepositoryChangedNotification = @"TLMDefaultRepositoryChangedNotification";
 
@@ -52,6 +55,11 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
 @interface TLMEnvironment (Private)
 
 + (void)updatePathEnvironment;
+
++ (void)_ensureSaneEnvironment;
++ (void)_checkSystemPythonVersion;
++ (void)_checkProcessUmask;
++ (void)_logEnvironment;
 
 + (NSMutableArray *)_systemPaths;
 - (void)_displayFallbackServerAlert;
@@ -89,6 +97,24 @@ static NSString            *_currentEnvironmentKey = nil;
 {
     if (nil == _environments)
         _environments = [NSMutableDictionary new];
+    
+    // we'll just assume umask, python, and hardware are invariant for the life of the program
+    static bool oneTimeChecksDone = false;
+    if (false == oneTimeChecksDone) {
+        
+        NSDictionary *infoPlist = [[NSBundle mainBundle] infoDictionary];
+        NSProcessInfo *pInfo = [NSProcessInfo processInfo];
+        NSFormatter *memsizeFormatter = [[TLMSizeFormatter new] autorelease];
+        NSString *memsize = [memsizeFormatter stringForObjectValue:[NSNumber numberWithUnsignedLongLong:[pInfo physicalMemory]]];
+        TLMLog(__func__, @"Welcome to %@ %@, running under Mac OS X %@ with %lu/%lu processors active and %@ physical memory.", [infoPlist objectForKey:(id)kCFBundleNameKey], [infoPlist objectForKey:(id)kCFBundleVersionKey], [pInfo operatingSystemVersionString], (unsigned long)[pInfo activeProcessorCount], (unsigned long)[pInfo processorCount], memsize);
+        
+        [self _checkSystemPythonVersion];
+        [self _checkProcessUmask];
+        [self _ensureSaneEnvironment];
+    }
+    
+    // call before anything uses tlmgr
+    [[TLMProxyManager sharedManager] updateProxyEnvironmentForURL:nil];
 }
 
 + (NSString *)_installDirectoryFromCurrentDefaults
@@ -133,6 +159,7 @@ static NSString            *_currentEnvironmentKey = nil;
             if (nil == env) {
                 TLMLog(__func__, @"Setting up a new environment for %@%C", installDir, TLM_ELLIPSIS);
                 [self updatePathEnvironment];
+                [self _logEnvironment];
                 env = [[self alloc] initWithInstallDirectory:_currentEnvironmentKey];
                 [_environments setObject:env forKey:_currentEnvironmentKey];
                 [env release];
@@ -414,7 +441,11 @@ static void __TLMTestAndClearEnvironmentVariable(const char *name)
     
     setenv("PATH", [newPath saneFileSystemRepresentation], 1);
     TLMLog(__func__, @"Using PATH = \"%@\"", systemPaths);
-    
+}
+
++ (void)_ensureSaneEnvironment;
+{
+
     /*
      Config.guess uses a really stupid test for 64 bit, and invokes the compiler
      stub on 10.9, prompting the user to install dev tools. Setting this envvar
@@ -508,18 +539,81 @@ static void __TLMTestAndClearEnvironmentVariable(const char *name)
     
     // !!! hopefully temporary workaround on Yosemite; wrong place for this
     setenv("NSUnbufferedIO", "YES", 1);
+    setenv("COMMAND_MODE", "unix2003", 1);
     
+}
+
++ (void)_checkSystemPythonVersion
+{
+    NSString *versionCheckPath = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"python_version.py"];
+    
+    TLMTask *versionCheckTask = [[TLMTask new] autorelease];
+    [versionCheckTask setLaunchPath:versionCheckPath];
+    [versionCheckTask launch];
+    [versionCheckTask waitUntilExit];
+    
+    if ([versionCheckTask terminationStatus] == EXIT_SUCCESS) {
+        if ([versionCheckTask outputString])
+            TLMLog(__func__, @"%@", [versionCheckTask outputString]);
+        
+        // !!! NSAlert here?
+        if ([versionCheckTask errorString])
+            TLMLog(__func__, @"%@", [versionCheckTask errorString]);
+    }
+    else {
+        // should never happen, so not bothering with NSAlert
+        TLMLog(__func__, @"*** ERROR *** Unable to run a Python task: %@", [versionCheckTask errorString]);
+    }
+}
+
++ (void)_checkProcessUmask
+{
+    const mode_t currentMask = umask(0);
+    (void) umask(currentMask);
+    
+    // don't reset umask; that's the user or sysadmin's prerogative
+    const mode_t defaultMask = (S_IRWXU | S_IRWXG | S_IRWXO) & ~S_IRWXU & ~S_IRGRP & ~S_IROTH & ~S_IXGRP & ~S_IXOTH;
+    
+    NSString *umaskString = [NSString stringWithFormat:@"%03o", currentMask];
+    NSString *defaultMaskString = [NSString stringWithFormat:@"%03o", defaultMask];
+    
+    TLMLog(__func__, @"Process umask = %@", umaskString);
+    
+    if (defaultMask != currentMask)
+        TLMLog(__func__, @"*** WARNING *** You have altered the system's umask from %@ to %@. If you have made it more restrictive, installing updates with TeX Live Utility may cause TeX Live to become unusable.", defaultMaskString, umaskString);
+    
+    // check for g=rx, o=rx permissions
+    if ((currentMask & S_IROTH) != 0 || (currentMask & S_IRGRP) != 0 || (currentMask & S_IXGRP) != 0 || (currentMask & S_IXOTH) != 0) {
+        // allow suppression on this, since it may be installed with user ownership, not root
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:TLMDisableUmaskWarningKey] == NO) {
+            NSAlert *alert = [[NSAlert new] autorelease];
+            [alert setShowsSuppressionButton:YES];
+            [alert setMessageText:NSLocalizedString(@"You have altered the system's umask", @"alert title")];
+            [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"The normal umask is %@ and yours is set to %@. This more restrictive umask may cause permission problems with TeX Live.", @"alert text, two string format specifiers"), defaultMaskString, umaskString]];
+            [alert runModal];
+            if ([[alert suppressionButton] state] == NSOnState)
+                [[NSUserDefaults standardUserDefaults] setBool:YES forKey:TLMDisableUmaskWarningKey];
+        }
+    }
+}
+
++ (void)_logEnvironment;
+{
     // Even though we now have a sane PATH, log the environment in case something is screwy.
     TLMTask *envTask = [TLMTask launchedTaskWithLaunchPath:@"/usr/bin/env" arguments:nil];
     [envTask waitUntilExit];
-    if ([envTask outputString])
-        TLMLog(__func__, @"/usr/bin/env\n%@", [envTask outputString]);
-
+    if ([envTask outputString]) {
+        NSString *output = [[envTask outputString] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        NSArray *lines = [output componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+        lines = [lines sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
+        TLMLog(__func__, @"Current environment from /usr/bin/env:\n%@", [lines componentsJoinedByString:@"\n"]);
+    }
+    
 }
 
 - (NSURL *)defaultServerURL
 {
-    return [[NSURL URLWithString:[[NSUserDefaults standardUserDefaults] objectForKey:TLMFullServerURLPreferenceKey]] tlm_normalizedURL];    
+    return [[NSURL URLWithString:[[NSUserDefaults standardUserDefaults] objectForKey:TLMFullServerURLPreferenceKey]] tlm_normalizedURL];
 }
 
 #define UPGRADE_TAG 'UPGR'
