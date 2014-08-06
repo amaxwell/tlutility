@@ -37,9 +37,21 @@
  */
 
 #import <Cocoa/Cocoa.h>
+#import <crt_externs.h>
 
 int main(int argc, char *argv[])
 {
+    
+    char ***nsEnvironment = _NSGetEnviron();
+    char **env = *nsEnvironment;
+
+    char **copyPtr = env;
+    NSUInteger envCount = 0;
+    while (NULL != *copyPtr++) {
+        NSLog(@"main() %lu %s\n", envCount, *copyPtr);
+        envCount++;
+    }
+        
     // http://lists.apple.com/archives/cocoa-dev/2011/Jan/msg00169.html
     signal(SIGPIPE, SIG_IGN);
     return NSApplicationMain(argc,  (const char **) argv);

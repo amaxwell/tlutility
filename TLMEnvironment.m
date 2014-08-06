@@ -608,7 +608,16 @@ static void __TLMTestAndClearEnvironmentVariable(const char *name)
         lines = [lines sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
         TLMLog(__func__, @"Current environment from /usr/bin/env:\n%@", [lines componentsJoinedByString:@"\n"]);
     }
+    else {
+        TLMLog(__func__, @"*** ERROR *** No output from /usr/bin/env");
+    }
     
+    NSDictionary *env = [[NSProcessInfo processInfo] environment];
+    NSArray *keys = [[env allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
+    NSMutableArray *array = [NSMutableArray array];
+    for (NSString *key in keys)
+        [array addObject:[NSString stringWithFormat:@"%@=%@", key, [env objectForKey:key]]];
+    TLMLog(__func__, @"Current environment from NSProcessInfo:\n%@", [array componentsJoinedByString:@"\n"]);
 }
 
 - (NSURL *)defaultServerURL
