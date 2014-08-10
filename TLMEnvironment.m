@@ -690,7 +690,7 @@ static void __TLMTestAndClearEnvironmentVariable(const char *name)
         
         // always show on the main window
         // ended up messaging a zombie TLMEnvironment when I had an alert due to a bad /usr/texbin path
-        [alert beginSheetModalForWindow:[(NSWindowController *)[[NSApp delegate] mainWindowController] window]
+        [alert beginSheetModalForWindow:[(NSWindowController *)[(TLMAppController *)[NSApp delegate] mainWindowController] window]
                           modalDelegate:[self retain]
                          didEndSelector:@selector(versionWarningDidEnd:returnCode:contextInfo:) 
                             contextInfo:NULL];            

@@ -257,7 +257,6 @@ static char *__BDSKCopyFileSystemRepresentation(NSString *str)
     
     char ***nsEnvironment = _NSGetEnviron();
     char **env = *nsEnvironment;
-    char **newEnv;
     
     NSDictionary *environment = [self environment];
     if (environment) {
@@ -272,14 +271,17 @@ static char *__BDSKCopyFileSystemRepresentation(NSString *str)
     }
 #if 0
     else {
+        
         char **copyPtr = env;
         NSUInteger envCount = 0;
         while (NULL != *copyPtr++) {
-            //NSLog(@"BDSKTask %lu %s\n", envCount, *copyPtr);
+            NSString *s = *copyPtr ? [NSString stringWithUTF8String:*copyPtr] : nil;
+            //if ([s hasPrefix:@"PATH"])
+                fprintf(stderr, "%s %lu %s\n", [[_launchPath lastPathComponent] UTF8String], envCount, *copyPtr);
             envCount++;
         }
         
-        newEnv = NSZoneCalloc([self zone], envCount + 1, sizeof(char *));
+        char **newEnv = NSZoneCalloc([self zone], envCount + 1, sizeof(char *));
         NSUInteger envIdx;
         for (envIdx = 0; envIdx < envCount; envIdx++) {
             char *var = env[envIdx];

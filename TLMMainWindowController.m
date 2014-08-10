@@ -336,7 +336,7 @@ static Class _UserNotificationClass;
 {
     [super showWindow:sender];
     
-    [[[NSApp delegate] logWindowController] setDockingDelegate:self];
+    [[(TLMAppController *)[NSApp delegate] logWindowController] setDockingDelegate:self];
 
     static BOOL __windowDidShow = NO;
     if (__windowDidShow) return;
@@ -466,8 +466,8 @@ static Class _UserNotificationClass;
 // cover method to avoid loading the log controller's window before it's needed
 - (NSWindow *)_logWindow
 {
-    TLMLogWindowController *lwc = [[NSApp delegate] logWindowController];
-    return [lwc isWindowLoaded] ? [[[NSApp delegate] logWindowController] window] : nil;
+    TLMLogWindowController *lwc = [(TLMAppController *)[NSApp delegate] logWindowController];
+    return [lwc isWindowLoaded] ? [[(TLMAppController *)[NSApp delegate] logWindowController] window] : nil;
 }
 
 - (NSSize)windowWillResize:(NSWindow *)sender toSize:(NSSize)frameSize;
@@ -722,7 +722,7 @@ static Class _UserNotificationClass;
 {
     if (selIndex) *selIndex = 0;
     NSFormatter *fmt = [[control cell] formatter];
-    NSMutableArray *candidates = [[[[NSApp delegate] mirrorController] mirrorsMatchingSearchString:[textView string]] mutableCopy];
+    NSMutableArray *candidates = [[[(TLMAppController *)[NSApp delegate] mirrorController] mirrorsMatchingSearchString:[textView string]] mutableCopy];
     if (fmt) {
         
         NSUInteger idx = [candidates count];
@@ -1472,7 +1472,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 - (void)alertForLogWindowDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
 {
     if (NSAlertFirstButtonReturn == returnCode) {
-        [[NSApp delegate] showLogWindow:nil];
+        [(TLMAppController *)[NSApp delegate] showLogWindow:nil];
     }
 }
 
@@ -1646,7 +1646,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 - (void)disasterAlertDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)context
 {
     if (NSAlertFirstButtonReturn == returnCode)
-        [[NSApp delegate] openDisasterRecoveryPage:nil];
+        [(TLMAppController *)[NSApp delegate] openDisasterRecoveryPage:nil];
     else
         TLMLog(__func__, @"User chose not to open %@ after failure", @"http://tug.org/texlive/tlmgr.html");
 }

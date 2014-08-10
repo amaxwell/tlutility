@@ -269,7 +269,7 @@ static NSURL *__TLMTLNetURL(NSString *mirrorURLString)
     if (row >= 0) {
         TLMMirrorNode *clickedNode = [_outlineView itemAtRow:row];
         if ([clickedNode type] == TLMMirrorNodeURL)
-            [[[NSApp delegate] mainWindowController] refreshUpdatedPackageListWithURL:[clickedNode value]];
+            [[(TLMAppController *)[NSApp delegate] mainWindowController] refreshUpdatedPackageListWithURL:[clickedNode value]];
         else
             NSBeep();
     }
@@ -539,8 +539,8 @@ static bool __ismultiplexer(TLMMirrorNode *node)
          which seems reasonable.  However, this action can be called for the current
          mirror, and we don't want to do a spurious reload in that case.
          */
-        if ([[[[NSApp delegate] mainWindowController] serverURL] isEqual:newDefault] == NO)
-            [[[NSApp delegate] mainWindowController] refreshUpdatedPackageListWithURL:newDefault];
+        if ([[[(TLMAppController *)[NSApp delegate] mainWindowController] serverURL] isEqual:newDefault] == NO)
+            [[(TLMAppController *)[NSApp delegate] mainWindowController] refreshUpdatedPackageListWithURL:newDefault];
         // notification handler should take care of UI updates for mirror window
     }
     else {
