@@ -38,6 +38,10 @@
 
 #import "TLMBackupCell.h"
 
+#ifndef MAC_OS_X_VERSION_10_10
+typedef NSUInteger NSCellHitResult;
+#endif
+
 @implementation TLMBackupCell
 
 + (BOOL)prefersTrackingUntilMouseUp { return YES; }
