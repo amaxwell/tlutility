@@ -341,7 +341,7 @@ static void __TLMMigrateBundleIdentifier()
 
 - (IBAction)openTracker:(id)sender;
 {
-    NSURL *aURL = [NSURL URLWithString:@"http://code.google.com/p/mactlmgr/issues/list"];
+    NSURL *aURL = [NSURL URLWithString:@"https://github.com/amaxwell/tlutility/issues"];
     [[NSWorkspace sharedWorkspace] openURL:aURL];
 }
 

@@ -59,7 +59,7 @@ All Rights Reserved.</string>
 	<key>SUAllowsAutomaticUpdates</key>
 	<false/>
 	<key>SUFeedURL</key>
-	<string>http://mactlmgr.googlecode.com/svn/trunk/appcast/tlu_appcast.xml</string>
+	<string>https://raw.githubusercontent.com/amaxwell/tlutility/master/appcast/tlu_appcast.xml</string>
 	<key>SUPublicDSAKeyFile</key>
 	<string>dsa_pub.pem</string>
 	<key>UTImportedTypeDeclarations</key>
