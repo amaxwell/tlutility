@@ -163,12 +163,12 @@
     </print-info>
     <auto-generate-level-styles>no</auto-generate-level-styles>
   </settings>
-  <editor content-size="{692, 828}" scroll-position="{0, 218}" column-titles-display-mode="off" ruler-visible="yes" status-visible="no">
-    <drawer display="sections" width="236" scroll-position="34" palette-height="346"/>
-    <hoisted-rows ids="hJb5KZPUKnx"/>
-    <selected-rows ids="pALbOik_Fp3"/>
+  <editor content-size="{692, 828}" scroll-position="{0, 61}" column-titles-display-mode="off" ruler-visible="yes" status-visible="no">
+    <drawer display="sections" width="236" palette-height="346"/>
+    <hoisted-rows ids="aLvRpQYwVsb"/>
+    <selected-rows ids="eFsoKakm9PV"/>
     <selected-columns ids="jFqHUGd_Dg1"/>
-    <selected-characters range="{117, 0}"/>
+    <selected-characters range="{303, 0}"/>
     <toolbar>{
     &quot;TB Display Mode&quot; = 2;
     &quot;TB Icon Size Mode&quot; = 2;
@@ -201,7 +201,7 @@
         </text>
       </title>
     </column>
-    <column id="jFqHUGd_Dg1" type="text" width="656" minimum-width="13" maximum-width="1000000" text-export-width="72" is-outline-column="yes">
+    <column id="jFqHUGd_Dg1" type="text" width="671" minimum-width="13" maximum-width="1000000" text-export-width="72" is-outline-column="yes">
       <title>
         <text>
           <p>
@@ -1871,7 +1871,45 @@
                               <lit>/usr/texbin</lit>
                             </run>
                             <run>
-                              <lit> is correct, but other distributions may require you to change this.</lit>
+                              <lit> is correct. Other distributions may require you to change this using the </lit>
+                            </run>
+                            <run>
+                              <style>
+                                <inherited-style name="UI" idref="a0as48_ttlo"/>
+                              </style>
+                              <lit>Choose…</lit>
+                            </run>
+                            <run>
+                              <lit> button or by dropping a folder on the path control to the left of the button.</lit>
+                            </run>
+                          </p>
+                        </text>
+                      </values>
+                    </item>
+                    <item id="eFsoKakm9PV">
+                      <values>
+                        <text>
+                          <p>
+                            <run>
+                              <lit>For TeX Live 2014 installed via the standard UNIX installer with default options, </lit>
+                            </run>
+                            <run>
+                              <style>
+                                <inherited-style name="Verbatim" idref="a-WJm12exYM"/>
+                              </style>
+                              <lit>/usr/local/texlive/2014/bin/x86_64-darwin</lit>
+                            </run>
+                            <run>
+                              <lit> would be the correct path. You may have to type </lit>
+                            </run>
+                            <run>
+                              <style>
+                                <inherited-style name="UI" idref="a0as48_ttlo"/>
+                              </style>
+                              <lit>/</lit>
+                            </run>
+                            <run>
+                              <lit> (a single forward slash keystroke) when presented with the open panel, in order to navigate to this directory, since it&apos;s hidden.</lit>
                             </run>
                           </p>
                         </text>
