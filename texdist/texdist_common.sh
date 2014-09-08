@@ -9,6 +9,26 @@ if [[ "$YEAR" = "" ]]; then
     exit 1
 fi
 
+# Finally, construct the TeX Distribution data structure. Start with the key link
+
+# First, set up /usr/texbin for the modern Pref Panel
+
+if [[ ( !  -L /usr/texbin ) && ( -d /usr/texbin ) && ( -e /usr/texbin/tex ) ]]; then
+	rm -R /usr/texbin
+fi
+
+if [[ -L /usr/texbin ]]; then
+	 rm /usr/texbin
+fi
+
+if [[ `/usr/bin/uname -r | /usr/bin/cut -f 1 -d .` -lt 13 ]]; then
+	ln -fhs /Library/TeX/Distributions/.DefaultTeX/Contents/Programs/texbin /usr/texbin
+else
+	ln -fhs ../Library/TeX/Distributions/Programs/texbin /usr/texbin
+fi
+
+# Set up /Library/TeX
+
 if [[ ! -d /Library/TeX ]]; then
 	mkdir /Library/TeX
 fi
@@ -52,23 +72,13 @@ if [[ ! -d /Library/TeX/Distributions/Programs ]]; then
 	ln -s ../.DefaultTeX/Contents/Programs/texbin /Library/TeX/Distributions/Programs/texbin
 fi
 
-
 if [[ ! -e /Library/TeX/Distributions/TeXDist-description.rtf ]]; then
 	cp ./TeXDist-description.rtf /Library/TeX/Distributions/TeXDist-description.rtf
 	chmod 644 /Library/TeX/Distributions/TeXDist-description.rtf
 fi
 
-if [[  -L /usr/local/bin/texdist ]]; then
-    rm /usr/local/bin/texdist
-fi
-
-if [[ ! -d /usr/local/bin ]]; then
-    mkdir /usr/local/bin
-fi
-
-if [[ ! -e /usr/local/bin/texdist ]]; then
-    ln -s /Library/TeX/.scripts/texdist /usr/local/bin/texdist
-fi
+# postinstall does some stuff with /usr/local/bin/texdist here that
+# I've omitted
 
 if [[ ! -d /Library/TeX/Distributions/.DefaultTeX ]]; then
     mkdir /Library/TeX/Distributions/.DefaultTeX
