@@ -464,7 +464,7 @@
 		F9C7F37013A124B70031774F /* parse_tlpdb.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = parse_tlpdb.py; sourceTree = "<group>"; };
 		F9C8920A1453366300131F23 /* LionBlueProgress.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LionBlueProgress.png; sourceTree = "<group>"; };
 		F9C8920B1453366300131F23 /* LionGraphiteProgress.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LionGraphiteProgress.png; sourceTree = "<group>"; };
-		F9D3014319BEB81E00CDEB55 /* texdist.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = texdist.plist; sourceTree = "<group>"; };
+		F9D3014319BEB81E00CDEB55 /* texdist.plist */ = {isa = PBXFileReference; explicitFileType = text; path = texdist.plist; sourceTree = "<group>"; };
 		F9D3014419BEB81E00CDEB55 /* texdist_2014.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = texdist_2014.sh; sourceTree = "<group>"; };
 		F9D3014519BEB81E00CDEB55 /* texdist_common.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = texdist_common.sh; sourceTree = "<group>"; };
 		F9D37C980F01A80800FB755E /* TLMGradientView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMGradientView.h; sourceTree = "<group>"; };
