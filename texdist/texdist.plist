@@ -1,0 +1,33 @@
+{
+    2014_full = {
+        name = "TeX Live 2014";
+        scripts = ("texdist_2014.sh");
+        path = "/usr/local/texlive/2014";
+        auxiliary = {
+            TeXDistVersion = "1";
+            Description = "
+              <!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\">
+              <html><body>
+              <p>TeX Live 2014 Distribution.</p>
+              <p>See: <a href=\"http://www.tug.org/mactex/\">The MacTeX Distribution.</a></p>
+              <p>See: <a href=\"http://www.uoregon.edu/~koch/BasicTeX.pdf\">BasicTeX</a><br></p></body></html>
+              ";
+        };
+    };
+    
+    2014_basic = {
+        name = "BasicTeX 2014";
+        scripts = ("texdist_2014.sh");
+        path = "/usr/local/texlive/2014basic";
+        auxiliary = {
+            TeXDistVersion = "1";
+            Description = "
+              <!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\">
+              <html><body>
+              <p>TeX Live 2014 Distribution.</p>
+              <p>See: <a href=\"http://www.tug.org/mactex/\">The MacTeX Distribution.</a></p>
+              <p>See: <a href=\"http://www.uoregon.edu/~koch/BasicTeX.pdf\">BasicTeX</a><br></p></body></html>
+              ";
+        };
+    };
+}

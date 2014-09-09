@@ -35,7 +35,6 @@
 		F929DE8413DCE00000072DDA /* TLMAddressTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = F929DE8313DCE00000072DDA /* TLMAddressTextField.m */; };
 		F92A38B3198EFD64005C4B71 /* FileView.framework in copy frameworks */ = {isa = PBXBuildFile; fileRef = F96F06D3198ED9A9001CFD1C /* FileView.framework */; };
 		F92A38C4198F023F005C4B71 /* FileView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F92A38C3198F023F005C4B71 /* FileView.framework */; };
-		F932AF9619BE2647009BF272 /* texdist in Resources */ = {isa = PBXBuildFile; fileRef = F932AF9519BE2647009BF272 /* texdist */; };
 		F942FFC513A08FD60008D8FD /* TLMDatabasePackage.m in Sources */ = {isa = PBXBuildFile; fileRef = F942FFC413A08FD60008D8FD /* TLMDatabasePackage.m */; };
 		F94E74A20EF4965100E0B78F /* TLMTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = F94E74A10EF4965100E0B78F /* TLMTableView.m */; };
 		F957A4E312514B040079E07F /* TLMBackupOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F957A4E212514B040079E07F /* TLMBackupOperation.m */; };
@@ -104,6 +103,9 @@
 		F9C7F188139E91E40031774F /* NSString_TLMExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = F9C7F176139E8E550031774F /* NSString_TLMExtensions.m */; };
 		F9C7F37113A124C30031774F /* parse_tlpdb.py in Copy aux executables */ = {isa = PBXBuildFile; fileRef = F9C7F37013A124B70031774F /* parse_tlpdb.py */; };
 		F9C8920C1453366300131F23 /* LionBlueProgress.png in Resources */ = {isa = PBXBuildFile; fileRef = F9C8920A1453366300131F23 /* LionBlueProgress.png */; };
+		F9D3014819BEB81E00CDEB55 /* texdist.plist in Resources */ = {isa = PBXBuildFile; fileRef = F9D3014319BEB81E00CDEB55 /* texdist.plist */; };
+		F9D3014919BEB81E00CDEB55 /* texdist_2014.sh in Resources */ = {isa = PBXBuildFile; fileRef = F9D3014419BEB81E00CDEB55 /* texdist_2014.sh */; };
+		F9D3014A19BEB81E00CDEB55 /* texdist_common.sh in Resources */ = {isa = PBXBuildFile; fileRef = F9D3014519BEB81E00CDEB55 /* texdist_common.sh */; };
 		F9D37C9A0F01A80800FB755E /* TLMGradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D37C990F01A80800FB755E /* TLMGradientView.m */; };
 		F9D37D640F01EA8900FB755E /* TLMUpdateListDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D37D630F01EA8900FB755E /* TLMUpdateListDataSource.m */; };
 		F9D37E7B0F02B5F700FB755E /* TLMOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D37E7A0F02B5F700FB755E /* TLMOutlineView.m */; };
@@ -339,7 +341,6 @@
 		F929DE8213DCDFFF00072DDA /* TLMAddressTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMAddressTextField.h; sourceTree = "<group>"; };
 		F929DE8313DCE00000072DDA /* TLMAddressTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMAddressTextField.m; sourceTree = "<group>"; };
 		F92A38C3198F023F005C4B71 /* FileView.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FileView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		F932AF9519BE2647009BF272 /* texdist */ = {isa = PBXFileReference; lastKnownFileType = folder; path = texdist; sourceTree = "<group>"; };
 		F942FFC313A08FD60008D8FD /* TLMDatabasePackage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMDatabasePackage.h; sourceTree = "<group>"; };
 		F942FFC413A08FD60008D8FD /* TLMDatabasePackage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMDatabasePackage.m; sourceTree = "<group>"; };
 		F94E74A00EF4965100E0B78F /* TLMTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMTableView.h; sourceTree = "<group>"; };
@@ -463,6 +464,9 @@
 		F9C7F37013A124B70031774F /* parse_tlpdb.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = parse_tlpdb.py; sourceTree = "<group>"; };
 		F9C8920A1453366300131F23 /* LionBlueProgress.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LionBlueProgress.png; sourceTree = "<group>"; };
 		F9C8920B1453366300131F23 /* LionGraphiteProgress.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LionGraphiteProgress.png; sourceTree = "<group>"; };
+		F9D3014319BEB81E00CDEB55 /* texdist.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = texdist.plist; sourceTree = "<group>"; };
+		F9D3014419BEB81E00CDEB55 /* texdist_2014.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = texdist_2014.sh; sourceTree = "<group>"; };
+		F9D3014519BEB81E00CDEB55 /* texdist_common.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = texdist_common.sh; sourceTree = "<group>"; };
 		F9D37C980F01A80800FB755E /* TLMGradientView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMGradientView.h; sourceTree = "<group>"; };
 		F9D37C990F01A80800FB755E /* TLMGradientView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMGradientView.m; sourceTree = "<group>"; };
 		F9D37D620F01EA8900FB755E /* TLMUpdateListDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMUpdateListDataSource.h; sourceTree = "<group>"; };
@@ -591,12 +595,12 @@
 		29B97314FDCFA39411CA2CEA /* TeX Live Utility */ = {
 			isa = PBXGroup;
 			children = (
-				F932AF9519BE2647009BF272 /* texdist */,
 				F9DCD4A10F07126F00600DD2 /* tlu_appcast.xml */,
 				F9C7F1F013A003660031774F /* Configurations */,
 				080E96DDFE201D6D7F000001 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				F9D85F72125E85FD00C0FEC5 /* agent */,
+				F9D3014119BEB81E00CDEB55 /* texdist */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
@@ -863,6 +867,16 @@
 			path = Configurations;
 			sourceTree = "<group>";
 		};
+		F9D3014119BEB81E00CDEB55 /* texdist */ = {
+			isa = PBXGroup;
+			children = (
+				F9D3014319BEB81E00CDEB55 /* texdist.plist */,
+				F9D3014419BEB81E00CDEB55 /* texdist_2014.sh */,
+				F9D3014519BEB81E00CDEB55 /* texdist_common.sh */,
+			);
+			path = texdist;
+			sourceTree = "<group>";
+		};
 		F9D85F72125E85FD00C0FEC5 /* agent */ = {
 			isa = PBXGroup;
 			children = (
@@ -1099,10 +1113,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F932AF9619BE2647009BF272 /* texdist in Resources */,
 				F9D85F7B125E866100C0FEC5 /* com.googlecode.mactlmgr.update_check.plist in Resources */,
 				F9D85F7A125E865E00C0FEC5 /* update_check.py in Resources */,
 				F99CCDE70F0EB56E00D67ED0 /* DefaultMirrors.plist in Resources */,
+				F9D3014819BEB81E00CDEB55 /* texdist.plist in Resources */,
 				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
 				1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */,
 				F9B134710EEB1B13007C0046 /* MainWindow.xib in Resources */,
@@ -1117,6 +1131,7 @@
 				F96249D50F1C516F007F3D70 /* ReleaseNotes.xib in Resources */,
 				F9A4A106105D736B00F5AC62 /* texlive.profile.plist in Resources */,
 				F982553F12504E210018CB73 /* AutobackupSheet.xib in Resources */,
+				F9D3014A19BEB81E00CDEB55 /* texdist_common.sh in Resources */,
 				F9C0D3E7125ECF3700B1FBE5 /* LaunchAgentSheet.xib in Resources */,
 				F925D1B112957B5600D75BB4 /* Mirrors.xib in Resources */,
 				F925D1BB12957C1B00D75BB4 /* CTAN.sites.plist in Resources */,
@@ -1133,6 +1148,7 @@
 				F918B78D14552A9B0038476C /* SearchFieldCapRightInactive.png in Resources */,
 				F918B78E14552A9B0038476C /* TextFieldStretch.png in Resources */,
 				F918B78F14552A9B0038476C /* TextFieldStretchInactive.png in Resources */,
+				F9D3014919BEB81E00CDEB55 /* texdist_2014.sh in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
