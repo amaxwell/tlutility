@@ -106,6 +106,8 @@
 		F9D3014819BEB81E00CDEB55 /* texdist.plist in Resources */ = {isa = PBXBuildFile; fileRef = F9D3014319BEB81E00CDEB55 /* texdist.plist */; };
 		F9D3014919BEB81E00CDEB55 /* texdist_2014.sh in Resources */ = {isa = PBXBuildFile; fileRef = F9D3014419BEB81E00CDEB55 /* texdist_2014.sh */; };
 		F9D3014A19BEB81E00CDEB55 /* texdist_common.sh in Resources */ = {isa = PBXBuildFile; fileRef = F9D3014519BEB81E00CDEB55 /* texdist_common.sh */; };
+		F9D3015119BECCDB00CDEB55 /* TLMTexdistConfigController.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D3014F19BECCDB00CDEB55 /* TLMTexdistConfigController.m */; };
+		F9D3015219BECCDB00CDEB55 /* TLMTexdistConfigController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F9D3015019BECCDB00CDEB55 /* TLMTexdistConfigController.xib */; };
 		F9D37C9A0F01A80800FB755E /* TLMGradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D37C990F01A80800FB755E /* TLMGradientView.m */; };
 		F9D37D640F01EA8900FB755E /* TLMUpdateListDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D37D630F01EA8900FB755E /* TLMUpdateListDataSource.m */; };
 		F9D37E7B0F02B5F700FB755E /* TLMOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D37E7A0F02B5F700FB755E /* TLMOutlineView.m */; };
@@ -467,6 +469,9 @@
 		F9D3014319BEB81E00CDEB55 /* texdist.plist */ = {isa = PBXFileReference; explicitFileType = text; path = texdist.plist; sourceTree = "<group>"; };
 		F9D3014419BEB81E00CDEB55 /* texdist_2014.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = texdist_2014.sh; sourceTree = "<group>"; };
 		F9D3014519BEB81E00CDEB55 /* texdist_common.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = texdist_common.sh; sourceTree = "<group>"; };
+		F9D3014E19BECCDB00CDEB55 /* TLMTexdistConfigController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMTexdistConfigController.h; sourceTree = "<group>"; };
+		F9D3014F19BECCDB00CDEB55 /* TLMTexdistConfigController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMTexdistConfigController.m; sourceTree = "<group>"; };
+		F9D3015019BECCDB00CDEB55 /* TLMTexdistConfigController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TLMTexdistConfigController.xib; sourceTree = "<group>"; };
 		F9D37C980F01A80800FB755E /* TLMGradientView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMGradientView.h; sourceTree = "<group>"; };
 		F9D37C990F01A80800FB755E /* TLMGradientView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMGradientView.m; sourceTree = "<group>"; };
 		F9D37D620F01EA8900FB755E /* TLMUpdateListDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMUpdateListDataSource.h; sourceTree = "<group>"; };
@@ -629,6 +634,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				F9D3015019BECCDB00CDEB55 /* TLMTexdistConfigController.xib */,
 				F918B77C14552A9B0038476C /* AddressFieldCapLeft.png */,
 				F918B77D14552A9B0038476C /* AddressFieldCapLeftInactive.png */,
 				F918B77E14552A9B0038476C /* AddressFieldCapRight.png */,
@@ -775,6 +781,8 @@
 				F925D1AA12957B1800D75BB4 /* TLMMirrorController.m */,
 				F96203BD13D3656300932965 /* TLMLogWindowController.h */,
 				F96203BE13D3656300932965 /* TLMLogWindowController.m */,
+				F9D3014E19BECCDB00CDEB55 /* TLMTexdistConfigController.h */,
+				F9D3014F19BECCDB00CDEB55 /* TLMTexdistConfigController.m */,
 			);
 			name = "Window controllers";
 			sourceTree = "<group>";
@@ -1116,6 +1124,7 @@
 				F9D85F7B125E866100C0FEC5 /* com.googlecode.mactlmgr.update_check.plist in Resources */,
 				F9D85F7A125E865E00C0FEC5 /* update_check.py in Resources */,
 				F99CCDE70F0EB56E00D67ED0 /* DefaultMirrors.plist in Resources */,
+				F9D3015219BECCDB00CDEB55 /* TLMTexdistConfigController.xib in Resources */,
 				F9D3014819BEB81E00CDEB55 /* texdist.plist in Resources */,
 				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
 				1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */,
@@ -1269,6 +1278,7 @@
 				F9F043030F180031008DFE8C /* TLMReadWriteOperationQueue.m in Sources */,
 				F96249D10F1C453B007F3D70 /* TLMReleaseNotesController.m in Sources */,
 				F9129BC0102F25AC000A7B50 /* TLMSizeFormatter.m in Sources */,
+				F9D3015119BECCDB00CDEB55 /* TLMTexdistConfigController.m in Sources */,
 				F922D79E1038B1E1004E9B12 /* TLMDownload.m in Sources */,
 				F91858E0104798C400341791 /* TLMOptionOperation.m in Sources */,
 				F9A49FC71059E64400F5AC62 /* TLMInstallDataSource.m in Sources */,
