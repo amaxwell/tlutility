@@ -2,6 +2,7 @@
 
 # create the texdist structure
 
+# may be e.g. 2014 or 2014-Basic
 YEAR=$1
 
 if [[ "$YEAR" = "" ]]; then

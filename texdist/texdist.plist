@@ -17,7 +17,7 @@
     
     2014_basic = {
         name = "BasicTeX 2014";
-        scripts = ("texdist_2014_basic.sh");
+        scripts = ("texdist_2014basic.sh");
         path = "/usr/local/texlive/2014basic";
         auxiliary = {
             TeXDistVersion = "1";

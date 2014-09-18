@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sh texdist_common.sh 2014
+sh texdist_common.sh '2014'
 
 PROCESSOR=`/usr/bin/uname -p`
 
