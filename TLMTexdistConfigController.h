@@ -39,5 +39,16 @@
 #import <Cocoa/Cocoa.h>
 
 @interface TLMTexdistConfigController : NSWindowController
+{
+@private
+    NSArray *_distributions;
+    NSPopUpButton *_distributionPopup;
+    NSButton *_cancelButton;
+    NSButton *_okButton;
+}
+
+@property (nonatomic, retain) IBOutlet NSPopUpButton *_distributionPopup;
+@property (nonatomic, retain) IBOutlet NSButton *_cancelButton;
+@property (nonatomic, retain) IBOutlet NSButton *_okButton;
 
 @end

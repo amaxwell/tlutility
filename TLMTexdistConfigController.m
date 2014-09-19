@@ -38,11 +38,100 @@
 
 #import "TLMTexdistConfigController.h"
 
+@interface TLMTexDistribution : NSObject
+{
+    NSString           *_name;
+    NSArray            *_scripts;
+    NSString           *_installPath;
+    NSString           *_texdistVersion;
+    NSAttributedString *_texdistDescription;
+}
+
+@property (nonatomic, readonly) NSString *name;
+@property (nonatomic, readonly) NSArray *scripts;
+@property (nonatomic, readonly) NSString *installPath;
+@property (nonatomic, readonly) NSString *texdistVersion;
+@property (nonatomic, readonly) NSAttributedString *texdistDescription;
+
+@end
+
+@implementation TLMTexDistribution
+
+@synthesize name = _name;
+@synthesize scripts = _scripts;
+@synthesize installPath = _installPath;
+@synthesize texdistVersion = _texdistVersion;
+@synthesize texdistDescription = _texdistDescription;
+
+- (id)initWithPropertyList:(NSDictionary *)plist
+{
+    self = [super init];
+    if (self) {
+        _name = [[plist objectForKey:@"name"] copy];
+        _scripts = [[plist objectForKey:@"scripts"] copy];
+        _installPath = [[plist objectForKey:@"path"] copy];
+        NSDictionary *auxiliary = [plist objectForKey:@"auxiliary"];
+        _texdistVersion = [[auxiliary objectForKey:@"TeXDistVersion"] copy];
+        NSData *htmlData = [[auxiliary objectForKey:@"Description"] dataUsingEncoding:NSUTF8StringEncoding];
+        _texdistDescription = [[NSAttributedString alloc] initWithHTML:htmlData baseURL:nil documentAttributes:NULL];
+    }
+    return self;
+}
+
+-  (void)dealloc
+{
+    [_name release];
+    [_scripts release];
+    [_installPath release];
+    [_texdistVersion release];
+    [_texdistDescription release];
+    [super dealloc];
+}
+
+- (BOOL)isInstalled
+{
+    return [[NSFileManager defaultManager] fileExistsAtPath:[self installPath]];
+}
+
+@end
+
 @interface TLMTexdistConfigController ()
 
 @end
 
 @implementation TLMTexdistConfigController
+
+@synthesize _distributionPopup;
+@synthesize _okButton;
+@synthesize _cancelButton;
+
+- (id)initWithWindowNibName:(NSString *)windowNibName
+{
+    self = [super initWithWindowNibName:windowNibName];
+    if (self) {
+        NSDictionary *plist = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"texdist" ofType:@"plist"]];
+        NSMutableArray *distributions = [NSMutableArray array];
+        for (NSString *key in plist) {
+            TLMTexDistribution *dist = [[TLMTexDistribution alloc] initWithPropertyList:[plist objectForKey:key]];
+            if ([dist isInstalled])
+                [distributions addObject:dist];
+            [dist release];
+        }
+        _distributions = [distributions copy];
+    }
+    return self;
+}
+
+- (void)dealloc
+{
+    [_distributions release];
+    [_distributionPopup release];
+    [_okButton release];
+    [_cancelButton release];
+    [super dealloc];
+}
+
+- (NSString *)windowNibName { return @"TLMTexdistConfigController"; }
 
 - (void)windowDidLoad {
     [super windowDidLoad];
