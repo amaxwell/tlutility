@@ -28,6 +28,8 @@ To check out:
     git submodule update
 
   to pull the necessary submodules.
+* open ``TeX Live Utility.xcodeproj`` and set the scheme to
+  ``TeX Live Utility (Debug)`` or release, and build it
 * it should build in Xcode on 10.8 and later
 
 =======
