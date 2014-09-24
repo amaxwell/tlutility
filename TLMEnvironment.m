@@ -57,7 +57,7 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
 + (void)updatePathEnvironment;
 
 + (void)_ensureSaneEnvironment;
-+ (void)_checkSystemPythonVersion;
++ (BOOL)_checkSystemPythonMajorVersion:(NSInteger *)major minorVersion:(NSInteger *)minor;
 + (void)_checkProcessUmask;
 + (void)_logEnvironment;
 
@@ -108,7 +108,15 @@ static NSString            *_currentEnvironmentKey = nil;
         NSString *memsize = [memsizeFormatter stringForObjectValue:[NSNumber numberWithUnsignedLongLong:[pInfo physicalMemory]]];
         TLMLog(__func__, @"Welcome to %@ %@, running under Mac OS X %@ with %lu/%lu processors active and %@ physical memory.", [infoPlist objectForKey:(id)kCFBundleNameKey], [infoPlist objectForKey:(id)kCFBundleVersionKey], [pInfo operatingSystemVersionString], (unsigned long)[pInfo activeProcessorCount], (unsigned long)[pInfo processorCount], memsize);
         
-        [self _checkSystemPythonVersion];
+        NSInteger major, minor;
+        if ([self _checkSystemPythonMajorVersion:&major minorVersion:&minor] && (major != 2 || minor < 6)) {
+            // https://code.google.com/p/mactlmgr/issues/detail?id=103
+            TLMLog(__func__, @"*** WARNING *** Unsupported python version. Attempting to work around.");
+            // lowest common denominator of Python that we support
+            setenv("VERSIONER_PYTHON_VERSION", "2.6", 1);
+            // check again; just log, since there's no point in trying more than one fallback version
+            [self _checkSystemPythonMajorVersion:&major minorVersion:&minor];
+        }
         [self _checkProcessUmask];
         [self _ensureSaneEnvironment];
     }
@@ -543,7 +551,7 @@ static void __TLMTestAndClearEnvironmentVariable(const char *name)
     
 }
 
-+ (void)_checkSystemPythonVersion
++ (BOOL)_checkSystemPythonMajorVersion:(NSInteger *)major minorVersion:(NSInteger *)minor;
 {
     NSString *versionCheckPath = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"python_version.py"];
     
@@ -551,10 +559,21 @@ static void __TLMTestAndClearEnvironmentVariable(const char *name)
     [versionCheckTask setLaunchPath:versionCheckPath];
     [versionCheckTask launch];
     [versionCheckTask waitUntilExit];
+    BOOL ret = NO;
     
     if ([versionCheckTask terminationStatus] == EXIT_SUCCESS) {
-        if ([versionCheckTask outputString])
-            TLMLog(__func__, @"%@", [versionCheckTask outputString]);
+        if ([versionCheckTask outputString]) {
+            NSArray *lines = [[versionCheckTask outputString] componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+            if ([lines count] >= 4) {
+                TLMLog(__func__, @"Using python at '%@'", [lines objectAtIndex:0]);
+                TLMLog(__func__, @"Python version is %@\n%@", [lines objectAtIndex:1], [lines objectAtIndex:2]);
+                NSString *version = [lines objectAtIndex:3];
+                NSScanner *scanner = [NSScanner scannerWithString:version];
+                if ([scanner scanInteger:major] && [scanner scanInteger:minor])
+                    return YES;
+            }
+            //TLMLog(__func__, @"%@", [versionCheckTask outputString]);
+        }
         
         // !!! NSAlert here?
         if ([versionCheckTask errorString])
@@ -564,6 +583,7 @@ static void __TLMTestAndClearEnvironmentVariable(const char *name)
         // should never happen, so not bothering with NSAlert
         TLMLog(__func__, @"*** ERROR *** Unable to run a Python task: %@", [versionCheckTask errorString]);
     }
+    return ret;
 }
 
 + (void)_checkProcessUmask
