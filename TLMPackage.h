@@ -58,6 +58,7 @@
     BOOL        _needsUpdate;
     BOOL        _failedToParse;
     BOOL        _wasForciblyRemoved;
+    BOOL        _pinned;
 }
 
 + (TLMPackage *)package;
@@ -85,5 +86,8 @@
 
 // true if the tlmgr output was not recognizable
 @property(readwrite) BOOL failedToParse;
+
+// true if the package is pinned to a non-main repo
+@property (readwrite) BOOL pinned;
 
 @end

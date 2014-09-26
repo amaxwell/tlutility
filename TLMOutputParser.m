@@ -107,6 +107,7 @@ enum {
     TLMRemoteVersionIndex    = 3,
     TLMSizeIndex             = 4,
     /* stuff we ignore */
+    TLMRepositoryTag         = 7,
     TLMLocalCatVersionIndex  = 8,
     TLMRemoteCatVersionIndex = 9
 };
@@ -161,6 +162,10 @@ static NSString * __TLMStringFromComponentsAtIndex(NSArray *components, NSUInteg
     
     NSInteger s = [__TLMStringFromComponentsAtIndex(components, TLMSizeIndex) integerValue];
     if (s > 0) [package setSize:[NSNumber numberWithUnsignedInteger:s]];
+    
+    // !!! pinning: add repo name?
+    NSString *tag = __TLMStringFromComponentsAtIndex(components, TLMRepositoryTag);
+    [package setPinned:(nil != tag && NO == [tag isEqualToString:@"-"] && NO == [tag isEqualToString:@"main"])];
     
     [package setLocalCatalogueVersion:__TLMStringFromComponentsAtIndex(components, TLMLocalCatVersionIndex)];
 
