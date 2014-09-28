@@ -52,6 +52,7 @@
 @synthesize localCatalogueVersion = _localCatalogueVersion;
 @synthesize remoteCatalogueVersion = _remoteCatalogueVersion;
 @synthesize wasForciblyRemoved = _wasForciblyRemoved;
+@synthesize pinned = _pinned;
 
 + (TLMPackage *)package;
 {
