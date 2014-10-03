@@ -88,6 +88,6 @@
 @property(readwrite) BOOL failedToParse;
 
 // true if the package is pinned to a non-main repo
-@property (readwrite) BOOL pinned;
+@property (readwrite, getter = isPinned) BOOL pinned;
 
 @end

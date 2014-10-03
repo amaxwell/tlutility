@@ -252,7 +252,7 @@
         return NO;
     
     // be strict about this; only valid, installed packages that need to be updated can be selected for update
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(isInstalled == NO) OR (willBeRemoved == YES) OR (failedToParse == YES)"];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(isInstalled == NO) OR (willBeRemoved == YES) OR (failedToParse == YES) OR (isPinned == YES)"];
     NSArray *packages = [[_displayedPackages objectsAtIndexes:[_tableView selectedRowIndexes]] filteredArrayUsingPredicate:predicate];
     if ([packages count])
         return NO;
@@ -405,7 +405,7 @@
 - (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row;
 {
     TLMPackage *package = [_displayedPackages objectAtIndex:row];
-    if ([package failedToParse])
+    if ([package failedToParse] || [package isPinned])
         [cell setTextColor:[NSColor redColor]];
     else if ([package willBeRemoved])
         [cell setTextColor:[NSColor grayColor]];
