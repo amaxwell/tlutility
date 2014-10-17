@@ -97,6 +97,7 @@
 
     BDSKTask *dumpTask = [[BDSKTask new] autorelease];
     [dumpTask setLaunchPath:tlmgrPath];
+    [dumpTask setEnvironment:[[TLMEnvironment currentEnvironment] taskEnvironment]];
     NSArray *arguments = nil;
     if (aURL)
         arguments = [NSArray arrayWithObjects:@"--repository", [[self updateURL] absoluteString], @"dump-tlpdb", @"--remote", nil];
@@ -116,6 +117,7 @@
     BDSKTask *parseTask = [[BDSKTask new] autorelease];
     NSString *parserPath = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"parse_tlpdb.py"];
     [parseTask setLaunchPath:parserPath];
+    [parseTask setEnvironment:[[TLMEnvironment currentEnvironment] taskEnvironment]];
     [parseTask setArguments:[NSArray arrayWithObjects:@"-o", absolutePath, @"-f", @"plist", nil]];
     [parseTask setStandardInput:[[dumpTask standardOutput] fileHandleForReading]];
     [parseTask setStandardError:[NSPipe pipe]];

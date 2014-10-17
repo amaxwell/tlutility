@@ -40,6 +40,7 @@
 #import "TLMTask.h"
 #import "TLMPreferenceController.h"
 #import "TLMLogServer.h"
+#import "TLMEnvironment.h"
 
 NSString * const TLMOperationFinishedNotification = @"TLMOperationFinishedNotification";
 
@@ -77,6 +78,7 @@ static char _TLMOperationFinishedContext;
         [self _commonInit];
         _task = [TLMTask new];
         [_task setLaunchPath:absolutePath];
+        [_task setEnvironment:[[TLMEnvironment currentEnvironment] taskEnvironment]];
         [_task setArguments:options];
     }
     return self;

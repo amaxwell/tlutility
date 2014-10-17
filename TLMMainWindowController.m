@@ -751,6 +751,7 @@ static Class _UserNotificationClass;
     [self _displayStatusString:NSLocalizedString(@"Running updmap…", @"") dataSource:_currentListDataSource];
     TLMTask *task = [[TLMTask new] autorelease];
     [task setLaunchPath:[[TLMEnvironment currentEnvironment] updmapAbsolutePath]];
+    [task setEnvironment:[[TLMEnvironment currentEnvironment] taskEnvironment]];
     [task launch];
     
     // so we can check/log messages and clear the status overlay
@@ -978,6 +979,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     for (NSString *name in packageNames) {
         TLMTask *task = [[TLMTask new] autorelease];
         [task setLaunchPath:[[TLMEnvironment currentEnvironment] tlmgrAbsolutePath]];
+        [task setEnvironment:[[TLMEnvironment currentEnvironment] taskEnvironment]];
         [task setArguments:[NSArray arrayWithObjects:@"show", name, nil]];
         [task launch];
         [task waitUntilExit];
@@ -2069,6 +2071,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     
     TLMTask *task = [TLMTask new];
     [task setLaunchPath:[[TLMEnvironment currentEnvironment] tlmgrAbsolutePath]];
+    [task setEnvironment:[[TLMEnvironment currentEnvironment] taskEnvironment]];
     [task setArguments:[NSArray arrayWithObjects:@"pdftex", @"paper", @"--list", nil]];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(_paperSizeCheckTerminated:)

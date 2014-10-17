@@ -87,6 +87,7 @@ static float __TLMTexdocVersion()
     NSString *cmd = [[TLMEnvironment currentEnvironment] texdocAbsolutePath];
     TLMTask *task = [[TLMTask new] autorelease];
     [task setLaunchPath:cmd];
+    [task setEnvironment:[[TLMEnvironment currentEnvironment] taskEnvironment]];
     
     /*
      NB: 0.4 uses -v for --version.  Unfortunately, 0.42 uses -v for --verbose and has no short 
@@ -232,6 +233,7 @@ static NSArray * __TLMURLsFromTexdocOutput2(NSString *outputString)
         
     TLMTask *task = [[TLMTask new] autorelease];
     [task setLaunchPath:cmd];
+    [task setEnvironment:[[TLMEnvironment currentEnvironment] taskEnvironment]];
     
     const bool useMachineReadable = __TLMTexdocHasMachineReadable();
     if (useMachineReadable)

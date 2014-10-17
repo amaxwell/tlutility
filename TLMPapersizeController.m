@@ -68,6 +68,7 @@
 
     TLMTask *task = [[TLMTask new] autorelease];
     [task setLaunchPath:cmd];
+    [task setEnvironment:[[TLMEnvironment currentEnvironment] taskEnvironment]];
     [task setArguments:[NSArray arrayWithObjects:@"pdftex", @"paper", @"--list", nil]];
 
     // output won't fill the pipe's buffer

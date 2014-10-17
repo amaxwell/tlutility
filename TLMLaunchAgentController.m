@@ -41,6 +41,7 @@
 #import "TLMTask.h"
 #import "TLMAuthorizedOperation.h"
 #import "TLMReadWriteOperationQueue.h"
+#import "TLMEnvironment.h"
 
 enum {
     TLMScheduleMatrixNever  = 0,
@@ -174,7 +175,11 @@ CGFloat __TLMScriptVersionAtPath(NSString *absolutePath)
 {
     NSString *parent = [absolutePath stringByDeletingLastPathComponent];
     NSString *script = [NSString stringWithFormat:@"import sys; sys.path.append(\"%@\"); import update_check as uc; sys.stdout.write(str(uc.VERSION))", parent];
-    TLMTask *task = [TLMTask launchedTaskWithLaunchPath:@"/usr/bin/python" arguments:[NSArray arrayWithObjects:@"-c", script, nil]];
+    TLMTask *task = [[TLMTask new] autorelease];
+    [task setLaunchPath:@"/usr/bin/python"];
+    [task setArguments:[NSArray arrayWithObjects:@"-c", script, nil]];
+    [task setEnvironment:[[TLMEnvironment currentEnvironment] taskEnvironment]];
+    [task launch];
     [task waitUntilExit];
     CGFloat version = 0;
     if ([task terminationStatus] == 0) {

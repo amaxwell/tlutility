@@ -198,6 +198,19 @@ static void log_lines_and_clear(NSMutableData *data, bool is_warning)
     [data replaceBytesInRange:NSMakeRange(0, last) withBytes:NULL length:0];
 }
 
+static char *__BDSKCopyFileSystemRepresentation(NSString *str)
+{
+    if (nil == str) return NULL;
+    
+    CFIndex len = CFStringGetMaximumSizeOfFileSystemRepresentation((CFStringRef)str);
+    char *cstr = NSZoneCalloc(NSDefaultMallocZone(), len, sizeof(char));
+    if (CFStringGetFileSystemRepresentation((CFStringRef)str, cstr, len) == FALSE) {
+        NSZoneFree(NSDefaultMallocZone(), cstr);
+        cstr = NULL;
+    }
+    return cstr;
+}
+
 /* 
  argv[0]: tlu_ipctask
  argv[1]: DO server name for IPC
@@ -313,6 +326,33 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
     
+    /*
+     Yosemite workaround.
+     
+     Apple has seriously f**ked up the environ/_NSGetEnviron() pointers. If I
+     log getenv("PATH") here, it's what I expect. However, if I print the
+     C-strings in environ, the PATH is wrong. Since this is single-threaded,
+     I can safely use NSProcessInfo here. Hopefully it correctly deals with any
+     duplicates, but I've already culled those in the calling program.
+     
+     Bug filed a couple months before Yosemite released, but only bullshit
+     questions asked as followup. Clearly Apple needs more widespread pressure
+     on this.
+     */
+    
+    char **env;
+    NSDictionary *environment = [[NSProcessInfo processInfo] environment];
+    if (environment) {
+        // fill with pointers to copied C strings
+        env = NSZoneCalloc(NULL, [environment count] + 1, sizeof(char *));
+        NSString *key;
+        NSUInteger envIndex = 0;
+        for (key in environment) {
+            env[envIndex++] = __BDSKCopyFileSystemRepresentation([NSString stringWithFormat:@"%@=%@", key, [environment objectForKey:key]]);
+        }
+        env[envIndex] = NULL;
+    }
+    
     int ret = 0;
     pid_t child = fork();
     if (0 == child) {
@@ -329,7 +369,7 @@ int main(int argc, char *argv[]) {
         (void) HANDLE_EINTR(read(waitpipe[0], &ignored, 1));
         close(waitpipe[0]);
 
-        i = execve(argv[ARG_CMD], &argv[ARG_CMD], environ);
+        i = execve(argv[ARG_CMD], &argv[ARG_CMD], env);
         _exit(i);
     }
     else if (-1 == child) {

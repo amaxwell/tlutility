@@ -50,6 +50,7 @@ extern NSString * const TLMDefaultRepositoryChangedNotification;
     BOOL                 _rootRequired;
     NSConditionLock     *_rootRequiredLock;
     TLMDatabaseYear      _installedYear;
+    NSDictionary        *_taskEnvironment;
     // baseline: tlmgr version changes with updates
     struct __tlmgrVersion {
         NSInteger       revision;
@@ -109,6 +110,8 @@ extern NSString * const TLMDefaultRepositoryChangedNotification;
 // tlmgr 2009 modifiers to update action
 @property (readonly) BOOL autoInstall;
 @property (readonly) BOOL autoRemove;
+
+@property (readonly) NSDictionary *taskEnvironment;
 
 @property (readonly) BOOL tlmgrSupportsPersistentDownloads;
 @property (readonly) BOOL tlmgrSupportsDumpTlpdb;

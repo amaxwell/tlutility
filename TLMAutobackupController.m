@@ -92,6 +92,7 @@
     
     TLMTask *task = [[TLMTask new] autorelease];
     [task setLaunchPath:cmd];
+    [task setEnvironment:[[TLMEnvironment currentEnvironment] taskEnvironment]];
     [task setArguments:[NSArray arrayWithObjects:@"option", @"autobackup", nil]];    
     [task launch];
     [task waitUntilExit];
