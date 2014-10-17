@@ -959,7 +959,9 @@ static Class _UserNotificationClass;
             [self _addOperation:op selector:@selector(_handleInfrastructureUpdateFinishedNotification:) setRefreshingForDataSource:nil];
         }
         else {
+#if DEBUG
 #warning FIXME
+#endif
             op = [[TLMUpdateOperation alloc] initWithPackageNames:nil location:repository];
             TLMLog(__func__, @"Beginning update of all packages from %@", [repository absoluteString]);
             [self _addOperation:op selector:@selector(_handleUpdateFinishedNotification:) setRefreshingForDataSource:nil];
