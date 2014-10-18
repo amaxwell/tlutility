@@ -260,7 +260,6 @@ if __name__ == '__main__':
 
     old_version, minimum_system_version = rewrite_version(new_version)
 
-    new_version = rewrite_version()
     commit_task = Popen(["/usr/bin/git", "commit", "-a", "-m", "bump version to %s" % (new_version)], cwd=SOURCE_DIR)
     commit_task.wait()
     
