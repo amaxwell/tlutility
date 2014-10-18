@@ -734,5 +734,22 @@
             <sparkle:minimumSystemVersion>10.6.8</sparkle:minimumSystemVersion>
             <enclosure url="http://mactlmgr.googlecode.com/files/TeX%20Live%20Utility.app-1.17.tar.gz" sparkle:version="1.17" length="2968699" type="application/octet-stream" sparkle:dsaSignature="MCwCFE3RLM0MF9qYYWpDcrGXBcU/XNR6AhRi+bhKQcqGJ5LQwTRaw7dqk6nwuA=="></enclosure>
         </item>
+        <item>
+            <title>Version 1.19</title>
+            <description>
+                <h3>Changes Since 1.17</h3>
+                <li>Allow automatic graphics switching on newer hardware</li>
+                <li>Log errors from authorization failures</li>
+                <li>Add a separate python program for checking the python version</li>
+                <li>Change upgrade URL to MacTeX, not generic TeX Live</li>
+                <li>Changed wording of some status messages</li>
+                <li>Update mirror list</li>
+                <li>Allow banner notifications by default for update checker</li>
+                <li>Work around a major bug in Yosemite, where the environ pointer is not updated</li>
+            </description>
+            <pubDate>Sat, 18 Oct 2014 02:34:18 +0000</pubDate>
+            <sparkle:minimumSystemVersion>10.6.8</sparkle:minimumSystemVersion>
+            <enclosure url="https://github.com/amaxwell/tlutility/releases/download/1.19/TeX.Live.Utility.app-1.19.tar.gz" sparkle:version="1.19" length="2976478" type="application/octet-stream" sparkle:dsaSignature="MCsCEy7sHtx/fgSpi+lNsa16OF7pfwcCFHbd1o2VWdn4ij2TvKM5xPWjZv3F"></enclosure>
+        </item>
     </channel>
 </rss>

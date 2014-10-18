@@ -52,9 +52,11 @@
 
 import os, sys
 from subprocess import Popen, PIPE
+from stat import ST_SIZE
 import tarfile
-from time import strftime, localtime
+from time import gmtime, strftime, localtime
 import plistlib
+import tempfile
 
 import requests
 from requests.auth import HTTPBasicAuth
@@ -165,10 +167,9 @@ def signature_and_size(tarballName):
     
     return appcastSignature, fileSize
     
-def update_appcast(oldVersion, newVersion, appcastSignature, tarballName, fileSize, minimumSystemVersion):
+def update_appcast(oldVersion, newVersion, appcastSignature, tarballName, fileSize, minimumSystemVersion, download_url):
     
     appcastDate = strftime("%a, %d %b %Y %H:%M:%S +0000", gmtime())
-    theURL = "http://mactlmgr.googlecode.com/files/" + urllib.pathname2url(os.path.basename(tarballName))
 
     # creating this from a string is easier than manipulating NSXMLNodes...
     newItemString = """<?xml version="1.0" encoding="utf-8"?>
@@ -183,7 +184,7 @@ def update_appcast(oldVersion, newVersion, appcastSignature, tarballName, fileSi
             </description>
             <pubDate>""" + appcastDate + """</pubDate>
             <sparkle:minimumSystemVersion>""" + minimumSystemVersion + """</sparkle:minimumSystemVersion>
-            <enclosure url=\"""" + theURL + """\" sparkle:version=\"""" + newVersion + """\" length=\"""" + fileSize + """\" type="application/octet-stream" sparkle:dsaSignature=\"""" + appcastSignature + """\" />
+            <enclosure url=\"""" + download_url + """\" sparkle:version=\"""" + newVersion + """\" length=\"""" + fileSize + """\" type="application/octet-stream" sparkle:dsaSignature=\"""" + appcastSignature + """\" />
         </item>
         </channel>
     </rss>"""
@@ -257,27 +258,28 @@ if __name__ == '__main__':
     assert len(sys.argv) > 1, "missing new version argument"
     new_version = sys.argv[-1]
     print "will use version %s" % (new_version)
+    
+    old_version = "1.17"
+    minimum_system_version = "10.6.8"
 
     old_version, minimum_system_version = rewrite_version(new_version)
 
     commit_task = Popen(["/usr/bin/git", "commit", "-a", "-m", "bump version to %s" % (new_version)], cwd=SOURCE_DIR)
     commit_task.wait()
-    
+
     push_task = Popen(["/usr/bin/git", "push"], cwd=SOURCE_DIR)
     push_task.wait()
-    
+
     # git tag -a 1.18b5 -m "release 1.18"
     tag_task = Popen(["/usr/bin/git", "tag", "-a", new_version, "-m", "release " + new_version])
     tag_task.wait()
-    
+
     # git push origin --tags
     push_task = Popen(["/usr/bin/git", "push", "origin", "--tags"], cwd=SOURCE_DIR)
     push_task.wait()
     
     clean_and_build()
     tarball_path = create_tarball_of_application(new_version)
-    appcast_signature, file_size = signature_and_size(tarball_path)    
-    update_appcast(old_version, new_version, appcast_signature, tarball_path, file_size, minimum_system_version)
     
     username, password = user_and_pass_for_upload()
     auth = HTTPBasicAuth(username, password)
@@ -303,4 +305,7 @@ if __name__ == '__main__':
     # should be part of appcast
     download_url = asset_response["browser_download_url"]
     print "download_url:", download_url
+    
+    appcast_signature, file_size = signature_and_size(tarball_path)    
+    update_appcast(old_version, new_version, appcast_signature, tarball_path, file_size, minimum_system_version, download_url)
 
