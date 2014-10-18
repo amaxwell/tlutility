@@ -52,13 +52,14 @@
 
 import os, sys
 from subprocess import Popen, PIPE
-from stat import ST_SIZE
 import tarfile
-from time import gmtime, strftime, localtime
-import urllib
+from time import strftime, localtime
 import plistlib
-import tempfile
-import googlecode_upload
+
+import requests
+from requests.auth import HTTPBasicAuth
+import json
+from uritemplate import expand as uri_expand 
 
 from Foundation import NSXMLDocument, NSUserDefaults, NSURL, NSXMLNodePrettyPrint
 
