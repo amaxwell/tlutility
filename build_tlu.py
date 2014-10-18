@@ -75,7 +75,7 @@ assert SOURCE_DIR.startswith("/")
 KEY_NAME = "TeX Live Utility Sparkle Key"
 
 # name of keychain item for svn/upload
-UPLOAD_KEYCHAIN_ITEM = "<https://mactlmgr.googlecode.com:443> Google Code Subversion Repository"
+UPLOAD_KEYCHAIN_ITEM = "github.com"
 
 # derived paths
 BUILD_DIR = os.path.join(GetSymRoot(), "Release")
@@ -226,7 +226,7 @@ def update_appcast(oldVersion, newVersion, appcastSignature, tarballName, fileSi
 
 def user_and_pass_for_upload():
     
-    pwtask = Popen(["/usr/bin/security", "find-generic-password", "-g", "-s", UPLOAD_KEYCHAIN_ITEM], stdout=PIPE, stderr=PIPE)
+    pwtask = Popen(["/usr/bin/security", "find-internet-password", "-g", "-s", UPLOAD_KEYCHAIN_ITEM], stdout=PIPE, stderr=PIPE)
     [output, error] = pwtask.communicate()
     pwoutput = output + error
         
@@ -248,18 +248,58 @@ def user_and_pass_for_upload():
     
 if __name__ == '__main__':
     
+    pull_task = Popen(["/usr/bin/git", "pull"], cwd=SOURCE_DIR)
+    rc = pull_task.wait()
+    assert rc == 0, "update failed"
+    
     # single arg is required (the new version)
     assert len(sys.argv) > 1, "missing new version argument"
-    newVersion = sys.argv[-1]
+    new_version = sys.argv[-1]
 
-    oldVersion, minimumSystemVersion = rewrite_version(newVersion)
+    old_version, minimum_system_version = rewrite_version(newVersion)
+
+    new_version = rewrite_version()
+    commit_task = Popen(["/usr/bin/git", "commit", "-a", "-m", "bump version to %s" % (new_version)], cwd=SOURCE_DIR)
+    commit_task.wait()
+    
+    push_task = Popen(["/usr/bin/git", "push"], cwd=SOURCE_DIR)
+    push_task.wait()
+    
+    # git tag -a 1.18b5 -m "release 1.18"
+    tag_task = Popen(["/usr/bin/git", "tag", "-a", new_version, "-m", "release " + new_version])
+    tag_task.wait()
+    
+    # git push origin --tags
+    push_task = Popen(["/usr/bin/git", "push", "origin", "--tags"], cwd=SOURCE_DIR)
+    push_task.wait()
+    
     clean_and_build()
-    tarballPath = create_tarball_of_application(newVersion)
-    appcastSignature, fileSize = signature_and_size(tarballPath)    
-    update_appcast(oldVersion, newVersion, appcastSignature, tarballPath, fileSize, minimumSystemVersion)
+    tarball_path = create_tarball_of_application(new_version)
+    appcast_signature, file_size = signature_and_size(tarball_path)    
+    update_appcast(old_version, new_version, appcast_signature, tarball_path, file_size, minimum_system_version)
     
     username, password = user_and_pass_for_upload()
-    summary = "%s build (%s)" % (strftime("%Y%m%d", localtime()), newVersion)
-    labels = ["Featured", "Type-Archive", "OpSys-OSX"]
-    googlecode_upload.upload(tarballPath, "mactlmgr", username, password, summary, labels)
+    auth = HTTPBasicAuth(username, password)
+    r = requests.get("https://api.github.com/user", auth=auth)
+    assert r.ok, "failed authentication"
+    
+    payload = {}
+    payload["tag_name"] = new_version
+    payload["target_commitish"] = "master"
+    payload["name"] = new_version
+    payload["body"] = "RELEASE: %s build (%s)" % (strftime("%Y%m%d", localtime()), new_version)
+    payload["draft"] = False
+    payload["prerelease"] = False
+    
+    r = requests.post("https://api.github.com/repos/amaxwell/tlutility/releases", data=json.dumps(payload), auth=auth)
+    post_response = json.loads(r.text or r.content)
+    upload_url = uri_expand(post_response["upload_url"], {"name" : os.path.basename(tarball_path)})
+    
+    file_data = open(tarball_path, "rb").read()
+    r = requests.post(upload_url, data=file_data, headers={"Content-Type" : "application/gzip"}, auth=auth)
+    asset_response = json.loads(r.text or r.content)
+    
+    # should be part of appcast
+    download_url = asset_response["browser_download_url"]
+    print "download_url:", download_url
 
