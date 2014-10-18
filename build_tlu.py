@@ -256,8 +256,9 @@ if __name__ == '__main__':
     # single arg is required (the new version)
     assert len(sys.argv) > 1, "missing new version argument"
     new_version = sys.argv[-1]
+    print "will use version %s" % (new_version)
 
-    old_version, minimum_system_version = rewrite_version(newVersion)
+    old_version, minimum_system_version = rewrite_version(new_version)
 
     new_version = rewrite_version()
     commit_task = Popen(["/usr/bin/git", "commit", "-a", "-m", "bump version to %s" % (new_version)], cwd=SOURCE_DIR)
