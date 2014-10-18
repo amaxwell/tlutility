@@ -897,18 +897,6 @@
 			</dict>
 			<dict>
 				<key>country</key>
-				<string>Turkey</string>
-				<key>name</key>
-				<string>main.mirrortr.com</string>
-				<key>urls</key>
-				<array>
-					<string>ftp://main.mirrortr.com/main.mirrortr.com/CTAN/</string>
-					<string>http://main.mirrortr.com/CTAN/</string>
-					<string>rsync://main.mirrortr.com/CTAN/</string>
-				</array>
-			</dict>
-			<dict>
-				<key>country</key>
 				<string>UK</string>
 				<key>name</key>
 				<string>anorien.csc.warwick.ac.uk</string>
@@ -1294,6 +1282,6 @@
 		</array>
 	</dict>
 	<key>timestamp</key>
-	<real>1412344841.273653</real>
+	<real>1413597513.429833</real>
 </dict>
 </plist>
