@@ -236,6 +236,8 @@ static void __TLMSetProxyEnvironment(const char *var, NSString *proxy, const uin
     
     const char *value = [proxy UTF8String];
     if (value && strlen(value)) setenv(var, value, 1);
+    
+    [TLMEnvironment updateEnvironment];
 }
 
 static void __TLMPacCallback(void *info, CFArrayRef proxyList, CFErrorRef error)
@@ -360,6 +362,7 @@ static void __TLMProxySettingsChanged(SCDynamicStoreRef store, CFArrayRef change
         else if (getenv("http_proxy") != NULL) {
             unsetenv("http_proxy");
             TLMLog(__func__, @"Unset http_proxy");
+            [TLMEnvironment updateEnvironment];
         }
         
         if ([[proxies objectForKey:(id)kSCPropNetProxiesFTPEnable] intValue] != 0) {
@@ -372,6 +375,7 @@ static void __TLMProxySettingsChanged(SCDynamicStoreRef store, CFArrayRef change
         else if (getenv("ftp_proxy") != NULL) {
             unsetenv("ftp_proxy");
             TLMLog(__func__, @"Unset ftp_proxy");
+            [TLMEnvironment updateEnvironment];
         }
     }
 }
