@@ -119,10 +119,16 @@ static NSString            *_currentEnvironmentKey = nil;
         }
         [self _checkProcessUmask];
         [self _ensureSaneEnvironment];
+        
+        /*
+         Call before anything uses tlmgr. Note that because of the
+         Yosemite environment variable workarounds, this could now
+         trigger a call to +[TLMEnvironment updateEnvironment].
+         */
+        [[TLMProxyManager sharedManager] updateProxyEnvironmentForURL:nil];
+
     }
     
-    // call before anything uses tlmgr
-    [[TLMProxyManager sharedManager] updateProxyEnvironmentForURL:nil];
 }
 
 + (NSString *)_installDirectoryFromCurrentDefaults
