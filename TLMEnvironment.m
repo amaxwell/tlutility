@@ -119,10 +119,16 @@ static NSString            *_currentEnvironmentKey = nil;
         }
         [self _checkProcessUmask];
         [self _ensureSaneEnvironment];
+        
+        /*
+         Call before anything uses tlmgr. Note that because of the
+         Yosemite environment variable workarounds, this could now
+         trigger a call to +[TLMEnvironment updateEnvironment].
+         */
+        [[TLMProxyManager sharedManager] updateProxyEnvironmentForURL:nil];
+
     }
     
-    // call before anything uses tlmgr
-    [[TLMProxyManager sharedManager] updateProxyEnvironmentForURL:nil];
 }
 
 + (NSString *)_installDirectoryFromCurrentDefaults
@@ -703,6 +709,9 @@ static void __TLMTestAndClearEnvironmentVariable(const char *name)
     }
     else if (remoteVersion > _installedYear) {
         [alert setMessageText:NSLocalizedString(@"Repository URL has a newer TeX Live version", @"")];
+#if DEBUG
+#warning change wording if MacTeX installed
+#endif
         [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"Your TeX Live version is %lu, but your default repository URL appears to be for TeX Live %lu.  You need to manually upgrade to a newer version of TeX Live, as there will be no further updates for your version.", @"two integer specifiers"), _installedYear, remoteVersion]];
         // nag users into upgrading, to keep them from using ftp.tug.org willy-nilly
         allowSuppression = NO;
