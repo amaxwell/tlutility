@@ -319,10 +319,10 @@
 "The repository at %@ has TeX Live %lu, but you have TeX Live %lu installed.  You need to switch repositories in order to continue." = "位于 %@ 的源 TeX Live 版本是 %lu，但是您安装的是 TeX Live %lu。 您需要切换源地址以便继续。";
 
 /* alert message text */
-"The restore process appears to have failed. Would you like to show the log now or ignore this warning?" = "復元過程で失敗が発生したようです。ログを今表示しますか、あるいはこの警告を無視しますか？";
+"The restore process appears to have failed. Would you like to show the log now or ignore this warning?" = "恢复操作似乎失败了，要打开日志或是忽略这个警告吗？";
 
 /* alert message text */
-"The TeX Live infrastructure packages have the same version after updating.  This could be a packaging problem on the server.  If you see this message repeatedly, wait until the problem is resolved in TeX Live before attempting another update." = "TeX Live 基盤部パッケージのバージョンが、更新後も同じままです。これはサーバー側のパッケージ化の不具合である可能性があります。このメッセージが繰り返し表示される場合には、他の更新に進む前に、TeX Live 側で問題が解消されるまでお待ちください。";
+"The TeX Live infrastructure packages have the same version after updating.  This could be a packaging problem on the server.  If you see this message repeatedly, wait until the problem is resolved in TeX Live before attempting another update." = "TeX Live 更新后基础包的版本未发生改变， 这有可能是由于服务器的打包问题引起的。如果这个消息一再出现，请等待 TeX Live 解决这个问题以后再进行更新。";
 
 /* alert message text in preferences */
 "The tlmgr and kpsewhich tools must be present in this folder for basic functionality." = "tlmgr 和 kpsewhich 辅助程序必须位于这个目录才能执行基本的功能。";
@@ -409,7 +409,7 @@
 "Would you like to use this as the default value for the command-line tlmgr tool as well?" = "您愿意也使用这个作为命令行工具 tlmgr 的默认值吗？";
 
 /* button title */
-"Yes" = "Yes";
+"Yes" = "好";
 
 /* alert message text */
 "You are attempting to remove critical parts of the underlying TeX Live infrastructure, and I won't help you do that." = "您正试图卸载 TeX Live 基础架构的关键组件，这是 TeX Live Utility 所无法完成的。";
@@ -448,31 +448,31 @@
 "You appear to have installed fonts in your home directory.  Would you like them to be automatically activated in TeX Live %d?" = "您似乎在 Home 目录安装了字体。要在 TeX Live %d 中自动激活这些字体吗？";
 
 /* alert text */
-"A newer version of the scheduled update script is available.  Would you like to install it now?" = "A newer version of the scheduled update script is available.  Would you like to install it now?";
+"A newer version of the scheduled update script is available.  Would you like to install it now?" = "有新版的定期更新脚本可用，现在安装吗？";
 
 /* alert title */
-"Newer update checker is available" = "Newer update checker is available";
+"Newer update checker is available" = "有新的更新检查器可用";
 
 /* alert title */
-"TeX Live paper size does not match system default" = "TeX Live paper size does not match system default";
+"TeX Live paper size does not match system default" = "TeX Live 的纸张大小和系统默认值不符";
 
 /* alert text, two string format specifiers */
-"The normal umask is %@ and yours is set to %@. This more restrictive umask may cause permission problems with TeX Live." = "The normal umask is %1$@ and yours is set to %2$@. This more restrictive umask may cause permission problems with TeX Live.";
+"The normal umask is %@ and yours is set to %@. This more restrictive umask may cause permission problems with TeX Live." = "正常的 umask 是 %1$@ 而您的 umask 被设置为 %2$@。 过于严格的 umask 限制可能会导致 TeX Live 的权限错误。";
 
 /* alert title */
-"Unable to determine repository version" = "Unable to determine repository version";
+"Unable to determine repository version" = "无法确定软件源的版本";
 
 /* alert text */
-"Would you like to set the TeX Live paper size now?" = "Would you like to set the TeX Live paper size now?";
+"Would you like to set the TeX Live paper size now?" = "现在设置 TeX Live 的纸张大小吗？";
 
 /* alert title */
-"You have altered the system's umask" = "You have altered the system's umask";
+"You have altered the system's umask" = "您已经修改了系统的 umask 参数";
 
 /* alert text, integer and string format specifiers */
-"You have TeX Live %lu installed, but the version at %@ cannot be determined." = "You have TeX Live %1$lu installed, but the version at %2$@ cannot be determined.";
+"You have TeX Live %lu installed, but the version at %@ cannot be determined." = "您安装了 TeX Live %1$lu，但位于 %2$@ 的版本无法确定。";
 
 /* status for package */
-"Needs removal" = "Needs removal";
+"Needs removal" = "需卸载";
 
 /* status for package */
-"Update available" = "Update available";
+"Update available" = "可更新";
