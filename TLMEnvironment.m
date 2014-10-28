@@ -226,14 +226,6 @@ static NSString            *_currentEnvironmentKey = nil;
     return NO;
 }
 
-- (void)_updateTaskEnvironment
-{
-    NSParameterAssert([NSThread isMainThread]);
-    [_taskEnvironment autorelease];
-    // this entire f***ed up workaround relies on Apple to pick the correct PATH variable here
-    _taskEnvironment = [[[NSProcessInfo processInfo] environment] copy];
-}
-
 - (id)initWithInstallDirectory:(NSString *)absolutePath
 {
     NSParameterAssert(absolutePath);
@@ -255,13 +247,6 @@ static NSString            *_currentEnvironmentKey = nil;
             }
         }
         
-        /*
-         Assume worst case that this isn't the main thread and NSProcessInfo isn't thread safe.
-         This is a workaround for Apple's bullshit Yosemite environment variable bug(s) which
-         they're ignoring in spite of my reports.
-         */
-        [self performSelectorOnMainThread:@selector(_updateTaskEnvironment) withObject:nil waitUntilDone:YES];
-        
         // spin off a thread to check this lazily, in case a recursive check is required
         _rootRequiredLock = [[NSConditionLock alloc] initWithCondition:PERMISSION_CHECK_IN_PROGRESS];
         [NSThread detachNewThreadSelector:@selector(_checkForRootPrivileges) toTarget:self withObject:nil];
@@ -279,7 +264,6 @@ static NSString            *_currentEnvironmentKey = nil;
     [_rootRequiredLock release];
     [_legacyRepositoryURL release];
     [_installDirectory release];
-    [_taskEnvironment release];
     [super dealloc];
 }
 
@@ -638,12 +622,9 @@ static void __TLMTestAndClearEnvironmentVariable(const char *name)
 
 + (void)_logEnvironment;
 {
-    NSDictionary *env = [[self currentEnvironment] taskEnvironment];
-
     // Even though we now have a sane PATH, log the environment in case something is screwy.
     TLMTask *envTask = [[TLMTask  new] autorelease];
     [envTask setLaunchPath:@"/usr/bin/env"];
-    [envTask setEnvironment:env];
     [envTask launch];
     [envTask waitUntilExit];
     if ([envTask outputString]) {
@@ -655,13 +636,6 @@ static void __TLMTestAndClearEnvironmentVariable(const char *name)
     else {
         TLMLog(__func__, @"*** ERROR *** No output from /usr/bin/env");
     }
-    
-    NSArray *keys = [[env allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
-    NSMutableArray *array = [NSMutableArray array];
-    for (NSString *key in keys)
-        [array addObject:[NSString stringWithFormat:@"%@=%@", key, [env objectForKey:key]]];
-    TLMLog(__func__, @"Current environment from TLMEnvironment <%p>:\n%@", [self currentEnvironment], [array componentsJoinedByString:@"\n"]);
-    
 }
 
 - (NSURL *)defaultServerURL
@@ -1015,11 +989,6 @@ static void __TLMTestAndClearEnvironmentVariable(const char *name)
 {
     NSString *texbinPath = [[NSUserDefaults standardUserDefaults] objectForKey:TLMTexBinPathPreferenceKey];
     return [[texbinPath stringByAppendingPathComponent:KPSEWHICH_CMD] stringByStandardizingPath];
-}
-
-- (NSDictionary *)taskEnvironment
-{
-    return _taskEnvironment;
 }
 
 #pragma mark Default URL

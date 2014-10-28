@@ -178,7 +178,6 @@ CGFloat __TLMScriptVersionAtPath(NSString *absolutePath)
     TLMTask *task = [[TLMTask new] autorelease];
     [task setLaunchPath:@"/usr/bin/python"];
     [task setArguments:[NSArray arrayWithObjects:@"-c", script, nil]];
-    [task setEnvironment:[[TLMEnvironment currentEnvironment] taskEnvironment]];
     [task launch];
     [task waitUntilExit];
     CGFloat version = 0;

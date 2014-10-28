@@ -488,7 +488,6 @@ static BOOL __TLMCheckSignature()
             _internal->_task = [TLMTask new]; 
             [_internal->_task setLaunchPath:__TLMCwrapperPath()];
             [_internal->_task setArguments:__TLMOptionArrayFromArguments(args)];
-            [_internal->_task setEnvironment:[[TLMEnvironment currentEnvironment] taskEnvironment]];
             [_internal->_task launch];
             // set to nonzero if the task failed to launch
             status = [_internal->_task isRunning] ? errAuthorizationSuccess : coreFoundationUnknownErr;

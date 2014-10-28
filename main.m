@@ -4,7 +4,7 @@
 //
 //  Created by Adam Maxwell on 12/6/08.
 /*
- This software is Copyright (c) 2008-2013
+ This software is Copyright (c) 2008-2014
  Adam Maxwell. All rights reserved.
  
  Redistribution and use in source and binary forms, with or without
@@ -43,6 +43,18 @@ int main(int argc, char *argv[])
 {
     // http://lists.apple.com/archives/cocoa-dev/2011/Jan/msg00169.html
     signal(SIGPIPE, SIG_IGN);
+    
+    /*
+     Workaround for Yosemite environment variable bug, whereby all
+     variables are duplicated for processes launched in Finder, and
+     setenv/getenv don't modify the ones that are passed to fork/exec
+     via (char ** environ). My original workaround was to let Foundation
+     pick variables by using NSProcessInfo, but this is more efficient;
+     credit to Joe Cheng of RStudio for the idea.
+     
+     http://tex.stackexchange.com/questions/208181/why-did-my-tex-related-gui-program-stop-working-in-mac-os-x-yosemite/
+     
+     */
     
     char ***original_env = _NSGetEnviron();
     unsigned int idx, original_count = 0;
