@@ -269,29 +269,6 @@ static char *__BDSKCopyFileSystemRepresentation(NSString *str)
         }
         env[envIndex] = NULL;
     }
-#if 0
-    else {
-        
-        char **copyPtr = env;
-        NSUInteger envCount = 0;
-        while (NULL != *copyPtr++) {
-            NSString *s = *copyPtr ? [NSString stringWithUTF8String:*copyPtr] : nil;
-            //if ([s hasPrefix:@"PATH"])
-                fprintf(stderr, "%s %lu %s\n", [[_launchPath lastPathComponent] UTF8String], envCount, *copyPtr);
-            envCount++;
-        }
-        
-        char **newEnv = NSZoneCalloc([self zone], envCount + 1, sizeof(char *));
-        NSUInteger envIdx;
-        for (envIdx = 0; envIdx < envCount; envIdx++) {
-            char *var = env[envIdx];
-            const size_t len = strlen(var) + 1;
-            newEnv[envIdx] = NSZoneCalloc([self zone], len, sizeof(char));
-            strlcpy(newEnv[envIdx], var, len);
-        }
-        env = newEnv;
-    }
-#endif
     
     // fileHandleWithNullDevice returns a descriptor of -1, so use fd_null instead
     int fd_out = -1, fd_inp = -1, fd_err = -1, fd_null = open("/dev/null", O_WRONLY);
