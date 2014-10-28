@@ -36,6 +36,7 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#import "TLMLogServer.h"
 #import "TLMTexdistConfigController.h"
 
 @interface TLMTexDistribution : NSObject
@@ -133,8 +134,22 @@
 
 - (NSString *)windowNibName { return @"TLMTexdistConfigController"; }
 
+- (void)chooseDistribution:(id)sender
+{
+    TLMLog(__func__, @"choose distribution %@", [sender representedObject]);
+}
+
 - (void)windowDidLoad {
     [super windowDidLoad];
+    
+    [_distributionPopup setTarget:self];
+    [_distributionPopup setAction:@selector(chooseDistribution:)];
+    
+    [_distributionPopup removeAllItems];
+    for (TLMTexDistribution *dist in _distributions) {
+        [_distributionPopup addItemWithTitle:[dist name]];
+        [[_distributionPopup lastItem] setRepresentedObject:dist];
+    }
     
     // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
 }
