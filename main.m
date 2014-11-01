@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
      Make a copy of the environment, but don't worry about
      NULL-terminating this array; we'll access it by index.
      */
-    char **new_env = calloc(original_count, sizeof(char *));
+    char **new_env = original_count ? calloc(original_count, sizeof(char *)) : NULL;
     env = *original_env;
     for (idx = 0; idx < original_count; idx++)
         new_env[idx] = strdup(env[idx]);
@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
      This should be only half the length of the original
      environment, as long as we have this bug.
      */
-    char **keys_seen = calloc(original_count, sizeof(char *));
+    char **keys_seen = original_count ? calloc(original_count, sizeof(char *)) : NULL;
     unsigned number_of_keys_seen = 0;
     
     // iterate our copy of environ, not the original
