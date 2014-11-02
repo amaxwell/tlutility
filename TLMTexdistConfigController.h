@@ -51,4 +51,7 @@
 @property (nonatomic, retain) IBOutlet NSButton *_cancelButton;
 @property (nonatomic, retain) IBOutlet NSButton *_okButton;
 
+- (IBAction)repair:(id)sender;
+- (IBAction)cancel:(id)sender;
+
 @end

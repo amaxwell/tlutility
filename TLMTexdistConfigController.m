@@ -106,6 +106,8 @@
 @synthesize _okButton;
 @synthesize _cancelButton;
 
+- (id)init { return [self initWithWindowNibName:[self windowNibName]]; }
+
 - (id)initWithWindowNibName:(NSString *)windowNibName
 {
     self = [super initWithWindowNibName:windowNibName];
@@ -132,11 +134,11 @@
     [super dealloc];
 }
 
-- (NSString *)windowNibName { return @"TLMTexdistConfigController"; }
+- (NSString *)windowNibName { return @"TexdistConfigController"; }
 
 - (void)chooseDistribution:(id)sender
 {
-    TLMLog(__func__, @"choose distribution %@", [sender representedObject]);
+    TLMLog(__func__, @"choose distribution %@ %@", [[sender representedObject] name], [[sender representedObject] installPath]);
 }
 
 - (void)windowDidLoad {
@@ -151,7 +153,18 @@
         [[_distributionPopup lastItem] setRepresentedObject:dist];
     }
     
-    // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
+    // send action
+    [self chooseDistribution:_distributionPopup];
+}
+
+- (void)repair:(id)sender
+{
+    [NSApp endSheet:[self window] returnCode:0];
+}
+
+- (void)cancel:(id)sender
+{
+    [NSApp endSheet:[self window] returnCode:0];
 }
 
 @end

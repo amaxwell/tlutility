@@ -77,6 +77,7 @@
 #import "TLMDatabase.h"
 #import "TLMDatabasePackage.h"
 #import "TLMMirrorController.h"
+#import "TLMTexdistConfigController.h"
 
 @interface TLMMainWindowController (Private)
 // only declare here if reorganizing the implementation isn't practical
@@ -1379,6 +1380,13 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     }
 }
 
+- (void)texdistConfigSheetDidEnd:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)context
+{
+    [sheet orderOut:self];
+    TLMTexdistConfigController *tcc = context;
+    [tcc autorelease];
+}
+
 - (void)_handleListFinishedNotification:(NSNotification *)aNote
 {
     TLMListOperation *op = [aNote object];
@@ -1819,6 +1827,16 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     // validate the current URL if the user is editing it (only checks syntax, not reachability or versioning)
     if ([[self window] firstResponder] != [[self window] fieldEditor:YES forObject:_URLField] || [[self window] makeFirstResponder:nil])
         [TLMEnvironment setDefaultRepository:[self serverURL]];
+}
+
+- (void)reconfigureDistributions:(id)sender
+{
+    TLMTexdistConfigController *tcc = [TLMTexdistConfigController new];
+    [NSApp beginSheet:[tcc window]
+       modalForWindow:[self window]
+        modalDelegate:self
+       didEndSelector:@selector(texdistConfigSheetDidEnd:returnCode:contextInfo:)
+          contextInfo:tcc];
 }
 
 #pragma mark API
