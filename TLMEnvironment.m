@@ -450,6 +450,12 @@ static void __TLMTestAndClearEnvironmentVariable(const char *name)
     NSParameterAssert([systemPaths count]);
     
     NSParameterAssert([[NSUserDefaults standardUserDefaults] objectForKey:TLMTexBinPathPreferenceKey]);
+    /*
+     17 Nov 2014: user ended up with /usr/local/bin prepended to his PATH somehow,
+     and also had an ancient and/or broken Python version in /usr/local/bin. Since
+     we shouldn't need /usr/local/bin in the PATH, let's just remove it.
+     */
+    [systemPaths removeObject:@"/usr/local/bin"];
     [systemPaths addObject:[[NSUserDefaults standardUserDefaults] objectForKey:TLMTexBinPathPreferenceKey]];
     NSString *newPath = [systemPaths componentsJoinedByString:@":"];
     NSParameterAssert(newPath);
