@@ -477,6 +477,16 @@
 				<key>country</key>
 				<string>Germany</string>
 				<key>name</key>
+				<string>ctan.sciserv.eu</string>
+				<key>urls</key>
+				<array>
+					<string>http://ctan.sciserv.eu/</string>
+				</array>
+			</dict>
+			<dict>
+				<key>country</key>
+				<string>Germany</string>
+				<key>name</key>
 				<string>ctan.space-pro.be</string>
 				<key>urls</key>
 				<array>
@@ -1282,6 +1292,6 @@
 		</array>
 	</dict>
 	<key>timestamp</key>
-	<real>1413597513.429833</real>
+	<real>1416251811.420047</real>
 </dict>
 </plist>
