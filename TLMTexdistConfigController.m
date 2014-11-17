@@ -105,6 +105,7 @@
 @synthesize _distributionPopup;
 @synthesize _okButton;
 @synthesize _cancelButton;
+@synthesize _tableView;
 
 - (id)init { return [self initWithWindowNibName:[self windowNibName]]; }
 
@@ -131,6 +132,7 @@
     [_distributionPopup release];
     [_okButton release];
     [_cancelButton release];
+    [_tableView release];
     [super dealloc];
 }
 
@@ -157,14 +159,45 @@
     [self chooseDistribution:_distributionPopup];
 }
 
+- (void)dismissSheet
+{
+    [_tableView setDelegate:nil];
+    [_tableView setDataSource:nil];
+    [NSApp endSheet:[self window] returnCode:0];
+}
+
 - (void)repair:(id)sender
 {
-    [NSApp endSheet:[self window] returnCode:0];
+    [self dismissSheet];
 }
 
 - (void)cancel:(id)sender
 {
-    [NSApp endSheet:[self window] returnCode:0];
+    [self dismissSheet];
 }
+
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView;
+{
+    return [_distributions count];
+}
+
+- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row;
+{
+    NSString *ident = [tableColumn identifier];
+    TLMTexDistribution *dist = [_distributions objectAtIndex:row];
+    if ([ident isEqualToString:@"name"])
+        return [dist name];
+    else if ([ident isEqualToString:@"arch"])
+        return @"x86";
+    else if ([ident isEqualToString:@"state"])
+        return [NSNumber numberWithBool:YES];
+    return nil;
+}
+
+- (void)tableView:(NSTableView *)tableView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row;
+{
+    TLMLog(__func__, @"set object %@", object);
+}
+
 
 @end
