@@ -307,7 +307,6 @@ static NSArray * __TLMURLsFromTexdocOutput2(NSString *outputString)
     
     TLMTask *task = [[TLMTask new] autorelease];
     [task setLaunchPath:cmd];
-    [task setEnvironment:[[TLMEnvironment currentEnvironment] taskEnvironment]];
     [task setArguments:[NSArray arrayWithObjects:@"--list", @"--nointeract", @"--machine", packageName, nil]];
     [task launch];
     
