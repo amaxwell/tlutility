@@ -108,15 +108,6 @@ static NSString            *_currentEnvironmentKey = nil;
         NSString *memsize = [memsizeFormatter stringForObjectValue:[NSNumber numberWithUnsignedLongLong:[pInfo physicalMemory]]];
         TLMLog(__func__, @"Welcome to %@ %@, running under Mac OS X %@ with %lu/%lu processors active and %@ physical memory.", [infoPlist objectForKey:(id)kCFBundleNameKey], [infoPlist objectForKey:(id)kCFBundleVersionKey], [pInfo operatingSystemVersionString], (unsigned long)[pInfo activeProcessorCount], (unsigned long)[pInfo processorCount], memsize);
         
-        NSInteger major, minor;
-        if ([self _checkSystemPythonMajorVersion:&major minorVersion:&minor] && (major != 2 || minor < 6)) {
-            // https://code.google.com/p/mactlmgr/issues/detail?id=103
-            TLMLog(__func__, @"*** WARNING *** Unsupported python version. Attempting to work around.");
-            // lowest common denominator of Python that we support
-            setenv("VERSIONER_PYTHON_VERSION", "2.6", 1);
-            // check again; just log, since there's no point in trying more than one fallback version
-            [self _checkSystemPythonMajorVersion:&major minorVersion:&minor];
-        }
         [self _checkProcessUmask];
         [self _ensureSaneEnvironment];
         
@@ -462,6 +453,22 @@ static void __TLMTestAndClearEnvironmentVariable(const char *name)
     
     setenv("PATH", [newPath saneFileSystemRepresentation], 1);
     TLMLog(__func__, @"Using PATH = \"%@\"", systemPaths);
+    
+    /*
+     This depends on the PATH, so ensure that it's checked after PATH is cleaned up.
+     I first added this in +initialize, but it didn't pick up problems when the user
+     had an old Python in /usr/local/bin (and /usr/local/bin was first in PATH).
+     */
+    NSInteger major, minor;
+    if ([self _checkSystemPythonMajorVersion:&major minorVersion:&minor] && (major != 2 || minor < 6)) {
+        // https://code.google.com/p/mactlmgr/issues/detail?id=103
+        TLMLog(__func__, @"*** WARNING *** Unsupported python version. Attempting to work around.");
+        // lowest common denominator of Python that we support
+        // NB: Yosemite symlinks Python 2.5 -> Python 2.6
+        setenv("VERSIONER_PYTHON_VERSION", "2.6", 1);
+        // check again; just log, since there's no point in trying more than one fallback version
+        [self _checkSystemPythonMajorVersion:&major minorVersion:&minor];
+    }
 }
 
 + (void)_ensureSaneEnvironment;

@@ -184,7 +184,6 @@ if __name__ == '__main__':
     
     r = requests.post("https://api.github.com/repos/amaxwell/tlutility/releases", data=json.dumps(payload), auth=auth)
     post_response = json.loads(r.text or r.content)
-    print "post_response is", post_response
     upload_url = uri_expand(post_response["upload_url"], {"name" : os.path.basename(tarball_path)})
     
     file_data = open(tarball_path, "rb").read()
