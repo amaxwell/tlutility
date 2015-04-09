@@ -3,7 +3,7 @@
 #
 # Created by Adam Maxwell on 12/28/08.
 #
-# This software is Copyright (c) 2008-2013
+# This software is Copyright (c) 2008-2015
 # Adam Maxwell. All rights reserved.
 # 
 # Redistribution and use in source and binary forms, with or without
