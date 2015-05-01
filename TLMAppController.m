@@ -132,7 +132,7 @@ static void __TLMMigrateBundleIdentifier()
     
     // disable TL critical repo by default
     [defaults setObject:[NSNumber numberWithBool:NO] forKey:TLMShouldListTLCritical];
-    [defaults setObject:@"ftp://tug.org/texlive/tlcritical" forKey:TLMTLCriticalRepository];
+    [defaults setObject:@"http://tug.org/texlive/tlcritical" forKey:TLMTLCriticalRepository];
     
     // no UI for this at present
     [defaults setObject:[NSNumber numberWithBool:NO] forKey:TLMEnableNetInstall];

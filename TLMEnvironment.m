@@ -773,7 +773,7 @@ static void __TLMTestAndClearEnvironmentVariable(const char *name)
             NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"DefaultMirrors" ofType:@"plist"];
             NSDictionary *mirrorsByYear = nil;
             if (plistPath)
-                mirrorsByYear = [NSDictionary dictionaryWithContentsOfFile:plistPath];
+                mirrorsByYear = [[NSDictionary dictionaryWithContentsOfFile:plistPath] objectForKey:@"LegacyMirrors"];
             NSString *location = [mirrorsByYear objectForKey:[[NSNumber numberWithInteger:_installedYear] stringValue]];
             if (location) {
                 TLMLog(__func__, @"Version mismatch detected.  Trying to fall back to %@", location);
