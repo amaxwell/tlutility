@@ -36,6 +36,8 @@
 		F92A38B3198EFD64005C4B71 /* FileView.framework in copy frameworks */ = {isa = PBXBuildFile; fileRef = F96F06D3198ED9A9001CFD1C /* FileView.framework */; };
 		F92A38C4198F023F005C4B71 /* FileView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F92A38C3198F023F005C4B71 /* FileView.framework */; };
 		F93BA51E19CB611F00C23004 /* texdist_2014basic.sh in Resources */ = {isa = PBXBuildFile; fileRef = F93BA51D19CB611F00C23004 /* texdist_2014basic.sh */; };
+		F93C786F1AF32F5800817C34 /* texdist_change_default.sh in Copy aux executables */ = {isa = PBXBuildFile; fileRef = F93C78661AF3284A00817C34 /* texdist_change_default.sh */; };
+		F93C78721AF33A6000817C34 /* TLMTexDistribution.m in Sources */ = {isa = PBXBuildFile; fileRef = F93C78711AF33A6000817C34 /* TLMTexDistribution.m */; };
 		F942FFC513A08FD60008D8FD /* TLMDatabasePackage.m in Sources */ = {isa = PBXBuildFile; fileRef = F942FFC413A08FD60008D8FD /* TLMDatabasePackage.m */; };
 		F94E74A20EF4965100E0B78F /* TLMTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = F94E74A10EF4965100E0B78F /* TLMTableView.m */; };
 		F957A4E312514B040079E07F /* TLMBackupOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F957A4E212514B040079E07F /* TLMBackupOperation.m */; };
@@ -267,6 +269,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 6;
 			files = (
+				F93C786F1AF32F5800817C34 /* texdist_change_default.sh in Copy aux executables */,
 				F9E3DDC1182F415B00800308 /* TLUNotifier.app in Copy aux executables */,
 				F92034E217F0A6E300796A10 /* python_version.py in Copy aux executables */,
 				F9F8BB4915DB0A1100B5D1F3 /* uninstall_local_agent.sh in Copy aux executables */,
@@ -309,7 +312,7 @@
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		32CA4F630368D1EE00C91783 /* TeX Live Manager_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TeX Live Manager_Prefix.pch"; sourceTree = "<group>"; };
-		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; explicitFileType = text.xml; fileEncoding = 4; path = Info.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* TeX Live Utility.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TeX Live Utility.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F90520D80EFDCB5400B489FE /* TLMAuthorizedOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMAuthorizedOperation.h; sourceTree = "<group>"; };
 		F90520D90EFDCB5400B489FE /* TLMAuthorizedOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMAuthorizedOperation.m; sourceTree = "<group>"; };
@@ -345,6 +348,9 @@
 		F929DE8313DCE00000072DDA /* TLMAddressTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMAddressTextField.m; sourceTree = "<group>"; };
 		F92A38C3198F023F005C4B71 /* FileView.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FileView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F93BA51D19CB611F00C23004 /* texdist_2014basic.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = texdist_2014basic.sh; sourceTree = "<group>"; };
+		F93C78661AF3284A00817C34 /* texdist_change_default.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = texdist_change_default.sh; sourceTree = "<group>"; };
+		F93C78701AF33A6000817C34 /* TLMTexDistribution.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMTexDistribution.h; sourceTree = "<group>"; };
+		F93C78711AF33A6000817C34 /* TLMTexDistribution.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMTexDistribution.m; sourceTree = "<group>"; };
 		F942FFC313A08FD60008D8FD /* TLMDatabasePackage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMDatabasePackage.h; sourceTree = "<group>"; };
 		F942FFC413A08FD60008D8FD /* TLMDatabasePackage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMDatabasePackage.m; sourceTree = "<group>"; };
 		F94E74A00EF4965100E0B78F /* TLMTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMTableView.h; sourceTree = "<group>"; };
@@ -402,7 +408,7 @@
 		F9963FEE0F054999005F0174 /* TLMInstallOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMInstallOperation.m; sourceTree = "<group>"; };
 		F9999F9A10D1C33800F594CB /* TLMProxyManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMProxyManager.h; sourceTree = "<group>"; };
 		F9999F9B10D1C33800F594CB /* TLMProxyManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMProxyManager.m; sourceTree = "<group>"; };
-		F99CCDDA0F0EAFB300D67ED0 /* DefaultMirrors.plist */ = {isa = PBXFileReference; explicitFileType = text.plist.strings; fileEncoding = 4; path = DefaultMirrors.plist; sourceTree = "<group>"; };
+		F99CCDDA0F0EAFB300D67ED0 /* DefaultMirrors.plist */ = {isa = PBXFileReference; explicitFileType = text.plist; fileEncoding = 4; path = DefaultMirrors.plist; sourceTree = "<group>"; };
 		F99D9B090F01731E00A1DCCB /* TLMTabView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMTabView.h; sourceTree = "<group>"; };
 		F99D9B0A0F01731E00A1DCCB /* TLMTabView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMTabView.m; sourceTree = "<group>"; };
 		F99E51960EEE4AD5006E6B39 /* TLMURLFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMURLFormatter.h; sourceTree = "<group>"; };
@@ -820,6 +826,8 @@
 				F9D5CCB812977D8C00AEEDCB /* TLMMirrorNode.m */,
 				F967340313E10867008C2B3E /* TLMFaviconCache.h */,
 				F967340413E10867008C2B3E /* TLMFaviconCache.m */,
+				F93C78701AF33A6000817C34 /* TLMTexDistribution.h */,
+				F93C78711AF33A6000817C34 /* TLMTexDistribution.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -884,6 +892,7 @@
 				F9D3014319BEB81E00CDEB55 /* texdist.plist */,
 				F9D3014419BEB81E00CDEB55 /* texdist_2014.sh */,
 				F9D3014519BEB81E00CDEB55 /* texdist_common.sh */,
+				F93C78661AF3284A00817C34 /* texdist_change_default.sh */,
 			);
 			path = texdist;
 			sourceTree = "<group>";
@@ -995,7 +1004,7 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0610;
+				LastUpgradeCheck = 0630;
 			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "TeX Live Utility" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -1194,7 +1203,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "LOCATION=\"${BUILT_PRODUCTS_DIR}\"/\"${EXECUTABLE_FOLDER_PATH}\"\nIDENTITY=\"TeX Live Utility Signing Certificate\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/python_version.py\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/uninstall_local_agent.sh\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/parse_tlpdb.py\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/agent_installer.py\"\n\n\n\n";
+			shellScript = "LOCATION=\"${BUILT_PRODUCTS_DIR}\"/\"${EXECUTABLE_FOLDER_PATH}\"\nIDENTITY=\"TeX Live Utility Signing Certificate\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/python_version.py\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/uninstall_local_agent.sh\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/parse_tlpdb.py\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/agent_installer.py\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/texdist_change_default.sh\"\n\n\n";
 		};
 		F9ACDA3814434DBC005DA800 /* Create help book */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1307,6 +1316,7 @@
 				F9B2F09913A2FFC400F37783 /* TLMLoadDatabaseOperation.m in Sources */,
 				F915C9FF13A846A100F3E807 /* TLMEnvironment.m in Sources */,
 				F9DAAB8213D0DE26004055A0 /* NSURL_TLMExtensions.m in Sources */,
+				F93C78721AF33A6000817C34 /* TLMTexDistribution.m in Sources */,
 				F96203BF13D3656300932965 /* TLMLogWindowController.m in Sources */,
 				F929DE8413DCE00000072DDA /* TLMAddressTextField.m in Sources */,
 				F967340513E10867008C2B3E /* TLMFaviconCache.m in Sources */,

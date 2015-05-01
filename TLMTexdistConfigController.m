@@ -4,7 +4,7 @@
 //
 //  Created by Adam R. Maxwell on 09/08/14.
 /*
- This software is Copyright (c) 2014
+ This software is Copyright (c) 2014-2015
  Adam Maxwell. All rights reserved.
  
  Redistribution and use in source and binary forms, with or without
@@ -37,64 +37,10 @@
  */
 
 #import "TLMLogServer.h"
+#import "TLMTexDistribution.h"
 #import "TLMTexdistConfigController.h"
-
-@interface TLMTexDistribution : NSObject
-{
-    NSString           *_name;
-    NSArray            *_scripts;
-    NSString           *_installPath;
-    NSString           *_texdistVersion;
-    NSAttributedString *_texdistDescription;
-}
-
-@property (nonatomic, readonly) NSString *name;
-@property (nonatomic, readonly) NSArray *scripts;
-@property (nonatomic, readonly) NSString *installPath;
-@property (nonatomic, readonly) NSString *texdistVersion;
-@property (nonatomic, readonly) NSAttributedString *texdistDescription;
-
-@end
-
-@implementation TLMTexDistribution
-
-@synthesize name = _name;
-@synthesize scripts = _scripts;
-@synthesize installPath = _installPath;
-@synthesize texdistVersion = _texdistVersion;
-@synthesize texdistDescription = _texdistDescription;
-
-- (id)initWithPropertyList:(NSDictionary *)plist
-{
-    self = [super init];
-    if (self) {
-        _name = [[plist objectForKey:@"name"] copy];
-        _scripts = [[plist objectForKey:@"scripts"] copy];
-        _installPath = [[plist objectForKey:@"path"] copy];
-        NSDictionary *auxiliary = [plist objectForKey:@"auxiliary"];
-        _texdistVersion = [[auxiliary objectForKey:@"TeXDistVersion"] copy];
-        NSData *htmlData = [[auxiliary objectForKey:@"Description"] dataUsingEncoding:NSUTF8StringEncoding];
-        _texdistDescription = [[NSAttributedString alloc] initWithHTML:htmlData baseURL:nil documentAttributes:NULL];
-    }
-    return self;
-}
-
--  (void)dealloc
-{
-    [_name release];
-    [_scripts release];
-    [_installPath release];
-    [_texdistVersion release];
-    [_texdistDescription release];
-    [super dealloc];
-}
-
-- (BOOL)isInstalled
-{
-    return [[NSFileManager defaultManager] fileExistsAtPath:[self installPath]];
-}
-
-@end
+#import "TLMReadWriteOperationQueue.h"
+#import "TLMAuthorizedOperation.h"
 
 @interface TLMTexdistConfigController ()
 
@@ -102,36 +48,15 @@
 
 @implementation TLMTexdistConfigController
 
-@synthesize _distributionPopup;
 @synthesize _okButton;
-@synthesize _cancelButton;
 @synthesize _tableView;
 
 - (id)init { return [self initWithWindowNibName:[self windowNibName]]; }
 
-- (id)initWithWindowNibName:(NSString *)windowNibName
-{
-    self = [super initWithWindowNibName:windowNibName];
-    if (self) {
-        NSDictionary *plist = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"texdist" ofType:@"plist"]];
-        NSMutableArray *distributions = [NSMutableArray array];
-        for (NSString *key in plist) {
-            TLMTexDistribution *dist = [[TLMTexDistribution alloc] initWithPropertyList:[plist objectForKey:key]];
-            if ([dist isInstalled])
-                [distributions addObject:dist];
-            [dist release];
-        }
-        _distributions = [distributions copy];
-    }
-    return self;
-}
-
 - (void)dealloc
 {
     [_distributions release];
-    [_distributionPopup release];
     [_okButton release];
-    [_cancelButton release];
     [_tableView release];
     [super dealloc];
 }
@@ -143,20 +68,23 @@
     TLMLog(__func__, @"choose distribution %@ %@", [[sender representedObject] name], [[sender representedObject] installPath]);
 }
 
+- (void)_reloadDistributions
+{
+    NSMutableArray *distributions = [NSMutableArray array];
+    NSArray *availableDistributions = [TLMTexDistribution knownDistributionsInLocalDomain];
+    for (TLMTexDistribution *dist in availableDistributions) {
+        if ([dist isInstalled])
+            [distributions addObject:dist];
+    }
+    [_distributions release];
+    _distributions = [distributions copy];
+    [_tableView reloadData];
+}
+
 - (void)windowDidLoad {
     [super windowDidLoad];
     
-    [_distributionPopup setTarget:self];
-    [_distributionPopup setAction:@selector(chooseDistribution:)];
-    
-    [_distributionPopup removeAllItems];
-    for (TLMTexDistribution *dist in _distributions) {
-        [_distributionPopup addItemWithTitle:[dist name]];
-        [[_distributionPopup lastItem] setRepresentedObject:dist];
-    }
-    
-    // send action
-    [self chooseDistribution:_distributionPopup];
+    [self _reloadDistributions];
 }
 
 - (void)dismissSheet
@@ -167,11 +95,6 @@
 }
 
 - (void)repair:(id)sender
-{
-    [self dismissSheet];
-}
-
-- (void)cancel:(id)sender
 {
     [self dismissSheet];
 }
@@ -188,15 +111,59 @@
     if ([ident isEqualToString:@"name"])
         return [dist name];
     else if ([ident isEqualToString:@"arch"])
-        return @"x86";
+        return [dist architecture];
     else if ([ident isEqualToString:@"state"])
-        return [NSNumber numberWithBool:YES];
+        return [NSNumber numberWithInteger:([dist isDefault] ? NSOnState : NSOffState)];
     return nil;
+}
+
+- (void)_handleChangeFinishedNotification:(NSNotification *)aNote
+{
+    TLMAuthorizedOperation *op = [aNote object];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:TLMOperationFinishedNotification object:op];
+    [_okButton setEnabled:YES];
+    [self _reloadDistributions];
 }
 
 - (void)tableView:(NSTableView *)tableView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row;
 {
-    TLMLog(__func__, @"set object %@", object);
+    if (row >= 0) {
+        TLMTexDistribution *dist = [_distributions objectAtIndex:row];
+        /*
+         From Dick Koch on 17 Mar 2015:
+         One final thing. When actually selecting a distribution, it should only be
+         necessary to define one symbolic link. Such a link is shown below
+         when TeXLive-2013 is chosen.
+         
+         /Library/Distributions/.DefaultTeX/Contents —> ../TeXLive-2013.texdist/Contents
+         
+         
+         Let me talk about the contents of ../TeXLive-2013.texdist/Contents/Programs.
+         This location contains five symbolic links:
+         
+         i386
+         powerpc
+         ppc
+         x86_64
+         texbin
+         
+         The first four point to paths to the corresponding binaries for that distribution.
+         The final texbin is a link to one of the first four, choosing the actual distribution.
+         
+         I’d advise ignoring this, because the texbin link was set up at install time
+         to point to an appropriate binary. But you can dip into this if you want the
+         user to reselect the binaries (mainly to select x86 over universal-darwin).
+         However, it is an added complication, and for what?
+         */
+        TLMLog(__func__, @"set %@ : %@", [[dist texdistPath] lastPathComponent], [dist architecture]);
+        NSString *changeScript = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"texdist_change_default.sh"];
+        NSArray *args = [NSArray arrayWithObject:[[dist texdistPath] lastPathComponent]];
+        TLMAuthorizedOperation *op = [[TLMAuthorizedOperation alloc] initWithAuthorizedCommand:changeScript options:args];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleChangeFinishedNotification:) name:TLMOperationFinishedNotification object:op];
+        [[TLMReadWriteOperationQueue defaultQueue] addOperation:op];
+        [op release];
+        [_okButton setEnabled:NO];
+    }
 }
 
 

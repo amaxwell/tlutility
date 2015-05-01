@@ -1,10 +1,10 @@
 //
-//  TLMTexdistConfigController.h
+//  TLMTexDistribution.h
 //  TeX Live Utility
 //
-//  Created by Adam R. Maxwell on 09/08/14.
+//  Created by Adam R. Maxwell on 04/30/15.
 /*
- This software is Copyright (c) 2014-2015
+ This software is Copyright (c) 2015
  Adam Maxwell. All rights reserved.
  
  Redistribution and use in source and binary forms, with or without
@@ -36,19 +36,29 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import <Cocoa/Cocoa.h>
+#import <Foundation/Foundation.h>
 
-@interface TLMTexdistConfigController : NSWindowController <NSTableViewDataSource, NSTableViewDelegate>
+@interface TLMTexDistribution : NSObject
 {
-@private
-    NSArray       *_distributions;
-    NSButton      *_okButton;
-    NSTableView   *_tableView;
+    NSString           *_name;
+    NSArray            *_scripts;
+    NSString           *_installPath;
+    NSString           *_texdistPath;
+    NSString           *_texdistVersion;
+    NSAttributedString *_texdistDescription;
 }
 
-@property (nonatomic, retain) IBOutlet NSButton *_okButton;
-@property (nonatomic, retain) IBOutlet NSTableView *_tableView;
+@property (nonatomic, readonly) NSString *name;
+@property (nonatomic, readonly) NSArray *scripts;
+@property (nonatomic, readonly) NSString *installPath;
+@property (nonatomic, readonly) NSString *texdistPath;
+@property (nonatomic, readonly) NSString *texdistVersion;
+@property (nonatomic, readonly) NSAttributedString *texdistDescription;
 
-- (IBAction)repair:(id)sender;
++ (NSArray *)knownDistributionsInLocalDomain;
+- (id)initWithPath:(NSString *)absolutePath architecture:(NSString *)arch;
+- (BOOL)isInstalled;
+- (BOOL)isDefault;
+- (NSString *)architecture;
 
 @end
