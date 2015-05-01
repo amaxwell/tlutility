@@ -3,7 +3,7 @@
 //  TeX Live Utility
 //
 /*
- This software is Copyright (c) 2010-2013
+ This software is Copyright (c) 2010-2015
  Adam Maxwell. All rights reserved.
  
  Redistribution and use in source and binary forms, with or without
