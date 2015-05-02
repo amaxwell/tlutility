@@ -83,7 +83,7 @@
 
 - (void)windowDidLoad {
     [super windowDidLoad];
-    
+    [_tableView removeTableColumn:[_tableView tableColumnWithIdentifier:@"arch"]];
     [self _reloadDistributions];
 }
 
