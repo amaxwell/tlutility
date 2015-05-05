@@ -271,6 +271,15 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
             [(Class)context updateEnvironment];
             break;
         }
+        /*
+         FSEvent is apparently buggy on (at least) 10.8, as I'm now getting 
+         nonzero flags. This is obviously bullshit, since I'm not passing
+         kFSEventStreamCreateFlagFileEvents when creating the stream. We also
+         seem to get multiple calls here for a single event.
+         */
+        TLMLog(__func__, @"Change notice with flags %0#x. Assuming broken Apple FSEvents code, updating environment anyway.", eventFlags[i]);
+        [(Class)context updateEnvironment];
+        break;
     }
 }
 
