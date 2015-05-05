@@ -1,5 +1,6 @@
 ---
 title: Getting Started
+layout: default
 ---
 # This page only provides a limited feature overview.  Please use the Help menu to access TeX Live Utility's documentation.
 
