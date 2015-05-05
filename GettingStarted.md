@@ -8,7 +8,7 @@ layout: post
 
 The primary feature of TeX Live Utility is updating a MacTeX installation.  When first launching the program, this is the screen that will be visible:
 
-![http://mactlmgr.googlecode.com/svn/wiki/images/UpdateTab.png](http://mactlmgr.googlecode.com/svn/wiki/images/UpdateTab.png)
+![images/UpdateTab.png](images/UpdateTab.png)
 
 Installed and Remote columns show the TeX Live version number for the package.  Size shows the installed size in bytes.
 
@@ -22,7 +22,7 @@ The **Update All Packages** action will also remove and install packages to matc
 
 Packages can be installed using the “Packages” tab:
 
-![http://mactlmgr.googlecode.com/svn/wiki/images/PackageTab.png](http://mactlmgr.googlecode.com/svn/wiki/images/PackageTab.png)
+![images/PackageTab.png](images/PackageTab.png)
 
 Note that some packages have multiple architectures, and you generally only want to install the darwin version for Mac OS X.  This is not a generic package installer.  Only TeX Live packages that exist on the server will be listed.
 
@@ -36,17 +36,17 @@ TeX Live Manager will automatically keep backups for you when it installs a new 
 
 Use the Configure menu to change automatic backup settings.  If you want to keep all backups, enter ∞ (opt-5) for the number to keep.  If the “Prune backups” box is checked, old backups will be removed, excluding the number specified for keeping.
 
-![http://mactlmgr.googlecode.com/svn/wiki/images/AutobackupSheet.png](http://mactlmgr.googlecode.com/svn/wiki/images/AutobackupSheet.png)
+![images/AutobackupSheet.png](images/AutobackupSheet.png)
 
 You can restore backups using the “Backups” tab by clicking the “Restore” button next to the package version that you want to install.
 
-![http://mactlmgr.googlecode.com/svn/wiki/images/BackupTab.png](http://mactlmgr.googlecode.com/svn/wiki/images/BackupTab.png)
+![images/BackupTab.png](images/BackupTab.png)
 
 # Show Info
 
 You can display detailed information for a specific package in an inspector panel:
 
-![http://mactlmgr.googlecode.com/svn/wiki/images/Info.png](http://mactlmgr.googlecode.com/svn/wiki/images/Info.png)
+![images/Info.png](images/Info.png)
 
 This panel also shows links and thumbnails for documentation, found using texdoc.
 
