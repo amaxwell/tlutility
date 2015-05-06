@@ -9,8 +9,11 @@ In Terminal:
 
 ```
 git clone https://github.com/amaxwell/tlutility
+
 cd tlutility
+
 git submodule init
+
 git submodule update
 ```
 
