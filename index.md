@@ -39,5 +39,8 @@ If you are stuck using Mac OS X Leopard 10.5.7 (e.g, you are using a PowerPC sys
 ## Support
 If you have a bug report or feature suggestion, please use the issue tracker (Issues tab on this page). There is also a [Mailing List](http://tug.org/mailman/listinfo/tlu) dedicated to discussion of TeX Live Utility where you can post questions, comments, or discuss ideas for development. Subscription isn't required if you just have a question; you can [email](mailto:tlu@tug.org) us directly.
 
+## Beta Testing
+There is usually a beta release available on the [Releases Page](https://github.com/amaxwell/tlutility/releases) which is more recent than the latest official release. These are likely to have bugs, so any testing and feedback is appreciated.
+
 ## License
 TeX Live Utility is free software, and released under the [BSD License](License.html)
