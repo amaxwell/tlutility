@@ -5,18 +5,13 @@ layout: default
 
 ## Check out
 
-In Terminal: 
+In Terminal::
 
-```
-git clone https://github.com/amaxwell/tlutility
-
-cd tlutility
-
-git submodule init
-
-git submodule update
-```
-
+    git clone https://github.com/amaxwell/tlutility
+    cd tlutility
+    git submodule init
+    git submodule update
+ 
 to pull the necessary submodules.
 
 ## Compile
