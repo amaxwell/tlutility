@@ -42,5 +42,7 @@ If you have a bug report or feature suggestion, please use the issue tracker (Is
 ## Beta Testing
 There is usually a beta release available on the [Releases Page](https://github.com/amaxwell/tlutility/releases) which is more recent than the latest official release. These are likely to have bugs, so any testing and feedback is appreciated.
 
+Instructions for downloading the source and compiling it are [available here](Building.html).
+
 ## License
 TeX Live Utility is free software, and released under the [BSD License](License.html)
