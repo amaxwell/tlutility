@@ -1,9 +1,9 @@
 ---
-title: Getting Started
+title: TeX Live Utility
 layout: default
 ---
 
-## TeX Live Utility
+## What Is This?
 
 TeX Live Utility is a Mac OS X graphical interface for [TeX Live Manager](http://www.tug.org/texlive/tlmgr.html).  It aims to provide a native Mac OS X interface for the most commonly used functions of the TeX Live Manager command-line tool.
 
