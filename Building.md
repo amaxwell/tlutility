@@ -5,7 +5,7 @@ layout: default
 
 ## Check out
 
-In Terminal::
+In Terminal:
 
     git clone https://github.com/amaxwell/tlutility
     cd tlutility
