@@ -20,7 +20,7 @@ The present subset of commands is as follows:
   * Set a mirror URL for command-line tlmgr usage
   * List and restore backups
 
-See (GettingStarted.html) for screenshots and more specific details.
+See [Getting Started](GettingStarted.html) for screenshots and more specific details.
 
 ## Why Use This?
 Why use this program when you can use the command line tlmgr or the Perl/Tk GUI?  TeX Live Utility performs TeX Live infrastructure updates using the [Disaster Recovery script](http://www.tug.org/texlive/tlmgr.html), which avoids problems with tlmgr removing itself while updating.  TeX Live Utility also provides a native OS X user interface.  Beyond that, there's no compelling reason to switch from the command line or X11 GUI if you're comfortable with them.
