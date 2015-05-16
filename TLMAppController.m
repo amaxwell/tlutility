@@ -329,7 +329,7 @@ static void __TLMMigrateBundleIdentifier()
 
 - (IBAction)openTLUWiki:(id)sender;
 {
-    NSURL *aURL = [NSURL URLWithString:@"http://code.google.com/p/mactlmgr/w/list"];
+    NSURL *aURL = [NSURL URLWithString:@"http://amaxwell.github.io/tlutility/"];
     [[NSWorkspace sharedWorkspace] openURL:aURL];    
 }
 
