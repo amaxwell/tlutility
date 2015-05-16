@@ -751,5 +751,20 @@
             <sparkle:minimumSystemVersion>10.6.8</sparkle:minimumSystemVersion>
             <enclosure url="https://github.com/amaxwell/tlutility/releases/download/1.19/TeX.Live.Utility.app-1.19.tar.gz" sparkle:version="1.19" length="2976478" type="application/octet-stream" sparkle:dsaSignature="MCsCEy7sHtx/fgSpi+lNsa16OF7pfwcCFHbd1o2VWdn4ij2TvKM5xPWjZv3F"></enclosure>
         </item>
+        <item>
+            <title>Version 1.21</title>
+            <description>
+                <h3>Changes Since 1.19</h3>
+                <li>Ensure environment variables are updated after proxy changes</li>
+                <li>Simplified workaround for Yosemite environment variable bug</li>
+                <li>Remove /usr/local/bin from the internal PATH variable</li>
+                <li>Check Python version after PATH variable is set up properly</li>
+                <li>New http server for tlcritical</li>
+                <li>Added rudimentary capability to switch MacTeX distributions</li>
+            </description>
+            <pubDate>Sat, 16 May 2015 01:30:48 +0000</pubDate>
+            <sparkle:minimumSystemVersion>10.6.8</sparkle:minimumSystemVersion>
+            <enclosure url="https://github.com/amaxwell/tlutility/releases/download/1.21/TeX.Live.Utility.app-1.21.tar.gz" sparkle:version="1.21" length="2985824" type="application/octet-stream" sparkle:dsaSignature="MCwCFEhQKs/6N/mxTAV5/GLkj2tCnJuxAhQH5rbvk+/z+MBr+eEZ65ZjJd4mng=="></enclosure>
+        </item>
     </channel>
 </rss>
