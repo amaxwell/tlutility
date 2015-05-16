@@ -277,7 +277,7 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
          kFSEventStreamCreateFlagFileEvents when creating the stream. We also
          seem to get multiple calls here for a single event.
          */
-        TLMLog(__func__, @"Change notice with flags %0#x. Assuming broken Apple FSEvents code, updating environment anyway.", eventFlags[i]);
+        TLMLog(__func__, @"Change notice with flags %0#x. Assuming broken Apple FSEvents code, updating environment anyway.", (unsigned int)eventFlags[i]);
         [(Class)context updateEnvironment];
         break;
     }
