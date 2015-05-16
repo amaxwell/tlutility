@@ -3,4 +3,4 @@
 CFBundleName = "TeX Live Utility";
 CFBundleDisplayName = "TeX Live Utility";
 
-NSHumanReadableCopyright = "Copyright © 2008-2013, Adam R. Maxwell.\nAll Rights Reserved.";
+NSHumanReadableCopyright = "Copyright © 2008-2015, Adam R. Maxwell.\nAll Rights Reserved.";
