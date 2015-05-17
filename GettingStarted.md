@@ -50,7 +50,3 @@ You can display detailed information for a specific package in an inspector pane
 ![images/Info.png](images/Info.png)
 
 This panel also shows links and thumbnails for documentation, found using texdoc.
-
-## Settings
-
-See the PreferencesPage for details.
