@@ -12,8 +12,8 @@ cross-platform Perl/Tk graphical interface, and a command-line
 interface (tlmgr). The cross-platform Perl/Tk interface is less 
 Mac-like, but provides access to more features.
 
-Development is moving to GitHub, but the old
-`Project page <https://code.google.com/p/mactlmgr/>`_ is still active.
+The `home page <http://amaxwell.github.io/tlutility/>`_ has more
+information about features.
 
 ===========
 COMPILATION
