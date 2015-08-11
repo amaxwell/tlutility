@@ -495,7 +495,7 @@ int main(int argc, char *argv[]) {
         
         int childStatus;
         ret = HANDLE_EINTR(waitpid(child, &childStatus, 0));
-        ret = (ret != 0 && WIFEXITED(childStatus)) ? WEXITSTATUS(childStatus) : EXIT_FAILURE;
+        ret = (ret != -1 && WIFEXITED(childStatus)) ? WEXITSTATUS(childStatus) : EXIT_FAILURE;
         
         if (ret) {
             // save this off, since it could change in the next call

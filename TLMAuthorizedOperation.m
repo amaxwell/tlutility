@@ -319,9 +319,9 @@ static NSArray * __TLMOptionArrayFromArguments(char **nullTerminatedArguments)
                     ret = HANDLE_EINTR(waitpid((int)event.ident, &wstatus, 0));
 
                     int err = errno;
-                    const char *errstr = err ? strerror(err) : "No error";
+                    const char *errstr = -1 == ret ? strerror(err) : "No error";
                     TLMLog(__func__, @"waitpid returned %d, WIFEXITED(%d) = %d, errno = %d (%s)", ret, wstatus, WIFEXITED(wstatus), err, errstr);
-                    ret = (ret != 0 && WIFEXITED(wstatus)) ? WEXITSTATUS(wstatus) : EXIT_FAILURE;                
+                    ret = (ret != -1 && WIFEXITED(wstatus)) ? WEXITSTATUS(wstatus) : EXIT_FAILURE;
                 }
                 // set failure flag if ipctask failed
                 [self setFailed:(EXIT_SUCCESS != ret)];
