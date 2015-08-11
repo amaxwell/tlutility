@@ -9,6 +9,7 @@
         2011 = "ftp://ftp.tug.org/historic/systems/texlive/2011/tlnet-final/";
         2012 = "ftp://ftp.tug.org/historic/systems/texlive/2012//tlnet-final/";
         2013 = "ftp://ftp.tug.org/historic/systems/texlive/2013//tlnet-final/";
+        2014 = "ftp://ftp.tug.org/historic/systems/texlive/2014//tlnet-final/";
     }
     CriticalMirror = "http://tug.org/texlive/tlcritical";
 }
