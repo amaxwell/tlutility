@@ -206,7 +206,12 @@ static Class _UserNotificationClass;
     
     TLMURLFormatter *fmt = [[TLMURLFormatter new] autorelease];
     [fmt setReturnsURL:YES];
-    [_URLField setFormatter:fmt];    
+    [_URLField setFormatter:fmt];
+    
+    // need good initial properties since we can't add to the queue if tlmgr doesn't exist
+    [_URLField setButtonImage:[NSImage imageNamed:NSImageNameRefreshFreestandingTemplate]];
+    [_URLField setButtonTarget:self];
+    [_URLField setButtonAction:@selector(refresh:)];
 }
 
 /*
@@ -877,6 +882,22 @@ static Class _UserNotificationClass;
     }
 }
 
+- (void)_updatePathAlert:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
+{
+    switch (returnCode) {
+        case NSAlertFirstButtonReturn:
+            [[NSUserDefaults standardUserDefaults] setObject:@"/Library/TeX/texbin" forKey:TLMTexBinPathPreferenceKey];
+            [self _checkCommandPathAndWarn:YES];
+            break;
+        case NSAlertSecondButtonReturn:
+            [[TLMPreferenceController sharedPreferenceController] showWindow:nil];
+            break;
+        default:
+            TLMLog(__func__, @"User has a bad path and chose to follow it.");
+            break;
+    }
+}
+
 - (BOOL)_checkCommandPathAndWarn:(BOOL)displayWarning
 {
     NSString *cmdPath = [[TLMEnvironment currentEnvironment] tlmgrAbsolutePath];
@@ -884,7 +905,22 @@ static Class _UserNotificationClass;
     
     if (NO == exists) {
         TLMLog(__func__, @"tlmgr not found at \"%@\"", cmdPath);
-        if (displayWarning) {
+        
+        NSString *newCmdPath = @"/Library/TeX/texbin/tlmgr";
+        
+        // we are on El Cap or later, have the original mactex default, and have installed mactex 2015
+        if (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_10_Max &&
+            [cmdPath hasPrefix:@"/usr/texbin"] &&
+            [[NSFileManager defaultManager] isExecutableFileAtPath:newCmdPath]) {
+            NSAlert *alert = [[NSAlert new] autorelease];
+            [alert setMessageText:NSLocalizedString(@"TeX installation not found.", @"alert sheet title")];
+            [alert setInformativeText:NSLocalizedString(@"Your preferences need to be adjusted for new Apple requirements. Would you like to change your TeX Programs location from /usr/texbin to /Library/TeX/texbin or set it manually?", @"alert message text")];
+            [alert addButtonWithTitle:NSLocalizedString(@"Change", @"alert button title")];
+            [alert addButtonWithTitle:NSLocalizedString(@"Manually", @"alert button title")];
+            [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"alert button title")];
+            [alert beginSheetModalForWindow:[self window] modalDelegate:self didEndSelector:@selector(_updatePathAlert:returnCode:contextInfo:) contextInfo:NULL];
+        }
+        else if (displayWarning) {
             NSAlert *alert = [[NSAlert new] autorelease];
             [alert setMessageText:NSLocalizedString(@"TeX installation not found.", @"alert sheet title")];
             [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"The tlmgr tool does not exist at %@.  Please set the correct location in preferences or install TeX Live.", @"alert message text"), cmdPath]];
@@ -907,7 +943,6 @@ static Class _UserNotificationClass;
         // operation ending handlers aren't called, so this will never get reset
         [dataSource setRefreshing:NO];
     }
-
 }
 
 /*
@@ -1098,7 +1133,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     TLMLog(__func__, @"Updating local package database");
     NSURL *mirror = [[TLMEnvironment currentEnvironment] defaultServerURL];
     TLMLoadDatabaseOperation *op = [[TLMLoadDatabaseOperation alloc] initWithLocation:mirror offline:YES];
-    [self _addOperation:op selector:@selector(_handleRefreshLocalDatabaseFinishedNotification:) setRefreshingForDataSource:nil];
+    [self _addOperation:op selector:@selector(_handleRefreshLocalDatabaseFinishedNotification:) setRefreshingForDataSource:_updateListDataSource];
     [op release];
 }
 
@@ -1830,7 +1865,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
      */
     CFNetDiagnosticRef diagnostic = NULL;
     if (serverURL) {
-        diagnostic = CFNetDiagnosticCreateWithURL(NULL, (CFURLRef)serverURL);
+        diagnostic = CFNetDiagnosticCreateWithURL(CFAllocatorGetDefault(), (CFURLRef)serverURL);
         [(id)diagnostic autorelease];
     }
     CFStringRef desc = NULL;
