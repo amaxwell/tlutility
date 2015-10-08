@@ -41,7 +41,6 @@
 @interface TLMProfileNode ()
 @property (readwrite, copy) NSString *name;
 @property (readwrite, copy) NSString *key;
-@property (readwrite, copy) id value;
 @property (readwrite, copy) NSArray *children;
 @property (readwrite) TLMProfileType type;
 @end

@@ -37,10 +37,9 @@
  */
 
 #import <Cocoa/Cocoa.h>
+#import <WebKit/WebKit.h>
 
-@class WebView;
-
-@interface TLMFaviconCache : NSObject 
+@interface TLMFaviconCache : NSObject <WebFrameLoadDelegate>
 {
 @private
     NSMutableArray      *_queue;
