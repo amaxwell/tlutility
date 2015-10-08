@@ -48,7 +48,6 @@
 #import "TLMInfraUpdateOperation.h"
 #import "TLMPapersizeOperation.h"
 #import "TLMAuthorizedOperation.h"
-#import "TLMListOperation.h"
 #import "TLMRemoveOperation.h"
 #import "TLMInstallOperation.h"
 #import "TLMNetInstallOperation.h"
@@ -1094,15 +1093,13 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 
 - (void)_refreshLocalDatabase
 {
-    if ([[TLMEnvironment currentEnvironment] tlmgrSupportsDumpTlpdb]) {
-        // pick a datasource to use here; doesn't matter which, as long as it's the same in the callback
-        [self _displayStatusString:DB_LOAD_STATUS_STRING dataSource:_updateListDataSource];
-        TLMLog(__func__, @"Updating local package database");
-        NSURL *mirror = [[TLMEnvironment currentEnvironment] defaultServerURL];
-        TLMLoadDatabaseOperation *op = [[TLMLoadDatabaseOperation alloc] initWithLocation:mirror offline:YES];
-        [self _addOperation:op selector:@selector(_handleRefreshLocalDatabaseFinishedNotification:) setRefreshingForDataSource:nil];
-        [op release];
-    }   
+    // pick a datasource to use here; doesn't matter which, as long as it's the same in the callback
+    [self _displayStatusString:DB_LOAD_STATUS_STRING dataSource:_updateListDataSource];
+    TLMLog(__func__, @"Updating local package database");
+    NSURL *mirror = [[TLMEnvironment currentEnvironment] defaultServerURL];
+    TLMLoadDatabaseOperation *op = [[TLMLoadDatabaseOperation alloc] initWithLocation:mirror offline:YES];
+    [self _addOperation:op selector:@selector(_handleRefreshLocalDatabaseFinishedNotification:) setRefreshingForDataSource:nil];
+    [op release];
 }
 
 - (void)_refreshUpdatedPackageListFromLocation:(NSURL *)location
@@ -1387,27 +1384,6 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     [tcc autorelease];
 }
 
-- (void)_handleListFinishedNotification:(NSNotification *)aNote
-{
-    TLMListOperation *op = [aNote object];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:TLMOperationFinishedNotification object:op];
-    [_packageListDataSource setPackageNodes:[op packageNodes]];
-    [_packageListDataSource setRefreshing:NO];
-    [_packageListDataSource setNeedsUpdate:NO];
-    
-    NSString *statusString = nil;
-    
-    if ([op isCancelled])
-        statusString = NSLocalizedString(@"Listing Cancelled", @"main window status string");
-    else if ([op failed]) {
-        statusString = NSLocalizedString(@"Listing Failed", @"main window status string");
-        [self _postUserNotificationWithTitle:statusString];
-    }
-    
-    [self _displayStatusString:statusString dataSource:_packageListDataSource];
-    [[[self window] toolbar] validateVisibleItems];
-}
-
 - (void)_handleLoadDatabaseFinishedNotification:(NSNotification *)aNote
 {
     TLMLoadDatabaseOperation *op = [aNote object];
@@ -1465,18 +1441,10 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     // disable refresh action for this view
     [_packageListDataSource setRefreshing:YES];
     TLMLog(__func__, @"Refreshing list of all packages%C", TLM_ELLIPSIS);
-    
-    if ([[TLMEnvironment currentEnvironment] tlmgrSupportsDumpTlpdb] == NO) {
-        TLMLog(__func__, @"Using legacy code for listing packages.  Hopefully it still works.");
-        TLMListOperation *op = [[TLMListOperation alloc] initWithLocation:location offline:offline];
-        [self _addOperation:op selector:@selector(_handleListFinishedNotification:) setRefreshingForDataSource:_packageListDataSource];
-        [op release];
-    }
-    else {
-        TLMLoadDatabaseOperation *op = [[TLMLoadDatabaseOperation alloc] initWithLocation:location offline:offline];
-        [self _addOperation:op selector:@selector(_handleLoadDatabaseFinishedNotification:) setRefreshingForDataSource:_packageListDataSource];
-        [op release];
-    }
+
+    TLMLoadDatabaseOperation *op = [[TLMLoadDatabaseOperation alloc] initWithLocation:location offline:offline];
+    [self _addOperation:op selector:@selector(_handleLoadDatabaseFinishedNotification:) setRefreshingForDataSource:_packageListDataSource];
+    [op release];
     [[[self window] toolbar] validateVisibleItems];
 }
 

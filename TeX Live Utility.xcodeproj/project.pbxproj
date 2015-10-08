@@ -49,7 +49,6 @@
 		F964A3350EFEFBCC0006868B /* TLMStatusWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = F964A3340EFEFBCC0006868B /* TLMStatusWindow.m */; };
 		F964A6350F0070E80006868B /* TLMPackageListDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = F964A6340F0070E80006868B /* TLMPackageListDataSource.m */; };
 		F964A63B0F0071920006868B /* TLMPackageNode.m in Sources */ = {isa = PBXBuildFile; fileRef = F964A63A0F0071920006868B /* TLMPackageNode.m */; };
-		F964A6660F009B1F0006868B /* TLMListOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F964A6650F009B1F0006868B /* TLMListOperation.m */; };
 		F967340513E10867008C2B3E /* TLMFaviconCache.m in Sources */ = {isa = PBXBuildFile; fileRef = F967340413E10867008C2B3E /* TLMFaviconCache.m */; };
 		F967342713E10BB3008C2B3E /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F967342613E10BB3008C2B3E /* WebKit.framework */; };
 		F96737A713E8E577008C2B3E /* TLMAddressTextFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F96737A613E8E576008C2B3E /* TLMAddressTextFieldCell.m */; };
@@ -371,8 +370,6 @@
 		F964A6340F0070E80006868B /* TLMPackageListDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMPackageListDataSource.m; sourceTree = "<group>"; };
 		F964A6390F0071920006868B /* TLMPackageNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMPackageNode.h; sourceTree = "<group>"; };
 		F964A63A0F0071920006868B /* TLMPackageNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMPackageNode.m; sourceTree = "<group>"; };
-		F964A6640F009B1F0006868B /* TLMListOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMListOperation.h; sourceTree = "<group>"; };
-		F964A6650F009B1F0006868B /* TLMListOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMListOperation.m; sourceTree = "<group>"; };
 		F967340313E10867008C2B3E /* TLMFaviconCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMFaviconCache.h; sourceTree = "<group>"; };
 		F967340413E10867008C2B3E /* TLMFaviconCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMFaviconCache.m; sourceTree = "<group>"; };
 		F967342613E10BB3008C2B3E /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = /System/Library/Frameworks/WebKit.framework; sourceTree = "<absolute>"; };
@@ -851,8 +848,6 @@
 				F9E22FD40EFCBD2A00B0BE38 /* TLMPapersizeOperation.m */,
 				F90520D80EFDCB5400B489FE /* TLMAuthorizedOperation.h */,
 				F90520D90EFDCB5400B489FE /* TLMAuthorizedOperation.m */,
-				F964A6640F009B1F0006868B /* TLMListOperation.h */,
-				F964A6650F009B1F0006868B /* TLMListOperation.m */,
 				F9963EC30F0490E9005F0174 /* TLMRemoveOperation.h */,
 				F9963EC40F0490E9005F0174 /* TLMRemoveOperation.m */,
 				F9963FED0F054999005F0174 /* TLMInstallOperation.h */,
@@ -1280,7 +1275,6 @@
 				F964A3350EFEFBCC0006868B /* TLMStatusWindow.m in Sources */,
 				F964A6350F0070E80006868B /* TLMPackageListDataSource.m in Sources */,
 				F964A63B0F0071920006868B /* TLMPackageNode.m in Sources */,
-				F964A6660F009B1F0006868B /* TLMListOperation.m in Sources */,
 				F99D9B0B0F01731E00A1DCCB /* TLMTabView.m in Sources */,
 				F9D37C9A0F01A80800FB755E /* TLMGradientView.m in Sources */,
 				F9D37D640F01EA8900FB755E /* TLMUpdateListDataSource.m in Sources */,

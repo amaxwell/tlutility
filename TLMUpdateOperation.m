@@ -53,8 +53,7 @@
     NSMutableArray *options = [NSMutableArray arrayWithObjects:@"--repository", locationString, @"--machine-readable", nil];
     
     // added after TL 2009 release
-    if ([[TLMEnvironment currentEnvironment] tlmgrSupportsPersistentDownloads])
-        [options addObject:@"--persistent-downloads"];
+    [options addObject:@"--persistent-downloads"];
     
     [options addObject:@"update"];
         
