@@ -906,11 +906,12 @@ static Class _UserNotificationClass;
     if (NO == exists) {
         TLMLog(__func__, @"tlmgr not found at \"%@\"", cmdPath);
         
-        NSString *newCmdPath = @"/Library/TeX/texbin/tlmgr";
-        
+        NSString *libdir = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSLocalDomainMask, YES) lastObject];
+        NSString *newCmdPath = [NSString pathWithComponents:[NSArray arrayWithObjects:libdir, @"TeX", @"texbin", @"tlmgr", nil]];
+
         // we are on El Cap or later, have the original mactex default, and have installed mactex 2015
         if (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_10_Max &&
-            [cmdPath hasPrefix:@"/usr/texbin"] &&
+            [[cmdPath stringByDeletingLastPathComponent] isEqualToString:@"/usr/texbin"] &&
             [[NSFileManager defaultManager] isExecutableFileAtPath:newCmdPath]) {
             NSAlert *alert = [[NSAlert new] autorelease];
             [alert setMessageText:NSLocalizedString(@"TeX installation not found.", @"alert sheet title")];
