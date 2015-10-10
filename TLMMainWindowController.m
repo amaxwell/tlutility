@@ -910,11 +910,16 @@ static Class _UserNotificationClass;
         NSString *newCmdPath = [NSString pathWithComponents:[NSArray arrayWithObjects:libdir, @"TeX", @"texbin", @"tlmgr", nil]];
         
         TLMLog(__func__, @"newCmdPath = %@, floor(NSAppKitVersionNumber) = %d, NSAppKitVersionNumber10_10_Max = %d, [cmdPath stringByDeletingLastPathComponent] = %@, newCmdPath exists = %d", newCmdPath, (int)floor(NSAppKitVersionNumber), NSAppKitVersionNumber10_10_Max, [cmdPath stringByDeletingLastPathComponent], [[NSFileManager defaultManager] isExecutableFileAtPath:newCmdPath]);
+        
+        BOOL c1 = floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_10_Max;
+        BOOL c2 = [[cmdPath stringByDeletingLastPathComponent] isEqualToString:@"/usr/texbin"];
+        BOOL c3 = [[NSFileManager defaultManager] isExecutableFileAtPath:newCmdPath];
+        
+        TLMLog(__func__, @"c1 = %d, c2 = %d, c3 = %d", c1, c2, c3);
 
         // we are on El Cap or later, have the original mactex default, and have installed mactex 2015
-        if (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_10_Max &&
-            [[cmdPath stringByDeletingLastPathComponent] isEqualToString:@"/usr/texbin"] &&
-            [[NSFileManager defaultManager] isExecutableFileAtPath:newCmdPath]) {
+        if (c1 && c2 && c3) {
+            TLMLog(__func__, @"showing warning about bad prefs");
             NSAlert *alert = [[NSAlert new] autorelease];
             [alert setMessageText:NSLocalizedString(@"TeX installation not found.", @"alert sheet title")];
             [alert setInformativeText:NSLocalizedString(@"Your preferences need to be adjusted for new Apple requirements. Would you like to change your TeX Programs location from /usr/texbin to /Library/TeX/texbin or set it manually?", @"alert message text")];
@@ -928,6 +933,9 @@ static Class _UserNotificationClass;
             [alert setMessageText:NSLocalizedString(@"TeX installation not found.", @"alert sheet title")];
             [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"The tlmgr tool does not exist at %@.  Please set the correct location in preferences or install TeX Live.", @"alert message text"), cmdPath]];
             [alert beginSheetModalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
+        }
+        else {
+            TLMLog(__func__, @"bad path %@, but displayWarning = %d", cmdPath, displayWarning);
         }
     }
     
