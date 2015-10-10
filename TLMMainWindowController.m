@@ -902,7 +902,7 @@ static Class _UserNotificationClass;
 {
     NSString *cmdPath = [[TLMEnvironment currentEnvironment] tlmgrAbsolutePath];
     BOOL exists = [[NSFileManager defaultManager] isExecutableFileAtPath:cmdPath];
-    
+    TLMLog(__func__, @"trying command %@, exists = %d", cmdPath, exists);
     if (NO == exists) {
         TLMLog(__func__, @"tlmgr not found at \"%@\"", cmdPath);
         
@@ -935,6 +935,7 @@ static Class _UserNotificationClass;
 - (void)_addOperation:(TLMOperation *)op selector:(SEL)sel setRefreshingForDataSource:(id)dataSource
 {
     // avoid the tlmgr path check when installing
+    TLMLog(__func__, @"adding operation %@", op);
     if (op && ([_currentListDataSource isEqual:_installDataSource] || [self _checkCommandPathAndWarn:YES])) {
         if (NULL != sel)
             [[NSNotificationCenter defaultCenter] addObserver:self selector:sel name:TLMOperationFinishedNotification object:op];

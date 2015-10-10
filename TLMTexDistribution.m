@@ -155,6 +155,7 @@
     return [[[self texbinPath] stringByResolvingSymlinksInPath] lastPathComponent];
 }
 
+#warning FIXME
 - (BOOL)isDefault
 {
     NSString *resolvedTexbin = [[self texbinPath] stringByResolvingSymlinksInPath];

@@ -114,7 +114,7 @@ static void __TLMMigrateBundleIdentifier()
     
     NSMutableDictionary *defaults = [NSMutableDictionary dictionary];
     [defaults setObject:tlnetDefault forKey:TLMFullServerURLPreferenceKey];
-    
+#warning FIXME
     [defaults setObject:@"/usr/texbin" forKey:TLMTexBinPathPreferenceKey];
     
     [defaults setObject:@"install-tl-unx.tar.gz" forKey:TLMNetInstallerPathPreferenceKey];
