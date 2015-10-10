@@ -76,7 +76,10 @@
     [icon lockFocus];
     [cell setCurrentProgress:progress];
     const CGFloat width = [icon size].width;
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnonnull"
     [cell drawWithFrame:NSMakeRect(0.25 * width, 0, 0.5 * width, 0.5 * width) inView:nil];
+#pragma clang diagnostic pop
     [icon unlockFocus];
     
     return [icon autorelease];

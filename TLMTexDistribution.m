@@ -112,7 +112,10 @@
         NSDictionary *auxiliary = [plist objectForKey:@"auxiliary"];
         _texdistVersion = [[auxiliary objectForKey:@"TeXDistVersion"] copy];
         NSData *htmlData = [[auxiliary objectForKey:@"Description"] dataUsingEncoding:NSUTF8StringEncoding];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnonnull"
         _texdistDescription = [[NSAttributedString alloc] initWithHTML:htmlData baseURL:nil documentAttributes:NULL];
+#pragma clang diagnostic pop
     }
     return self;
 }

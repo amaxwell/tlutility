@@ -155,7 +155,10 @@
     
     // clean up the downloaded file
     [[NSFileManager defaultManager] removeItemAtPath:_downloadPath error:NULL];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnonnull"
     [self tableViewSelectionDidChange:nil];
+#pragma clang diagnostic pop
 }
 
 - (void)download:(NSURLDownload *)download didFailWithError:(NSError *)error;

@@ -495,7 +495,7 @@ static bool __ismultiplexer(TLMMirrorNode *node)
             [_addRemoveControl setEnabled:NO forSegment:0];
             // may still be able to add if the custom node parent is selected
         }
-        else if ([(NSURL *)[item value] isMultiplexer]) {
+        else if ([(NSURL *)[(TLMMirrorNode *)item value] isMultiplexer]) {
             [_addRemoveControl setEnabled:NO forSegment:1];
             [_addRemoveControl setEnabled:([selectedItems count] == 1) forSegment:0];
         }
