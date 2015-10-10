@@ -141,7 +141,9 @@ static bool __TLMGetUserAndPassForProxy(NSString *host, const uint16_t port, NSS
     // finally, we can actually copy the attributes out of this thing (causes a 2nd authorization dialog to appear)
     err = SecKeychainItemCopyAttributesAndData(item, attrInfo, NULL, &attrList, &len, &attrs);
     assert(noErr == err);
+#ifndef __clang_analyzer__
     assert(attrInfo->count == attrList->count);
+#endif
     
     UInt32 ix;
     *user = nil;
