@@ -908,6 +908,8 @@ static Class _UserNotificationClass;
         
         NSString *libdir = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSLocalDomainMask, YES) lastObject];
         NSString *newCmdPath = [NSString pathWithComponents:[NSArray arrayWithObjects:libdir, @"TeX", @"texbin", @"tlmgr", nil]];
+        
+        TLMLog(__func__, @"newCmdPath = %@, floor(NSAppKitVersionNumber) = %d, NSAppKitVersionNumber10_10_Max = %d, [cmdPath stringByDeletingLastPathComponent] = %@, newCmdPath exists = %d", newCmdPath, (int)floor(NSAppKitVersionNumber), NSAppKitVersionNumber10_10_Max, [cmdPath stringByDeletingLastPathComponent], [[NSFileManager defaultManager] isExecutableFileAtPath:newCmdPath]);
 
         // we are on El Cap or later, have the original mactex default, and have installed mactex 2015
         if (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_10_Max &&
