@@ -114,8 +114,10 @@ static void __TLMMigrateBundleIdentifier()
     
     NSMutableDictionary *defaults = [NSMutableDictionary dictionary];
     [defaults setObject:tlnetDefault forKey:TLMFullServerURLPreferenceKey];
-#warning FIXME
-    [defaults setObject:@"/usr/texbin" forKey:TLMTexBinPathPreferenceKey];
+
+    // no point in making this too complex; users with TL 2014 and earlier will just have to deal with it
+    NSString *cmdPath = (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_10_Max) ? @"/Library/TeX/texbin" : @"/usr/texbin";
+    [defaults setObject:cmdPath forKey:TLMTexBinPathPreferenceKey];
     
     [defaults setObject:@"install-tl-unx.tar.gz" forKey:TLMNetInstallerPathPreferenceKey];
     [defaults setObject:@"update-tlmgr-latest.sh" forKey:TLMInfraPathPreferenceKey];
