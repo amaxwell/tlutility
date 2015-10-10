@@ -41,7 +41,7 @@ from tempfile import NamedTemporaryFile
 from subprocess import call as launch_task
 from urlparse import urlsplit
 
-SITES_URL = "http://www.tex.ac.uk/tex-archive/CTAN.sites"
+SITES_URL = "http://dante.ctan.org/tex-archive/CTAN.sites"
 
 JUNK    = 0 << 1
 COUNTRY = 1 << 2
