@@ -77,6 +77,7 @@
 #import "TLMDatabasePackage.h"
 #import "TLMMirrorController.h"
 #import "TLMTexdistConfigController.h"
+#import "TLMDocumentationController.h"
 
 @interface TLMMainWindowController (Private)
 // only declare here if reorganizing the implementation isn't practical
@@ -1371,6 +1372,44 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     }
 }
 
+- (void)_handleDocumentationOptionFinishedNotification:(NSNotification *)aNote
+{
+    TLMOptionOperation *op = [aNote object];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:TLMOperationFinishedNotification object:op];
+    if ([op failed]) {
+        TLMLog(__func__, @"Failed to change documentation option.  Error was: %@", [op errorMessages]);
+        NSString *statusString = NSLocalizedString(@"Changing Documentation Option Failed", @"status message");
+        [self _displayStatusString:statusString dataSource:_updateListDataSource];
+        [self _postUserNotificationWithTitle:statusString];
+    }
+    [[[self window] toolbar] validateVisibleItems];
+}
+
+- (void)documentationSheetDidEnd:(NSWindow *)sheet returnCode:(TLMDocumentationReturnCode)rc contextInfo:(void *)context
+{
+    [sheet orderOut:self];
+    TLMDocumentationController *tdc = context;
+    [tdc autorelease];
+    if (rc & TLMDocumentationChanged) {
+        
+        NSString *optString = [NSString stringWithFormat:@"%d", (rc & TLMDocumentationInstallLater) ? 1 : 0];
+        TLMOptionOperation *change = [[TLMOptionOperation alloc] initWithKey:@"docfiles" value:optString];
+        [self _addOperation:change selector:@selector(_handleDocumentationOptionFinishedNotification:) setRefreshingForDataSource:nil];
+        [change release];
+    }
+    
+    if (rc & TLMDocumentationInstallNow) {
+        
+        NSMutableArray *packageNames = [NSMutableArray array];
+        for (TLMDatabasePackage *pkg in [[TLMDatabase localDatabase] packages]) {
+            // avoid trying to reinstall the dummy TL package(s)
+            if ([[pkg name] hasPrefix:@"00texlive"] == NO)
+                [packageNames addObject:[pkg name]];
+        }
+        [self _installPackagesWithNames:packageNames reinstall:YES];
+    }
+}
+
 - (void)_handleLaunchAgentInstallFinishedNotification:(NSNotification *)aNote
 {
     TLMAuthorizedOperation *op = [aNote object];
@@ -1852,6 +1891,16 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
         modalDelegate:self
        didEndSelector:@selector(texdistConfigSheetDidEnd:returnCode:contextInfo:)
           contextInfo:tcc];
+}
+
+- (void)configureDocumentation:(id)sender;
+{
+    TLMDocumentationController *tdc = [TLMDocumentationController new];
+    [NSApp beginSheet:[tdc window]
+       modalForWindow:[self window]
+        modalDelegate:self
+       didEndSelector:@selector(documentationSheetDidEnd:returnCode:contextInfo:)
+          contextInfo:tdc];
 }
 
 #pragma mark API

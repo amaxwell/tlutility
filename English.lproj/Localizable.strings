@@ -62,6 +62,9 @@
 /* alert title */
 "Change command-line default?" = "Change command-line default?";
 
+/* status message */
+"Changing Documentation Option Failed" = "Changing Documentation Option Failed";
+
 /* button title in open panel (must be short)
    Menu item title */
 "Choose" = "Choose";

@@ -64,7 +64,6 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
 + (NSMutableArray *)_systemPaths;
 - (void)_displayFallbackServerAlert;
 + (BOOL)_getInstalledYear:(TLMDatabaseYear *)installedYear isDevelopmentVersion:(BOOL *)isDev tlmgrVersion:(NSInteger *)tlmgrVersion;
-- (NSString *)_backupDirOption;
 - (void)_checkForRootPrivileges;
 
 @end
@@ -783,37 +782,9 @@ static void __TLMTestAndClearEnvironmentVariable(const char *name)
     return validURL;
 }
 
-- (NSString *)_backupDirOption
-{
-    // kpsewhich -var-value=SELFAUTOPARENT
-    NSString *tlmgrPath = [self tlmgrAbsolutePath];
-    NSString *backupDir = nil;
-    if ([[[NSFileManager new] autorelease] isExecutableFileAtPath:tlmgrPath]) {
-        TLMTask *task = [TLMTask new];
-        [task setLaunchPath:tlmgrPath];
-        [task setArguments:[NSArray arrayWithObjects:@"option", @"backupdir", nil]];
-        [task launch];
-        [task waitUntilExit];
-        if ([task terminationStatus] == 0 && [task outputString]) {
-            NSString *str = [[task outputString] stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]];
-            NSRange r = [str rangeOfString:@": " options:NSLiteralSearch];
-            if (r.length)
-                backupDir = [[str substringFromIndex:NSMaxRange(r)] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-        }
-        else {
-            TLMLog(__func__, @"tlmgr returned an error: %@", [task errorString]);
-        }
-        [task release];
-    }
-    else {
-        TLMLog(__func__, @"no tlmgr executable at %@", tlmgrPath);
-    }
-    return backupDir;
-}
-
 - (NSURL *)backupDirectory
 {
-    NSString *backupDir = [self _backupDirOption];
+    NSString *backupDir = [TLMOptionOperation stringValueOfOption:@"backupdir"];
     if ([backupDir isAbsolutePath] == NO)
         backupDir = [[self installDirectory] stringByAppendingPathComponent:backupDir];
     return backupDir ? [NSURL fileURLWithPath:backupDir] : nil;
@@ -929,24 +900,13 @@ static void __TLMTestAndClearEnvironmentVariable(const char *name)
 
 #pragma mark Default URL
 
-static NSURL * __TLMParseLocationOption(NSString *location)
-{
-    if (location) {
-        location = [location stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        location = [[location componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] lastObject];
-        // remove trailing slashes before comparison, although this is a directory
-        while ([location hasSuffix:@"/"])
-            location = [location substringToIndex:([location length] - 1)];        
-    }
-    return location ? [NSURL URLWithString:location] : nil;
-}
-
 + (NSURL *)_currentTeXLiveLocationOption
 {
-    NSArray *args = [NSArray arrayWithObjects:@"--machine-readable", @"option", @"location", nil];
-    TLMTask *checkTask = [TLMTask launchedTaskWithLaunchPath:[[TLMEnvironment currentEnvironment] tlmgrAbsolutePath] arguments:args];
-    [checkTask waitUntilExit];
-    return ([checkTask terminationStatus] == 0) ? __TLMParseLocationOption([checkTask outputString]) : nil;
+    NSString *location = [TLMOptionOperation stringValueOfOption:@"location"];
+    // remove trailing slashes before comparison, although this is a directory
+    while ([location hasSuffix:@"/"])
+        location = [location substringToIndex:([location length] - 1)];
+    return location ? [NSURL URLWithString:location] : nil;
 }
 
 + (void)_handleLocationOperationFinished:(NSNotification *)aNote

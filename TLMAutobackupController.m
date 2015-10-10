@@ -38,8 +38,7 @@
 
 #import "TLMAutobackupController.h"
 #import "TLMLogServer.h"
-#import "TLMTask.h"
-#import "TLMEnvironment.h"
+#import "TLMOptionOperation.h"
 
 @implementation TLMAutobackupController
 
@@ -85,41 +84,11 @@
 
 - (void)awakeFromNib
 {
-    NSString *cmd = [[TLMEnvironment currentEnvironment] tlmgrAbsolutePath];
-    
-    // owner's responsiblity to validate this before showing the sheet
-    NSParameterAssert([[NSFileManager defaultManager] isExecutableFileAtPath:cmd]);
-    
-    TLMTask *task = [[TLMTask new] autorelease];
-    [task setLaunchPath:cmd];
-    [task setArguments:[NSArray arrayWithObjects:@"option", @"autobackup", nil]];    
-    [task launch];
-    [task waitUntilExit];
-    
-    /*
-     froude:~ amaxwell$ tlmgr option autobackup 2>/dev/null
-     Number of backups to keep (autobackup): 
-     froude:~ amaxwell$ sudo tlmgr option autobackup 1
-     Password:
-     tlmgr: setting option autobackup to 1.
-     froude:~ amaxwell$ tlmgr option autobackup 2>/dev/null
-     Number of backups to keep (autobackup): 1
-    */
-    
-    NSInteger ret = [task terminationStatus];
-    if (0 != ret) {
+    NSString *autobackupString = [TLMOptionOperation stringValueOfOption:@"autobackup"];
+    if (nil == autobackupString) {
         TLMLog(__func__, @"Unable to determine autobackup state");
     }
-    else if ([task outputString]) {
-        NSScanner *scanner = [NSScanner scannerWithString:[task outputString]];
-        [scanner scanUpToString:@":" intoString:NULL];
-        [scanner scanString:@":" intoString:NULL];
-        if ([scanner scanInteger:&_backupCount] == NO)
-            [self setBackupCount:0];
-    }
-    else {
-        [self setBackupCount:0];
-    }
+    [self setBackupCount:[autobackupString integerValue]];
 
     TLMLog(__func__, @"Old autobackup setting: keep %ld backups", (long)_backupCount);
     _initialBackupCount = [self backupCount];

@@ -41,6 +41,9 @@
 
 @interface TLMOptionOperation : TLMAuthorizedOperation
 
++ (NSString *)stringValueOfOption:(NSString *)key;
++ (BOOL)boolValueOfOption:(NSString *)key;
+
 - (id)initWithKey:(NSString *)key value:(NSString *)value;
 
 @end
