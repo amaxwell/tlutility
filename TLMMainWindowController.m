@@ -906,8 +906,7 @@ static Class _UserNotificationClass;
 
 - (void)_addOperation:(TLMOperation *)op selector:(SEL)sel setRefreshingForDataSource:(id)dataSource
 {
-    // avoid the tlmgr path check when installing
-    TLMLog(__func__, @"adding operation %@", op);
+    // short-circuit the tlmgr path check when installing
     if (op && ([_currentListDataSource isEqual:_installDataSource] || [self _checkCommandPathAndWarn:YES])) {
         if (NULL != sel)
             [[NSNotificationCenter defaultCenter] addObserver:self selector:sel name:TLMOperationFinishedNotification object:op];
