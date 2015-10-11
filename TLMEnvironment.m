@@ -45,6 +45,7 @@
 #import "TLMLogServer.h"
 #import "TLMSizeFormatter.h"
 #import "TLMProxyManager.h"
+#import "TLMMainWindowController.h"
 #import <pthread.h>
 #import <sys/stat.h>
 
@@ -86,6 +87,7 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
 
 static NSMutableDictionary *_environments = nil;
 static NSString            *_currentEnvironmentKey = nil;
+static bool                 _didShowElCapitanPathAlert = false;
 
 @implementation TLMEnvironment
 
@@ -123,9 +125,13 @@ static NSString            *_currentEnvironmentKey = nil;
 
 + (void)_updatePathAlert:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
 {
+    // if the user chooses to keep the bad path or edit manually, we end up showing the alert again
+    _didShowElCapitanPathAlert = true;
+    
     switch (returnCode) {
         case NSAlertFirstButtonReturn:
             [[NSUserDefaults standardUserDefaults] setObject:@"/Library/TeX/texbin" forKey:TLMTexBinPathPreferenceKey];
+            [[[NSApp delegate] mainWindowController] refreshUpdatedPackageList];
             break;
         case NSAlertSecondButtonReturn:
             [[TLMPreferenceController sharedPreferenceController] showWindow:nil];
@@ -149,7 +155,8 @@ static NSString            *_currentEnvironmentKey = nil;
     // we are on El Cap or later, have the original mactex default, and have installed mactex 2015
     if (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_10_Max &&
         [texbinPath isEqualToString:@"/usr/texbin"] &&
-        [[NSFileManager defaultManager] isExecutableFileAtPath:newCmdPath]) {
+        [[NSFileManager defaultManager] isExecutableFileAtPath:newCmdPath] &&
+        false == _didShowElCapitanPathAlert) {
         
         // shown here, so it's early enough to be the first alert and avoid OS X ignoring a second sheet
         NSAlert *alert = [[NSAlert new] autorelease];
