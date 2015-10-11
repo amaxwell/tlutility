@@ -121,28 +121,67 @@ static NSString            *_currentEnvironmentKey = nil;
     
 }
 
++ (void)_updatePathAlert:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
+{
+    switch (returnCode) {
+        case NSAlertFirstButtonReturn:
+            [[NSUserDefaults standardUserDefaults] setObject:@"/Library/TeX/texbin" forKey:TLMTexBinPathPreferenceKey];
+            break;
+        case NSAlertSecondButtonReturn:
+            [[TLMPreferenceController sharedPreferenceController] showWindow:nil];
+            break;
+        default:
+            TLMLog(__func__, @"User has a bad path and chose to follow it.");
+            break;
+    }
+}
+
 + (NSString *)_installDirectoryFromCurrentDefaults
 {
     NSString *installDirectory = nil;
-    // kpsewhich -var-value=SELFAUTOPARENT
     NSString *texbinPath = [[NSUserDefaults standardUserDefaults] objectForKey:TLMTexBinPathPreferenceKey];
-    NSString *kpsewhichPath = [[texbinPath stringByAppendingPathComponent:KPSEWHICH_CMD] stringByStandardizingPath];
-    if ([[[NSFileManager new] autorelease] isExecutableFileAtPath:kpsewhichPath]) {
-        TLMTask *task = [TLMTask new];
-        [task setLaunchPath:kpsewhichPath];
-        [task setArguments:[NSArray arrayWithObject:@"-var-value=SELFAUTOPARENT"]];
-        [task launch];
-        [task waitUntilExit];
-        if ([task terminationStatus] == 0 && [task outputString]) {
-            installDirectory = [[task outputString] stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]];
-        }
-        else {
-            TLMLog(__func__, @"kpsewhich returned an error: %@", [task errorString]);
-        }
-        [task release];
+    
+    NSString *libdir = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSLocalDomainMask, YES) lastObject];
+    
+    // see if we have TL 2015
+    NSString *newCmdPath = [NSString pathWithComponents:[NSArray arrayWithObjects:libdir, @"TeX", @"texbin", @"tlmgr", nil]];
+    
+    // we are on El Cap or later, have the original mactex default, and have installed mactex 2015
+    if (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_10_Max &&
+        [texbinPath isEqualToString:@"/usr/texbin"] &&
+        [[NSFileManager defaultManager] isExecutableFileAtPath:newCmdPath]) {
+        
+        // shown here, so it's early enough to be the first alert and avoid OS X ignoring a second sheet
+        NSAlert *alert = [[NSAlert new] autorelease];
+        [alert setMessageText:NSLocalizedString(@"TeX installation not found.", @"alert sheet title")];
+        [alert setInformativeText:NSLocalizedString(@"Your preferences need to be adjusted for new Apple requirements. Would you like to change your TeX Programs location from /usr/texbin to /Library/TeX/texbin or set it manually?", @"alert message text")];
+        [alert addButtonWithTitle:NSLocalizedString(@"Change", @"alert button title")];
+        [alert addButtonWithTitle:NSLocalizedString(@"Manually", @"alert button title")];
+        [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"alert button title")];
+        [alert beginSheetModalForWindow:[(NSWindowController *)[(TLMAppController *)[NSApp delegate] mainWindowController] window]
+                          modalDelegate:self
+                         didEndSelector:@selector(_updatePathAlert:returnCode:contextInfo:)
+                            contextInfo:NULL];
     }
     else {
-        TLMLog(__func__, @"no kpsewhich executable at %@", kpsewhichPath);
+        NSString *kpsewhichPath = [[texbinPath stringByAppendingPathComponent:KPSEWHICH_CMD] stringByStandardizingPath];
+        if ([[[NSFileManager new] autorelease] isExecutableFileAtPath:kpsewhichPath]) {
+            TLMTask *task = [TLMTask new];
+            [task setLaunchPath:kpsewhichPath];
+            [task setArguments:[NSArray arrayWithObject:@"-var-value=SELFAUTOPARENT"]];
+            [task launch];
+            [task waitUntilExit];
+            if ([task terminationStatus] == 0 && [task outputString]) {
+                installDirectory = [[task outputString] stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+            }
+            else {
+                TLMLog(__func__, @"kpsewhich returned an error: %@", [task errorString]);
+            }
+            [task release];
+        }
+        else {
+            TLMLog(__func__, @"no kpsewhich executable at %@", kpsewhichPath);
+        }
     }
     return installDirectory;
 }

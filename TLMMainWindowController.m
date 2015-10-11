@@ -883,53 +883,14 @@ static Class _UserNotificationClass;
     }
 }
 
-- (void)_updatePathAlert:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
-{
-    switch (returnCode) {
-        case NSAlertFirstButtonReturn:
-            [[NSUserDefaults standardUserDefaults] setObject:@"/Library/TeX/texbin" forKey:TLMTexBinPathPreferenceKey];
-            [self _checkCommandPathAndWarn:YES];
-            break;
-        case NSAlertSecondButtonReturn:
-            [[TLMPreferenceController sharedPreferenceController] showWindow:nil];
-            break;
-        default:
-            TLMLog(__func__, @"User has a bad path and chose to follow it.");
-            break;
-    }
-}
-
 - (BOOL)_checkCommandPathAndWarn:(BOOL)displayWarning
 {
     NSString *cmdPath = [[TLMEnvironment currentEnvironment] tlmgrAbsolutePath];
     BOOL exists = [[NSFileManager defaultManager] isExecutableFileAtPath:cmdPath];
-    TLMLog(__func__, @"trying command %@, exists = %d", cmdPath, exists);
-    if (NO == exists) {
-        TLMLog(__func__, @"tlmgr not found at \"%@\"", cmdPath);
-        
-        NSString *libdir = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSLocalDomainMask, YES) lastObject];
-        NSString *newCmdPath = [NSString pathWithComponents:[NSArray arrayWithObjects:libdir, @"TeX", @"texbin", @"tlmgr", nil]];
-        
-        TLMLog(__func__, @"newCmdPath = %@, floor(NSAppKitVersionNumber) = %d, NSAppKitVersionNumber10_10_Max = %d, [cmdPath stringByDeletingLastPathComponent] = %@, newCmdPath exists = %d", newCmdPath, (int)floor(NSAppKitVersionNumber), NSAppKitVersionNumber10_10_Max, [cmdPath stringByDeletingLastPathComponent], [[NSFileManager defaultManager] isExecutableFileAtPath:newCmdPath]);
-        
-        BOOL c1 = floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_10_Max;
-        BOOL c2 = [[cmdPath stringByDeletingLastPathComponent] isEqualToString:@"/usr/texbin"];
-        BOOL c3 = [[NSFileManager defaultManager] isExecutableFileAtPath:newCmdPath];
-        
-        TLMLog(__func__, @"c1 = %d, c2 = %d, c3 = %d", c1, c2, c3);
 
-        // we are on El Cap or later, have the original mactex default, and have installed mactex 2015
-        if (c1 && c2 && c3) {
-            TLMLog(__func__, @"showing warning about bad prefs");
-            NSAlert *alert = [[NSAlert new] autorelease];
-            [alert setMessageText:NSLocalizedString(@"TeX installation not found.", @"alert sheet title")];
-            [alert setInformativeText:NSLocalizedString(@"Your preferences need to be adjusted for new Apple requirements. Would you like to change your TeX Programs location from /usr/texbin to /Library/TeX/texbin or set it manually?", @"alert message text")];
-            [alert addButtonWithTitle:NSLocalizedString(@"Change", @"alert button title")];
-            [alert addButtonWithTitle:NSLocalizedString(@"Manually", @"alert button title")];
-            [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"alert button title")];
-            [alert beginSheetModalForWindow:[self window] modalDelegate:self didEndSelector:@selector(_updatePathAlert:returnCode:contextInfo:) contextInfo:NULL];
-        }
-        else if (displayWarning) {
+    if (NO == exists) {
+        
+        if (displayWarning) {
             NSAlert *alert = [[NSAlert new] autorelease];
             [alert setMessageText:NSLocalizedString(@"TeX installation not found.", @"alert sheet title")];
             [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"The tlmgr tool does not exist at %@.  Please set the correct location in preferences or install TeX Live.", @"alert message text"), cmdPath]];
