@@ -125,15 +125,17 @@
     <attachment id="att1" href="AutocompleteAddress.png"/>
     <attachment id="att2" href="AutoUpdateSheet.png"/>
     <attachment id="att3" href="BackupTab.png"/>
-    <attachment id="att4" href="Info.png"/>
-    <attachment id="att5" href="InstallTab.png"/>
-    <attachment id="att6" href="LogWindow.png"/>
-    <attachment id="att7" href="Mirrors.png"/>
-    <attachment id="att8" href="NotificationCenterUpdate.png"/>
-    <attachment id="att9" href="PackageTab.png"/>
-    <attachment id="att10" href="Prefs.png"/>
-    <attachment id="att11" href="UpdateCheckAlert.png"/>
-    <attachment id="att12" href="UpdateTab.png"/>
+    <attachment id="att4" href="Distributions.png"/>
+    <attachment id="att5" href="Documentation.png"/>
+    <attachment id="att6" href="Info.png"/>
+    <attachment id="att7" href="InstallTab.png"/>
+    <attachment id="att8" href="LogWindow.png"/>
+    <attachment id="att9" href="Mirrors.png"/>
+    <attachment id="att10" href="NotificationCenterUpdate.png"/>
+    <attachment id="att11" href="PackageTab.png"/>
+    <attachment id="att12" href="Prefs.png"/>
+    <attachment id="att13" href="UpdateCheckAlert.png"/>
+    <attachment id="att14" href="UpdateTab.png"/>
   </attachments>
   <settings>
     <base-style>
@@ -163,12 +165,12 @@
     </print-info>
     <auto-generate-level-styles>no</auto-generate-level-styles>
   </settings>
-  <editor content-size="{692, 828}" scroll-position="{0, 61}" column-titles-display-mode="off" ruler-visible="yes" status-visible="no">
+  <editor content-size="{692, 828}" column-titles-display-mode="off" ruler-visible="yes" status-visible="no">
     <drawer display="sections" width="236" palette-height="346"/>
-    <hoisted-rows ids="aLvRpQYwVsb"/>
-    <selected-rows ids="eFsoKakm9PV"/>
+    <hoisted-rows ids="ohh8nduMklZ"/>
+    <selected-rows ids="pgyZsyOzEFM"/>
     <selected-columns ids="jFqHUGd_Dg1"/>
-    <selected-characters range="{303, 0}"/>
+    <selected-characters range="{1, 0}"/>
     <toolbar>{
     &quot;TB Display Mode&quot; = 2;
     &quot;TB Icon Size Mode&quot; = 2;
@@ -523,7 +525,7 @@
                     <text>
                       <p>
                         <run>
-                          <lit><cell refid="att12" name="UpdateTab" expanded="yes" type="image" width="495" height="366"/></lit>
+                          <lit><cell refid="att14" name="UpdateTab" expanded="yes" type="image" width="495" height="366"/></lit>
                         </run>
                       </p>
                     </text>
@@ -700,7 +702,7 @@
                     <text>
                       <p>
                         <run>
-                          <lit><cell refid="att9" name="PackageTab" expanded="yes" type="image" width="495" height="366"/></lit>
+                          <lit><cell refid="att11" name="PackageTab" expanded="yes" type="image" width="495" height="366"/></lit>
                         </run>
                       </p>
                     </text>
@@ -1077,7 +1079,7 @@
                         <text>
                           <p>
                             <run>
-                              <lit><cell refid="att4" name="Info" expanded="yes" type="image" width="440" height="341"/></lit>
+                              <lit><cell refid="att6" name="Info" expanded="yes" type="image" width="440" height="341"/></lit>
                             </run>
                           </p>
                         </text>
@@ -1231,7 +1233,7 @@
                         <text>
                           <p>
                             <run>
-                              <lit><cell refid="att8" name="NotificationCenterUpdate" expanded="yes" type="image" width="232" height="57"/></lit>
+                              <lit><cell refid="att10" name="NotificationCenterUpdate" expanded="yes" type="image" width="232" height="57"/></lit>
                             </run>
                           </p>
                         </text>
@@ -1280,7 +1282,7 @@
                         <text>
                           <p>
                             <run>
-                              <lit><cell refid="att11" name="UpdateCheckAlert" expanded="yes" type="image" width="315" height="120"/></lit>
+                              <lit><cell refid="att13" name="UpdateCheckAlert" expanded="yes" type="image" width="315" height="120"/></lit>
                             </run>
                           </p>
                         </text>
@@ -1447,7 +1449,7 @@
                     <text>
                       <p>
                         <run>
-                          <lit><cell refid="att7" name="Mirrors" expanded="yes" type="image" width="508" height="437"/></lit>
+                          <lit><cell refid="att9" name="Mirrors" expanded="yes" type="image" width="508" height="437"/></lit>
                         </run>
                       </p>
                     </text>
@@ -1586,6 +1588,234 @@
                 </item>
               </children>
             </item>
+            <item id="ohh8nduMklZ">
+              <style>
+                <inherited-style name="Destination" idref="oQxEDq66I5w"/>
+              </style>
+              <values>
+                <text>
+                  <p>
+                    <run>
+                      <lit>Distributions</lit>
+                    </run>
+                  </p>
+                </text>
+              </values>
+              <children>
+                <item id="hazLvWksFVy">
+                  <style>
+                    <inherited-style name="Anchor" idref="aUm3924E6__"/>
+                  </style>
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit>distributions</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
+                <item id="lRd-WTGw5lb">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit>TeX Live Utility allows you to easily switch between TeX distributions which install the requisite package data (primarily MacTeX). This allows you to easily switch between MacTeX 2014 and 2015, for instance, if both are installed.</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
+                <item id="dVnkevHC2GO">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit>To change the distribution, choose </lit>
+                        </run>
+                        <run>
+                          <style>
+                            <inherited-style name="UI" idref="a0as48_ttlo"/>
+                          </style>
+                          <lit>Reconfigure Distributions…</lit>
+                        </run>
+                        <run>
+                          <lit> from the </lit>
+                        </run>
+                        <run>
+                          <style>
+                            <inherited-style name="UI" idref="a0as48_ttlo"/>
+                          </style>
+                          <lit>Configure</lit>
+                        </run>
+                        <run>
+                          <lit> menu and choose the radio button for your preferred distribution.</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
+                <item id="pgyZsyOzEFM">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit><cell refid="att4" name="Distributions" expanded="yes" type="image" width="301" height="228"/></lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
+              </children>
+            </item>
+            <item id="byn1imoFibm" expanded="yes">
+              <style>
+                <inherited-style name="Destination" idref="oQxEDq66I5w"/>
+              </style>
+              <values>
+                <text>
+                  <p>
+                    <run>
+                      <lit>Documentation</lit>
+                    </run>
+                  </p>
+                </text>
+              </values>
+              <children>
+                <item id="kgRMe1vXTn7">
+                  <style>
+                    <inherited-style name="Anchor" idref="aUm3924E6__"/>
+                  </style>
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit>documentation</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
+                <item id="gEJqMtKZUBo">
+                  <style>
+                    <inherited-style name="Anchor" idref="aUm3924E6__"/>
+                  </style>
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit>docfiles</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
+                <item id="jeHbYBAYl7z">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit>TeX Live Manager has an option to disable install of documentation files, which can take up a significant amount of space. The BasicTeX distribution ships with a limited subset of TeX Live, and excludes documentation. However, you can add packages on an as-needed basis with TeX Live Utility, and it&apos;s often desirable to have documentation for the installed packages.</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
+                <item id="jV5hcXTSHcf">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <lit>To change the default, choose </lit>
+                        </run>
+                        <run>
+                          <style>
+                            <inherited-style name="UI" idref="a0as48_ttlo"/>
+                          </style>
+                          <lit>Configure Documentation…</lit>
+                        </run>
+                        <run>
+                          <lit> from the </lit>
+                        </run>
+                        <run>
+                          <style>
+                            <inherited-style name="UI" idref="a0as48_ttlo"/>
+                          </style>
+                          <lit>Configure</lit>
+                        </run>
+                        <run>
+                          <lit> menu and toggle the checkbox. If you enable documentation and click </lit>
+                        </run>
+                        <run>
+                          <style>
+                            <inherited-style name="UI" idref="a0as48_ttlo"/>
+                          </style>
+                          <lit>Install Now</lit>
+                        </run>
+                        <run>
+                          <lit>, the documentation for all installed packages will be downloaded. Otherwise, it will only be installed for future update or install actions.</lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
+                <item id="kiEjdUommBp">
+                  <values>
+                    <text>
+                      <p>
+                        <run>
+                          <style>
+                            <value key="baseline-offset">0</value>
+                            <value key="font-family">Helvetica</value>
+                            <value key="font-size">12</value>
+                          </style>
+                          <lit><cell refid="att5" name="Documentation" expanded="yes" type="image" width="301" height="228"/></lit>
+                        </run>
+                      </p>
+                    </text>
+                  </values>
+                </item>
+                <item id="jRMv0iwutJN" expanded="yes">
+                  <style>
+                    <inherited-style name="Box" idref="mRPR-6uEuRb"/>
+                  </style>
+                  <values>
+                    <null/>
+                  </values>
+                  <children>
+                    <item id="nlnraSsEN1o">
+                      <values>
+                        <text>
+                          <p>
+                            <run>
+                              <lit>The BasicTeX distribution is popular for laptops with limited disk space, and is approximately 100 MB vs. 2 GB for the full MacTeX installation.</lit>
+                            </run>
+                          </p>
+                        </text>
+                      </values>
+                    </item>
+                    <item id="m8QTxty13fi">
+                      <values>
+                        <text>
+                          <p>
+                            <run>
+                              <lit>For more information on BasicTeX, see </lit>
+                            </run>
+                            <run>
+                              <lit><cell href="https://tug.org/mactex/morepackages.html" name="tug.org—morepackages.html" type="link"/></lit>
+                            </run>
+                            <run>
+                              <lit>.</lit>
+                            </run>
+                          </p>
+                        </text>
+                      </values>
+                    </item>
+                  </children>
+                </item>
+              </children>
+            </item>
             <item id="loFja0cULCm">
               <style>
                 <inherited-style name="Destination" idref="oQxEDq66I5w"/>
@@ -1662,7 +1892,7 @@
                     <text>
                       <p>
                         <run>
-                          <lit><cell refid="att6" name="LogWindow" expanded="yes" type="image" width="710" height="210"/></lit>
+                          <lit><cell refid="att8" name="LogWindow" expanded="yes" type="image" width="710" height="210"/></lit>
                         </run>
                       </p>
                     </text>
@@ -1828,7 +2058,7 @@
                     <text>
                       <p>
                         <run>
-                          <lit><cell refid="att10" name="Preferences" expanded="yes" type="image" width="373" height="137"/></lit>
+                          <lit><cell refid="att12" name="Preferences" expanded="yes" type="image" width="373" height="137"/></lit>
                         </run>
                       </p>
                     </text>
@@ -1862,7 +2092,16 @@
                               <lit>tlmgr</lit>
                             </run>
                             <run>
-                              <lit> command-line tool that TeX Live Utility uses.  If you use MacTeX, the default setting of </lit>
+                              <lit> command-line tool that TeX Live Utility uses. For Mac OS X 10.11 and later, the correct path is /</lit>
+                            </run>
+                            <run>
+                              <style>
+                                <inherited-style name="Verbatim" idref="a-WJm12exYM"/>
+                              </style>
+                              <lit>Library/TeX/texbin</lit>
+                            </run>
+                            <run>
+                              <lit> if you have MacTeX 2015 or later; if you have an earlier version of MacTeX on OS X 10.11, the note below on the standard UNIX installer applies. If you use MacTeX 2014 and earlier on Mac OS X 10.10 and earlier, the setting of </lit>
                             </run>
                             <run>
                               <style>
@@ -1871,16 +2110,7 @@
                               <lit>/usr/texbin</lit>
                             </run>
                             <run>
-                              <lit> is correct. Other distributions may require you to change this using the </lit>
-                            </run>
-                            <run>
-                              <style>
-                                <inherited-style name="UI" idref="a0as48_ttlo"/>
-                              </style>
-                              <lit>Choose…</lit>
-                            </run>
-                            <run>
-                              <lit> button or by dropping a folder on the path control to the left of the button.</lit>
+                              <lit> is correct.</lit>
                             </run>
                           </p>
                         </text>
@@ -1910,6 +2140,26 @@
                             </run>
                             <run>
                               <lit> (a single forward slash keystroke) when presented with the open panel, in order to navigate to this directory, since it&apos;s hidden.</lit>
+                            </run>
+                          </p>
+                        </text>
+                      </values>
+                    </item>
+                    <item id="fd9PLf9J3vm">
+                      <values>
+                        <text>
+                          <p>
+                            <run>
+                              <lit>Other distributions require you to change this using the </lit>
+                            </run>
+                            <run>
+                              <style>
+                                <inherited-style name="UI" idref="a0as48_ttlo"/>
+                              </style>
+                              <lit>Choose…</lit>
+                            </run>
+                            <run>
+                              <lit> button or by dropping a folder on the path control to the left of the button.</lit>
                             </run>
                           </p>
                         </text>
@@ -2248,7 +2498,7 @@
                     <text>
                       <p>
                         <run>
-                          <lit><cell refid="att5" name="InstallTab" expanded="yes" type="image" width="495" height="366"/></lit>
+                          <lit><cell refid="att7" name="InstallTab" expanded="yes" type="image" width="495" height="366"/></lit>
                         </run>
                       </p>
                     </text>
