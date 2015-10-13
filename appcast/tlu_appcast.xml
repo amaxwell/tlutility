@@ -766,5 +766,23 @@
             <sparkle:minimumSystemVersion>10.6.8</sparkle:minimumSystemVersion>
             <enclosure url="https://github.com/amaxwell/tlutility/releases/download/1.21/TeX.Live.Utility.app-1.21.tar.gz" sparkle:version="1.21" length="2985824" type="application/octet-stream" sparkle:dsaSignature="MCwCFEhQKs/6N/mxTAV5/GLkj2tCnJuxAhQH5rbvk+/z+MBr+eEZ65ZjJd4mng=="></enclosure>
         </item>
+        <item>
+            <title>Version 1.23</title>
+            <description>
+                <h3>Changes Since 1.21</h3>
+                <li>Fixed link in About box</li>
+                <li>Updated legacy mirror list for TL 2014</li>
+                <li>Added installation info for TeX Live 2015</li>
+                <li>Added a warning for path configuration problems with Mac OS X 10.11</li>
+                <li>Avoid parsing the output of tlmgr -version</li>
+                <li>Add Distribution switching menu item to Chinese and Japanese menu</li>
+                <li>Fixed a bunch of stupid warnings from Xcode 7</li>
+                <li>Add option to install documentation, mainly for BasicTeX (see Help)</li>
+                <li>Added a Help page on TeX Distribution switching</li>
+            </description>
+            <pubDate>Tue, 13 Oct 2015 02:13:22 +0000</pubDate>
+            <sparkle:minimumSystemVersion>10.6.8</sparkle:minimumSystemVersion>
+            <enclosure url="https://github.com/amaxwell/tlutility/releases/download/1.23/TeX.Live.Utility.app-1.23.tar.gz" sparkle:version="1.23" length="3067050" type="application/octet-stream" sparkle:dsaSignature="MCwCFDGnHJVQ+Q9dM3fltCyM9ddxU0E2AhQE+GPq3Cc+E1zWDj7CadiGehtjsQ=="></enclosure>
+        </item>
     </channel>
 </rss>
