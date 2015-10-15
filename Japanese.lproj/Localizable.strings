@@ -476,3 +476,15 @@
 
 /* status for package */
 "Update available" = "Update available";
+
+/* alert button title */
+"Change" = "Change";
+
+/* alert button title */
+"Manually" = "Manually";
+
+/* alert message text */
+"Your preferences need to be adjusted for new Apple requirements. Would you like to change your TeX Programs location from /usr/texbin to /Library/TeX/texbin or set it manually?" = "Your preferences need to be adjusted for new Apple requirements. Would you like to change your TeX Programs location from /usr/texbin to /Library/TeX/texbin or set it manually?";
+
+/* status message */
+"Changing Documentation Option Failed" = "Changing Documentation Option Failed";

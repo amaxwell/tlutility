@@ -114,8 +114,10 @@ static void __TLMMigrateBundleIdentifier()
     
     NSMutableDictionary *defaults = [NSMutableDictionary dictionary];
     [defaults setObject:tlnetDefault forKey:TLMFullServerURLPreferenceKey];
-    
-    [defaults setObject:@"/usr/texbin" forKey:TLMTexBinPathPreferenceKey];
+
+    // no point in making this too complex; users with TL 2014 and earlier will just have to deal with it
+    NSString *cmdPath = (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_10_Max) ? @"/Library/TeX/texbin" : @"/usr/texbin";
+    [defaults setObject:cmdPath forKey:TLMTexBinPathPreferenceKey];
     
     [defaults setObject:@"install-tl-unx.tar.gz" forKey:TLMNetInstallerPathPreferenceKey];
     [defaults setObject:@"update-tlmgr-latest.sh" forKey:TLMInfraPathPreferenceKey];
@@ -197,7 +199,10 @@ static void __TLMMigrateBundleIdentifier()
 // Return YES to delay the relaunch until you do some processing; invoke the given NSInvocation to continue.
 - (BOOL)updater:(SUUpdater *)updater shouldPostponeRelaunchForUpdate:(SUAppcastItem *)update untilInvoking:(NSInvocation *)invocation;
 {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnonnull"
     if ([[self mainWindowController] windowShouldClose:nil] == NO) {
+#pragma clang diagnostic pop
         NSAlert *alert = [[NSAlert new] autorelease];
         [alert setMessageText:NSLocalizedString(@"Unable to relaunch", "alert title")];
         [alert setInformativeText:NSLocalizedString(@"You will need to manually quit and relaunch TeX Live Utility to complete installation of the new version.", @"alert text")];

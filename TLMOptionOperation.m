@@ -38,8 +38,37 @@
 
 #import "TLMOptionOperation.h"
 #import "TLMEnvironment.h"
+#import "TLMTask.h"
+#import "TLMLogServer.h"
 
 @implementation TLMOptionOperation
+
+static NSString * __TLMParseStringOption(NSString *output)
+{
+    if (output) {
+        output = [output stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        output = [[output componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] lastObject];
+    }
+    return output;
+}
+
++ (NSString *)stringValueOfOption:(NSString *)key
+{
+    NSString *cmdPath = [[TLMEnvironment currentEnvironment] tlmgrAbsolutePath];
+    if ([[NSFileManager defaultManager] isExecutableFileAtPath:cmdPath] == NO) {
+        TLMLog(__func__, @"incorrect path %@ for tlmgr; can't read option %@", cmdPath, key);
+        return nil;
+    }
+    NSArray *args = [NSArray arrayWithObjects:@"--machine-readable", @"option", key, nil];
+    TLMTask *checkTask = [TLMTask launchedTaskWithLaunchPath:cmdPath arguments:args];
+    [checkTask waitUntilExit];
+    return ([checkTask terminationStatus] == 0) ? __TLMParseStringOption([checkTask outputString]) : nil;
+}
+
++ (BOOL)boolValueOfOption:(NSString *)key
+{
+    return [[self stringValueOfOption:key] boolValue];
+}
 
 - (id)initWithKey:(NSString *)key value:(NSString *)value;
 {

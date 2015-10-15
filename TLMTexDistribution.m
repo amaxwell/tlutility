@@ -112,7 +112,10 @@
         NSDictionary *auxiliary = [plist objectForKey:@"auxiliary"];
         _texdistVersion = [[auxiliary objectForKey:@"TeXDistVersion"] copy];
         NSData *htmlData = [[auxiliary objectForKey:@"Description"] dataUsingEncoding:NSUTF8StringEncoding];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnonnull"
         _texdistDescription = [[NSAttributedString alloc] initWithHTML:htmlData baseURL:nil documentAttributes:NULL];
+#pragma clang diagnostic pop
     }
     return self;
 }
@@ -159,10 +162,16 @@
 {
     NSString *resolvedTexbin = [[self texbinPath] stringByResolvingSymlinksInPath];
     NSString *resolvedUsrTexbin = [@"/usr/texbin" stringByResolvingSymlinksInPath];
-    FSRef fsA, fsB;
-    if (CFURLGetFSRef((CFURLRef)[NSURL fileURLWithPath:resolvedTexbin], &fsA) &&
-        CFURLGetFSRef((CFURLRef)[NSURL fileURLWithPath:resolvedUsrTexbin], &fsB))
-        return (FSCompareFSRefs(&fsA, &fsB) == noErr);
+    NSString *resolvedLibTexbin = [@"/Library/TeX/texbin" stringByResolvingSymlinksInPath];
+    FSRef fsThis, fsUsr, fsLib;
+    if (CFURLGetFSRef((CFURLRef)[NSURL fileURLWithPath:resolvedTexbin], &fsThis) &&
+        CFURLGetFSRef((CFURLRef)[NSURL fileURLWithPath:resolvedUsrTexbin], &fsUsr)) {
+        return (FSCompareFSRefs(&fsThis, &fsUsr) == noErr);
+    }
+    else if (CFURLGetFSRef((CFURLRef)[NSURL fileURLWithPath:resolvedTexbin], &fsThis) &&
+             CFURLGetFSRef((CFURLRef)[NSURL fileURLWithPath:resolvedLibTexbin], &fsLib)) {
+        return (FSCompareFSRefs(&fsThis, &fsLib) == noErr);
+    }
     return NO;
 }
 

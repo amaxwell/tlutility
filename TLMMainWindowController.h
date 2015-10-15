@@ -88,6 +88,7 @@ typedef NSUInteger TLMDockedEdge;
 - (IBAction)changeServerURL:(id)sender;
 - (IBAction)goHome:(id)sender;
 - (IBAction)reconfigureDistributions:(id)sender;
+- (IBAction)configureDocumentation:(id)sender;
 
 @property (nonatomic, retain) IBOutlet NSProgressIndicator *_progressIndicator;
 @property (nonatomic, retain) IBOutlet TLMAddressTextField *_URLField;

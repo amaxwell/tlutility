@@ -49,14 +49,21 @@
 /* No comment provided by engineer. */
 "Beginning download of %.1f kbytes" = "Beginning download of %.1f kbytes";
 
-/* button title */
+/* alert button title
+   button title */
 "Cancel" = "Cancel";
 
 /* button title */
 "Cancel Anyway" = "Cancel Anyway";
 
+/* alert button title */
+"Change" = "Change";
+
 /* alert title */
 "Change command-line default?" = "Change command-line default?";
+
+/* status message */
+"Changing Documentation Option Failed" = "Changing Documentation Option Failed";
 
 /* button title in open panel (must be short)
    Menu item title */
@@ -181,6 +188,9 @@
 
 /* single trailing space */
 "Local version is newer " = "Local version is newer ";
+
+/* alert button title */
+"Manually" = "Manually";
 
 /* value in tableview */
 "Missing short description" = "Missing short description";
@@ -470,6 +480,9 @@
 
 /* alert text */
 "You will need to manually quit and relaunch TeX Live Utility to complete installation of the new version." = "You will need to manually quit and relaunch TeX Live Utility to complete installation of the new version.";
+
+/* alert message text */
+"Your preferences need to be adjusted for new Apple requirements. Would you like to change your TeX Programs location from /usr/texbin to /Library/TeX/texbin or set it manually?" = "Your preferences need to be adjusted for new Apple requirements. Would you like to change your TeX Programs location from /usr/texbin to /Library/TeX/texbin or set it manually?";
 
 /* two integer specifiers */
 "Your TeX Live version is %lu, but your default repository URL appears to be for TeX Live %lu.  You need to choose an appropriate repository." = "Your TeX Live version is %1$lu, but your default repository URL appears to be for TeX Live %2$lu.  You need to choose an appropriate repository.";

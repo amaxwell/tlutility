@@ -48,7 +48,6 @@
 #import "TLMInfraUpdateOperation.h"
 #import "TLMPapersizeOperation.h"
 #import "TLMAuthorizedOperation.h"
-#import "TLMListOperation.h"
 #import "TLMRemoveOperation.h"
 #import "TLMInstallOperation.h"
 #import "TLMNetInstallOperation.h"
@@ -78,6 +77,7 @@
 #import "TLMDatabasePackage.h"
 #import "TLMMirrorController.h"
 #import "TLMTexdistConfigController.h"
+#import "TLMDocumentationController.h"
 
 @interface TLMMainWindowController (Private)
 // only declare here if reorganizing the implementation isn't practical
@@ -207,7 +207,12 @@ static Class _UserNotificationClass;
     
     TLMURLFormatter *fmt = [[TLMURLFormatter new] autorelease];
     [fmt setReturnsURL:YES];
-    [_URLField setFormatter:fmt];    
+    [_URLField setFormatter:fmt];
+    
+    // need good initial properties since we can't add to the queue if tlmgr doesn't exist
+    [_URLField setButtonImage:[NSImage imageNamed:NSImageNameRefreshFreestandingTemplate]];
+    [_URLField setButtonTarget:self];
+    [_URLField setButtonAction:@selector(refresh:)];
 }
 
 /*
@@ -882,14 +887,17 @@ static Class _UserNotificationClass;
 {
     NSString *cmdPath = [[TLMEnvironment currentEnvironment] tlmgrAbsolutePath];
     BOOL exists = [[NSFileManager defaultManager] isExecutableFileAtPath:cmdPath];
-    
+
     if (NO == exists) {
-        TLMLog(__func__, @"tlmgr not found at \"%@\"", cmdPath);
+        
         if (displayWarning) {
             NSAlert *alert = [[NSAlert new] autorelease];
             [alert setMessageText:NSLocalizedString(@"TeX installation not found.", @"alert sheet title")];
             [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"The tlmgr tool does not exist at %@.  Please set the correct location in preferences or install TeX Live.", @"alert message text"), cmdPath]];
             [alert beginSheetModalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
+        }
+        else {
+            TLMLog(__func__, @"bad path %@, but displayWarning = %d", cmdPath, displayWarning);
         }
     }
     
@@ -898,7 +906,7 @@ static Class _UserNotificationClass;
 
 - (void)_addOperation:(TLMOperation *)op selector:(SEL)sel setRefreshingForDataSource:(id)dataSource
 {
-    // avoid the tlmgr path check when installing
+    // short-circuit the tlmgr path check when installing
     if (op && ([_currentListDataSource isEqual:_installDataSource] || [self _checkCommandPathAndWarn:YES])) {
         if (NULL != sel)
             [[NSNotificationCenter defaultCenter] addObserver:self selector:sel name:TLMOperationFinishedNotification object:op];
@@ -908,7 +916,6 @@ static Class _UserNotificationClass;
         // operation ending handlers aren't called, so this will never get reset
         [dataSource setRefreshing:NO];
     }
-
 }
 
 /*
@@ -1094,15 +1101,13 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 
 - (void)_refreshLocalDatabase
 {
-    if ([[TLMEnvironment currentEnvironment] tlmgrSupportsDumpTlpdb]) {
-        // pick a datasource to use here; doesn't matter which, as long as it's the same in the callback
-        [self _displayStatusString:DB_LOAD_STATUS_STRING dataSource:_updateListDataSource];
-        TLMLog(__func__, @"Updating local package database");
-        NSURL *mirror = [[TLMEnvironment currentEnvironment] defaultServerURL];
-        TLMLoadDatabaseOperation *op = [[TLMLoadDatabaseOperation alloc] initWithLocation:mirror offline:YES];
-        [self _addOperation:op selector:@selector(_handleRefreshLocalDatabaseFinishedNotification:) setRefreshingForDataSource:nil];
-        [op release];
-    }   
+    // pick a datasource to use here; doesn't matter which, as long as it's the same in the callback
+    [self _displayStatusString:DB_LOAD_STATUS_STRING dataSource:_updateListDataSource];
+    TLMLog(__func__, @"Updating local package database");
+    NSURL *mirror = [[TLMEnvironment currentEnvironment] defaultServerURL];
+    TLMLoadDatabaseOperation *op = [[TLMLoadDatabaseOperation alloc] initWithLocation:mirror offline:YES];
+    [self _addOperation:op selector:@selector(_handleRefreshLocalDatabaseFinishedNotification:) setRefreshingForDataSource:_updateListDataSource];
+    [op release];
 }
 
 - (void)_refreshUpdatedPackageListFromLocation:(NSURL *)location
@@ -1327,6 +1332,44 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     }
 }
 
+- (void)_handleDocumentationOptionFinishedNotification:(NSNotification *)aNote
+{
+    TLMOptionOperation *op = [aNote object];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:TLMOperationFinishedNotification object:op];
+    if ([op failed]) {
+        TLMLog(__func__, @"Failed to change documentation option.  Error was: %@", [op errorMessages]);
+        NSString *statusString = NSLocalizedString(@"Changing Documentation Option Failed", @"status message");
+        [self _displayStatusString:statusString dataSource:_updateListDataSource];
+        [self _postUserNotificationWithTitle:statusString];
+    }
+    [[[self window] toolbar] validateVisibleItems];
+}
+
+- (void)documentationSheetDidEnd:(NSWindow *)sheet returnCode:(TLMDocumentationReturnCode)rc contextInfo:(void *)context
+{
+    [sheet orderOut:self];
+    TLMDocumentationController *tdc = context;
+    [tdc autorelease];
+    if (rc & TLMDocumentationChanged) {
+        
+        NSString *optString = [NSString stringWithFormat:@"%d", (rc & TLMDocumentationInstallLater) ? 1 : 0];
+        TLMOptionOperation *change = [[TLMOptionOperation alloc] initWithKey:@"docfiles" value:optString];
+        [self _addOperation:change selector:@selector(_handleDocumentationOptionFinishedNotification:) setRefreshingForDataSource:nil];
+        [change release];
+    }
+    
+    if (rc & TLMDocumentationInstallNow) {
+        
+        NSMutableArray *packageNames = [NSMutableArray array];
+        for (TLMDatabasePackage *pkg in [[TLMDatabase localDatabase] packages]) {
+            // avoid trying to reinstall the dummy TL package(s)
+            if ([[pkg name] hasPrefix:@"00texlive"] == NO)
+                [packageNames addObject:[pkg name]];
+        }
+        [self _installPackagesWithNames:packageNames reinstall:YES];
+    }
+}
+
 - (void)_handleLaunchAgentInstallFinishedNotification:(NSNotification *)aNote
 {
     TLMAuthorizedOperation *op = [aNote object];
@@ -1387,27 +1430,6 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     [tcc autorelease];
 }
 
-- (void)_handleListFinishedNotification:(NSNotification *)aNote
-{
-    TLMListOperation *op = [aNote object];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:TLMOperationFinishedNotification object:op];
-    [_packageListDataSource setPackageNodes:[op packageNodes]];
-    [_packageListDataSource setRefreshing:NO];
-    [_packageListDataSource setNeedsUpdate:NO];
-    
-    NSString *statusString = nil;
-    
-    if ([op isCancelled])
-        statusString = NSLocalizedString(@"Listing Cancelled", @"main window status string");
-    else if ([op failed]) {
-        statusString = NSLocalizedString(@"Listing Failed", @"main window status string");
-        [self _postUserNotificationWithTitle:statusString];
-    }
-    
-    [self _displayStatusString:statusString dataSource:_packageListDataSource];
-    [[[self window] toolbar] validateVisibleItems];
-}
-
 - (void)_handleLoadDatabaseFinishedNotification:(NSNotification *)aNote
 {
     TLMLoadDatabaseOperation *op = [aNote object];
@@ -1465,18 +1487,10 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     // disable refresh action for this view
     [_packageListDataSource setRefreshing:YES];
     TLMLog(__func__, @"Refreshing list of all packages%C", TLM_ELLIPSIS);
-    
-    if ([[TLMEnvironment currentEnvironment] tlmgrSupportsDumpTlpdb] == NO) {
-        TLMLog(__func__, @"Using legacy code for listing packages.  Hopefully it still works.");
-        TLMListOperation *op = [[TLMListOperation alloc] initWithLocation:location offline:offline];
-        [self _addOperation:op selector:@selector(_handleListFinishedNotification:) setRefreshingForDataSource:_packageListDataSource];
-        [op release];
-    }
-    else {
-        TLMLoadDatabaseOperation *op = [[TLMLoadDatabaseOperation alloc] initWithLocation:location offline:offline];
-        [self _addOperation:op selector:@selector(_handleLoadDatabaseFinishedNotification:) setRefreshingForDataSource:_packageListDataSource];
-        [op release];
-    }
+
+    TLMLoadDatabaseOperation *op = [[TLMLoadDatabaseOperation alloc] initWithLocation:location offline:offline];
+    [self _addOperation:op selector:@selector(_handleLoadDatabaseFinishedNotification:) setRefreshingForDataSource:_packageListDataSource];
+    [op release];
     [[[self window] toolbar] validateVisibleItems];
 }
 
@@ -1839,6 +1853,16 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
           contextInfo:tcc];
 }
 
+- (void)configureDocumentation:(id)sender;
+{
+    TLMDocumentationController *tdc = [TLMDocumentationController new];
+    [NSApp beginSheet:[tdc window]
+       modalForWindow:[self window]
+        modalDelegate:self
+       didEndSelector:@selector(documentationSheetDidEnd:returnCode:contextInfo:)
+          contextInfo:tdc];
+}
+
 #pragma mark API
 
 - (void)refresh:(id)sender
@@ -1862,7 +1886,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
      */
     CFNetDiagnosticRef diagnostic = NULL;
     if (serverURL) {
-        diagnostic = CFNetDiagnosticCreateWithURL(NULL, (CFURLRef)serverURL);
+        diagnostic = CFNetDiagnosticCreateWithURL(CFAllocatorGetDefault(), (CFURLRef)serverURL);
         [(id)diagnostic autorelease];
     }
     CFStringRef desc = NULL;

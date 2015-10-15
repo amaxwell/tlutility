@@ -68,6 +68,6 @@ typedef NSUInteger TLMProfileType;
 
 @property (readonly, copy) NSString *name;
 @property (readonly) TLMProfileType type;
-@property (readonly, copy) id value;
+@property (readwrite, copy) id value;
 
 @end

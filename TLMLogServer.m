@@ -247,6 +247,8 @@ static NSConnection * __TLMLSCreateAndRegisterConnectionForServer(TLMLogServer *
             parsedMessage = [status stringByAppendingString:[comps objectAtIndex:0]];
             
             NSInteger bytes = [[comps objectAtIndex:4] integerValue];
+            // failure to install gives a -1, so avoid underflow
+            if (bytes < 0) bytes = 0;
             NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInteger:(NSUInteger)bytes], TLMLogSize, [comps objectAtIndex:0], TLMLogPackageName, [status stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]], TLMLogStatusMessage, nil];
 
             /*

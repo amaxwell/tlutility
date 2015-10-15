@@ -45,6 +45,7 @@
 #import "TLMLogServer.h"
 #import "TLMSizeFormatter.h"
 #import "TLMProxyManager.h"
+#import "TLMMainWindowController.h"
 #import <pthread.h>
 #import <sys/stat.h>
 
@@ -64,7 +65,6 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
 + (NSMutableArray *)_systemPaths;
 - (void)_displayFallbackServerAlert;
 + (BOOL)_getInstalledYear:(TLMDatabaseYear *)installedYear isDevelopmentVersion:(BOOL *)isDev tlmgrVersion:(NSInteger *)tlmgrVersion;
-- (NSString *)_backupDirOption;
 - (void)_checkForRootPrivileges;
 
 @end
@@ -87,6 +87,7 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
 
 static NSMutableDictionary *_environments = nil;
 static NSString            *_currentEnvironmentKey = nil;
+static bool                 _didShowElCapitanPathAlert = false;
 
 @implementation TLMEnvironment
 
@@ -122,28 +123,72 @@ static NSString            *_currentEnvironmentKey = nil;
     
 }
 
++ (void)_updatePathAlert:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
+{
+    // if the user chooses to keep the bad path or edit manually, we end up showing the alert again
+    _didShowElCapitanPathAlert = true;
+    
+    switch (returnCode) {
+        case NSAlertFirstButtonReturn:
+            [[NSUserDefaults standardUserDefaults] setObject:@"/Library/TeX/texbin" forKey:TLMTexBinPathPreferenceKey];
+            [[[NSApp delegate] mainWindowController] refreshUpdatedPackageList];
+            break;
+        case NSAlertSecondButtonReturn:
+            [[TLMPreferenceController sharedPreferenceController] showWindow:nil];
+            break;
+        default:
+            TLMLog(__func__, @"User has a bad path and chose to follow it.");
+            break;
+    }
+}
+
 + (NSString *)_installDirectoryFromCurrentDefaults
 {
     NSString *installDirectory = nil;
-    // kpsewhich -var-value=SELFAUTOPARENT
     NSString *texbinPath = [[NSUserDefaults standardUserDefaults] objectForKey:TLMTexBinPathPreferenceKey];
-    NSString *kpsewhichPath = [[texbinPath stringByAppendingPathComponent:KPSEWHICH_CMD] stringByStandardizingPath];
-    if ([[[NSFileManager new] autorelease] isExecutableFileAtPath:kpsewhichPath]) {
-        TLMTask *task = [TLMTask new];
-        [task setLaunchPath:kpsewhichPath];
-        [task setArguments:[NSArray arrayWithObject:@"-var-value=SELFAUTOPARENT"]];
-        [task launch];
-        [task waitUntilExit];
-        if ([task terminationStatus] == 0 && [task outputString]) {
-            installDirectory = [[task outputString] stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]];
-        }
-        else {
-            TLMLog(__func__, @"kpsewhich returned an error: %@", [task errorString]);
-        }
-        [task release];
+    
+    NSString *libdir = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSLocalDomainMask, YES) lastObject];
+    
+    // see if we have TL 2015
+    NSString *newCmdPath = [NSString pathWithComponents:[NSArray arrayWithObjects:libdir, @"TeX", @"texbin", @"tlmgr", nil]];
+    
+    // we are on El Cap or later, have the original mactex default, and have installed mactex 2015
+    if (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_10_Max &&
+        [texbinPath isEqualToString:@"/usr/texbin"] &&
+        [[NSFileManager defaultManager] isExecutableFileAtPath:newCmdPath] &&
+        false == _didShowElCapitanPathAlert) {
+        
+        // shown here, so it's early enough to be the first alert and avoid OS X ignoring a second sheet
+        NSAlert *alert = [[NSAlert new] autorelease];
+        [alert setMessageText:NSLocalizedString(@"TeX installation not found.", @"alert sheet title")];
+        [alert setInformativeText:NSLocalizedString(@"Your preferences need to be adjusted for new Apple requirements. Would you like to change your TeX Programs location from /usr/texbin to /Library/TeX/texbin or set it manually?", @"alert message text")];
+        [alert addButtonWithTitle:NSLocalizedString(@"Change", @"alert button title")];
+        [alert addButtonWithTitle:NSLocalizedString(@"Manually", @"alert button title")];
+        [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"alert button title")];
+        [alert beginSheetModalForWindow:[(NSWindowController *)[(TLMAppController *)[NSApp delegate] mainWindowController] window]
+                          modalDelegate:self
+                         didEndSelector:@selector(_updatePathAlert:returnCode:contextInfo:)
+                            contextInfo:NULL];
     }
     else {
-        TLMLog(__func__, @"no kpsewhich executable at %@", kpsewhichPath);
+        NSString *kpsewhichPath = [[texbinPath stringByAppendingPathComponent:KPSEWHICH_CMD] stringByStandardizingPath];
+        if ([[[NSFileManager new] autorelease] isExecutableFileAtPath:kpsewhichPath]) {
+            TLMTask *task = [TLMTask new];
+            [task setLaunchPath:kpsewhichPath];
+            [task setArguments:[NSArray arrayWithObject:@"-var-value=SELFAUTOPARENT"]];
+            [task launch];
+            [task waitUntilExit];
+            if ([task terminationStatus] == 0 && [task outputString]) {
+                installDirectory = [[task outputString] stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+            }
+            else {
+                TLMLog(__func__, @"kpsewhich returned an error: %@", [task errorString]);
+            }
+            [task release];
+        }
+        else {
+            TLMLog(__func__, @"no kpsewhich executable at %@", kpsewhichPath);
+        }
     }
     return installDirectory;
 }
@@ -224,8 +269,12 @@ static NSString            *_currentEnvironmentKey = nil;
     if (self) {
         
         _installDirectory = [absolutePath copy];
-        if ([TLMEnvironment _getInstalledYear:&_installedYear isDevelopmentVersion:&_tlmgrVersion.isDevelopment tlmgrVersion:&_tlmgrVersion.revision] == NO)
+        TLMDatabase *db = [TLMDatabase databaseForMirrorURL:[NSURL fileURLWithPath:_installDirectory]];
+        _installedYear = db ? [db texliveYear] : TLMDatabaseUnknownYear;
+        if (TLMDatabaseUnknownYear == _installedYear)
             TLMLog(__func__, @"Failed to determine local TeX Live version information.  This is a very bad sign.");
+        else
+            TLMLog(__func__, @"Looks like you're using TeX Live %lu", (long)_installedYear);
 
         if ([[[NSFileManager new] autorelease] fileExistsAtPath:TEXDIST_PATH]) {
             FSEventStreamContext ctxt = { 0, [self class], CFRetain, CFRelease, CFCopyDescription };
@@ -281,86 +330,6 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
         [(Class)context updateEnvironment];
         break;
     }
-}
-
-+ (BOOL)_getInstalledYear:(TLMDatabaseYear *)installedYear isDevelopmentVersion:(BOOL *)isDev tlmgrVersion:(NSInteger *)tlmgrVersion
-{
-
-    // called from -init, so can't use current environment
-    NSString *texbinPath = [[NSUserDefaults standardUserDefaults] objectForKey:TLMTexBinPathPreferenceKey];
-    
-    // always run the check and log the result
-    TLMTask *tlmgrTask = [[TLMTask new] autorelease];
-    [tlmgrTask setLaunchPath:[[texbinPath stringByAppendingPathComponent:TLMGR_CMD] stringByStandardizingPath]];
-    [tlmgrTask setArguments:[NSArray arrayWithObject:@"--version"]];
-    [tlmgrTask launch];
-    [tlmgrTask waitUntilExit];
-    
-    NSString *versionString = [tlmgrTask terminationStatus] ? nil : [tlmgrTask outputString];
-    
-    // !!! this happens periodically, and I don't yet know why...
-    if (nil == versionString) {
-        TLMLog(__func__, @"Failed to read version string: %@, ret = %d", [tlmgrTask errorString], [tlmgrTask terminationStatus]);
-        return NO;
-    }
-    
-    versionString = [versionString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    NSArray *versionLines = [versionString componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
-    TLMDatabaseYear texliveYear = TLMDatabaseUnknownYear;
-    if (isDev) *isDev = NO;
-            
-    /*
-     Using an svn version of tlmgr:
-     $ tlmgr --version
-     tlmgr revision unknown ($Date$)
-     tlmgr using installation: /usr/local/texlive/2011
-     TeX Live (http://tug.org/texlive) version 2011
-     
-     $ tlmgr --version
-     tlmgr revision 14230 (2009-07-11 14:56:31 +0200)
-     tlmgr using installation: /usr/local/texlive/2009
-     TeX Live (http://tug.org/texlive) version 2009-dev
-     
-     $ tlmgr --version
-     tlmgr revision 12152 (2009-02-12 13:08:37 +0100)
-     tlmgr using installation: /usr/local/texlive/2008
-     TeX Live (http://tug.org/texlive) version 2008
-     texlive-20080903
-     */         
-    
-    for (versionString in versionLines) {
-        
-        if ([versionString hasPrefix:@"TeX Live"]) {
-            
-            // allow handling development versions differently (not sure this is stable year-to-year)
-            if (isDev && [versionString hasSuffix:@"dev"])
-                *isDev = YES;
-            
-            NSScanner *scanner = [NSScanner scannerWithString:versionString];
-            [scanner setCharactersToBeSkipped:[[NSCharacterSet decimalDigitCharacterSet] invertedSet]];
-            [scanner scanInteger:&texliveYear];
-        }
-        
-        if (tlmgrVersion && [versionString hasPrefix:@"tlmgr revision"]) {
-            
-            NSScanner *scanner = [NSScanner scannerWithString:versionString];
-            [scanner setCharactersToBeSkipped:[[NSCharacterSet decimalDigitCharacterSet] invertedSet]];
-            if ([scanner scanInteger:tlmgrVersion] == NO)
-                *tlmgrVersion = -1;
-            if (isDev && [versionString rangeOfString:@"$Date$"].length)
-                *isDev = YES;
-        }
-    }
-    
-    if (TLMDatabaseUnknownYear == texliveYear)
-        TLMLog(__func__, @"Unable to determine TeX Live year from tlmgr version output: %@", versionString);
-    
-    if (installedYear)
-        *installedYear = texliveYear;
-    
-    TLMLog(__func__, @"Looks like you're using TeX Live %lu", (unsigned long)texliveYear);
-    
-    return YES;
 }
 
 + (NSMutableArray *)_systemPaths
@@ -859,37 +828,9 @@ static void __TLMTestAndClearEnvironmentVariable(const char *name)
     return validURL;
 }
 
-- (NSString *)_backupDirOption
-{
-    // kpsewhich -var-value=SELFAUTOPARENT
-    NSString *tlmgrPath = [self tlmgrAbsolutePath];
-    NSString *backupDir = nil;
-    if ([[[NSFileManager new] autorelease] isExecutableFileAtPath:tlmgrPath]) {
-        TLMTask *task = [TLMTask new];
-        [task setLaunchPath:tlmgrPath];
-        [task setArguments:[NSArray arrayWithObjects:@"option", @"backupdir", nil]];
-        [task launch];
-        [task waitUntilExit];
-        if ([task terminationStatus] == 0 && [task outputString]) {
-            NSString *str = [[task outputString] stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]];
-            NSRange r = [str rangeOfString:@": " options:NSLiteralSearch];
-            if (r.length)
-                backupDir = [[str substringFromIndex:NSMaxRange(r)] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-        }
-        else {
-            TLMLog(__func__, @"tlmgr returned an error: %@", [task errorString]);
-        }
-        [task release];
-    }
-    else {
-        TLMLog(__func__, @"no tlmgr executable at %@", tlmgrPath);
-    }
-    return backupDir;
-}
-
 - (NSURL *)backupDirectory
 {
-    NSString *backupDir = [self _backupDirOption];
+    NSString *backupDir = [TLMOptionOperation stringValueOfOption:@"backupdir"];
     if ([backupDir isAbsolutePath] == NO)
         backupDir = [[self installDirectory] stringByAppendingPathComponent:backupDir];
     return backupDir ? [NSURL fileURLWithPath:backupDir] : nil;
@@ -979,16 +920,6 @@ static void __TLMTestAndClearEnvironmentVariable(const char *name)
     return _installedYear;
 }
 
-- (BOOL)tlmgrSupportsPersistentDownloads;
-{
-    return _tlmgrVersion.isDevelopment || (_tlmgrVersion.revision >= 16424);
-}
-
-- (BOOL)tlmgrSupportsDumpTlpdb
-{
-    return _tlmgrVersion.isDevelopment || (_tlmgrVersion.revision >= 22912);
-}
-
 - (NSString *)updmapAbsolutePath
 {
     NSString *texbinPath = [[NSUserDefaults standardUserDefaults] objectForKey:TLMTexBinPathPreferenceKey];
@@ -1015,24 +946,13 @@ static void __TLMTestAndClearEnvironmentVariable(const char *name)
 
 #pragma mark Default URL
 
-static NSURL * __TLMParseLocationOption(NSString *location)
-{
-    if (location) {
-        location = [location stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        location = [[location componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] lastObject];
-        // remove trailing slashes before comparison, although this is a directory
-        while ([location hasSuffix:@"/"])
-            location = [location substringToIndex:([location length] - 1)];        
-    }
-    return location ? [NSURL URLWithString:location] : nil;
-}
-
 + (NSURL *)_currentTeXLiveLocationOption
 {
-    NSArray *args = [NSArray arrayWithObjects:@"--machine-readable", @"option", @"location", nil];
-    TLMTask *checkTask = [TLMTask launchedTaskWithLaunchPath:[[TLMEnvironment currentEnvironment] tlmgrAbsolutePath] arguments:args];
-    [checkTask waitUntilExit];
-    return ([checkTask terminationStatus] == 0) ? __TLMParseLocationOption([checkTask outputString]) : nil;
+    NSString *location = [TLMOptionOperation stringValueOfOption:@"location"];
+    // remove trailing slashes before comparison, although this is a directory
+    while ([location hasSuffix:@"/"])
+        location = [location substringToIndex:([location length] - 1)];
+    return location ? [NSURL URLWithString:location] : nil;
 }
 
 + (void)_handleLocationOperationFinished:(NSNotification *)aNote

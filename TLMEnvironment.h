@@ -50,11 +50,6 @@ extern NSString * const TLMDefaultRepositoryChangedNotification;
     BOOL                 _rootRequired;
     NSConditionLock     *_rootRequiredLock;
     TLMDatabaseYear      _installedYear;
-    // baseline: tlmgr version changes with updates
-    struct __tlmgrVersion {
-        NSInteger       revision;
-        BOOL            isDevelopment;
-    } _tlmgrVersion;
 }
 
 // call when prefs change for tlmgr path or TeX distribution
@@ -110,8 +105,6 @@ extern NSString * const TLMDefaultRepositoryChangedNotification;
 @property (readonly) BOOL autoInstall;
 @property (readonly) BOOL autoRemove;
 
-@property (readonly) BOOL tlmgrSupportsPersistentDownloads;
-@property (readonly) BOOL tlmgrSupportsDumpTlpdb;
 @property (readonly) TLMDatabaseYear texliveYear;
 
 
