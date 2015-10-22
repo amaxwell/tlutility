@@ -576,7 +576,7 @@ static NSString *__TLMTemporaryFile()
         
         TLMTask *parseTask = [[TLMTask new] autorelease];
         [parseTask setLaunchPath:parserPath];
-        [parseTask setArguments:[NSArray arrayWithObjects:@"-o", plistPath, @"-f", @"plist", tlpdbPath, nil]];
+        [parseTask setArguments:[NSArray arrayWithObjects:@"-p", @"-o", plistPath, @"-f", @"plist", tlpdbPath, nil]];
         [parseTask launch];
         [parseTask waitUntilExit];
 

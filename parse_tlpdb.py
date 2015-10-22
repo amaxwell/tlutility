@@ -200,11 +200,13 @@ def _attributes_from_line(line):
     attrs[key] = "".join(chars)
     return attrs
 
-def packages_from_tlpdb(flat_tlpdb):
+def packages_from_tlpdb(flat_tlpdb, allow_partial=False):
     """Creates a list of TLPackage objects from the given file-like object.
     
     Arguments:
     flat_tlpdb -- A file or file-like object, open for reading
+    allow_partial -- Pass True if you want to stop parsing after an error;
+    useful in case of a partial tlpdb download.
     
     Returns:
     A list of TLPackage objects
@@ -240,96 +242,103 @@ def packages_from_tlpdb(flat_tlpdb):
             last_arch = None
         else:
             
-            # the first space token is a delimiter
-            key, ignored, value = line.partition(" ")
+            try:
+                # the first space token is a delimiter
+                key, ignored, value = line.partition(" ")
                             
-            if package == None:
-                assert key == "name", "first line must be a name"
-                package = TLPackage()
+                if package == None:
+                    assert key == "name", "first line must be a name"
+                    package = TLPackage()
         
-            line_has_key = True
-            if len(key) == 0:
-                key = last_key
-                line_has_key = False
+                line_has_key = True
+                if len(key) == 0:
+                    key = last_key
+                    line_has_key = False
                         
-            if key == "name":
-                package.name = value
-            elif key == "category":
-                package.category = value
-            elif key == "revision":
-                package.revision = int(value)
-            elif key == "relocated":
-                package.relocated = int(value)
-            elif key == "shortdesc":
-                if python_major_version < 3:
-                    package.shortdesc = value.decode("utf-8")
-                else:
-                    package.shortdesc = value
-            elif key == "longdesc":
-                oldvalue = "" if package.longdesc == None else package.longdesc
-                if python_major_version < 3:
-                    package.longdesc = oldvalue + " " + value.decode("utf-8")
-                else:
-                    package.longdesc = oldvalue + " " + value
-            elif key == "depend":
-                package.depends.append(value)
-            elif key == "catalogue":
-                package.catalogue = value
-            elif key.startswith("catalogue-"):
-                catkey = key[len("catalogue-"):]
-                package.cataloguedata[catkey] = value
-            elif key == "srcfiles":
-                if line_has_key:
-                    attrs = _attributes_from_line(value)
-                    assert "size" in attrs, "missing size for %s : %s" % (package.name, key)
-                    package.srcsize = int(attrs["size"])
-                else:
-                    package.srcfiles.append(value)
-            elif key == "binfiles":
-                if line_has_key:
-                    attrs = _attributes_from_line(value)
-                    assert "arch" in attrs, "missing arch for %s : %s" % (package.name, key)
-                    last_arch = attrs["arch"]
-                    assert "size" in attrs, "missing size for %s : %s" % (package.name, key)
-                    package.binsize[last_arch] = int(attrs["size"])
-                else:
-                    oldvalue = package.binfiles[last_arch] if last_arch in package.binfiles else []
-                    oldvalue.append(value)
-                    package.binfiles[last_arch] = oldvalue
-            elif key == "docfiles":
-                # There's an exception handler here because a TL update introduced this abomination:
-                #   texmf-dist/doc/latex/pythontex/pythontex_quickstart.pdf details=""Quick start" documentation"
-                # due to a bug in the TeX Catalogue. TLPOBJ.pm uses a gruesome special case to handle this, but
-                # I'm just going to ignore it unless/until it happens again, since it's supposed to be fixed in
-                # the tlpdb at some point.
-                try:
+                if key == "name":
+                    package.name = value
+                elif key == "category":
+                    package.category = value
+                elif key == "revision":
+                    package.revision = int(value)
+                elif key == "relocated":
+                    package.relocated = int(value)
+                elif key == "shortdesc":
+                    if python_major_version < 3:
+                        package.shortdesc = value.decode("utf-8")
+                    else:
+                        package.shortdesc = value
+                elif key == "longdesc":
+                    oldvalue = "" if package.longdesc == None else package.longdesc
+                    if python_major_version < 3:
+                        package.longdesc = oldvalue + " " + value.decode("utf-8")
+                    else:
+                        package.longdesc = oldvalue + " " + value
+                elif key == "depend":
+                    package.depends.append(value)
+                elif key == "catalogue":
+                    package.catalogue = value
+                elif key.startswith("catalogue-"):
+                    catkey = key[len("catalogue-"):]
+                    package.cataloguedata[catkey] = value
+                elif key == "srcfiles":
                     if line_has_key:
                         attrs = _attributes_from_line(value)
                         assert "size" in attrs, "missing size for %s : %s" % (package.name, key)
-                        package.docsize = int(attrs["size"])
+                        package.srcsize = int(attrs["size"])
                     else:
-                        values = value.split(" ")
-                        if len(values) > 1:
-                            package.docfiledata[values[0]] = _attributes_from_line(" ".join(values[1:]))
-                        package.docfiles.append(values[0])
-                except Exception, e:
-                    sys.stderr.write("skipping bad docfile line %d in package %s: %s\n" % (line_idx, package.name, line))
-            elif key == "runfiles":
-                if line_has_key:
-                    attrs = _attributes_from_line(value)
-                    assert "size" in attrs, "missing size for %s : %s" % (package.name, key)
-                    package.runsize = int(attrs["size"])
+                        package.srcfiles.append(value)
+                elif key == "binfiles":
+                    if line_has_key:
+                        attrs = _attributes_from_line(value)
+                        assert "arch" in attrs, "missing arch for %s : %s" % (package.name, key)
+                        last_arch = attrs["arch"]
+                        assert "size" in attrs, "missing size for %s : %s" % (package.name, key)
+                        package.binsize[last_arch] = int(attrs["size"])
+                    else:
+                        oldvalue = package.binfiles[last_arch] if last_arch in package.binfiles else []
+                        oldvalue.append(value)
+                        package.binfiles[last_arch] = oldvalue
+                elif key == "docfiles":
+                    # There's an exception handler here because a TL update introduced this abomination:
+                    #   texmf-dist/doc/latex/pythontex/pythontex_quickstart.pdf details=""Quick start" documentation"
+                    # due to a bug in the TeX Catalogue. TLPOBJ.pm uses a gruesome special case to handle this, but
+                    # I'm just going to ignore it unless/until it happens again, since it's supposed to be fixed in
+                    # the tlpdb at some point.
+                    try:
+                        if line_has_key:
+                            attrs = _attributes_from_line(value)
+                            assert "size" in attrs, "missing size for %s : %s" % (package.name, key)
+                            package.docsize = int(attrs["size"])
+                        else:
+                            values = value.split(" ")
+                            if len(values) > 1:
+                                package.docfiledata[values[0]] = _attributes_from_line(" ".join(values[1:]))
+                            package.docfiles.append(values[0])
+                    except Exception, e:
+                        sys.stderr.write("skipping bad docfile line %d in package %s: %s\n" % (line_idx, package.name, line))
+                elif key == "runfiles":
+                    if line_has_key:
+                        attrs = _attributes_from_line(value)
+                        assert "size" in attrs, "missing size for %s : %s" % (package.name, key)
+                        package.runsize = int(attrs["size"])
+                    else:
+                        package.runfiles.append(value)
+                elif key == "postaction":
+                    package.postactions.append(value)
+                elif key == "execute":
+                    package.executes.append(value)
                 else:
-                    package.runfiles.append(value)
-            elif key == "postaction":
-                package.postactions.append(value)
-            elif key == "execute":
-                package.executes.append(value)
-            else:
-                package.add_pair(key, value)
-                #assert False, "unhandled line %s" % (line)
+                    package.add_pair(key, value)
+                    #assert False, "unhandled line %s" % (line)
                 
-            last_key = key
+                last_key = key
+            except Exception, e:
+                if allow_partial:
+                    sys.stderr.write("parsed up to junk line \"%s\"\n" % (line))
+                    break
+                else:
+                    raise e
 
     return all_packages, index_map
     
@@ -420,6 +429,7 @@ if __name__ == '__main__':
     parser.set_usage(usage)
     parser.add_option("-o", "--output", dest="output_path", help="write tlpdb to FILE", metavar="FILE", action="store", type="string")
     parser.add_option("-f", "--format", dest="output_format", help="[sqlite3 | plist] (default is to guess from output file extension)", metavar="FORMAT", action="store", type="string")
+    parser.add_option("-p", "--partial", dest="allow_partial", help="read file contents until an error occurs and return partial data", action="store_true", default=False)
     
     (options, args) = parser.parse_args(sys.argv[1:])    
     
@@ -449,7 +459,7 @@ if __name__ == '__main__':
 
     # "/usr/local/texlive/2011/tlpkg/texlive.tlpdb"
     flat_tlpdb = open(args[0], "r") if len(args) else sys.stdin
-    all_packages, index_map = packages_from_tlpdb(flat_tlpdb)
+    all_packages, index_map = packages_from_tlpdb(flat_tlpdb, options.allow_partial)
 
     if len(all_packages) == 0:
         sys.stderr.write("Did not find any packages in TeX Live Database\n")
