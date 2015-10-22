@@ -205,8 +205,8 @@ def packages_from_tlpdb(flat_tlpdb, allow_partial=False):
     
     Arguments:
     flat_tlpdb -- A file or file-like object, open for reading
-    allow_partial -- Pass True if you want to stop parsing after an error;
-    useful in case of a partial tlpdb download.
+    allow_partial -- Pass True if you want to return partial data after an error;
+    useful in case of a partial tlpdb download. Default is to raise an exception.
     
     Returns:
     A list of TLPackage objects
