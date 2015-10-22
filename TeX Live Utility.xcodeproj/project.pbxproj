@@ -76,7 +76,7 @@
 		F9A8BB370EF8B11200E35DC9 /* TLMInfraUpdateOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F9A8BB360EF8B11200E35DC9 /* TLMInfraUpdateOperation.m */; };
 		F9AAC10F12679785003D665F /* TLMBackupDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = F9AAC10E12679785003D665F /* TLMBackupDataSource.m */; };
 		F9AAC11D126798F6003D665F /* TLMBackupNode.m in Sources */ = {isa = PBXBuildFile; fileRef = F9AAC11C126798F6003D665F /* TLMBackupNode.m */; };
-		F9AAEE2C1BC9AE6000B5F9F0 /* TLMDocumentationController.m in Sources */ = {isa = PBXBuildFile; fileRef = F9AAEE2B1BC9AE6000B5F9F0 /* TLMDocumentationController.m */; settings = {ASSET_TAGS = (); }; };
+		F9AAEE2C1BC9AE6000B5F9F0 /* TLMDocumentationController.m in Sources */ = {isa = PBXBuildFile; fileRef = F9AAEE2B1BC9AE6000B5F9F0 /* TLMDocumentationController.m */; };
 		F9AAEE301BC9D4CE00B5F9F0 /* DocumentationSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = F9AAEE321BC9D4CE00B5F9F0 /* DocumentationSheet.xib */; };
 		F9ABAA5E0EF198D500497E0F /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = F9ABAA5D0EF198D500497E0F /* Credits.rtf */; };
 		F9B062000F0F388500BB03D3 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = F9B061FF0F0F388500BB03D3 /* Localizable.strings */; };
@@ -428,9 +428,9 @@
 		F9AAC11C126798F6003D665F /* TLMBackupNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMBackupNode.m; sourceTree = "<group>"; };
 		F9AAEE2A1BC9AE6000B5F9F0 /* TLMDocumentationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMDocumentationController.h; sourceTree = "<group>"; };
 		F9AAEE2B1BC9AE6000B5F9F0 /* TLMDocumentationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMDocumentationController.m; sourceTree = "<group>"; };
-		F9AAEE311BC9D4CE00B5F9F0 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/DocumentationSheet.xib; sourceTree = "<group>"; };
-		F9AAEE331BC9D4EA00B5F9F0 /* ja */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Japanese.lproj/DocumentationSheet.xib; sourceTree = "<group>"; };
-		F9AAEE341BC9D4EC00B5F9F0 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "zh_CN"; path = "zh_CN.lproj/DocumentationSheet.xib"; sourceTree = "<group>"; };
+		F9AAEE311BC9D4CE00B5F9F0 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/DocumentationSheet.xib; sourceTree = "<group>"; };
+		F9AAEE331BC9D4EA00B5F9F0 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Japanese.lproj/DocumentationSheet.xib; sourceTree = "<group>"; };
+		F9AAEE341BC9D4EC00B5F9F0 /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_CN; path = zh_CN.lproj/DocumentationSheet.xib; sourceTree = "<group>"; };
 		F9ABAA5D0EF198D500497E0F /* Credits.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = Credits.rtf; sourceTree = "<group>"; };
 		F9B061FD0F0F387700BB03D3 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/Localizable.strings; sourceTree = "<group>"; };
 		F9B1345F0EEB1894007C0046 /* TLMAppController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMAppController.h; sourceTree = "<group>"; };
@@ -1009,7 +1009,7 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0700;
+				LastUpgradeCheck = 0710;
 			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "TeX Live Utility" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -1443,9 +1443,9 @@
 		F9AAEE321BC9D4CE00B5F9F0 /* DocumentationSheet.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				F9AAEE311BC9D4CE00B5F9F0 /* en */,
-				F9AAEE331BC9D4EA00B5F9F0 /* ja */,
-				F9AAEE341BC9D4EC00B5F9F0 /* zh-Hans */,
+				F9AAEE311BC9D4CE00B5F9F0 /* English */,
+				F9AAEE331BC9D4EA00B5F9F0 /* Japanese */,
+				F9AAEE341BC9D4EC00B5F9F0 /* zh_CN */,
 			);
 			name = DocumentationSheet.xib;
 			sourceTree = "<group>";
