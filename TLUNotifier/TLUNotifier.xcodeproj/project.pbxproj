@@ -133,7 +133,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = TLU;
-				LastUpgradeCheck = 0710;
+				LastUpgradeCheck = 0730;
 				ORGANIZATIONNAME = "Adam R. Maxwell";
 			};
 			buildConfigurationList = F9C5E35715D49A2B006C293A /* Build configuration list for PBXProject "TLUNotifier" */;
