@@ -39,6 +39,7 @@
 #import "TLMInfraUpdateOperation.h"
 #import "TLMLogServer.h"
 #import "TLMPreferenceController.h"
+#import "TLMEnvironment.h"
 
 #import <CommonCrypto/CommonDigest.h>
 #import <unistd.h>
@@ -70,6 +71,18 @@ static NSString *__TLMGetTemporaryDirectory()
     return [updateDirectory autorelease];
 }
 
++ (NSString *)_sha256Filename
+{
+    NSString *hashFilename = [[NSUserDefaults standardUserDefaults] objectForKey:TLMInfraPathPreferenceKey];
+    return [hashFilename stringByAppendingPathExtension:@"sha256"];
+}
+
++ (NSString *)_sha512Filename
+{
+    NSString *hashFilename = [[NSUserDefaults standardUserDefaults] objectForKey:TLMInfraPathPreferenceKey];
+    return [hashFilename stringByAppendingPathExtension:@"sha512"];
+}
+
 - (id)initWithLocation:(NSURL *)location;
 {
     NSParameterAssert(location);
@@ -86,10 +99,9 @@ static NSString *__TLMGetTemporaryDirectory()
         _scriptPath = [scriptPath copy];        
         _updateDirectory = [updateDirectory copy];
         
-        // download the sha256 file to this path
-        NSString *hashFilename = [[NSUserDefaults standardUserDefaults] objectForKey:TLMInfraPathPreferenceKey];
-        hashFilename = [hashFilename stringByAppendingPathExtension:@"sha256"];
-        _hashPath = [[updateDirectory stringByAppendingPathComponent:hashFilename] copy];
+        // download the remote SHA signature file to this path
+        _hash256Path = [[updateDirectory stringByAppendingPathComponent:[[self class] _sha256Filename]] copy];
+        _hash512Path = [[updateDirectory stringByAppendingPathComponent:[[self class] _sha512Filename]] copy];
     }
     return self;
 }
@@ -99,7 +111,8 @@ static NSString *__TLMGetTemporaryDirectory()
     [_download release];
     [_updateDirectory release];
     [_scriptPath release];
-    [_hashPath release];
+    [_hash256Path release];
+    [_hash512Path release];
     [_location release];
     [super dealloc];
 }
@@ -268,20 +281,10 @@ static NSString *__TLMGetTemporaryDirectory()
     return _downloadComplete;
 }
 
-- (BOOL)_downloadAndCheckHash
+- (BOOL)_compare256
 {
-    NSParameterAssert([self failed] == NO && [self isCancelled] == NO);
-    
-    // remote URL is the same as the file we just downloaded, but with .sha256 appended
-    NSString *path = [[NSUserDefaults standardUserDefaults] objectForKey:TLMInfraPathPreferenceKey];
-    path = [path stringByAppendingPathExtension:@"sha256"];
-    NSURL *hashURL = [_location tlm_URLByAppendingPathComponent:path];
-    
-    [self _synchronouslyDownloadURL:hashURL toPath:_hashPath];
-    
-    BOOL isOkay = NO;
-    if (_downloadComplete) {
-        
+    {
+        BOOL isOkay = NO;
         const char *script_path = [_scriptPath saneFileSystemRepresentation];
         
         // guaranteed to be able to open the file here
@@ -299,7 +302,7 @@ static NSString *__TLMGetTemporaryDirectory()
         (void)fcntl(fd, F_NOCACHE, 1);
         
         char *buffer = mmap(0, (size_t)sb.st_size, PROT_READ, MAP_SHARED, fd, 0);
-        close(fd);    
+        close(fd);
         if (buffer == (void *)-1) {
             perror("failed to mmap file");
             TLMLog(__func__, @"Failed to memory map %@", _scriptPath);
@@ -310,7 +313,7 @@ static NSString *__TLMGetTemporaryDirectory()
         unsigned char digest[CC_SHA256_DIGEST_LENGTH] = { '\0' };
         (void) CC_SHA256(buffer, (CC_LONG)sb.st_size, digest);
         munmap(buffer, (size_t)sb.st_size);
-                
+        
         // the downloaded digest is a hex string, so convert to hex for comparison
         NSMutableString *scriptHashHexString = [NSMutableString stringWithCapacity:CC_SHA256_DIGEST_LENGTH];
         for (unsigned i = 0; i < CC_SHA256_DIGEST_LENGTH; i++)
@@ -319,8 +322,8 @@ static NSString *__TLMGetTemporaryDirectory()
         // compare as data so it's clear that we need byte equality
         NSParameterAssert([scriptHashHexString canBeConvertedToEncoding:NSASCIIStringEncoding]);
         NSData *scriptHash = [scriptHashHexString dataUsingEncoding:NSASCIIStringEncoding];
-        NSData *checkHash = [NSData dataWithContentsOfFile:_hashPath options:NSUncachedRead error:NULL];
-
+        NSData *checkHash = [NSData dataWithContentsOfFile:_hash256Path options:NSUncachedRead error:NULL];
+        
         // downloaded hash has a description string appended
         if ([checkHash length] >= [scriptHash length])
             isOkay = [[checkHash subdataWithRange:NSMakeRange(0, [scriptHash length])] isEqualToData:scriptHash];
@@ -332,6 +335,106 @@ static NSString *__TLMGetTemporaryDirectory()
             TLMLog(__func__, @"script: %@\n\nsha256: %@", scriptHash, checkHash);
             [self setFailed:YES];
         }
+        return isOkay;
+    }
+}
+
+- (BOOL)_compare512
+{
+    BOOL isOkay = NO;
+    const char *script_path = [_scriptPath saneFileSystemRepresentation];
+    
+    // guaranteed to be able to open the file here
+    int fd = open(script_path, O_RDONLY);
+    
+    int status;
+    struct stat sb;
+    status = fstat(fd, &sb);
+    if (status) {
+        perror(script_path);
+        close(fd);
+        return NO;
+    }
+    
+    (void)fcntl(fd, F_NOCACHE, 1);
+    
+    char *buffer = mmap(0, (size_t)sb.st_size, PROT_READ, MAP_SHARED, fd, 0);
+    close(fd);
+    if (buffer == (void *)-1) {
+        perror("failed to mmap file");
+        TLMLog(__func__, @"Failed to memory map %@", _scriptPath);
+        return NO;
+    }
+    
+    // digest the entire file at once
+    unsigned char digest[CC_SHA512_DIGEST_LENGTH] = { '\0' };
+    (void) CC_SHA512(buffer, (CC_LONG)sb.st_size, digest);
+    munmap(buffer, (size_t)sb.st_size);
+    
+    // the downloaded digest is a hex string, so convert to hex for comparison
+    NSMutableString *scriptHashHexString = [NSMutableString stringWithCapacity:CC_SHA512_DIGEST_LENGTH];
+    for (unsigned i = 0; i < CC_SHA512_DIGEST_LENGTH; i++)
+        [scriptHashHexString appendFormat:@"%02x", digest[i]];
+    
+    // compare as data so it's clear that we need byte equality
+    NSParameterAssert([scriptHashHexString canBeConvertedToEncoding:NSASCIIStringEncoding]);
+    NSData *scriptHash = [scriptHashHexString dataUsingEncoding:NSASCIIStringEncoding];
+    NSData *checkHash = [NSData dataWithContentsOfFile:_hash512Path options:NSUncachedRead error:NULL];
+    
+    // downloaded hash has a description string appended
+    if ([checkHash length] >= [scriptHash length])
+        isOkay = [[checkHash subdataWithRange:NSMakeRange(0, [scriptHash length])] isEqualToData:scriptHash];
+    if (isOkay) {
+        TLMLog(__func__, @"SHA512 signature looks okay");
+    }
+    else {
+        TLMLog(__func__, @"*** ERROR *** SHA512 signature does not match");
+        TLMLog(__func__, @"script: %@\n\nsha512: %@", scriptHash, checkHash);
+        [self setFailed:YES];
+    }
+    return isOkay;
+}
+
+- (BOOL)_downloadAndCheckHash
+{
+    NSParameterAssert([self failed] == NO && [self isCancelled] == NO);
+    
+    // remote URL is the same as the file we just downloaded, but with .sha256 appended
+    // (sha512 in TL 2016 and later)
+    NSURL *hashURL = [_location tlm_URLByAppendingPathComponent:[[self class] _sha512Filename]];
+    [self _synchronouslyDownloadURL:hashURL toPath:_hash512Path];
+    
+    
+    if (NO == _downloadComplete) {
+        TLMLog(__func__, @"Unable to download SHA-512 signature from %@", hashURL);
+        
+        // set to nil as a sentinel that we don't have this file
+        [_hash512Path release];
+        _hash512Path = nil;
+        
+        // reset and try downloading the SHA-256 file
+        [self setFailed:NO];
+        hashURL = [_location tlm_URLByAppendingPathComponent:[[self class] _sha256Filename]];
+        [self _synchronouslyDownloadURL:hashURL toPath:_hash256Path];
+    }
+    
+    if (NO == _downloadComplete) {
+        TLMLog(__func__, @"Unable to download SHA-256 signature from %@", hashURL);
+        
+        // set to nil as a sentinel that we don't have this file, either
+        [_hash256Path release];
+        _hash256Path = nil;
+    }
+    
+    BOOL isOkay = NO;
+    
+    if (_downloadComplete) {
+        
+        if (_hash512Path)
+            isOkay = [self _compare512];
+        else if (_hash256Path)
+            isOkay = [self _compare256];
+        
     }
     else {
         TLMLog(__func__, @"Unable to download SHA256 signature from %@", hashURL);
