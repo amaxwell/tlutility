@@ -709,7 +709,7 @@ static void __TLMTestAndClearEnvironmentVariable(const char *name)
     }
 }
 
-- (BOOL)_getValidServerURL:(NSURL **)outURL repositoryYear:(TLMDatabaseYear *)outYear
+- (BOOL)_getValidServerURL:(NSURL **)outURL repositoryYear:(TLMDatabaseYear *)outYear fromURL:(NSURL *)fromURL
 {        
     NSParameterAssert(_installedYear != TLMDatabaseUnknownYear);
     NSParameterAssert(outURL);
@@ -720,7 +720,7 @@ static void __TLMTestAndClearEnvironmentVariable(const char *name)
      some other URL.  Eventually we'll get a few of them cached in the TLMDatabase, but this
      is a slowdown if you use mirror.ctan.org.
      */
-    TLMDatabase *db = [TLMDatabase databaseForMirrorURL:[self defaultServerURL]];
+    TLMDatabase *db = [TLMDatabase databaseForMirrorURL:fromURL];
     const TLMDatabaseYear repositoryYear = [db texliveYear];
     NSURL *validURL = [db mirrorURL];
         
@@ -782,14 +782,18 @@ static void __TLMTestAndClearEnvironmentVariable(const char *name)
     return [db failed];
 }
 
-- (NSURL *)validServerURL
+- (NSURL *)validServerURLFromURL:(NSURL *)fromURL
 {
     // will be nil on failure; always initialized
     NSURL *validURL;
     TLMDatabaseYear repositoryYear;
     
+    // use the mirror from prefs if we're not checking a specific one for redirects
+    if (nil == fromURL)
+        fromURL = [self defaultServerURL];
+    
     // false return value signifies TLMDatabase failure (usually a network problem)
-    BOOL dbFailed = [self _getValidServerURL:&validURL repositoryYear:&repositoryYear];
+    BOOL dbFailed = [self _getValidServerURL:&validURL repositoryYear:&repositoryYear fromURL:fromURL];
 
     /*
      This is a special case for the multiplexer, which can return a stale server; retry
@@ -802,7 +806,7 @@ static void __TLMTestAndClearEnvironmentVariable(const char *name)
      only case where we don't want to retry is when the network is down or the multiplexer
      itself is down.
      */
-    if (nil == validURL && [[self defaultServerURL] isMultiplexer]) {
+    if (nil == validURL && [fromURL isMultiplexer]) {
         int tryCount = 2;
         const int maxTries = 5;
         while (nil == validURL && tryCount <= maxTries) {
@@ -813,7 +817,7 @@ static void __TLMTestAndClearEnvironmentVariable(const char *name)
                 TLMLog(__func__, @"Stale repository returned from multiplexer.  Requesting another repository (attempt %d of %d).", tryCount, maxTries);
             }
 
-            dbFailed = [self _getValidServerURL:&validURL repositoryYear:&repositoryYear];
+            dbFailed = [self _getValidServerURL:&validURL repositoryYear:&repositoryYear fromURL:fromURL];
             tryCount++;
         }
     }

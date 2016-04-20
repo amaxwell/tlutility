@@ -67,6 +67,9 @@ extern NSString * const TLMDefaultRepositoryChangedNotification;
 // main thread only; sets defaults
 + (void)setDefaultRepository:(NSURL *)absoluteURL;
 
+// returns nil when no server can be reached; pass nil to use default URL from prefs
+- (NSURL *)validServerURLFromURL:(NSURL *)fromURL;
+
 /*
  NOTE: although property syntax is used, these keys are not necessarily
  observable with KVO at present.  Since no bindings are currently used, 
@@ -76,9 +79,6 @@ extern NSString * const TLMDefaultRepositoryChangedNotification;
 
 // composes the URL as needed
 @property (readonly) NSURL *defaultServerURL;
-
-// returns nil when no server can be reached
-@property (readonly) NSURL *validServerURL;
 
 // returns the local installation directory (/usr/local/texlive/2009)
 @property (readonly, copy) NSString *installDirectory;

@@ -311,7 +311,8 @@ static Class _UserNotificationClass;
 {
     if ([[[TLMEnvironment currentEnvironment] defaultServerURL] isMultiplexer])
         [self _displayStatusString:URL_VALIDATE_STATUS_STRING dataSource:_currentListDataSource];
-    _serverURL = [[[TLMEnvironment currentEnvironment] validServerURL] copy];
+    // home is based on prefs, not the current URL
+    _serverURL = [[[TLMEnvironment currentEnvironment] validServerURLFromURL:nil] copy];
     if ([[[_currentListDataSource statusWindow] statusString] isEqualToString:URL_VALIDATE_STATUS_STRING])
         [self _displayStatusString:nil dataSource:_currentListDataSource];
     
@@ -1914,7 +1915,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     if (aURL && [_updateListDataSource isRefreshing] == NO) {
         // make sure it's okay to call this with the multiplexer, just in case
         if ([aURL isMultiplexer])
-            aURL = [[TLMEnvironment currentEnvironment] validServerURL];
+            aURL = [[TLMEnvironment currentEnvironment] validServerURLFromURL:aURL];
         // if no valid URL, bad things are about to happen...
         if (nil == aURL)
             aURL = [[TLMEnvironment currentEnvironment] defaultServerURL];
