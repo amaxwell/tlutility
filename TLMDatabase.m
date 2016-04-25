@@ -230,7 +230,9 @@ static NSString     *_userAgent = nil;
 
 + (TLMDatabase *)localDatabase;
 {
-    return [self databaseForMirrorURL:[NSURL fileURLWithPath:[[TLMEnvironment currentEnvironment] installDirectory]]];
+    TLMDatabase *db = [self databaseForMirrorURL:[NSURL fileURLWithPath:[[TLMEnvironment currentEnvironment] installDirectory]]];
+    [db _fullDownload];
+    return db;
 }
 
 + (TLMDatabase *)databaseForMirrorURL:(NSURL *)aURL;
@@ -283,7 +285,7 @@ static NSString     *_userAgent = nil;
     [super dealloc];
 }
 
-- (void)reloadDatabaseFromPath:(NSString *)absolutePath
+- (void)reloadDatabaseFromPropertyListAtPath:(NSString *)absolutePath
 {    
     NSArray *packageDictionaries = [[NSDictionary dictionaryWithContentsOfFile:absolutePath] objectForKey:@"packages"];
     NSMutableArray *packages = [NSMutableArray arrayWithCapacity:[packageDictionaries count]];
@@ -304,6 +306,8 @@ static NSString     *_userAgent = nil;
         if ([[pkg name] isEqualToString:name])
             return pkg;
     }
+    if (NO == _hasFullDownload)
+        TLMLog(__func__, @"*** WARNING *** Requested package %@ from database without a full download", name);
     return nil;
 }
 
@@ -504,7 +508,7 @@ static NSString *__TLMTemporaryFile()
         [parseTask waitUntilExit];
         
         if ([parseTask terminationStatus] == EXIT_SUCCESS) {
-            [self reloadDatabaseFromPath:plistPath];
+            [self reloadDatabaseFromPropertyListAtPath:plistPath];
             if ([parseTask errorString])
                 TLMLog(__func__, @"parse_tlpdb.py noted the following problems: %@", [parseTask errorString]);
         }
@@ -581,7 +585,7 @@ static NSString *__TLMTemporaryFile()
         [parseTask waitUntilExit];
 
         if ([parseTask terminationStatus] == EXIT_SUCCESS) {
-            [self reloadDatabaseFromPath:plistPath];
+            [self reloadDatabaseFromPropertyListAtPath:plistPath];
             unlink([plistPath saneFileSystemRepresentation]);
             unlink([tlpdbPath saneFileSystemRepresentation]);
             if ([parseTask errorString])

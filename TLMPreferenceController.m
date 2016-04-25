@@ -58,6 +58,7 @@ NSString * const TLMShowLogWindowPreferenceKey = @"TLMShowLogWindowPreferenceKey
 NSString * const TLMLastUpdmapVersionShownKey = @"TLMLastUpdmapVersionShownKey";             /* 0                      */
 NSString * const TLMEnableUserUpdmapPreferenceKey = @"TLMEnableUserUpdmapPreferenceKey";     /* NO                     */
 NSString * const TLMDisableUpdmapAlertPreferenceKey = @"TLMDisableUpdmapAlertPreferenceKey"; /* NO                     */
+NSString * const TLMDisableGPGAlertPreferenceKey = @"TLMDisableGPGAlertPreferenceKey";       /* 0                      */
 NSString * const TLMDisableUmaskWarningKey = @"TLMDisableUmaskWarningKey";         /* NO                               */
 
 #define URL_TIMEOUT   30.0

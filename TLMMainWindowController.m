@@ -339,6 +339,39 @@ static Class _UserNotificationClass;
     
 }
 
+- (void)gpgInstallAlertDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)context
+{
+    TLMDatabaseYear year = [[TLMEnvironment currentEnvironment] texliveYear];
+    if ([[alert suppressionButton] state] == NSOnState)
+        [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInteger:year]
+                                                  forKey:TLMDisableGPGAlertPreferenceKey];
+    
+    if (NSAlertFirstButtonReturn == returnCode) {
+        //   tlmgr --repository http://www.preining.info/tlgpg/ install tlgpg
+        NSURL *gpgURL = [NSURL URLWithString:@"http://www.preining.info/tlgpg/"];
+        [_URLField setStringValue:[gpgURL absoluteString]];
+        [self setServerURL:gpgURL];
+        
+        // I don't like having this selected and highlighted at launch, for some reason
+        [[_URLField currentEditor] setSelectedRange:NSMakeRange(0, 0)];
+        [[self window] makeFirstResponder:nil];
+        
+        TLMInstallOperation *gpgOperation = [[TLMInstallOperation alloc] initWithPackageNames:[NSArray arrayWithObject:@"tlgpg"] location:gpgURL reinstall:YES];
+        [self _addOperation:gpgOperation selector:@selector(_handleGPGInstallFinishedNotification:) setRefreshingForDataSource:nil];
+        [gpgOperation release];
+    }
+    else {
+        // set the dirty bit on all datasources
+        [_updateListDataSource setNeedsUpdate:YES];
+        [_packageListDataSource setNeedsUpdate:YES];
+        [_backupDataSource setNeedsUpdate:YES];
+        [_installDataSource setNeedsUpdate:YES];
+        
+        // do this after the window loads, so something is visible right away
+        [self _goHome];
+    }
+}
+
 - (void)showWindow:(id)sender
 {
     [super showWindow:sender];
@@ -349,14 +382,38 @@ static Class _UserNotificationClass;
     if (__windowDidShow) return;
     __windowDidShow = YES;
     
-    // set the dirty bit on all datasources
-    [_updateListDataSource setNeedsUpdate:YES];
-    [_packageListDataSource setNeedsUpdate:YES];
-    [_backupDataSource setNeedsUpdate:YES];
-    [_installDataSource setNeedsUpdate:YES];
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:TLMDisableGPGAlertPreferenceKey])
+        TLMLog(__func__, @"User has chosen to permanently ignore the GPG install alert");
     
-    // do this after the window loads, so something is visible right away
-    [self _goHome];
+    TLMEnvironment *currentEnv = [TLMEnvironment currentEnvironment];
+    const TLMDatabaseYear currentYear = [currentEnv texliveYear];
+    // force the user to disable GPG install warning every year
+    if (currentYear >= 2016 &&
+        [[NSUserDefaults standardUserDefaults] integerForKey:TLMDisableGPGAlertPreferenceKey] != currentYear &&
+        [[TLMDatabase localDatabase] packageNamed:@"tlgpg"] == nil) {
+
+            NSAlert *alert = [[NSAlert new] autorelease];
+            [alert setMessageText:NSLocalizedString(@"Enable security validation of packages?", @"alert title")];
+            [alert setInformativeText:NSLocalizedString(@"This version of TeX Live allows you to check the digital signature of downloaded packages. For better security, you should enable this feature.", @"alert text")];
+            [alert addButtonWithTitle:NSLocalizedString(@"Enable", @"button title")];
+            [alert addButtonWithTitle:NSLocalizedString(@"Later", @"button title")];
+            [alert setShowsSuppressionButton:YES];
+            [alert beginSheetModalForWindow:[self window]
+                              modalDelegate:self
+                             didEndSelector:@selector(gpgInstallAlertDidEnd:returnCode:contextInfo:)
+                                contextInfo:NULL];
+    }
+    else {
+
+        // set the dirty bit on all datasources
+        [_updateListDataSource setNeedsUpdate:YES];
+        [_packageListDataSource setNeedsUpdate:YES];
+        [_backupDataSource setNeedsUpdate:YES];
+        [_installDataSource setNeedsUpdate:YES];
+
+        // do this after the window loads, so something is visible in the URL field
+        [self _goHome];
+    }
     
     // for info window; TL 2011 and later only
     [self _refreshLocalDatabase];
@@ -1549,6 +1606,31 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
         [op release];
         TLMLog(__func__, @"Beginning install of %@\nfrom %@", packageNames, [currentURL absoluteString]);   
     }
+}
+
+- (void)_handleGPGInstallFinishedNotification:(NSNotification *)aNote
+{
+    TLMInstallOperation *op = [aNote object];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:TLMOperationFinishedNotification object:op];
+
+    if ([op failed]) {
+        NSAlert *alert = [[NSAlert new] autorelease];
+        [alert setMessageText:NSLocalizedString(@"Failed to enable security validation of packages.", @"alert title")];
+        [alert setInformativeText:NSLocalizedString(@"Installing gpg appears to have failed. Would you like to show the log now or ignore this warning?", @"alert message text")];
+        [alert addButtonWithTitle:NSLocalizedString(@"Show Log", @"button title")];
+        [alert addButtonWithTitle:NSLocalizedString(@"Ignore", @"button title")];
+        [alert beginSheetModalForWindow:[self window]
+                          modalDelegate:self
+                         didEndSelector:@selector(alertForLogWindowDidEnd:returnCode:contextInfo:)
+                            contextInfo:NULL];
+    }
+    
+    NSString *statusString = NSLocalizedString(@"Security Validation Enabled", @"status message");
+    [self _displayStatusString:statusString dataSource:_packageListDataSource];
+    [self _postUserNotificationWithTitle:statusString];
+
+    // finish the rest of -showWindow setup here
+    [self goHome:nil];
 }
 
 - (void)_handleRemoveFinishedNotification:(NSNotification *)aNote

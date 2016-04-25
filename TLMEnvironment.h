@@ -98,6 +98,9 @@ extern NSString * const TLMDefaultRepositoryChangedNotification;
 // adds kpsewhich to TLMTexBinPathPreferenceKey, standardizes path
 @property (readonly) NSString *kpsewhichAbsolutePath;
 
+// adds gpg to TLMTexBinPathPreferenceKey, standardizes path
+@property (readonly) NSString *gpgAbsolutePath;
+
 // checks permission on installDirectory
 @property (readonly) BOOL installRequiresRootPrivileges;
 

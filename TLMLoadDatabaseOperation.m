@@ -188,7 +188,7 @@
                 TLMLog(__func__, @"Unable to read mirror from tlpdb property list with keys %@", [dict allKeys]);
             else
                 [self setUpdateURL:[NSURL URLWithString:mirror]];
-            [[TLMDatabase databaseForMirrorURL:[self updateURL]] reloadDatabaseFromPath:temporaryPath];
+            [[TLMDatabase databaseForMirrorURL:[self updateURL]] reloadDatabaseFromPropertyListAtPath:temporaryPath];
         }
         else {
             TLMLog(__func__, @"Dumping tlpdb from repository %@ failed", [self updateURL]);
@@ -197,7 +197,7 @@
     
     // always dump the local db
     if ([self _dumpDatabaseAtURL:nil asPropertyList:temporaryPath]) {
-        [[TLMDatabase localDatabase] reloadDatabaseFromPath:temporaryPath];
+        [[TLMDatabase localDatabase] reloadDatabaseFromPropertyListAtPath:temporaryPath];
     }
     else {
         TLMLog(__func__, @"Dumping local tlpdb failed");

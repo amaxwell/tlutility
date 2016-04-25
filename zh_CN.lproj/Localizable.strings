@@ -488,3 +488,24 @@
 
 /* status message */
 "Changing Documentation Option Failed" = "Changing Documentation Option Failed";
+
+/* button title */
+"Enable" = "Enable";
+
+/* alert title */
+"Enable security validation of packages?" = "Enable security validation of packages?";
+
+/* alert title */
+"Failed to enable security validation of packages." = "Failed to enable security validation of packages.";
+
+/* alert message text */
+"Installing gpg appears to have failed. Would you like to show the log now or ignore this warning?" = "Installing gpg appears to have failed. Would you like to show the log now or ignore this warning?";
+
+/* button title */
+"Later" = "Later";
+
+/* status message */
+"Security Validation Enabled" = "Security Validation Enabled";
+
+/* alert text */
+"This version of TeX Live allows you to check the digital signature of downloaded packages. For better security, you should enable this feature." = "This version of TeX Live allows you to check the digital signature of downloaded packages. For better security, you should enable this feature.";

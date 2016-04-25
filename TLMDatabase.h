@@ -45,6 +45,8 @@ extern const TLMDatabaseYear TLMDatabaseUnknownYear;
 
 extern NSString * const TLMDatabaseVersionCheckComplete;
 
+@class TLMDatabasePackage;
+
 @interface TLMDatabase : NSObject 
 {
 @private
@@ -65,7 +67,8 @@ extern NSString * const TLMDatabaseVersionCheckComplete;
 
 + (NSArray *)packagesByAddingVersionsFromMirror:(NSURL *)aURL toPackages:(NSArray *)packages;
 + (NSArray *)packageNodesByMergingLocalWithMirror:(NSURL *)aURL;
-- (void)reloadDatabaseFromPath:(NSString *)absolutePath;
+- (void)reloadDatabaseFromPropertyListAtPath:(NSString *)absolutePath;
+- (TLMDatabasePackage *)packageNamed:(NSString *)name;
 
 @property (readonly) TLMDatabaseYear texliveYear;
 @property (copy) NSArray *packages;

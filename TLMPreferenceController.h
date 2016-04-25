@@ -53,6 +53,7 @@ extern NSString * const TLMShowLogWindowPreferenceKey;
 extern NSString * const TLMLastUpdmapVersionShownKey;
 extern NSString * const TLMEnableUserUpdmapPreferenceKey;
 extern NSString * const TLMDisableUpdmapAlertPreferenceKey;
+extern NSString * const TLMDisableGPGAlertPreferenceKey;
 extern NSString * const TLMDisableUmaskWarningKey;
 
 @interface TLMPreferenceController : NSWindowController <NSComboBoxDataSource, NSOpenSavePanelDelegate>

@@ -80,6 +80,7 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
 #define TEXDOC_CMD    @"texdoc"
 #define KPSEWHICH_CMD @"kpsewhich"
 #define UPDMAP_CMD    @"updmap"
+#define GPG_CMD       @"gpg"
 #define TEXDIST_PATH  @"/Library/TeX"
 
 #define PERMISSION_CHECK_IN_PROGRESS 1
@@ -946,6 +947,12 @@ static void __TLMTestAndClearEnvironmentVariable(const char *name)
 {
     NSString *texbinPath = [[NSUserDefaults standardUserDefaults] objectForKey:TLMTexBinPathPreferenceKey];
     return [[texbinPath stringByAppendingPathComponent:KPSEWHICH_CMD] stringByStandardizingPath];
+}
+
+- (NSString *)gpgAbsolutePath
+{
+    NSString *texbinPath = [[NSUserDefaults standardUserDefaults] objectForKey:TLMTexBinPathPreferenceKey];
+    return [[texbinPath stringByAppendingPathComponent:GPG_CMD] stringByStandardizingPath];
 }
 
 #pragma mark Default URL

@@ -147,6 +147,9 @@ static void __TLMMigrateBundleIdentifier()
     [defaults setObject:[NSNumber numberWithBool:NO] forKey:TLMEnableUserUpdmapPreferenceKey];
     [defaults setObject:[NSNumber numberWithBool:NO] forKey:TLMDisableUpdmapAlertPreferenceKey];
     
+    // TL 2016 and later
+    [defaults setObject:[NSNumber numberWithInt:0] forKey:TLMDisableGPGAlertPreferenceKey];
+    
     [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];   
 }
 
