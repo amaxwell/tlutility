@@ -394,7 +394,7 @@ static Class _UserNotificationClass;
 
             NSAlert *alert = [[NSAlert new] autorelease];
             [alert setMessageText:NSLocalizedString(@"Enable security validation of packages?", @"alert title")];
-            [alert setInformativeText:NSLocalizedString(@"This version of TeX Live allows you to check the digital signature of downloaded packages. For better security, you should enable this feature.", @"alert text")];
+            [alert setInformativeText:NSLocalizedString(@"This version of TeX Live allows you to check the digital signature of downloaded packages by installing GnuPG. For better security, you should enable this feature.", @"alert text")];
             [alert addButtonWithTitle:NSLocalizedString(@"Enable", @"button title")];
             [alert addButtonWithTitle:NSLocalizedString(@"Later", @"button title")];
             [alert setShowsSuppressionButton:YES];
@@ -1147,25 +1147,9 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     [[[self window] toolbar] validateVisibleItems];
 }
 
-- (void)_handleRefreshLocalDatabaseFinishedNotification:(NSNotification *)aNote
-{
-    TLMLoadDatabaseOperation *op = [aNote object];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:TLMOperationFinishedNotification object:op];
-    // only clear this status message, which is intended to be ephemeral
-    if ([[[_updateListDataSource statusWindow] statusString] isEqualToString:DB_LOAD_STATUS_STRING])
-        [self _displayStatusString:nil dataSource:_updateListDataSource];
-    [[[self window] toolbar] validateVisibleItems];
-}
-
 - (void)_refreshLocalDatabase
 {
-    // pick a datasource to use here; doesn't matter which, as long as it's the same in the callback
-    [self _displayStatusString:DB_LOAD_STATUS_STRING dataSource:_updateListDataSource];
-    TLMLog(__func__, @"Updating local package database");
-    NSURL *mirror = [[TLMEnvironment currentEnvironment] defaultServerURL];
-    TLMLoadDatabaseOperation *op = [[TLMLoadDatabaseOperation alloc] initWithLocation:mirror offline:YES];
-    [self _addOperation:op selector:@selector(_handleRefreshLocalDatabaseFinishedNotification:) setRefreshingForDataSource:_updateListDataSource];
-    [op release];
+    [TLMDatabase reloadLocalDatabase];
 }
 
 - (void)_refreshUpdatedPackageListFromLocation:(NSURL *)location
@@ -1653,6 +1637,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     else if ([op isCancelled] == NO) {
         
         [self _runUpdmapIfNeeded];
+        [self _refreshLocalDatabase];
         [_updateListDataSource setNeedsUpdate:YES];
         [_packageListDataSource setNeedsUpdate:YES];
         [_backupDataSource setNeedsUpdate:YES];
@@ -1685,6 +1670,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     else if ([op isCancelled] == NO) {
                 
         [self _runUpdmapIfNeeded];
+        [self _refreshLocalDatabase];
         [_updateListDataSource setNeedsUpdate:YES];
         
         // no reason to refresh backups or package list after a restore

@@ -508,4 +508,4 @@
 "Security Validation Enabled" = "Security Validation Enabled";
 
 /* alert text */
-"This version of TeX Live allows you to check the digital signature of downloaded packages. For better security, you should enable this feature." = "This version of TeX Live allows you to check the digital signature of downloaded packages. For better security, you should enable this feature.";
+"This version of TeX Live allows you to check the digital signature of downloaded packages by installing GnuPG. For better security, you should enable this feature." = "This version of TeX Live allows you to check the digital signature of downloaded packages by installing GnuPG. For better security, you should enable this feature.";

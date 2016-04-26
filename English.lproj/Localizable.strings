@@ -407,7 +407,7 @@
 "This URL was not valid." = "This URL was not valid.";
 
 /* alert text */
-"This version of TeX Live allows you to check the digital signature of downloaded packages. For better security, you should enable this feature." = "This version of TeX Live allows you to check the digital signature of downloaded packages. For better security, you should enable this feature.";
+"This version of TeX Live allows you to check the digital signature of downloaded packages by installing GnuPG. For better security, you should enable this feature." = "This version of TeX Live allows you to check the digital signature of downloaded packages by installing GnuPG. For better security, you should enable this feature.";
 
 /* No comment provided by engineer. */
 "This version of TeX Live Utility will not work correctly with TeX Live 2008.  You need to download TeX Live Utility version 0.74 or earlier, or upgrade to a newer TeX Live.  I recommend the latter." = "This version of TeX Live Utility will not work correctly with TeX Live 2008.  You need to download TeX Live Utility version 0.74 or earlier, or upgrade to a newer TeX Live.  I recommend the latter.";

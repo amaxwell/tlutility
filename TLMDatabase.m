@@ -54,6 +54,8 @@ NSString * const TLMDatabaseVersionCheckComplete = @"TLMDatabaseVersionCheckComp
 @interface TLMDatabase ()
 @property (readwrite, retain) NSMutableData *tlpdbData;
 - (void)_fullDownload;
+- (void)_reloadFromLocalFile;
+@property (readwrite) BOOL needsReload;
 @end
 
 @implementation TLMDatabase
@@ -65,6 +67,7 @@ NSString * const TLMDatabaseVersionCheckComplete = @"TLMDatabaseVersionCheckComp
 @synthesize failed = _failed;
 @synthesize isOfficial = _isOfficial;
 @synthesize tlpdbData = _tlpdbData;
+@synthesize needsReload = _needsReload;
 
 static NSMutableSet *_databases = nil;
 static NSLock       *_databasesLock = nil;
@@ -228,10 +231,17 @@ static NSString     *_userAgent = nil;
     return packageNodes;
 }
 
++ (void)reloadLocalDatabase;
+{
+    TLMDatabase *db = [self databaseForMirrorURL:[NSURL fileURLWithPath:[[TLMEnvironment currentEnvironment] installDirectory]]];
+    [db setNeedsReload:YES];
+}
+
 + (TLMDatabase *)localDatabase;
 {
     TLMDatabase *db = [self databaseForMirrorURL:[NSURL fileURLWithPath:[[TLMEnvironment currentEnvironment] installDirectory]]];
-    [db _fullDownload];
+    // will check if loaded/needs reload
+    [db _reloadFromLocalFile];
     return db;
 }
 
@@ -255,6 +265,7 @@ static NSString     *_userAgent = nil;
      if downloading the db directly to check version or when loaded from disk.
      */
     [db setMirrorURL:aURL];
+    [db setNeedsReload:YES];
     [_databases addObject:db];
     [db release];
     [_databasesLock unlock];
@@ -286,8 +297,27 @@ static NSString     *_userAgent = nil;
 }
 
 - (void)reloadDatabaseFromPropertyListAtPath:(NSString *)absolutePath
-{    
-    NSArray *packageDictionaries = [[NSDictionary dictionaryWithContentsOfFile:absolutePath] objectForKey:@"packages"];
+{
+    /*
+     $ time ~/build/tlutility/parse_tlpdb.py /usr/local/texlive/2016/tlpkg/texlive.tlpdb -o /tmp/a.plist -f plist
+     
+     real	0m1.762s
+     user	0m1.687s
+     sys	0m0.062s
+     
+     Saving it as a binary plist blows up the write time from Python to ~2.1 seconds. 
+     Total time was 2.8 seconds here, and that pushed it up over 3 seconds. Using XML plist
+     from Python and mapped data + NSPropertyListSerialization knocked us down to ~2.5
+     seconds overall, which is about as good as it gets for now.
+     */
+    NSData *plistData = [[NSData alloc] initWithContentsOfURL:[NSURL fileURLWithPath:absolutePath]
+                                                      options:NSDataReadingMappedIfSafe
+                                                        error:NULL];
+    NSDictionary *rootPlist = [NSPropertyListSerialization propertyListWithData:plistData
+                                                                        options:NSPropertyListImmutable
+                                                                         format:NULL
+                                                                          error:NULL];
+    NSArray *packageDictionaries = [rootPlist objectForKey:@"packages"];
     NSMutableArray *packages = [NSMutableArray arrayWithCapacity:[packageDictionaries count]];
     for (NSDictionary *pkgDict in packageDictionaries) {
         TLMDatabasePackage *pkg = [[TLMDatabasePackage alloc] initWithDictionary:pkgDict];
@@ -298,6 +328,7 @@ static NSString     *_userAgent = nil;
         [self setPackages:packages];
         [self setLoadDate:[NSDate date]];
     }
+    [plistData release];
 }
 
 - (TLMDatabasePackage *)packageNamed:(NSString *)name
@@ -438,6 +469,46 @@ static NSString *__TLMTemporaryFile()
     NSString *absolutePath = [NSTemporaryDirectory() stringByAppendingPathComponent:[(id)CFUUIDCreateString(NULL, uuid) autorelease]];
     if (uuid) CFRelease(uuid);
     return absolutePath;
+}
+
+- (void)_reloadFromLocalFile
+{
+    // !!! early return
+    if ([self needsReload] == NO)
+        return;
+    
+    CFAbsoluteTime start = CFAbsoluteTimeGetCurrent();
+    NSURL *fileURL = [self _tlpdbURL];
+    NSParameterAssert([fileURL isFileURL]);
+    TLMLog(__func__, @"Reloading local tlpdb from %@", fileURL);
+
+    NSString *tlpdbPath = [fileURL path];
+    NSString *plistPath = __TLMTemporaryFile();
+    NSString *parserPath = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"parse_tlpdb.py"];
+    
+    TLMTask *parseTask = [[TLMTask new] autorelease];
+    [parseTask setLaunchPath:parserPath];
+    [parseTask setArguments:[NSArray arrayWithObjects:@"-o", plistPath, @"-f", @"plist", tlpdbPath, nil]];
+    [parseTask launch];
+    [parseTask waitUntilExit];
+    
+    if ([parseTask terminationStatus] == EXIT_SUCCESS) {
+        [_downloadLock lock];
+        [self reloadDatabaseFromPropertyListAtPath:plistPath];
+        _hasFullDownload = YES;
+        [self setNeedsReload:NO];
+        [_downloadLock unlock];
+        if ([parseTask errorString])
+            TLMLog(__func__, @"parse_tlpdb.py noted the following problems: %@", [parseTask errorString]);
+    }
+    else {
+        TLMLog(__func__, @"Parsing the database from this repository failed with the following error: %@", [parseTask errorString]);
+        _failed = YES;
+    }
+    TLMLog(__func__, @"Took %.2f seconds to reload local tlpdb", CFAbsoluteTimeGetCurrent() - start);
+    
+    unlink([plistPath saneFileSystemRepresentation]);
+
 }
 
 - (void)_fullDownload

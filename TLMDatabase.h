@@ -60,9 +60,12 @@ extern NSString * const TLMDatabaseVersionCheckComplete;
     BOOL             _failed;
     CFAbsoluteTime   _failureTime;
     BOOL             _hasFullDownload;
+    BOOL             _needsReload;
 }
 
 + (TLMDatabase *)localDatabase;
+// force a reload from disk
++ (void)reloadLocalDatabase;
 + (TLMDatabase *)databaseForMirrorURL:(NSURL *)aURL;
 
 + (NSArray *)packagesByAddingVersionsFromMirror:(NSURL *)aURL toPackages:(NSArray *)packages;
