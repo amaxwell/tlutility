@@ -8,6 +8,18 @@
 		<array>
 			<dict>
 				<key>country</key>
+				<string>Algeria</string>
+				<key>name</key>
+				<string>ctan.epst-tlemcen.dz</string>
+				<key>urls</key>
+				<array>
+					<string>http://ctan.epst-tlemcen.dz/tex-archive/</string>
+					<string>ftp://ctan.epst-tlemcen.dz/pub/tex-archive/</string>
+					<string>rsync://ctan.epst-tlemcen.dz/ctan/</string>
+				</array>
+			</dict>
+			<dict>
+				<key>country</key>
 				<string>South Africa</string>
 				<key>name</key>
 				<string>ftp.leg.uct.ac.za</string>
@@ -59,6 +71,16 @@
 				<key>country</key>
 				<string>China</string>
 				<key>name</key>
+				<string>mirror.lzu.edu.cn</string>
+				<key>urls</key>
+				<array>
+					<string>http://mirror.lzu.edu.cn/CTAN/</string>
+				</array>
+			</dict>
+			<dict>
+				<key>country</key>
+				<string>China</string>
+				<key>name</key>
 				<string>mirror.neu.edu.cn</string>
 				<key>urls</key>
 				<array>
@@ -74,6 +96,16 @@
 				<array>
 					<string>http://mirrors.hust.edu.cn/CTAN/</string>
 					<string>rsync://mirrors.hust.edu.cn/CTAN/</string>
+				</array>
+			</dict>
+			<dict>
+				<key>country</key>
+				<string>China</string>
+				<key>name</key>
+				<string>mirrors.opencas.cn</string>
+				<key>urls</key>
+				<array>
+					<string>http://mirrors.opencas.cn/ctan/</string>
 				</array>
 			</dict>
 			<dict>
@@ -521,7 +553,7 @@
 				<string>mirror.unicorncloud.org</string>
 				<key>urls</key>
 				<array>
-					<string>http://mirror.unicorncloud.org/CTAN/</string>
+					<string>http://mirror.reismil.ch/CTAN/</string>
 				</array>
 			</dict>
 			<dict>
@@ -668,10 +700,20 @@
 				<key>country</key>
 				<string>Russia</string>
 				<key>name</key>
-				<string>ctan.uni-altai.ru</string>
+				<string>ctan.altspu.ru</string>
 				<key>urls</key>
 				<array>
-					<string>http://ctan.uni-altai.ru/</string>
+					<string>http://ctan.altspu.ru/</string>
+				</array>
+			</dict>
+			<dict>
+				<key>country</key>
+				<string>Serbia</string>
+				<key>name</key>
+				<string>ctan.mirror.ftn.uns.ac.rs</string>
+				<key>urls</key>
+				<array>
+					<string>http://ctan.mirror.ftn.uns.ac.rs/</string>
 				</array>
 			</dict>
 			<dict>
@@ -884,17 +926,6 @@
 				<key>country</key>
 				<string>USA</string>
 				<key>name</key>
-				<string>ctan.mirrorcatalogs.com</string>
-				<key>urls</key>
-				<array>
-					<string>http://ctan.mirrorcatalogs.com/</string>
-					<string>ftp://ctan.mirrorcatalogs.com/ctan/</string>
-				</array>
-			</dict>
-			<dict>
-				<key>country</key>
-				<string>USA</string>
-				<key>name</key>
 				<string>ctan.sharelatex.com</string>
 				<key>urls</key>
 				<array>
@@ -961,10 +992,10 @@
 				<key>country</key>
 				<string>USA</string>
 				<key>name</key>
-				<string>mirror.math.ku.edu</string>
+				<string>mirrors.acm.jhu.edu</string>
 				<key>urls</key>
 				<array>
-					<string>http://mirror.math.ku.edu/tex-archive/</string>
+					<string>http://mirrors.acm.jhu.edu/ctan/</string>
 				</array>
 			</dict>
 			<dict>
@@ -1029,6 +1060,17 @@
 				<key>country</key>
 				<string>Brazil</string>
 				<key>name</key>
+				<string>lasca.ic.unicamp.br</string>
+				<key>urls</key>
+				<array>
+					<string>http://www.lasca.ic.unicamp.br/pub/ctan/</string>
+					<string>ftp://ftp.lasca.ic.unicamp.br/pub/ctan/</string>
+				</array>
+			</dict>
+			<dict>
+				<key>country</key>
+				<string>Brazil</string>
+				<key>name</key>
 				<string>linorg.usp.br</string>
 				<key>urls</key>
 				<array>
@@ -1082,6 +1124,6 @@
 		</array>
 	</dict>
 	<key>timestamp</key>
-	<real>1444520666.976588</real>
+	<real>1463709382.63382</real>
 </dict>
 </plist>

@@ -43,7 +43,7 @@ lang = []
 collections = []
 other = []
 
-TEXLIVE_YEAR = 2015
+TEXLIVE_YEAR = 2016
 
 for line in open("/usr/local/texlive/%d/tlpkg/texlive.profile" % (TEXLIVE_YEAR), "r"):
     
