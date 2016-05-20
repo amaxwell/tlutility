@@ -784,5 +784,20 @@
             <sparkle:minimumSystemVersion>10.6.8</sparkle:minimumSystemVersion>
             <enclosure url="https://github.com/amaxwell/tlutility/releases/download/1.23/TeX.Live.Utility.app-1.23.tar.gz" sparkle:version="1.23" length="3067050" type="application/octet-stream" sparkle:dsaSignature="MCwCFDGnHJVQ+Q9dM3fltCyM9ddxU0E2AhQE+GPq3Cc+E1zWDj7CadiGehtjsQ=="></enclosure>
         </item>
+        <item>
+            <title>Version 1.24</title>
+            <description>
+                <h3>Changes Since 1.23</h3>
+                <li>Fixed issue 32, parsing of a partial tlpdb when reading version numbers</li>
+                <li>Return values from waitpid are handled correctly</li>
+                <li>Fixed issue 38, bad hyperlink in About box</li>
+                <li>Fixes for compatibility with TL 2016 and sha-512 hashes</li>
+                <li>Added support for signed TL package checking in TL 2016</li>
+                <li>Updated Japanese translation, many thanks to kojiyokota</li>
+            </description>
+            <pubDate>Fri, 20 May 2016 02:04:01 +0000</pubDate>
+            <sparkle:minimumSystemVersion>10.6.8</sparkle:minimumSystemVersion>
+            <enclosure url="https://github.com/amaxwell/tlutility/releases/download/1.24/TeX.Live.Utility.app-1.24.tar.gz" sparkle:version="1.24" length="3000637" type="application/octet-stream" sparkle:dsaSignature="MC0CFQCI9OTnr0d+q2cvRl1Vn8k4oPdkcQIUWq66xreLCg8zmRB7bRT6fctiCks="></enclosure>
+        </item>
     </channel>
 </rss>
