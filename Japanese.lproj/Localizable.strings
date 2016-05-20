@@ -1,4 +1,4 @@
-﻿/* partial alert text, with double space in front, only used with tlmgr2 */
+/* partial alert text, with double space in front, only used with tlmgr2 */
 "  Total download size will be %@." = "  ダウンロード総量は %@ の見込みです。";
 
 /* Menu item title, Need a single leading space */
@@ -189,7 +189,7 @@
 "New packages will be installed." = "新しいパッケージが導入されます。";
 
 /* button title */
-"No" = "No";
+"No" = "いいえ";
 
 /* main window status string */
 "No Backups Available" = "利用できるバックアップがありません";
@@ -409,7 +409,7 @@
 "Would you like to use this as the default value for the command-line tlmgr tool as well?" = "これをコマンドラインツールの tlmgr の既定値としても使用したいですか？";
 
 /* button title */
-"Yes" = "Yes";
+"Yes" = "はい";
 
 /* alert message text */
 "You are attempting to remove critical parts of the underlying TeX Live infrastructure, and I won't help you do that." = "TeX Live 基盤部の必須部分を削除しようとしています。この操作の手助けはしません。";
@@ -445,67 +445,67 @@
 "Running updmap…" = "updmapを実行中です…";
 
 /* alert text */
-"A newer version of the scheduled update script is available.  Would you like to install it now?" = "A newer version of the scheduled update script is available.  Would you like to install it now?";
+"A newer version of the scheduled update script is available.  Would you like to install it now?" = "時間指定更新スクリプトの新版がありますが、いま導入しますか？";
 
 /* alert title */
-"Newer update checker is available" = "Newer update checker is available";
+"Newer update checker is available" = "新しい更新確認プログラムがあります";
 
 /* alert title */
-"TeX Live paper size does not match system default" = "TeX Live paper size does not match system default";
+"TeX Live paper size does not match system default" = "TeX Liveの用紙寸法がシステム既定値と一致しません";
 
 /* alert text, two string format specifiers */
-"The normal umask is %@ and yours is set to %@. This more restrictive umask may cause permission problems with TeX Live." = "The normal umask is %1$@ and yours is set to %2$@. This more restrictive umask may cause permission problems with TeX Live.";
+"The normal umask is %@ and yours is set to %@. This more restrictive umask may cause permission problems with TeX Live." = "通常のumaskは%1$@ですが、お使いのumaskは%2$@になっています。この制限の強いumaskでは、TeX Liveにアクセス権限の問題を引き起こすかもしれません。";
 
 /* alert title */
-"Unable to determine repository version" = "Unable to determine repository version";
+"Unable to determine repository version" = "リポジトリのバージョンを特定できません";
 
 /* alert text */
-"Would you like to set the TeX Live paper size now?" = "Would you like to set the TeX Live paper size now?";
+"Would you like to set the TeX Live paper size now?" = "いまTeX Liveの用紙寸法を設定しますか？";
 
 /* alert text, integer format specifier */
-"You appear to have installed fonts in your home directory.  Would you like them to be automatically activated in TeX Live %d?" = "You appear to have installed fonts in your home directory.  Would you like them to be automatically activated in TeX Live %d?";
+"You appear to have installed fonts in your home directory.  Would you like them to be automatically activated in TeX Live %d?" = "フォントをホームディレクトリ上に導入しているようです。これらのフォントを自動的にTeX Live %dでも有効にしますか？";
 
 /* alert title */
-"You have altered the system's umask" = "You have altered the system's umask";
+"You have altered the system's umask" = "システムumaskを変更しました";
 
 /* alert text, integer and string format specifiers */
-"You have TeX Live %lu installed, but the version at %@ cannot be determined." = "You have TeX Live %1$lu installed, but the version at %2$@ cannot be determined.";
+"You have TeX Live %lu installed, but the version at %@ cannot be determined." = "TeX Live %1$luが導入済みですが、%2$@にあるバージョンを特定できません。";
 
 /* status for package */
-"Needs removal" = "Needs removal";
+"Needs removal" = "要削除";
 
 /* status for package */
-"Update available" = "Update available";
+"Update available" = "更新可";
 
 /* alert button title */
-"Change" = "Change";
+"Change" = "変更";
 
 /* alert button title */
-"Manually" = "Manually";
+"Manually" = "手動";
 
 /* alert message text */
-"Your preferences need to be adjusted for new Apple requirements. Would you like to change your TeX Programs location from /usr/texbin to /Library/TeX/texbin or set it manually?" = "Your preferences need to be adjusted for new Apple requirements. Would you like to change your TeX Programs location from /usr/texbin to /Library/TeX/texbin or set it manually?";
+"Your preferences need to be adjusted for new Apple requirements. Would you like to change your TeX Programs location from /usr/texbin to /Library/TeX/texbin or set it manually?" = "現在の設定を、新しいAppleの要求に合わせる必要があります。TeXプログラムの場所を現在の/usr/texbinから/Library/TeX/texbinに変更しますか、それとも手動で設定しますか？";
 
 /* status message */
-"Changing Documentation Option Failed" = "Changing Documentation Option Failed";
+"Changing Documentation Option Failed" = "説明書関連オプションの変更に失敗しました";
 
 /* button title */
-"Enable" = "Enable";
+"Enable" = "有効化";
 
 /* alert title */
-"Enable security validation of packages?" = "Enable security validation of packages?";
+"Enable security validation of packages?" = "パッケージの安全性検証を有効にしますか？";
 
 /* alert title */
-"Failed to enable security validation of packages." = "Failed to enable security validation of packages.";
+"Failed to enable security validation of packages." = "パッケージの安全性検証を有効化に失敗しました。";
 
 /* alert message text */
-"Installing gpg appears to have failed. Would you like to show the log now or ignore this warning?" = "Installing gpg appears to have failed. Would you like to show the log now or ignore this warning?";
+"Installing gpg appears to have failed. Would you like to show the log now or ignore this warning?" = "gpgの導入に失敗したようです。ログをいま表示しますか、それともこの警告を無視しますか？";
 
 /* button title */
-"Later" = "Later";
+"Later" = "後で";
 
 /* status message */
-"Security Validation Enabled" = "Security Validation Enabled";
+"Security Validation Enabled" = "安全性検証が有効になりました";
 
 /* alert text */
-"This version of TeX Live allows you to check the digital signature of downloaded packages by installing GnuPG. For better security, you should enable this feature." = "This version of TeX Live allows you to check the digital signature of downloaded packages by installing GnuPG. For better security, you should enable this feature.";
+"This version of TeX Live allows you to check the digital signature of downloaded packages by installing GnuPG. For better security, you should enable this feature." = "この版のTeX Liveでは、GnuPGを導入することによって、ダウンロードしたパッケージのデジタル署名をチェックすることができます。安全性向上のために、この機能を有効にしたほうが良いでしょう。";

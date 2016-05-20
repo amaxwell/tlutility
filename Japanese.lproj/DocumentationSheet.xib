@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="8191" systemVersion="15A284" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="10117" systemVersion="15E65" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="8191"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10117"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="TLMDocumentationController">
@@ -27,10 +27,9 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <button id="AfX-Ub-AKe">
-                        <rect key="frame" x="18" y="59" width="246" height="18"/>
+                        <rect key="frame" x="18" y="59" width="191" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <animations/>
-                        <buttonCell key="cell" type="check" title="Install documentation when updating" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="zf9-P2-scC">
+                        <buttonCell key="cell" type="check" title="更新の際、説明書類も導入する" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="zf9-P2-scC">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -39,10 +38,9 @@
                         </connections>
                     </button>
                     <button verticalHuggingPriority="750" id="GKj-m5-f9g">
-                        <rect key="frame" x="161" y="13" width="107" height="32"/>
+                        <rect key="frame" x="158" y="13" width="113" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <animations/>
-                        <buttonCell key="cell" type="push" title="Install Now" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="NfU-5X-tLJ">
+                        <buttonCell key="cell" type="push" title="いま導入する" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="NfU-5X-tLJ">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -51,10 +49,9 @@
                         </connections>
                     </button>
                     <button verticalHuggingPriority="750" id="bRY-WV-37V">
-                        <rect key="frame" x="74" y="13" width="87" height="32"/>
+                        <rect key="frame" x="73" y="13" width="89" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <animations/>
-                        <buttonCell key="cell" type="push" title="Dismiss" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="T5g-mM-5u2">
+                        <buttonCell key="cell" type="push" title="取り消す" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="T5g-mM-5u2">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -63,7 +60,6 @@
                         </connections>
                     </button>
                 </subviews>
-                <animations/>
             </view>
             <connections>
                 <outlet property="delegate" destination="-2" id="qFZ-LD-RfR"/>

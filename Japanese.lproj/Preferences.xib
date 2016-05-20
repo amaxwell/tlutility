@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9059" systemVersion="15B42" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="10117" systemVersion="15E65" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
-        <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9059"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10117"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="TLMPreferenceController">
@@ -31,7 +30,6 @@
                     <textField verticalHuggingPriority="750" id="11">
                         <rect key="frame" x="17" y="120" width="100" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <animations/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="TeX プログラム:" id="12">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -41,7 +39,6 @@
                     <button verticalHuggingPriority="750" id="23">
                         <rect key="frame" x="384" y="113" width="100" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
-                        <animations/>
                         <buttonCell key="cell" type="push" title="選択…" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="24">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
@@ -50,11 +47,9 @@
                             <action selector="changeTexBinPath:" target="-2" id="25"/>
                         </connections>
                     </button>
-                    <button id="33">
+                    <button toolTip="このボックスをチェックすると、状況によってはパフォーマンスが低下するかもしれませんが、組み込みログビューアでは問題がある場合には、便利です。" id="33">
                         <rect key="frame" x="18" y="58" width="243" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <string key="toolTip">Checking this box may reduce performance under some conditions, but is useful if there are problems with the built-in log viewer.</string>
-                        <animations/>
                         <buttonCell key="cell" type="check" title="進行状況をシステムログに表示する。" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="34">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
@@ -63,10 +58,9 @@
                             <action selector="toggleUseSyslog:" target="-2" id="36"/>
                         </connections>
                     </button>
-                    <button toolTip="If unchecked, pass --no-auto-install to tlmgr to avoid installing packages added to the server." id="47">
+                    <button toolTip="チェックを外すと、tlmgrに--no-auto-installを渡して、サーバーに追加されたパッケージを導入してしまわないようにします。" id="47">
                         <rect key="frame" x="18" y="38" width="360" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <animations/>
                         <buttonCell key="cell" type="check" title="更新時にサーバーに合わせて新規パッケージを追加する。" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="48">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
@@ -75,10 +69,9 @@
                             <action selector="toggleAutoinstall:" target="-2" id="54"/>
                         </connections>
                     </button>
-                    <button toolTip="If unchecked, pass --no-auto-remove to tlmgr to avoid removing packages that have been removed on the server." id="49">
+                    <button toolTip="チェックを外すと、tlmgrに--no-auto-removeを渡して、サーバーで削除されたパッケージが削除されないようにします。" id="49">
                         <rect key="frame" x="18" y="18" width="334" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <animations/>
                         <buttonCell key="cell" type="check" title="更新時にサーバーに合わせてパッケージを削除する。" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="50">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
@@ -87,22 +80,20 @@
                             <action selector="toggleAutoremove:" target="-2" id="53"/>
                         </connections>
                     </button>
-                    <button toolTip="If checked, TeX Live Utility will run the updmap command after TeX Live is modified." id="59">
+                    <button toolTip="チェックすると、TeX Liveユーティリティは、TeX Liveに修正が加えられると、updmapコマンドを実行します。" id="59">
                         <rect key="frame" x="19" y="78" width="360" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <animations/>
                         <buttonCell key="cell" type="check" title="ホームディレクトリ中のフォントを自動的に有効にする。" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="60">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                            <font key="font" size="13" name="AquaKana"/>
+                            <font key="font" metaFont="system"/>
                         </buttonCell>
                         <connections>
                             <action selector="toggleRunUpdmap:" target="-2" id="62"/>
                         </connections>
                     </button>
-                    <pathControl toolTip="Set the directory fo the tlmgr command and other TeX commands." verticalHuggingPriority="750" allowsExpansionToolTips="YES" id="9">
+                    <pathControl toolTip="tlmgrコマンドやその他のTeXコマンドのあるディレクトリを設定してください。" verticalHuggingPriority="750" allowsExpansionToolTips="YES" id="9">
                         <rect key="frame" x="120" y="118" width="262" height="22"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <animations/>
                         <pathCell key="cell" selectable="YES" editable="YES" alignment="left" id="10">
                             <font key="font" metaFont="system"/>
                             <url key="url" string="file:///usr/"/>
@@ -114,7 +105,6 @@
                         </connections>
                     </pathControl>
                 </subviews>
-                <animations/>
             </view>
             <connections>
                 <outlet property="delegate" destination="-2" id="13"/>

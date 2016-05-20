@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9059" systemVersion="15B42" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="10117" systemVersion="15E65" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
-        <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9059"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10117"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="TLMAutobackupController">
@@ -14,7 +13,7 @@
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
-        <customObject id="-3" userLabel="Application"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <window title="ウインドウ" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" visibleAtLaunch="NO" animationBehavior="default" id="1" customClass="NSPanel">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
@@ -29,7 +28,6 @@
                     <button verticalHuggingPriority="750" id="5">
                         <rect key="frame" x="176" y="12" width="96" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <animations/>
                         <buttonCell key="cell" type="push" title="設定" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="6">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
@@ -44,7 +42,6 @@ DQ
                     <button verticalHuggingPriority="750" id="7">
                         <rect key="frame" x="80" y="12" width="96" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <animations/>
                         <buttonCell key="cell" type="push" title="キャンセル" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="8">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
@@ -56,10 +53,9 @@ Gw
                             <action selector="cancel:" target="-2" id="24"/>
                         </connections>
                     </button>
-                    <button toolTip="Automatically back up changed files as updates are applied." id="11">
+                    <button toolTip="更新の適用時に、変更されたファイルを自動的にバックアップします。" id="11">
                         <rect key="frame" x="18" y="108" width="178" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <animations/>
                         <buttonCell key="cell" type="check" title="自動バックアップを有効化" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="12">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
@@ -68,10 +64,9 @@ Gw
                             <action selector="enableAction:" target="-2" id="20"/>
                         </connections>
                     </button>
-                    <button toolTip="Remove old backups after closing this sheet, up to the number specified above." id="26">
+                    <button toolTip="このシートを閉じるときに、上記で指定した数を除き、旧バックアップを削除します。" id="26">
                         <rect key="frame" x="18" y="58" width="204" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <animations/>
                         <buttonCell key="cell" type="check" title="旧くなったバックアップは削除" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="27">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
@@ -80,7 +75,6 @@ Gw
                     <textField toolTip="Number of most recent backups that will be kept when pruning the backup set.  Set to ∞ to prevent deleting files." verticalHuggingPriority="750" id="15">
                         <rect key="frame" x="20" y="80" width="64" height="22"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <animations/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="16">
                             <numberFormatter key="formatter" formatterBehavior="custom10_4" numberStyle="decimal" allowsFloats="NO" minimumIntegerDigits="1" maximumIntegerDigits="2000000000" maximumFractionDigits="3" id="17" customClass="TLMBackupCountFormatter">
                                 <real key="minimum" value="-1"/>
@@ -96,7 +90,6 @@ Gw
                     <textField verticalHuggingPriority="750" id="22">
                         <rect key="frame" x="89" y="82" width="147" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <animations/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="個のバックアップを保管" id="23">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -104,7 +97,6 @@ Gw
                         </textFieldCell>
                     </textField>
                 </subviews>
-                <animations/>
             </view>
             <connections>
                 <outlet property="delegate" destination="-2" id="4"/>
