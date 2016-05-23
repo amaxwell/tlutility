@@ -80,11 +80,8 @@
 @implementation TLMTexDistribution
 
 @synthesize name = _name;
-@synthesize scripts = _scripts;
 @synthesize installPath = _installPath;
 @synthesize texdistPath = _texdistPath;
-@synthesize texdistVersion = _texdistVersion;
-@synthesize texdistDescription = _texdistDescription;
 
 #define TEXDIST_LOCAL @"/Library/TeX/Distributions"
 
@@ -102,24 +99,6 @@
     return distributions;
 }
 
-- (id)initWithPropertyList:(NSDictionary *)plist
-{
-    self = [super init];
-    if (self) {
-        _name = [[plist objectForKey:@"name"] copy];
-        _scripts = [[plist objectForKey:@"scripts"] copy];
-        _installPath = [[plist objectForKey:@"path"] copy];
-        NSDictionary *auxiliary = [plist objectForKey:@"auxiliary"];
-        _texdistVersion = [[auxiliary objectForKey:@"TeXDistVersion"] copy];
-        NSData *htmlData = [[auxiliary objectForKey:@"Description"] dataUsingEncoding:NSUTF8StringEncoding];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wnonnull"
-        _texdistDescription = [[NSAttributedString alloc] initWithHTML:htmlData baseURL:nil documentAttributes:NULL];
-#pragma clang diagnostic pop
-    }
-    return self;
-}
-
 - (id)initWithPath:(NSString *)absolutePath architecture:(NSString *)arch
 {
     self = [super init];
@@ -127,6 +106,7 @@
         _texdistPath = [absolutePath copy];
         NSString *rootPath = [[_texdistPath stringByAppendingPathComponent:@"Contents"] stringByAppendingPathComponent:@"Root"];
         _name = [[[_texdistPath lastPathComponent] stringByDeletingPathExtension] copy];
+        // for macports, this points to /opt/local/share, which always exists
         _installPath = [[rootPath stringByResolvingSymlinksInPath] copy];
     }
     return self;
@@ -135,17 +115,15 @@
 -  (void)dealloc
 {
     [_name release];
-    [_scripts release];
     [_installPath release];
     [_texdistPath release];
-    [_texdistVersion release];
-    [_texdistDescription release];
     [super dealloc];
 }
 
 - (BOOL)isInstalled
 {
-    return [[NSFileManager defaultManager] fileExistsAtPath:[self installPath]];
+    // originally checked for _installPath existence, but it always exists for macports
+    return [[NSFileManager defaultManager] fileExistsAtPath:[self texbinPath]];
 }
 
 - (NSString *)texbinPath

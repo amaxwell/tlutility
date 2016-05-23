@@ -41,19 +41,13 @@
 @interface TLMTexDistribution : NSObject
 {
     NSString           *_name;
-    NSArray            *_scripts;
     NSString           *_installPath;
     NSString           *_texdistPath;
-    NSString           *_texdistVersion;
-    NSAttributedString *_texdistDescription;
 }
 
 @property (nonatomic, readonly) NSString *name;
-@property (nonatomic, readonly) NSArray *scripts;
 @property (nonatomic, readonly) NSString *installPath;
 @property (nonatomic, readonly) NSString *texdistPath;
-@property (nonatomic, readonly) NSString *texdistVersion;
-@property (nonatomic, readonly) NSAttributedString *texdistDescription;
 
 + (NSArray *)knownDistributionsInLocalDomain;
 - (id)initWithPath:(NSString *)absolutePath architecture:(NSString *)arch;
