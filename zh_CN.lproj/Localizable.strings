@@ -478,34 +478,34 @@
 "Update available" = "可更新";
 
 /* alert button title */
-"Change" = "Change";
+"Change" = "更改";
 
 /* alert button title */
-"Manually" = "Manually";
+"Manually" = "手动";
 
 /* alert message text */
-"Your preferences need to be adjusted for new Apple requirements. Would you like to change your TeX Programs location from /usr/texbin to /Library/TeX/texbin or set it manually?" = "Your preferences need to be adjusted for new Apple requirements. Would you like to change your TeX Programs location from /usr/texbin to /Library/TeX/texbin or set it manually?";
+"Your preferences need to be adjusted for new Apple requirements. Would you like to change your TeX Programs location from /usr/texbin to /Library/TeX/texbin or set it manually?" = "根据苹果公司的新规定，首选项必须加以调整。您愿意把 TeX 程序的安装位置从 /usr/texbin 切换到 /Library/TeX/texbin 还是手动设置安装位置？";
 
 /* status message */
-"Changing Documentation Option Failed" = "Changing Documentation Option Failed";
+"Changing Documentation Option Failed" = "修改文档选项失败";
 
 /* button title */
-"Enable" = "Enable";
+"Enable" = "激活";
 
 /* alert title */
-"Enable security validation of packages?" = "Enable security validation of packages?";
+"Enable security validation of packages?" = "是否激活软件包安全验证？";
 
 /* alert title */
-"Failed to enable security validation of packages." = "Failed to enable security validation of packages.";
+"Failed to enable security validation of packages." = "激活安全验证失败。";
 
 /* alert message text */
-"Installing gpg appears to have failed. Would you like to show the log now or ignore this warning?" = "Installing gpg appears to have failed. Would you like to show the log now or ignore this warning?";
+"Installing gpg appears to have failed. Would you like to show the log now or ignore this warning?" = "貌似安装 gpg 失败了。您需要查看错误日志或是忽略这个警告？";
 
 /* button title */
-"Later" = "Later";
+"Later" = "以后再说";
 
 /* status message */
-"Security Validation Enabled" = "Security Validation Enabled";
+"Security Validation Enabled" = "安全验证已激活";
 
 /* alert text */
-"This version of TeX Live allows you to check the digital signature of downloaded packages by installing GnuPG. For better security, you should enable this feature." = "This version of TeX Live allows you to check the digital signature of downloaded packages by installing GnuPG. For better security, you should enable this feature.";
+"This version of TeX Live allows you to check the digital signature of downloaded packages by installing GnuPG. For better security, you should enable this feature." = "这个版本的 TeX Live 可以通过安装 GnuPG 对下载的软件包进行安全验证。处于安全方面的考虑，您应当激活安全验证。";
