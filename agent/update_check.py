@@ -160,9 +160,12 @@ def macosx_update_check():
     
     # if this hasn't been set, try the default path
     texbin_path = CFPreferencesCopyAppValue("TLMTexBinPathPreferenceKey", bundle_id)
-    if texbin_path == None and os.path.exists("/usr/texbin"):
-        texbin_path = "/usr/texbin"
-        
+    if texbin_path == None:
+        if os.path.exists("/usr/texbin"):
+            texbin_path = "/usr/texbin"
+        elif os.path.exists("/Library/TeX/texbin"):
+            texbin_path = "/Library/TeX/texbin"
+
     if texbin_path == None:
         log_message("no tlmgr path set; TeX Live update check will not proceed")
         return 1
