@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="8191" systemVersion="15A284" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="8191"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10117"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="TLMDocumentationController">
@@ -27,43 +27,39 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <button id="AfX-Ub-AKe">
-                        <rect key="frame" x="18" y="59" width="246" height="18"/>
+                        <rect key="frame" x="18" y="59" width="139" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <animations/>
-                        <buttonCell key="cell" type="check" title="Install documentation when updating" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="zf9-P2-scC">
+                        <buttonCell key="cell" type="check" title="更新的同时安装文档" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="zf9-P2-scC">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                            <font key="font" metaFont="system"/>
+                            <font key="font" size="13" name=".PingFangSC-Regular"/>
                         </buttonCell>
                         <connections>
                             <action selector="enableAction:" target="-2" id="gAp-m6-EYe"/>
                         </connections>
                     </button>
                     <button verticalHuggingPriority="750" id="GKj-m5-f9g">
-                        <rect key="frame" x="161" y="13" width="107" height="32"/>
+                        <rect key="frame" x="169" y="13" width="92" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <animations/>
-                        <buttonCell key="cell" type="push" title="Install Now" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="NfU-5X-tLJ">
+                        <buttonCell key="cell" type="push" title="现在安装" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="NfU-5X-tLJ">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
+                            <font key="font" size="13" name=".PingFangSC-Regular"/>
                         </buttonCell>
                         <connections>
                             <action selector="install:" target="-2" id="Kqh-HT-Nc9"/>
                         </connections>
                     </button>
                     <button verticalHuggingPriority="750" id="bRY-WV-37V">
-                        <rect key="frame" x="74" y="13" width="87" height="32"/>
+                        <rect key="frame" x="85" y="13" width="66" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <animations/>
-                        <buttonCell key="cell" type="push" title="Dismiss" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="T5g-mM-5u2">
+                        <buttonCell key="cell" type="push" title="关闭" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="T5g-mM-5u2">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
+                            <font key="font" size="13" name=".PingFangSC-Regular"/>
                         </buttonCell>
                         <connections>
                             <action selector="dismiss:" target="-2" id="bGF-Mw-EMJ"/>
                         </connections>
                     </button>
                 </subviews>
-                <animations/>
             </view>
             <connections>
                 <outlet property="delegate" destination="-2" id="qFZ-LD-RfR"/>
