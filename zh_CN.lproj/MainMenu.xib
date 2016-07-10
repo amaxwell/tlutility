@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="10116" systemVersion="15G24b" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10116"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10117"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication"/>
@@ -538,13 +538,13 @@
                                     <action selector="automaticUpdateCheck:" target="-1" id="612"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Change Default TeX Live Version…" toolTip="Choose which TeX Live version is used by default on this system." id="yfe-hg-Ki8">
+                            <menuItem title="重新配置发行版…" toolTip="Schedule automatic checks to see if TeX Live packages are available for update." id="yfe-hg-Ki8">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="reconfigureDistributions:" target="-1" id="fFY-GT-qXh"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Configure Documentation…" id="L1j-Vz-qeT">
+                            <menuItem title="配置文档…" id="L1j-Vz-qeT">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="configureDocumentation:" target="-1" id="D8Q-FZ-3YF"/>
