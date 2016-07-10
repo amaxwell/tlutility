@@ -84,6 +84,9 @@
 - (void)windowDidLoad {
     [super windowDidLoad];
     [_tableView removeTableColumn:[_tableView tableColumnWithIdentifier:@"arch"]];
+    [[_tableView tableColumnWithIdentifier:@"name"] setTitle:NSLocalizedString(@"Name", "text-based table column title")];
+    [[_tableView tableColumnWithIdentifier:@"state"] setTitle:NSLocalizedString(@"Default", "radio button table column title")];
+    [_okButton setTitle:NSLocalizedString(@"Done", @"button title")];
     [self _reloadDistributions];
 }
 

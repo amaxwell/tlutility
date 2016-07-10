@@ -84,6 +84,9 @@
 /* main window status string */
 "Database Loading Failed" = "Database Loading Failed";
 
+/* radio button table column title */
+"Default" = "Default";
+
 /* single trailing space */
 "Deleting " = "Deleting ";
 
@@ -92,6 +95,9 @@
 
 /* all caps tableview group title */
 "DOC FILES" = "DOC FILES";
+
+/* button title */
+"Done" = "Done";
 
 /* No comment provided by engineer. */
 "Download complete" = "Download complete";
@@ -215,6 +221,9 @@
 
 /* the user's repository group title */
 "My Repositories" = "My Repositories";
+
+/* text-based table column title */
+"Name" = "Name";
 
 /* alert title in preferences */
 "Necessary programs for TeX Live do not exist in that folder" = "Necessary programs for TeX Live do not exist in that folder";
