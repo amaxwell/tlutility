@@ -509,3 +509,12 @@
 
 /* alert text */
 "This version of TeX Live allows you to check the digital signature of downloaded packages by installing GnuPG. For better security, you should enable this feature." = "この版のTeX Liveでは、GnuPGを導入することによって、ダウンロードしたパッケージのデジタル署名をチェックすることができます。安全性向上のために、この機能を有効にしたほうが良いでしょう。";
+
+/* radio button table column title */
+"Default" = "Default";
+
+/* button title */
+"Done" = "Done";
+
+/* text-based table column title */
+"Name" = "Name";

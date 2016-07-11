@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="10117" systemVersion="15E65" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="10116" systemVersion="15G24b" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment version="1060" identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10117"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10116"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication"/>
@@ -538,7 +538,7 @@
                                     <action selector="automaticUpdateCheck:" target="-1" id="612"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="頒布版の再設定…" toolTip="TeX Liveパッケージの更新があるかどうかを見る自動確認のスケジュールを設定します。" id="Eqa-fY-HEf">
+                            <menuItem title="Change Default TeX Live Version…" toolTip="Choose which TeX Live version is used by default on this system." id="Eqa-fY-HEf">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="reconfigureDistributions:" target="-1" id="diA-JI-JGU"/>
