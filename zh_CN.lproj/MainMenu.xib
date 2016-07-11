@@ -538,7 +538,7 @@
                                     <action selector="automaticUpdateCheck:" target="-1" id="612"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="重新配置发行版…" toolTip="Schedule automatic checks to see if TeX Live packages are available for update." id="yfe-hg-Ki8">
+                            <menuItem title="TeX Live 发行版…" toolTip="Schedule automatic checks to see if TeX Live packages are available for update." id="yfe-hg-Ki8">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="reconfigureDistributions:" target="-1" id="fFY-GT-qXh"/>
