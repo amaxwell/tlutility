@@ -167,10 +167,7 @@
   </settings>
   <editor content-size="{692, 828}" column-titles-display-mode="off" ruler-visible="yes" status-visible="no">
     <drawer display="sections" width="236" palette-height="346"/>
-    <hoisted-rows ids="ohh8nduMklZ"/>
-    <selected-rows ids="pgyZsyOzEFM"/>
-    <selected-columns ids="jFqHUGd_Dg1"/>
-    <selected-characters range="{1, 0}"/>
+    <hoisted-rows ids="aLvRpQYwVsb"/>
     <toolbar>{
     &quot;TB Display Mode&quot; = 2;
     &quot;TB Icon Size Mode&quot; = 2;
@@ -1638,7 +1635,7 @@
                           <style>
                             <inherited-style name="UI" idref="a0as48_ttlo"/>
                           </style>
-                          <lit>Reconfigure Distributions…</lit>
+                          <lit>Change Default TeX Live Version…</lit>
                         </run>
                         <run>
                           <lit> from the </lit>

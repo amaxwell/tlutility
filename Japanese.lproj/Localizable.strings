@@ -518,3 +518,6 @@
 
 /* text-based table column title */
 "Name" = "Name";
+
+/* alert message text */
+"If you have installed TeX Live, you need to tell TeX Live Utility where to find TeX programs. For MacTeX 2015 and later, you should use /Library/TeX/texbin. Change settings now?" = "If you have installed TeX Live, you need to tell TeX Live Utility where to find TeX programs. For MacTeX 2015 and later, you should use /Library/TeX/texbin. Change settings now?";

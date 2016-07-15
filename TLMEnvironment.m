@@ -89,6 +89,7 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
 static NSMutableDictionary *_environments = nil;
 static NSString            *_currentEnvironmentKey = nil;
 static bool                 _didShowElCapitanPathAlert = false;
+static bool                 _didShowBadTexbinPathAlert = false;
 
 @implementation TLMEnvironment
 
@@ -194,13 +195,45 @@ static bool                 _didShowElCapitanPathAlert = false;
     return installDirectory;
 }
 
++ (void)_updatePathAlert2:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
+{
+    _didShowBadTexbinPathAlert = true;
+    switch (returnCode) {
+        case NSAlertFirstButtonReturn:
+            [[TLMPreferenceController sharedPreferenceController] showWindow:nil];
+            break;
+        default:
+            TLMLog(__func__, @"User has a bad path and chose to follow it.");
+            break;
+    }
+}
+
 + (void)updateEnvironment
 {
     @synchronized(_environments) {
         
         NSString *installDir = [self _installDirectoryFromCurrentDefaults];
         if (nil == installDir) {
-            TLMLog(__func__, @"No install directory from current defaults; this is very disturbing, and lots of things are going to fail.  You probably need to fix the tlmgr path in preferences.");
+
+            /*
+             Shown here, so it's early enough to be the first alert and avoid OS X ignoring a second sheet.
+             We need a static variable since a bunch of stuff (including prefs window?) calls the
+             environment, and we can end up with the same sheet repeating over and over.
+             */
+            if (false == _didShowBadTexbinPathAlert) {
+                TLMLog(__func__, @"No install directory from current defaults; this is very disturbing, and lots of things are going to fail.  You probably need to fix the tlmgr path in preferences.");
+                NSAlert *alert = [[NSAlert new] autorelease];
+                [alert setMessageText:NSLocalizedString(@"TeX installation not found.", @"alert sheet title")];
+                [alert setInformativeText:NSLocalizedString(@"If you have installed TeX Live, you need to tell TeX Live Utility where to find TeX programs. For MacTeX 2015 and later, you should use /Library/TeX/texbin. Change settings now?", @"alert message text")];
+                [alert addButtonWithTitle:NSLocalizedString(@"Change", @"alert button title")];
+                [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"alert button title")];
+                [alert setShowsHelp:YES];
+                [alert setHelpAnchor:@"preferences"];
+                [alert beginSheetModalForWindow:[(NSWindowController *)[(TLMAppController *)[NSApp delegate] mainWindowController] window]
+                                  modalDelegate:self
+                                 didEndSelector:@selector(_updatePathAlert2:returnCode:contextInfo:)
+                                    contextInfo:NULL];
+            }
         }
         else if ([installDir isEqualToString:_currentEnvironmentKey] == NO) {
             [_currentEnvironmentKey autorelease];

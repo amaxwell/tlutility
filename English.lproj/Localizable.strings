@@ -144,6 +144,9 @@
 /* alert message text */
 "If you close the window, the installation process may leave your TeX installation in an unknown state.  You can ignore this warning and close the window, or wait until the installation finishes." = "If you close the window, the installation process may leave your TeX installation in an unknown state.  You can ignore this warning and close the window, or wait until the installation finishes.";
 
+/* alert message text */
+"If you have installed TeX Live, you need to tell TeX Live Utility where to find TeX programs. For MacTeX 2015 and later, you should use /Library/TeX/texbin. Change settings now?" = "If you have installed TeX Live, you need to tell TeX Live Utility where to find TeX programs. For MacTeX 2015 and later, you should use /Library/TeX/texbin. Change settings now?";
+
 /* button title */
 "Ignore" = "Ignore";
 
