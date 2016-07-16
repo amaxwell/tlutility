@@ -120,27 +120,64 @@
     [super dealloc];
 }
 
-- (BOOL)isInstalled
+- (NSArray *)texbinPaths
 {
-    // originally checked for _installPath existence, but it always exists for macports
-    return [[NSFileManager defaultManager] fileExistsAtPath:[self texbinPath]];
-}
-
-- (NSString *)texbinPath
-{
-    return [NSString pathWithComponents:[NSArray arrayWithObjects:[self texdistPath], @"Contents", @"Programs", @"texbin", nil]];
+    /*
+     Looks like the texbin symlink doesn't exist in early texdist bundles, so that's not
+     always the right one. Damn it.
+     
+     $ ll ../.FactoryDefaults/TeXLive-2014/Contents/Programs/
+     total 40
+     lrwxr-xr-x  1 root  wheel  64 Oct 17  2014 i386 -> ../../../../../../../usr/local/texlive/2014/bin/universal-darwin
+     lrwxr-xr-x  1 root  wheel  64 Oct 17  2014 powerpc -> ../../../../../../../usr/local/texlive/2014/bin/universal-darwin
+     lrwxr-xr-x  1 root  wheel  64 Oct 17  2014 ppc -> ../../../../../../../usr/local/texlive/2014/bin/universal-darwin
+     lrwxr-xr-x  1 root  wheel   6 Oct 17  2014 texbin -> x86_64
+     lrwxr-xr-x  1 root  wheel  61 Oct 17  2014 x86_64 -> ../../../../../../../usr/local/texlive/2014/bin/x86_64-darwin
+     
+     $ ll ../.FactoryDefaults/TeXLive-2009/Contents/Programs/
+     total 24
+     lrwxr-xr-x@ 1 root  wheel  64 Jul 15 21:03 i386 -> ../../../../../../../usr/local/texlive/2009/bin/universal-darwin
+     lrwxr-xr-x@ 1 root  wheel  64 Jul 15 21:03 powerpc -> ../../../../../../../usr/local/texlive/2009/bin/universal-darwin
+     lrwxr-xr-x@ 1 root  wheel  64 Jul 15 21:03 ppc -> ../../../../../../../usr/local/texlive/2009/bin/universal-darwin
+     */
+    NSString *texbinDirectory = [NSString pathWithComponents:[NSArray arrayWithObjects:[self texdistPath], @"Contents", @"Programs", nil]];
+    NSMutableArray *paths = [NSMutableArray arrayWithCapacity:5];
+    for(NSString *last in [[NSFileManager defaultManager] contentsOfDirectoryAtPath:texbinDirectory error:NULL]) {
+        [paths addObject:[texbinDirectory stringByAppendingPathComponent:last]];
+    }
+    return paths;
 }
 
 - (NSString *)architecture
 {
-    return [[[self texbinPath] stringByResolvingSymlinksInPath] lastPathComponent];
+    // !!! currently unused, but if texbin, need to resolve; if not, it's the architecture directly?
+    return [[[[self texbinPaths] lastObject] stringByResolvingSymlinksInPath] lastPathComponent];
 }
 
-- (BOOL)isDefault
+- (BOOL)isInstalled
 {
-    NSString *resolvedTexbin = [[self texbinPath] stringByResolvingSymlinksInPath];
+    // originally checked for _installPath existence, but it always exists for macports
+    for (NSString *path in [self texbinPaths]) {
+        if ([[NSFileManager defaultManager] fileExistsAtPath:path])
+            return YES;
+    }
+    return NO;
+}
+
+/*
+ 
+ Need to try this for each path in -texbinPaths, I guess?
+ 
+ */
+
+- (BOOL)_isMactexPath:(NSString *)absolutePath
+{
+    NSString *resolvedTexbin = [absolutePath stringByResolvingSymlinksInPath];
+    
+    // check against old and new (TL 2015 and later) locations
     NSString *resolvedUsrTexbin = [@"/usr/texbin" stringByResolvingSymlinksInPath];
     NSString *resolvedLibTexbin = [@"/Library/TeX/texbin" stringByResolvingSymlinksInPath];
+    
     FSRef fsThis, fsUsr, fsLib;
     if (CFURLGetFSRef((CFURLRef)[NSURL fileURLWithPath:resolvedTexbin], &fsThis) &&
         CFURLGetFSRef((CFURLRef)[NSURL fileURLWithPath:resolvedUsrTexbin], &fsUsr)) {
@@ -149,6 +186,15 @@
     else if (CFURLGetFSRef((CFURLRef)[NSURL fileURLWithPath:resolvedTexbin], &fsThis) &&
              CFURLGetFSRef((CFURLRef)[NSURL fileURLWithPath:resolvedLibTexbin], &fsLib)) {
         return (FSCompareFSRefs(&fsThis, &fsLib) == noErr);
+    }
+    return NO;
+}
+
+- (BOOL)isDefault
+{
+    for (NSString *path in [self texbinPaths]) {
+        if ([self _isMactexPath:path])
+            return YES;
     }
     return NO;
 }
