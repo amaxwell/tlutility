@@ -799,5 +799,21 @@
             <sparkle:minimumSystemVersion>10.6.8</sparkle:minimumSystemVersion>
             <enclosure url="https://github.com/amaxwell/tlutility/releases/download/1.24/TeX.Live.Utility.app-1.24.tar.gz" sparkle:version="1.24" length="3000637" type="application/octet-stream" sparkle:dsaSignature="MC0CFQCI9OTnr0d+q2cvRl1Vn8k4oPdkcQIUWq66xreLCg8zmRB7bRT6fctiCks="></enclosure>
         </item>
+        <item>
+            <title>Version 1.26</title>
+            <description>
+                <h3>Changes Since 1.24</h3>
+                <li>More robust checking for TeX distribution presence</li>
+                <li>Updated Chinese translation (thanks to greenflute!)</li>
+                <li>Changed menu item title for TeX version switching (see Help)</li>
+                <li>Fixed default path for the scheduled version check (bug report on tex.sx)</li>
+                <li>Added legacy mirror for TL 2015</li>
+                <li>Added a GUI alert if TeX programs cannot be found (issue 50)</li>
+                <li>Support added for older TeX distributions (thanks to Axel Kielhorn for debug assistance)</li>
+            </description>
+            <pubDate>Tue, 19 Jul 2016 01:31:08 +0000</pubDate>
+            <sparkle:minimumSystemVersion>10.6.8</sparkle:minimumSystemVersion>
+            <enclosure url="https://github.com/amaxwell/tlutility/releases/download/1.26/TeX.Live.Utility.app-1.26.tar.gz" sparkle:version="1.26" length="3000278" type="application/octet-stream" sparkle:dsaSignature="MCwCFDnPQYsi1023Wb9ZFV1/wALfIMEkAhREKxxIyZALdr9cK7JPsNDTT6zk1g=="></enclosure>
+        </item>
     </channel>
 </rss>
