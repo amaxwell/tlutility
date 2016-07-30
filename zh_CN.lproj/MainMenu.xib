@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="10117" systemVersion="15G31" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10117"/>
@@ -441,52 +441,52 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="动作" id="463">
                         <items>
-                            <menuItem title="刷新软件包列表" keyEquivalent="r" toolTip="Reload the list of packages from the server." id="469">
+                            <menuItem title="刷新软件包列表" keyEquivalent="r" toolTip="从服务器重新加载软件包列表。" id="469">
                                 <connections>
                                     <action selector="refreshList:" target="-1" id="481"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="取消" toolTip="Cancel the current operation and any pending operations." id="470">
+                            <menuItem title="取消" toolTip="停止当前以及后续操作。" id="470">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="cancelAllOperations:" target="-1" id="479"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="显示软件包信息" keyEquivalent="i" toolTip="Show a panel with detailed info for the selected package." id="468">
+                            <menuItem title="显示软件包信息" keyEquivalent="i" toolTip="在面板中显示所选软件包的详细信息。" id="468">
                                 <connections>
                                     <action selector="showInfo:" target="-1" id="478"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="快速查看" keyEquivalent="y" toolTip="Preview selected file." id="616">
+                            <menuItem title="快速查看" keyEquivalent="y" toolTip="预览选中文件。" id="616">
                                 <connections>
                                     <action selector="previewAction:" target="-1" id="617"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="473"/>
-                            <menuItem title="更新所选软件包" keyEquivalent="u" toolTip="Install updates for the selected packages." id="471">
+                            <menuItem title="更新所选软件包" keyEquivalent="u" toolTip="为选中的软件包安装更新。" id="471">
                                 <connections>
                                     <action selector="updateSelectedRows:" target="-1" id="477"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="更新所有软件包" keyEquivalent="U" toolTip="Update and remove packages to be consistent with the latest repository changes." id="464">
+                            <menuItem title="更新所有软件包" keyEquivalent="U" toolTip="更新并卸载软件包以便和软件源保持一致。" id="464">
                                 <connections>
                                     <action selector="updateAll:" target="-1" id="476"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="472"/>
-                            <menuItem title="安装所选软件包" keyEquivalent="i" toolTip="Install the selected packages." id="467">
+                            <menuItem title="安装所选软件包" keyEquivalent="i" toolTip="安装所选软件包。" id="467">
                                 <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 <connections>
                                     <action selector="installSelectedRows:" target="-1" id="475"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="重新安装所选软件包" keyEquivalent="r" toolTip="Reinstall the selected packages." id="579">
+                            <menuItem title="重新安装所选软件包" keyEquivalent="r" toolTip="重新安装所选软件包。" id="579">
                                 <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 <connections>
                                     <action selector="reinstallSelectedRows:" target="-1" id="580"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="卸载所选软件包" toolTip="Try to remove the selected packages.  Hold down the option key to force removal." id="466">
+                            <menuItem title="卸载所选软件包" toolTip="尝试卸载所选软件包，按住 Option 键以强制卸载。" id="466">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="removeSelectedRows:" target="-1" id="474"/>
@@ -498,16 +498,16 @@
                                     <action selector="forciblyRemoveSelectedRows:" target="-1" id="573"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="安装 TeX Live" toolTip="Install TeX Live from the current repository." id="627">
+                            <menuItem title="安装 TeX Live" toolTip="从当前软件源安装 TeX Live。" id="627">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                             </menuItem>
-                            <menuItem title="重新安装 TeX Live 管理器" toolTip="Reinstall the underlying tlmgr program, using the latest available version." id="574">
+                            <menuItem title="重新安装 TeX Live 管理器" toolTip="重新安装 tlmgr 的最新版本。" id="574">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="updateInfrastructure:" target="-1" id="631"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="从关键软件源安装 TeX Live 管理器" alternate="YES" toolTip="Reinstall the underlying tlmgr program, using the prerelease version from the tlcritical repository." id="584">
+                            <menuItem title="从关键软件源安装 TeX Live 管理器" alternate="YES" toolTip="从关键软件源安装 tlmgr 的预发布版本。" id="584">
                                 <modifierMask key="keyEquivalentModifierMask" option="YES"/>
                                 <connections>
                                     <action selector="updateInfrastructureFromCriticalRepository:" target="-1" id="632"/>
@@ -520,44 +520,44 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="设置" id="604">
                         <items>
-                            <menuItem title="纸张大小…" toolTip="Set the default paper size for all TeX programs." id="606">
+                            <menuItem title="纸张大小…" toolTip="为所有 TeX 程序设置默认纸张大小。" id="606">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="changePapersize:" target="-1" id="613"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="自动备份…" toolTip="Change number of automatic backups to keep when updating." id="607">
+                            <menuItem title="自动备份…" toolTip="修改更新时自动备份的个数。" id="607">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="changeAutobackup:" target="-1" id="611"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="TeX Live 自动更新…" toolTip="Schedule automatic checks to see if TeX Live packages are available for update." id="608">
+                            <menuItem title="TeX Live 自动更新…" toolTip="设置定时自动检查是否有更新可以安装。" id="608">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="automaticUpdateCheck:" target="-1" id="612"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="TeX Live 发行版…" toolTip="Schedule automatic checks to see if TeX Live packages are available for update." id="yfe-hg-Ki8">
+                            <menuItem title="TeX Live 发行版…" toolTip="切换到其他 TeX Live 发行版。" id="yfe-hg-Ki8">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="reconfigureDistributions:" target="-1" id="fFY-GT-qXh"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="配置文档…" id="L1j-Vz-qeT">
+                            <menuItem title="配置文档…" toolTip="设置是否更新软件包的同时安装文档。" id="L1j-Vz-qeT">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="configureDocumentation:" target="-1" id="D8Q-FZ-3YF"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="615"/>
-                            <menuItem title="管理软件源" toolTip="View and edit available CTAN or TeX Live mirror servers." id="609">
+                            <menuItem title="管理软件源" toolTip="编辑查看可用的 CTAN 以及 TeX Live 镜像服务器。" id="609">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="manageMirrors:" target="-1" id="614"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="设为主源" toolTip="Change the mirror used at startup of TeX Live Utility." id="610">
+                            <menuItem title="设为主源" toolTip="设置当前软件源镜像为启动时使用的主软件源。" id="610">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="changeDefaultMirror:" target="-1" id="618"/>
