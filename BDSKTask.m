@@ -114,12 +114,6 @@ static int _kqueue = -1;
     [super dealloc];
 }
 
-- (void)finalize
-{
-    [self _disableNotification];
-    [super finalize];
-}
-
 - (void)setLaunchPath:(NSString *)path;
 {
     ASSERT_NOTLAUNCHED;

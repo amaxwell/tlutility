@@ -165,9 +165,12 @@
     </print-info>
     <auto-generate-level-styles>no</auto-generate-level-styles>
   </settings>
-  <editor content-size="{692, 828}" column-titles-display-mode="off" ruler-visible="yes" status-visible="no">
+  <editor content-size="{692, 828}" scroll-position="{0, 128}" column-titles-display-mode="off" ruler-visible="yes" status-visible="no">
     <drawer display="sections" width="236" palette-height="346"/>
     <hoisted-rows ids="aLvRpQYwVsb"/>
+    <selected-rows ids="lNaPuZYoCap"/>
+    <selected-columns ids="jFqHUGd_Dg1"/>
+    <selected-characters range="{144, 0}"/>
     <toolbar>{
     &quot;TB Display Mode&quot; = 2;
     &quot;TB Icon Size Mode&quot; = 2;
@@ -2108,6 +2111,20 @@
                             </run>
                             <run>
                               <lit> is correct.</lit>
+                            </run>
+                          </p>
+                        </text>
+                      </values>
+                    </item>
+                    <item id="lNaPuZYoCap">
+                      <style>
+                        <value key="font-italic">yes</value>
+                      </style>
+                      <values>
+                        <text>
+                          <p>
+                            <run>
+                              <lit>Note: /Library will be translated if you use a non-English language setting for your operating system, even if TeX Live Utility is not translated into your language.</lit>
                             </run>
                           </p>
                         </text>

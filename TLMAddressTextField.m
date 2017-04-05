@@ -37,6 +37,7 @@
  */
 
 #import "TLMAddressTextField.h"
+#import "TLMAddressTextFieldCell.h"
 #import "TLMMirrorCell.h"
 #import "BDSKTextViewCompletionController.h"
 

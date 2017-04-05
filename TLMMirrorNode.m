@@ -58,6 +58,7 @@
 {
     [_value release];
     [_children release];
+    [_status release];
     [super dealloc];
 }
 

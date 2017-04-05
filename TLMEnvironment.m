@@ -133,7 +133,7 @@ static bool                 _didShowBadTexbinPathAlert = false;
     switch (returnCode) {
         case NSAlertFirstButtonReturn:
             [[NSUserDefaults standardUserDefaults] setObject:@"/Library/TeX/texbin" forKey:TLMTexBinPathPreferenceKey];
-            [[[NSApp delegate] mainWindowController] refreshUpdatedPackageList];
+            [[(TLMAppController *)[NSApp delegate] mainWindowController] refreshUpdatedPackageList];
             break;
         case NSAlertSecondButtonReturn:
             [[TLMPreferenceController sharedPreferenceController] showWindow:nil];

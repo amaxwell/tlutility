@@ -167,6 +167,8 @@ static Class _UserNotificationClass;
     [_progressIndicator release];
     [_packageListDataSource release];
     [_updateListDataSource release];
+    [_backupDataSource release];
+    [_installDataSource release];
     [_previousInfrastructureVersions release];
     
     [super dealloc];
