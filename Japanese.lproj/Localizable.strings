@@ -511,13 +511,13 @@
 "This version of TeX Live allows you to check the digital signature of downloaded packages by installing GnuPG. For better security, you should enable this feature." = "この版のTeX Liveでは、GnuPGを導入することによって、ダウンロードしたパッケージのデジタル署名をチェックすることができます。安全性向上のために、この機能を有効にしたほうが良いでしょう。";
 
 /* radio button table column title */
-"Default" = "Default";
+"Default" = “既定値”;
 
 /* button title */
-"Done" = "Done";
+"Done" = “完了”;
 
 /* text-based table column title */
-"Name" = "Name";
+"Name" = “名称”;
 
 /* alert message text */
-"If you have installed TeX Live, you need to tell TeX Live Utility where to find TeX programs. For MacTeX 2015 and later, you should use /Library/TeX/texbin. Change settings now?" = "If you have installed TeX Live, you need to tell TeX Live Utility where to find TeX programs. For MacTeX 2015 and later, you should use /Library/TeX/texbin. Change settings now?";
+"If you have installed TeX Live, you need to tell TeX Live Utility where to find TeX programs. For MacTeX 2015 and later, you should use /Library/TeX/texbin. Change settings now?" = "TeX Liveが導入済みの場合，TeX LiveユーティリティにTeXプログラムの場所を指示する必要があります．MacTeX 2015以降では，/Library/TeX/texbinが推奨されます．いま設定を変更しますか？";
