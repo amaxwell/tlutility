@@ -184,8 +184,9 @@ static Class _UserNotificationClass;
     [_tabView addTabNamed:NSLocalizedString(@"Updates", @"tab title") withView:[[_updateListDataSource tableView]  enclosingScrollView]];
     [_tabView addTabNamed:NSLocalizedString(@"Packages", @"tab title") withView:[[_packageListDataSource outlineView] enclosingScrollView]];
     [_tabView addTabNamed:NSLocalizedString(@"Backups", @"tab title") withView:[[_backupDataSource outlineView] enclosingScrollView]];
-    
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:TLMEnableNetInstall])
+
+#warning fixme
+    if (1 || [[NSUserDefaults standardUserDefaults] boolForKey:TLMEnableNetInstall])
         [_tabView addTabNamed:NSLocalizedString(@"Install", @"tab title") withView:[[_installDataSource outlineView] enclosingScrollView]];
     
     // 10.5 release notes say this is enabled by default, but it returns NO
@@ -817,6 +818,10 @@ static Class _UserNotificationClass;
     [self _displayStatusString:NSLocalizedString(@"Running updmap…", @"") dataSource:_currentListDataSource];
     TLMTask *task = [[TLMTask new] autorelease];
     [task setLaunchPath:[[TLMEnvironment currentEnvironment] updmapAbsolutePath]];
+    
+    // updmap-sys vs. updmap remains one of the most confusing things ever done in teTeX
+    if ([[TLMEnvironment currentEnvironment] texliveYear] >= 2017)
+        [task setArguments:[NSArray arrayWithObject:@"-user"]];
     [task launch];
     
     // so we can check/log messages and clear the status overlay
