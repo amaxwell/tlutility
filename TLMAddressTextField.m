@@ -100,7 +100,7 @@ static NSArray * __TLMAddressDragTypes()
 {
     if ([[self string] isEqualToString:aString])
         return NO;
-
+    
     [self setString:aString];
     _dragChangedText = YES;
     return YES;
@@ -117,7 +117,7 @@ static NSArray * __TLMAddressDragTypes()
     else if ([type isEqualToString:(id)kUTTypeURL]) {
         rv = [self setStringFromDragOperation:[pboard stringForType:type]];
     }
-    else if ([type isEqualToString:NSStringPboardType]) {
+    else if ([type isEqualToString:NSStringPboardType] && [NSURL URLWithString:[pboard stringForType:type]]) {
         rv = [self setStringFromDragOperation:[pboard stringForType:type]];
     }
     return rv;
