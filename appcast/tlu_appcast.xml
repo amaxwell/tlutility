@@ -815,5 +815,18 @@
             <sparkle:minimumSystemVersion>10.6.8</sparkle:minimumSystemVersion>
             <enclosure url="https://github.com/amaxwell/tlutility/releases/download/1.26/TeX.Live.Utility.app-1.26.tar.gz" sparkle:version="1.26" length="3000278" type="application/octet-stream" sparkle:dsaSignature="MCwCFDnPQYsi1023Wb9ZFV1/wALfIMEkAhREKxxIyZALdr9cK7JPsNDTT6zk1g=="></enclosure>
         </item>
+        <item>
+            <title>Version 1.28</title>
+            <description>
+                <h3>Changes Since 1.26</h3>
+                <li>Updated Chinese translation</li>
+                <li>Updated Japanese translation</li>
+                <li>Minor fixes for TL 2017 compatibility</li>
+                <li>Updated CTAN mirror list</li>
+            </description>
+            <pubDate>Fri, 19 May 2017 01:57:33 +0000</pubDate>
+            <sparkle:minimumSystemVersion>10.6.8</sparkle:minimumSystemVersion>
+            <enclosure url="https://github.com/amaxwell/tlutility/releases/download/1.28/TeX.Live.Utility.app-1.28.tar.gz" sparkle:version="1.28" length="3010617" type="application/octet-stream" sparkle:dsaSignature="MC0CFFgwodrOFK/RYK2ik4EogRU14NWkAhUAhrvR8JUqBTsMWJF0wCE1Z1bRbGE="></enclosure>
+        </item>
     </channel>
 </rss>
