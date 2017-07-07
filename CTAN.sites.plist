@@ -82,6 +82,16 @@
 				<key>country</key>
 				<string>China</string>
 				<key>name</key>
+				<string>mirrors.cqu.edu.cn</string>
+				<key>urls</key>
+				<array>
+					<string>http://mirrors.cqu.edu.cn/CTAN/</string>
+				</array>
+			</dict>
+			<dict>
+				<key>country</key>
+				<string>China</string>
+				<key>name</key>
 				<string>mirrors.hust.edu.cn</string>
 				<key>urls</key>
 				<array>
@@ -232,16 +242,6 @@
 			</dict>
 			<dict>
 				<key>country</key>
-				<string>Malaysia</string>
-				<key>name</key>
-				<string>wbc.upm.edu.my</string>
-				<key>urls</key>
-				<array>
-					<string>http://wbc.upm.edu.my/tex-archive/</string>
-				</array>
-			</dict>
-			<dict>
-				<key>country</key>
 				<string>Philippines</string>
 				<key>name</key>
 				<string>mirror.pregi.net</string>
@@ -282,16 +282,6 @@
 					<string>ftp://ftp.yzu.edu.tw/CTAN/</string>
 					<string>http://ftp.yzu.edu.tw/CTAN/</string>
 					<string>rsync://ftp.yzu.edu.tw/pub/CTAN/</string>
-				</array>
-			</dict>
-			<dict>
-				<key>country</key>
-				<string>Thailand</string>
-				<key>name</key>
-				<string>ctan.megagod.net</string>
-				<key>urls</key>
-				<array>
-					<string>http://ctan.megagod.net/tex-archive/</string>
 				</array>
 			</dict>
 		</array>
@@ -667,11 +657,12 @@
 				<key>country</key>
 				<string>Portugal</string>
 				<key>name</key>
-				<string>neacm.fe.up.pt</string>
+				<string>mirrors.up.pt</string>
 				<key>urls</key>
 				<array>
-					<string>ftp://mirrors.fe.up.pt/pub/CTAN/</string>
-					<string>http://mirrors.fe.up.pt/pub/CTAN/</string>
+					<string>ftp://mirrors.up.pt/pub/CTAN/</string>
+					<string>http://mirrors.up.pt/pub/CTAN/</string>
+					<string>rsync://mirrors.up.pt/pub/CTAN/</string>
 				</array>
 			</dict>
 			<dict>
@@ -1172,6 +1163,6 @@
 		</array>
 	</dict>
 	<key>timestamp</key>
-	<real>1495158766.206577</real>
+	<real>1499391893.176662</real>
 </dict>
 </plist>
