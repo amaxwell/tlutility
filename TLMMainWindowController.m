@@ -185,8 +185,7 @@ static Class _UserNotificationClass;
     [_tabView addTabNamed:NSLocalizedString(@"Packages", @"tab title") withView:[[_packageListDataSource outlineView] enclosingScrollView]];
     [_tabView addTabNamed:NSLocalizedString(@"Backups", @"tab title") withView:[[_backupDataSource outlineView] enclosingScrollView]];
 
-#warning fixme
-    if (1 || [[NSUserDefaults standardUserDefaults] boolForKey:TLMEnableNetInstall])
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:TLMEnableNetInstall])
         [_tabView addTabNamed:NSLocalizedString(@"Install", @"tab title") withView:[[_installDataSource outlineView] enclosingScrollView]];
     
     // 10.5 release notes say this is enabled by default, but it returns NO
