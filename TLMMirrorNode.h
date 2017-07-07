@@ -62,7 +62,11 @@ typedef NSInteger TLMMirrorNodeType;
 - (NSUInteger)numberOfChildren;
 - (void)addChild:(TLMMirrorNode *)child;
 - (TLMMirrorNode *)childAtIndex:(NSUInteger)idx;
+- (void)insertChild:(TLMMirrorNode *)child atIndex:(NSUInteger)index;
+- (void)removeChildAtIndex:(NSUInteger)index;
 - (void)removeChild:(TLMMirrorNode *)child;
+- (void)removeChildIdenticalTo:(TLMMirrorNode *)child;
+- (BOOL)containsChild:(TLMMirrorNode *)child;
 
 
 @end

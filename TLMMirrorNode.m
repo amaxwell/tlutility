@@ -134,6 +134,26 @@
     [_children removeObject:child];
 }
 
+- (void)removeChildIdenticalTo:(TLMMirrorNode *)child;
+{
+    [_children removeObjectIdenticalTo:child];
+}
+
+- (void)insertChild:(TLMMirrorNode *)child atIndex:(NSUInteger)index;
+{
+    [_children insertObject:child atIndex:index];
+}
+
+- (void)removeChildAtIndex:(NSUInteger)index;
+{
+    [_children removeObjectAtIndex:index];
+}
+
+- (BOOL)containsChild:(TLMMirrorNode *)child;
+{
+    return [_children containsObject:child];
+}
+
 - (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state objects:(id *)stackbuf count:(NSUInteger)len;
 {
     return [_children countByEnumeratingWithState:state objects:stackbuf count:len];

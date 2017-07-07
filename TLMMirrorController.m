@@ -49,6 +49,7 @@
 
 #define MIRRORS_FILENAME @"Mirrors.plist"
 #define USER_MIRRORS_KEY @"User mirrors"
+#define TLM_MIRROR_REORDER_DRAG_TYPE @"TLM_MIRROR_REORDER_DRAG_TYPE"
 
 @interface TLMMirrorController (Private)
 - (void)_loadDefaultSites;
@@ -184,7 +185,9 @@ static NSURL *__TLMTLNetURL(NSString *mirrorURLString)
         TLMMirrorNode *userNode = [TLMMirrorNode new];
         [userNode setType:TLMMirrorNodeURL];
         [userNode setValue:[NSURL URLWithString:URLString]];
-        [[self _customNode] addChild:userNode];
+        // dragging used to create spurious duplicates, with no way to remove the multiplexor in particular
+        if ([userNode isEqual:multiplexorNode] == NO)
+            [[self _customNode] addChild:userNode];
         [userNode release];
     }
     
@@ -247,7 +250,9 @@ static NSURL *__TLMTLNetURL(NSString *mirrorURLString)
 - (void)awakeFromNib
 {        
     [_outlineView reloadData];
-    [_outlineView registerForDraggedTypes:[NSArray arrayWithObjects:(id)kUTTypeURL, NSURLPboardType, NSStringPboardType, nil]];
+    [_outlineView registerForDraggedTypes:[NSArray arrayWithObjects:TLM_MIRROR_REORDER_DRAG_TYPE, (id)kUTTypeURL, NSURLPboardType, NSStringPboardType, nil]];
+    [_outlineView setDraggingSourceOperationMask:NSDragOperationMove | NSDragOperationCopy forLocal:YES];
+    [_outlineView setDraggingSourceOperationMask:NSDragOperationCopy forLocal:NO];
     [_outlineView setDoubleAction:@selector(doubleClickAction:)];
     [_outlineView setTarget:self];
 }
@@ -443,21 +448,126 @@ static bool __ismultiplexer(TLMMirrorNode *node)
 
 #pragma mark User interaction
 
+NSIndexSet *__reorderIndexSetFromPasteboard(NSPasteboard *pboard)
+{
+    OSStatus err;
+    
+    PasteboardRef carbonPboard;
+    err = PasteboardCreate((CFStringRef)[pboard name], &carbonPboard);
+    
+    if (noErr == err)
+        (void)PasteboardSynchronize(carbonPboard);
+    
+    ItemCount itemCount, itemIndex;
+    if (noErr == err)
+        err = PasteboardGetItemCount(carbonPboard, &itemCount);
+    
+    if (noErr != err)
+        itemCount = 0;
+    
+    NSIndexSet *toReturn = nil;
+    
+    // Pasteboard has 1-based indexing!
+    
+    for (itemIndex = 1; itemIndex <= itemCount; itemIndex++) {
+        
+        PasteboardItemID itemID;
+        CFArrayRef flavors = NULL;
+        CFIndex flavorIndex, flavorCount = 0;
+        
+        err = PasteboardGetItemIdentifier(carbonPboard, itemIndex, &itemID);
+        if (noErr == err)
+            err = PasteboardCopyItemFlavors(carbonPboard, itemID, &flavors);
+        
+        if (noErr == err)
+            flavorCount = CFArrayGetCount(flavors);
+        
+        // flavorCount will be zero in case of an error...
+        for (flavorIndex = 0; flavorIndex < flavorCount; flavorIndex++) {
+            
+            CFStringRef flavor;
+            CFDataRef data;
+            
+            flavor = CFArrayGetValueAtIndex(flavors, flavorIndex);
+            
+            if (UTTypeEqual(flavor, (CFStringRef)TLM_MIRROR_REORDER_DRAG_TYPE)) {
+                
+                err = PasteboardCopyItemFlavorData(carbonPboard, itemID, flavor, &data);
+                if (noErr == err && NULL != data) {
+                    toReturn = [NSUnarchiver unarchiveObjectWithData:(NSData *)data];
+                    CFRelease(data);
+                }
+                
+            }
+            // ignore any other type; we don't care
+            
+        }
+        
+        if (NULL != flavors)
+            CFRelease(flavors);
+    }
+    
+    if (carbonPboard) CFRelease(carbonPboard);
+    NSLog(@"index set from pboard: %@", toReturn);
+    
+    return toReturn;
+}
+
+// for drag operations
 - (BOOL)outlineView:(TLMOutlineView *)outlineView writeItems:(NSArray *)items toPasteboard:(NSPasteboard *)pasteboard;
 {
     NSMutableArray *URLs = [NSMutableArray array];
-        
+    NSMutableIndexSet *indexes = [NSMutableIndexSet indexSet];
+    
     for (TLMMirrorNode *node in items) {
         
         if ([node type] != TLMMirrorNodeURL)
             continue;
         
         [URLs addObject:[node value]];
+        [indexes addIndex:[_outlineView rowForItem:node]];
     }
 
-    return [NSURL writeURLs:URLs toPasteboard:pasteboard];
+    // clears the pboard
+    BOOL rv = [NSURL writeURLs:URLs toPasteboard:pasteboard];
+    
+    OSStatus err;
+    
+    PasteboardRef carbonPboard;
+    err = PasteboardCreate((CFStringRef)[pasteboard name], &carbonPboard);
+    
+    if (noErr == err)
+        (void)PasteboardSynchronize(carbonPboard);
+    
+    if (noErr != err) {
+        TLMLog(__func__, @"failed to setup pboard %@: %s", [pasteboard name], GetMacOSStatusErrorString(err));
+        return NO;
+    }
+    
+    CFDataRef utf8Data = (CFDataRef)[NSArchiver archivedDataWithRootObject:indexes];
+    
+    // any pointer type; private to the creating application
+    PasteboardItemID itemID = (void *)TLM_MIRROR_REORDER_DRAG_TYPE;
+    err = PasteboardPutItemFlavor(carbonPboard, itemID, (CFStringRef)TLM_MIRROR_REORDER_DRAG_TYPE, utf8Data, kPasteboardFlavorNoFlags);
+    
+    if (noErr != err)
+        TLMLog(__func__, @"failed to write to pboard %@: %s", [pasteboard name], GetMacOSStatusErrorString(err));
+    
+    ItemCount itemCount;
+    err = PasteboardGetItemCount(carbonPboard, &itemCount);
+    
+    if (carbonPboard)
+        CFRelease(carbonPboard);
+    
+    return noErr == err && itemCount > 0;
+
+    [pasteboard addTypes:[NSArray arrayWithObject:TLM_MIRROR_REORDER_DRAG_TYPE] owner:nil];
+    rv += [pasteboard setData:[NSKeyedArchiver archivedDataWithRootObject:indexes] forType:TLM_MIRROR_REORDER_DRAG_TYPE];
+    NSLog(@"wrote %@ to pboard", indexes);
+    return rv;
 }
 
+// for cmd-c copy support
 - (void)outlineView:(TLMOutlineView *)outlineView writeSelectedRowsToPasteboard:(NSPasteboard *)pboard;
 {
     NSMutableArray *URLs = [NSMutableArray array];
@@ -476,10 +586,52 @@ static bool __ismultiplexer(TLMMirrorNode *node)
 
 - (NSDragOperation)outlineView:(NSOutlineView *)outlineView validateDrop:(id <NSDraggingInfo>)info proposedItem:(id)item proposedChildIndex:(NSInteger)idx;
 {
+    //NSLog(@"validate drop on parent %@ at %d", item, idx);
+    if ([[[info draggingPasteboard] types] containsObject:TLM_MIRROR_REORDER_DRAG_TYPE]) return NSDragOperationMove;
     NSArray *URLs = [NSURL URLsFromPasteboard:[info draggingPasteboard]];
     if ([URLs count] == 0) return NSDragOperationNone;
     // originally checked isFileURL here, but you can have a file: based repo
-    return ([item isEqual:[self _customNode]]) ? NSDragOperationCopy : NSDragOperationNone;    
+    return ([item isEqual:[self _customNode]]) ? NSDragOperationMove : NSDragOperationNone;
+}
+
+- (BOOL)outlineView:(NSOutlineView *)outlineView acceptDrop:(id <NSDraggingInfo>)info item:(id)item childIndex:(NSInteger)idx;
+{
+    //NSLog(@"accept drop on parent %@ at %d", item, idx);
+    NSLog(@"acceptDrop types = %@, has reorder = %d", [[info draggingPasteboard] types], [[[info draggingPasteboard] types] containsObject:TLM_MIRROR_REORDER_DRAG_TYPE]);
+    NSArray *URLs = [NSURL URLsFromPasteboard:[info draggingPasteboard]];
+    NSParameterAssert([item isEqual:[self _customNode]]);
+    
+    // may be external drag, too, so figure that out
+    if ([[[info draggingPasteboard] types] containsObject:TLM_MIRROR_REORDER_DRAG_TYPE] == NO)
+        return NO;
+    
+    NSIndexSet *sourceIndexes = __reorderIndexSetFromPasteboard([info draggingPasteboard]); //[NSKeyedUnarchiver unarchiveObjectWithData:[[info draggingPasteboard] dataForType:TLM_MIRROR_REORDER_DRAG_TYPE]];
+    NSUInteger ridx = [sourceIndexes firstIndex];
+    NSMutableArray *childrenToRemove = [NSMutableArray array];
+    
+    while (NSNotFound != ridx) {
+        [childrenToRemove addObject:[[self _customNode] childAtIndex:ridx]];
+        ridx = [sourceIndexes indexGreaterThanIndex:ridx];
+    }
+    
+    for (NSURL *aURL in URLs) {
+        TLMMirrorNode *userNode = [TLMMirrorNode new];
+        [userNode setType:TLMMirrorNodeURL];
+        [userNode setValue:aURL];
+        // FIXME: drop index is currently ignored
+        if ([info draggingSourceOperationMask] & NSDragOperationMove)
+            [[self _customNode] insertChild:userNode atIndex:idx];
+        [userNode release];
+    }
+    
+    for (TLMMirrorNode *toRemove in childrenToRemove) {
+        [[self _customNode] removeChildIdenticalTo:toRemove];
+    }
+    
+    [_outlineView reloadData];
+#warning fixme
+    //[self performSelector:@selector(_archivePlist) withObject:nil afterDelay:0];
+    return [URLs count] > 0;
 }
 
 - (void)outlineViewSelectionDidChange:(NSNotification *)notification;
@@ -517,7 +669,7 @@ static bool __ismultiplexer(TLMMirrorNode *node)
     NSArray *selectedItems = [[[_outlineView selectedItems] copy] autorelease];
     for (TLMMirrorNode *node in selectedItems) {
         if ([node type] == TLMMirrorNodeURL)
-            [[self _customNode] removeChild:node];
+            [[self _customNode] removeChildIdenticalTo:node];
     }
     [_outlineView reloadData];
     [self _archivePlist];
@@ -612,23 +764,6 @@ static bool __ismultiplexer(TLMMirrorNode *node)
         default:
             break;
     }
-}
-
-- (BOOL)outlineView:(NSOutlineView *)outlineView acceptDrop:(id <NSDraggingInfo>)info item:(id)item childIndex:(NSInteger)idx;
-{
-    NSArray *URLs = [NSURL URLsFromPasteboard:[info draggingPasteboard]];
-    NSParameterAssert([item isEqual:[self _customNode]]);
-    for (NSURL *aURL in URLs) {
-        TLMMirrorNode *userNode = [TLMMirrorNode new];
-        [userNode setType:TLMMirrorNodeURL];
-        [userNode setValue:aURL];
-        // FIXME: drop index is currently ignored
-        [[self _customNode] addChild:userNode];
-        [userNode release];
-    }
-    [_outlineView reloadData];
-    [self performSelector:@selector(_archivePlist) withObject:nil afterDelay:0];
-    return [URLs count] > 0;
 }
 
 - (BOOL)control:(NSControl *)control didFailToFormatString:(NSString *)string errorDescription:(NSString *)error
