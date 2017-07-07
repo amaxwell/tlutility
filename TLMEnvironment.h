@@ -58,6 +58,11 @@ extern NSString * const TLMDefaultRepositoryChangedNotification;
 // should be the only object needed for external usage
 + (TLMEnvironment *)currentEnvironment;
 
+// TL 2017 snafu
++ (BOOL)localDatabaseIsReadable;
+// only to be used for fixing permissions
++ (NSString *)localDatabasePath;
+
 // not useful when instantiated directly
 - (id)initWithInstallDirectory:(NSString *)absolutePath;
 

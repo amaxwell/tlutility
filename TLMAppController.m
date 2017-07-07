@@ -45,6 +45,8 @@
 #import "TLMMirrorController.h"
 #import "TLMEnvironment.h"
 #import "TLMLogWindowController.h"
+#import "TLMAuthorizedOperation.h"
+#import "TLMReadWriteOperationQueue.h"
 
 @implementation TLMAppController
 
@@ -189,7 +191,9 @@ static void __TLMMigrateBundleIdentifier()
 
 - (BOOL)applicationShouldHandleReopen:(NSApplication *)theApplication hasVisibleWindows:(BOOL)flag
 {
-    [[self mainWindowController] showWindow:nil];
+    // might still be fixing bloody permissions
+    if (_canShowMainWindow)
+        [[self mainWindowController] showWindow:nil];
     // let NSApp order in the log window if needed
     return flag;
 }
@@ -250,14 +254,12 @@ static void __TLMMigrateBundleIdentifier()
                                                         andEventID:kAEGetURL];
 }
 
-- (void)applicationDidFinishLaunching:(NSNotification *)notification;
+- (void)_continueApplicationDidFinishLaunching
 {
-    // make sure this gets hooked up early enough that it collects messages
-    if (nil == _logWindowController)
-        _logWindowController = [TLMLogWindowController new];
-    
     // make sure this is set up early enough to use tasks anywhere
-    [TLMEnvironment updateEnvironment]; 
+    [TLMEnvironment updateEnvironment];
+    
+    _canShowMainWindow = YES;
     
     /*
      Show before main window, so the main window is key when we finish launching,
@@ -280,13 +282,47 @@ static void __TLMMigrateBundleIdentifier()
     else if ([NSApp isActive] && [[NSUserDefaults standardUserDefaults] boolForKey:TLMShowLogWindowPreferenceKey]) {
         [[[self mainWindowController] window] makeKeyAndOrderFront:nil];
     }
-
+    
     if (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_7) {
         // NB: have to include the .app extension here
         NSString *notifierPath = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"TLUNotifier.app"];
         if (notifierPath)
-            LSRegisterURL((CFURLRef)[NSURL fileURLWithPath:notifierPath], TRUE);        
-    }    
+            LSRegisterURL((CFURLRef)[NSURL fileURLWithPath:notifierPath], TRUE);
+    }
+}
+
+- (void)_handleFixPermissionsFinishedNotification:(NSNotification *)aNote
+{
+    TLMAuthorizedOperation *op = [aNote object];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:TLMOperationFinishedNotification object:op];
+    if ([op failed])
+        TLMLog(__func__, @"Failed to fix permissions. Many other things will now fail.");
+    
+    [self _continueApplicationDidFinishLaunching];
+}
+
+- (void)applicationDidFinishLaunching:(NSNotification *)notification;
+{
+    // make sure this gets hooked up early enough that it collects messages
+    if (nil == _logWindowController)
+        _logWindowController = [TLMLogWindowController new];
+    
+    // hack for TL 2017 breakage; has to be done before TLMEnvironment is used
+    if ([TLMEnvironment localDatabaseIsReadable] == NO) {
+        NSArray *args = [NSArray arrayWithObjects:@"644", [TLMEnvironment localDatabasePath], nil];
+        // always run as root, so we don't create a TLMEnvironment
+        TLMAuthorizedOperation *op = [[TLMAuthorizedOperation alloc] initWithAuthorizedCommand:@"/bin/chmod" options:args];
+        TLMLog(__func__, @"Fixing database permissions at %@…", [TLMEnvironment localDatabasePath]);
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(_handleFixPermissionsFinishedNotification:)
+                                                     name:TLMOperationFinishedNotification
+                                                   object:op];
+        [[TLMReadWriteOperationQueue defaultQueue] addOperation:op];
+    }
+    else {
+        [self _continueApplicationDidFinishLaunching];
+    }
+    
 }
 
 - (TLMMainWindowController *)mainWindowController { 
