@@ -841,5 +841,16 @@
             <sparkle:minimumSystemVersion>10.6.8</sparkle:minimumSystemVersion>
             <enclosure url="https://github.com/amaxwell/tlutility/releases/download/1.29/TeX.Live.Utility.app-1.29.tar.gz" sparkle:version="1.29" length="3013276" type="application/octet-stream" sparkle:dsaSignature="MCwCFBtPwSknEiYIoeO5kq0joIjp03evAhRKkjlztLhVqX6R3x7M48o6Hg+vrQ=="></enclosure>
         </item>
+        <item>
+            <title>Version 1.30</title>
+            <description>
+                <h3>Changes Since 1.29</h3>
+                <li>Fix drag and drop in the repository list</li>
+                <li>Remove debug code which enabled the Install tab by default</li>
+            </description>
+            <pubDate>Fri, 07 Jul 2017 04:38:30 +0000</pubDate>
+            <sparkle:minimumSystemVersion>10.6.8</sparkle:minimumSystemVersion>
+            <enclosure url="https://github.com/amaxwell/tlutility/releases/download/1.30/TeX.Live.Utility.app-1.30.tar.gz" sparkle:version="1.30" length="3013226" type="application/octet-stream" sparkle:dsaSignature="MCwCFCOfjSVxjOE9PVlauYhdeYdxRlnrAhQHaDCkRF453jM5iBfEnmm9Q+5Pug=="></enclosure>
+        </item>
     </channel>
 </rss>
