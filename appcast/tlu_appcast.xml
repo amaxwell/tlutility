@@ -828,5 +828,18 @@
             <sparkle:minimumSystemVersion>10.6.8</sparkle:minimumSystemVersion>
             <enclosure url="https://github.com/amaxwell/tlutility/releases/download/1.28/TeX.Live.Utility.app-1.28.tar.gz" sparkle:version="1.28" length="3010617" type="application/octet-stream" sparkle:dsaSignature="MC0CFFgwodrOFK/RYK2ik4EogRU14NWkAhUAhrvR8JUqBTsMWJF0wCE1Z1bRbGE="></enclosure>
         </item>
+        <item>
+            <title>Version 1.29</title>
+            <description>
+                <h3>Changes Since 1.28</h3>
+                <li>Add a workaround for a mysterious bug where tlmgr apparently makes its database read-only</li>
+                <li>Add legacy mirror for TL 2016</li>
+                <li>Update repository list</li>
+                <li>Started fixing the drag and drop issues in the repository list</li>
+            </description>
+            <pubDate>Fri, 07 Jul 2017 01:46:53 +0000</pubDate>
+            <sparkle:minimumSystemVersion>10.6.8</sparkle:minimumSystemVersion>
+            <enclosure url="https://github.com/amaxwell/tlutility/releases/download/1.29/TeX.Live.Utility.app-1.29.tar.gz" sparkle:version="1.29" length="3013276" type="application/octet-stream" sparkle:dsaSignature="MCwCFBtPwSknEiYIoeO5kq0joIjp03evAhRKkjlztLhVqX6R3x7M48o6Hg+vrQ=="></enclosure>
+        </item>
     </channel>
 </rss>
