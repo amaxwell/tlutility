@@ -74,22 +74,12 @@ struct TLMAOInternal {
 
 - (id)initWithAuthorizedCommand:(NSString *)absolutePath options:(NSArray *)options;
 {
-    self = [self initWithCommand:absolutePath options:options];
-    if (self) {
-        _internal->_authorizationRequired = YES;
-    }
-    return self;
-}
-
-- (id)initWithCommand:(NSString *)absolutePath options:(NSArray *)options;
-{
     NSParameterAssert(absolutePath);
     NSParameterAssert(options);
     
     // we override -main and don't need an NSTask, so use -init
     self = [super init];
     if (self) {
-        
         _internal = NSZoneCalloc([self zone], 1, sizeof(struct TLMAOInternal));
         NSParameterAssert(_internal);
         
@@ -104,7 +94,19 @@ struct TLMAOInternal {
         [fullOptions insertObject:absolutePath atIndex:0];
         _internal->_options = [fullOptions copy];
         [fullOptions release];
+
+        _internal->_authorizationRequired = YES;
+    }
+    return self;
+}
+
+- (id)initWithCommand:(NSString *)absolutePath options:(NSArray *)options;
+{
+    
+    self = [self initWithAuthorizedCommand:absolutePath options:options];
+    if (self) {
         
+        // revised to initWithAuthorizedCommand:options: is now designated init, to avoid hitting TLMEnvironment
         _internal->_authorizationRequired = [[TLMEnvironment currentEnvironment] installRequiresRootPrivileges];
     }
     return self;

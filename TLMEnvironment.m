@@ -195,6 +195,26 @@ static bool                 _didShowBadTexbinPathAlert = false;
     return installDirectory;
 }
 
+/*
+ This is a disgusting hack to allow us to fix a local database path once at startup,
+ because of some snafu with TL 2017 where it makes the tlpdb read-only. I could move
+ the authorized operation stuff in here and check for it every time we get a new
+ environment, but I frankly don't want to. There might be a better place to do the
+ fix than in TLMMainWindowController, but it has to be early, and in a method that
+ doesn't return an object since it's asynchronous. This means that I can't do it from
+ +currentEnvironment, as far as I can see.
+ */
++ (NSString *)localDatabasePath;
+{
+    return [[[NSURL databaseURLForTLNetURL:[NSURL fileURLWithPath:[self _installDirectoryFromCurrentDefaults]]] tlm_normalizedURL] path];
+}
+
++ (BOOL)localDatabaseIsReadable;
+{
+    NSFileManager *fm = [[NSFileManager new] autorelease];
+    return [fm isReadableFileAtPath:[self localDatabasePath]];
+}
+
 + (void)_updatePathAlert2:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
 {
     _didShowBadTexbinPathAlert = true;

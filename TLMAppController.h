@@ -51,6 +51,7 @@
     NSURL                   *_aevtUpdateURL;
     NSInvocation            *_sparkleUpdateInvocation;
     NSMenuItem              *_installMenuItem;
+    BOOL                     _canShowMainWindow;
 }
 
 @property (nonatomic, retain) IBOutlet NSMenuItem *_installMenuItem;

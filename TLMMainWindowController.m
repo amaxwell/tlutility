@@ -394,33 +394,33 @@ static Class _UserNotificationClass;
     if (currentYear >= 2016 &&
         [[NSUserDefaults standardUserDefaults] integerForKey:TLMDisableGPGAlertPreferenceKey] != currentYear &&
         [[TLMDatabase localDatabase] packageNamed:@"tlgpg"] == nil) {
-
-            NSAlert *alert = [[NSAlert new] autorelease];
-            [alert setMessageText:NSLocalizedString(@"Enable security validation of packages?", @"alert title")];
-            [alert setInformativeText:NSLocalizedString(@"This version of TeX Live allows you to check the digital signature of downloaded packages by installing GnuPG. For better security, you should enable this feature.", @"alert text")];
-            [alert addButtonWithTitle:NSLocalizedString(@"Enable", @"button title")];
-            [alert addButtonWithTitle:NSLocalizedString(@"Later", @"button title")];
-            [alert setShowsSuppressionButton:YES];
-            [alert beginSheetModalForWindow:[self window]
-                              modalDelegate:self
-                             didEndSelector:@selector(gpgInstallAlertDidEnd:returnCode:contextInfo:)
-                                contextInfo:NULL];
+        
+        NSAlert *alert = [[NSAlert new] autorelease];
+        [alert setMessageText:NSLocalizedString(@"Enable security validation of packages?", @"alert title")];
+        [alert setInformativeText:NSLocalizedString(@"This version of TeX Live allows you to check the digital signature of downloaded packages by installing GnuPG. For better security, you should enable this feature.", @"alert text")];
+        [alert addButtonWithTitle:NSLocalizedString(@"Enable", @"button title")];
+        [alert addButtonWithTitle:NSLocalizedString(@"Later", @"button title")];
+        [alert setShowsSuppressionButton:YES];
+        [alert beginSheetModalForWindow:[self window]
+                          modalDelegate:self
+                         didEndSelector:@selector(gpgInstallAlertDidEnd:returnCode:contextInfo:)
+                            contextInfo:NULL];
     }
     else {
-
+        
         // set the dirty bit on all datasources
         [_updateListDataSource setNeedsUpdate:YES];
         [_packageListDataSource setNeedsUpdate:YES];
         [_backupDataSource setNeedsUpdate:YES];
         [_installDataSource setNeedsUpdate:YES];
-
+        
         // do this after the window loads, so something is visible in the URL field
         [self _goHome];
     }
     
     // for info window; TL 2011 and later only
     [self _refreshLocalDatabase];
-        
+    
     // no need to update if we do a migration
     if ([TLMLaunchAgentController migrateLocalToUserIfNeeded] == NO && [TLMLaunchAgentController scriptNeedsUpdate]) {
         NSAlert *alert = [[NSAlert new] autorelease];
@@ -428,11 +428,12 @@ static Class _UserNotificationClass;
         [alert setInformativeText:NSLocalizedString(@"A newer version of the scheduled update script is available.  Would you like to install it now?", @"alert text")];
         [alert addButtonWithTitle:NSLocalizedString(@"Yes", @"button title")];
         [alert addButtonWithTitle:NSLocalizedString(@"No", @"button title")];
-        [alert beginSheetModalForWindow:[self window] 
+        [alert beginSheetModalForWindow:[self window]
                           modalDelegate:self
                          didEndSelector:@selector(launchAgentScriptUpdateAlertDidEnd:returnCode:contextInfo:)
                             contextInfo:NULL];
     }
+    
 }
 
 - (NSString *)windowNibName { return @"MainWindow"; }

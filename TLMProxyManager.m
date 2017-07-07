@@ -39,6 +39,7 @@
 #import "TLMProxyManager.h"
 #import "TLMLogServer.h"
 #import "TLMEnvironment.h"
+#import "TLMPreferenceController.h"
 #import <SystemConfiguration/SystemConfiguration.h>
 #import <CoreServices/CoreServices.h>
 #import <Security/Security.h>
@@ -402,8 +403,12 @@ static NSURL * __TLMProxyDefaultServerURL()
      this will also be correct, unless we're going to legacy mode (in which case I don't care if it breaks).
      The main thing is to avoid a download here, since this is called very early, and could cause a delay
      in showing the main window.
+     
+     Avoid hitting TLMEnvironment here, since this is called from its +initialize, and I don't want to
+     instantiate an environment yet (because of the TL 2017 permissions screwup, the environment is
+     unsafe until after the application finishes launching).
      */
-    return [[TLMEnvironment currentEnvironment] defaultServerURL];
+    return [[NSURL URLWithString:[[NSUserDefaults standardUserDefaults] objectForKey:TLMFullServerURLPreferenceKey]] tlm_normalizedURL];
 }
 
 - (id)init

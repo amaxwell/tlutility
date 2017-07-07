@@ -46,7 +46,7 @@
     struct TLMAOInternal *_internal;
 }
 
-// checks -[TLMPreferenceController installRequiresRootPrivileges] to determine permission
+// checks -[[TLMEnvironment currentEnvironment] installRequiresRootPrivileges] and only runs as root if needed
 - (id)initWithCommand:(NSString *)absolutePath options:(NSArray *)options;
 
 // prepares to execute command as root with given option
