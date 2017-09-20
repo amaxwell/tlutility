@@ -97,10 +97,10 @@
 "DOC FILES" = "DOC FILES";
 
 /* button title */
-"Done" = "Done";
+"Done" = "Terminé";
 
 /* No comment provided by engineer. */
-"Download complete" = "Download complete";
+"Download complete" = "Téléchargement terminé";
 
 /* No comment provided by engineer. */
 "Downloading release notes" = "Downloading release notes";
@@ -109,7 +109,7 @@
 "Either a network problem exists or the TeX Live version on the server does not match.  If this problem persists on further attempts, you may need to try a different repository." = "Either a network problem exists or the TeX Live version on the server does not match.  If this problem persists on further attempts, you may need to try a different repository.";
 
 /* button title */
-"Enable" = "Enable";
+"Enable" = "Activer";
 
 /* alert title */
 "Enable security validation of packages?" = "Enable security validation of packages?";
@@ -148,31 +148,31 @@
 "If you have installed TeX Live, you need to tell TeX Live Utility where to find TeX programs. For MacTeX 2015 and later, you should use /Library/TeX/texbin. Change settings now?" = "If you have installed TeX Live, you need to tell TeX Live Utility where to find TeX programs. For MacTeX 2015 and later, you should use /Library/TeX/texbin. Change settings now?";
 
 /* button title */
-"Ignore" = "Ignore";
+"Ignore" = "Ignorer";
 
 /* status message */
 "Infrastructure Update Succeeded" = "Infrastructure Update Succeeded";
 
 /* tab title */
-"Install" = "Install";
+"Install" = "Installer";
 
 /* alert title */
-"Install failed." = "Install failed.";
+"Install failed." = "L'installation a échoué.";
 
 /* context menu */
-"Install Selected Packages" = "Install Selected Packages";
+"Install Selected Packages" = "Installer les paquets sélectionnés";
 
 /* status message */
-"Install Succeeded" = "Install Succeeded";
+"Install Succeeded" = "L'installation a réussi";
 
 /* No comment provided by engineer. */
 "Installation complete; reconfiguring TeX Live" = "Installation complete; reconfiguring TeX Live";
 
 /* alert title */
-"Installation in progress!" = "Installation in progress!";
+"Installation in progress!" = "Installation en cours...";
 
 /* status for package */
-"Installed" = "Installed";
+"Installed" = "Installé";
 
 /* single trailing space */
 "Installing " = "Installing ";
@@ -181,7 +181,7 @@
 "Installing gpg appears to have failed. Would you like to show the log now or ignore this warning?" = "Installing gpg appears to have failed. Would you like to show the log now or ignore this warning?";
 
 /* alert title */
-"Invalid URL" = "Invalid URL";
+"Invalid URL" = "URL invalide";
 
 /* alert title */
 "Invalid URL entered" = "Invalid URL entered";
@@ -190,10 +190,10 @@
 "Keep Waiting" = "Keep Waiting";
 
 /* button title */
-"Later" = "Later";
+"Later" = "Plus tard";
 
 /* heading in info panel */
-"Link: " = "Link: ";
+"Link: " = "Lien : ";
 
 /* main window status string */
 "Listing Cancelled" = "Listing Cancelled";
@@ -202,7 +202,7 @@
 "Listing Failed" = "Listing Failed";
 
 /* status message */
-"Loading Database" = "Loading Database";
+"Loading Database" = "Chargement de la base de données";
 
 /* alert title */
 "Local fonts were found" = "Local fonts were found";
@@ -214,19 +214,19 @@
 "Local version is newer " = "Local version is newer ";
 
 /* alert button title */
-"Manually" = "Manually";
+"Manually" = "Manuellement";
 
 /* value in tableview */
-"Missing short description" = "Missing short description";
+"Missing short description" = "Description manquante";
 
 /* status for expandable outline row with installed and uninstalled packages */
-"Mixed" = "Mixed";
+"Mixed" = "Mixte";
 
 /* the user's repository group title */
-"My Repositories" = "My Repositories";
+"My Repositories" = "Mes dépôts";
 
 /* text-based table column title */
-"Name" = "Name";
+"Name" = "Nom";
 
 /* alert title in preferences */
 "Necessary programs for TeX Live do not exist in that folder" = "Necessary programs for TeX Live do not exist in that folder";
@@ -235,7 +235,7 @@
 "Needs removal" = "Needs removal";
 
 /* No comment provided by engineer. */
-"Network is unavailable" = "Network is unavailable";
+"Network is unavailable" = "Réseau indisponible";
 
 /* update alert message text part 3 (optional) */
 "New packages will be installed." = "New packages will be installed.";
@@ -244,31 +244,31 @@
 "Newer update checker is available" = "Newer update checker is available";
 
 /* button title */
-"No" = "No";
+"No" = "Non";
 
 /* main window status string */
-"No Backups Available" = "No Backups Available";
+"No Backups Available" = "Aucune sauvegarde disponible";
 
 /* main window status string */
-"No Updates Available" = "No Updates Available";
+"No Updates Available" = "Aucune mise à jour disponible";
 
 /* status for package */
-"Not installed" = "Not installed";
+"Not installed" = "Non installé";
 
 /* info panel title */
-"Nothing Selected" = "Nothing Selected";
+"Nothing Selected" = "Rien n'est sélectionné.";
 
 /* No comment provided by engineer. */
-"Nothing selected." = "Nothing selected.";
+"Nothing selected." = "Rien n'est sélectionné.";
 
 /* menu title */
-"Open With" = "Open With";
+"Open With" = "Ouvrir avec";
 
 /* heading in info panel */
-"Package:" = "Package:";
+"Package:" = "Paquet :";
 
 /* tab title */
-"Packages" = "Packages";
+"Packages" = "Paquets";
 
 /* update alert message text part 2 (optional) */
 "Packages that no longer exist on the server will be removed." = "Packages that no longer exist on the server will be removed.";
@@ -286,13 +286,13 @@
 "Progress" = "Progress";
 
 /* button title */
-"Reinstall" = "Reinstall";
+"Reinstall" = "Réinstaller";
 
 /* alert title */
-"Reinstall packages?" = "Reinstall packages?";
+"Reinstall packages?" = "Réinstaller les paquets ?";
 
 /* context menu */
-"Reinstall Selected Packages" = "Reinstall Selected Packages";
+"Reinstall Selected Packages" = "Réinstaller les paquets sélectionnés";
 
 /* single trailing space */
 "Reinstalling " = "Reinstalling ";
@@ -301,13 +301,13 @@
 "Release Notes" = "Release Notes";
 
 /* alert title */
-"Removal failed." = "Removal failed.";
+"Removal failed." = "La suppression a échoué.";
 
 /* status message */
-"Removal Succeeded" = "Removal Succeeded";
+"Removal Succeeded" = "La suppression a réussi.";
 
 /* context menu */
-"Remove Selected Packages" = "Remove Selected Packages";
+"Remove Selected Packages" = "Supprimer les paquets sélectionnés";
 
 /* alert title */
 "Repository has a different TeX Live version" = "Repository has a different TeX Live version";
@@ -320,13 +320,13 @@
 
 /* button title
    small button title */
-"Restore" = "Restore";
+"Restore" = "Restaurer";
 
 /* alert title */
-"Restore failed." = "Restore failed.";
+"Restore failed." = "La restauration a échoué.";
 
 /* status message */
-"Restore Succeeded" = "Restore Succeeded";
+"Restore Succeeded" = "La restauration a réussi.";
 
 /* all caps tableview group title */
 "RUN FILES" = "RUN FILES";
@@ -341,31 +341,31 @@
 "Security Validation Enabled" = "Security Validation Enabled";
 
 /* context menu */
-"Set Default Repository" = "Set Default Repository";
+"Set Default Repository" = "Définir un dépot par défaut";
 
 /* context menu */
-"Show Info" = "Show Info";
+"Show Info" = "Afficher les détails";
 
 /* button title */
-"Show Log" = "Show Log";
+"Show Log" = "Afficher les logs";
 
 /* alert message text */
-"Some of the packages you have selected are already installed.  Would you like to reinstall them?" = "Some of the packages you have selected are already installed.  Would you like to reinstall them?";
+"Some of the packages you have selected are already installed.  Would you like to reinstall them?" = "Certains des paquets que vous avez sélectionnés sont déjà installés. Voulez-vous les réinstaller ?";
 
 /* alert title */
-"Some of these packages cannot be removed." = "Some of these packages cannot be removed.";
+"Some of these packages cannot be removed." = "Certains de ces paquets ne peuvent pas être supprimés.";
 
 /* all caps tableview group title */
 "SOURCE FILES" = "SOURCE FILES";
 
 /* heading in info panel */
-"Status:" = "Status:";
+"Status:" = "Statut :";
 
 /* heading in info panel */
-"Summary:" = "Summary:";
+"Summary:" = "Résumé :";
 
 /* alert sheet title */
-"TeX installation not found." = "TeX installation not found.";
+"TeX installation not found." = "TeX est introuvable.";
 
 /* No comment provided by engineer. */
 "TeX Live 2008 is not supported" = "TeX Live 2008 is not supported";
