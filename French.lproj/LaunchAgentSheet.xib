@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9059" systemVersion="15B42" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9059"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="TLMLaunchAgentController">
+            <connections>
+                <outlet property="_datePicker" destination="9" id="17"/>
+                <outlet property="_dayField" destination="29" id="37"/>
+                <outlet property="_scheduleMatrix" destination="25" id="36"/>
+                <outlet property="window" destination="1" id="3"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application"/>
+        <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" visibleAtLaunch="NO" animationBehavior="default" id="1" customClass="NSPanel">
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+            <rect key="contentRect" x="196" y="295" width="245" height="215"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1028"/>
+            <view key="contentView" id="2">
+                <rect key="frame" x="0.0" y="0.0" width="245" height="215"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <button verticalHuggingPriority="750" id="5">
+                        <rect key="frame" x="135" y="12" width="96" height="32"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <animations/>
+                        <buttonCell key="cell" type="push" title="Accept" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="6">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="accept:" target="-2" id="21"/>
+                        </connections>
+                    </button>
+                    <button verticalHuggingPriority="750" id="7">
+                        <rect key="frame" x="39" y="12" width="96" height="32"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <animations/>
+                        <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="8">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                            <string key="keyEquivalent" base64-UTF8="YES">
+Gw
+</string>
+                        </buttonCell>
+                        <connections>
+                            <action selector="cancel:" target="-2" id="20"/>
+                        </connections>
+                    </button>
+                    <datePicker verticalHuggingPriority="750" id="9">
+                        <rect key="frame" x="124" y="82" width="104" height="27"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <animations/>
+                        <datePickerCell key="cell" borderStyle="bezel" alignment="left" id="10">
+                            <font key="font" metaFont="system"/>
+                            <calendarDate key="date" timeIntervalSinceReferenceDate="-595929600" calendarFormat="%Y-%m-%d %H:%M:%S %z">
+                                <!--1982-02-12 08:00:00 -0800-->
+                                <timeZone key="timeZone" name="US/Pacific"/>
+                            </calendarDate>
+                            <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <datePickerElements key="datePickerElements" hour="YES" minute="YES"/>
+                        </datePickerCell>
+                        <connections>
+                            <action selector="changeTime:" target="-2" id="39"/>
+                        </connections>
+                    </datePicker>
+                    <matrix verticalHuggingPriority="750" allowsEmptySelection="NO" id="25">
+                        <rect key="frame" x="20" y="112" width="71" height="58"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <animations/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        <size key="cellSize" width="71" height="18"/>
+                        <size key="intercellSpacing" width="4" height="2"/>
+                        <buttonCell key="prototype" type="radio" title="Radio" imagePosition="left" alignment="left" inset="2" id="28">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <cells>
+                            <column>
+                                <buttonCell type="radio" title="Never" imagePosition="left" alignment="left" state="on" inset="2" id="26">
+                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <buttonCell type="radio" title="Weekly" imagePosition="left" alignment="left" tag="1" inset="2" id="27">
+                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <buttonCell type="radio" title="Daily" imagePosition="left" alignment="left" tag="2" inset="2" id="32">
+                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                            </column>
+                        </cells>
+                        <connections>
+                            <action selector="enableAction:" target="-2" id="35"/>
+                        </connections>
+                    </matrix>
+                    <textField verticalHuggingPriority="750" id="29">
+                        <rect key="frame" x="20" y="82" width="96" height="22"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <animations/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" title="Wednesday" drawsBackground="YES" id="30">
+                            <dateFormatter key="formatter" formatterBehavior="custom10_4" dateFormat="EEEE" id="31"/>
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                        <connections>
+                            <action selector="changeDay:" target="-2" id="38"/>
+                        </connections>
+                    </textField>
+                    <textField verticalHuggingPriority="750" id="33">
+                        <rect key="frame" x="17" y="178" width="177" height="17"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <animations/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Check for TeX Live Updates" id="34">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                </subviews>
+                <animations/>
+            </view>
+            <connections>
+                <outlet property="delegate" destination="-2" id="4"/>
+            </connections>
+        </window>
+    </objects>
+</document>
