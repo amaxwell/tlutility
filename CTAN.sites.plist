@@ -92,11 +92,10 @@
 				<key>country</key>
 				<string>China</string>
 				<key>name</key>
-				<string>mirrors.hust.edu.cn</string>
+				<string>mirrors.hustunique.com</string>
 				<key>urls</key>
 				<array>
-					<string>http://mirrors.hust.edu.cn/CTAN/</string>
-					<string>rsync://mirrors.hust.edu.cn/CTAN/</string>
+					<string>http://mirrors.hustunique.com/ctan/</string>
 				</array>
 			</dict>
 			<dict>
@@ -107,6 +106,16 @@
 				<key>urls</key>
 				<array>
 					<string>http://mirrors.opencas.cn/ctan/</string>
+				</array>
+			</dict>
+			<dict>
+				<key>country</key>
+				<string>China</string>
+				<key>name</key>
+				<string>mirrors.shuosc.org</string>
+				<key>urls</key>
+				<array>
+					<string>http://mirrors.shuosc.org/CTAN/</string>
 				</array>
 			</dict>
 			<dict>
@@ -157,20 +166,20 @@
 				<key>country</key>
 				<string>Iran</string>
 				<key>name</key>
-				<string>ctan.um.ac.ir</string>
+				<string>ctan.yazd.ac.ir</string>
 				<key>urls</key>
 				<array>
-					<string>http://ctan.um.ac.ir/</string>
+					<string>http://ctan.yazd.ac.ir/</string>
 				</array>
 			</dict>
 			<dict>
 				<key>country</key>
 				<string>Iran</string>
 				<key>name</key>
-				<string>ctan.yazd.ac.ir</string>
+				<string>repo.iut.ac.ir</string>
 				<key>urls</key>
 				<array>
-					<string>http://ctan.yazd.ac.ir/</string>
+					<string>http://repo.iut.ac.ir/tex-archive/</string>
 				</array>
 			</dict>
 			<dict>
@@ -284,6 +293,18 @@
 					<string>rsync://ftp.yzu.edu.tw/pub/CTAN/</string>
 				</array>
 			</dict>
+			<dict>
+				<key>country</key>
+				<string>Thailand</string>
+				<key>name</key>
+				<string>mirror.kku.ac.th</string>
+				<key>urls</key>
+				<array>
+					<string>ftp://mirror.kku.ac.th/CTAN/</string>
+					<string>http://mirror.kku.ac.th/CTAN/</string>
+					<string>rsync://mirror.kku.ac.th/CTAN/</string>
+				</array>
+			</dict>
 		</array>
 		<key>Europe</key>
 		<array>
@@ -358,16 +379,6 @@
 				<key>country</key>
 				<string>France</string>
 				<key>name</key>
-				<string>ftp.oleane.net</string>
-				<key>urls</key>
-				<array>
-					<string>ftp://ftp.oleane.net/pub/CTAN/</string>
-				</array>
-			</dict>
-			<dict>
-				<key>country</key>
-				<string>France</string>
-				<key>name</key>
 				<string>mirror.ibcp.fr</string>
 				<key>urls</key>
 				<array>
@@ -400,10 +411,10 @@
 				<key>country</key>
 				<string>Germany</string>
 				<key>name</key>
-				<string>bothelp.net</string>
+				<string>babyname.tips</string>
 				<key>urls</key>
 				<array>
-					<string>http://www.bothelp.net/mirrors/ctan/</string>
+					<string>http://babyname.tips/mirrors/ctan/</string>
 				</array>
 			</dict>
 			<dict>
@@ -801,6 +812,16 @@
 				<key>country</key>
 				<string>The Netherlands</string>
 				<key>name</key>
+				<string>ctan.robertdegroot.nl</string>
+				<key>urls</key>
+				<array>
+					<string>http://ctan.robertdegroot.nl/tex-archive/</string>
+				</array>
+			</dict>
+			<dict>
+				<key>country</key>
+				<string>The Netherlands</string>
+				<key>name</key>
 				<string>ctan.triasinformatica.nl</string>
 				<key>urls</key>
 				<array>
@@ -926,16 +947,6 @@
 				<key>country</key>
 				<string>USA</string>
 				<key>name</key>
-				<string>ctan.mackichan.com</string>
-				<key>urls</key>
-				<array>
-					<string>http://ctan.mackichan.com/</string>
-				</array>
-			</dict>
-			<dict>
-				<key>country</key>
-				<string>USA</string>
-				<key>name</key>
 				<string>ctan.math.utah.edu</string>
 				<key>urls</key>
 				<array>
@@ -1047,17 +1058,6 @@
 				<key>country</key>
 				<string>USA</string>
 				<key>name</key>
-				<string>mirror.unl.edu</string>
-				<key>urls</key>
-				<array>
-					<string>http://mirror.unl.edu/ctan/</string>
-					<string>rsync://mirror.unl.edu/ctan/</string>
-				</array>
-			</dict>
-			<dict>
-				<key>country</key>
-				<string>USA</string>
-				<key>name</key>
 				<string>mirror.utexas.edu</string>
 				<key>urls</key>
 				<array>
@@ -1163,6 +1163,6 @@
 		</array>
 	</dict>
 	<key>timestamp</key>
-	<real>1499391893.176662</real>
+	<real>1507261409.488934</real>
 </dict>
 </plist>
