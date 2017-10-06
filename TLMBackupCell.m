@@ -70,6 +70,9 @@ typedef NSUInteger NSCellHitResult;
 - (void)dealloc
 {
     [_buttonCell release];
+    // attempted workaround for Apple doing stupid shit in -[NSActionCell dealloc]
+    // like messaging the object (crash in High Sierra)
+    _buttonCell = nil;
     [super dealloc];
 }
 
