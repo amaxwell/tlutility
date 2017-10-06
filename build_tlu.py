@@ -254,6 +254,12 @@ if __name__ == '__main__':
     rc = pull_task.wait()
     assert rc == 0, "update failed"
     
+    sites_task = Popen(["/usr/bin/python", "read_ctan_sites.py"], cwd=SOURCE_DIR)
+    rc = sites_task.wait()
+    assert rc == 0, "parsing CTAN sites failed"
+    commit_task = Popen(["/usr/bin/git", "commit", "CTAN.sites.plist", "-m", "update CTAN sites list"], cwd=SOURCE_DIR)
+    commit_task.wait()
+    
     # single arg is required (the new version)
     assert len(sys.argv) > 1, "missing new version argument"
     new_version = sys.argv[-1]

@@ -150,6 +150,12 @@ if __name__ == '__main__':
     pull_task = Popen(["/usr/bin/git", "pull"], cwd=SOURCE_DIR)
     rc = pull_task.wait()
     assert rc == 0, "update failed"
+    
+    sites_task = Popen(["/usr/bin/python", "read_ctan_sites.py"], cwd=SOURCE_DIR)
+    rc = sites_task.wait()
+    assert rc == 0, "parsing CTAN sites failed"
+    commit_task = Popen(["/usr/bin/git", "commit", "CTAN.sites.plist", "-m", "update CTAN sites list"], cwd=SOURCE_DIR)
+    commit_task.wait()
 
     new_version = rewrite_version()
     commit_task = Popen(["/usr/bin/git", "commit", "-a", "-m", "bump beta version"], cwd=SOURCE_DIR)
