@@ -38,6 +38,10 @@
 # version number is less than 3.
 import sys
 python_major_version = sys.version_info[0]
+
+# Changed exception handlers to use 'except Exception as e'
+# which breaks compatibility with python 2.5.x and earlier. According to
+# some rando, Snow Leopard shipped with 2.6 as default, so this should be okay.
     
 # sys.stdout has been changed between python 2 and 3.  The result is that when you write to sys.stdout, it accepts bytes
 # rather than strings now.  This trips up plistlib.PlistWriter, which expects to be writing strings.  As a hack around
@@ -315,7 +319,7 @@ def packages_from_tlpdb(flat_tlpdb, allow_partial=False):
                             if len(values) > 1:
                                 package.docfiledata[values[0]] = _attributes_from_line(" ".join(values[1:]))
                             package.docfiles.append(values[0])
-                    except Exception, e:
+                    except Exception as e:
                         sys.stderr.write("skipping bad docfile line %d in package %s: %s\n" % (line_idx, package.name, line))
                 elif key == "runfiles":
                     if line_has_key:
@@ -333,7 +337,7 @@ def packages_from_tlpdb(flat_tlpdb, allow_partial=False):
                     #assert False, "unhandled line %s" % (line)
                 
                 last_key = key
-            except Exception, e:
+            except Exception as e:
                 if allow_partial:
                     sys.stderr.write("parsed up to junk line \"%s\"\n" % (line))
                     break
