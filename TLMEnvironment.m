@@ -64,7 +64,6 @@ static void __TLMTeXDistChanged(ConstFSEventStreamRef strm, void *context, size_
 
 + (NSMutableArray *)_systemPaths;
 - (void)_displayFallbackServerAlert;
-+ (BOOL)_getInstalledYear:(TLMDatabaseYear *)installedYear isDevelopmentVersion:(BOOL *)isDev tlmgrVersion:(NSInteger *)tlmgrVersion;
 - (void)_checkForRootPrivileges;
 
 @end
