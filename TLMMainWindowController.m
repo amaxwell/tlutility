@@ -1053,7 +1053,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     for (NSString *name in packageNames) {
         TLMTask *task = [[TLMTask new] autorelease];
         [task setLaunchPath:[[TLMEnvironment currentEnvironment] tlmgrAbsolutePath]];
-        [task setArguments:[NSArray arrayWithObjects:@"show", name, nil]];
+        [task setArguments:[NSArray arrayWithObjects:@"show", @"--only-installed", name, nil]];
         [task launch];
         [task waitUntilExit];
 
@@ -1068,7 +1068,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
          collection: collection-basic
         */
                 
-        if ([task outputString]) {
+        if ([task terminationStatus] == 0 && [task outputString]) {
             NSArray *lines = [[task outputString] componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
             for (NSString *line in lines) {
                 line = [line stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
@@ -1079,6 +1079,10 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
                     break;
                 }
             }
+        }
+        else {
+            TLMLog(__func__, @"`tlmgr show` failed to return versions for package %@", name);
+            TLMLog(__func__, @"Standard error was: %@", [task errorString]);
         }
     }
     return versions;
