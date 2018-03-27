@@ -459,7 +459,7 @@
 		F9B13B170EECE5AE007C0046 /* TLMInfoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMInfoController.m; sourceTree = "<group>"; };
 		F9B13B1B0EECE7F3007C0046 /* TLMInfoOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMInfoOperation.h; sourceTree = "<group>"; };
 		F9B13B1C0EECE7F3007C0046 /* TLMInfoOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMInfoOperation.m; sourceTree = "<group>"; };
-		F9B13B2A0EECEB05007C0046 /* InfoPanel.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InfoPanel.xib; sourceTree = "<group>"; };
+		F9B13B2A0EECEB05007C0046 /* InfoPanel.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = InfoPanel.xib; sourceTree = "<group>"; };
 		F9B2F09713A2FFC400F37783 /* TLMLoadDatabaseOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMLoadDatabaseOperation.h; sourceTree = "<group>"; };
 		F9B2F09813A2FFC400F37783 /* TLMLoadDatabaseOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMLoadDatabaseOperation.m; sourceTree = "<group>"; };
 		F9B396090F340A71007F95E9 /* FileView.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FileView.xcodeproj; path = fileview/FileView.xcodeproj; sourceTree = "<group>"; };
@@ -513,6 +513,17 @@
 		F9DCD3590F06F08C00600DD2 /* Sparkle.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Sparkle.xcodeproj; path = Sparkle/Sparkle.xcodeproj; sourceTree = "<group>"; };
 		F9DCD43E0F06F76F00600DD2 /* dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dsa_pub.pem; sourceTree = "<group>"; };
 		F9DCD4A10F07126F00600DD2 /* tlu_appcast.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = tlu_appcast.xml; path = appcast/tlu_appcast.xml; sourceTree = "<group>"; };
+		F9E1F78A2069FCBE00908132 /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = French.lproj/LaunchAgentSheet.xib; sourceTree = "<group>"; };
+		F9E1F7932069FCD100908132 /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = French.lproj/LogWindow.xib; sourceTree = "<group>"; };
+		F9E1F7942069FCED00908132 /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = French.lproj/AutobackupSheet.xib; sourceTree = "<group>"; };
+		F9E1F7952069FCF800908132 /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = French.lproj/DocumentationSheet.xib; sourceTree = "<group>"; };
+		F9E1F7962069FD0900908132 /* French */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = French; path = French.lproj/Localizable.strings; sourceTree = "<group>"; };
+		F9E1F7972069FD1800908132 /* French */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = French; path = French.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		F9E1F7982069FD2700908132 /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = French.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		F9E1F7992069FD2700908132 /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = French.lproj/MainWindow.xib; sourceTree = "<group>"; };
+		F9E1F79A2069FD2700908132 /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = French.lproj/Mirrors.xib; sourceTree = "<group>"; };
+		F9E1F79B2069FD2700908132 /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = French.lproj/PapersizeSheet.xib; sourceTree = "<group>"; };
+		F9E1F79C2069FD2700908132 /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = French.lproj/Preferences.xib; sourceTree = "<group>"; };
 		F9E22FD30EFCBD2A00B0BE38 /* TLMPapersizeOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMPapersizeOperation.h; sourceTree = "<group>"; };
 		F9E22FD40EFCBD2A00B0BE38 /* TLMPapersizeOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMPapersizeOperation.m; sourceTree = "<group>"; };
 		F9E2C9250F3C009300D5EC49 /* DVI.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = DVI.xcodeproj; path = "DVI-qlgenerator/DVI.xcodeproj"; sourceTree = "<group>"; };
@@ -1388,6 +1399,7 @@
 				089C165DFE840E0CC02AAC07 /* English */,
 				F97EBB3E1440976B00E79859 /* Japanese */,
 				F9DBEE671578487500EFADE5 /* zh_CN */,
+				F9E1F7972069FD1800908132 /* French */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -1398,6 +1410,7 @@
 				1DDD58150DA1D0A300B32029 /* English */,
 				F97EBB3F1440977100E79859 /* Japanese */,
 				F9DBEE681578488300EFADE5 /* zh_CN */,
+				F9E1F7982069FD2700908132 /* French */,
 			);
 			name = MainMenu.xib;
 			sourceTree = "<group>";
@@ -1408,6 +1421,7 @@
 				F925D1AE12957B4C00D75BB4 /* English */,
 				F97EBB431440978E00E79859 /* Japanese */,
 				F9DBEE71157848C600EFADE5 /* zh_CN */,
+				F9E1F79A2069FD2700908132 /* French */,
 			);
 			name = Mirrors.xib;
 			sourceTree = "<group>";
@@ -1418,6 +1432,7 @@
 				F96203CE13D3677600932965 /* English */,
 				F97EBB381440971C00E79859 /* Japanese */,
 				F9DBEE631578482D00EFADE5 /* zh_CN */,
+				F9E1F7932069FCD100908132 /* French */,
 			);
 			name = LogWindow.xib;
 			sourceTree = "<group>";
@@ -1428,6 +1443,7 @@
 				F982553C12504E040018CB73 /* English */,
 				F97EBB3C1440975A00E79859 /* Japanese */,
 				F9DBEE651578486300EFADE5 /* zh_CN */,
+				F9E1F7942069FCED00908132 /* French */,
 			);
 			name = AutobackupSheet.xib;
 			sourceTree = "<group>";
@@ -1446,6 +1462,7 @@
 				F9AAEE311BC9D4CE00B5F9F0 /* English */,
 				F9AAEE331BC9D4EA00B5F9F0 /* Japanese */,
 				F9AAEE341BC9D4EC00B5F9F0 /* zh_CN */,
+				F9E1F7952069FCF800908132 /* French */,
 			);
 			name = DocumentationSheet.xib;
 			sourceTree = "<group>";
@@ -1456,6 +1473,7 @@
 				F9B061FD0F0F387700BB03D3 /* English */,
 				F97EBB3D1440976200E79859 /* Japanese */,
 				F9DBEE661578486D00EFADE5 /* zh_CN */,
+				F9E1F7962069FD0900908132 /* French */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -1466,6 +1484,7 @@
 				F9B1346D0EEB1AFE007C0046 /* English */,
 				F97EBB401440977900E79859 /* Japanese */,
 				F9DBEE691578488900EFADE5 /* zh_CN */,
+				F9E1F7992069FD2700908132 /* French */,
 			);
 			name = MainWindow.xib;
 			sourceTree = "<group>";
@@ -1476,6 +1495,7 @@
 				F9C0D3D1125ECEDB00B1FBE5 /* English */,
 				F97EBB3B1440975200E79859 /* Japanese */,
 				F9DBEE641578485A00EFADE5 /* zh_CN */,
+				F9E1F78A2069FCBE00908132 /* French */,
 			);
 			name = LaunchAgentSheet.xib;
 			sourceTree = "<group>";
@@ -1486,6 +1506,7 @@
 				F905217E0EFEA98600B489FE /* English */,
 				F9DBEE6F157848AD00EFADE5 /* Japanese */,
 				F9DBEE70157848B100EFADE5 /* zh_CN */,
+				F9E1F79B2069FD2700908132 /* French */,
 			);
 			name = PapersizeSheet.xib;
 			sourceTree = "<group>";
@@ -1496,6 +1517,7 @@
 				F9F130530EED94CC00D9968D /* English */,
 				F97EBB411440977F00E79859 /* Japanese */,
 				F9DBEE6A1578489000EFADE5 /* zh_CN */,
+				F9E1F79C2069FD2700908132 /* French */,
 			);
 			name = Preferences.xib;
 			sourceTree = "<group>";
