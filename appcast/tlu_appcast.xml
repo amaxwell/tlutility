@@ -852,5 +852,19 @@
             <sparkle:minimumSystemVersion>10.6.8</sparkle:minimumSystemVersion>
             <enclosure url="https://github.com/amaxwell/tlutility/releases/download/1.30/TeX.Live.Utility.app-1.30.tar.gz" sparkle:version="1.30" length="3013226" type="application/octet-stream" sparkle:dsaSignature="MCwCFCOfjSVxjOE9PVlauYhdeYdxRlnrAhQHaDCkRF453jM5iBfEnmm9Q+5Pug=="></enclosure>
         </item>
+        <item>
+            <title>Version 1.32</title>
+            <description>
+                <h3>Changes Since 1.30</h3>
+                <li>Skipped 1.31 because I forgot how to change versions</li>
+                <li>Attempted workaround for issue 55</li>
+                <li>Fixed issue 56: Python 3 compatibility (again)</li>
+                <li>Worked around a change in tlmgr that caused a crash with TL 2018 pretest</li>
+                <li>Updated repository list</li>
+            </description>
+            <pubDate>Tue, 27 Mar 2018 03:50:44 +0000</pubDate>
+            <sparkle:minimumSystemVersion>10.6.8</sparkle:minimumSystemVersion>
+            <enclosure url="https://github.com/amaxwell/tlutility/releases/download/1.32/TeX.Live.Utility.app-1.32.tar.gz" sparkle:version="1.32" length="3013412" type="application/octet-stream" sparkle:dsaSignature="MC0CFQCE0qJHLFEyZnbAA4eP3c/uyfp8oAIUY4faY7zk5UrcJqZ6x/kO9qKhp5c="></enclosure>
+        </item>
     </channel>
 </rss>
