@@ -234,67 +234,67 @@
                                 </menu>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="555"/>
-                            <menuItem title="Font" id="484">
+                            <menuItem title="Police" id="484">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Font" systemMenu="font" id="485">
                                     <items>
-                                        <menuItem title="Show Fonts" keyEquivalent="t" id="486">
+                                        <menuItem title="Afficher les polices" keyEquivalent="t" id="486">
                                             <connections>
                                                 <action selector="orderFrontFontPanel:" target="420" id="521"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Bold" tag="2" keyEquivalent="b" id="487">
+                                        <menuItem title="Gras" tag="2" keyEquivalent="b" id="487">
                                             <connections>
                                                 <action selector="addFontTrait:" target="420" id="517"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Italic" tag="1" id="488">
+                                        <menuItem title="Italique" tag="1" id="488">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="addFontTrait:" target="420" id="519"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Underline" id="489">
+                                        <menuItem title="Souligné" id="489">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="underline:" target="-1" id="527"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="490"/>
-                                        <menuItem title="Bigger" tag="3" keyEquivalent="+" id="491">
+                                        <menuItem title="Plus grand" tag="3" keyEquivalent="+" id="491">
                                             <connections>
                                                 <action selector="modifyFont:" target="420" id="520"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Smaller" tag="4" keyEquivalent="-" id="492">
+                                        <menuItem title="Plus petit" tag="4" keyEquivalent="-" id="492">
                                             <connections>
                                                 <action selector="modifyFont:" target="420" id="518"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="493"/>
-                                        <menuItem title="Kern" id="494">
+                                        <menuItem title="Crénage" id="494">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <menu key="submenu" title="Kern" id="512">
                                                 <items>
-                                                    <menuItem title="Use Default" id="513">
+                                                    <menuItem title="Valeur par défaut" id="513">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
                                                             <action selector="useStandardKerning:" target="-1" id="534"/>
                                                         </connections>
                                                     </menuItem>
-                                                    <menuItem title="Use None" id="514">
+                                                    <menuItem title="Aucun" id="514">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
                                                             <action selector="turnOffKerning:" target="-1" id="537"/>
                                                         </connections>
                                                     </menuItem>
-                                                    <menuItem title="Tighten" id="515">
+                                                    <menuItem title="Resserrer" id="515">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
                                                             <action selector="tightenKerning:" target="-1" id="525"/>
                                                         </connections>
                                                     </menuItem>
-                                                    <menuItem title="Loosen" id="516">
+                                                    <menuItem title="Desserer" id="516">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
                                                             <action selector="loosenKerning:" target="-1" id="530"/>
@@ -307,19 +307,19 @@
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <menu key="submenu" title="Ligature" id="508">
                                                 <items>
-                                                    <menuItem title="Use Default" id="509">
+                                                    <menuItem title="Valeur par défaut" id="509">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
                                                             <action selector="useStandardLigatures:" target="-1" id="535"/>
                                                         </connections>
                                                     </menuItem>
-                                                    <menuItem title="Use None" id="510">
+                                                    <menuItem title="Aucun" id="510">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
                                                             <action selector="turnOffLigatures:" target="-1" id="536"/>
                                                         </connections>
                                                     </menuItem>
-                                                    <menuItem title="Use All" id="511">
+                                                    <menuItem title="Toutes" id="511">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
                                                             <action selector="useAllLigatures:" target="-1" id="532"/>
@@ -328,35 +328,35 @@
                                                 </items>
                                             </menu>
                                         </menuItem>
-                                        <menuItem title="Baseline" id="496">
+                                        <menuItem title="Ligne de base" id="496">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <menu key="submenu" title="Baseline" id="502">
                                                 <items>
-                                                    <menuItem title="Use Default" id="503">
+                                                    <menuItem title="Valeur par défaut" id="503">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
                                                             <action selector="unscript:" target="-1" id="533"/>
                                                         </connections>
                                                     </menuItem>
-                                                    <menuItem title="Superscript" id="504">
+                                                    <menuItem title="Exposant" id="504">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
                                                             <action selector="superscript:" target="-1" id="526"/>
                                                         </connections>
                                                     </menuItem>
-                                                    <menuItem title="Subscript" id="505">
+                                                    <menuItem title="Indice" id="505">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
                                                             <action selector="subscript:" target="-1" id="531"/>
                                                         </connections>
                                                     </menuItem>
-                                                    <menuItem title="Raise" id="506">
+                                                    <menuItem title="Élever" id="506">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
                                                             <action selector="raiseBaseline:" target="-1" id="528"/>
                                                         </connections>
                                                     </menuItem>
-                                                    <menuItem title="Lower" id="507">
+                                                    <menuItem title="Baisser" id="507">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
                                                             <action selector="lowerBaseline:" target="-1" id="529"/>
@@ -366,19 +366,19 @@
                                             </menu>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="497"/>
-                                        <menuItem title="Show Colors" keyEquivalent="C" id="498">
+                                        <menuItem title="Afficher les couleurs" keyEquivalent="C" id="498">
                                             <connections>
                                                 <action selector="orderFrontColorPanel:" target="-1" id="523"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="499"/>
-                                        <menuItem title="Copy Style" keyEquivalent="c" id="500">
+                                        <menuItem title="Copier le style" keyEquivalent="c" id="500">
                                             <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                             <connections>
                                                 <action selector="copyFont:" target="-1" id="524"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Paste Style" keyEquivalent="v" id="501">
+                                        <menuItem title="Coller le style" keyEquivalent="v" id="501">
                                             <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                             <connections>
                                                 <action selector="pasteFont:" target="-1" id="522"/>
@@ -387,45 +387,45 @@
                                     </items>
                                 </menu>
                             </menuItem>
-                            <menuItem title="Text" id="538">
+                            <menuItem title="Texte" id="538">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Text" id="539">
                                     <items>
-                                        <menuItem title="Align Left" keyEquivalent="{" id="540">
+                                        <menuItem title="Aligner à gauche" keyEquivalent="{" id="540">
                                             <connections>
                                                 <action selector="alignLeft:" target="-1" id="548"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Center" keyEquivalent="|" id="541">
+                                        <menuItem title="Centrer" keyEquivalent="|" id="541">
                                             <connections>
                                                 <action selector="alignCenter:" target="-1" id="551"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Justify" id="542">
+                                        <menuItem title="Justifier" id="542">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="alignJustified:" target="-1" id="554"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Align Right" keyEquivalent="}" id="543">
+                                        <menuItem title="Aligner à droite" keyEquivalent="}" id="543">
                                             <connections>
                                                 <action selector="alignRight:" target="-1" id="553"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="544"/>
-                                        <menuItem title="Show Ruler" id="545">
+                                        <menuItem title="Afficher la règle" id="545">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="toggleRuler:" target="-1" id="549"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Copy Ruler" keyEquivalent="c" id="546">
+                                        <menuItem title="Copier la règle" keyEquivalent="c" id="546">
                                             <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
                                             <connections>
                                                 <action selector="copyRuler:" target="-1" id="552"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Paste Ruler" keyEquivalent="v" id="547">
+                                        <menuItem title="Coller la règle" keyEquivalent="v" id="547">
                                             <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
                                             <connections>
                                                 <action selector="pasteRuler:" target="-1" id="550"/>
@@ -441,29 +441,29 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Actions" id="463">
                         <items>
-                            <menuItem title="Rafraichir la liste des paquets" keyEquivalent="r" toolTip="Reload the list of packages from the server." id="469">
+                            <menuItem title="Rafraichir la liste des paquets" keyEquivalent="r" toolTip="Recharge la liste des paquets depuis le serveur." id="469">
                                 <connections>
                                     <action selector="refreshList:" target="-1" id="481"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Annuler" toolTip="Cancel the current operation and any pending operations." id="470">
+                            <menuItem title="Annuler" toolTip="Annule l'opération en cours et toutes les opérations en attente." id="470">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="cancelAllOperations:" target="-1" id="479"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Afficher les détails" keyEquivalent="i" toolTip="Show a panel with detailed info for the selected package." id="468">
+                            <menuItem title="Afficher les détails" keyEquivalent="i" toolTip="Affiche un panneau avec les informations détaillées sur le paquet sélectionné." id="468">
                                 <connections>
                                     <action selector="showInfo:" target="-1" id="478"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Quick Look" keyEquivalent="y" toolTip="Preview selected file." id="616">
+                            <menuItem title="Quick Look" keyEquivalent="y" toolTip="Aperçu des fichiers sélectionnés." id="616">
                                 <connections>
                                     <action selector="previewAction:" target="-1" id="617"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="473"/>
-                            <menuItem title="Mettre à jour les paquets sélectionnés" keyEquivalent="u" toolTip="Install updates for the selected packages." id="471">
+                            <menuItem title="Mettre à jour les paquets sélectionnés" keyEquivalent="u" toolTip="Installe les mises à jour des paquets sélectionnés." id="471">
                                 <connections>
                                     <action selector="updateSelectedRows:" target="-1" id="477"/>
                                 </connections>
@@ -474,19 +474,19 @@
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="472"/>
-                            <menuItem title="Installer les paquets sélectionnés" keyEquivalent="i" toolTip="Install the selected packages." id="467">
+                            <menuItem title="Installer les paquets sélectionnés" keyEquivalent="i" toolTip="Installe les paquets sélectionnés." id="467">
                                 <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 <connections>
                                     <action selector="installSelectedRows:" target="-1" id="475"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Réinstaller les paquets sélectionnés" keyEquivalent="r" toolTip="Reinstall the selected packages." id="579">
+                            <menuItem title="Réinstaller les paquets sélectionnés" keyEquivalent="r" toolTip="Réinstalle les paquets sélectionnés." id="579">
                                 <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 <connections>
                                     <action selector="reinstallSelectedRows:" target="-1" id="580"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Supprimer les paquets sélectionnés" toolTip="Try to remove the selected packages.  Hold down the option key to force removal." id="466">
+                            <menuItem title="Supprimer les paquets sélectionnés" toolTip="Essaye de supprimer les paquets sélectionnés. Maintenir la touche option pour forcer la suppression." id="466">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="removeSelectedRows:" target="-1" id="474"/>
@@ -498,19 +498,19 @@
                                     <action selector="forciblyRemoveSelectedRows:" target="-1" id="573"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Installer TeX Live" toolTip="Install TeX Live from the current repository." id="619">
+                            <menuItem title="Installer TeX Live" toolTip="Installe TeX Live à partir des dépôts standards." id="619">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="netInstall:" target="-1" id="620"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Réinstaller TeX Live Manager" toolTip="Reinstall the underlying tlmgr program, using the latest available version." id="574">
+                            <menuItem title="Réinstaller TeX Live Manager" toolTip="Réinstalle le programme tlmgr sous-jacent en utilisant la dernière version disponible." id="574">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="updateInfrastructure:" target="-1" id="575"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Install TeX Live Manager From Critical Repository" alternate="YES" toolTip="Reinstall the underlying tlmgr program, using the prerelease version from the tlcritical repository." id="584">
+                            <menuItem title="Installer TeX Live Manager à partir des pré-dépôts" alternate="YES" toolTip="Réinstalle le programme tlmgr sous-jacent en utilisant la dernière pré-version disponible." id="584">
                                 <modifierMask key="keyEquivalentModifierMask" option="YES"/>
                                 <connections>
                                     <action selector="updateInfrastructureFromCriticalRepository:" target="-1" id="586"/>
@@ -523,57 +523,57 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Configure" id="604">
                         <items>
-                            <menuItem title="Change Paper Size…" toolTip="Set the default paper size for all TeX programs." id="606">
+                            <menuItem title="Changer le format de papier…" toolTip="Définis le format de papier utilisé par tous les programmes TeX." id="606">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="changePapersize:" target="-1" id="613"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Configure Automatic Backups…" toolTip="Change number of automatic backups to keep when updating." id="607">
+                            <menuItem title="Configurer les sauvegardes automatiques…" toolTip="Modifier le nombre de sauvegardes automatiques à conserver lors des mises à jour." id="607">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="changeAutobackup:" target="-1" id="611"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Schedule TeX Live Update Checks…" toolTip="Schedule automatic checks to see if TeX Live packages are available for update." id="608">
+                            <menuItem title="Programmer la vérification des mises à jour" toolTip="Programmer la vérification automatique des mises à jour des paquets de la distribution LaTex." id="608">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="automaticUpdateCheck:" target="-1" id="612"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Change Default TeX Live Version…" toolTip="Choose which TeX Live version is used by default on this system." id="627">
+                            <menuItem title="Changer la version TeX par défaut…" toolTip="Choisir quelle version de LaTeX est utilisée par défaut sur ce système." id="627">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="reconfigureDistributions:" target="-1" id="630"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Configure Documentation…" id="E2S-K0-b6I">
+                            <menuItem title="Configurer la documentation…" id="E2S-K0-b6I">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="configureDocumentation:" target="-1" id="4vr-BG-Zyi"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="615"/>
-                            <menuItem title="Manage Repositories" toolTip="View and edit available CTAN or TeX Live repository locations." id="609">
+                            <menuItem title="Gérer les dépôts" toolTip="Affichez et modifiez les emplacements des dépôts CTAN ou TeX Live disponibles." id="609">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="manageMirrors:" target="-1" id="614"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Set as Home Repository" toolTip="Change the repository used at startup of TeX Live Utility and when clicking the Home button." id="610">
+                            <menuItem title="Définir comme dépôt principal" toolTip="Change le dépôt utilisé par défaut au démarrage de Tex Live Utility ou lorsque vous cliquez sur le bouton d'Accueil." id="610">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="changeDefaultMirror:" target="-1" id="618"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="624"/>
-                            <menuItem title="Show Toolbar" keyEquivalent="t" id="622">
+                            <menuItem title="Afficher la barre d'outils" keyEquivalent="t" id="622">
                                 <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 <connections>
                                     <action selector="toggleToolbarShown:" target="-1" id="625"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Customize Toolbar…" id="623">
+                            <menuItem title="Personnaliser la barre d'outils…" id="623">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="runToolbarCustomizationPalette:" target="-1" id="626"/>
@@ -619,26 +619,26 @@
                                     <action selector="showHelp:" target="-1" id="360"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Problems or Questions" id="562">
+                            <menuItem title="Problèmes et questions" id="562">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="openTracker:" target="-1" id="565"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Release Notes" id="569">
+                            <menuItem title="Notes de version" id="569">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="openReleaseNotes:" target="-1" id="570"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="TeX Live Utility Wiki" id="560">
+                            <menuItem title="Documentation TeX Live Utility" id="560">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="openTLUWiki:" target="-1" id="566"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="563"/>
-                            <menuItem title="TeX on Mac Wiki" id="561">
+                            <menuItem title="Documentation MacTeX" id="561">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="openMacTeXWiki:" target="-1" id="564"/>
