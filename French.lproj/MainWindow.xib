@@ -51,8 +51,8 @@
 							<object class="NSMutableString" key="NSToolbarItemIdentifier">
 								<characters key="NS.bytes">04FC7F98-8B89-4CE5-90FF-B88B4B99C147</characters>
 							</object>
-							<string key="NSToolbarItemLabel">Refresh</string>
-							<string key="NSToolbarItemPaletteLabel">Refresh</string>
+							<string key="NSToolbarItemLabel">Rafraichir</string>
+							<string key="NSToolbarItemPaletteLabel">Rafraichir</string>
 							<nil key="NSToolbarItemToolTip"/>
 							<object class="NSButton" key="NSToolbarItemView" id="858194647">
 								<reference key="NSNextResponder"/>
@@ -98,8 +98,8 @@
 							<object class="NSMutableString" key="NSToolbarItemIdentifier">
 								<characters key="NS.bytes">0CACDDEC-5907-4F1A-B295-F77231D91933</characters>
 							</object>
-							<string key="NSToolbarItemLabel">Remove Selected</string>
-							<string key="NSToolbarItemPaletteLabel">Remove Selected</string>
+							<string key="NSToolbarItemLabel">Supprimer la sélection</string>
+							<string key="NSToolbarItemPaletteLabel">Supprimer la sélection</string>
 							<nil key="NSToolbarItemToolTip"/>
 							<object class="NSButton" key="NSToolbarItemView" id="86490936">
 								<reference key="NSNextResponder"/>
@@ -111,7 +111,7 @@
 								<object class="NSButtonCell" key="NSCell" id="94536646">
 									<int key="NSCellFlags">-2080244224</int>
 									<int key="NSCellFlags2">134217728</int>
-									<string key="NSContents">Remove</string>
+									<string key="NSContents">Supprimer</string>
 									<reference key="NSSupport" ref="578794457"/>
 									<reference key="NSControlView" ref="86490936"/>
 									<int key="NSButtonFlags">-2038152961</int>
@@ -180,8 +180,8 @@
 							<object class="NSMutableString" key="NSToolbarItemIdentifier">
 								<characters key="NS.bytes">318AC86E-B244-446C-892C-ED092EABCE18</characters>
 							</object>
-							<string key="NSToolbarItemLabel">Home</string>
-							<string key="NSToolbarItemPaletteLabel">Home</string>
+							<string key="NSToolbarItemLabel">Accueil</string>
+							<string key="NSToolbarItemPaletteLabel">Accueil</string>
 							<nil key="NSToolbarItemToolTip"/>
 							<object class="NSButton" key="NSToolbarItemView" id="978947961">
 								<reference key="NSNextResponder"/>
@@ -223,8 +223,8 @@
 							<object class="NSMutableString" key="NSToolbarItemIdentifier">
 								<characters key="NS.bytes">656BF939-5868-4450-A163-0157284F2936</characters>
 							</object>
-							<string key="NSToolbarItemLabel">Repository Address</string>
-							<string key="NSToolbarItemPaletteLabel">Repository Address</string>
+							<string key="NSToolbarItemLabel">Adresse du dépôt</string>
+							<string key="NSToolbarItemPaletteLabel">Adresse du dépôt</string>
 							<nil key="NSToolbarItemToolTip"/>
 							<object class="NSTextField" key="NSToolbarItemView" id="951392799">
 								<reference key="NSNextResponder"/>
@@ -276,8 +276,8 @@
 							<object class="NSMutableString" key="NSToolbarItemIdentifier">
 								<characters key="NS.bytes">69AE5016-E225-46D3-9FE8-17E9E65A55FF</characters>
 							</object>
-							<string key="NSToolbarItemLabel">Search</string>
-							<string key="NSToolbarItemPaletteLabel">Search</string>
+							<string key="NSToolbarItemLabel">Rechercher</string>
+							<string key="NSToolbarItemPaletteLabel">Rechercher</string>
 							<nil key="NSToolbarItemToolTip"/>
 							<object class="NSSearchField" key="NSToolbarItemView" id="822066201">
 								<reference key="NSNextResponder"/>
@@ -291,7 +291,7 @@
 									<int key="NSCellFlags2">268436544</int>
 									<string key="NSContents"/>
 									<reference key="NSSupport" ref="578794457"/>
-									<string key="NSPlaceholderString">Rechercher</string>
+									<string key="NSPlaceholderString">Search</string>
 									<reference key="NSControlView" ref="822066201"/>
 									<bool key="NSDrawsBackground">YES</bool>
 									<int key="NSTextBezelStyle">1</int>
@@ -352,8 +352,8 @@
 							<object class="NSMutableString" key="NSToolbarItemIdentifier">
 								<characters key="NS.bytes">7181E572-6066-4E37-95A7-A754437C9B93</characters>
 							</object>
-							<string key="NSToolbarItemLabel">Update All</string>
-							<string key="NSToolbarItemPaletteLabel">Update All</string>
+							<string key="NSToolbarItemLabel">Tout mettre à jour</string>
+							<string key="NSToolbarItemPaletteLabel">Tout mettre à jour</string>
 							<nil key="NSToolbarItemToolTip"/>
 							<object class="NSButton" key="NSToolbarItemView" id="800906937">
 								<reference key="NSNextResponder"/>
@@ -365,7 +365,7 @@
 								<object class="NSButtonCell" key="NSCell" id="963889509">
 									<int key="NSCellFlags">-2080244224</int>
 									<int key="NSCellFlags2">134217728</int>
-									<string key="NSContents">Update All</string>
+									<string key="NSContents">Tout mettre à jour</string>
 									<reference key="NSSupport" ref="578794457"/>
 									<reference key="NSControlView" ref="800906937"/>
 									<int key="NSButtonFlags">-2038152961</int>
@@ -391,8 +391,8 @@
 							<object class="NSMutableString" key="NSToolbarItemIdentifier">
 								<characters key="NS.bytes">D35988E4-6F77-4F3F-ACE1-FE50DCA3D4D5</characters>
 							</object>
-							<string key="NSToolbarItemLabel">Stop</string>
-							<string key="NSToolbarItemPaletteLabel">Stop</string>
+							<string key="NSToolbarItemLabel">Arrêter</string>
+							<string key="NSToolbarItemPaletteLabel">Arrêter</string>
 							<nil key="NSToolbarItemToolTip"/>
 							<object class="NSButton" key="NSToolbarItemView" id="7015601">
 								<reference key="NSNextResponder"/>
@@ -434,8 +434,8 @@
 							<object class="NSMutableString" key="NSToolbarItemIdentifier">
 								<characters key="NS.bytes">D6CD870C-9ADD-4DEA-ACE1-8DCD2B3F326B</characters>
 							</object>
-							<string key="NSToolbarItemLabel">Install Selected</string>
-							<string key="NSToolbarItemPaletteLabel">Install Selected</string>
+							<string key="NSToolbarItemLabel">Installer la sélection</string>
+							<string key="NSToolbarItemPaletteLabel">Installer la sélection</string>
 							<nil key="NSToolbarItemToolTip"/>
 							<object class="NSButton" key="NSToolbarItemView" id="266211852">
 								<reference key="NSNextResponder"/>
@@ -447,7 +447,7 @@
 								<object class="NSButtonCell" key="NSCell" id="83966635">
 									<int key="NSCellFlags">-2080244224</int>
 									<int key="NSCellFlags2">134217728</int>
-									<string key="NSContents">Install</string>
+									<string key="NSContents">Installer</string>
 									<reference key="NSSupport" ref="578794457"/>
 									<reference key="NSControlView" ref="266211852"/>
 									<int key="NSButtonFlags">-2038152961</int>
@@ -473,8 +473,8 @@
 							<object class="NSMutableString" key="NSToolbarItemIdentifier">
 								<characters key="NS.bytes">FD534FA6-E234-4564-8B25-6123BCF5900E</characters>
 							</object>
-							<string key="NSToolbarItemLabel">Update Selected</string>
-							<string key="NSToolbarItemPaletteLabel">Update Selected</string>
+							<string key="NSToolbarItemLabel">Mettre à jour la sélection</string>
+							<string key="NSToolbarItemPaletteLabel">Mettre à jour la sélection</string>
 							<nil key="NSToolbarItemToolTip"/>
 							<object class="NSButton" key="NSToolbarItemView" id="679290281">
 								<reference key="NSNextResponder"/>
@@ -486,7 +486,7 @@
 								<object class="NSButtonCell" key="NSCell" id="264468022">
 									<int key="NSCellFlags">-2080244224</int>
 									<int key="NSCellFlags2">134217728</int>
-									<string key="NSContents">Update</string>
+									<string key="NSContents">Mettre à jour</string>
 									<reference key="NSSupport" ref="578794457"/>
 									<reference key="NSControlView" ref="679290281"/>
 									<int key="NSButtonFlags">-2038152961</int>
@@ -511,7 +511,7 @@
 						<object class="NSToolbarFlexibleSpaceItem" key="NSToolbarFlexibleSpaceItem" id="225242661">
 							<string key="NSToolbarItemIdentifier">NSToolbarFlexibleSpaceItem</string>
 							<string key="NSToolbarItemLabel"/>
-							<string key="NSToolbarItemPaletteLabel">Flexible Space</string>
+							<string key="NSToolbarItemPaletteLabel">Espace ajustable</string>
 							<nil key="NSToolbarItemToolTip"/>
 							<nil key="NSToolbarItemView"/>
 							<nil key="NSToolbarItemImage"/>
@@ -543,9 +543,9 @@
 						</object>
 						<object class="NSToolbarItem" key="NSToolbarPrintItem" id="845007478">
 							<string key="NSToolbarItemIdentifier">NSToolbarPrintItem</string>
-							<string key="NSToolbarItemLabel">Print</string>
-							<string key="NSToolbarItemPaletteLabel">Print</string>
-							<string key="NSToolbarItemToolTip">Print</string>
+							<string key="NSToolbarItemLabel">Imprimer</string>
+							<string key="NSToolbarItemPaletteLabel">Imprimer</string>
+							<string key="NSToolbarItemToolTip">Imprimer</string>
 							<nil key="NSToolbarItemView"/>
 							<object class="NSCustomResource" key="NSToolbarItemImage">
 								<string key="NSClassName">NSImage</string>
@@ -563,9 +563,9 @@
 						</object>
 						<object class="NSToolbarItem" key="NSToolbarShowFontsItem" id="779600281">
 							<string key="NSToolbarItemIdentifier">NSToolbarShowFontsItem</string>
-							<string key="NSToolbarItemLabel">Fonts</string>
-							<string key="NSToolbarItemPaletteLabel">Fonts</string>
-							<string key="NSToolbarItemToolTip">Show Font Panel</string>
+							<string key="NSToolbarItemLabel">Polices</string>
+							<string key="NSToolbarItemPaletteLabel">Polices</string>
+							<string key="NSToolbarItemToolTip">Afficher le panneau des polices</string>
 							<nil key="NSToolbarItemView"/>
 							<object class="NSCustomResource" key="NSToolbarItemImage">
 								<string key="NSClassName">NSImage</string>
@@ -584,7 +584,7 @@
 						<object class="NSToolbarSpaceItem" key="NSToolbarSpaceItem" id="498062910">
 							<string key="NSToolbarItemIdentifier">NSToolbarSpaceItem</string>
 							<string key="NSToolbarItemLabel"/>
-							<string key="NSToolbarItemPaletteLabel">Space</string>
+							<string key="NSToolbarItemPaletteLabel">Espace</string>
 							<nil key="NSToolbarItemToolTip"/>
 							<nil key="NSToolbarItemView"/>
 							<nil key="NSToolbarItemImage"/>
