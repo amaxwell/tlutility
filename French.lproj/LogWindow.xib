@@ -51,8 +51,8 @@
 							<object class="NSMutableString" key="NSToolbarItemIdentifier">
 								<characters key="NS.bytes">19843BFB-00F0-4926-9FBE-6C4862769C5B</characters>
 							</object>
-							<string key="NSToolbarItemLabel">Search</string>
-							<string key="NSToolbarItemPaletteLabel">Search</string>
+							<string key="NSToolbarItemLabel">Rechercher</string>
+							<string key="NSToolbarItemPaletteLabel">Rechercher</string>
 							<nil key="NSToolbarItemToolTip"/>
 							<object class="NSSearchField" key="NSToolbarItemView" id="134550653">
 								<nil key="NSNextResponder"/>
@@ -93,7 +93,7 @@
 									<object class="NSButtonCell" key="NSSearchButtonCell">
 										<int key="NSCellFlags">130560</int>
 										<int key="NSCellFlags2">0</int>
-										<string key="NSContents">search</string>
+										<string key="NSContents">Rechercher</string>
 										<reference key="NSControlView" ref="134550653"/>
 										<string key="NSAction">_searchFieldSearch:</string>
 										<reference key="NSTarget" ref="303811826"/>
@@ -141,7 +141,7 @@
 						<object class="NSToolbarFlexibleSpaceItem" key="NSToolbarFlexibleSpaceItem" id="906106915">
 							<string key="NSToolbarItemIdentifier">NSToolbarFlexibleSpaceItem</string>
 							<string key="NSToolbarItemLabel"/>
-							<string key="NSToolbarItemPaletteLabel">Flexible Space</string>
+							<string key="NSToolbarItemPaletteLabel">Espace ajustable</string>
 							<nil key="NSToolbarItemToolTip"/>
 							<nil key="NSToolbarItemView"/>
 							<nil key="NSToolbarItemImage"/>
@@ -173,9 +173,9 @@
 						</object>
 						<object class="NSToolbarItem" key="NSToolbarShowFontsItem" id="73705036">
 							<string key="NSToolbarItemIdentifier">NSToolbarShowFontsItem</string>
-							<string key="NSToolbarItemLabel">Fonts</string>
-							<string key="NSToolbarItemPaletteLabel">Fonts</string>
-							<string key="NSToolbarItemToolTip">Show Font Panel</string>
+							<string key="NSToolbarItemLabel">Plices</string>
+							<string key="NSToolbarItemPaletteLabel">Polices</string>
+							<string key="NSToolbarItemToolTip">Afficher le panneau des polices</string>
 							<nil key="NSToolbarItemView"/>
 							<object class="NSCustomResource" key="NSToolbarItemImage">
 								<string key="NSClassName">NSImage</string>
@@ -194,7 +194,7 @@
 						<object class="NSToolbarSpaceItem" key="NSToolbarSpaceItem" id="844982868">
 							<string key="NSToolbarItemIdentifier">NSToolbarSpaceItem</string>
 							<string key="NSToolbarItemLabel"/>
-							<string key="NSToolbarItemPaletteLabel">Space</string>
+							<string key="NSToolbarItemPaletteLabel">Espace</string>
 							<nil key="NSToolbarItemToolTip"/>
 							<nil key="NSToolbarItemView"/>
 							<nil key="NSToolbarItemImage"/>

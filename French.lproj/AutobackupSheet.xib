@@ -30,7 +30,7 @@
                         <rect key="frame" x="176" y="12" width="96" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <animations/>
-                        <buttonCell key="cell" type="push" title="Accept" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="6">
+                        <buttonCell key="cell" type="push" title="Enregistrer" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="6">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                             <string key="keyEquivalent" base64-UTF8="YES">
@@ -45,7 +45,7 @@ DQ
                         <rect key="frame" x="80" y="12" width="96" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <animations/>
-                        <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="8">
+                        <buttonCell key="cell" type="push" title="Annuler" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="8">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                             <string key="keyEquivalent" base64-UTF8="YES">
@@ -56,11 +56,11 @@ Gw
                             <action selector="cancel:" target="-2" id="24"/>
                         </connections>
                     </button>
-                    <button toolTip="Automatically back up changed files as updates are applied." id="11">
+                    <button toolTip="Sauvegardez automatiquement les fichiers modifiés lorsque les mises à jour sont appliquées." id="11">
                         <rect key="frame" x="18" y="108" width="152" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <animations/>
-                        <buttonCell key="cell" type="check" title="Autobackup enabled" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="12">
+                        <buttonCell key="cell" type="check" title="Activer la sauvegarde automatique" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="12">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -68,16 +68,16 @@ Gw
                             <action selector="enableAction:" target="-2" id="20"/>
                         </connections>
                     </button>
-                    <button toolTip="Remove old backups after closing this sheet, up to the number specified above." id="26">
+                    <button toolTip="Supprimez les anciennes sauvegardes après avoir fermé cette boite de dialogue, jusqu'au nombre spécifié ci-dessus." id="26">
                         <rect key="frame" x="18" y="58" width="152" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <animations/>
-                        <buttonCell key="cell" type="check" title="Prune backups" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="27">
+                        <buttonCell key="cell" type="check" title="Élaguer le jeu de sauvegarde" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="27">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
                     </button>
-                    <textField toolTip="Number of most recent backups that will be kept when pruning the backup set.  Set to ∞ to prevent deleting files." verticalHuggingPriority="750" id="15">
+                    <textField toolTip="Nombre de sauvegardes les plus récentes qui seront conservées lors de l'élagage du jeu de sauvegarde. Définissez sur ∞ pour empêcher la suppression de fichiers." verticalHuggingPriority="750" id="15">
                         <rect key="frame" x="20" y="80" width="64" height="22"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <animations/>
@@ -97,7 +97,7 @@ Gw
                         <rect key="frame" x="89" y="82" width="180" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <animations/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Number of backups to keep" id="23">
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Nombre de sauvegardes à conserver" id="23">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
