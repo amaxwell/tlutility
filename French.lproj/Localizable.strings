@@ -491,7 +491,7 @@
 "Would you like to set the TeX Live paper size now?" = "Souhaitez-vous définir le format de papier TeX Live maintenant ?";
 
 /* alert text */
-"Would you like to use this as the default value for the command-line tlmgr tool as well?" = "Would you like to use this as the default value for the command-line tlmgr tool as well?";
+"Would you like to use this as the default value for the command-line tlmgr tool as well?" = "Voulez-vous l'utiliser comme valeur par défaut pour l'outil en ligne de commande tlmgr ?";
 
 /* button title */
 "Yes" = "Oui";
