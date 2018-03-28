@@ -291,7 +291,7 @@
 									<int key="NSCellFlags2">268436544</int>
 									<string key="NSContents"/>
 									<reference key="NSSupport" ref="578794457"/>
-									<string key="NSPlaceholderString">Filter</string>
+									<string key="NSPlaceholderString">Rechercher</string>
 									<reference key="NSControlView" ref="822066201"/>
 									<bool key="NSDrawsBackground">YES</bool>
 									<int key="NSTextBezelStyle">1</int>
@@ -2452,7 +2452,7 @@
 					<object class="IBToolTipAttribute" key="NS.object.0">
 						<string key="name">ToolTip</string>
 						<reference key="object" ref="978947961"/>
-						<string key="toolTip">Load from the default repository URL.</string>
+						<string key="toolTip">Charger à partir de l'URL du dépôt par défaut.</string>
 					</object>
 				</object>
 				<string key="308.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
