@@ -291,7 +291,7 @@
 									<int key="NSCellFlags2">268436544</int>
 									<string key="NSContents"/>
 									<reference key="NSSupport" ref="578794457"/>
-									<string key="NSPlaceholderString">Search</string>
+									<string key="NSPlaceholderString">Filter</string>
 									<reference key="NSControlView" ref="822066201"/>
 									<bool key="NSDrawsBackground">YES</bool>
 									<int key="NSTextBezelStyle">1</int>
