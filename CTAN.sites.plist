@@ -220,6 +220,18 @@
 				<key>country</key>
 				<string>Korea</string>
 				<key>name</key>
+				<string>ftp.harukasan.org</string>
+				<key>urls</key>
+				<array>
+					<string>ftp://ftp.harukasan.org/CTAN/</string>
+					<string>http://ftp.harukasan.org/CTAN/</string>
+					<string>rsync://ftp.harukasan.org/CTAN/</string>
+				</array>
+			</dict>
+			<dict>
+				<key>country</key>
+				<string>Korea</string>
+				<key>name</key>
 				<string>ftp.kaist.ac.kr</string>
 				<key>urls</key>
 				<array>
@@ -701,6 +713,17 @@
 			</dict>
 			<dict>
 				<key>country</key>
+				<string>Romania</string>
+				<key>name</key>
+				<string>mirrors.nxthost.com</string>
+				<key>urls</key>
+				<array>
+					<string>http://mirrors.nxthost.com/ctan/</string>
+					<string>rsync://mirrors.nxthost.com/ctan/</string>
+				</array>
+			</dict>
+			<dict>
+				<key>country</key>
 				<string>Russia</string>
 				<key>name</key>
 				<string>ctan.altspu.ru</string>
@@ -1006,6 +1029,16 @@
 				<key>country</key>
 				<string>USA</string>
 				<key>name</key>
+				<string>ctan.scidock.com</string>
+				<key>urls</key>
+				<array>
+					<string>http://ctan.scidock.com/tex-archive/</string>
+				</array>
+			</dict>
+			<dict>
+				<key>country</key>
+				<string>USA</string>
+				<key>name</key>
 				<string>ctan.sharelatex.com</string>
 				<key>urls</key>
 				<array>
@@ -1198,6 +1231,6 @@
 		</array>
 	</dict>
 	<key>timestamp</key>
-	<real>1522122570.417433</real>
+	<real>1522384271.776871</real>
 </dict>
 </plist>
