@@ -866,5 +866,16 @@
             <sparkle:minimumSystemVersion>10.6.8</sparkle:minimumSystemVersion>
             <enclosure url="https://github.com/amaxwell/tlutility/releases/download/1.32/TeX.Live.Utility.app-1.32.tar.gz" sparkle:version="1.32" length="3013412" type="application/octet-stream" sparkle:dsaSignature="MC0CFQCE0qJHLFEyZnbAA4eP3c/uyfp8oAIUY4faY7zk5UrcJqZ6x/kO9qKhp5c="></enclosure>
         </item>
+        <item>
+            <title>Version 1.33</title>
+            <description>
+                <h3>Changes Since 1.32</h3>
+                <li>Added French translation (thanks to Aymeric)</li>
+                <li>Fixed issue 60: incremented update checker version number to work around Apple NSUserDefaults breakage</li>
+            </description>
+            <pubDate>Fri, 30 Mar 2018 04:32:42 +0000</pubDate>
+            <sparkle:minimumSystemVersion>10.6.8</sparkle:minimumSystemVersion>
+            <enclosure url="https://github.com/amaxwell/tlutility/releases/download/1.33/TeX.Live.Utility.app-1.33.tar.gz" sparkle:version="1.33" length="3124950" type="application/octet-stream" sparkle:dsaSignature="MC0CFA1F9htkebP0YW5TKlPvAGh9nVXmAhUAh5mICSCNB2zRmCKY+70DUeAVXHU="></enclosure>
+        </item>
     </channel>
 </rss>
