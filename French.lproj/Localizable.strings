@@ -1,44 +1,44 @@
 /* partial alert text, with double space in front, only used with tlmgr2 */
-"  Total download size will be %@." = "  La taille totale du téléchargement sera de %@.";
+"  Total download size will be %@." = " La taille totale du téléchargement sera de %@.";
 
 /* Menu item title, Need a single leading space */
-" (Default)" = " (défaut)";
+" (Default)" = " (Défaut)";
 
 /* alert message text */
-"%lu packages are available for update.  Of these, the TeX Live installer packages listed here must be updated first.  Update now?" = "%lu paquets peuvent être mis à jour.  Parmi ceux-ci, les paquets d'installation TeX Live listés ci-dessous doivent d'abord être mis à jour. Voulez-vous les mettre à jour maintenant ?";
+"%lu packages are available for update.  Of these, the TeX Live installer packages listed here must be updated first.  Update now?" = "%lu paquets sont disponibles pour mise à jour. Parmi eux, les paquets de l'installeur de TeX Live listés ici seront mis à jour en premier.  Mettre à jour maintenant ?";
 
 /* heading in info panel */
-"\nDoc Files:\n" = "\nAutres fichiers :\n";
+"\nDoc Files:\n" = "\nDoc fichiers :\n";
 
 /* heading in info panel */
 "\nDocumentation:\n" = "\nDocumentation :\n";
 
 /* heading in info panel */
-"\nRun Files:\n" = "\nFichiers exécutables :\n";
+"\nRun Files:\n" = "\nRun fichiers :\n";
 
 /* heading in info panel */
-"\nSource Files:\n" = "\nFichiers source :\n";
+"\nSource Files:\n" = "\nSource fichiers :\n";
 
 /* alert text */
 "A newer version of the scheduled update script is available.  Would you like to install it now?" = "Une version plus récente du script de mise à jour programmée est disponible. Voulez-vous l'installer maintenant ?";
 
 /* single trailing space */
-"Adding " = "Ajouter ";
+"Adding " = "Ajout en cours ";
 
 /* alert title */
-"An installation is running!" = "Une installation est en cours d'exécution !";
+"An installation is running!" = "Une installation est en cours !";
 
 /* alert title */
-"Are you sure you want to restore %@ from backup?" = "Êtes-vous sûr de vouloir restaurer %@ à partir de la sauvegarde ?";
+"Are you sure you want to restore %@ from backup?" = "Êtes-vous certain de vouloir restaurer %@ depuis la sauvegarde ?";
 
 /* main window status string */
-"Backup Listing Cancelled" = "Listage des sauvegardes annulé";
+"Backup Listing Cancelled" = "Sauvegarde de la liste annulée";
 
 /* main window status string */
-"Backup Listing Failed" = "Échec du listage des sauvegardes";
+"Backup Listing Failed" = "Échec de la sauvegarde de la liste";
 
 /* status message */
-"Backup Pruning Failed" = "Échec de l'optimisation des sauvegardes";
+"Backup Pruning Failed" = "Échec de la simplification de la liste";
 
 /* tab title */
 "Backups" = "Sauvegardes";
@@ -47,7 +47,7 @@
 "Beginning download and installation of packages" = "Début du téléchargement et de l'installation des paquets";
 
 /* No comment provided by engineer. */
-"Beginning download of %.1f kbytes" = "Téléchargement de %.1f kB";
+"Beginning download of %.1f kbytes" = "Début du téléchargement de %.1f Ko";
 
 /* alert button title
    button title */
@@ -57,20 +57,20 @@
 "Cancel Anyway" = "Annuler quand même";
 
 /* alert button title */
-"Change" = "Changement";
+"Change" = "Changer";
 
 /* alert title */
-"Change command-line default?" = "Modifier la ligne de commande par défaut ?";
+"Change command-line default?" = "Changer la ligne de commande par défaut ?";
 
-/* status message */
-"Changing Documentation Option Failed" = "La modification de l'option de documentation a échoué";
+/* status message*/
+"Changing Documentation Option Failed" = "Changing Documentation Option Failed";
 
 /* button title in open panel (must be short)
    Menu item title */
 "Choose" = "Choisir";
 
-/* Prompt for Choose panel */
-"Choose Viewer" = "Choisir l'aperçu";
+/* Prompt for Choose panel*/
+"Choose Viewer" = "Choose Viewer";
 
 /* context menu */
 "Copy" = "Copier";
@@ -88,13 +88,13 @@
 "Default" = "Défaut";
 
 /* single trailing space */
-"Deleting " = "Suppression ";
+"Deleting " = "Effacement ";
 
 /* heading in info panel */
-"Description:\n" = "Description :\n";
+"Description:\n" = "Description : \n";
 
 /* all caps tableview group title */
-"DOC FILES" = "AUTRES FICHIERS";
+"DOC FILES" = "DOC FILES";
 
 /* button title */
 "Done" = "Terminé";
@@ -105,8 +105,8 @@
 /* No comment provided by engineer. */
 "Downloading release notes" = "Téléchargement des notes de version";
 
-/* alert text */
-"Either a network problem exists or the TeX Live version on the server does not match.  If this problem persists on further attempts, you may need to try a different repository." = "Tex Live Manager rencontre un problème de réseau ou la version de TeX Live sur le serveur ne correspond pas. Si ce problème persiste lors d'autres tentatives, vous devrez peut-être essayer un autre dépôt.";
+/* alert text*/
+"Either a network problem exists or the TeX Live version on the server does not match.  If this problem persists on further attempts, you may need to try a different repository." = "Soit il y a un problème de réseau soit la version de TeX Live sur le serveur ne coïncide pas. Si ce problème persiste avec d'autres tentatives, vous devriez essayer un dépôt différent.";
 
 /* button title */
 "Enable" = "Activer";
@@ -114,23 +114,23 @@
 /* alert title */
 "Enable security validation of packages?" = "Activer la validation de sécurité des paquets ?";
 
-/* error message for unreadable package */
-"Error parsing output line" = "Erreur lors de l'analyse de la ligne de sortie";
+/* error message for unreadable package*/
+"Error parsing output line" = "Erreur pendant l'analyse";
 
-/* No comment provided by engineer. */
-"Error reading location from TeX Live" = "Erreur lors de la lecture de l'emplacement à partir de TeX Live";
+/* No comment provided by engineer.*/
+"Error reading location from TeX Live" = "Erreur pendant la détection de TeX Live";
 
-/* No comment provided by engineer. */
-"Error: no release notes for selected version." = "Erreur : il n'existe pas de notes de version pour la version sélectionnée.";
+/* No comment provided by engineer.*/
+"Error: no release notes for selected version." = "Erreur : aucune note de version de la version sélectionnée.";
 
 /* alert message */
-"Failed to authorize operation" = "Impossible d'autoriser l'opération";
+"Failed to authorize operation" = "Échec de l'autorisation de l'opération";
 
 /* alert title */
-"Failed to enable security validation of packages." = "Failed to enable security validation of packages.";
+"Failed to enable security validation of packages." = "Échec de l'activation de la validation de sécurité des paquets.";
 
 /* context menu */
-"Forcibly Remove Selected Packages" = "Forcer la suppression des paquets sélectionnés";
+"Forcibly Remove Selected Packages" = "Suppression forcée des paquets sélectionnés ";
 
 /* status for package */
 "Forcibly removed" = "Supprimé de force";
@@ -138,20 +138,20 @@
 /* single trailing space */
 "Forcibly removed " = "Supprimé de force ";
 
-/* alert message text */
-"If you cancel the installation process, it may leave your TeX installation in an unknown state.  You can ignore this warning and cancel anyway, or keep waiting until the installation finishes." = "If you cancel the installation process, it may leave your TeX installation in an unknown state.  You can ignore this warning and cancel anyway, or keep waiting until the installation finishes.";
+/* alert message text*/
+"If you cancel the installation process, it may leave your TeX installation in an unknown state.  You can ignore this warning and cancel anyway, or keep waiting until the installation finishes." = "Si vous arrêtez l'installation, cela peut laisser votre installation TeX dans un état inconnu.  Vous pouvez ignorer cet avertissement et annuler quand même, ou attendre jusqu'à ce que l'installation finisse.";
 
-/* alert message text */
-"If you close the window, the installation process may leave your TeX installation in an unknown state.  You can ignore this warning and close the window, or wait until the installation finishes." = "If you close the window, the installation process may leave your TeX installation in an unknown state.  You can ignore this warning and close the window, or wait until the installation finishes.";
+/* alert message text*/
+"If you close the window, the installation process may leave your TeX installation in an unknown state.  You can ignore this warning and close the window, or wait until the installation finishes." = "Si vous fermez la fenêtre, cela peut laisser votre installation TeX dans un état inconnu.  Vous pouvez ignorer cet avertissement et annuler quand même, ou attendre jusqu'à ce que l'installation finisse.";
 
-/* alert message text */
-"If you have installed TeX Live, you need to tell TeX Live Utility where to find TeX programs. For MacTeX 2015 and later, you should use /Library/TeX/texbin. Change settings now?" = "If you have installed TeX Live, you need to tell TeX Live Utility where to find TeX programs. For MacTeX 2015 and later, you should use /Library/TeX/texbin. Change settings now?";
+/* alert message text*/
+"If you have installed TeX Live, you need to tell TeX Live Utility where to find TeX programs. For MacTeX 2015 and later, you should use /Library/TeX/texbin. Change settings now?" = "Si vous avez déjà installé TeX Live, vous avez besoin de dire à TeX Live Utility où trouver les programmes TeX. Pour MacTeX 2015 et au delà, vous devriez utiliser /Library/TeX/texbin. Changer les réglages maintenant ?";
 
 /* button title */
 "Ignore" = "Ignorer";
 
 /* status message */
-"Infrastructure Update Succeeded" = "Mise à jour de l'infrastructure réussie";
+"Infrastructure Update Succeeded" = "Infrastructure mise à jour avec succés";
 
 /* tab title */
 "Install" = "Installer";
@@ -166,7 +166,7 @@
 "Install Succeeded" = "L'installation a réussi";
 
 /* No comment provided by engineer. */
-"Installation complete; reconfiguring TeX Live" = "Installation terminée, reconfiguration de TeX Live";
+"Installation complete; reconfiguring TeX Live" = "Installation terminée ; reconfiguration de TeX Live en cours";
 
 /* alert title */
 "Installation in progress!" = "Installation en cours...";
@@ -175,19 +175,19 @@
 "Installed" = "Installé";
 
 /* single trailing space */
-"Installing " = "Installation ";
+"Installing " = "Installation en cours ";
 
 /* alert message text */
-"Installing gpg appears to have failed. Would you like to show the log now or ignore this warning?" = "Installing gpg appears to have failed. Would you like to show the log now or ignore this warning?";
+"Installing gpg appears to have failed. Would you like to show the log now or ignore this warning?" = "Il semblerait que l'installation de gpg ait échoué. Voulez-vous afficher le log maintenant ou ignorer cet avertissement ?";
 
 /* alert title */
 "Invalid URL" = "URL invalide";
 
 /* alert title */
-"Invalid URL entered" = "Invalid URL entered";
+"Invalid URL entered" = "URL invalide renseignée";
 
 /* button title */
-"Keep Waiting" = "Keep Waiting";
+"Keep Waiting" = "Continuer à attendre";
 
 /* button title */
 "Later" = "Plus tard";
@@ -240,8 +240,8 @@
 /* update alert message text part 3 (optional) */
 "New packages will be installed." = "De nouveaux paquets seront installés.";
 
-/* alert title */
-"Newer update checker is available" = "Newer update checker is available";
+/* alert title*/
+"Newer update checker is available" = "Nouveau vérificateur de mise à jour disponible";
 
 /* button title */
 "No" = "Non";
@@ -256,7 +256,7 @@
 "Not installed" = "Non installé";
 
 /* info panel title */
-"Nothing Selected" = "Rien n'est sélectionné";
+"Nothing Selected" = "Rien n'est sélectionné.";
 
 /* No comment provided by engineer. */
 "Nothing selected." = "Rien n'est sélectionné.";
@@ -271,19 +271,19 @@
 "Packages" = "Paquets";
 
 /* update alert message text part 2 (optional) */
-"Packages that no longer exist on the server will be removed." = "Packages that no longer exist on the server will be removed.";
+"Packages that no longer exist on the server will be removed." = "Les paquets qui n'existent plus sur le serveur seront supprimés.";
 
 /* status message */
-"Paper Size Change Failed" = "Échec du changement de format de papier";
+"Paper Size Change Failed" = "Échec du changement de la taille du papier";
 
 /* alert message */
-"Please quit and relaunch TeX Live Utility.  If this problem occurs again, please submit a bug report using the link on the Help menu." = "Please quit and relaunch TeX Live Utility.  If this problem occurs again, please submit a bug report using the link on the Help menu.";
+"Please quit and relaunch TeX Live Utility.  If this problem occurs again, please submit a bug report using the link on the Help menu." = "Veuillez quitter et relancer TeX Live Utility. Si ce probème persiste, veuillez soumettre un rapport de bogue en utilisant le lien dans le menu Aide.";
 
 /* alert title */
-"Possible update failure." = "Échec de mise à jour possible";
+"Possible update failure." = "Échec possible de la mise à jour.";
 
 /* toolbar item palette label */
-"Progress" = "Déroulement";
+"Progress" = "Progression";
 
 /* button title */
 "Reinstall" = "Réinstaller";
@@ -295,7 +295,7 @@
 "Reinstall Selected Packages" = "Réinstaller les paquets sélectionnés";
 
 /* single trailing space */
-"Reinstalling " = "Réinstallation ";
+"Reinstalling " = "Réinstallation en cours ";
 
 /* Window title */
 "Release Notes" = "Notes de version";
@@ -310,13 +310,13 @@
 "Remove Selected Packages" = "Supprimer les paquets sélectionnés";
 
 /* alert title */
-"Repository has a different TeX Live version" = "Repository has a different TeX Live version";
+"Repository has a different TeX Live version" = "Le dépôt a une version différente de TeX Live";
 
 /* No comment provided by engineer. */
-"Repository URL has a newer TeX Live version" = "Repository URL has a newer TeX Live version";
+"Repository URL has a newer TeX Live version" = "Le dépôt a une version plus récente de TeX Live";
 
 /* No comment provided by engineer. */
-"Repository URL has an older TeX Live version" = "Repository URL has an older TeX Live version";
+"Repository URL has an older TeX Live version" = "Le dépôt a une version plus ancienne de TeX Live";
 
 /* button title
    small button title */
@@ -329,34 +329,34 @@
 "Restore Succeeded" = "La restauration a réussi.";
 
 /* all caps tableview group title */
-"RUN FILES" = "FICHIERS EXÉCUTABLES";
+"RUN FILES" = "RUN FILES";
 
-/* No comment provided by engineer. */
-"Running updmap…" = "Exécution d'updmap…";
+/* No comment provided by engineer.*/
+"Running updmap…" = "updmap en fonction…";
 
 /* info panel title */
-"Searching%C" = "Recherche de %C";
+"Searching%C" = "Searching%C";
 
 /* status message */
-"Security Validation Enabled" = "Validation de sécurité activée";
+"Security Validation Enabled" = "Validation sécurisée activée";
 
 /* context menu */
-"Set Default Repository" = "Définir un dépot par défaut";
+"Set Default Repository" = "Définir un dépôt par défaut";
 
 /* context menu */
-"Show Info" = "Afficher les détails";
+"Show Info" = "Afficher les informations";
 
 /* button title */
 "Show Log" = "Afficher les logs";
 
 /* alert message text */
-"Some of the packages you have selected are already installed.  Would you like to reinstall them?" = "Certains des paquets que vous avez sélectionné sont déjà installés. Voulez-vous les réinstaller ?";
+"Some of the packages you have selected are already installed.  Would you like to reinstall them?" = "Certains des paquets que vous avez sélectionnés sont déjà installés. Voulez-vous les réinstaller ?";
 
 /* alert title */
-"Some of these packages cannot be removed." = "Certains de ces paquets ne peuvent pas être supprimés.";
+"Some of these packages cannot be removed." = "Certains de ces paquets ne peuvent être supprimés.";
 
 /* all caps tableview group title */
-"SOURCE FILES" = "FICHIERS SOURCE";
+"SOURCE FILES" = "SOURCE FILES";
 
 /* heading in info panel */
 "Status:" = "Statut :";
@@ -365,97 +365,97 @@
 "Summary:" = "Résumé :";
 
 /* alert sheet title */
-"TeX installation not found." = "TeX est introuvable.";
+"TeX installation not found." = "Installation TeX introuvable.";
 
 /* No comment provided by engineer. */
 "TeX Live 2008 is not supported" = "TeX Live 2008 n'est pas supporté";
 
 /* alert title */
-"TeX Live paper size does not match system default" = "Le format de papier TeX Live ne correspond pas à la valeur par défaut du système";
+"TeX Live paper size does not match system default" = "La taille du papier de TeX Live ne coïncide pas avec celle par défaut du système";
 
-/* No comment provided by engineer. */
-"The current location is:" = "L'emplacement actuel est :";
+/* No comment provided by engineer.*/
+"The current location is:" = "La localisation actuelle est :";
 
-/* alert message text */
-"The install process appears to have failed. Would you like to show the log now or ignore this warning?" = "The install process appears to have failed. Would you like to show the log now or ignore this warning?";
+/* alert message text*/
+"The install process appears to have failed. Would you like to show the log now or ignore this warning?" = "Le processus d'installation semble avoir échoué. Aimeriez-vous afficher le log maintenant ou ignorer cet avertissement ?";
 
-/* No comment provided by engineer. */
-"The location in the TeX Live database was not changed" = "The location in the TeX Live database was not changed";
+/* No comment provided by engineer.*/
+"The location in the TeX Live database was not changed" = "La localisation dans la base de données TeX Live est inchangée";
 
-/* alert text, two string format specifiers */
-"The normal umask is %@ and yours is set to %@. This more restrictive umask may cause permission problems with TeX Live." = "The normal umask is %1$@ and yours is set to %2$@. This more restrictive umask may cause permission problems with TeX Live.";
+/* alert text, two string format specifiers*/
+"The normal umask is %@ and yours is set to %@. This more restrictive umask may cause permission problems with TeX Live." = "L'umask normal est %1$@ et le vôtre est fixé à %2$@. Cet umask plus restrictif pourrait causer des problèmes de permissions avec TeX Live.";
 
-/* alert message text */
-"The removal process appears to have failed. Would you like to show the log now or ignore this warning?" = "The removal process appears to have failed. Would you like to show the log now or ignore this warning?";
+/* alert message text*/
+"The removal process appears to have failed. Would you like to show the log now or ignore this warning?" = "Le processus de suppression semble avoir échouer. Aimeriez-vous afficher le log maintenant ou ignorer cet avertissement ?";
 
-/* alert text, two integer format specifiers */
-"The repository at %@ has TeX Live %lu, but you have TeX Live %lu installed.  You need to switch repositories in order to continue." = "The repository at %1$@ has TeX Live %2$lu, but you have TeX Live %3$lu installed.  You need to switch repositories in order to continue.";
+/* alert text, two integer format specifiers*/
+"The repository at %@ has TeX Live %lu, but you have TeX Live %lu installed.  You need to switch repositories in order to continue." = "Le dépôt à %1$@ a TeX Live %2$lu, mais vous avez TeX Live %3$lu installé. Vous avez besoin de permuter les dépôts avant de continuer.";
 
-/* alert message text */
-"The restore process appears to have failed. Would you like to show the log now or ignore this warning?" = "The restore process appears to have failed. Would you like to show the log now or ignore this warning?";
+/* alert message text*/
+"The restore process appears to have failed. Would you like to show the log now or ignore this warning?" = "Le processus de restauration semble avoir échouer. Aimeriez-vous afficher le log maintenant ou ignorer cet avertissement ?";
 
-/* alert message text */
-"The TeX Live infrastructure packages have the same version after updating.  This could be a packaging problem on the server.  If you see this message repeatedly, wait until the problem is resolved in TeX Live before attempting another update." = "The TeX Live infrastructure packages have the same version after updating.  This could be a packaging problem on the server.  If you see this message repeatedly, wait until the problem is resolved in TeX Live before attempting another update.";
+/* alert message text*/
+"The TeX Live infrastructure packages have the same version after updating.  This could be a packaging problem on the server.  If you see this message repeatedly, wait until the problem is resolved in TeX Live before attempting another update." = "L'infrastructure des paquets de TeX Live a la même version après mise à jour. Cela est dû à un problème sur le serveur. Si vous voyez ce message de façon répétée, attendez que le problème soit résolu dans TeX Live avant d'essayer une autre mise à jour.";
 
-/* alert message text in preferences */
-"The tlmgr and kpsewhich tools must be present in this folder for basic functionality." = "The tlmgr and kpsewhich tools must be present in this folder for basic functionality.";
+/* alert message text in preferences*/
+"The tlmgr and kpsewhich tools must be present in this folder for basic functionality." = "Les outils de tlmgr et kpsewhich doivent être présents dans ce dossier pour une fonctionnalité basique.";
 
-/* alert message text */
-"The tlmgr tool does not exist at %@.  Please set the correct location in preferences or install TeX Live." = "The tlmgr tool does not exist at %@.  Please set the correct location in preferences or install TeX Live.";
+/* alert message text*/
+"The tlmgr tool does not exist at %@.  Please set the correct location in preferences or install TeX Live." = "L'outil tlmgr n'existe pas à %@. Veuillez fixer la localisation correcte dans les Préférences ou installer TeX Live.";
 
-/* No comment provided by engineer. */
-"The tlu_ipctask helper application may have been tampered with." = "The tlu_ipctask helper application may have been tampered with.";
+/* No comment provided by engineer.*/
+"The tlu_ipctask helper application may have been tampered with." = "L'application assistante tlu_ipctask semble avoir été trafiquée.";
 
 /* alert title */
 "The update failed." = "La mise à jour a échoué.";
 
-/* alert message text */
-"The update process appears to have failed. Would you like to show the log now or ignore this warning?" = "The update process appears to have failed. Would you like to show the log now or ignore this warning?";
+/* alert message text*/
+"The update process appears to have failed. Would you like to show the log now or ignore this warning?" = "Le processus de mise à jour semble avoir échoué. Aimeriez-vous afficher le log maintenant ou ignorer cet avertissement ?";
+
+/* error message*/
+"This URL is missing a scheme, such as http." = "Il manque à cette URL un schéma, comme http.";
 
 /* error message */
-"This URL is missing a scheme, such as http." = "This URL is missing a scheme, such as http.";
+"This URL was not valid." = "Cette URL n'est pas valide.";
 
-/* error message */
-"This URL was not valid." = "This URL was not valid.";
+/* alert text*/
+"This version of TeX Live allows you to check the digital signature of downloaded packages by installing GnuPG. For better security, you should enable this feature." = "Cette version de TeX Live vous permet de vérifier la signature numérique des paquets téléchargés en installant GnuPG. Pour une meilleure sécurité, vous devriez activer cette fonctionnalité.";
 
-/* alert text */
-"This version of TeX Live allows you to check the digital signature of downloaded packages by installing GnuPG. For better security, you should enable this feature." = "This version of TeX Live allows you to check the digital signature of downloaded packages by installing GnuPG. For better security, you should enable this feature.";
-
-/* No comment provided by engineer. */
-"This version of TeX Live Utility will not work correctly with TeX Live 2008.  You need to download TeX Live Utility version 0.74 or earlier, or upgrade to a newer TeX Live.  I recommend the latter." = "This version of TeX Live Utility will not work correctly with TeX Live 2008.  You need to download TeX Live Utility version 0.74 or earlier, or upgrade to a newer TeX Live.  I recommend the latter.";
+/* No comment provided by engineer.*/
+"This version of TeX Live Utility will not work correctly with TeX Live 2008.  You need to download TeX Live Utility version 0.74 or earlier, or upgrade to a newer TeX Live.  I recommend the latter." = "Cette version de TeX Live Utility ne fonctionnera pas correctement avec TeX Live 2008. Vous devez télécharger TeX Live Utility version 0.74 ou plus ancienne, ou migrer vers un TeX Live plus récent. Je recommande la dernière version.";
 
 /* update alert message text part 1 */
-"This will install all available updates." = "Cela va installer toutes les mises à jour disponibles.";
+"This will install all available updates." = "Cela installera toutes les mises à jour disponibles.";
 
-/* No comment provided by engineer. */
-"Unable to convert to a number" = "Unable to convert to a number";
+/* No comment provided by engineer.*/
+"Unable to convert to a number" = "Impossible de convertir en un nombre";
 
-/* alert title */
-"Unable to determine repository version" = "Unable to determine repository version";
-
-/* alert title */
-"Unable to determine your TeX Live version" = "Unable to determine your TeX Live version";
+/* alert title*/
+"Unable to determine repository version" = "Impossible de déterminer la version du dépôt";
 
 /* alert title */
-"Unable to find a valid update server" = "Unable to find a valid update server";
+"Unable to determine your TeX Live version" = "Impossible de déterminer votre version de TeX Live";
+
+/* alert title */
+"Unable to find a valid update server" = "Impossible de trouver un serveur de mise à jour valide";
 
 /* error message for info panel */
-"Unable to find info for %@" = "Unable to find info for %@";
+"Unable to find info for %@" = "Impossible de trouver les informations pour %@";
 
 /* alert title */
-"Unable to relaunch" = "Unable to relaunch";
+"Unable to relaunch" = "Impossible de relancer";
 
 /* error message */
-"Unsupported URL scheme for TeX Live.  Must be one of:" = "Unsupported URL scheme for TeX Live.  Must be one of:";
+"Unsupported URL scheme for TeX Live.  Must be one of:" = "Schéma d'URL non supporté pour TeX Live. Doit être l'un de :";
 
 /* button title */
-"Update" = "Mettre à jour";
+"Update" = "Mise à jour";
 
 /* context menu */
 "Update All Packages" = "Mettre à jour tous les paquets";
 
 /* alert title */
-"Update all packages?" = "Voulez-vous mettre à jour tous les paquets ?";
+"Update all packages?" = "Mettre à jour tous les paquets ?";
 
 /* status for package */
 "Update available" = "Mise à jour disponible";
@@ -464,61 +464,61 @@
 "Update Selected Packages" = "Mettre à jour les paquets sélectionnés";
 
 /* status message */
-"Update Succeeded" = "Mise à jour terminée";
+"Update Succeeded" = "Mise à jour réussie";
 
 /* tab title */
 "Updates" = "Mises à jour";
 
 /* single trailing space */
-"Updating " = "Mise à jour ";
+"Updating " = "Mise à jour en cours ";
 
 /* button title */
-"Upgrade" = "Mettre à jour";
+"Upgrade" = "Améliorer";
 
 /* alert message */
-"User cancelled operation" = "User cancelled operation";
+"User cancelled operation" = "L'utilisateur a annulé l'opération";
 
 /* status message */
-"Validating Server" = "Validating Server";
+"Validating Server" = "Validation du serveur en cours";
 
 /* No comment provided by engineer. */
 "Version %@" = "Version %@";
 
 /* button title */
-"Wait" = "Plus tard";
+"Wait" = "Attendre";
 
 /* alert text */
-"Would you like to set the TeX Live paper size now?" = "Souhaitez-vous définir le format de papier TeX Live maintenant ?";
+"Would you like to set the TeX Live paper size now?" = "Aimeriez-vous fixer maintenant la taille du papier de TeX Live ?";
 
-/* alert text */
-"Would you like to use this as the default value for the command-line tlmgr tool as well?" = "Voulez-vous l'utiliser comme valeur par défaut pour l'outil en ligne de commande tlmgr ?";
+/* alert text*/
+"Would you like to use this as the default value for the command-line tlmgr tool as well?" = "Aimeriez-vous utiliser cette valeur comme celle par défaut pour l'outil de commande tlmgr aussi ?";
 
 /* button title */
 "Yes" = "Oui";
 
 /* alert text, integer format specifier */
-"You appear to have installed fonts in your home directory.  Would you like them to be automatically activated in TeX Live %d?" = "You appear to have installed fonts in your home directory.  Would you like them to be automatically activated in TeX Live %d?";
+"You appear to have installed fonts in your home directory.  Would you like them to be automatically activated in TeX Live %d?" = "Il semble que vous avez des polices installées dans votre répertoire personnel. Aimeriez-vous qu'elles soient activées automatiquement dans TeX Live %d ?";
 
-/* alert message text */
-"You are attempting to remove critical parts of the underlying TeX Live infrastructure, and I won't help you do that." = "You are attempting to remove critical parts of the underlying TeX Live infrastructure, and I won't help you do that.";
+/* alert message text*/
+"You are attempting to remove critical parts of the underlying TeX Live infrastructure, and I won't help you do that." = "Vous êtes en train de tenter de supprimer des parties essentielles de l'infrastructure sous-jacente de TeX Live, et je ne vous aiderai pas à le faire.";
 
-/* alert message */
-"You can always update to the latest version or restore a different one to undo this change." = "You can always update to the latest version or restore a different one to undo this change.";
+/* alert message*/
+"You can always update to the latest version or restore a different one to undo this change." = "Vous pouvez toujours mettre à jour vers la version la plus récente ou en restaurer une différente pour annuler ce changement.";
 
-/* alert title */
-"You have altered the system's umask" = "You have altered the system's umask";
+/* alert title*/
+"You have altered the system's umask" = "Vous avez modifié l'umask du système";
 
-/* alert text, integer and string format specifiers */
-"You have TeX Live %lu installed, but the version at %@ cannot be determined." = "You have TeX Live %1$lu installed, but the version at %2$@ cannot be determined.";
+/* alert text, integer and string format specifiers*/
+"You have TeX Live %lu installed, but the version at %@ cannot be determined." = "Vous avez TeX Live %1$lu installé, mais la version à %2$@ ne peut être déterminée.";
 
-/* alert text */
-"You will need to manually quit and relaunch TeX Live Utility to complete installation of the new version." = "You will need to manually quit and relaunch TeX Live Utility to complete installation of the new version.";
+/* alert text*/
+"You will need to manually quit and relaunch TeX Live Utility to complete installation of the new version." = "Vous avez besoin de quitter manuellement TeX Live Utility puis de relancer pour terminer l'installation de cette nouvelle version.";
 
-/* alert message text */
-"Your preferences need to be adjusted for new Apple requirements. Would you like to change your TeX Programs location from /usr/texbin to /Library/TeX/texbin or set it manually?" = "Your preferences need to be adjusted for new Apple requirements. Would you like to change your TeX Programs location from /usr/texbin to /Library/TeX/texbin or set it manually?";
+/* alert message text*/
+"Your preferences need to be adjusted for new Apple requirements. Would you like to change your TeX Programs location from /usr/texbin to /Library/TeX/texbin or set it manually?" = "Vos préférences ont besoin d'être ajustées pour les nouvelles exigences d'Apple. Aimeriez-vous changer l'emplacement de vos programmes TeX de /usr/texbin vers /Library/TeX/texbin ou le faire manuellement ?";
 
-/* two integer specifiers */
-"Your TeX Live version is %lu, but your default repository URL appears to be for TeX Live %lu.  You need to choose an appropriate repository." = "Your TeX Live version is %1$lu, but your default repository URL appears to be for TeX Live %2$lu.  You need to choose an appropriate repository.";
+/* two integer specifiers*/
+"Your TeX Live version is %lu, but your default repository URL appears to be for TeX Live %lu.  You need to choose an appropriate repository." = "Votre version de TeX Live est %1$lu, mais l'URL de votre dépôt par défaut semble être celle de TeX Live %2$lu. Vous avez besoin de choisir un dépôt approprié.";
 
-/* two integer specifiers */
-"Your TeX Live version is %lu, but your default repository URL appears to be for TeX Live %lu.  You need to manually upgrade to a newer version of TeX Live, as there will be no further updates for your version." = "Your TeX Live version is %1$lu, but your default repository URL appears to be for TeX Live %2$lu.  You need to manually upgrade to a newer version of TeX Live, as there will be no further updates for your version.";
+/* two integer specifiers*/
+"Your TeX Live version is %lu, but your default repository URL appears to be for TeX Live %lu.  You need to manually upgrade to a newer version of TeX Live, as there will be no further updates for your version." = "Votre version de TeX Live est %1$lu, mais l'URL de votre dépôt par défaut semble être celle de TeX Live %2$lu. Vous avez besoin de mettre à jour manuellement vers une version de TeX Live plus récente, car il n'y aura pas de mises à jour ultérieures pour votre version.";

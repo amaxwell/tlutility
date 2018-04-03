@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9059" systemVersion="15B42" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14109" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
-        <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9059"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14109"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="TLMPreferenceController">
@@ -16,33 +16,31 @@
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
-        <customObject id="-3" userLabel="Application"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <window title="Préférences" allowsToolTipsWhenApplicationIsInactive="NO" oneShot="NO" frameAutosaveName="Preferences Window" animationBehavior="default" id="1">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="200" y="339" width="498" height="161"/>
+            <rect key="contentRect" x="200" y="339" width="514" height="161"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1028"/>
             <value key="minSize" type="size" width="498" height="161"/>
-            <value key="maxSize" type="size" width="498" height="161"/>
-            <view key="contentView" id="2">
-                <rect key="frame" x="0.0" y="0.0" width="498" height="161"/>
+            <value key="maxSize" type="size" width="514" height="161"/>
+            <view key="contentView" misplaced="YES" id="2">
+                <rect key="frame" x="0.0" y="0.0" width="514" height="161"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <textField verticalHuggingPriority="750" id="11">
-                        <rect key="frame" x="17" y="121" width="97" height="17"/>
+                    <textField verticalHuggingPriority="750" misplaced="YES" id="11">
+                        <rect key="frame" x="18" y="121" width="115" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <animations/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Emplacement :" id="12">
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Programmes TeX :" id="12">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <button verticalHuggingPriority="750" id="23">
-                        <rect key="frame" x="384" y="113" width="100" height="32"/>
+                    <button verticalHuggingPriority="750" misplaced="YES" id="23">
+                        <rect key="frame" x="408" y="113" width="92" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
-                        <animations/>
-                        <buttonCell key="cell" type="push" title="Parcourir" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="24">
+                        <buttonCell key="cell" type="push" title="Choisir…" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="24">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -50,12 +48,11 @@
                             <action selector="changeTexBinPath:" target="-2" id="25"/>
                         </connections>
                     </button>
-                    <button id="33">
-                        <rect key="frame" x="18" y="58" width="207" height="18"/>
+                    <button misplaced="YES" id="33">
+                        <rect key="frame" x="18" y="58" width="322" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <string key="toolTip">Cocher cette case peut réduire les performances dans certaines conditions mais est utile en cas de problème avec le visualiseur de journal intégré.</string>
-                        <animations/>
-                        <buttonCell key="cell" type="check" title="Afficher la progression dans le journal système" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="34">
+                        <string key="toolTip">Checking this box may reduce performance under some conditions, but is useful if there are problems with the built-in log viewer.</string>
+                        <buttonCell key="cell" type="check" title="Afficher la progression dans l'historique Système." bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="34">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -63,11 +60,10 @@
                             <action selector="toggleUseSyslog:" target="-2" id="36"/>
                         </connections>
                     </button>
-                    <button toolTip="Si décoché, utilisez la commande --no-auto-install pour éviter d'installer les paquets ajoutés sur le serveur." id="47">
-                        <rect key="frame" x="18" y="38" width="369" height="18"/>
+                    <button toolTip="If unchecked, pass --no-auto-install to tlmgr to avoid installing packages added to the server." misplaced="YES" id="47">
+                        <rect key="frame" x="18" y="38" width="478" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <animations/>
-                        <buttonCell key="cell" type="check" title="Ajouter les nouveaux paquets à chaque mise à jour pour correspondre au serveur" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="48">
+                        <buttonCell key="cell" type="check" title="Ajouter les nouveaux paquets pour s'harmoniser au serveur pendant la màj." bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="48">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -75,11 +71,10 @@
                             <action selector="toggleAutoinstall:" target="-2" id="54"/>
                         </connections>
                     </button>
-                    <button toolTip="Si décoché, utilisez la commande --no-auto-remove pour éviter de supprimer les paquets qui ont été supprimés sur le serveur." id="49">
-                        <rect key="frame" x="18" y="18" width="364" height="18"/>
+                    <button toolTip="If unchecked, pass --no-auto-remove to tlmgr to avoid removing packages that have been removed on the server." misplaced="YES" id="49">
+                        <rect key="frame" x="18" y="18" width="484" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <animations/>
-                        <buttonCell key="cell" type="check" title="Supprimez les paquets effacés à chaque mise à jour pour correspondre au serveur" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="50">
+                        <buttonCell key="cell" type="check" title="Supprimer les paquets effacés pour s'harmoniser au serveur pendant la màj." bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="50">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -87,11 +82,10 @@
                             <action selector="toggleAutoremove:" target="-2" id="53"/>
                         </connections>
                     </button>
-                    <button toolTip="Si coché, TeX Live Utility lancera la commande 'updmap' après la modification de TeX Live." id="59">
-                        <rect key="frame" x="18" y="78" width="333" height="18"/>
+                    <button toolTip="If checked, TeX Live Utility will run the updmap command after TeX Live is modified." misplaced="YES" id="59">
+                        <rect key="frame" x="18" y="78" width="413" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <animations/>
-                        <buttonCell key="cell" type="check" title="Activer automatiquement les polices dans mon répertoire personnel" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="60">
+                        <buttonCell key="cell" type="check" title="Activer automatiquement les polices dans mon dossier peronnel." bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="60">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -99,10 +93,9 @@
                             <action selector="toggleRunUpdmap:" target="-2" id="62"/>
                         </connections>
                     </button>
-                    <pathControl toolTip="Définissez le répertoire utilisé pour la commande tlmgr ainsi que les autres commandes TeX." verticalHuggingPriority="750" allowsExpansionToolTips="YES" id="9">
-                        <rect key="frame" x="120" y="119" width="259" height="22"/>
+                    <pathControl toolTip="Set the directory for the tlmgr command and other TeX commands." verticalHuggingPriority="750" misplaced="YES" allowsExpansionToolTips="YES" id="9">
+                        <rect key="frame" x="137" y="119" width="160" height="22"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <animations/>
                         <pathCell key="cell" selectable="YES" editable="YES" alignment="left" id="10">
                             <font key="font" metaFont="system"/>
                             <url key="url" string="file:///usr/"/>
@@ -114,12 +107,11 @@
                         </connections>
                     </pathControl>
                 </subviews>
-                <animations/>
             </view>
             <connections>
                 <outlet property="delegate" destination="-2" id="13"/>
             </connections>
-            <point key="canvasLocation" x="123" y="139.5"/>
+            <point key="canvasLocation" x="145" y="139.5"/>
         </window>
     </objects>
 </document>
