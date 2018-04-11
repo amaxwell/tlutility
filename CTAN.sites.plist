@@ -92,6 +92,17 @@
 				<key>country</key>
 				<string>China</string>
 				<key>name</key>
+				<string>mirrors.geekpie.club</string>
+				<key>urls</key>
+				<array>
+					<string>http://mirrors.geekpie.club/CTAN/</string>
+					<string>https://mirrors.geekpie.club/CTAN/</string>
+				</array>
+			</dict>
+			<dict>
+				<key>country</key>
+				<string>China</string>
+				<key>name</key>
 				<string>mirrors.shu.edu.cn</string>
 				<key>urls</key>
 				<array>
@@ -460,6 +471,19 @@
 				<key>urls</key>
 				<array>
 					<string>http://ctan.127001.ovh/</string>
+				</array>
+			</dict>
+			<dict>
+				<key>country</key>
+				<string>Germany</string>
+				<key>name</key>
+				<string>ctan.mirror.norbert-ruehl.de</string>
+				<key>urls</key>
+				<array>
+					<string>ftp://ctan.mirror.norbert-ruehl.de/</string>
+					<string>http://ctan.mirror.norbert-ruehl.de/</string>
+					<string>https://ctan.mirror.norbert-ruehl.de/</string>
+					<string>rsync://ctan.mirror.norbert-ruehl.de/ctan/</string>
 				</array>
 			</dict>
 			<dict>
@@ -1231,6 +1255,6 @@
 		</array>
 	</dict>
 	<key>timestamp</key>
-	<real>1522384271.776871</real>
+	<real>1523420385.27923</real>
 </dict>
 </plist>
