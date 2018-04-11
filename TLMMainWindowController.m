@@ -1429,6 +1429,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     [[NSNotificationCenter defaultCenter] removeObserver:self name:TLMOperationFinishedNotification object:op];
     if ([op isCancelled] == NO)
         TLMLog(__func__, @"Finished running launchd agent installer script");
+#warning update status?
     [[[self window] toolbar] validateVisibleItems];
 }
 
