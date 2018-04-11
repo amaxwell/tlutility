@@ -877,5 +877,15 @@
             <sparkle:minimumSystemVersion>10.6.8</sparkle:minimumSystemVersion>
             <enclosure url="https://github.com/amaxwell/tlutility/releases/download/1.33/TeX.Live.Utility.app-1.33.tar.gz" sparkle:version="1.33" length="3124950" type="application/octet-stream" sparkle:dsaSignature="MC0CFA1F9htkebP0YW5TKlPvAGh9nVXmAhUAh5mICSCNB2zRmCKY+70DUeAVXHU="></enclosure>
         </item>
+        <item>
+            <title>Version 1.34</title>
+            <description>
+                <h3>Changes Since 1.33</h3>
+                <li>Completed French translation (thanks to Jean-Claude DE SOZA)</li>
+            </description>
+            <pubDate>Wed, 11 Apr 2018 04:21:06 +0000</pubDate>
+            <sparkle:minimumSystemVersion>10.6.8</sparkle:minimumSystemVersion>
+            <enclosure url="https://github.com/amaxwell/tlutility/releases/download/1.34/TeX.Live.Utility.app-1.34.tar.gz" sparkle:version="1.34" length="3109753" type="application/octet-stream" sparkle:dsaSignature="MCwCFCr1gGbrt2P0OWeZL/eWUYvalDlGAhQBsiP29GnPZM9XrxCVjP5pArSPxg=="></enclosure>
+        </item>
     </channel>
 </rss>
