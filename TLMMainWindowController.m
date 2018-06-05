@@ -1273,8 +1273,9 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
         }
         else {
             // successful infrastructure update; remove the infra package from the list manually
-            // ??? when did TL quit using arch-specific texlive.infra packages?
             [_updateListDataSource removePackageNamed:@"texlive.infra"];
+            [_updateListDataSource removePackageNamed:@"texlive.infra.x86_64-darwin"];
+            [_updateListDataSource removePackageNamed:@"texlive.infra.universal-darwin"];
             // formerly called _refreshUpdatedPackageListFromLocation here
             [_updateListDataSource setPackageFilter:nil];
             NSString *statusString = NSLocalizedString(@"Infrastructure Update Succeeded", @"status message");
