@@ -103,12 +103,34 @@
 				<key>country</key>
 				<string>China</string>
 				<key>name</key>
+				<string>mirrors.huaweicloud.com</string>
+				<key>urls</key>
+				<array>
+					<string>http://mirrors.huaweicloud.com/repository/toolkit/CTAN/</string>
+					<string>https://mirrors.huaweicloud.com/repository/toolkit/CTAN/</string>
+				</array>
+			</dict>
+			<dict>
+				<key>country</key>
+				<string>China</string>
+				<key>name</key>
 				<string>mirrors.shu.edu.cn</string>
 				<key>urls</key>
 				<array>
 					<string>http://mirrors.shu.edu.cn/CTAN/</string>
 					<string>ftp://mirrors.shu.edu.cn/CTAN/</string>
 					<string>rsync://mirrors.shu.edu.cn/CTAN/</string>
+				</array>
+			</dict>
+			<dict>
+				<key>country</key>
+				<string>China</string>
+				<key>name</key>
+				<string>mirrors.sjtug.sjtu.edu.cn</string>
+				<key>urls</key>
+				<array>
+					<string>http://mirrors.sjtug.sjtu.edu.cn/ctan/</string>
+					<string>https://mirrors.sjtug.sjtu.edu.cn/ctan/</string>
 				</array>
 			</dict>
 			<dict>
@@ -142,6 +164,16 @@
 				<key>urls</key>
 				<array>
 					<string>http://ctan.imsc.res.in/</string>
+				</array>
+			</dict>
+			<dict>
+				<key>country</key>
+				<string>India</string>
+				<key>name</key>
+				<string>mirror.iopb.res.in</string>
+				<key>urls</key>
+				<array>
+					<string>http://mirror.iopb.res.in/tex-archive/</string>
 				</array>
 			</dict>
 			<dict>
@@ -423,6 +455,17 @@
 				<key>country</key>
 				<string>France</string>
 				<key>name</key>
+				<string>ctan.tetaneutral.net</string>
+				<key>urls</key>
+				<array>
+					<string>rsync://ctan.tetaneutral.net/ctan/</string>
+					<string>http://ctan.tetaneutral.net/</string>
+				</array>
+			</dict>
+			<dict>
+				<key>country</key>
+				<string>France</string>
+				<key>name</key>
 				<string>distrib-coffee.ipsl.jussieu.fr</string>
 				<key>urls</key>
 				<array>
@@ -597,6 +640,18 @@
 				<key>country</key>
 				<string>Germany</string>
 				<key>name</key>
+				<string>packages.oth-regensburg.de</string>
+				<key>urls</key>
+				<array>
+					<string>http://packages.oth-regensburg.de/ctan/</string>
+					<string>rsync://packages.oth-regensburg.de/ctan/</string>
+					<string>https://packages.oth-regensburg.de/ctan/</string>
+				</array>
+			</dict>
+			<dict>
+				<key>country</key>
+				<string>Germany</string>
+				<key>name</key>
 				<string>sunsite.informatik.rwth-aachen.de</string>
 				<key>urls</key>
 				<array>
@@ -632,9 +687,9 @@
 				<string>ftp.heanet.ie</string>
 				<key>urls</key>
 				<array>
-					<string>http://ftp.heanet.ie/mirrors/ctan.org/tex/</string>
-					<string>rsync://ftp.heanet.ie/mirrors/ctan.org/tex/</string>
-					<string>ftp://ftp.heanet.ie/pub/ctan/tex/</string>
+					<string>http://ftp.heanet.iemirrors/ctan.org/tex/</string>
+					<string>rsync://ftp.heanet.iemirrors/ctan.org/tex/</string>
+					<string>ftp://ftp.heanet.iemirrors/ctan.org/tex/</string>
 				</array>
 			</dict>
 			<dict>
@@ -1053,27 +1108,6 @@
 				<key>country</key>
 				<string>USA</string>
 				<key>name</key>
-				<string>ctan.scidock.com</string>
-				<key>urls</key>
-				<array>
-					<string>http://ctan.scidock.com/tex-archive/</string>
-				</array>
-			</dict>
-			<dict>
-				<key>country</key>
-				<string>USA</string>
-				<key>name</key>
-				<string>ctan.sharelatex.com</string>
-				<key>urls</key>
-				<array>
-					<string>ftp://ctan.sharelatex.com/pub/tex-archive/</string>
-					<string>http://ctan.sharelatex.com/tex-archive/</string>
-				</array>
-			</dict>
-			<dict>
-				<key>country</key>
-				<string>USA</string>
-				<key>name</key>
 				<string>ftp.math.purdue.edu</string>
 				<key>urls</key>
 				<array>
@@ -1099,6 +1133,16 @@
 				<key>urls</key>
 				<array>
 					<string>http://mirror.hmc.edu/ctan/</string>
+				</array>
+			</dict>
+			<dict>
+				<key>country</key>
+				<string>USA</string>
+				<key>name</key>
+				<string>mirror.las.iastate.edu</string>
+				<key>urls</key>
+				<array>
+					<string>http://mirror.las.iastate.edu/tex-archive/</string>
 				</array>
 			</dict>
 			<dict>
@@ -1131,19 +1175,6 @@
 					<string>ftp://mirrors.rit.edu/CTAN/</string>
 					<string>http://mirrors.rit.edu/CTAN/</string>
 					<string>rsync://mirrors.rit.edu/CTAN/</string>
-				</array>
-			</dict>
-			<dict>
-				<key>country</key>
-				<string>USA</string>
-				<key>name</key>
-				<string>mirrors.sorengard.com</string>
-				<key>urls</key>
-				<array>
-					<string>http://mirrors.sorengard.com/ctan/</string>
-					<string>rsync://mirrors.sorengard.com/ctan/</string>
-					<string>https://mirrors.sorengard.com/ctan/</string>
-					<string>ftp://mirrors.sorengard.com/mirrors/ctan/</string>
 				</array>
 			</dict>
 			<dict>
@@ -1255,6 +1286,6 @@
 		</array>
 	</dict>
 	<key>timestamp</key>
-	<real>1523420385.27923</real>
+	<real>1529712069.970495</real>
 </dict>
 </plist>
