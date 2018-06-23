@@ -341,6 +341,18 @@ static Class _UserNotificationClass;
     
 }
 
+static NSURL * __TLMGPGURL()
+{
+    return [NSURL URLWithString:@"http://www.preining.info/tlgpg/"];
+}
+
+- (void)checkForGPGUpdate
+{
+    TLMListUpdatesOperation *op = [[TLMListUpdatesOperation alloc] initWithLocation:__TLMGPGURL()];
+    [self _addOperation:op selector:@selector(_handleListGPGUpdatesFinishedNotification:) setRefreshingForDataSource:nil];
+    [op release];
+}
+
 - (void)gpgInstallAlertDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)context
 {
     TLMDatabaseYear year = [[TLMEnvironment currentEnvironment] texliveYear];
@@ -350,7 +362,7 @@ static Class _UserNotificationClass;
     
     if (NSAlertFirstButtonReturn == returnCode) {
         //   tlmgr --repository http://www.preining.info/tlgpg/ install tlgpg
-        NSURL *gpgURL = [NSURL URLWithString:@"http://www.preining.info/tlgpg/"];
+        NSURL *gpgURL = __TLMGPGURL();
         [_URLField setStringValue:[gpgURL absoluteString]];
         [self setServerURL:gpgURL];
         
@@ -406,6 +418,9 @@ static Class _UserNotificationClass;
                             contextInfo:NULL];
     }
     else {
+        
+        if ([[TLMDatabase localDatabase] packageNamed:@"tlgpg"])
+            [self checkForGPGUpdate];
         
         // set the dirty bit on all datasources
         [_updateListDataSource setNeedsUpdate:YES];
@@ -1602,6 +1617,25 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
         [self _addOperation:op selector:@selector(_handleInstallFinishedNotification:) setRefreshingForDataSource:nil];
         [op release];
         TLMLog(__func__, @"Beginning install of %@\nfrom %@", packageNames, [currentURL absoluteString]);   
+    }
+}
+
+- (void)_handleListGPGUpdatesFinishedNotification:(NSNotification *)aNote
+{
+    TLMListUpdatesOperation *op = [aNote object];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:TLMOperationFinishedNotification object:op];
+    NSArray *allPackages = [op packages];
+    TLMLog(__func__, @"Found %ld tlgpg packages to update from %@", [allPackages count], __TLMGPGURL());
+    if ([allPackages count]) {
+        NSAlert *alert = [[NSAlert new] autorelease];
+        [alert setMessageText:NSLocalizedString(@"Update security validation of packages?", @"alert title")];
+        [alert setInformativeText:NSLocalizedString(@"An update is available for GnuPG, which you previously installed for security validation of packages.", @"alert text")];
+        [alert addButtonWithTitle:NSLocalizedString(@"Update", @"button title")];
+        [alert addButtonWithTitle:NSLocalizedString(@"Later", @"button title")];
+        [alert beginSheetModalForWindow:[self window]
+                          modalDelegate:self
+                         didEndSelector:@selector(gpgInstallAlertDidEnd:returnCode:contextInfo:)
+                            contextInfo:NULL];
     }
 }
 
