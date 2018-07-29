@@ -70,6 +70,8 @@
         return ([self numberOfSelectedRows] > 0 || [self numberOfSelectedColumns] > 0) && [self dataSourceAllowsCopying];
     else if ([anItem action] == @selector(changeFont:))
         return ([self fontNamePreferenceKey] && [self fontSizePreferenceKey]);
+    else if ([anItem action] == @selector(print:))
+        return NO;
     else
         return YES;
 }
