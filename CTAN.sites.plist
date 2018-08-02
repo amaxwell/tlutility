@@ -510,16 +510,6 @@
 				<key>country</key>
 				<string>Germany</string>
 				<key>name</key>
-				<string>ctan.127001.ovh</string>
-				<key>urls</key>
-				<array>
-					<string>http://ctan.127001.ovh/</string>
-				</array>
-			</dict>
-			<dict>
-				<key>country</key>
-				<string>Germany</string>
-				<key>name</key>
 				<string>ctan.mirror.norbert-ruehl.de</string>
 				<key>urls</key>
 				<array>
@@ -1286,6 +1276,6 @@
 		</array>
 	</dict>
 	<key>timestamp</key>
-	<real>1529712069.970495</real>
+	<real>1533179362.450232</real>
 </dict>
 </plist>
