@@ -521,3 +521,9 @@
 
 /* alert message text */
 "If you have installed TeX Live, you need to tell TeX Live Utility where to find TeX programs. For MacTeX 2015 and later, you should use /Library/TeX/texbin. Change settings now?" = "If you have installed TeX Live, you need to tell TeX Live Utility where to find TeX programs. For MacTeX 2015 and later, you should use /Library/TeX/texbin. Change settings now?";
+
+/* alert text */
+"An update is available for GnuPG, which you previously installed for security validation of packages." = "An update is available for GnuPG, which you previously installed for security validation of packages.";
+
+/* alert title */
+"Update security validation of packages?" = "Update security validation of packages?";

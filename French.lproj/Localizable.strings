@@ -522,3 +522,9 @@
 
 /* two integer specifiers*/
 "Your TeX Live version is %lu, but your default repository URL appears to be for TeX Live %lu.  You need to manually upgrade to a newer version of TeX Live, as there will be no further updates for your version." = "Votre version de TeX Live est %1$lu, mais l'URL de votre dépôt par défaut semble être celle de TeX Live %2$lu. Vous avez besoin de mettre à jour manuellement vers une version de TeX Live plus récente, car il n'y aura pas de mises à jour ultérieures pour votre version.";
+
+/* alert text */
+"An update is available for GnuPG, which you previously installed for security validation of packages." = "An update is available for GnuPG, which you previously installed for security validation of packages.";
+
+/* alert title */
+"Update security validation of packages?" = "Update security validation of packages?";

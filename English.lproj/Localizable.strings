@@ -28,6 +28,9 @@
 /* alert title */
 "An installation is running!" = "An installation is running!";
 
+/* alert text */
+"An update is available for GnuPG, which you previously installed for security validation of packages." = "An update is available for GnuPG, which you previously installed for security validation of packages.";
+
 /* alert title */
 "Are you sure you want to restore %@ from backup?" = "Are you sure you want to restore %@ from backup?";
 
@@ -459,6 +462,9 @@
 
 /* status for package */
 "Update available" = "Update available";
+
+/* alert title */
+"Update security validation of packages?" = "Update security validation of packages?";
 
 /* context menu */
 "Update Selected Packages" = "Update Selected Packages";
