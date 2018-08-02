@@ -93,7 +93,8 @@ static NSString *__TLMGetTemporaryDirectory()
     scriptPath = [updateDirectory stringByAppendingPathComponent:scriptPath];
     
     // note that --nox11 is required to avoid spawning an xterm on some systems
-    self = [self initWithCommand:scriptPath options:[NSArray arrayWithObject:@"--nox11"]];
+    // debug options per request from karl https://github.com/amaxwell/tlutility/issues/65#issuecomment-409426335
+    self = [self initWithCommand:scriptPath options:[NSArray arrayWithObjects:@"--nox11", @"--", @"--debug", nil]];
     if (self) {        
         _location = [location copy];
         _scriptPath = [scriptPath copy];        
