@@ -887,5 +887,19 @@
             <sparkle:minimumSystemVersion>10.6.8</sparkle:minimumSystemVersion>
             <enclosure url="https://github.com/amaxwell/tlutility/releases/download/1.34/TeX.Live.Utility.app-1.34.tar.gz" sparkle:version="1.34" length="3109753" type="application/octet-stream" sparkle:dsaSignature="MCwCFCr1gGbrt2P0OWeZL/eWUYvalDlGAhQBsiP29GnPZM9XrxCVjP5pArSPxg=="></enclosure>
         </item>
+        <item>
+            <title>Version 1.35</title>
+            <description>
+                <h3>Changes Since 1.34</h3>
+                <li>Do not show arch-specific infrastructure files after an infrastructure update</li>
+                <li>Add support for updating tlgpg</li>
+                <li>Disable printing in the log view, since PDF logs are not wrapped properly</li>
+                <li>Add debug flags to update-tlmgr-latest.sh for issue 65</li>
+                <li>Prepend TeX Live path when creating the environment for tlmgr</li>
+            </description>
+            <pubDate>Fri, 03 Aug 2018 05:11:08 +0000</pubDate>
+            <sparkle:minimumSystemVersion>10.6.8</sparkle:minimumSystemVersion>
+            <enclosure url="https://github.com/amaxwell/tlutility/releases/download/1.35/TeX.Live.Utility.app-1.35.tar.gz" sparkle:version="1.35" length="3113016" type="application/octet-stream" sparkle:dsaSignature="MC0CFFbHf0HCVsjuIiAjVwMyErTr9WEkAhUAhzSu031AWoVLF566/mYZNzDyh/A="></enclosure>
+        </item>
     </channel>
 </rss>
