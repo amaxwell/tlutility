@@ -478,7 +478,9 @@ static void __TLMTestAndClearEnvironmentVariable(const char *name)
      we shouldn't need /usr/local/bin in the PATH, let's just remove it.
      */
     [systemPaths removeObject:@"/usr/local/bin"];
-    [systemPaths addObject:[[NSUserDefaults standardUserDefaults] objectForKey:TLMTexBinPathPreferenceKey]];
+    
+    // prepend TL to PATH in case of macports or fink TL
+    [systemPaths insertObject:[[NSUserDefaults standardUserDefaults] objectForKey:TLMTexBinPathPreferenceKey] atIndex:0];
     NSString *newPath = [systemPaths componentsJoinedByString:@":"];
     NSParameterAssert(newPath);
     
