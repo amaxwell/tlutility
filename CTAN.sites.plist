@@ -45,18 +45,6 @@
 				<key>country</key>
 				<string>South Africa</string>
 				<key>name</key>
-				<string>mirror.ac.za</string>
-				<key>urls</key>
-				<array>
-					<string>ftp://ctan.mirror.ac.za/</string>
-					<string>http://ctan.mirror.ac.za/</string>
-					<string>rsync://ctan.mirror.ac.za/CTAN/</string>
-				</array>
-			</dict>
-			<dict>
-				<key>country</key>
-				<string>South Africa</string>
-				<key>name</key>
 				<string>mirror.ufs.ac.za</string>
 				<key>urls</key>
 				<array>
@@ -180,11 +168,11 @@
 				<key>country</key>
 				<string>Iran</string>
 				<key>name</key>
-				<string>ctan.asis.io</string>
+				<string>ctan.asis.ai</string>
 				<key>urls</key>
 				<array>
-					<string>http://ctan.asis.io/</string>
-					<string>rsync://ctan.asis.io/ctan/</string>
+					<string>rsync://ctan.asis.ai/ctan/</string>
+					<string>http://ctan.asis.ai/</string>
 				</array>
 			</dict>
 			<dict>
@@ -205,16 +193,6 @@
 				<key>urls</key>
 				<array>
 					<string>http://ctan.yazd.ac.ir/</string>
-				</array>
-			</dict>
-			<dict>
-				<key>country</key>
-				<string>Iran</string>
-				<key>name</key>
-				<string>repo.iut.ac.ir</string>
-				<key>urls</key>
-				<array>
-					<string>http://repo.iut.ac.ir/tex-archive/</string>
 				</array>
 			</dict>
 			<dict>
@@ -298,18 +276,6 @@
 				<key>country</key>
 				<string>Korea</string>
 				<key>name</key>
-				<string>ftp.neowiz.com</string>
-				<key>urls</key>
-				<array>
-					<string>http://ftp.neowiz.com/CTAN/</string>
-					<string>ftp://ftp.neowiz.com/CTAN/</string>
-					<string>rsync://ftp.neowiz.com/CTAN/</string>
-				</array>
-			</dict>
-			<dict>
-				<key>country</key>
-				<string>Korea</string>
-				<key>name</key>
 				<string>mirror.navercorp.com</string>
 				<key>urls</key>
 				<array>
@@ -360,32 +326,9 @@
 					<string>rsync://ftp.yzu.edu.tw/pub/CTAN/</string>
 				</array>
 			</dict>
-			<dict>
-				<key>country</key>
-				<string>Thailand</string>
-				<key>name</key>
-				<string>mirror.kku.ac.th</string>
-				<key>urls</key>
-				<array>
-					<string>ftp://mirror.kku.ac.th/CTAN/</string>
-					<string>http://mirror.kku.ac.th/CTAN/</string>
-					<string>rsync://mirror.kku.ac.th/CTAN/</string>
-				</array>
-			</dict>
 		</array>
 		<key>Europe</key>
 		<array>
-			<dict>
-				<key>country</key>
-				<string>Austria</string>
-				<key>name</key>
-				<string>cyber-perikarp.eu</string>
-				<key>urls</key>
-				<array>
-					<string>http://mirror.reismil.ch/CTAN/</string>
-					<string>https://mirror.cyber-perikarp.eu/CTAN/</string>
-				</array>
-			</dict>
 			<dict>
 				<key>country</key>
 				<string>Austria</string>
@@ -870,17 +813,6 @@
 				<key>country</key>
 				<string>Switzerland</string>
 				<key>name</key>
-				<string>mirror.switch.ch</string>
-				<key>urls</key>
-				<array>
-					<string>http://mirror.switch.ch/ftp/mirror/tex/</string>
-					<string>ftp://mirror.switch.ch/mirror/tex/</string>
-				</array>
-			</dict>
-			<dict>
-				<key>country</key>
-				<string>Switzerland</string>
-				<key>name</key>
 				<string>pirbot.com</string>
 				<key>urls</key>
 				<array>
@@ -1232,16 +1164,6 @@
 			</dict>
 			<dict>
 				<key>country</key>
-				<string>Brazil</string>
-				<key>name</key>
-				<string>repositorios.cpai.unb.br</string>
-				<key>urls</key>
-				<array>
-					<string>http://repositorios.cpai.unb.br/ctan/</string>
-				</array>
-			</dict>
-			<dict>
-				<key>country</key>
 				<string>Chile</string>
 				<key>name</key>
 				<string>ctan.dcc.uchile.cl</string>
@@ -1262,20 +1184,9 @@
 					<string>rsync://ftp.inf.utfsm.cl/pub/tex-archive/</string>
 				</array>
 			</dict>
-			<dict>
-				<key>country</key>
-				<string>Colombia</string>
-				<key>name</key>
-				<string>ctan.uniminuto.edu</string>
-				<key>urls</key>
-				<array>
-					<string>http://ctan.uniminuto.edu/</string>
-					<string>rsync://ctan.uniminuto.edu/</string>
-				</array>
-			</dict>
 		</array>
 	</dict>
 	<key>timestamp</key>
-	<real>1533272990.204527</real>
+	<real>1556858578.526205</real>
 </dict>
 </plist>
