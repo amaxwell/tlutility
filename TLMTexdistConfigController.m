@@ -76,6 +76,12 @@
         if ([dist isInstalled])
             [distributions addObject:dist];
     }
+    
+    // try to put newest at the top; doesn't matter as long as it's stable (issue #72)
+    NSSortDescriptor *sort = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:NO];
+    [distributions sortUsingDescriptors:[NSArray arrayWithObject:sort]];
+    [sort release];
+    
     [_distributions release];
     _distributions = [distributions copy];
     [_tableView reloadData];
