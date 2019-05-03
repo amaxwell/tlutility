@@ -12,6 +12,8 @@
         2014 = "ftp://ftp.tug.org/historic/systems/texlive/2014//tlnet-final/";
         2015 = "ftp://ftp.tug.org/historic/systems/texlive/2015/tlnet-final/";
         2016 = "ftp://ftp.tug.org/historic/systems/texlive/2016/tlnet-final/";
+        2017 = "ftp://ftp.tug.org/historic/systems/texlive/2017/tlnet-final/";
+        2018 = "ftp://ftp.tug.org/historic/systems/texlive/2018/tlnet-final/";
     };
     
     CriticalMirror = "http://tug.org/texlive/tlcritical";
