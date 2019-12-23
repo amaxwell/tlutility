@@ -142,7 +142,7 @@ def create_dmg_of_application(new_version_number):
     assert rc == 0, "hdiutil convert failed"
 
     nullDevice.close()
-    os.unlink(temp_dmg_name)
+    os.unlink(temp_dmg_path)
     
     return dmg_name    
 
