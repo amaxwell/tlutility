@@ -128,7 +128,10 @@ def create_dmg_of_application(new_version_number):
     # Create a name for the tarball based on version number, instead
     # of date, since I sometimes want to upload multiple betas per day.
     final_dmg_name = os.path.join(BUILD_DIR, os.path.basename(BUILT_APP) + "-" + new_version_number + ".dmg")
+    
     temp_dmg_path = "/tmp/TeX Live Utility.dmg"
+    if os.path.exists(temp_dmg_path):
+        os.unlink(temp_dmg_path)
 
     nullDevice = open("/dev/null", "r")
     cmd = ["/usr/bin/hdiutil", "create", "-srcfolder", BUILT_APP, temp_dmg_path]
