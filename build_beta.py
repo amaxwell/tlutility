@@ -122,6 +122,29 @@ def create_tarball_of_application(newVersionNumber):
     tarball.close()
     
     return tarballName
+    
+def create_dmg_of_application(new_version_number):
+    
+    # Create a name for the tarball based on version number, instead
+    # of date, since I sometimes want to upload multiple betas per day.
+    final_dmg_name = os.path.join(BUILD_DIR, os.path.basename(BUILT_APP) + "-" + new_version_number + ".dmg")
+    temp_dmg_name = "/tmp/TeX Live Utility.dmg"
+
+    nullDevice = open("/dev/null", "r")
+    cmd = ["/usr/bin/hdiutil", "create", "-srcfolder", BUILT_APP, temp_dmg_path]
+    x = Popen(cmd, stdout=nullDevice, stderr=nullDevice)
+    rc = x.wait()
+    assert rc == 0, "hdiutil create failed"
+
+    cmd = ["/usr/bin/hdiutil", "convert", temp_dmg_path, "-format", "UDZO", "-imagekey", "zlib-level=9", "-o", final_dmg_name]
+    x = Popen(cmd, stdout=nullDevice, stderr=nullDevice)
+    rc = x.wait()
+    assert rc == 0, "hdiutil convert failed"
+
+    nullDevice.close()
+    os.unlink(temp_dmg_name)
+    
+    return dmg_name    
 
 def user_and_pass_for_upload():
     
@@ -173,7 +196,7 @@ if __name__ == '__main__':
     push_task.wait()
     
     clean_and_build()
-    tarball_path = create_tarball_of_application(new_version)
+    dmg_path = create_dmg_of_application(new_version)
     
     username, password = user_and_pass_for_upload()
     auth = HTTPBasicAuth(username, password)
@@ -190,10 +213,10 @@ if __name__ == '__main__':
     
     r = requests.post("https://api.github.com/repos/amaxwell/tlutility/releases", data=json.dumps(payload), auth=auth)
     post_response = json.loads(r.text or r.content)
-    upload_url = uri_expand(post_response["upload_url"], {"name" : os.path.basename(tarball_path)})
+    upload_url = uri_expand(post_response["upload_url"], {"name" : os.path.basename(dmg_path)})
     
-    file_data = open(tarball_path, "rb").read()
-    r = requests.post(upload_url, data=file_data, headers={"Content-Type" : "application/gzip"}, auth=auth)
+    file_data = open(dmg_path, "rb").read()
+    r = requests.post(upload_url, data=file_data, headers={"Content-Type" : "application/x-apple-diskimage"}, auth=auth)
     asset_response = json.loads(r.text or r.content)
     
     # should be part of appcast
