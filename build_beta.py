@@ -147,7 +147,7 @@ def create_dmg_of_application(new_version_number):
     nullDevice.close()
     os.unlink(temp_dmg_path)
     
-    return dmg_name    
+    return final_dmg_name    
 
 def user_and_pass_for_upload():
     
