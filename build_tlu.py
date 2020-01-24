@@ -127,6 +127,32 @@ def create_tarball_of_application(newVersionNumber):
     
     return tarballName
 
+def create_dmg_of_application(new_version_number):
+    
+    # Create a name for the tarball based on version number, instead
+    # of date, since I sometimes want to upload multiple betas per day.
+    final_dmg_name = os.path.join(BUILD_DIR, os.path.basename(BUILT_APP) + "-" + new_version_number + ".dmg")
+    
+    temp_dmg_path = "/tmp/TeX Live Utility.dmg"
+    if os.path.exists(temp_dmg_path):
+        os.unlink(temp_dmg_path)
+
+    nullDevice = open("/dev/null", "r")
+    cmd = ["/usr/bin/hdiutil", "create", "-srcfolder", BUILT_APP, temp_dmg_path]
+    x = Popen(cmd, stdout=nullDevice, stderr=nullDevice)
+    rc = x.wait()
+    assert rc == 0, "hdiutil create failed"
+
+    cmd = ["/usr/bin/hdiutil", "convert", temp_dmg_path, "-format", "UDZO", "-imagekey", "zlib-level=9", "-o", final_dmg_name]
+    x = Popen(cmd, stdout=nullDevice, stderr=nullDevice)
+    rc = x.wait()
+    assert rc == 0, "hdiutil convert failed"
+
+    nullDevice.close()
+    os.unlink(temp_dmg_path)
+    
+    return final_dmg_name    
+
 def keyFromSecureNote():
     
     # see http://www.entropy.ch/blog/Developer/2008/09/22/Sparkle-Appcast-Automation-in-Xcode.html
@@ -228,7 +254,7 @@ def update_appcast(oldVersion, newVersion, appcastSignature, tarballName, fileSi
 
 def user_and_pass_for_upload():
     
-    pwtask = Popen(["/usr/bin/security", "find-internet-password", "-g", "-s", UPLOAD_KEYCHAIN_ITEM], stdout=PIPE, stderr=PIPE)
+    pwtask = Popen(["/usr/bin/security", "find-internet-password", "-g", "-s", UPLOAD_KEYCHAIN_ITEM, "-t", "dflt"], stdout=PIPE, stderr=PIPE)
     [output, error] = pwtask.communicate()
     pwoutput = output + error
         
@@ -285,7 +311,7 @@ if __name__ == '__main__':
     push_task.wait()
     
     clean_and_build()
-    tarball_path = create_tarball_of_application(new_version)
+    dmg_path = create_dmg_of_application(new_version)
     
     username, password = user_and_pass_for_upload()
     auth = HTTPBasicAuth(username, password)
@@ -302,9 +328,9 @@ if __name__ == '__main__':
     
     r = requests.post("https://api.github.com/repos/amaxwell/tlutility/releases", data=json.dumps(payload), auth=auth)
     post_response = json.loads(r.text or r.content)
-    upload_url = uri_expand(post_response["upload_url"], {"name" : os.path.basename(tarball_path)})
+    upload_url = uri_expand(post_response["upload_url"], {"name" : os.path.basename(dmg_path)})
     
-    file_data = open(tarball_path, "rb").read()
+    file_data = open(dmg_path, "rb").read()
     r = requests.post(upload_url, data=file_data, headers={"Content-Type" : "application/gzip"}, auth=auth)
     asset_response = json.loads(r.text or r.content)
     
@@ -312,6 +338,6 @@ if __name__ == '__main__':
     download_url = asset_response["browser_download_url"]
     print "download_url:", download_url
     
-    appcast_signature, file_size = signature_and_size(tarball_path)    
-    update_appcast(old_version, new_version, appcast_signature, tarball_path, file_size, minimum_system_version, download_url)
+    appcast_signature, file_size = signature_and_size(dmg_path)    
+    update_appcast(old_version, new_version, appcast_signature, dmg_path, file_size, minimum_system_version, download_url)
 
