@@ -151,7 +151,8 @@ def create_dmg_of_application(new_version_number):
 
 def user_and_pass_for_upload():
     
-    pwtask = Popen(["/usr/bin/security", "find-internet-password", "-g", "-s", UPLOAD_KEYCHAIN_ITEM], stdout=PIPE, stderr=PIPE)
+    # look for dflt account type, rather than the web form
+    pwtask = Popen(["/usr/bin/security", "find-internet-password", "-g", "-s", UPLOAD_KEYCHAIN_ITEM, "-t", "dflt"], stdout=PIPE, stderr=PIPE)
     [output, error] = pwtask.communicate()
     pwoutput = output + error
         
