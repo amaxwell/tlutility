@@ -901,5 +901,17 @@
             <sparkle:minimumSystemVersion>10.6.8</sparkle:minimumSystemVersion>
             <enclosure url="https://github.com/amaxwell/tlutility/releases/download/1.35/TeX.Live.Utility.app-1.35.tar.gz" sparkle:version="1.35" length="3113016" type="application/octet-stream" sparkle:dsaSignature="MC0CFFbHf0HCVsjuIiAjVwMyErTr9WEkAhUAhzSu031AWoVLF566/mYZNzDyh/A="></enclosure>
         </item>
+        <item>
+            <title>Version 1.36</title>
+            <description>
+                <h3>Changes Since 1.35</h3>
+                <li>Added 2017 and 2018 legacy mirrors</li>
+                <li>Fixed issue 82: sorting</li>
+                <li>Packaged as disk image to try and work around Gatekeeper bugs</li>
+            </description>
+            <pubDate>Fri, 24 Jan 2020 05:36:10 +0000</pubDate>
+            <sparkle:minimumSystemVersion>10.6.8</sparkle:minimumSystemVersion>
+            <enclosure url="https://github.com/amaxwell/tlutility/releases/download/1.36/TeX.Live.Utility.app-1.36.dmg" sparkle:version="1.36" length="3159223" type="application/octet-stream" sparkle:dsaSignature="MC0CFQCNMwj01mi+JX6f4Rqb3IWpySMmgQIUZ2wcg0eESnaz18qaX1XFNPOW0vE="></enclosure>
+        </item>
     </channel>
 </rss>
