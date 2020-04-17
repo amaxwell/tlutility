@@ -91,6 +91,11 @@
         [[tc dataCell] setFont:aFont];
     
     NSLayoutManager *lm = [NSLayoutManager new];
+    /* Using NSTypesetterBehavior_10_2_WithCompatibility works around 
+       problems with clipped baselines on Georgia 18. Problem noted in
+       email from user on 16 April 2020.
+     */
+    [lm setTypesetterBehavior:NSTypesetterBehavior_10_2_WithCompatibility];
     [self setRowHeight:[lm defaultLineHeightForFont:aFont] + 2.0f];
     [lm release];
 
