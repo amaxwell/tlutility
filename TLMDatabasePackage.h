@@ -56,6 +56,7 @@
 @property (nonatomic, readonly) NSNumber *revision;
 @property (nonatomic, readonly) NSArray *depends;
 @property (nonatomic, readonly) NSString *catalogueVersion;
+@property (nonatomic, readonly) BOOL isInstalled;
 
 // underlying paths are modified to return file URLs
 // only files that exist on disk are returned

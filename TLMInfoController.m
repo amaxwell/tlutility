@@ -274,6 +274,9 @@ static NSArray * __TLMURLsFromTexdocOutput2(NSString *outputString)
 
 - (NSArray *)_texdocForPackage:(TLMDatabasePackage *)package
 {
+    // avoid returning junk results, because texdoc tries too hard
+    if ([package isInstalled] == NO)
+        return nil;
     
     NSString *cmd = [[TLMEnvironment currentEnvironment] texdocAbsolutePath];
         
@@ -349,21 +352,18 @@ static NSArray * __TLMURLsFromTexdocOutput2(NSString *outputString)
         [attrString addAttribute:NSFontAttributeName value:userFont range:NSMakeRange(previousLength, [attrString length] - previousLength)];
     }
     
-    value = [[[TLMDatabase localDatabase] packages] containsObject:package] ? @"yes" : @"no";
-    if (value) {
-        previousLength = [attrString length];
-        [[attrString mutableString] appendString:NSLocalizedString(@"Status:", @"heading in info panel")];
-        [attrString addAttribute:NSFontAttributeName value:boldFont range:NSMakeRange(previousLength, [attrString length] - previousLength)];
-        if ([value caseInsensitiveCompare:@"yes"] == NSOrderedSame) {
-            value = NSLocalizedString(@"Installed", @"status for package");
-        }
-        else {
-            value = NSLocalizedString(@"Not installed", @"status for package");
-        }
-        previousLength = [attrString length];
-        [[attrString mutableString] appendFormat:@" %@\n\n", value];
-        [attrString addAttribute:NSFontAttributeName value:userFont range:NSMakeRange(previousLength, [attrString length] - previousLength)];
+    previousLength = [attrString length];
+    [[attrString mutableString] appendString:NSLocalizedString(@"Status:", @"heading in info panel")];
+    [attrString addAttribute:NSFontAttributeName value:boldFont range:NSMakeRange(previousLength, [attrString length] - previousLength)];
+    if ([package isInstalled]) {
+        value = NSLocalizedString(@"Installed", @"status for package");
     }
+    else {
+        value = NSLocalizedString(@"Not installed", @"status for package");
+    }
+    previousLength = [attrString length];
+    [[attrString mutableString] appendFormat:@" %@\n\n", value];
+    [attrString addAttribute:NSFontAttributeName value:userFont range:NSMakeRange(previousLength, [attrString length] - previousLength)];
     
     value = [package longDescription];
     if (value) {

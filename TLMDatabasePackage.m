@@ -70,6 +70,11 @@
     return [[self name] isEqualToString:[object name]];
 }
 
+- (BOOL)isInstalled
+{
+    return [[[TLMDatabase localDatabase] packages] containsObject:self];
+}
+
 - (NSAttributedString *)attributedString;
 {
     NSString *desc = [_dictionary objectForKey:@"longDescription"] ? [_dictionary objectForKey:@"longDescription"] : [self shortDescription];
