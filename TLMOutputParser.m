@@ -320,6 +320,9 @@ static NSArray * __TLMCheckFileExistence(NSArray *inputURLs)
     NSUInteger previousLength;
     NSFont *userFont = [NSFont userFontOfSize:0.0];
     NSFont *boldFont = [[NSFontManager sharedFontManager] convertFont:userFont toHaveTrait:NSBoldFontMask];
+    
+    // keep track of this, so we don't get crap results from texdoc heuristics (issue #90)
+    BOOL isInstalled = NO;
 
     // note that all keys are downcased; tlmgr 2008 used CamelCase, but Karl might switch 2009 to lowercase
     value = [info objectForKey:@"package"];
@@ -351,9 +354,11 @@ static NSArray * __TLMCheckFileExistence(NSArray *inputURLs)
         [attrString addAttribute:NSFontAttributeName value:boldFont range:NSMakeRange(previousLength, [attrString length] - previousLength)];
         if ([value caseInsensitiveCompare:@"yes"] == NSOrderedSame) {
             value = NSLocalizedString(@"Installed", @"status for package");
+            isInstalled = YES;
         }
         else {
             value = NSLocalizedString(@"Not installed", @"status for package");
+            isInstalled = NO;
         }
         previousLength = [attrString length];
         [[attrString mutableString] appendFormat:@" %@\n\n", value];
@@ -398,8 +403,8 @@ static NSArray * __TLMCheckFileExistence(NSArray *inputURLs)
     
     docURLs = __TLMCheckFileExistence(docURLs);
     
-    // documentation from texdoc
-    if ([docURLs count]) {
+    // documentation from texdoc is some set of random files if the package isn't installed
+    if ([docURLs count] && isInstalled) {
         previousLength = [attrString length];
         [[attrString mutableString] appendString:NSLocalizedString(@"\nDocumentation:\n", @"heading in info panel")];
         [attrString addAttribute:NSFontAttributeName value:boldFont range:NSMakeRange(previousLength, [attrString length] - previousLength)];
