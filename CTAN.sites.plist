@@ -94,6 +94,17 @@
 				<key>country</key>
 				<string>China</string>
 				<key>name</key>
+				<string>mirrors.bfsu.edu.cn</string>
+				<key>urls</key>
+				<array>
+					<string>rsync://mirrors.bfsu.edu.cn/CTAN/</string>
+					<string>https://mirrors.bfsu.edu.cn/CTAN/</string>
+				</array>
+			</dict>
+			<dict>
+				<key>country</key>
+				<string>China</string>
+				<key>name</key>
 				<string>mirrors.cqu.edu.cn</string>
 				<key>urls</key>
 				<array>
@@ -316,6 +327,16 @@
 				<array>
 					<string>http://ftp.ktug.org/tex-archive/</string>
 					<string>ftp://ftp.ktug.org/tex-archive/</string>
+				</array>
+			</dict>
+			<dict>
+				<key>country</key>
+				<string>Korea</string>
+				<key>name</key>
+				<string>mirror.kakao.com</string>
+				<key>urls</key>
+				<array>
+					<string>http://mirror.kakao.com/CTAN/</string>
 				</array>
 			</dict>
 			<dict>
@@ -943,6 +964,17 @@
 				<key>country</key>
 				<string>Spain</string>
 				<key>name</key>
+				<string>ctan.javinator9889.com</string>
+				<key>urls</key>
+				<array>
+					<string>http://ctan.javinator9889.com/</string>
+					<string>https://ctan.javinator9889.com/</string>
+				</array>
+			</dict>
+			<dict>
+				<key>country</key>
+				<string>Spain</string>
+				<key>name</key>
 				<string>osl.ugr.es</string>
 				<key>urls</key>
 				<array>
@@ -1284,6 +1316,6 @@
 		</array>
 	</dict>
 	<key>timestamp</key>
-	<real>1587153714.456431</real>
+	<real>1590900691.53721</real>
 </dict>
 </plist>
