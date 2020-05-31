@@ -405,14 +405,21 @@
 - (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row;
 {
     TLMPackage *package = [_displayedPackages objectAtIndex:row];
-    if ([package failedToParse] || [package isPinned])
-        [cell setTextColor:[NSColor redColor]];
-    else if ([package willBeRemoved])
-        [cell setTextColor:[NSColor grayColor]];
-    else if ([package isInstalled] == NO)
-        [cell setTextColor:[NSColor blueColor]];
-    else
-        [cell setTextColor:[NSColor blackColor]];
+    
+    // see https://lists.apple.com/archives/cocoa-dev/2008/Feb/msg02133.html
+    if ([cell isHighlighted] && [[tableView window] isKeyWindow] && [[tableView window] firstResponder] == tableView) {
+        [cell setTextColor:[NSColor selectedTextColor]];
+    }
+    else {
+        if ([package failedToParse] || [package isPinned])
+            [cell setTextColor:[NSColor redColor]];
+        else if ([package willBeRemoved])
+            [cell setTextColor:[NSColor grayColor]];
+        else if ([package isInstalled] == NO)
+            [cell setTextColor:[NSColor blueColor]];
+        else
+            [cell setTextColor:[NSColor blackColor]];
+    }
 }
 
 - (void)tableView:(NSTableView *)tableView didClickTableColumn:(NSTableColumn *)tableColumn

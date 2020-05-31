@@ -226,12 +226,20 @@
 - (void)outlineView:(NSOutlineView *)outlineView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item;
 {
     TLMPackageNode *node = item;
-    if ([node hasMixedStatus])
-        [cell setTextColor:[NSColor purpleColor]];
-    else if ([node isInstalled] == NO)
-        [cell setTextColor:[NSColor blueColor]];
-    else
-        [cell setTextColor:[NSColor blackColor]];
+    
+    // see https://lists.apple.com/archives/cocoa-dev/2008/Feb/msg02133.html
+    if ([cell isHighlighted] && [[outlineView window] isKeyWindow] && [[outlineView window] firstResponder] == outlineView) {
+        [cell setTextColor:[NSColor selectedTextColor]];
+    }
+    else {
+    
+        if ([node hasMixedStatus])
+            [cell setTextColor:[NSColor purpleColor]];
+        else if ([node isInstalled] == NO)
+            [cell setTextColor:[NSColor blueColor]];
+        else
+            [cell setTextColor:[NSColor blackColor]];
+    }
 }
 
 - (void)outlineView:(NSOutlineView *)outlineView didClickTableColumn:(NSTableColumn *)tableColumn;
