@@ -7,6 +7,8 @@ layout: default
 
 TeX Live Utility is a Mac OS X graphical interface for [TeX Live Manager](http://www.tug.org/texlive/tlmgr.html), which is a tool provided with [TeX Live](http://www.tug.org/texlive/) 2008 and later, for updating, installing, and otherwise managing TeX Live. TeX Live Utility aims to provide a native Mac OS X interface for the most commonly used functions of the TeX Live Manager command-line tool.
 
+Use the "Latest Version" link in the sidebar to download a compiled binary (either a .dmg or .tar.gz file, depending on the version). If you are using Mac OS X Catalina or later, you will need to control-click (or right-click) on the TeX Live Utility icon in Finder and choose "Open" from the contextual menu, due to Apple's Gatekeeper. If you need more information, see this [blog post](https://lapcatsoftware.com/articles/unsigned.html) for details.
+
 ## Functionality
 
 The present subset of commands is as follows:
@@ -25,7 +27,7 @@ Why use this program when you can use the command line tlmgr or its built-in Per
 
 ## Requirements
 
-  * Mac OS X Snow Leopard 10.6.8 or greater
+  * Mac OS X Lion 10.7.0 or greater
   * [TeX Live](http://www.tug.org/texlive/) installed via [MacTeX](http://www.tug.org/mactex) or the standard Unix install
 
 
