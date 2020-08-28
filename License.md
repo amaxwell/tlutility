@@ -7,7 +7,7 @@ layout: default
 
 TeX Live Utility and associated scripts are released under the BSD license as follows:
 
-This software is Copyright (c) 2010-2015 Adam Maxwell. All rights reserved.
+This software is Copyright (c) 2010-2020 Adam Maxwell. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 

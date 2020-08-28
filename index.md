@@ -34,6 +34,8 @@ Why use this program when you can use the command line tlmgr or its built-in Per
 ## Versioning Notes
 TeX Live Utility 0.74 and earlier will work with TeX Live 2008 and 2009. Current versions of TeX Live Utility require TeX Live 2009 or later, due to changes in the tlmgr tool itself.
 
+If you are stuck using Mac OS X Leopard 10.6.8, you can use TeX Live Utility 1.36 or earlier. Apple's compiler removed support for 10.6.8, which is a shame since it was the last good version of OS X.
+
 If you are stuck using Mac OS X Leopard 10.5.7 (e.g, you are using a PowerPC system), you can use TeX Live Utility 1.03 or earlier. Unfortunately, Apple made it too hard to keep supporting 10.5.
 
 ## Support
