@@ -55,6 +55,14 @@
 
 - (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {        
+#if 0
+    /* I no longer recall why I have this drawing code in here, but it
+     doesn't look right in Mojave, at least on Retina, and is even worse
+     on later releases. I think it was to give a uniform look next to the
+     custom URL field, which also doesn't look right in this era of
+     borderless bullshit.
+     */
+    
     NSImage *leftCap = nil;
     NSImage *middle = nil;
     NSImage *rightCap = nil;
@@ -73,7 +81,8 @@
     NSDrawThreePartImage(cellFrame, leftCap, middle, rightCap, NO, NSCompositeSourceOver, 1.0, [controlView isFlipped]);
     
     [self drawInteriorWithFrame:cellFrame inView:controlView];
-    
+#endif
+    [super drawWithFrame:cellFrame inView:controlView];
 }
 
 @end
