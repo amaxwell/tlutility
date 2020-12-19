@@ -157,6 +157,7 @@
         [_parseError setData:[NSData data]];
     }
     if ([_dumpError length]) {
+        // as of TL2020, this has the mirror name in it and is not an error
         TLMLog(__func__, @"Dump error: %@",[[[NSString alloc] initWithData:_dumpError encoding:NSUTF8StringEncoding] autorelease]);
         [_dumpError setData:[NSData data]];
     }

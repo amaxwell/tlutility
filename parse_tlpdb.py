@@ -226,6 +226,7 @@ def packages_from_tlpdb(flat_tlpdb, allow_partial=False):
 
     for line_idx, line in enumerate(flat_tlpdb):
     
+        # seems to be absent in TL 2020 (not in stderr?)
         if line_idx == 0 and line.startswith("location-url\t"):
             TLPackage.mirror = line[len("location-url\t"):].strip()
             continue
