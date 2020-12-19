@@ -325,7 +325,8 @@
  
     NSRect bezelRect = [self bounds];
     bezelRect.size.height = NSMidY([_tabControl frame]);
-    [[NSColor colorWithDeviceWhite:0.9 alpha:1.0] set];
+    // Dork Mode: was [[NSColor colorWithDeviceWhite:0.9 alpha:1.0] set]
+    [[NSColor windowBackgroundColor] set];
     NSRectFillUsingOperation(bezelRect, NSCompositeCopy);
     
     [NSGraphicsContext restoreGraphicsState];
@@ -333,6 +334,7 @@
     [NSGraphicsContext saveGraphicsState];
 
     NSShadow *lineShadow = [[NSShadow new] autorelease];
+    // Dork Mode: tried +shadowColor here, but it looks awful in normal mode, and the same in dark
     [lineShadow setShadowColor:[NSColor colorWithDeviceWhite:0.8 alpha:1.0]];
     [lineShadow setShadowOffset:NSMakeSize(0, -1)];
     [lineShadow setShadowBlurRadius:2.0];
@@ -352,7 +354,8 @@
     [path moveToPoint:pathStart];
     [path lineToPoint:pathEnd];
     
-    [[NSColor colorWithDeviceWhite:0.67 alpha:1.0] setStroke];
+    // Dork Mode: was [[NSColor colorWithDeviceWhite:0.67 alpha:1.0] setStroke];
+    [[NSColor gridColor] setStroke];
     [path setLineWidth:1.0];
     [path stroke];
 
