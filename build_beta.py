@@ -104,10 +104,11 @@ def clean_and_build():
     
     # clean and rebuild the Xcode project
     buildCmd = ["/usr/bin/xcodebuild", "-configuration", "Release", "-target", "TeX Live Utility", "clean", "build"]
-    nullDevice = open("/dev/null", "r")
-    x = Popen(buildCmd, cwd=SOURCE_DIR, stdout=nullDevice, stderr=nullDevice)
+    nullDevice = open("/dev/null", "w")
+#    x = Popen(buildCmd, cwd=SOURCE_DIR, stdout=nullDevice, stderr=nullDevice)
+    x = Popen(buildCmd, cwd=SOURCE_DIR)
     rc = x.wait()
-    assert rc == 0, "xcodebuild failed"
+    #assert rc == 0, "xcodebuild failed"
     nullDevice.close()
 
 def create_tarball_of_application(newVersionNumber):
