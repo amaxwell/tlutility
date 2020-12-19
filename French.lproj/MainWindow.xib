@@ -225,13 +225,13 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <clipView key="contentView" id="vcJ-Kp-LbX">
                 <rect key="frame" x="0.0" y="0.0" width="601" height="151"/>
-                <autoresizingMask key="autoresizingMask"/>
+                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
                     <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="reverseSequential" autosaveName="Package list outline view" headerView="124" indentationPerLevel="16" autoresizesOutlineColumn="YES" outlineTableColumn="125" id="123" customClass="TLMOutlineView">
                         <rect key="frame" x="0.0" y="0.0" width="601" height="128"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <size key="intercellSpacing" width="3" height="2"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                         <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                         <tableColumns>
                             <tableColumn identifier="name" editable="NO" width="101" minWidth="16" maxWidth="1000" id="125">
@@ -293,19 +293,20 @@
                 <rect key="frame" x="0.0" y="0.0" width="601" height="23"/>
                 <autoresizingMask key="autoresizingMask"/>
             </tableHeaderView>
+            <point key="canvasLocation" x="-504" y="372"/>
         </scrollView>
         <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="5" userLabel="Update table view">
             <rect key="frame" x="0.0" y="0.0" width="600" height="162"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <clipView key="contentView" id="INX-bk-gAg">
                 <rect key="frame" x="0.0" y="0.0" width="600" height="162"/>
-                <autoresizingMask key="autoresizingMask"/>
+                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="reverseSequential" autosaveName="Update tableview" headerView="9" id="8" customClass="TLMTableView">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="139"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <size key="intercellSpacing" width="3" height="2"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                         <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                         <tableColumns>
                             <tableColumn identifier="name" editable="NO" width="174" minWidth="40" maxWidth="1000" id="10">
@@ -393,19 +394,20 @@
                 <rect key="frame" x="0.0" y="0.0" width="600" height="23"/>
                 <autoresizingMask key="autoresizingMask"/>
             </tableHeaderView>
+            <point key="canvasLocation" x="164" y="344"/>
         </scrollView>
         <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="197" userLabel="Install outline view">
             <rect key="frame" x="0.0" y="0.0" width="561" height="265"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <clipView key="contentView" id="N47-tT-TWa">
                 <rect key="frame" x="0.0" y="0.0" width="561" height="265"/>
-                <autoresizingMask key="autoresizingMask"/>
+                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
                     <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="firstColumnOnly" columnReordering="NO" autosaveColumns="NO" autosaveName="Install outline view" headerView="201" indentationPerLevel="16" autosaveExpandedItems="YES" outlineTableColumn="202" id="200" customClass="TLMOutlineView">
                         <rect key="frame" x="0.0" y="0.0" width="561" height="242"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <size key="intercellSpacing" width="3" height="2"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                         <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                         <tableColumns>
                             <tableColumn identifier="name" editable="NO" width="150" minWidth="16" maxWidth="1000" id="202">
@@ -454,19 +456,20 @@
                 <rect key="frame" x="0.0" y="0.0" width="561" height="23"/>
                 <autoresizingMask key="autoresizingMask"/>
             </tableHeaderView>
+            <point key="canvasLocation" x="164" y="627"/>
         </scrollView>
         <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="214" userLabel="Backup outline view">
             <rect key="frame" x="0.0" y="0.0" width="604" height="370"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <clipView key="contentView" id="78h-pF-Gjp">
                 <rect key="frame" x="0.0" y="0.0" width="604" height="370"/>
-                <autoresizingMask key="autoresizingMask"/>
+                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
                     <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="reverseSequential" autosaveName="Backup outline view" headerView="218" indentationPerLevel="16" autoresizesOutlineColumn="YES" outlineTableColumn="219" id="217" customClass="TLMOutlineView">
                         <rect key="frame" x="0.0" y="0.0" width="604" height="347"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <size key="intercellSpacing" width="3" height="2"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                         <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                         <tableColumns>
                             <tableColumn identifier="name" editable="NO" width="352" minWidth="16" maxWidth="1000" id="219">
@@ -516,6 +519,7 @@
                 <rect key="frame" x="0.0" y="0.0" width="604" height="23"/>
                 <autoresizingMask key="autoresizingMask"/>
             </tableHeaderView>
+            <point key="canvasLocation" x="163" y="1013"/>
         </scrollView>
         <customObject id="135" customClass="TLMPackageListDataSource">
             <connections>
