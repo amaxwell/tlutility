@@ -108,8 +108,15 @@ def rewrite_version(newVersion):
 def clean_and_build():
     
     # clean and rebuild the Xcode project
-    buildCmd = ["/usr/bin/xcodebuild", "-configuration", "Release", "-target", "TeX Live Utility", "clean", "build"]
-    nullDevice = open("/dev/null", "r")
+    buildCmd = ["/usr/bin/xcodebuild", "-configuration", "Release", "-target", "TeX Live Utility", "clean"]
+    nullDevice = open("/dev/null", "w")
+    x = Popen(buildCmd, cwd=SOURCE_DIR, stdout=nullDevice, stderr=nullDevice)
+    rc = x.wait()
+    print("xcodebuild clean exited with status %s" % (rc))
+
+    # separate steps, since clean fails when Xcode can't delete my home directory,
+    # which is some scary shit.
+    buildCmd = ["/usr/bin/xcodebuild", "-configuration", "Release", "-target", "TeX Live Utility", "build"]
     x = Popen(buildCmd, cwd=SOURCE_DIR, stdout=nullDevice, stderr=nullDevice)
     rc = x.wait()
     assert rc == 0, "xcodebuild failed"
@@ -137,7 +144,7 @@ def create_dmg_of_application(new_version_number):
     if os.path.exists(temp_dmg_path):
         os.unlink(temp_dmg_path)
 
-    nullDevice = open("/dev/null", "r")
+    nullDevice = open("/dev/null", "w")
     cmd = ["/usr/bin/hdiutil", "create", "-srcfolder", BUILT_APP, temp_dmg_path]
     x = Popen(cmd, stdout=nullDevice, stderr=nullDevice)
     rc = x.wait()

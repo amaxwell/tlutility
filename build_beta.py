@@ -141,7 +141,7 @@ def create_dmg_of_application(new_version_number):
     if os.path.exists(temp_dmg_path):
         os.unlink(temp_dmg_path)
 
-    nullDevice = open("/dev/null", "r")
+    nullDevice = open("/dev/null", "w")
     cmd = ["/usr/bin/hdiutil", "create", "-srcfolder", BUILT_APP, temp_dmg_path]
     x = Popen(cmd, stdout=nullDevice, stderr=nullDevice)
     rc = x.wait()
