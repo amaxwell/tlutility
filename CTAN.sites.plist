@@ -82,16 +82,6 @@
 				<key>country</key>
 				<string>China</string>
 				<key>name</key>
-				<string>mirror.lzu.edu.cn</string>
-				<key>urls</key>
-				<array>
-					<string>https://mirror.lzu.edu.cn/CTAN/</string>
-				</array>
-			</dict>
-			<dict>
-				<key>country</key>
-				<string>China</string>
-				<key>name</key>
 				<string>mirrors.aliyun.com</string>
 				<key>urls</key>
 				<array>
@@ -206,33 +196,12 @@
 			</dict>
 			<dict>
 				<key>country</key>
-				<string>India</string>
-				<key>name</key>
-				<string>mirror.iopb.res.in</string>
-				<key>urls</key>
-				<array>
-					<string>http://mirror.iopb.res.in/tex-archive/</string>
-				</array>
-			</dict>
-			<dict>
-				<key>country</key>
 				<string>Indonesia</string>
 				<key>name</key>
 				<string>mirror.unpad.ac.id</string>
 				<key>urls</key>
 				<array>
 					<string>https://mirror.unpad.ac.id/ctan/</string>
-				</array>
-			</dict>
-			<dict>
-				<key>country</key>
-				<string>Iran</string>
-				<key>name</key>
-				<string>ctan.asis.ai</string>
-				<key>urls</key>
-				<array>
-					<string>http://ctan.asis.ai/</string>
-					<string>rsync://ctan.asis.ai/ctan/</string>
 				</array>
 			</dict>
 			<dict>
@@ -449,11 +418,11 @@
 				<key>country</key>
 				<string>Finland</string>
 				<key>name</key>
-				<string>ftp.funet.fi</string>
+				<string>funet.fi</string>
 				<key>urls</key>
 				<array>
 					<string>ftp://ftp.funet.fi/pub/TeX/CTAN/</string>
-					<string>https://ftp.funet.fi/pub/TeX/CTAN/</string>
+					<string>https://www.nic.funet.fi/pub/TeX/CTAN/</string>
 				</array>
 			</dict>
 			<dict>
@@ -549,17 +518,6 @@
 				<array>
 					<string>ftp://mirrors.ircam.fr/pub/CTAN/</string>
 					<string>https://mirrors.ircam.fr/pub/CTAN/</string>
-				</array>
-			</dict>
-			<dict>
-				<key>country</key>
-				<string>France</string>
-				<key>name</key>
-				<string>standaloneinstaller.com</string>
-				<key>urls</key>
-				<array>
-					<string>http://mirrors.standaloneinstaller.com/ctan/</string>
-					<string>rsync://mirrors.standaloneinstaller.com/ctan/</string>
 				</array>
 			</dict>
 			<dict>
@@ -698,7 +656,7 @@
 				<key>urls</key>
 				<array>
 					<string>ftp://ftp.rrzn.uni-hannover.de/pub/mirror/tex-archive/</string>
-					<string>https://ftp.rrzn.uni-hannover.de/pub/mirror/tex-archive/</string>
+					<string>http://ftp.rrzn.uni-hannover.de/pub/mirror/tex-archive/</string>
 				</array>
 			</dict>
 			<dict>
@@ -710,6 +668,28 @@
 				<array>
 					<string>ftp://ftp.tu-chemnitz.de/pub/tex/</string>
 					<string>https://ftp.tu-chemnitz.de/pub/tex/</string>
+				</array>
+			</dict>
+			<dict>
+				<key>country</key>
+				<string>Germany</string>
+				<key>name</key>
+				<string>mirror.clientvps.com</string>
+				<key>urls</key>
+				<array>
+					<string>ftp://mirror.clientvps.com/CTAN/</string>
+					<string>rsync://mirror.clientvps.com/CTAN/</string>
+					<string>https://mirror.clientvps.com/CTAN/</string>
+				</array>
+			</dict>
+			<dict>
+				<key>country</key>
+				<string>Germany</string>
+				<key>name</key>
+				<string>mirror.dogado.de</string>
+				<key>urls</key>
+				<array>
+					<string>https://mirror.dogado.de/tex-archive/</string>
 				</array>
 			</dict>
 			<dict>
@@ -809,7 +789,7 @@
 				<string>ctan.mirror.garr.it</string>
 				<key>urls</key>
 				<array>
-					<string>https://ctan.mirror.garr.it/mirrors/CTAN/</string>
+					<string>https://ctan.mirror.garr.it/mirrors/ctan/</string>
 				</array>
 			</dict>
 			<dict>
@@ -832,6 +812,7 @@
 				<key>urls</key>
 				<array>
 					<string>ftp://ftp.gust.org.pl/TeX/</string>
+					<string>https://ftp.gust.org.pl/TeX/</string>
 				</array>
 			</dict>
 			<dict>
@@ -914,6 +895,18 @@
 			</dict>
 			<dict>
 				<key>country</key>
+				<string>Russia</string>
+				<key>name</key>
+				<string>mirror.truenetwork.ru</string>
+				<key>urls</key>
+				<array>
+					<string>ftp://mirror.truenetwork.ru/CTAN/</string>
+					<string>rsync://mirror.truenetwork.ru/CTAN/</string>
+					<string>https://mirror.truenetwork.ru/CTAN/</string>
+				</array>
+			</dict>
+			<dict>
+				<key>country</key>
 				<string>Serbia</string>
 				<key>name</key>
 				<string>ctan.mirror.ftn.uns.ac.rs</string>
@@ -962,6 +955,28 @@
 				<array>
 					<string>rsync://ftp.acc.umu.se/mirror/CTAN/</string>
 					<string>https://ftp.acc.umu.se/mirror/CTAN/</string>
+				</array>
+			</dict>
+			<dict>
+				<key>country</key>
+				<string>Sweden</string>
+				<key>name</key>
+				<string>ftpmirror1.infania.net</string>
+				<key>urls</key>
+				<array>
+					<string>ftp://ftpmirror1.infania.net/mirror/CTAN/</string>
+					<string>rsync://ftpmirror1.infania.net/CTAN/</string>
+					<string>https://ftpmirror1.infania.net/mirror/CTAN/</string>
+				</array>
+			</dict>
+			<dict>
+				<key>country</key>
+				<string>Switzerland</string>
+				<key>name</key>
+				<string>mirror.foobar.to</string>
+				<key>urls</key>
+				<array>
+					<string>https://mirror.foobar.to/CTAN/</string>
 				</array>
 			</dict>
 			<dict>
@@ -1019,6 +1034,17 @@
 				<array>
 					<string>rsync://mirror.koddos.net/CTAN/</string>
 					<string>https://mirror.koddos.net/CTAN/</string>
+				</array>
+			</dict>
+			<dict>
+				<key>country</key>
+				<string>The Netherlands</string>
+				<key>name</key>
+				<string>mirror.lyrahosting.com</string>
+				<key>urls</key>
+				<array>
+					<string>rsync://mirror.lyrahosting.com/CTAN/</string>
+					<string>https://mirror.lyrahosting.com/CTAN/</string>
 				</array>
 			</dict>
 			<dict>
@@ -1223,18 +1249,6 @@
 				<key>country</key>
 				<string>USA</string>
 				<key>name</key>
-				<string>mirror.utexas.edu</string>
-				<key>urls</key>
-				<array>
-					<string>ftp://mirror.utexas.edu/pub/ctan/</string>
-					<string>http://mirror.utexas.edu/ctan/</string>
-					<string>rsync://mirror.utexas.edu/CTAN/</string>
-				</array>
-			</dict>
-			<dict>
-				<key>country</key>
-				<string>USA</string>
-				<key>name</key>
 				<string>tug.ctan.org</string>
 				<key>urls</key>
 				<array>
@@ -1296,6 +1310,6 @@
 		</array>
 	</dict>
 	<key>timestamp</key>
-	<real>1596861527.829518</real>
+	<real>1608356963.087584</real>
 </dict>
 </plist>
