@@ -21,12 +21,14 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.37b3</string>
+	<string>1.37b4</string>
 	<key>CFBundleSignature</key>
 	<string>TLUm</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>None</string>
 			<key>CFBundleURLName</key>
 			<string>Mirror URL</string>
 			<key>CFBundleURLSchemes</key>
@@ -35,12 +37,10 @@
 				<string>http</string>
 				<string>ftp</string>
 			</array>
-            <key>CFBundleTypeRole</key>
-            <string>None</string>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1.37b3</string>
+	<string>1.37b4</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>10.7.0</string>
 	<key>NSAppTransportSecurity</key>
