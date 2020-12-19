@@ -200,7 +200,7 @@ static void __TLMMigrateBundleIdentifier()
 
 - (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender
 {
-    return ([[self mainWindowController] windowShouldClose:sender]) ? NSTerminateNow : NSTerminateCancel;
+    return ([[self mainWindowController] windowShouldClose:[[self mainWindowController] window]]) ? NSTerminateNow : NSTerminateCancel;
 }
 
 // Return YES to delay the relaunch until you do some processing; invoke the given NSInvocation to continue.

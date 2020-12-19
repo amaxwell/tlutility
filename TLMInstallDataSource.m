@@ -209,7 +209,7 @@
 - (void)outlineView:(NSOutlineView *)outlineView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn byItem:(id)item;
 {
     NSParameterAssert([[tableColumn identifier] isEqualToString:@"value"]);
-    [item setValue:object];    
+    [(TLMProfileNode *)item setValue:object];    
     NSDictionary *archiveRoot = [NSDictionary dictionaryWithObjectsAndKeys:_rootNode, @"_rootNode", _metadata, @"_metadata", nil];
     [NSKeyedArchiver archiveRootObject:archiveRoot toFile:_archivePath];
 }
