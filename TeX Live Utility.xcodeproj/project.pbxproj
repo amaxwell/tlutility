@@ -1541,6 +1541,7 @@
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				OTHER_CODE_SIGN_FLAGS = "-o kill";
+				PRODUCT_BUNDLE_IDENTIFIER = com.googlecode.mactlmgr.tlu;
 				PRODUCT_NAME = "TeX Live Utility";
 			};
 			name = Debug;
@@ -1558,6 +1559,7 @@
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				OTHER_CODE_SIGN_FLAGS = "-o kill";
+				PRODUCT_BUNDLE_IDENTIFIER = com.googlecode.mactlmgr.tlu;
 				PRODUCT_NAME = "TeX Live Utility";
 			};
 			name = Release;

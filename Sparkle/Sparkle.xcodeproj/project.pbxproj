@@ -932,6 +932,7 @@
 			baseConfigurationReference = FA1941CA0D94A70100DD942E /* ConfigFrameworkDebug.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = org.andymatuschak.Sparkle;
 				VALID_ARCHS = "i386 x86_64";
 			};
 			name = Debug;
@@ -942,6 +943,7 @@
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_DEBUGGING_SYMBOLS = full;
+				PRODUCT_BUNDLE_IDENTIFIER = org.andymatuschak.Sparkle;
 				VALID_ARCHS = "i386 x86_64";
 			};
 			name = Release;
@@ -976,6 +978,7 @@
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				INSTALL_PATH = "@loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = org.andymatuschak.Sparkle;
 				SEPARATE_STRIP = NO;
 				STRIP_INSTALLED_PRODUCT = NO;
 				VALID_ARCHS = "i386 x86_64";

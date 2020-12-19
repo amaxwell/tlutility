@@ -280,6 +280,7 @@
 				GCC_PREFIX_HEADER = "TLUNotifier/TLUNotifier-Prefix.pch";
 				INFOPLIST_FILE = "TLUNotifier/TLUNotifier-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				PRODUCT_BUNDLE_IDENTIFIER = com.googlecode.mactlmgr.TLUNotifier;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
@@ -295,6 +296,7 @@
 				GCC_PREFIX_HEADER = "TLUNotifier/TLUNotifier-Prefix.pch";
 				INFOPLIST_FILE = "TLUNotifier/TLUNotifier-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				PRODUCT_BUNDLE_IDENTIFIER = com.googlecode.mactlmgr.TLUNotifier;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
