@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13771" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="15705" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13771"/>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="15705"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -18,18 +19,18 @@
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
-        <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" oneShot="NO" frameAutosaveName="Main Window" animationBehavior="default" id="1">
+        <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" frameAutosaveName="Main Window" animationBehavior="default" id="1">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="196" y="71" width="1116" height="573"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
+            <rect key="contentRect" x="196" y="71" width="633" height="444"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
             <value key="minSize" type="size" width="500" height="200"/>
-            <view key="contentView" misplaced="YES" id="2">
-                <rect key="frame" x="0.0" y="0.0" width="1116" height="573"/>
-                <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" id="2">
+                <rect key="frame" x="0.0" y="0.0" width="633" height="444"/>
+                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
                     <customView id="150" customClass="TLMTabView">
-                        <rect key="frame" x="0.0" y="0.0" width="1116" height="566"/>
+                        <rect key="frame" x="0.0" y="0.0" width="633" height="437"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     </customView>
                 </subviews>
@@ -82,7 +83,7 @@
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" placeholderString="Repository URL" drawsBackground="YES" id="311" customClass="TLMAddressTextFieldCell">
                                 <font key="font" metaFont="system"/>
-                                <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                             </textFieldCell>
                             <connections>
@@ -143,7 +144,7 @@
                         <nil key="toolTip"/>
                         <size key="minSize" width="80" height="25"/>
                         <size key="maxSize" width="137" height="25"/>
-                        <button key="view" verticalHuggingPriority="750" misplaced="YES" imageHugsTitle="YES" id="352">
+                        <button key="view" verticalHuggingPriority="750" imageHugsTitle="YES" id="352">
                             <rect key="frame" x="0.0" y="14" width="130" height="25"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             <buttonCell key="cell" type="roundTextured" title="Tout mettre à jour" bezelStyle="texturedRounded" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="353">
@@ -159,7 +160,7 @@
                         <nil key="toolTip"/>
                         <size key="minSize" width="80" height="25"/>
                         <size key="maxSize" width="113" height="25"/>
-                        <button key="view" verticalHuggingPriority="750" misplaced="YES" imageHugsTitle="YES" id="355">
+                        <button key="view" verticalHuggingPriority="750" imageHugsTitle="YES" id="355">
                             <rect key="frame" x="0.0" y="14" width="100" height="25"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             <buttonCell key="cell" type="roundTextured" title="Mettre à jour" bezelStyle="texturedRounded" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="356">
@@ -175,7 +176,7 @@
                         <nil key="toolTip"/>
                         <size key="minSize" width="80" height="25"/>
                         <size key="maxSize" width="99" height="25"/>
-                        <button key="view" verticalHuggingPriority="750" misplaced="YES" imageHugsTitle="YES" id="358">
+                        <button key="view" verticalHuggingPriority="750" imageHugsTitle="YES" id="358">
                             <rect key="frame" x="0.0" y="14" width="89" height="25"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             <buttonCell key="cell" type="roundTextured" title="Supprimer" bezelStyle="texturedRounded" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="359">
@@ -217,7 +218,7 @@
             <connections>
                 <outlet property="delegate" destination="-2" id="4"/>
             </connections>
-            <point key="canvasLocation" x="193" y="120"/>
+            <point key="canvasLocation" x="165" y="-39"/>
         </window>
         <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="120" userLabel="Package list outline view">
             <rect key="frame" x="0.0" y="0.0" width="601" height="151"/>
@@ -298,7 +299,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <clipView key="contentView" id="INX-bk-gAg">
                 <rect key="frame" x="0.0" y="0.0" width="600" height="162"/>
-                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="reverseSequential" autosaveName="Update tableview" headerView="9" id="8" customClass="TLMTableView">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="139"/>

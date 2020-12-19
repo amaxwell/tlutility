@@ -233,7 +233,8 @@ static void __adjust_text_rect(NSRect *textRect, NSView *controlView)
 }
 
 - (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
-{       
+{
+#if 0
     NSImage *leftCap = nil;
     NSImage *middle = nil;
     NSImage *rightCap = nil;
@@ -252,6 +253,9 @@ static void __adjust_text_rect(NSRect *textRect, NSView *controlView)
     NSDrawThreePartImage(cellFrame, leftCap, middle, rightCap, NO, NSCompositeSourceOver, 1.0, [controlView isFlipped]);
     
     [self drawInteriorWithFrame:cellFrame inView:controlView];
+#endif
+    
+    [super drawWithFrame:cellFrame inView:controlView];
 }
 
 - (NSFocusRingType)focusRingType { return floor(NSAppKitVersionNumber) < NSAppKitVersionNumber10_7 ? NSFocusRingTypeNone : [super focusRingType]; }
