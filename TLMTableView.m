@@ -172,6 +172,19 @@
     return ret;
 }
 
+- (NSCell *)preparedCellAtColumn:(NSInteger)column row:(NSInteger)row
+{
+    /*
+     Make sure we have the special font color so text gets drawn with the correct
+     color when highlighted. No idea when this quit working, but it's broken as of
+     Mojave. Probably related to font changes, since the font color isn't set anywhere
+     that I'm aware of.     
+     */
+    id cell = [super preparedCellAtColumn:column row:row];
+    [cell setTextColor:[NSColor controlTextColor]];
+    return cell;
+}
+
 @end
 
 @interface NSTableView (OAExtensions)
