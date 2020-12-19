@@ -408,7 +408,18 @@
     
     // see https://lists.apple.com/archives/cocoa-dev/2008/Feb/msg02133.html
     if ([cell isHighlighted] && [[tableView window] isKeyWindow] && [[tableView window] firstResponder] == tableView) {
-        [cell setTextColor:[NSColor selectedTextColor]];
+        // +selectedTextColor is no longer magic on Mojave
+        [cell setTextColor:[NSColor controlTextColor]];
+    }
+    else if (floor(NSAppKitVersionNumber) >= NSAppKitVersionNumber10_14) {
+        if ([package failedToParse] || [package isPinned])
+            [cell setTextColor:[NSColor quaternaryLabelColor]];
+        else if ([package willBeRemoved])
+            [cell setTextColor:[NSColor tertiaryLabelColor]];
+        else if ([package isInstalled] == NO)
+            [cell setTextColor:[NSColor secondaryLabelColor]];
+        else
+            [cell setTextColor:[NSColor controlTextColor]];
     }
     else {
         if ([package failedToParse] || [package isPinned])
@@ -418,7 +429,7 @@
         else if ([package isInstalled] == NO)
             [cell setTextColor:[NSColor blueColor]];
         else
-            [cell setTextColor:[NSColor blackColor]];
+            [cell setTextColor:[NSColor controlTextColor]];
     }
 }
 

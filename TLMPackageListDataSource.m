@@ -229,16 +229,32 @@
     
     // see https://lists.apple.com/archives/cocoa-dev/2008/Feb/msg02133.html
     if ([cell isHighlighted] && [[outlineView window] isKeyWindow] && [[outlineView window] firstResponder] == outlineView) {
-        [cell setTextColor:[NSColor selectedTextColor]];
+        // +selectedTextColor is apparently no longer the magic color, at least as of Mojave
+        [cell setTextColor:[NSColor controlTextColor]];
     }
     else {
     
-        if ([node hasMixedStatus])
-            [cell setTextColor:[NSColor purpleColor]];
-        else if ([node isInstalled] == NO)
-            [cell setTextColor:[NSColor blueColor]];
-        else
-            [cell setTextColor:[NSColor blackColor]];
+        if (floor(NSAppKitVersionNumber) >= NSAppKitVersionNumber10_14) {
+            /* My old colors are not compatible with the Mojave and later Dork Mode,
+               and checking for the mode with NSAppearance feels too hackish, since
+               it relies on parsing the name of the current appearance.
+             */
+            if ([node hasMixedStatus])
+                [cell setTextColor:[NSColor secondaryLabelColor]];
+            else if ([node isInstalled] == NO)
+                [cell setTextColor:[NSColor tertiaryLabelColor]];
+            else
+                [cell setTextColor:[NSColor controlTextColor]];
+        }
+        else {
+            // no Dork Mode, so use the old color scheme
+            if ([node hasMixedStatus])
+                [cell setTextColor:[NSColor purpleColor]];
+            else if ([node isInstalled] == NO)
+                [cell setTextColor:[NSColor blueColor]];
+            else
+                [cell setTextColor:[NSColor controlTextColor]];
+        }
     }
 }
 
