@@ -43,9 +43,9 @@ lang = []
 collections = []
 other = []
 
-TEXLIVE_YEAR = 2016
+TEXLIVE_YEAR = "2020basic"
 
-for line in open("/usr/local/texlive/%d/tlpkg/texlive.profile" % (TEXLIVE_YEAR), "r"):
+for line in open("/usr/local/texlive/%s/tlpkg/texlive.profile" % (TEXLIVE_YEAR), "r"):
     
     if line.startswith("#"):
         continue
