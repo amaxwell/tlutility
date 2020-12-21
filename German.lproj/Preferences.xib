@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="17701" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="17701"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="TLMPreferenceController">
+            <connections>
+                <outlet property="_autoinstallCheckBox" destination="47" id="51"/>
+                <outlet property="_autoremoveCheckBox" destination="49" id="52"/>
+                <outlet property="_runUpdmapCheckBox" destination="59" id="61"/>
+                <outlet property="_texbinPathControl" destination="9" id="16"/>
+                <outlet property="_useSyslogCheckBox" destination="33" id="35"/>
+                <outlet property="window" destination="1" id="14"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <window title="Einstellungen" allowsToolTipsWhenApplicationIsInactive="NO" frameAutosaveName="Preferences Window" animationBehavior="default" id="1">
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
+            <windowPositionMask key="initialPositionMask" leftStrut="YES" bottomStrut="YES"/>
+            <rect key="contentRect" x="200" y="339" width="522" height="161"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1415"/>
+            <value key="minSize" type="size" width="498" height="161"/>
+            <value key="maxSize" type="size" width="498" height="161"/>
+            <view key="contentView" id="2">
+                <rect key="frame" x="0.0" y="0.0" width="522" height="161"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="11">
+                        <rect key="frame" x="17" y="121" width="109" height="17"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="TeX-Programme:" id="12">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="33">
+                        <rect key="frame" x="18" y="58" width="243" height="18"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <string key="toolTip">Checking this box may reduce performance under some conditions, but is useful if there are problems with the built-in log viewer.</string>
+                        <buttonCell key="cell" type="check" title="Fortschritt im System-Log anzeigen" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="34">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="toggleUseSyslog:" target="-2" id="36"/>
+                        </connections>
+                    </button>
+                    <button toolTip="If unchecked, pass --no-auto-install to tlmgr to avoid installing packages added to the server." fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="47">
+                        <rect key="frame" x="18" y="38" width="487" height="18"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="check" title="Beim Aktualisieren neue Pakete hinzufügen, um dem Server zu entsprechen " bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="48">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="toggleAutoinstall:" target="-2" id="54"/>
+                        </connections>
+                    </button>
+                    <button toolTip="If unchecked, pass --no-auto-remove to tlmgr to avoid removing packages that have been removed on the server." fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="49">
+                        <rect key="frame" x="18" y="18" width="441" height="18"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="check" title="Beim Aktualisieren Pakete entfernen, um dem Server zu entsprechen" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="50">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="toggleAutoremove:" target="-2" id="53"/>
+                        </connections>
+                    </button>
+                    <button toolTip="If checked, TeX Live Utility will run the updmap command after TeX Live is modified." fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="59">
+                        <rect key="frame" x="18" y="78" width="419" height="18"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="check" title="Schriftarten in meinem Home-Verzeichnis automatisch aktivieren" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="60">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="toggleRunUpdmap:" target="-2" id="62"/>
+                        </connections>
+                    </button>
+                    <pathControl toolTip="Set the directory for the tlmgr command and other TeX commands." verticalHuggingPriority="750" fixedFrame="YES" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9">
+                        <rect key="frame" x="132" y="119" width="275" height="22"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <pathCell key="cell" selectable="YES" editable="YES" alignment="left" id="10">
+                            <font key="font" metaFont="system"/>
+                            <url key="url" string="file:///usr/"/>
+                            <color key="backgroundColor" name="windowBackgroundColor" catalog="System" colorSpace="catalog"/>
+                            <allowedTypes/>
+                        </pathCell>
+                        <connections>
+                            <outlet property="delegate" destination="-2" id="26"/>
+                        </connections>
+                    </pathControl>
+                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="23">
+                        <rect key="frame" x="409" y="113" width="100" height="32"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="push" title="Auswählen…" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="24">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="changeTexBinPath:" target="-2" id="25"/>
+                        </connections>
+                    </button>
+                </subviews>
+            </view>
+            <connections>
+                <outlet property="delegate" destination="-2" id="13"/>
+            </connections>
+            <point key="canvasLocation" x="135" y="139.5"/>
+        </window>
+    </objects>
+</document>
