@@ -913,5 +913,22 @@
             <sparkle:minimumSystemVersion>10.6.8</sparkle:minimumSystemVersion>
             <enclosure url="https://github.com/amaxwell/tlutility/releases/download/1.36/TeX.Live.Utility.app-1.36.dmg" sparkle:version="1.36" length="3159223" type="application/octet-stream" sparkle:dsaSignature="MC0CFQCNMwj01mi+JX6f4Rqb3IWpySMmgQIUZ2wcg0eESnaz18qaX1XFNPOW0vE="></enclosure>
         </item>
+        <item>
+            <title>Version 1.40</title>
+            <description>
+                <h3>Changes Since 1.36</h3>
+                <li>Snow Leopard is no longer supported, due to Apple developer tool limitations</li>
+                <li>Added TL 2019 mirror to legacy list</li>
+                <li>Random files no longer shown for uninstalled packages (issue 90)</li>
+                <li>French localization</li>
+                <li>Fixed drawing problems with search field and repository field on recent Mac OS versions</li>
+                <li>Fixed font color inversion problem for selected table rows on recent Mac OS versions</li>
+                <li>Fixed dark mode drawing problems, for you weirdos who use that abomination</li>
+                <li>German localization</li>
+            </description>
+            <pubDate>Sat, 02 Jan 2021 20:16:48 +0000</pubDate>
+            <sparkle:minimumSystemVersion>10.7.0</sparkle:minimumSystemVersion>
+            <enclosure url="https://github.com/amaxwell/tlutility/releases/download/1.40/TeX.Live.Utility.app-1.40.dmg" sparkle:version="1.40" length="2780805" type="application/octet-stream" sparkle:dsaSignature="MCwCFD/QoDPqyi9jqJZ3og3grUgZ5GUxAhRImORTOKMcMWFGZRHg63VMdtn1EA=="></enclosure>
+        </item>
     </channel>
 </rss>
