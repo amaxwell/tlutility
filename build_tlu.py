@@ -108,11 +108,11 @@ def rewrite_version(newVersion):
 def clean_and_build():
     
     # clean and rebuild the Xcode project
-    buildCmd = ["/usr/bin/xcodebuild", "-configuration", "Release", "-target", "TeX Live Utility", "clean"]
-    nullDevice = open("/dev/null", "w")
-    x = Popen(buildCmd, cwd=SOURCE_DIR, stdout=nullDevice, stderr=nullDevice)
-    rc = x.wait()
-    print("xcodebuild clean exited with status %s" % (rc))
+    # buildCmd = ["/usr/bin/xcodebuild", "-configuration", "Release", "-target", "TeX Live Utility", "clean"]
+    # nullDevice = open("/dev/null", "w")
+    # x = Popen(buildCmd, cwd=SOURCE_DIR, stdout=nullDevice, stderr=nullDevice)
+    # rc = x.wait()
+    # print("xcodebuild clean exited with status %s" % (rc))
 
     # separate steps, since clean fails when Xcode can't delete my home directory,
     # which is some scary shit.
