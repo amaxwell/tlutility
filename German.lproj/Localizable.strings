@@ -109,13 +109,13 @@
 "Downloading release notes" = "Veröffentlichungshinweise werden heruntergeladen";
 
 /* alert text */
-"Either a network problem exists or the TeX Live version on the server does not match.  If this problem persists on further attempts, you may need to try a different repository." = "Es besteht entweder ein Problem mit dem Netzwerk oder die Tex Live-Version auf dem Server stimmt nicht überein. Falls das Problem weiterhin auftritt, sollten Sie ein anderen Repository verwenden.";
+"Either a network problem exists or the TeX Live version on the server does not match.  If this problem persists on further attempts, you may need to try a different repository." = "Es besteht entweder ein Problem mit dem Netzwerk oder die TeX Live-Version auf dem Server stimmt nicht überein. Falls das Problem weiterhin auftritt, sollten Sie ein anderen Repository verwenden.";
 
 /* button title */
 "Enable" = "Einschalten";
 
 /* alert title */
-"Enable security validation of packages?" = "Soll die Sicherheitsberprüfung von Paketen eingeschaltet werden?";
+"Enable security validation of packages?" = "Soll die Sicherheitsüberprüfung von Paketen eingeschaltet werden?";
 
 /* error message for unreadable package */
 "Error parsing output line" = "Beim Lesen der Ausgabezeile ist ein Fehler aufgetreten.";
@@ -130,7 +130,7 @@
 "Failed to authorize operation" = "Die Authentifizierung der Operation ist fehlgeschlagen.";
 
 /* alert title */
-"Failed to enable security validation of packages." = "Das Einschalten der Sicherheitsprüfung der Pakete ist fehlgeschlagen.";
+"Failed to enable security validation of packages." = "Das Einschalten der Sicherheitsüberprüfung der Pakete ist fehlgeschlagen.";
 
 /* context menu */
 "Forcibly Remove Selected Packages" = "Entfernen der ausgewählten Pakete erzwingen";
@@ -148,7 +148,7 @@
 "If you close the window, the installation process may leave your TeX installation in an unknown state.  You can ignore this warning and close the window, or wait until the installation finishes." = "Wenn Sie das Fenster schließen, wird der Status Ihrer TeX-Installation möglicherweise unklar sein. Sie können diese Warnung ignorieren und das Fenster schließen, oder warten Sie, bis die Installation abgeschlossen ist.";
 
 /* alert message text */
-"If you have installed TeX Live, you need to tell TeX Live Utility where to find TeX programs. For MacTeX 2015 and later, you should use /Library/TeX/texbin. Change settings now?" = "Wenn Sie Tex Live installiert haben, müssen Sie TeX Live Utility mitteilen, wo die TeX-Programme zu finden sind. Für MacTeX 2015 oder neuer sollten Sie »/Library/TeX/texbin« verwenden. Möchten Sie die Einstellungen jetzt ändern?";
+"If you have installed TeX Live, you need to tell TeX Live Utility where to find TeX programs. For MacTeX 2015 and later, you should use /Library/TeX/texbin. Change settings now?" = "Wenn Sie TeX Live installiert haben, müssen Sie TeX Live Utility mitteilen, wo die TeX-Programme zu finden sind. Für MacTeX 2015 oder neuer sollten Sie »/Library/TeX/texbin« verwenden. Möchten Sie die Einstellungen jetzt ändern?";
 
 /* button title */
 "Ignore" = "Ignorieren";
@@ -341,7 +341,7 @@
 "Searching%C" = "Suche nach%C";
 
 /* status message */
-"Security Validation Enabled" = "Sicherheitsprüfung eingeschaltet";
+"Security Validation Enabled" = "Sicherheitsüberprüfung eingeschaltet";
 
 /* context menu */
 "Set Default Repository" = "Standard-Repository festlegen";
@@ -452,7 +452,7 @@
 "Unsupported URL scheme for TeX Live.  Must be one of:" = "Das URL-Schema für TeX Live wird nicht unterstützt. Folgende Schemata sind möglich:";
 
 /* button title */
-"Update" = "Aktualsieren";
+"Update" = "Aktualisieren";
 
 /* context menu */
 "Update All Packages" = "Alle Pakete aktualisieren";
@@ -461,10 +461,10 @@
 "Update all packages?" = "Sollten alle Pakete aktualisiert werden?";
 
 /* status for package */
-"Update available" = "Aktualalisierung verfügbar";
+"Update available" = "Aktualisierung verfügbar";
 
 /* alert title */
-"Update security validation of packages?" = "Soll die Sicherheitsprüfung der Pakete aktualisiert werden?";
+"Update security validation of packages?" = "Soll die Sicherheitsüberprüfung der Pakete aktualisiert werden?";
 
 /* context menu */
 "Update Selected Packages" = "Ausgewählte Pakete aktualisieren";
@@ -506,10 +506,10 @@
 "You appear to have installed fonts in your home directory.  Would you like them to be automatically activated in TeX Live %d?" = "Sie haben offenbar Schriftarten in Ihrem Home-Verzeichnis installiert. Möchten Sie, dass sie automatisch für TeX Live %d aktiviert werden?";
 
 /* alert message text */
-"You are attempting to remove critical parts of the underlying TeX Live infrastructure, and I won't help you do that." = "Sie versuchen kritische Bestandteile der Infrastruktur von TeX Live zu entfernen. Das wird nicht unterstützt.";
+"You are attempting to remove critical parts of the underlying TeX Live infrastructure, and I won't help you do that." = "Sie versuchen kritische Bestandteile der Infrastruktur von TeX Live zu entfernen. Dies wird nicht unterstützt.";
 
 /* alert message */
-"You can always update to the latest version or restore a different one to undo this change." = "Sie können diese Veränderung jederzeit rückgängig machen, indem Sie auf die aktuelle Version aktualisierieren oder eine andere Version wiederherstellen.";
+"You can always update to the latest version or restore a different one to undo this change." = "Sie können diese Veränderung jederzeit rückgängig machen, indem Sie auf die aktuelle Version aktualisieren oder eine andere Version wiederherstellen.";
 
 /* alert title */
 "You have altered the system's umask" = "Sie haben die umask des Systems geändert.";
@@ -527,5 +527,5 @@
 "Your TeX Live version is %lu, but your default repository URL appears to be for TeX Live %lu.  You need to choose an appropriate repository." = "Ihre Version von TeX Live ist %1$lu. Ihre Standard-Repository ist allerdings offenbar für TeX Live %2$lu vorgesehen.  Bitte wählen Sie ein passendes Repository.";
 
 /* two integer specifiers */
-"Your TeX Live version is %lu, but your default repository URL appears to be for TeX Live %lu.  You need to manually upgrade to a newer version of TeX Live, as there will be no further updates for your version." = "Ihre Version von TeX Live ist %1$lu. Ihre Standard-Repository ist allerdings offenbar für TeX Live %2$lu vorgesehen.  Sie sollten manuell auf eine neuere Version von Tex Live aktualisieren, da Ihre Version keine weieren Aktualisierungen erhalten wird.";
+"Your TeX Live version is %lu, but your default repository URL appears to be for TeX Live %lu.  You need to manually upgrade to a newer version of TeX Live, as there will be no further updates for your version." = "Ihre Version von TeX Live ist %1$lu. Ihre Standard-Repository ist allerdings offenbar für TeX Live %2$lu vorgesehen.  Sie sollten manuell auf eine neuere Version von TeX Live aktualisieren, da Ihre Version keine weiteren Aktualisierungen erhalten wird.";
 
