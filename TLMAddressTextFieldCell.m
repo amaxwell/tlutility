@@ -296,7 +296,10 @@ static void __adjust_text_rect(NSRect *textRect, NSView *controlView)
             NSPoint dragImageOrigin = [controlView convertPoint:[event locationInWindow] fromView:nil];
             dragImageOrigin.x -= dragImageSize.width / 2;
             dragImageOrigin.y = [controlView isFlipped] ? dragImageOrigin.y + dragImageSize.height / 2 : dragImageOrigin.y - dragImageSize.width / 2;
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
             [controlView dragImage:dragImage at:dragImageOrigin offset:NSZeroSize event:event pasteboard:pboard source:controlView slideBack:YES];
+#pragma clang diagnostic pop
         }
         return YES;
     }

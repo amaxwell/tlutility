@@ -105,7 +105,11 @@
 
 - (id)replacementObjectForPortCoder:(NSPortCoder *)encoder
 {
+    #pragma clang diagnostic push
+    // Apple can stick NSXPCConnection where the sun don't shine
+    #pragma clang diagnostic ignored "-Wdeprecated"
     return [encoder isByref] ? (id)[NSDistantObject proxyWithLocal:self connection:[encoder connection]] : (id)self;
+    #pragma clang diagnostic pop
 }
 
 - (id)propertyList

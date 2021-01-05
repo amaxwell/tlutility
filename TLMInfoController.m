@@ -123,8 +123,7 @@ static NSString * const TLMInfoFileViewIconScaleKey = @"TLMInfoFileViewIconScale
 - (void)_recenterSpinner
 {
     if ([[_tabView selectedTabViewItem] isEqual:[_tabView tabViewItemAtIndex:0]] == NO) {
-        NSRect windowFrame = [[self window] frame];
-        windowFrame.origin = [[self window] convertScreenToBase:windowFrame.origin];
+        NSRect windowFrame = [[self window] convertRectFromScreen:[[self window] frame]];
         NSRect bounds = [[_spinner superview] convertRect:windowFrame fromView:nil];
         NSSize spinnerSize = [_spinner bounds].size;
         NSPoint origin = NSMakePoint(NSMidX(bounds), NSMidY(bounds));

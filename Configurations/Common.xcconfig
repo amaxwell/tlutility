@@ -6,8 +6,14 @@
 ARCHS = x86_64
 SDKROOT = macosx
 DEBUG_INFORMATION_FORMAT = dwarf-with-dsym
-MACOSX_DEPLOYMENT_TARGET = 10.6
+MACOSX_DEPLOYMENT_TARGET = 10.7
 PREBINDING = NO
+
+// this is pretty worthless
+CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = NO
+
+// might keep it from screwing up the Info.plist with wrong LSMinimumSystemVersion
+DISABLE_INFOPLIST_PLATFORM_PROCESSING = YES
 
 GCC_VERSION = com.apple.compilers.llvm.clang.1_0
 GCC_C_LANGUAGE_STANDARD = gnu99

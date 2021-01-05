@@ -218,14 +218,8 @@ static void CenterRectInRect(NSRect *toCenter, NSRect enclosingRect)
 {
     NSParameterAssert(_frameView);
     NSRect frame;
-    if (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_6) {
-        frame = [_frameView convertRect:[_frameView bounds] toView:nil];
-        frame = [[_frameView window] convertRectToScreen:frame];
-    }
-    else {
-        frame = [_frameView convertRectToBase:[_frameView bounds]];
-        frame.origin = [[_frameView window] convertBaseToScreen:frame.origin];
-    }
+    frame = [_frameView convertRect:[_frameView bounds] toView:nil];
+    frame = [[_frameView window] convertRectToScreen:frame];
     [self setFrame:frame display:YES];
 }
 
