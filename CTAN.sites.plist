@@ -113,6 +113,16 @@
 				<key>country</key>
 				<string>China</string>
 				<key>name</key>
+				<string>mirrors.dgut.edu.cn</string>
+				<key>urls</key>
+				<array>
+					<string>https://mirrors.dgut.edu.cn/CTAN/</string>
+				</array>
+			</dict>
+			<dict>
+				<key>country</key>
+				<string>China</string>
+				<key>name</key>
 				<string>mirrors.hit.edu.cn</string>
 				<key>urls</key>
 				<array>
@@ -1310,6 +1320,6 @@
 		</array>
 	</dict>
 	<key>timestamp</key>
-	<real>1608573331.421145</real>
+	<real>1609946605.992537</real>
 </dict>
 </plist>

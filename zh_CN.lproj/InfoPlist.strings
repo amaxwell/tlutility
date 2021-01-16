@@ -1,6 +1,6 @@
-﻿/* Localized versions of Info.plist keys */
+/* Localized versions of Info.plist keys */
 
 CFBundleName = "TeX Live Utility";
 CFBundleDisplayName = "TeX Live Utility";
 
-NSHumanReadableCopyright = "Copyright © 2008-2020, Adam R. Maxwell.\nAll Rights Reserved.";
+NSHumanReadableCopyright = "Copyright © 2008-2021, Adam R. Maxwell.\nAll Rights Reserved.";

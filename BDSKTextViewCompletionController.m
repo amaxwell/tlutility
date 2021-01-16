@@ -371,7 +371,10 @@ static const int BDSKCompletionMinHeight = 20;
 		[cell setStringValue:[completions objectAtIndex:count]];
 		hSize = fmaxf(hSize, [cell cellSize].width);
 	}
-	hSize += [NSScroller scrollerWidth] + [tableView intercellSpacing].width;
+    
+    CGFloat scrollerWidth = [NSScroller scrollerWidthForControlSize:[[[tableView enclosingScrollView] verticalScroller] controlSize]
+                                                      scrollerStyle:[NSScroller preferredScrollerStyle]];
+	hSize += scrollerWidth + [tableView intercellSpacing].width;
     
 	CGFloat vSize = NSHeight(NSUnionRect([tableView rectOfRow:0], [tableView rectOfRow:[tableView numberOfRows] - 1]));
 	
@@ -508,7 +511,7 @@ static const int BDSKCompletionMinHeight = 20;
     
     // convert to screen coordinates
     point = [self convertPoint:point toView:nil];
-    point = [[self window] convertBaseToScreen:point];  
+    point = [[self window] convertPointToScreen:point];
     
     return point;
 }

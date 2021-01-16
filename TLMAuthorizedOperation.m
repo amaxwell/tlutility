@@ -216,6 +216,8 @@ static NSArray * __TLMOptionArrayFromArguments(char **nullTerminatedArguments)
         AuthorizationRef authorization = [self _authorization];
          
         OSStatus status = noErr;
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
         /*
          In general, you're supposed to write your own helper tool for AEWP.  However, /bin/kill is guaranteed to do exactly what
          we need, and it's used all the time with sudo.  Hence, I'm taking the easy way out (again) and avoiding a possibly buggy
@@ -223,7 +225,8 @@ static NSArray * __TLMOptionArrayFromArguments(char **nullTerminatedArguments)
          */
         if (authorization)
             status = AuthorizationExecuteWithPrivileges(authorization, "/bin/kill", kAuthorizationFlagDefaults, killargs, NULL); 
-        
+#pragma clang diagnostic pop
+
         if (noErr != status) {
             NSString *errStr;
             errStr = [NSString stringWithFormat:@"AuthorizationExecuteWithPrivileges error: %d (%s)", (int32_t)status, GetMacOSStatusErrorString(status)];
@@ -482,7 +485,10 @@ static BOOL __TLMCheckSignature()
         if (_internal->_authorizationRequired) {
             
             TLMLog(__func__, @"Invoking privileged task via AuthorizationExecuteWithPrivileges");
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
             status = AuthorizationExecuteWithPrivileges(authorization, cmdPath, kAuthorizationFlagDefaults, args, NULL);
+#pragma clang diagnostic pop
         }
         else {
             

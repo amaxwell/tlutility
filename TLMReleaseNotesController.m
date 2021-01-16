@@ -38,7 +38,7 @@
 
 #import "TLMReleaseNotesController.h"
 
-#define RELNOTES_URL @"http://mactlmgr.googlecode.com/svn/trunk/appcast/tlu_appcast.xml"
+#define RELNOTES_URL @"https://raw.githubusercontent.com/amaxwell/tlutility/master/appcast/tlu_appcast.xml"
 
 @implementation TLMReleaseNotesController
 

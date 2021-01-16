@@ -360,6 +360,16 @@
 		F957A4E212514B040079E07F /* TLMBackupOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMBackupOperation.m; sourceTree = "<group>"; };
 		F958309612695A0800DB997C /* TLMBackupCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMBackupCell.h; sourceTree = "<group>"; };
 		F958309712695A0800DB997C /* TLMBackupCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMBackupCell.m; sourceTree = "<group>"; };
+		F95D60C625911A060062AC47 /* German */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = German; path = German.lproj/Localizable.strings; sourceTree = "<group>"; };
+		F95D60CF25911A1B0062AC47 /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = German.lproj/MainWindow.xib; sourceTree = "<group>"; };
+		F95D60D025911A720062AC47 /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = German.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		F95D60D125911A790062AC47 /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = German.lproj/Preferences.xib; sourceTree = "<group>"; };
+		F95D60D225911A7D0062AC47 /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = German.lproj/PapersizeSheet.xib; sourceTree = "<group>"; };
+		F95D60D325911A890062AC47 /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = German.lproj/Mirrors.xib; sourceTree = "<group>"; };
+		F95D60D425911AF30062AC47 /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = German.lproj/LaunchAgentSheet.xib; sourceTree = "<group>"; };
+		F95D60D525911AF70062AC47 /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = German.lproj/AutobackupSheet.xib; sourceTree = "<group>"; };
+		F95D60D625911AFC0062AC47 /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = German.lproj/DocumentationSheet.xib; sourceTree = "<group>"; };
+		F95D60D725911B030062AC47 /* German */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = German; path = German.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		F96203BD13D3656300932965 /* TLMLogWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMLogWindowController.h; sourceTree = "<group>"; };
 		F96203BE13D3656300932965 /* TLMLogWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMLogWindowController.m; sourceTree = "<group>"; };
 		F96203CE13D3677600932965 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/LogWindow.xib; sourceTree = "<group>"; };
@@ -1400,6 +1410,7 @@
 				F97EBB3E1440976B00E79859 /* Japanese */,
 				F9DBEE671578487500EFADE5 /* zh_CN */,
 				F9E1F7972069FD1800908132 /* French */,
+				F95D60D725911B030062AC47 /* German */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -1411,6 +1422,7 @@
 				F97EBB3F1440977100E79859 /* Japanese */,
 				F9DBEE681578488300EFADE5 /* zh_CN */,
 				F9E1F7982069FD2700908132 /* French */,
+				F95D60D025911A720062AC47 /* German */,
 			);
 			name = MainMenu.xib;
 			sourceTree = "<group>";
@@ -1422,6 +1434,7 @@
 				F97EBB431440978E00E79859 /* Japanese */,
 				F9DBEE71157848C600EFADE5 /* zh_CN */,
 				F9E1F79A2069FD2700908132 /* French */,
+				F95D60D325911A890062AC47 /* German */,
 			);
 			name = Mirrors.xib;
 			sourceTree = "<group>";
@@ -1444,6 +1457,7 @@
 				F97EBB3C1440975A00E79859 /* Japanese */,
 				F9DBEE651578486300EFADE5 /* zh_CN */,
 				F9E1F7942069FCED00908132 /* French */,
+				F95D60D525911AF70062AC47 /* German */,
 			);
 			name = AutobackupSheet.xib;
 			sourceTree = "<group>";
@@ -1463,6 +1477,7 @@
 				F9AAEE331BC9D4EA00B5F9F0 /* Japanese */,
 				F9AAEE341BC9D4EC00B5F9F0 /* zh_CN */,
 				F9E1F7952069FCF800908132 /* French */,
+				F95D60D625911AFC0062AC47 /* German */,
 			);
 			name = DocumentationSheet.xib;
 			sourceTree = "<group>";
@@ -1474,6 +1489,7 @@
 				F97EBB3D1440976200E79859 /* Japanese */,
 				F9DBEE661578486D00EFADE5 /* zh_CN */,
 				F9E1F7962069FD0900908132 /* French */,
+				F95D60C625911A060062AC47 /* German */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -1485,6 +1501,7 @@
 				F97EBB401440977900E79859 /* Japanese */,
 				F9DBEE691578488900EFADE5 /* zh_CN */,
 				F9E1F7992069FD2700908132 /* French */,
+				F95D60CF25911A1B0062AC47 /* German */,
 			);
 			name = MainWindow.xib;
 			sourceTree = "<group>";
@@ -1496,6 +1513,7 @@
 				F97EBB3B1440975200E79859 /* Japanese */,
 				F9DBEE641578485A00EFADE5 /* zh_CN */,
 				F9E1F78A2069FCBE00908132 /* French */,
+				F95D60D425911AF30062AC47 /* German */,
 			);
 			name = LaunchAgentSheet.xib;
 			sourceTree = "<group>";
@@ -1507,6 +1525,7 @@
 				F9DBEE6F157848AD00EFADE5 /* Japanese */,
 				F9DBEE70157848B100EFADE5 /* zh_CN */,
 				F9E1F79B2069FD2700908132 /* French */,
+				F95D60D225911A7D0062AC47 /* German */,
 			);
 			name = PapersizeSheet.xib;
 			sourceTree = "<group>";
@@ -1518,6 +1537,7 @@
 				F97EBB411440977F00E79859 /* Japanese */,
 				F9DBEE6A1578489000EFADE5 /* zh_CN */,
 				F9E1F79C2069FD2700908132 /* French */,
+				F95D60D125911A790062AC47 /* German */,
 			);
 			name = Preferences.xib;
 			sourceTree = "<group>";
@@ -1530,7 +1550,6 @@
 			baseConfigurationReference = F9C7F1F113A003660031774F /* Debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CODE_SIGN_IDENTITY = "TeX Live Utility Signing Certificate";
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_DEBUGGING_SYMBOLS = full;
@@ -1551,7 +1570,6 @@
 			baseConfigurationReference = F9C7F1F213A003660031774F /* Release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = NO;
 				CODE_SIGN_IDENTITY = "TeX Live Utility Signing Certificate";
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;

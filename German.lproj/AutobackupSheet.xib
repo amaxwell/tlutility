@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="17701" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="15705" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="17701"/>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="15705"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -19,14 +20,14 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="178" y="558" width="286" height="149"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1415"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
             <value key="minSize" type="size" width="286" height="149"/>
             <value key="maxSize" type="size" width="286" height="149"/>
             <view key="contentView" id="2">
                 <rect key="frame" x="0.0" y="0.0" width="286" height="149"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5">
+                    <button verticalHuggingPriority="750" id="5">
                         <rect key="frame" x="176" y="12" width="96" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="push" title="OK" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="6">
@@ -40,7 +41,7 @@ DQ
                             <action selector="accept:" target="-2" id="25"/>
                         </connections>
                     </button>
-                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7">
+                    <button verticalHuggingPriority="750" id="7">
                         <rect key="frame" x="77" y="12" width="102" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="push" title="Abbrechen" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="8">
@@ -54,7 +55,7 @@ Gw
                             <action selector="cancel:" target="-2" id="24"/>
                         </connections>
                     </button>
-                    <button toolTip="Automatically back up changed files as updates are applied." fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="11">
+                    <button toolTip="Automatically back up changed files as updates are applied." id="11">
                         <rect key="frame" x="18" y="108" width="252" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="check" title="Atomatische Sicherung eingeschaltet" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="12">
@@ -65,7 +66,7 @@ Gw
                             <action selector="enableAction:" target="-2" id="20"/>
                         </connections>
                     </button>
-                    <button toolTip="Remove old backups after closing this sheet, up to the number specified above." fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="26">
+                    <button toolTip="Remove old backups after closing this sheet, up to the number specified above." id="26">
                         <rect key="frame" x="18" y="58" width="153" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="check" title="Sicherungen löschen" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="27">
@@ -73,7 +74,7 @@ Gw
                             <font key="font" metaFont="system"/>
                         </buttonCell>
                     </button>
-                    <textField toolTip="Number of most recent backups that will be kept when pruning the backup set.  Set to ∞ to prevent deleting files." verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="15">
+                    <textField toolTip="Number of most recent backups that will be kept when pruning the backup set.  Set to ∞ to prevent deleting files." verticalHuggingPriority="750" id="15">
                         <rect key="frame" x="20" y="80" width="64" height="22"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="16">
@@ -88,7 +89,7 @@ Gw
                             <action selector="changeCount:" target="-2" id="21"/>
                         </connections>
                     </textField>
-                    <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="22">
+                    <textField verticalHuggingPriority="750" id="22">
                         <rect key="frame" x="89" y="82" width="180" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Anzahl Sicherungen" id="23">

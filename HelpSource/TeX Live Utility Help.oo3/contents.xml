@@ -1,19 +1,27 @@
-<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE outline PUBLIC "-//omnigroup.com//DTD OUTLINE 3.0//EN" "http://www.omnigroup.com/namespace/OmniOutliner/xmloutline-v3.dtd">
 <outline xmlns="http://www.omnigroup.com/namespace/OmniOutliner/v3">
   <style-attribute-registry>
-    <style-attribute version="0" key="baseline-offset" group="baseline" name="offset" class="number">0</style-attribute>
+    <style-attribute version="0" key="baseline-offset" group="baseline" name="offset" class="number" integral="1" min="-1000" max="1000">0</style-attribute>
     <style-attribute version="0" key="font-family" group="font" name="family" class="string">Helvetica</style-attribute>
     <style-attribute version="1" key="font-fill" group="font" name="fill color" class="color">
       <color w="0"/>
     </style-attribute>
     <style-attribute version="0" key="font-fixed-pitch" group="font" name="fixed pitch" class="bool">no</style-attribute>
     <style-attribute version="0" key="font-italic" group="font" name="italic" class="bool">no</style-attribute>
-    <style-attribute version="0" key="font-size" group="font" name="size" class="number">12</style-attribute>
-    <style-attribute version="0" key="font-weight" group="font" name="weight" class="number">5</style-attribute>
+    <style-attribute version="0" key="font-size" group="font" name="size" class="number" integral="0" min="1" max="65536">12</style-attribute>
+    <style-attribute version="0" key="font-weight" group="font" name="weight" class="number" integral="1" min="1" max="14">5</style-attribute>
     <style-attribute version="0" key="heading-lowercase(com.omnigroup.OmniOutliner)" group="heading" name="lowercase" class="bool">no</style-attribute>
-    <style-attribute version="0" key="item-post-gap(com.omnigroup.OmniOutliner)" group="row" name="post gap" class="number">0</style-attribute>
-    <style-attribute version="0" key="item-pre-gap(com.omnigroup.OmniOutliner)" group="row" name="pre gap" class="number">1</style-attribute>
+    <style-attribute version="0" key="item-post-gap(com.omnigroup.OmniOutliner)" group="row" name="post gap" class="number" integral="1" min="0" max="1000">0</style-attribute>
+    <style-attribute version="0" key="item-pre-gap(com.omnigroup.OmniOutliner)" group="row" name="pre gap" class="number" integral="1" min="0" max="1000">1</style-attribute>
+    <style-attribute version="0" key="item-row-padding(com.omnigroup.OmniOutliner)" group="row" name="row padding" class="string">4</style-attribute>
+    <style-attribute version="0" key="paragraph-base-writing-direction" group="paragraph" name="writing direction" class="enum">
+      <enum-name-table default-value="-1">
+        <enum-name-table-element value="-1" name="natural"/>
+        <enum-name-table-element value="0" name="left-to-right"/>
+        <enum-name-table-element value="1" name="right-to-left"/>
+      </enum-name-table>
+    </style-attribute>
     <style-attribute version="0" key="text-background-color" group="text" name="background color" class="color">
       <color w="0" a="0"/>
     </style-attribute>
@@ -76,10 +84,10 @@
     <named-style id="mkRhzPcpm-u" name="Link" display-order="7">
       <style>
         <value key="font-fill">
-          <color r="0" g="0.501961" b="1"/>
+          <color r="3.50177e-07" g="0.501961" b="1"/>
         </value>
         <value key="underline-color">
-          <color r="0" g="0.501961" b="1"/>
+          <color r="3.50177e-07" g="0.501961" b="1"/>
         </value>
         <value key="underline-style">single</value>
       </style>
@@ -121,21 +129,21 @@
     </named-style>
   </named-styles>
   <attachments>
-    <attachment id="att0" href="AutobackupSheet.png"/>
-    <attachment id="att1" href="AutocompleteAddress.png"/>
-    <attachment id="att2" href="AutoUpdateSheet.png"/>
-    <attachment id="att3" href="BackupTab.png"/>
-    <attachment id="att4" href="Distributions.png"/>
-    <attachment id="att5" href="Documentation.png"/>
-    <attachment id="att6" href="Info.png"/>
-    <attachment id="att7" href="InstallTab.png"/>
-    <attachment id="att8" href="LogWindow.png"/>
-    <attachment id="att9" href="Mirrors.png"/>
-    <attachment id="att10" href="NotificationCenterUpdate.png"/>
-    <attachment id="att11" href="PackageTab.png"/>
-    <attachment id="att12" href="Prefs.png"/>
-    <attachment id="att13" href="UpdateCheckAlert.png"/>
-    <attachment id="att14" href="UpdateTab.png"/>
+    <attachment id="att0" href="AutobackupSheet.png" type="image"/>
+    <attachment id="att1" href="AutocompleteAddress.png" type="image"/>
+    <attachment id="att2" href="AutoUpdateSheet.png" type="image"/>
+    <attachment id="att3" href="BackupTab.png" type="image"/>
+    <attachment id="att4" href="Distributions.png" type="image"/>
+    <attachment id="att5" href="Documentation.png" type="image"/>
+    <attachment id="att6" href="Info.png" type="image"/>
+    <attachment id="att7" href="InstallTab.png" type="image"/>
+    <attachment id="att8" href="LogWindow.png" type="image"/>
+    <attachment id="att9" href="Mirrors.png" type="image"/>
+    <attachment id="att10" href="NotificationCenterUpdate.png" type="image"/>
+    <attachment id="att11" href="PackageTab.png" type="image"/>
+    <attachment id="att12" href="Prefs.png" type="image"/>
+    <attachment id="att13" href="UpdateCheckAlert.png" type="image"/>
+    <attachment id="att14" href="UpdateTab.png" type="image"/>
   </attachments>
   <settings>
     <base-style>
@@ -145,6 +153,8 @@
         <value key="font-size">16</value>
         <value key="item-post-gap(com.omnigroup.OmniOutliner)">8</value>
         <value key="item-pre-gap(com.omnigroup.OmniOutliner)">8</value>
+        <value key="item-row-padding(com.omnigroup.OmniOutliner)">8</value>
+        <value key="paragraph-base-writing-direction">left-to-right</value>
       </style>
     </base-style>
     <page-adornment>
@@ -165,12 +175,10 @@
     </print-info>
     <auto-generate-level-styles>no</auto-generate-level-styles>
   </settings>
-  <editor content-size="{692, 828}" scroll-position="{0, 128}" column-titles-display-mode="off" ruler-visible="yes" status-visible="no">
-    <drawer display="sections" width="236" palette-height="346"/>
-    <hoisted-rows ids="aLvRpQYwVsb"/>
-    <selected-rows ids="lNaPuZYoCap"/>
-    <selected-columns ids="jFqHUGd_Dg1"/>
-    <selected-characters range="{144, 0}"/>
+  <editor content-size="{692, 730}" vertical-scrollbar-visible-width="15" column-titles-display-mode="off" ruler-visible="yes" status-visible="no">
+    <drawer display="sections" width="236"/>
+    <note-split-view height="33"/>
+    <hoisted-rows ids="ohh8nduMklZ"/>
     <toolbar>{
     &quot;TB Display Mode&quot; = 2;
     &quot;TB Icon Size Mode&quot; = 2;
@@ -203,7 +211,7 @@
         </text>
       </title>
     </column>
-    <column id="jFqHUGd_Dg1" type="text" width="671" minimum-width="13" maximum-width="1000000" text-export-width="72" is-outline-column="yes">
+    <column id="jFqHUGd_Dg1" type="text" width="656" minimum-width="13" maximum-width="1000000" text-export-width="72" is-outline-column="yes">
       <title>
         <text>
           <p>
@@ -369,7 +377,7 @@
             </item>
           </children>
         </item>
-        <item id="nIJtChAWJ-C">
+        <item id="nIJtChAWJ-C" expanded="yes">
           <style>
             <inherited-style name="Destination" idref="oQxEDq66I5w"/>
           </style>
@@ -388,7 +396,7 @@
                 <text>
                   <p>
                     <run>
-                      <lit>Mac OS X Leopard 10.5.7 or later.</lit>
+                      <lit>Mac OS X Lion 10.7 or later.</lit>
                     </run>
                   </p>
                 </text>
@@ -464,7 +472,7 @@
             </text>
           </values>
           <children>
-            <item id="g-6zW6wA71h">
+            <item id="g-6zW6wA71h" expanded="yes">
               <style>
                 <inherited-style name="Destination" idref="oQxEDq66I5w"/>
               </style>
@@ -525,7 +533,7 @@
                     <text>
                       <p>
                         <run>
-                          <lit><cell refid="att14" name="UpdateTab" expanded="yes" type="image" width="495" height="366"/></lit>
+                          <lit><cell refid="att14" expanded="yes" name="UpdateTab"/></lit>
                         </run>
                       </p>
                     </text>
@@ -620,8 +628,8 @@
                             </run>
                             <run>
                               <style>
-                                <inherited-style name="Emphasis" idref="j7s0i2W8XqH"/>
                                 <inherited-style name="Bold" idref="bMbdsrPBbNQ"/>
+                                <inherited-style name="Emphasis" idref="j7s0i2W8XqH"/>
                               </style>
                               <lit>and remove</lit>
                             </run>
@@ -652,7 +660,7 @@
                 </item>
               </children>
             </item>
-            <item id="fuS_akUfHVg">
+            <item id="fuS_akUfHVg" expanded="yes">
               <style>
                 <inherited-style name="Destination" idref="oQxEDq66I5w"/>
               </style>
@@ -702,7 +710,7 @@
                     <text>
                       <p>
                         <run>
-                          <lit><cell refid="att11" name="PackageTab" expanded="yes" type="image" width="495" height="366"/></lit>
+                          <lit><cell refid="att11" expanded="yes" name="PackageTab"/></lit>
                         </run>
                       </p>
                     </text>
@@ -804,7 +812,7 @@
                 </item>
               </children>
             </item>
-            <item id="jF5DhHO-g3r">
+            <item id="jF5DhHO-g3r" expanded="yes">
               <style>
                 <inherited-style name="Destination" idref="oQxEDq66I5w"/>
               </style>
@@ -854,7 +862,7 @@
                     <text>
                       <p>
                         <run>
-                          <lit><cell refid="att3" name="BackupTab" type="image" width="495" height="366"/></lit>
+                          <lit><cell refid="att3" name="BackupTab"/></lit>
                         </run>
                       </p>
                     </text>
@@ -885,7 +893,7 @@
                         <text>
                           <p>
                             <run>
-                              <lit><cell refid="att0" name="AutobackupSheet" expanded="yes" type="image" width="300" height="163"/></lit>
+                              <lit><cell refid="att0" expanded="yes" name="AutobackupSheet"/></lit>
                             </run>
                           </p>
                         </text>
@@ -1079,7 +1087,7 @@
                         <text>
                           <p>
                             <run>
-                              <lit><cell refid="att6" name="Info" expanded="yes" type="image" width="440" height="341"/></lit>
+                              <lit><cell refid="att6" expanded="yes" name="Info"/></lit>
                             </run>
                           </p>
                         </text>
@@ -1197,7 +1205,7 @@
                     <text>
                       <p>
                         <run>
-                          <lit><cell refid="att2" name="AutoUpdateSheet" expanded="yes" type="image" width="183" height="161"/></lit>
+                          <lit><cell refid="att2" expanded="yes" name="AutoUpdateSheet"/></lit>
                         </run>
                       </p>
                     </text>
@@ -1233,7 +1241,7 @@
                         <text>
                           <p>
                             <run>
-                              <lit><cell refid="att10" name="NotificationCenterUpdate" expanded="yes" type="image" width="232" height="57"/></lit>
+                              <lit><cell refid="att10" expanded="yes" name="NotificationCenterUpdate"/></lit>
                             </run>
                           </p>
                         </text>
@@ -1282,7 +1290,7 @@
                         <text>
                           <p>
                             <run>
-                              <lit><cell refid="att13" name="UpdateCheckAlert" expanded="yes" type="image" width="315" height="120"/></lit>
+                              <lit><cell refid="att13" expanded="yes" name="UpdateCheckAlert"/></lit>
                             </run>
                           </p>
                         </text>
@@ -1449,7 +1457,7 @@
                     <text>
                       <p>
                         <run>
-                          <lit><cell refid="att9" name="Mirrors" expanded="yes" type="image" width="508" height="437"/></lit>
+                          <lit><cell refid="att9" expanded="yes" name="Mirrors"/></lit>
                         </run>
                       </p>
                     </text>
@@ -1498,7 +1506,7 @@
                                 <value key="font-family">Helvetica</value>
                                 <value key="font-size">12</value>
                               </style>
-                              <lit><cell refid="att1" name="AutocompleteAddress" expanded="yes" type="image" width="333" height="240"/></lit>
+                              <lit><cell refid="att1" expanded="yes" name="AutocompleteAddress"/></lit>
                             </run>
                           </p>
                         </text>
@@ -1661,7 +1669,7 @@
                     <text>
                       <p>
                         <run>
-                          <lit><cell refid="att4" name="Distributions" expanded="yes" type="image" width="301" height="228"/></lit>
+                          <lit><cell refid="att4" expanded="yes" name="Distributions"/></lit>
                         </run>
                       </p>
                     </text>
@@ -1770,7 +1778,7 @@
                             <value key="font-family">Helvetica</value>
                             <value key="font-size">12</value>
                           </style>
-                          <lit><cell refid="att5" name="Documentation" expanded="yes" type="image" width="301" height="228"/></lit>
+                          <lit><cell refid="att5" expanded="yes" name="Documentation"/></lit>
                         </run>
                       </p>
                     </text>
@@ -1816,7 +1824,7 @@
                 </item>
               </children>
             </item>
-            <item id="loFja0cULCm">
+            <item id="loFja0cULCm" expanded="yes">
               <style>
                 <inherited-style name="Destination" idref="oQxEDq66I5w"/>
               </style>
@@ -1892,7 +1900,7 @@
                     <text>
                       <p>
                         <run>
-                          <lit><cell refid="att8" name="LogWindow" expanded="yes" type="image" width="710" height="210"/></lit>
+                          <lit><cell refid="att8" expanded="yes" name="LogWindow"/></lit>
                         </run>
                       </p>
                     </text>
@@ -2058,7 +2066,7 @@
                     <text>
                       <p>
                         <run>
-                          <lit><cell refid="att12" name="Preferences" expanded="yes" type="image" width="373" height="137"/></lit>
+                          <lit><cell refid="att12" expanded="yes" name="Preferences"/></lit>
                         </run>
                       </p>
                     </text>
@@ -2512,7 +2520,7 @@
                     <text>
                       <p>
                         <run>
-                          <lit><cell refid="att7" name="InstallTab" expanded="yes" type="image" width="495" height="366"/></lit>
+                          <lit><cell refid="att7" expanded="yes" name="InstallTab"/></lit>
                         </run>
                       </p>
                     </text>
@@ -2723,7 +2731,7 @@
                       <lit>Please report any problems using the </lit>
                     </run>
                     <run>
-                      <lit><cell href="http://code.google.com/p/mactlmgr/issues/list" name="bug tracker" type="link"/></lit>
+                      <lit><cell href="https://github.com/amaxwell/tlutility/issues" name="bug tracker" type="link"/></lit>
                     </run>
                     <run>
                       <lit>, or at a bare minimum, by e-mailing the maintainer at </lit>
@@ -2847,7 +2855,7 @@
                       <lit>If you are requesting a feature or asking a question, please check the </lit>
                     </run>
                     <run>
-                      <lit><cell href="http://code.google.com/p/mactlmgr/wiki/FAQ" name="FAQ" type="link"/></lit>
+                      <lit><cell href="http://amaxwell.github.io/tlutility/" name="FAQ" type="link"/></lit>
                     </run>
                     <run>
                       <lit> first to see if it is already addressed.</lit>
@@ -2930,7 +2938,7 @@
                     <text>
                       <p>
                         <run>
-                          <lit><cell href="http://mactlmgr.googlecode.com/" name="mactlmgr.googlecode.com" type="link"/></lit>
+                          <lit><cell href="http://amaxwell.github.io/tlutility/" name="amaxwell.github.io/tlutility/" type="link"/></lit>
                         </run>
                       </p>
                     </text>

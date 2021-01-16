@@ -123,8 +123,7 @@ static NSString * const TLMInfoFileViewIconScaleKey = @"TLMInfoFileViewIconScale
 - (void)_recenterSpinner
 {
     if ([[_tabView selectedTabViewItem] isEqual:[_tabView tabViewItemAtIndex:0]] == NO) {
-        NSRect windowFrame = [[self window] frame];
-        windowFrame.origin = [[self window] convertScreenToBase:windowFrame.origin];
+        NSRect windowFrame = [[self window] convertRectFromScreen:[[self window] frame]];
         NSRect bounds = [[_spinner superview] convertRect:windowFrame fromView:nil];
         NSSize spinnerSize = [_spinner bounds].size;
         NSPoint origin = NSMakePoint(NSMidX(bounds), NSMidY(bounds));
@@ -157,7 +156,11 @@ static NSString * const TLMInfoFileViewIconScaleKey = @"TLMInfoFileViewIconScale
     [_spinner setUsesThreadedAnimation:YES];
     if ([[NSUserDefaults standardUserDefaults] objectForKey:TLMInfoFileViewIconScaleKey] != nil)
         [_fileView setIconScale:[[NSUserDefaults standardUserDefaults] doubleForKey:TLMInfoFileViewIconScaleKey]];
-    [_fileView addObserver:self forKeyPath:@"iconScale" options:0 context:&_TLMInfoFileViewScaleObserverationContext];    
+    [_fileView addObserver:self forKeyPath:@"iconScale" options:0 context:&_TLMInfoFileViewScaleObserverationContext];
+    
+    // Too bad this isn't the default on Mojave...
+    if ([_textView respondsToSelector:@selector(setUsesAdaptiveColorMappingForDarkAppearance:)])
+        [_textView setUsesAdaptiveColorMappingForDarkAppearance:YES];
 }
 
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
