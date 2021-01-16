@@ -458,7 +458,7 @@
 "Update All Packages" = "Alle Pakete aktualisieren";
 
 /* alert title */
-"Update all packages?" = "Sollten alle Pakete aktualisiert werden?";
+"Update all packages?" = "Sollen alle Pakete aktualisiert werden?";
 
 /* status for package */
 "Update available" = "Aktualisierung verfügbar";
