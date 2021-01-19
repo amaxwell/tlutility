@@ -16,7 +16,7 @@
                 <menuItem title="TeX Live Utility" id="56">
                     <menu key="submenu" title="TeX Live Utility" systemMenu="apple" id="57">
                         <items>
-                            <menuItem title="About TeX Live Utility" id="58">
+                            <menuItem title="Über TeX Live Utility" id="58">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="orderFrontStandardAboutPanel:" target="-2" id="142"/>
