@@ -90,6 +90,10 @@
             err = PasteboardPutItemFlavor(carbonPboard, itemID, kUTTypeURL, utf8Data, kPasteboardFlavorNoFlags);
         }
         
+        // need text data for mail and text views
+        if (noErr == err)
+            err = PasteboardPutItemFlavor(carbonPboard, itemID, kUTTypeUTF8PlainText, utf8Data, kPasteboardFlavorNoFlags);
+        
         if (noErr != err)
             TLMLog(__func__, @"failed to write to pboard %@: %s", [pboard name], GetMacOSStatusErrorString(err));
     }
