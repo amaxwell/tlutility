@@ -1196,17 +1196,6 @@
 				<key>country</key>
 				<string>USA</string>
 				<key>name</key>
-				<string>ftp.math.purdue.edu</string>
-				<key>urls</key>
-				<array>
-					<string>ftp://ftp.math.purdue.edu/mirrors/ctan.org/</string>
-					<string>http://ftp.math.purdue.edu/mirrors/ctan.org/</string>
-				</array>
-			</dict>
-			<dict>
-				<key>country</key>
-				<string>USA</string>
-				<key>name</key>
 				<string>ibiblio.org</string>
 				<key>urls</key>
 				<array>
@@ -1320,6 +1309,6 @@
 		</array>
 	</dict>
 	<key>timestamp</key>
-	<real>1609946605.992537</real>
+	<real>1611204165.114039</real>
 </dict>
 </plist>
