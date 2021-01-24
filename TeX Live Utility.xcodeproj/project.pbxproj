@@ -1232,7 +1232,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "LOCATION=\"${BUILT_PRODUCTS_DIR}\"/\"${EXECUTABLE_FOLDER_PATH}\"\nIDENTITY=\"TeX Live Utility Signing Certificate\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/python_version.py\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/uninstall_local_agent.sh\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/parse_tlpdb.py\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/agent_installer.py\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/texdist_change_default.sh\"\n\n\n";
+			shellScript = "LOCATION=\"${BUILT_PRODUCTS_DIR}\"/\"${EXECUTABLE_FOLDER_PATH}\"\nIDENTITY=\"TeX Live Utility Signing Certificate\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/python_version.py\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/uninstall_local_agent.sh\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/parse_tlpdb.py\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/agent_installer.py\"\ncodesign --verbose --force --options kill --sign \"$IDENTITY\" \"$LOCATION/texdist_change_default.sh\"\ncodesign --verbose --force --options kill --sign \"$IDENTITY\" \"$LOCATION/tlu_ipctask\"\n\n";
 		};
 		F9ACDA3814434DBC005DA800 /* Create help book */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1248,7 +1248,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\ncd \"${SRCROOT}/HelpSource\"\n\n# need to clean the old html files out first, since renaming or adding sections\n# will leave the old files html files intact\nif [ -d \"TeX Live Utility Help\" ]; then\n\tpushd .\n\tcd \"TeX Live Utility Help\" && rm *.html\n\tpopd\nfi\n\npython OOhelpify.py \"TeX Live Utility Help.oo3\"";
+			shellScript = "\ncd \"${SRCROOT}/HelpSource\"\n\n# need to clean the old html files out first, since renaming or adding sections\n# will leave the old files html files intact\nif [ -d \"TeX Live Utility Help\" ]; then\n\tpushd .\n\tcd \"TeX Live Utility Help\" && rm *.html\n\tpopd\nfi\n\npython OOhelpify.py \"TeX Live Utility Help.oo3\"\n";
 		};
 		F9B396400F340E45007F95E9 /* FileView install name */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1262,7 +1262,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "/usr/bin/install_name_tool -change \\\n'@loader_path/../../../../../../../FileView.framework/Versions/A/FileView' \\\n'@executable_path/../Frameworks/FileView.framework/Versions/A/FileView'   \\\n\"${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}\"";
+			shellScript = "/usr/bin/install_name_tool -change \\\n'@loader_path/../../../../../../../FileView.framework/Versions/A/FileView' \\\n'@executable_path/../Frameworks/FileView.framework/Versions/A/FileView'   \\\n\"${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}\"\n";
 		};
 		F9DCD5650F07EFF100600DD2 /* Run genstrings */ = {
 			isa = PBXShellScriptBuildPhase;
