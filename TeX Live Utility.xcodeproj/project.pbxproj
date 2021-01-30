@@ -33,7 +33,7 @@
 		F925D1B112957B5600D75BB4 /* Mirrors.xib in Resources */ = {isa = PBXBuildFile; fileRef = F925D1B012957B5600D75BB4 /* Mirrors.xib */; };
 		F925D1BB12957C1B00D75BB4 /* CTAN.sites.plist in Resources */ = {isa = PBXBuildFile; fileRef = F925D1BA12957C1B00D75BB4 /* CTAN.sites.plist */; };
 		F929DE8413DCE00000072DDA /* TLMAddressTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = F929DE8313DCE00000072DDA /* TLMAddressTextField.m */; };
-		F92A38B3198EFD64005C4B71 /* FileView.framework in copy frameworks */ = {isa = PBXBuildFile; fileRef = F96F06D3198ED9A9001CFD1C /* FileView.framework */; };
+		F92A38B3198EFD64005C4B71 /* FileView.framework in copy frameworks */ = {isa = PBXBuildFile; fileRef = F96F06D3198ED9A9001CFD1C /* FileView.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		F92A38C4198F023F005C4B71 /* FileView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F92A38C3198F023F005C4B71 /* FileView.framework */; };
 		F93BA51E19CB611F00C23004 /* texdist_2014basic.sh in Resources */ = {isa = PBXBuildFile; fileRef = F93BA51D19CB611F00C23004 /* texdist_2014basic.sh */; };
 		F93C786F1AF32F5800817C34 /* texdist_change_default.sh in Copy aux executables */ = {isa = PBXBuildFile; fileRef = F93C78661AF3284A00817C34 /* texdist_change_default.sh */; };
@@ -68,7 +68,7 @@
 		F99CCDE70F0EB56E00D67ED0 /* DefaultMirrors.plist in Resources */ = {isa = PBXBuildFile; fileRef = F99CCDDA0F0EAFB300D67ED0 /* DefaultMirrors.plist */; };
 		F99D9B0B0F01731E00A1DCCB /* TLMTabView.m in Sources */ = {isa = PBXBuildFile; fileRef = F99D9B0A0F01731E00A1DCCB /* TLMTabView.m */; };
 		F99E51980EEE4AD5006E6B39 /* TLMURLFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = F99E51970EEE4AD5006E6B39 /* TLMURLFormatter.m */; };
-		F9A057B60F507624008C804E /* DVIImporter.mdimporter in CopyFiles */ = {isa = PBXBuildFile; fileRef = F9A057B20F5075DD008C804E /* DVIImporter.mdimporter */; };
+		F9A057B60F507624008C804E /* DVIImporter.mdimporter in CopyFiles */ = {isa = PBXBuildFile; fileRef = F9A057B20F5075DD008C804E /* DVIImporter.mdimporter */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		F9A49FC71059E64400F5AC62 /* TLMInstallDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = F9A49FC61059E64400F5AC62 /* TLMInstallDataSource.m */; };
 		F9A4A093105CA67100F5AC62 /* TLMProfileNode.m in Sources */ = {isa = PBXBuildFile; fileRef = F9A4A092105CA67100F5AC62 /* TLMProfileNode.m */; };
 		F9A4A106105D736B00F5AC62 /* texlive.profile.plist in Resources */ = {isa = PBXBuildFile; fileRef = F9A4A105105D736B00F5AC62 /* texlive.profile.plist */; };
@@ -91,7 +91,7 @@
 		F9B137200EEC4A92007C0046 /* TLMUpdateOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B1371F0EEC4A92007C0046 /* TLMUpdateOperation.m */; };
 		F9B137330EEC4C6A007C0046 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9B137320EEC4C6A007C0046 /* Security.framework */; };
 		F9B139D40EECBE23007C0046 /* tlu_ipctask.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B139D30EECBE23007C0046 /* tlu_ipctask.m */; };
-		F9B139DA0EECBECD007C0046 /* tlu_ipctask in Copy aux executables */ = {isa = PBXBuildFile; fileRef = F9B139CB0EECBDFE007C0046 /* tlu_ipctask */; };
+		F9B139DA0EECBECD007C0046 /* tlu_ipctask in Copy aux executables */ = {isa = PBXBuildFile; fileRef = F9B139CB0EECBDFE007C0046 /* tlu_ipctask */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		F9B13ADE0EECDAC8007C0046 /* TLMSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B13ADB0EECD9DA007C0046 /* TLMSplitView.m */; };
 		F9B13B1D0EECE7F3007C0046 /* TLMInfoOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B13B1C0EECE7F3007C0046 /* TLMInfoOperation.m */; };
 		F9B13B240EECEA73007C0046 /* TLMInfoController.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B13B170EECE5AE007C0046 /* TLMInfoController.m */; };
@@ -122,10 +122,10 @@
 		F9DAAB8213D0DE26004055A0 /* NSURL_TLMExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = F9DAAB8113D0DE26004055A0 /* NSURL_TLMExtensions.m */; };
 		F9DBEE6E157848A500EFADE5 /* PapersizeSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = F9DBEE6D157848A500EFADE5 /* PapersizeSheet.xib */; };
 		F9DCD36C0F06F0A200600DD2 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9DCD3650F06F08C00600DD2 /* Sparkle.framework */; };
-		F9DCD3700F06F0F400600DD2 /* Sparkle.framework in copy frameworks */ = {isa = PBXBuildFile; fileRef = F9DCD3650F06F08C00600DD2 /* Sparkle.framework */; };
+		F9DCD3700F06F0F400600DD2 /* Sparkle.framework in copy frameworks */ = {isa = PBXBuildFile; fileRef = F9DCD3650F06F08C00600DD2 /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		F9DCD43F0F06F76F00600DD2 /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = F9DCD43E0F06F76F00600DD2 /* dsa_pub.pem */; };
 		F9E22FD50EFCBD2A00B0BE38 /* TLMPapersizeOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F9E22FD40EFCBD2A00B0BE38 /* TLMPapersizeOperation.m */; };
-		F9E2C9BF0F3C00FA00D5EC49 /* DVI.qlgenerator in CopyFiles */ = {isa = PBXBuildFile; fileRef = F9E2C92D0F3C009400D5EC49 /* DVI.qlgenerator */; };
+		F9E2C9BF0F3C00FA00D5EC49 /* DVI.qlgenerator in CopyFiles */ = {isa = PBXBuildFile; fileRef = F9E2C92D0F3C009400D5EC49 /* DVI.qlgenerator */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		F9E3DDC1182F415B00800308 /* TLUNotifier.app in Copy aux executables */ = {isa = PBXBuildFile; fileRef = F9E3DDB0182F3FEA00800308 /* TLUNotifier.app */; };
 		F9F043030F180031008DFE8C /* TLMReadWriteOperationQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F043020F180031008DFE8C /* TLMReadWriteOperationQueue.m */; };
 		F9F130560EED94D800D9968D /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = F9F130550EED94D800D9968D /* Preferences.xib */; };
@@ -1030,7 +1030,7 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1130;
+				LastUpgradeCheck = 1240;
 			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "TeX Live Utility" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -1586,6 +1586,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F9C7F1F113A003660031774F /* Debug.xcconfig */;
 			buildSettings = {
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_STATIC_ANALYZER_MODE = deep;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
@@ -1604,6 +1605,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F9C7F1F213A003660031774F /* Release.xcconfig */;
 			buildSettings = {
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_STATIC_ANALYZER_MODE = deep;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
