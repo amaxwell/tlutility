@@ -3,7 +3,7 @@
 //  TeX Live Utility
 //
 
-ARCHS = x86_64
+ARCHS = x86_64 arm64
 SDKROOT = macosx
 DEBUG_INFORMATION_FORMAT = dwarf-with-dsym
 MACOSX_DEPLOYMENT_TARGET = 10.7
