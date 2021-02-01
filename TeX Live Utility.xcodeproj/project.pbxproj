@@ -594,6 +594,7 @@
 		F9E22FD40EFCBD2A00B0BE38 /* TLMPapersizeOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMPapersizeOperation.m; sourceTree = "<group>"; };
 		F9E2C9250F3C009300D5EC49 /* DVI.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = DVI.xcodeproj; path = "DVI-qlgenerator/DVI.xcodeproj"; sourceTree = "<group>"; };
 		F9E3DDA3182F3FE800800308 /* TLUNotifier.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = TLUNotifier.xcodeproj; path = TLUNotifier/TLUNotifier.xcodeproj; sourceTree = "<group>"; };
+		F9ECF7F525C7EABC009BC1BA /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = German.lproj/LogWindow.xib; sourceTree = "<group>"; };
 		F9F043010F180031008DFE8C /* TLMReadWriteOperationQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMReadWriteOperationQueue.h; sourceTree = "<group>"; };
 		F9F043020F180031008DFE8C /* TLMReadWriteOperationQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMReadWriteOperationQueue.m; sourceTree = "<group>"; };
 		F9F130530EED94CC00D9968D /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/Preferences.xib; sourceTree = "<group>"; };
@@ -1566,6 +1567,7 @@
 				F97EBB381440971C00E79859 /* Japanese */,
 				F9DBEE631578482D00EFADE5 /* zh_CN */,
 				F9E1F7932069FCD100908132 /* French */,
+				F9ECF7F525C7EABC009BC1BA /* German */,
 			);
 			name = LogWindow.xib;
 			sourceTree = "<group>";
