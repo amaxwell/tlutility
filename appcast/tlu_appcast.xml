@@ -934,14 +934,12 @@
         <item>
             <title>Version 1.41</title>
             <description>
-                <![CDATA[
                 <h3>Changes Since 1.40</h3>
                 <li>Replaced ancient links to Google Code in the help book</li>
                 <li>Release notes window should work again, as it also pointed to Google Code</li>
                 <li>Fixed various German localization issues</li>
                 <li>Worked around a dark mode problem in the info panel</li>
                 <li>Included the French translation of the Notification Center alerts</li>
-                ]]>
             </description>
             <pubDate>Thu, 21 Jan 2021 04:44:32 +0000</pubDate>
             <sparkle:minimumSystemVersion>10.7.0</sparkle:minimumSystemVersion>
