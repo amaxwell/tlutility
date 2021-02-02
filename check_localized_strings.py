@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 #
 # Created by Adam Maxwell on 12/28/08.
@@ -41,6 +41,7 @@ from Foundation import NSString, NSUTF8StringEncoding
 from CoreFoundation import CFStringConvertNSStringEncodingToEncoding, CFStringConvertEncodingToIANACharSetName
 import os, sys
 import codecs
+import functools
 
 class StringsEntry(object):
     """docstring for StringsEntry"""
@@ -63,7 +64,7 @@ IN_VALUE            = 1
 SINGLE_LINE_COMMENT = 2
 
 def _normalize_key(key):
-    key = key.encode("raw_unicode_escape").encode("utf-8").decode("string_escape")
+    key = key.encode("raw_unicode_escape").decode("unicode_escape")
     if "\\u" in key:
         key = key.replace("\\u", "\\U")
     return key
@@ -154,7 +155,7 @@ def _check_strings_at_path(path, english_strings):
         return cmp(a.order, b.order)
     
     to_add = [english_strings[key] for key in missing]
-    to_add = sorted(to_add, _sort_by_order)
+    to_add = sorted(to_add, key=functools.cmp_to_key(_sort_by_order))
     
     # now add to the strings file
     if len(to_add):
