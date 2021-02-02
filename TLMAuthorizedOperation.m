@@ -41,6 +41,7 @@
 #import "TLMTask.h"
 #import "TLMPreferenceController.h"
 #import "TLMEnvironment.h"
+#import "NSStupid.h"
 
 #import <Security/Authorization.h>
 
@@ -161,7 +162,7 @@ struct TLMAOInternal {
         [self setFailed:NO];
         [self cancel];
     } else if (errAuthorizationSuccess != status) {
-        [self _appendStringToErrorData:[NSString stringWithFormat:@"AuthorizationCopyRights error: %d (%s)", (int32_t)status, GetMacOSStatusErrorString(status)]];
+        [self _appendStringToErrorData:[NSString stringWithFormat:@"AuthorizationCopyRights error: %d (%s)", (int32_t)status, TLMGetMacOSStatusErrorString(status)]];
         [self _appendStringToErrorData:NSLocalizedString(@"Failed to authorize operation", @"alert message")];
         [self setFailed:YES];
     }
@@ -229,7 +230,7 @@ static NSArray * __TLMOptionArrayFromArguments(char **nullTerminatedArguments)
 
         if (noErr != status) {
             NSString *errStr;
-            errStr = [NSString stringWithFormat:@"AuthorizationExecuteWithPrivileges error: %d (%s)", (int32_t)status, GetMacOSStatusErrorString(status)];
+            errStr = [NSString stringWithFormat:@"AuthorizationExecuteWithPrivileges error: %d (%s)", (int32_t)status, TLMGetMacOSStatusErrorString(status)];
             [self _appendStringToErrorData:errStr];
         }
     }
@@ -513,7 +514,7 @@ static BOOL __TLMCheckSignature()
         }
         else if (_internal->_authorizationRequired) {
             NSString *errStr;
-            errStr = [NSString stringWithFormat:@"AuthorizationExecuteWithPrivileges error: %d (%s)", (int32_t)status, GetMacOSStatusErrorString(status)];
+            errStr = [NSString stringWithFormat:@"AuthorizationExecuteWithPrivileges error: %d (%s)", (int32_t)status, TLMGetMacOSStatusErrorString(status)];
             [self _appendStringToErrorData:errStr];
             [self setFailed:YES];
         }

@@ -38,6 +38,7 @@
 
 #import "NSURL_TLMExtensions.h"
 #import "TLMLogServer.h"
+#import "NSStupid.h"
 
 #define TLPDB_PATH  @"tlpkg/texlive.tlpdb"
 #define MULTIPLEXER @"mirror.ctan.org"
@@ -69,7 +70,7 @@
         (void)PasteboardSynchronize(carbonPboard);
     
     if (noErr != err) {
-        TLMLog(__func__, @"failed to setup pboard %@: %s", [pboard name], GetMacOSStatusErrorString(err));
+        TLMLog(__func__, @"failed to setup pboard %@: %s", [pboard name], TLMGetMacOSStatusErrorString(err));
         return NO;
     }
     
@@ -95,7 +96,7 @@
             err = PasteboardPutItemFlavor(carbonPboard, itemID, kUTTypeUTF8PlainText, utf8Data, kPasteboardFlavorNoFlags);
         
         if (noErr != err)
-            TLMLog(__func__, @"failed to write to pboard %@: %s", [pboard name], GetMacOSStatusErrorString(err));
+            TLMLog(__func__, @"failed to write to pboard %@: %s", [pboard name], TLMGetMacOSStatusErrorString(err));
     }
     
     ItemCount itemCount;
@@ -282,6 +283,18 @@
         aURL = [NSURL URLWithString:str];
     [str release];
     return aURL;
+}
+
+- (BOOL)tlm_isEqualToFileURL:(NSURL *)other;
+{
+    // supposedly a replacement for FSCompareFSRef
+    id thisKey, otherKey;
+    if ([self getResourceValue:&thisKey forKey:NSURLFileResourceIdentifierKey error:NULL] &&
+        [other getResourceValue:&otherKey forKey:NSURLFileResourceIdentifierKey error:NULL]) {
+        return [thisKey isEqual:otherKey];
+    }
+    
+    return NO;
 }
 
 @end

@@ -503,7 +503,7 @@
 "Yes" = "Yes";
 
 /* alert text, integer format specifier */
-"You appear to have installed fonts in your home directory.  Would you like them to be automatically activated in TeX Live %d?" = "You appear to have installed fonts in your home directory.  Would you like them to be automatically activated in TeX Live %d?";
+"You appear to have installed fonts in your home directory.  Would you like them to be automatically activated in TeX Live %ld?" = "You appear to have installed fonts in your home directory.  Would you like them to be automatically activated in TeX Live %ld?";
 
 /* alert message text */
 "You are attempting to remove critical parts of the underlying TeX Live infrastructure, and I won't help you do that." = "You are attempting to remove critical parts of the underlying TeX Live infrastructure, and I won't help you do that.";

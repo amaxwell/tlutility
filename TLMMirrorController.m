@@ -46,6 +46,7 @@
 #import "TLMEnvironment.h"
 #import "TLMURLFormatter.h"
 #import "TLMPreferenceController.h"
+#import "NSStupid.h"
 
 #define MIRRORS_FILENAME @"Mirrors.plist"
 #define USER_MIRRORS_KEY @"User mirrors"
@@ -542,7 +543,7 @@ static NSIndexSet *__reorderIndexSetFromPasteboard(NSPasteboard *pboard)
         (void)PasteboardSynchronize(carbonPboard);
     
     if (noErr != err) {
-        TLMLog(__func__, @"failed to setup pboard %@: %s", [pasteboard name], GetMacOSStatusErrorString(err));
+        TLMLog(__func__, @"failed to setup pboard %@: %s", [pasteboard name], TLMGetMacOSStatusErrorString(err));
         return NO;
     }
     
@@ -553,7 +554,7 @@ static NSIndexSet *__reorderIndexSetFromPasteboard(NSPasteboard *pboard)
     err = PasteboardPutItemFlavor(carbonPboard, itemID, (CFStringRef)TLM_MIRROR_REORDER_DRAG_TYPE, utf8Data, kPasteboardFlavorNoFlags);
     
     if (noErr != err)
-        TLMLog(__func__, @"failed to write to pboard %@: %s", [pasteboard name], GetMacOSStatusErrorString(err));
+        TLMLog(__func__, @"failed to write to pboard %@: %s", [pasteboard name], TLMGetMacOSStatusErrorString(err));
     
     ItemCount itemCount;
     err = PasteboardGetItemCount(carbonPboard, &itemCount);

@@ -445,7 +445,7 @@
 "Running updmap…" = "正在运行 updmap…";
 
 /* alert text, integer format specifier */
-"You appear to have installed fonts in your home directory.  Would you like them to be automatically activated in TeX Live %d?" = "您似乎在 Home 目录安装了字体。要在 TeX Live %d 中自动激活这些字体吗？";
+"You appear to have installed fonts in your home directory.  Would you like them to be automatically activated in TeX Live %ld?" = "您似乎在 Home 目录安装了字体。要在 TeX Live %ld 中自动激活这些字体吗？";
 
 /* alert text */
 "A newer version of the scheduled update script is available.  Would you like to install it now?" = "有新版的定期更新脚本可用，现在安装吗？";

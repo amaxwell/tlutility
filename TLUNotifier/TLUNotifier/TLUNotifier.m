@@ -75,6 +75,7 @@ static OSErr FindRunningAppBySignature( OSType sig, ProcessSerialNumber *psn, FS
         ProcessSerialNumber psn;
         FSRef runningApp;
         OSStatus err = FindRunningAppBySignature('TLUm', &psn, &runningApp);
+        // typeKernelProcessID
         if (noErr == err) {
             NSLog(@"TeX Live Utility is already running; sending kAEGetURL");
             NSAppleEventDescriptor *tluProcess = [NSAppleEventDescriptor descriptorWithDescriptorType:typeProcessSerialNumber

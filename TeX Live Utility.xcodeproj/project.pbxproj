@@ -127,6 +127,7 @@
 		F9E22FD50EFCBD2A00B0BE38 /* TLMPapersizeOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F9E22FD40EFCBD2A00B0BE38 /* TLMPapersizeOperation.m */; };
 		F9E2C9BF0F3C00FA00D5EC49 /* DVI.qlgenerator in CopyFiles */ = {isa = PBXBuildFile; fileRef = F9E2C92D0F3C009400D5EC49 /* DVI.qlgenerator */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		F9E3DDC1182F415B00800308 /* TLUNotifier.app in Copy aux executables */ = {isa = PBXBuildFile; fileRef = F9E3DDB0182F3FEA00800308 /* TLUNotifier.app */; };
+		F9E6912225C8CF4A004285CD /* NSStupid.m in Sources */ = {isa = PBXBuildFile; fileRef = F9E6912125C8CF4A004285CD /* NSStupid.m */; };
 		F9F043030F180031008DFE8C /* TLMReadWriteOperationQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F043020F180031008DFE8C /* TLMReadWriteOperationQueue.m */; };
 		F9F130560EED94D800D9968D /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = F9F130550EED94D800D9968D /* Preferences.xib */; };
 		F9F1305B0EED94F700D9968D /* TLMPreferenceController.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F1305A0EED94F700D9968D /* TLMPreferenceController.m */; };
@@ -594,6 +595,8 @@
 		F9E22FD40EFCBD2A00B0BE38 /* TLMPapersizeOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMPapersizeOperation.m; sourceTree = "<group>"; };
 		F9E2C9250F3C009300D5EC49 /* DVI.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = DVI.xcodeproj; path = "DVI-qlgenerator/DVI.xcodeproj"; sourceTree = "<group>"; };
 		F9E3DDA3182F3FE800800308 /* TLUNotifier.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = TLUNotifier.xcodeproj; path = TLUNotifier/TLUNotifier.xcodeproj; sourceTree = "<group>"; };
+		F9E6912125C8CF4A004285CD /* NSStupid.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSStupid.m; sourceTree = "<group>"; };
+		F9E6913825C8CF69004285CD /* NSStupid.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NSStupid.h; sourceTree = "<group>"; };
 		F9ECF7F525C7EABC009BC1BA /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = German.lproj/LogWindow.xib; sourceTree = "<group>"; };
 		F9F043010F180031008DFE8C /* TLMReadWriteOperationQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMReadWriteOperationQueue.h; sourceTree = "<group>"; };
 		F9F043020F180031008DFE8C /* TLMReadWriteOperationQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMReadWriteOperationQueue.m; sourceTree = "<group>"; };
@@ -657,6 +660,8 @@
 				F9129BBE102F25AC000A7B50 /* TLMSizeFormatter.h */,
 				F9999F9A10D1C33800F594CB /* TLMProxyManager.h */,
 				F9999F9B10D1C33800F594CB /* TLMProxyManager.m */,
+				F9E6912125C8CF4A004285CD /* NSStupid.m */,
+				F9E6913825C8CF69004285CD /* NSStupid.h */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -1421,6 +1426,7 @@
 				F9F1305B0EED94F700D9968D /* TLMPreferenceController.m in Sources */,
 				F99E51980EEE4AD5006E6B39 /* TLMURLFormatter.m in Sources */,
 				F9F56B4C0EF31F8800E934A9 /* TLMLogMessage.m in Sources */,
+				F9E6912225C8CF4A004285CD /* NSStupid.m in Sources */,
 				F9B6B5F80EF469A600CF767F /* TLMLogServer.m in Sources */,
 				F94E74A20EF4965100E0B78F /* TLMTableView.m in Sources */,
 				F9A8BB370EF8B11200E35DC9 /* TLMInfraUpdateOperation.m in Sources */,
