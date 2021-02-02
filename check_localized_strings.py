@@ -64,7 +64,10 @@ IN_VALUE            = 1
 SINGLE_LINE_COMMENT = 2
 
 def _normalize_key(key):
-    key = key.encode("raw_unicode_escape").decode("unicode_escape")
+    #key = key.encode("raw_unicode_escape").decode("unicode_escape")
+    # I no longer recall why I'm doing this, but it's the only way I can find to get 
+    # an escaped string in Python 3, which appears to be what I wanted 13 years ago.
+    key = key.encode("ascii", "backslashreplace").decode("ascii")
     if "\\u" in key:
         key = key.replace("\\u", "\\U")
     return key
