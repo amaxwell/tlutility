@@ -218,6 +218,17 @@
 				<key>country</key>
 				<string>Iran</string>
 				<key>name</key>
+				<string>ctan.asis.ai</string>
+				<key>urls</key>
+				<array>
+					<string>rsync://ctan.asis.ai/ctan/</string>
+					<string>https://ctan.asis.ai/</string>
+				</array>
+			</dict>
+			<dict>
+				<key>country</key>
+				<string>Iran</string>
+				<key>name</key>
 				<string>ctan.um.ac.ir</string>
 				<key>urls</key>
 				<array>
@@ -528,6 +539,16 @@
 				<array>
 					<string>ftp://mirrors.ircam.fr/pub/CTAN/</string>
 					<string>https://mirrors.ircam.fr/pub/CTAN/</string>
+				</array>
+			</dict>
+			<dict>
+				<key>country</key>
+				<string>France</string>
+				<key>name</key>
+				<string>texlive.mycozy.space</string>
+				<key>urls</key>
+				<array>
+					<string>https://texlive.mycozy.space/</string>
 				</array>
 			</dict>
 			<dict>
@@ -1309,6 +1330,6 @@
 		</array>
 	</dict>
 	<key>timestamp</key>
-	<real>1611204165.114039</real>
+	<real>1612243392.385074</real>
 </dict>
 </plist>
