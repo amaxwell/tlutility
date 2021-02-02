@@ -1687,6 +1687,7 @@
 				GCC_PREFIX_HEADER = "TeX Live Manager_Prefix.pch";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
+				LD_RUNPATH_SEARCH_PATHS = "$(LD_RUNPATH_SEARCH_PATHS_$(IS_MACCATALYST)) @loader_path/../Frameworks";
 				OTHER_CODE_SIGN_FLAGS = "-o kill";
 				PRODUCT_BUNDLE_IDENTIFIER = com.googlecode.mactlmgr.tlu;
 				PRODUCT_NAME = "TeX Live Utility";
@@ -1704,6 +1705,7 @@
 				GCC_PREFIX_HEADER = "TeX Live Manager_Prefix.pch";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
+				LD_RUNPATH_SEARCH_PATHS = "$(LD_RUNPATH_SEARCH_PATHS_$(IS_MACCATALYST)) @loader_path/../Frameworks";
 				OTHER_CODE_SIGN_FLAGS = "-o kill";
 				PRODUCT_BUNDLE_IDENTIFIER = com.googlecode.mactlmgr.tlu;
 				PRODUCT_NAME = "TeX Live Utility";
