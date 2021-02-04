@@ -250,7 +250,7 @@
 "No" = "Nein";
 
 /* main window status string */
-"No Backups Available" = "Es sind keine Backups verfügbar.";
+"No Backups Available" = "Es sind keine Aktualisierungen verfügbar.";
 
 /* main window status string */
 "No Updates Available" = "Es sind keine Backups verfügbar.";
