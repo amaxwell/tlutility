@@ -1402,7 +1402,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd ${SOURCE_ROOT}\n\n/usr/bin/genstrings -o English.lproj *.m\n\niconv -f UTF-16 -t UTF-8 English.lproj/Localizable.strings > English.lproj/Localizable.strings.utf8\n\nmv English.lproj/Localizable.strings.utf8 English.lproj/Localizable.strings\n\n# PyObjC squawks about this\nunset MACOSX_DEPLOYMENT_TARGET\n/usr/bin/python check_localized_strings.py\n";
+			shellScript = "cd ${SOURCE_ROOT}\n\n/usr/bin/genstrings -o English.lproj *.m\n\niconv -f UTF-16 -t UTF-8 English.lproj/Localizable.strings > English.lproj/Localizable.strings.utf8\n\nmv English.lproj/Localizable.strings.utf8 English.lproj/Localizable.strings\n\n# PyObjC squawks about this\n#unset MACOSX_DEPLOYMENT_TARGET\n/usr/bin/python check_localized_strings.py\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

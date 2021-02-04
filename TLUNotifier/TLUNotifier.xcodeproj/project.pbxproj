@@ -188,7 +188,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd ${SOURCE_ROOT}/TLUNotifier\nEN_LPROJ=en.lproj\n\n# need full paths when executing from Xcode 3 shell script, as we unset the environment\n/usr/bin/genstrings -o $EN_LPROJ *.m\n\n/usr/bin/iconv -f UTF-16 -t UTF-8 $EN_LPROJ/Localizable.strings > $EN_LPROJ/Localizable.strings.utf8\n\n/bin/mv $EN_LPROJ/Localizable.strings.utf8 $EN_LPROJ/Localizable.strings\n\n# PyObjC squawks about this\nunset MACOSX_DEPLOYMENT_TARGET\n/usr/bin/python ../../check_localized_strings.py\n";
+			shellScript = "cd ${SOURCE_ROOT}/TLUNotifier\nEN_LPROJ=en.lproj\n\n# need full paths when executing from Xcode 3 shell script, as we unset the environment\n/usr/bin/genstrings -o $EN_LPROJ *.m\n\n/usr/bin/iconv -f UTF-16 -t UTF-8 $EN_LPROJ/Localizable.strings > $EN_LPROJ/Localizable.strings.utf8\n\n/bin/mv $EN_LPROJ/Localizable.strings.utf8 $EN_LPROJ/Localizable.strings\n\n/usr/bin/python ../../check_localized_strings.py\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
