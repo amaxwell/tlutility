@@ -177,7 +177,7 @@ CGFloat __TLMScriptVersionAtPath(NSString *absolutePath)
     NSString *script = [NSString stringWithFormat:@"import sys; sys.path.append(\"%@\"); import update_check as uc; sys.stdout.write(str(uc.VERSION))", parent];
     TLMTask *task = [[TLMTask new] autorelease];
     [task setLaunchPath:@"/usr/bin/python"];
-    [task setArguments:[NSArray arrayWithObjects:@"-c", script, nil]];
+    [task setArguments:[NSArray arrayWithObjects:@"-B", @"-c", script, nil]];
     [task launch];
     [task waitUntilExit];
     CGFloat version = 0;
