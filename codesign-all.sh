@@ -18,6 +18,9 @@ codesign --verbose --options runtime --timestamp --force --sign "$IDENTITY" "$LO
 codesign --verbose --options runtime --timestamp --force --sign "$IDENTITY" "$LOCATION/texdist_change_default.sh"
 codesign --verbose --options runtime --timestamp --force --sign "$IDENTITY" "$LOCATION/tlu_ipctask"
 
+codesign --verbose --options runtime --timestamp --force --sign "$IDENTITY" "${TLU_BUNDLE_PATH}/Contents/Library/QuickLook/DVI.qlgenerator"
+codesign --verbose --options runtime --timestamp --force --sign "$IDENTITY" "${TLU_BUNDLE_PATH}/Contents/Library/Spotlight/DVIImporter.mdimporter"
+
 codesign --verbose --options runtime --timestamp --force --sign "$IDENTITY" "$TLU_BUNDLE_PATH"
 
 
