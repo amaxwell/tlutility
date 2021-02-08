@@ -6,7 +6,12 @@ IDENTITY="Developer ID Application: Adam Maxwell (966Z24PX4J)"
 TLU_BUNDLE_PATH="$1"
 
 LOCATION=${TLU_BUNDLE_PATH}/Contents/Frameworks
+codesign --verbose --options runtime --timestamp --force --sign "$IDENTITY" \
+    "$LOCATION/Sparkle.framework/Versions/A/Resources/Autoupdate.app/Contents/MacOS/fileop"
+codesign --verbose --options runtime --timestamp --force --sign "$IDENTITY" \
+    "$LOCATION/Sparkle.framework/Versions/A/Resources/Autoupdate.app/Contents/MacOS/Autoupdate"
 codesign --verbose --options runtime --timestamp --force --sign "$IDENTITY" "$LOCATION/Sparkle.framework/Versions/A"
+
 codesign --verbose --options runtime --timestamp --force --sign "$IDENTITY" "$LOCATION/FileView.framework/Versions/A"
 
 LOCATION="${TLU_BUNDLE_PATH}"/Contents/MacOS
