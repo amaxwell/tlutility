@@ -51,10 +51,10 @@ not be featured when uploaded.
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-import os, sys
+import os, sys, io
 from subprocess import Popen, PIPE
 import tarfile
-from time import strftime, localtime
+from time import strftime, localtime, sleep
 import plistlib
 from getpass import getuser
 
@@ -129,10 +129,61 @@ def codesign():
 def notarize_dmg(dmg_path):
     
     notarize_cmd = ["xcrun", "altool", "--notarize-app", "--primary-bundle-id", "com.mac.amaxwell.tlu", "--username", "amaxwell@mac.com", "--password",  "@keychain:AC_PASSWORD", "--output-format", "xml", "--file", dmg_path]
-    x = Popen(notarize_cmd, cwd=SOURCE_DIR)
-    rc = x.wait()
+    notarize_task = Popen(notarize_cmd, cwd=SOURCE_DIR, stdout=PIPE, stderr=PIPE)
+    [output, error] = notarize_task.communicate()
+    rc = notarize_task.returncode
     print("altool --notarize-app exited with status %s" % (rc))
     assert rc == 0, "notarization failed"
+    
+    output_stream = io.BytesIO(output)
+    output_pl = plistlib.readPlist(output_stream)
+    output_stream.close()
+    sys.stderr.write("%s\n" % (output))
+    assert "notarization-upload" in output_pl, "missing notarization-upload key in reply %s" % (output)
+    
+    request_uuid = output_pl["notarization-upload"]["RequestUUID"]
+    
+    while True:
+    
+        sleep(20)
+        
+        # xcrun altool --notarization-info 401e7e6d-7bce-4e0a-87bd-bcb17b40bf97 --username amaxwell@mac.com --password @keychain:AC_PASSWORD
+        
+        notarize_cmd = ["xcrun", "altool", "--notarization-info", request_uuid, "--username", "amaxwell@mac.com", "--password",  "@keychain:AC_PASSWORD", "--output-format", "xml"]
+        notarize_task = Popen(notarize_cmd, cwd=SOURCE_DIR, stdout=PIPE, stderr=PIPE)
+        [output, error] = notarize_task.communicate()
+        rc = notarize_task.returncode
+        assert rc == 0, "status request failed"
+        
+        output_stream = io.BytesIO(output)
+        output_pl = plistlib.readPlist(output_stream)
+        assert "notarization-info" in output_pl, "missing notarization-upload key in reply %s" % (output)
+        status = output_pl["notarization-info"]["Status"]
+            
+        if status == "invalid":
+            # open the URL
+            log_url = output_pl["notarization-info"]["LogFileURL"]
+            Popen(["/usr/bin/open", "-a", "Safari", log_url])
+            break
+        elif status == "in progress":
+            sys.stderr.write("notarization status not available yet for %s\n" % (request_uuid))
+            continue
+        else:
+            # staple?
+            sys.stderr.write("notarization succeeded\n")
+            sys.stdout.write("%s\n" % (output))
+                        
+            log_url = output_pl["notarization-info"]["LogFileURL"]
+            Popen(["/usr/bin/open", "-a", "Safari", log_url])
+            
+            # xcrun stapler staple TeX\ Live\ Utility.app-1.42b17.dmg 
+            x = Popen(["xcrun", "stapler", "staple", dmg_path])
+            rc = x.wait()
+            assert rc == 0, "stapler failed"
+            
+            break
+        
+        
 
 def create_tarball_of_application(newVersionNumber):
     
@@ -209,27 +260,27 @@ if __name__ == '__main__':
     commit_task.wait()
 
     new_version = rewrite_version()
-    #commit_task = Popen(["/usr/bin/git", "commit", "-a", "-m", "bump beta version"], cwd=SOURCE_DIR)
-    #commit_task.wait()
+    commit_task = Popen(["/usr/bin/git", "commit", "-a", "-m", "bump beta version"], cwd=SOURCE_DIR)
+    commit_task.wait()
     
     push_task = Popen(["/usr/bin/git", "push"], cwd=SOURCE_DIR)
     push_task.wait()
     
     # git tag -a 1.18b5 -m "beta 1.18b5"
-    #tag_task = Popen(["/usr/bin/git", "tag", "-a", new_version, "-m", "beta " + new_version])
-    #tag_task.wait()
+    tag_task = Popen(["/usr/bin/git", "tag", "-a", new_version, "-m", "beta " + new_version])
+    tag_task.wait()
     
     # git push origin --tags
-    #push_task = Popen(["/usr/bin/git", "push", "origin", "--tags"], cwd=SOURCE_DIR)
-    #push_task.wait()
+    push_task = Popen(["/usr/bin/git", "push", "origin", "--tags"], cwd=SOURCE_DIR)
+    push_task.wait()
     
     clean_and_build()
     codesign()
     dmg_path = create_dmg_of_application(new_version)
+    
+    # will bail if any part fails
     notarize_dmg(dmg_path)
-    
-    exit(0)
-    
+        
     username, password = user_and_pass_for_upload()
     auth = HTTPBasicAuth(username, password)
     r = requests.get("https://api.github.com/user", auth=auth)
