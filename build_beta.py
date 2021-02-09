@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 """
 This script is part of TeX Live Utility.  Various paths are hardcoded near
@@ -56,17 +56,12 @@ from subprocess import Popen, PIPE
 import tarfile
 from time import strftime, localtime
 import plistlib
+from getpass import getuser
 
 import requests
 from requests.auth import HTTPBasicAuth
 import json
 from uritemplate import expand as uri_expand 
-
-from Foundation import NSUserDefaults
-
-def GetSymRoot():
-    xcprefs = NSUserDefaults.standardUserDefaults().persistentDomainForName_("com.apple.Xcode")
-    return xcprefs["PBXApplicationwideBuildSettings"]["SYMROOT"].stringByStandardizingPath()
 
 # determine the path based on the path of this program
 SOURCE_DIR = os.path.dirname(os.path.abspath(sys.argv[0]))
@@ -76,8 +71,15 @@ assert SOURCE_DIR.startswith("/")
 # name of keychain item for svn/upload
 UPLOAD_KEYCHAIN_ITEM = "github.com"
 
-# derived paths
-BUILD_DIR = os.path.join(GetSymRoot(), "Release")
+# create a private temporary directory
+SYMROOT = os.path.join("/tmp", "TLU-%s" % (getuser()))
+try:
+    # should already exist after the first run
+    os.mkdir(SYMROOT)
+except Exception as e:
+    assert os.path.isdir(SYMROOT), "%s does not exist" % (SYMROOT)
+
+BUILD_DIR = os.path.join(SYMROOT, "Release")
 BUILT_APP = os.path.join(BUILD_DIR, "TeX Live Utility.app")
 PLIST_PATH = os.path.join(SOURCE_DIR, "Info.plist")
 
@@ -103,20 +105,34 @@ def rewrite_version():
 def clean_and_build():
     
     # clean and rebuild the Xcode project
-    # buildCmd = ["/usr/bin/xcodebuild", "-configuration", "Release", "-target", "TeX Live Utility", "clean"]
+    buildCmd = ["/usr/bin/xcodebuild", "clean", "-scheme", "TeX Live Utility (Release)", "SYMROOT=" + SYMROOT]
     nullDevice = open("/dev/null", "w")
-    # x = Popen(buildCmd, cwd=SOURCE_DIR, stdout=nullDevice, stderr=nullDevice)
-    # rc = x.wait()
-    # print("xcodebuild clean exited with status %s" % (rc))
+    x = Popen(buildCmd, cwd=SOURCE_DIR)
+    rc = x.wait()
+    print("xcodebuild clean exited with status %s" % (rc))
 
-    # separate steps, since clean fails when Xcode can't delete my home directory,
-    # which is some scary shit.
-    buildCmd = ["/usr/bin/xcodebuild", "-configuration", "Release", "-target", "TeX Live Utility", "build"]
+    buildCmd = ["/usr/bin/xcodebuild", "-scheme", "TeX Live Utility (Release)", "SYMROOT=" + SYMROOT, "buildsetting=", "CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO"]
     nullDevice = open("/dev/null", "w")
-    x = Popen(buildCmd, cwd=SOURCE_DIR, stdout=nullDevice, stderr=nullDevice)
+    x = Popen(buildCmd, cwd=SOURCE_DIR)#, stdout=nullDevice, stderr=nullDevice)
     rc = x.wait()
     assert rc == 0, "xcodebuild failed"
     nullDevice.close()
+    
+def codesign():
+    
+    sign_cmd = [os.path.join(SOURCE_DIR, "codesign-all.sh"), BUILT_APP]
+    x = Popen(sign_cmd, cwd=SOURCE_DIR)
+    rc = x.wait()
+    print("codesign-all.sh exited with status %s" % (rc))
+    assert rc == 0, "code signing failed"
+    
+def notarize_dmg(dmg_path):
+    
+    notarize_cmd = ["xcrun", "altool", "--notarize-app", "--primary-bundle-id", "com.mac.amaxwell.tlu", "--username", "amaxwell@mac.com", "--password",  "@keychain:AC_PASSWORD", "--output-format", "xml", "--file", dmg_path]
+    x = Popen(notarize_cmd, cwd=SOURCE_DIR)
+    rc = x.wait()
+    print("altool --notarize-app exited with status %s" % (rc))
+    assert rc == 0, "notarization failed"
 
 def create_tarball_of_application(newVersionNumber):
     
@@ -193,22 +209,26 @@ if __name__ == '__main__':
     commit_task.wait()
 
     new_version = rewrite_version()
-    commit_task = Popen(["/usr/bin/git", "commit", "-a", "-m", "bump beta version"], cwd=SOURCE_DIR)
-    commit_task.wait()
+    #commit_task = Popen(["/usr/bin/git", "commit", "-a", "-m", "bump beta version"], cwd=SOURCE_DIR)
+    #commit_task.wait()
     
     push_task = Popen(["/usr/bin/git", "push"], cwd=SOURCE_DIR)
     push_task.wait()
     
     # git tag -a 1.18b5 -m "beta 1.18b5"
-    tag_task = Popen(["/usr/bin/git", "tag", "-a", new_version, "-m", "beta " + new_version])
-    tag_task.wait()
+    #tag_task = Popen(["/usr/bin/git", "tag", "-a", new_version, "-m", "beta " + new_version])
+    #tag_task.wait()
     
     # git push origin --tags
-    push_task = Popen(["/usr/bin/git", "push", "origin", "--tags"], cwd=SOURCE_DIR)
-    push_task.wait()
+    #push_task = Popen(["/usr/bin/git", "push", "origin", "--tags"], cwd=SOURCE_DIR)
+    #push_task.wait()
     
     clean_and_build()
+    codesign()
     dmg_path = create_dmg_of_application(new_version)
+    notarize_dmg(dmg_path)
+    
+    exit(0)
     
     username, password = user_and_pass_for_upload()
     auth = HTTPBasicAuth(username, password)
@@ -233,5 +253,5 @@ if __name__ == '__main__':
     
     # should be part of appcast
     download_url = asset_response["browser_download_url"]
-    print "download_url:", download_url
+    print("download_url: " + download_url)
 

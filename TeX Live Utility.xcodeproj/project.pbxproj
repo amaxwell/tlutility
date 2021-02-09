@@ -1061,6 +1061,7 @@
 				F9A057B70F507642008C804E /* CopyFiles */,
 				F9B396400F340E45007F95E9 /* FileView install name */,
 				F965629E1812189E000B1464 /* Sign frameworks */,
+				F914FB4325D234A100331EE5 /* Codesign all the things */,
 			);
 			buildRules = (
 			);
@@ -1332,6 +1333,24 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		F914FB4325D234A100331EE5 /* Codesign all the things */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Codesign all the things";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n#${SRCROOT}/codesign-all.sh \"${CODESIGNING_FOLDER_PATH}\"\n\n\n\n";
+		};
 		F965629E1812189E000B1464 /* Sign frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1678,7 +1697,6 @@
 			baseConfigurationReference = F9C7F1F113A003660031774F /* Debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CODE_SIGN_IDENTITY = "TeX Live Utility Signing Certificate";
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -1688,7 +1706,6 @@
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				LD_RUNPATH_SEARCH_PATHS = "$(LD_RUNPATH_SEARCH_PATHS_$(IS_MACCATALYST)) @loader_path/../Frameworks";
-				OTHER_CODE_SIGN_FLAGS = "-o kill";
 				PRODUCT_BUNDLE_IDENTIFIER = com.googlecode.mactlmgr.tlu;
 				PRODUCT_NAME = "TeX Live Utility";
 			};
@@ -1699,14 +1716,12 @@
 			baseConfigurationReference = F9C7F1F213A003660031774F /* Release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CODE_SIGN_IDENTITY = "TeX Live Utility Signing Certificate";
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TeX Live Manager_Prefix.pch";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				LD_RUNPATH_SEARCH_PATHS = "$(LD_RUNPATH_SEARCH_PATHS_$(IS_MACCATALYST)) @loader_path/../Frameworks";
-				OTHER_CODE_SIGN_FLAGS = "-o kill";
 				PRODUCT_BUNDLE_IDENTIFIER = com.googlecode.mactlmgr.tlu;
 				PRODUCT_NAME = "TeX Live Utility";
 			};
@@ -1753,9 +1768,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F9C7F1F113A003660031774F /* Debug.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "TeX Live Utility Signing Certificate";
 				INFOPLIST_FILE = "tlu_ipctask-Info.plist";
-				OTHER_CODE_SIGN_FLAGS = "-i com.googlecode.mactlmgr.tlu_ipctask -o kill";
 				PRODUCT_NAME = tlu_ipctask;
 			};
 			name = Debug;
@@ -1764,10 +1777,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F9C7F1F213A003660031774F /* Release.xcconfig */;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CODE_SIGN_IDENTITY = "TeX Live Utility Signing Certificate";
 				INFOPLIST_FILE = "tlu_ipctask-Info.plist";
-				OTHER_CODE_SIGN_FLAGS = "-i com.googlecode.mactlmgr.tlu_ipctask -o kill";
 				PRODUCT_NAME = tlu_ipctask;
 			};
 			name = Release;
