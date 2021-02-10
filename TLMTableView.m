@@ -192,7 +192,7 @@
     return [(id <TLMTableDataSource>)[self dataSource] tableView:self contextMenuForRow:row column:column];
 }
 
-- (NSMenu *)menuForEvent:(NSEvent *)event;
+- (NSMenu *)tlm_menuForEvent:(NSEvent *)event;
 {
     if (![self _dataSourceHandlesContextMenu])
         return [super menuForEvent:event];
@@ -207,6 +207,18 @@
     }
     
     return [self _contextMenuForRow:rowIndex column:columnIndex];
+}
+
+#warning FIXME
+// This category override is no longer called on Big Sur, so I suspect NSTableView implemented its own menuForEvent: in a category and its implementation is winning out. For now, cheating and using rightMouseDown: restores the context menu. Needs testing on Mojave.
+- (NSMenu *)menuForEvent:(NSEvent *)event;
+{
+    return [self tlm_menuForEvent:event];
+}
+
+- (void)rightMouseDown:(NSEvent *)theEvent
+{
+    [NSMenu popUpContextMenu:[self tlm_menuForEvent:theEvent] withEvent:theEvent forView:self];
 }
 
 
