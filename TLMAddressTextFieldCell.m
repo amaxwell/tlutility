@@ -188,21 +188,28 @@ static void __adjust_text_rect(NSRect *textRect, NSView *controlView)
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {    
     NSRect iconRect = [self iconRectForBounds:cellFrame];
+    NSRect textRect = [self textRectForBounds:cellFrame];
     
     if (_progressValue > _minimum && _progressValue <= _maximum) {
-        NSRect imageBounds = [self textRectForBounds:cellFrame];
+        NSRect imageBounds = textRect;
         imageBounds.size.width = _progressValue / (_maximum - _minimum) * NSWidth(imageBounds);
         imageBounds.size.height -= 4;
         imageBounds.origin.y += 2;
         
-        // not entirely happy with how this looks, but it should work with dark mode and other highlight colors
         if (@available(macOS 10.14, *)) {
             [NSGraphicsContext saveGraphicsState];
+            /*  Not entirely happy with how this looks, but it should work with dark mode and other highlight colors,
+                since this is a magic color. The solid fill color looks like crap when filling the entire text rect,
+                so I'm just filling a narrow stripe under it. This is what current-ish Safari does. */
             [[NSColor controlAccentColor] setFill];
+            const CGFloat solidFillHeight = 2.0;
+            // not sure why I have to subtract 2x the height, but otherwise it draws outside the cell frame
+            imageBounds.origin.y = ([controlView isFlipped]) ? NSMaxY(textRect) - 2 * solidFillHeight : NSMinY(cellFrame);
+            imageBounds.size.height = solidFillHeight;
             NSRectFillUsingOperation(imageBounds, NSCompositeSourceOver);
             [NSGraphicsContext restoreGraphicsState];
         } else {
-            
+            // full gradient fill of the text area prior to Mojave
             NSImage *progressImage = nil;
             switch ([NSColor currentControlTint]) {
                 case NSBlueControlTint:
@@ -233,7 +240,6 @@ static void __adjust_text_rect(NSRect *textRect, NSView *controlView)
         CGContextRestoreGState(ctxt);
     }
     
-    NSRect textRect = [self textRectForBounds:cellFrame];
     __adjust_text_rect(&textRect, controlView);
     [super drawInteriorWithFrame:textRect inView:controlView];
     [_buttonCell drawWithFrame:[self buttonRectForBounds:cellFrame] inView:controlView];
