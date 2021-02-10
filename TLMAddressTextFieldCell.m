@@ -187,30 +187,37 @@ static void __adjust_text_rect(NSRect *textRect, NSView *controlView)
 
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {    
-    NSImage *progressImage = nil;
     NSRect iconRect = [self iconRectForBounds:cellFrame];
-
-    if (_progressValue > _minimum && _progressValue <= _maximum) {
-        switch ([NSColor currentControlTint]) {
-            case NSBlueControlTint:
-                progressImage = [[controlView window] isKeyWindow] ? _blueImage : _grayImage;
-                break;
-            case NSGraphiteControlTint:
-                progressImage = _grayImage;
-                break;
-            default:
-                break;
-        }
-    }
     
-    if (progressImage) {
-        // full width is width of text rect; don't draw under the favicon or button cell
+    if (_progressValue > _minimum && _progressValue <= _maximum) {
         NSRect imageBounds = [self textRectForBounds:cellFrame];
         imageBounds.size.width = _progressValue / (_maximum - _minimum) * NSWidth(imageBounds);
         imageBounds.size.height -= 4;
         imageBounds.origin.y += 2;
-        [progressImage drawInRect:imageBounds fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
-    }    
+        
+        // not entirely happy with how this looks, but it should work with dark mode and other highlight colors
+        if (@available(macOS 10.14, *)) {
+            [NSGraphicsContext saveGraphicsState];
+            [[NSColor controlAccentColor] setFill];
+            NSRectFillUsingOperation(imageBounds, NSCompositeSourceOver);
+            [NSGraphicsContext restoreGraphicsState];
+        } else {
+            
+            NSImage *progressImage = nil;
+            switch ([NSColor currentControlTint]) {
+                case NSBlueControlTint:
+                    progressImage = [[controlView window] isKeyWindow] ? _blueImage : _grayImage;
+                    break;
+                case NSGraphiteControlTint:
+                    progressImage = _grayImage;
+                    break;
+                default:
+                    break;
+            }
+            [progressImage drawInRect:imageBounds fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
+        }
+
+    }
     
     if ([self icon]) {
         CGContextRef ctxt = [[NSGraphicsContext currentContext] graphicsPort];
