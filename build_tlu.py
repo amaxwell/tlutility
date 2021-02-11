@@ -54,7 +54,7 @@ import os, sys, io
 from subprocess import Popen, PIPE
 from stat import ST_SIZE
 import tarfile
-from time import gmtime, strftime, localtime
+from time import gmtime, strftime, localtime, sleep
 import plistlib
 import tempfile
 from getpass import getuser
