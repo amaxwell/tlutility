@@ -945,5 +945,23 @@
             <sparkle:minimumSystemVersion>10.7.0</sparkle:minimumSystemVersion>
             <enclosure url="https://github.com/amaxwell/tlutility/releases/download/1.41/TeX.Live.Utility.app-1.41.dmg" sparkle:version="1.41" length="2788085" type="application/octet-stream" sparkle:dsaSignature="MCwCFCTVuf/BJp4gfQuhoToQANjopfHXAhQy8gjU+fGhz5VMsZgpm0Y4p+LAdw=="></enclosure>
         </item>
+        <item>
+            <title>Version 1.47</title>
+            <description>
+            <![CDATA[
+    	    <h3>Changes Since 1.41</h3>
+                <li>Minimum version is now 10.9, due to Xcode changes. Since Mountain Lion and Mojave are the only releases since 10.6.8 that haven't completely sucked, dropping 10.7 and 10.8 is no great loss.</li>
+                <li>Sparkle framework is updated from a 13-year-old version (yeah, that was bad)</li>
+                <li>Fixed some German localization issues, I guess</li>
+                <li>Compile for Apple Silicon on Big Sur</li>
+                <li>Sell out my open-source principles and sign with official Apple developer certificate and notarize for Catalina and Big Sur</li>
+                <li>Fix context menu in update and other list views on Big Sur (and maybe earlier)</li>
+                <li>Revise progress bar in address field for dark mode and user-specified highlight colors (Mojave and later)</li>
+            ]]>
+            </description>
+            <pubDate>Thu, 11 Feb 2021 05:00:37 +0000</pubDate>
+            <sparkle:minimumSystemVersion>10.9.0</sparkle:minimumSystemVersion>
+            <enclosure url="https://github.com/amaxwell/tlutility/releases/download/1.47/TeX.Live.Utility.app-1.47.dmg" sparkle:version="1.47" length="5013804" type="application/octet-stream" sparkle:dsaSignature="MC0CFAlVSA9GvF1OhmBvNIfoRxvXVEAVAhUAgwcQmEoWgsG//FGrdVUeHbsU/D8="></enclosure>
+        </item>
     </channel>
 </rss>
