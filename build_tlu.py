@@ -86,7 +86,7 @@ except Exception as e:
     assert os.path.isdir(SYMROOT), "%s does not exist" % (SYMROOT)
 
 # derived paths
-BUILD_DIR = os.path.join(GetSymRoot(), "Release")
+BUILD_DIR = os.path.join(SYMROOT, "Release")
 APPCAST_PATH = os.path.join(SOURCE_DIR, "appcast", "tlu_appcast.xml")
 BUILT_APP = os.path.join(BUILD_DIR, "TeX Live Utility.app")
 PLIST_PATH = os.path.join(SOURCE_DIR, "Info.plist")
