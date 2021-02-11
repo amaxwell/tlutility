@@ -7,3 +7,6 @@
 [submodule "fileview"]
 	path = fileview
 	url = https://github.com/amaxwell/fileview.git
+[submodule "Sparkle"]
+	path = Sparkle
+	url = https://github.com/sparkle-project/Sparkle.git
