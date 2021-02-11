@@ -284,8 +284,8 @@ def update_appcast(oldVersion, newVersion, appcastSignature, tarballName, fileSi
     	    <h3>Changes Since """ + str(oldVersion) + """</h3>
     	        <li></li>
     	        <li></li>
-            </description>
             ]]>
+            </description>
             <pubDate>""" + appcastDate + """</pubDate>
             <sparkle:minimumSystemVersion>""" + minimumSystemVersion + """</sparkle:minimumSystemVersion>
             <enclosure url=\"""" + download_url + """\" sparkle:version=\"""" + newVersion + """\" length=\"""" + fileSize + """\" type="application/octet-stream" sparkle:dsaSignature=\"""" + appcastSignature + """\" />
