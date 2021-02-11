@@ -50,13 +50,14 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-import os, sys
+import os, sys, io
 from subprocess import Popen, PIPE
 from stat import ST_SIZE
 import tarfile
 from time import gmtime, strftime, localtime
 import plistlib
 import tempfile
+from getpass import getuser
 
 import requests
 from requests.auth import HTTPBasicAuth
@@ -64,10 +65,6 @@ import json
 from uritemplate import expand as uri_expand 
 
 from Foundation import NSXMLDocument, NSUserDefaults, NSURL, NSXMLNodePrettyPrint
-
-def GetSymRoot():
-    xcprefs = NSUserDefaults.standardUserDefaults().persistentDomainForName_("com.apple.Xcode")
-    return xcprefs["PBXApplicationwideBuildSettings"]["SYMROOT"].stringByStandardizingPath()
 
 # determine the path based on the path of this program
 SOURCE_DIR = os.path.dirname(os.path.abspath(sys.argv[0]))
@@ -79,6 +76,14 @@ KEY_NAME = "TeX Live Utility Sparkle Key"
 
 # name of keychain item for svn/upload
 UPLOAD_KEYCHAIN_ITEM = "github.com"
+
+# create a private temporary directory
+SYMROOT = os.path.join("/tmp", "TLU-%s" % (getuser()))
+try:
+    # should already exist after the first run
+    os.mkdir(SYMROOT)
+except Exception as e:
+    assert os.path.isdir(SYMROOT), "%s does not exist" % (SYMROOT)
 
 # derived paths
 BUILD_DIR = os.path.join(GetSymRoot(), "Release")
@@ -108,19 +113,83 @@ def rewrite_version(newVersion):
 def clean_and_build():
     
     # clean and rebuild the Xcode project
-    buildCmd = ["/usr/bin/xcodebuild", "-configuration", "Release", "-target", "TeX Live Utility", "clean"]
+    buildCmd = ["/usr/bin/xcodebuild", "clean", "-scheme", "TeX Live Utility (Release)", "SYMROOT=" + SYMROOT]
     nullDevice = open("/dev/null", "w")
-    x = Popen(buildCmd, cwd=SOURCE_DIR, stdout=nullDevice, stderr=nullDevice)
+    x = Popen(buildCmd, cwd=SOURCE_DIR)
     rc = x.wait()
-    # print("xcodebuild clean exited with status %s" % (rc))
+    print("xcodebuild clean exited with status %s" % (rc))
 
-    # separate steps, since clean fails when Xcode can't delete my home directory,
-    # which is some scary shit.
-    buildCmd = ["/usr/bin/xcodebuild", "-configuration", "Release", "-target", "TeX Live Utility", "build"]
-    x = Popen(buildCmd, cwd=SOURCE_DIR, stdout=nullDevice, stderr=nullDevice)
+    buildCmd = ["/usr/bin/xcodebuild", "-scheme", "TeX Live Utility (Release)", "SYMROOT=" + SYMROOT, "buildsetting=", "CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO"]
+    nullDevice = open("/dev/null", "w")
+    x = Popen(buildCmd, cwd=SOURCE_DIR)#, stdout=nullDevice, stderr=nullDevice)
     rc = x.wait()
     assert rc == 0, "xcodebuild failed"
     nullDevice.close()
+
+def codesign():
+    
+    sign_cmd = [os.path.join(SOURCE_DIR, "codesign-all.sh"), BUILT_APP]
+    x = Popen(sign_cmd, cwd=SOURCE_DIR)
+    rc = x.wait()
+    print("codesign-all.sh exited with status %s" % (rc))
+    assert rc == 0, "code signing failed"
+    
+def notarize_dmg(dmg_path):
+    
+    notarize_cmd = ["xcrun", "altool", "--notarize-app", "--primary-bundle-id", "com.mac.amaxwell.tlu", "--username", "amaxwell@mac.com", "--password",  "@keychain:AC_PASSWORD", "--output-format", "xml", "--file", dmg_path]
+    notarize_task = Popen(notarize_cmd, cwd=SOURCE_DIR, stdout=PIPE, stderr=PIPE)
+    [output, error] = notarize_task.communicate()
+    rc = notarize_task.returncode
+    print("altool --notarize-app exited with status %s" % (rc))
+    assert rc == 0, "notarization failed"
+    
+    output_stream = io.BytesIO(output)
+    output_pl = plistlib.readPlist(output_stream)
+    output_stream.close()
+    sys.stderr.write("%s\n" % (output))
+    assert "notarization-upload" in output_pl, "missing notarization-upload key in reply %s" % (output)
+    
+    request_uuid = output_pl["notarization-upload"]["RequestUUID"]
+    
+    while True:
+    
+        sleep(20)
+        
+        # xcrun altool --notarization-info 401e7e6d-7bce-4e0a-87bd-bcb17b40bf97 --username amaxwell@mac.com --password @keychain:AC_PASSWORD
+        
+        notarize_cmd = ["xcrun", "altool", "--notarization-info", request_uuid, "--username", "amaxwell@mac.com", "--password",  "@keychain:AC_PASSWORD", "--output-format", "xml"]
+        notarize_task = Popen(notarize_cmd, cwd=SOURCE_DIR, stdout=PIPE, stderr=PIPE)
+        [output, error] = notarize_task.communicate()
+        rc = notarize_task.returncode
+        assert rc == 0, "status request failed"
+        
+        output_stream = io.BytesIO(output)
+        output_pl = plistlib.readPlist(output_stream)
+        assert "notarization-info" in output_pl, "missing notarization-upload key in reply %s" % (output)
+        status = output_pl["notarization-info"]["Status"]
+            
+        if status == "invalid":
+            # open the URL
+            log_url = output_pl["notarization-info"]["LogFileURL"]
+            Popen(["/usr/bin/open", "-a", "Safari", log_url])
+            break
+        elif status == "in progress":
+            sys.stderr.write("notarization status not available yet for %s\n" % (request_uuid))
+            continue
+        else:
+            # staple?
+            sys.stderr.write("notarization succeeded\n")
+            sys.stdout.write("%s\n" % (output))
+                        
+            log_url = output_pl["notarization-info"]["LogFileURL"]
+            Popen(["/usr/bin/open", "-a", "Safari", log_url])
+            
+            # xcrun stapler staple TeX\ Live\ Utility.app-1.42b17.dmg 
+            x = Popen(["xcrun", "stapler", "staple", dmg_path])
+            rc = x.wait()
+            assert rc == 0, "stapler failed"
+            
+            break
 
 def create_tarball_of_application(newVersionNumber):
     
@@ -211,10 +280,12 @@ def update_appcast(oldVersion, newVersion, appcastSignature, tarballName, fileSi
        <item>
             <title>Version """ + newVersion + """</title>
             <description>
+            <![CDATA[
     	    <h3>Changes Since """ + str(oldVersion) + """</h3>
     	        <li></li>
     	        <li></li>
             </description>
+            ]]>
             <pubDate>""" + appcastDate + """</pubDate>
             <sparkle:minimumSystemVersion>""" + minimumSystemVersion + """</sparkle:minimumSystemVersion>
             <enclosure url=\"""" + download_url + """\" sparkle:version=\"""" + newVersion + """\" length=\"""" + fileSize + """\" type="application/octet-stream" sparkle:dsaSignature=\"""" + appcastSignature + """\" />
@@ -318,7 +389,11 @@ if __name__ == '__main__':
     push_task.wait()
     
     clean_and_build()
+    codesign()
     dmg_path = create_dmg_of_application(new_version)
+    
+    # will bail if any part fails
+    notarize_dmg(dmg_path)
     
     username, password = user_and_pass_for_upload()
     auth = HTTPBasicAuth(username, password)
