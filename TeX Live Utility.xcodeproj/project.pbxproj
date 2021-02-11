@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -27,16 +27,16 @@
 		F918B78D14552A9B0038476C /* SearchFieldCapRightInactive.png in Resources */ = {isa = PBXBuildFile; fileRef = F918B78314552A9B0038476C /* SearchFieldCapRightInactive.png */; };
 		F918B78E14552A9B0038476C /* TextFieldStretch.png in Resources */ = {isa = PBXBuildFile; fileRef = F918B78414552A9B0038476C /* TextFieldStretch.png */; };
 		F918B78F14552A9B0038476C /* TextFieldStretchInactive.png in Resources */ = {isa = PBXBuildFile; fileRef = F918B78514552A9B0038476C /* TextFieldStretchInactive.png */; };
-		F92034E217F0A6E300796A10 /* python_version.py in Copy aux executables */ = {isa = PBXBuildFile; fileRef = F92034D817F0A45A00796A10 /* python_version.py */; };
+		F92034E217F0A6E300796A10 /* python_version.py in Copy aux executables */ = {isa = PBXBuildFile; fileRef = F92034D817F0A45A00796A10 /* python_version.py */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		F922D79E1038B1E1004E9B12 /* TLMDownload.m in Sources */ = {isa = PBXBuildFile; fileRef = F922D79D1038B1E1004E9B12 /* TLMDownload.m */; };
 		F925D1AB12957B1800D75BB4 /* TLMMirrorController.m in Sources */ = {isa = PBXBuildFile; fileRef = F925D1AA12957B1800D75BB4 /* TLMMirrorController.m */; };
 		F925D1B112957B5600D75BB4 /* Mirrors.xib in Resources */ = {isa = PBXBuildFile; fileRef = F925D1B012957B5600D75BB4 /* Mirrors.xib */; };
 		F925D1BB12957C1B00D75BB4 /* CTAN.sites.plist in Resources */ = {isa = PBXBuildFile; fileRef = F925D1BA12957C1B00D75BB4 /* CTAN.sites.plist */; };
 		F929DE8413DCE00000072DDA /* TLMAddressTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = F929DE8313DCE00000072DDA /* TLMAddressTextField.m */; };
-		F92A38B3198EFD64005C4B71 /* FileView.framework in copy frameworks */ = {isa = PBXBuildFile; fileRef = F96F06D3198ED9A9001CFD1C /* FileView.framework */; };
+		F92A38B3198EFD64005C4B71 /* FileView.framework in copy frameworks */ = {isa = PBXBuildFile; fileRef = F96F06D3198ED9A9001CFD1C /* FileView.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		F92A38C4198F023F005C4B71 /* FileView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F92A38C3198F023F005C4B71 /* FileView.framework */; };
 		F93BA51E19CB611F00C23004 /* texdist_2014basic.sh in Resources */ = {isa = PBXBuildFile; fileRef = F93BA51D19CB611F00C23004 /* texdist_2014basic.sh */; };
-		F93C786F1AF32F5800817C34 /* texdist_change_default.sh in Copy aux executables */ = {isa = PBXBuildFile; fileRef = F93C78661AF3284A00817C34 /* texdist_change_default.sh */; };
+		F93C786F1AF32F5800817C34 /* texdist_change_default.sh in Copy aux executables */ = {isa = PBXBuildFile; fileRef = F93C78661AF3284A00817C34 /* texdist_change_default.sh */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		F93C78721AF33A6000817C34 /* TLMTexDistribution.m in Sources */ = {isa = PBXBuildFile; fileRef = F93C78711AF33A6000817C34 /* TLMTexDistribution.m */; };
 		F942FFC513A08FD60008D8FD /* TLMDatabasePackage.m in Sources */ = {isa = PBXBuildFile; fileRef = F942FFC413A08FD60008D8FD /* TLMDatabasePackage.m */; };
 		F94E74A20EF4965100E0B78F /* TLMTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = F94E74A10EF4965100E0B78F /* TLMTableView.m */; };
@@ -53,7 +53,7 @@
 		F967342713E10BB3008C2B3E /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F967342613E10BB3008C2B3E /* WebKit.framework */; };
 		F96737A713E8E577008C2B3E /* TLMAddressTextFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F96737A613E8E576008C2B3E /* TLMAddressTextFieldCell.m */; };
 		F97A7E500F13067C008EBCEA /* TLMTask.m in Sources */ = {isa = PBXBuildFile; fileRef = F97A7E4F0F13067C008EBCEA /* TLMTask.m */; };
-		F97B37B2128B4FE600B49CA7 /* agent_installer.py in Copy aux executables */ = {isa = PBXBuildFile; fileRef = F97B37B0128B4FCC00B49CA7 /* agent_installer.py */; };
+		F97B37B2128B4FE600B49CA7 /* agent_installer.py in Copy aux executables */ = {isa = PBXBuildFile; fileRef = F97B37B0128B4FCC00B49CA7 /* agent_installer.py */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		F97E85740EFA18F400862882 /* TeXDistTool.icns in Resources */ = {isa = PBXBuildFile; fileRef = F97E85730EFA18F400862882 /* TeXDistTool.icns */; };
 		F97E860C0EFA3BFD00862882 /* TeXDistDocument.icns in Resources */ = {isa = PBXBuildFile; fileRef = F97E860B0EFA3BFD00862882 /* TeXDistDocument.icns */; };
 		F97EBA06143D449000E79859 /* TLMLogWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = F97EBA05143D449000E79859 /* TLMLogWindow.m */; };
@@ -68,7 +68,7 @@
 		F99CCDE70F0EB56E00D67ED0 /* DefaultMirrors.plist in Resources */ = {isa = PBXBuildFile; fileRef = F99CCDDA0F0EAFB300D67ED0 /* DefaultMirrors.plist */; };
 		F99D9B0B0F01731E00A1DCCB /* TLMTabView.m in Sources */ = {isa = PBXBuildFile; fileRef = F99D9B0A0F01731E00A1DCCB /* TLMTabView.m */; };
 		F99E51980EEE4AD5006E6B39 /* TLMURLFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = F99E51970EEE4AD5006E6B39 /* TLMURLFormatter.m */; };
-		F9A057B60F507624008C804E /* DVIImporter.mdimporter in CopyFiles */ = {isa = PBXBuildFile; fileRef = F9A057B20F5075DD008C804E /* DVIImporter.mdimporter */; };
+		F9A057B60F507624008C804E /* DVIImporter.mdimporter in CopyFiles */ = {isa = PBXBuildFile; fileRef = F9A057B20F5075DD008C804E /* DVIImporter.mdimporter */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		F9A49FC71059E64400F5AC62 /* TLMInstallDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = F9A49FC61059E64400F5AC62 /* TLMInstallDataSource.m */; };
 		F9A4A093105CA67100F5AC62 /* TLMProfileNode.m in Sources */ = {isa = PBXBuildFile; fileRef = F9A4A092105CA67100F5AC62 /* TLMProfileNode.m */; };
 		F9A4A106105D736B00F5AC62 /* texlive.profile.plist in Resources */ = {isa = PBXBuildFile; fileRef = F9A4A105105D736B00F5AC62 /* texlive.profile.plist */; };
@@ -91,7 +91,7 @@
 		F9B137200EEC4A92007C0046 /* TLMUpdateOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B1371F0EEC4A92007C0046 /* TLMUpdateOperation.m */; };
 		F9B137330EEC4C6A007C0046 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9B137320EEC4C6A007C0046 /* Security.framework */; };
 		F9B139D40EECBE23007C0046 /* tlu_ipctask.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B139D30EECBE23007C0046 /* tlu_ipctask.m */; };
-		F9B139DA0EECBECD007C0046 /* tlu_ipctask in Copy aux executables */ = {isa = PBXBuildFile; fileRef = F9B139CB0EECBDFE007C0046 /* tlu_ipctask */; };
+		F9B139DA0EECBECD007C0046 /* tlu_ipctask in Copy aux executables */ = {isa = PBXBuildFile; fileRef = F9B139CB0EECBDFE007C0046 /* tlu_ipctask */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		F9B13ADE0EECDAC8007C0046 /* TLMSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B13ADB0EECD9DA007C0046 /* TLMSplitView.m */; };
 		F9B13B1D0EECE7F3007C0046 /* TLMInfoOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B13B1C0EECE7F3007C0046 /* TLMInfoOperation.m */; };
 		F9B13B240EECEA73007C0046 /* TLMInfoController.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B13B170EECE5AE007C0046 /* TLMInfoController.m */; };
@@ -105,7 +105,7 @@
 		F9C7260C157931E8000DF90F /* TLMToolbarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = F9C7260B157931E8000DF90F /* TLMToolbarItem.m */; };
 		F9C7F177139E8E550031774F /* NSString_TLMExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = F9C7F176139E8E550031774F /* NSString_TLMExtensions.m */; };
 		F9C7F188139E91E40031774F /* NSString_TLMExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = F9C7F176139E8E550031774F /* NSString_TLMExtensions.m */; };
-		F9C7F37113A124C30031774F /* parse_tlpdb.py in Copy aux executables */ = {isa = PBXBuildFile; fileRef = F9C7F37013A124B70031774F /* parse_tlpdb.py */; };
+		F9C7F37113A124C30031774F /* parse_tlpdb.py in Copy aux executables */ = {isa = PBXBuildFile; fileRef = F9C7F37013A124B70031774F /* parse_tlpdb.py */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		F9C8920C1453366300131F23 /* LionBlueProgress.png in Resources */ = {isa = PBXBuildFile; fileRef = F9C8920A1453366300131F23 /* LionBlueProgress.png */; };
 		F9D3014819BEB81E00CDEB55 /* texdist.plist in Resources */ = {isa = PBXBuildFile; fileRef = F9D3014319BEB81E00CDEB55 /* texdist.plist */; };
 		F9D3014919BEB81E00CDEB55 /* texdist_2014.sh in Resources */ = {isa = PBXBuildFile; fileRef = F9D3014419BEB81E00CDEB55 /* texdist_2014.sh */; };
@@ -122,23 +122,87 @@
 		F9DAAB8213D0DE26004055A0 /* NSURL_TLMExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = F9DAAB8113D0DE26004055A0 /* NSURL_TLMExtensions.m */; };
 		F9DBEE6E157848A500EFADE5 /* PapersizeSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = F9DBEE6D157848A500EFADE5 /* PapersizeSheet.xib */; };
 		F9DCD36C0F06F0A200600DD2 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9DCD3650F06F08C00600DD2 /* Sparkle.framework */; };
-		F9DCD3700F06F0F400600DD2 /* Sparkle.framework in copy frameworks */ = {isa = PBXBuildFile; fileRef = F9DCD3650F06F08C00600DD2 /* Sparkle.framework */; };
+		F9DCD3700F06F0F400600DD2 /* Sparkle.framework in copy frameworks */ = {isa = PBXBuildFile; fileRef = F9DCD3650F06F08C00600DD2 /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		F9DCD43F0F06F76F00600DD2 /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = F9DCD43E0F06F76F00600DD2 /* dsa_pub.pem */; };
 		F9E22FD50EFCBD2A00B0BE38 /* TLMPapersizeOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F9E22FD40EFCBD2A00B0BE38 /* TLMPapersizeOperation.m */; };
-		F9E2C9BF0F3C00FA00D5EC49 /* DVI.qlgenerator in CopyFiles */ = {isa = PBXBuildFile; fileRef = F9E2C92D0F3C009400D5EC49 /* DVI.qlgenerator */; };
+		F9E2C9BF0F3C00FA00D5EC49 /* DVI.qlgenerator in CopyFiles */ = {isa = PBXBuildFile; fileRef = F9E2C92D0F3C009400D5EC49 /* DVI.qlgenerator */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		F9E3DDC1182F415B00800308 /* TLUNotifier.app in Copy aux executables */ = {isa = PBXBuildFile; fileRef = F9E3DDB0182F3FEA00800308 /* TLUNotifier.app */; };
+		F9E6912225C8CF4A004285CD /* NSStupid.m in Sources */ = {isa = PBXBuildFile; fileRef = F9E6912125C8CF4A004285CD /* NSStupid.m */; };
 		F9F043030F180031008DFE8C /* TLMReadWriteOperationQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F043020F180031008DFE8C /* TLMReadWriteOperationQueue.m */; };
 		F9F130560EED94D800D9968D /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = F9F130550EED94D800D9968D /* Preferences.xib */; };
 		F9F1305B0EED94F700D9968D /* TLMPreferenceController.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F1305A0EED94F700D9968D /* TLMPreferenceController.m */; };
 		F9F1C11310C5ABA300D32C17 /* NSMenu_TLMExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F1C11210C5ABA300D32C17 /* NSMenu_TLMExtensions.m */; };
 		F9F1C14E10C6EEC200D32C17 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9F1C14D10C6EEC200D32C17 /* SystemConfiguration.framework */; };
 		F9F56B4C0EF31F8800E934A9 /* TLMLogMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F56B4B0EF31F8800E934A9 /* TLMLogMessage.m */; };
-		F9F8BB4915DB0A1100B5D1F3 /* uninstall_local_agent.sh in Copy aux executables */ = {isa = PBXBuildFile; fileRef = F9F8BB4715DB09F900B5D1F3 /* uninstall_local_agent.sh */; };
+		F9F8BB4915DB0A1100B5D1F3 /* uninstall_local_agent.sh in Copy aux executables */ = {isa = PBXBuildFile; fileRef = F9F8BB4715DB09F900B5D1F3 /* uninstall_local_agent.sh */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		F9FAA44E0EFCBECD0040EAB2 /* TLMPapersizeController.m in Sources */ = {isa = PBXBuildFile; fileRef = F9FAA44D0EFCBECD0040EAB2 /* TLMPapersizeController.m */; };
 		F9FE58B4123EB80800B6008F /* TLMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = F9FE58B3123EB80800B6008F /* TLMDatabase.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		F94C250425C5DF2700F06A14 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F9DCD3590F06F08C00600DD2 /* Sparkle.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 5D06E8D00FD68C7C005AE3F6;
+			remoteInfo = BinaryDelta;
+		};
+		F94C250625C5DF2700F06A14 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F9DCD3590F06F08C00600DD2 /* Sparkle.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 55C14BB7136EEF1500649790;
+			remoteInfo = Autoupdate;
+		};
+		F94C250825C5DF2700F06A14 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F9DCD3590F06F08C00600DD2 /* Sparkle.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 726B2B5D1C645FC900388755;
+			remoteInfo = "UI Tests";
+		};
+		F94C250A25C5DF2700F06A14 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F9DCD3590F06F08C00600DD2 /* Sparkle.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 722954B41D04ADAF00ECF9CA;
+			remoteInfo = fileop;
+		};
+		F94C250C25C5DF2700F06A14 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F9DCD3590F06F08C00600DD2 /* Sparkle.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 5AE13FB31E0D9E07000D2C2C;
+			remoteInfo = generate_appcast;
+		};
+		F94C250E25C5DF2700F06A14 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F9DCD3590F06F08C00600DD2 /* Sparkle.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 5AB8F19F214DA72000A1187F;
+			remoteInfo = generate_keys;
+		};
+		F94C251025C5DF2700F06A14 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F9DCD3590F06F08C00600DD2 /* Sparkle.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 5A5ADED7214EDE4900DF0099;
+			remoteInfo = sign_update;
+		};
+		F94C251225C5DF2700F06A14 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F9DCD3590F06F08C00600DD2 /* Sparkle.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = EA4311EA229D651300A5503D;
+			remoteInfo = bsdiff;
+		};
+		F94C251425C5DF2700F06A14 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F9DCD3590F06F08C00600DD2 /* Sparkle.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = EA4311A0229D5FBC00A5503D;
+			remoteInfo = ed25519;
+		};
 		F96F06D2198ED9A9001CFD1C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F9B396090F340A71007F95E9 /* FileView.xcodeproj */;
@@ -194,13 +258,6 @@
 			proxyType = 2;
 			remoteGlobalIDString = 61B5F90209C4CEE200B25A18;
 			remoteInfo = "Sparkle Test App";
-		};
-		F9DCD3680F06F08C00600DD2 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F9DCD3590F06F08C00600DD2 /* Sparkle.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = DAAEFC960DA571DF0051E0D0;
-			remoteInfo = "relaunch tool";
 		};
 		F9DCD36A0F06F08C00600DD2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -538,6 +595,9 @@
 		F9E22FD40EFCBD2A00B0BE38 /* TLMPapersizeOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMPapersizeOperation.m; sourceTree = "<group>"; };
 		F9E2C9250F3C009300D5EC49 /* DVI.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = DVI.xcodeproj; path = "DVI-qlgenerator/DVI.xcodeproj"; sourceTree = "<group>"; };
 		F9E3DDA3182F3FE800800308 /* TLUNotifier.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = TLUNotifier.xcodeproj; path = TLUNotifier/TLUNotifier.xcodeproj; sourceTree = "<group>"; };
+		F9E6912125C8CF4A004285CD /* NSStupid.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSStupid.m; sourceTree = "<group>"; };
+		F9E6913825C8CF69004285CD /* NSStupid.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NSStupid.h; sourceTree = "<group>"; };
+		F9ECF7F525C7EABC009BC1BA /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = German.lproj/LogWindow.xib; sourceTree = "<group>"; };
 		F9F043010F180031008DFE8C /* TLMReadWriteOperationQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMReadWriteOperationQueue.h; sourceTree = "<group>"; };
 		F9F043020F180031008DFE8C /* TLMReadWriteOperationQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMReadWriteOperationQueue.m; sourceTree = "<group>"; };
 		F9F130530EED94CC00D9968D /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/Preferences.xib; sourceTree = "<group>"; };
@@ -600,6 +660,8 @@
 				F9129BBE102F25AC000A7B50 /* TLMSizeFormatter.h */,
 				F9999F9A10D1C33800F594CB /* TLMProxyManager.h */,
 				F9999F9B10D1C33800F594CB /* TLMProxyManager.m */,
+				F9E6912125C8CF4A004285CD /* NSStupid.m */,
+				F9E6913825C8CF69004285CD /* NSStupid.h */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -939,8 +1001,16 @@
 			children = (
 				F9DCD3650F06F08C00600DD2 /* Sparkle.framework */,
 				F9DCD3670F06F08C00600DD2 /* Sparkle Test App.app */,
-				F9DCD3690F06F08C00600DD2 /* relaunch */,
-				F9DCD36B0F06F08C00600DD2 /* Sparkle Unit Tests.octest */,
+				F9DCD36B0F06F08C00600DD2 /* Sparkle Unit Tests.xctest */,
+				F94C250525C5DF2700F06A14 /* BinaryDelta */,
+				F94C250725C5DF2700F06A14 /* Autoupdate.app */,
+				F94C250925C5DF2700F06A14 /* UI Tests.xctest */,
+				F94C250B25C5DF2700F06A14 /* fileop */,
+				F94C250D25C5DF2700F06A14 /* generate_appcast */,
+				F94C250F25C5DF2700F06A14 /* generate_keys */,
+				F94C251125C5DF2700F06A14 /* sign_update */,
+				F94C251325C5DF2700F06A14 /* libbsdiff.a */,
+				F94C251525C5DF2700F06A14 /* libed25519.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -991,6 +1061,7 @@
 				F9A057B70F507642008C804E /* CopyFiles */,
 				F9B396400F340E45007F95E9 /* FileView install name */,
 				F965629E1812189E000B1464 /* Sign frameworks */,
+				F914FB4325D234A100331EE5 /* Codesign all the things */,
 			);
 			buildRules = (
 			);
@@ -1030,10 +1101,11 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1130;
+				CLASSPREFIX = "";
+				LastUpgradeCheck = 1240;
 			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "TeX Live Utility" */;
-			compatibilityVersion = "Xcode 3.2";
+			compatibilityVersion = "Xcode 11.0";
 			developmentRegion = English;
 			hasScannedForEncodings = 1;
 			knownRegions = (
@@ -1084,6 +1156,69 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		F94C250525C5DF2700F06A14 /* BinaryDelta */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = BinaryDelta;
+			remoteRef = F94C250425C5DF2700F06A14 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F94C250725C5DF2700F06A14 /* Autoupdate.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = Autoupdate.app;
+			remoteRef = F94C250625C5DF2700F06A14 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F94C250925C5DF2700F06A14 /* UI Tests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "UI Tests.xctest";
+			remoteRef = F94C250825C5DF2700F06A14 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F94C250B25C5DF2700F06A14 /* fileop */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = fileop;
+			remoteRef = F94C250A25C5DF2700F06A14 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F94C250D25C5DF2700F06A14 /* generate_appcast */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = generate_appcast;
+			remoteRef = F94C250C25C5DF2700F06A14 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F94C250F25C5DF2700F06A14 /* generate_keys */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = generate_keys;
+			remoteRef = F94C250E25C5DF2700F06A14 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F94C251125C5DF2700F06A14 /* sign_update */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = sign_update;
+			remoteRef = F94C251025C5DF2700F06A14 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F94C251325C5DF2700F06A14 /* libbsdiff.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libbsdiff.a;
+			remoteRef = F94C251225C5DF2700F06A14 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F94C251525C5DF2700F06A14 /* libed25519.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libed25519.a;
+			remoteRef = F94C251425C5DF2700F06A14 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		F96F06D3198ED9A9001CFD1C /* FileView.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -1126,17 +1261,10 @@
 			remoteRef = F9DCD3660F06F08C00600DD2 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		F9DCD3690F06F08C00600DD2 /* relaunch */ = {
-			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.executable";
-			path = relaunch;
-			remoteRef = F9DCD3680F06F08C00600DD2 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		F9DCD36B0F06F08C00600DD2 /* Sparkle Unit Tests.octest */ = {
+		F9DCD36B0F06F08C00600DD2 /* Sparkle Unit Tests.xctest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "Sparkle Unit Tests.octest";
+			path = "Sparkle Unit Tests.xctest";
 			remoteRef = F9DCD36A0F06F08C00600DD2 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
@@ -1206,6 +1334,24 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		F914FB4325D234A100331EE5 /* Codesign all the things */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Codesign all the things";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n#${SRCROOT}/codesign-all.sh \"${CODESIGNING_FOLDER_PATH}\"\n\n\n\n";
+		};
 		F965629E1812189E000B1464 /* Sign frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1218,7 +1364,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "LOCATION=\"${BUILT_PRODUCTS_DIR}\"/\"${FRAMEWORKS_FOLDER_PATH}\"\nIDENTITY=\"TeX Live Utility Signing Certificate\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/Sparkle.framework/Versions/A\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/FileView.framework/Versions/A\"\n";
+			shellScript = "#LOCATION=\"${BUILT_PRODUCTS_DIR}\"/\"${FRAMEWORKS_FOLDER_PATH}\"\n#IDENTITY=\"TeX Live Utility Signing Certificate\"\n#codesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/Sparkle.framework/Versions/A\"\n#codesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/FileView.framework/Versions/A\"\n";
 		};
 		F96562A718121C75000B1464 /* Sign auxiliary executables */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1276,7 +1422,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd ${SOURCE_ROOT}\n\n/usr/bin/genstrings -o English.lproj *.m\n\niconv -f UTF-16 -t UTF-8 English.lproj/Localizable.strings > English.lproj/Localizable.strings.utf8\n\nmv English.lproj/Localizable.strings.utf8 English.lproj/Localizable.strings\n\n# PyObjC squawks about this\nunset MACOSX_DEPLOYMENT_TARGET\n/usr/bin/python check_localized_strings.py\n";
+			shellScript = "cd ${SOURCE_ROOT}\n\n/usr/bin/genstrings -o English.lproj *.m\n\niconv -f UTF-16 -t UTF-8 English.lproj/Localizable.strings > English.lproj/Localizable.strings.utf8\n\nmv English.lproj/Localizable.strings.utf8 English.lproj/Localizable.strings\n\n# PyObjC squawks about this\n#unset MACOSX_DEPLOYMENT_TARGET\n/usr/bin/python check_localized_strings.py\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1300,6 +1446,7 @@
 				F9F1305B0EED94F700D9968D /* TLMPreferenceController.m in Sources */,
 				F99E51980EEE4AD5006E6B39 /* TLMURLFormatter.m in Sources */,
 				F9F56B4C0EF31F8800E934A9 /* TLMLogMessage.m in Sources */,
+				F9E6912225C8CF4A004285CD /* NSStupid.m in Sources */,
 				F9B6B5F80EF469A600CF767F /* TLMLogServer.m in Sources */,
 				F94E74A20EF4965100E0B78F /* TLMTableView.m in Sources */,
 				F9A8BB370EF8B11200E35DC9 /* TLMInfraUpdateOperation.m in Sources */,
@@ -1446,6 +1593,7 @@
 				F97EBB381440971C00E79859 /* Japanese */,
 				F9DBEE631578482D00EFADE5 /* zh_CN */,
 				F9E1F7932069FCD100908132 /* French */,
+				F9ECF7F525C7EABC009BC1BA /* German */,
 			);
 			name = LogWindow.xib;
 			sourceTree = "<group>";
@@ -1550,7 +1698,6 @@
 			baseConfigurationReference = F9C7F1F113A003660031774F /* Debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CODE_SIGN_IDENTITY = "TeX Live Utility Signing Certificate";
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -1559,7 +1706,10 @@
 				GCC_PREFIX_HEADER = "TeX Live Manager_Prefix.pch";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				OTHER_CODE_SIGN_FLAGS = "-o kill";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(LD_RUNPATH_SEARCH_PATHS_$(IS_MACCATALYST))",
+					"@loader_path/../Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.googlecode.mactlmgr.tlu;
 				PRODUCT_NAME = "TeX Live Utility";
 			};
@@ -1570,13 +1720,15 @@
 			baseConfigurationReference = F9C7F1F213A003660031774F /* Release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CODE_SIGN_IDENTITY = "TeX Live Utility Signing Certificate";
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TeX Live Manager_Prefix.pch";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				OTHER_CODE_SIGN_FLAGS = "-o kill";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(LD_RUNPATH_SEARCH_PATHS_$(IS_MACCATALYST))",
+					"@loader_path/../Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.googlecode.mactlmgr.tlu;
 				PRODUCT_NAME = "TeX Live Utility";
 			};
@@ -1586,6 +1738,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F9C7F1F113A003660031774F /* Debug.xcconfig */;
 			buildSettings = {
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_STATIC_ANALYZER_MODE = deep;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
@@ -1604,6 +1757,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F9C7F1F213A003660031774F /* Release.xcconfig */;
 			buildSettings = {
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_STATIC_ANALYZER_MODE = deep;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
@@ -1621,9 +1775,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F9C7F1F113A003660031774F /* Debug.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "TeX Live Utility Signing Certificate";
 				INFOPLIST_FILE = "tlu_ipctask-Info.plist";
-				OTHER_CODE_SIGN_FLAGS = "-i com.googlecode.mactlmgr.tlu_ipctask -o kill";
 				PRODUCT_NAME = tlu_ipctask;
 			};
 			name = Debug;
@@ -1632,10 +1784,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F9C7F1F213A003660031774F /* Release.xcconfig */;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CODE_SIGN_IDENTITY = "TeX Live Utility Signing Certificate";
 				INFOPLIST_FILE = "tlu_ipctask-Info.plist";
-				OTHER_CODE_SIGN_FLAGS = "-i com.googlecode.mactlmgr.tlu_ipctask -o kill";
 				PRODUCT_NAME = tlu_ipctask;
 			};
 			name = Release;

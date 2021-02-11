@@ -178,15 +178,13 @@
     NSString *resolvedUsrTexbin = [@"/usr/texbin" stringByResolvingSymlinksInPath];
     NSString *resolvedLibTexbin = [@"/Library/TeX/texbin" stringByResolvingSymlinksInPath];
     
-    FSRef fsThis, fsUsr, fsLib;
-    if (CFURLGetFSRef((CFURLRef)[NSURL fileURLWithPath:resolvedTexbin], &fsThis) &&
-        CFURLGetFSRef((CFURLRef)[NSURL fileURLWithPath:resolvedUsrTexbin], &fsUsr)) {
-        return (FSCompareFSRefs(&fsThis, &fsUsr) == noErr);
-    }
-    else if (CFURLGetFSRef((CFURLRef)[NSURL fileURLWithPath:resolvedTexbin], &fsThis) &&
-             CFURLGetFSRef((CFURLRef)[NSURL fileURLWithPath:resolvedLibTexbin], &fsLib)) {
-        return (FSCompareFSRefs(&fsThis, &fsLib) == noErr);
-    }
+    NSURL *resolvedTexbinURL = [NSURL fileURLWithPath:resolvedTexbin];
+
+    if ([resolvedTexbinURL tlm_isEqualToFileURL:[NSURL fileURLWithPath:resolvedUsrTexbin]])
+        return YES;
+    else if ([resolvedTexbinURL tlm_isEqualToFileURL:[NSURL fileURLWithPath:resolvedLibTexbin]])
+        return YES;
+    
     return NO;
 }
 

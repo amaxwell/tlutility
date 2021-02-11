@@ -938,7 +938,7 @@ static NSURL * __TLMGPGURL()
                     
                 NSAlert *alert = [[NSAlert new] autorelease];
                 [alert setMessageText:NSLocalizedString(@"Local fonts were found", @"alert title")];
-                [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"You appear to have installed fonts in your home directory.  Would you like them to be automatically activated in TeX Live %d?", @"alert text, integer format specifier"), texliveYear]];
+                [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"You appear to have installed fonts in your home directory.  Would you like them to be automatically activated in TeX Live %ld?", @"alert text, integer format specifier"), texliveYear]];
                 [alert addButtonWithTitle:NSLocalizedString(@"Yes", @"button title")];
                 [alert addButtonWithTitle:NSLocalizedString(@"No", @"button title")];
                 

@@ -42,7 +42,7 @@ from time import sleep
 _ALERT_TIMEOUT = 3600 * 12
 
 # public attribute; can be checked from the shell with something like
-# python -c 'import sys; sys.path.append("/Library/Application Support/TeX Live Utility"); import update_check as uc; sys.stdout.write("%s\n" % (uc.VERSION))'
+# python -B -c 'import sys; sys.path.append("/Library/Application Support/TeX Live Utility"); import update_check as uc; sys.stdout.write("%s\n" % (uc.VERSION))'
 VERSION = 0.3
 
 def log_message(msg):

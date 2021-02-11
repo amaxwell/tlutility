@@ -40,6 +40,7 @@
 #import "TLMLogServer.h"
 #import "TLMEnvironment.h"
 #import "TLMPreferenceController.h"
+#import "NSStupid.h"
 #import <SystemConfiguration/SystemConfiguration.h>
 #import <CoreServices/CoreServices.h>
 #import <Security/Security.h>
@@ -83,7 +84,7 @@ static bool __TLMGetUserAndPassForProxy(NSString *host, const uint16_t port, NSS
     }
     
     if (noErr != err) {
-        TLMLog(__func__, @"unexpected error from SecKeychainFindInternetPassword: %s", GetMacOSStatusErrorString(err));
+        TLMLog(__func__, @"unexpected error from SecKeychainFindInternetPassword: %s", TLMGetMacOSStatusErrorString(err));
         return false;
     }
     
@@ -119,9 +120,6 @@ static bool __TLMGetUserAndPassForProxy(NSString *host, const uint16_t port, NSS
             break;
         case kSecGenericPasswordItemClass:
             itemID = CSSM_DL_DB_RECORD_GENERIC_PASSWORD;
-            break;
-        case kSecAppleSharePasswordItemClass:
-            itemID = CSSM_DL_DB_RECORD_APPLESHARE_PASSWORD;
             break;
         default:
             itemID = itemClass;

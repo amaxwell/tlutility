@@ -250,7 +250,7 @@
 "No" = "Nein";
 
 /* main window status string */
-"No Backups Available" = "Es sind keine Backups verfügbar.";
+"No Backups Available" = "Es sind keine Aktualisierungen verfügbar.";
 
 /* main window status string */
 "No Updates Available" = "Es sind keine Backups verfügbar.";
@@ -503,7 +503,7 @@
 "Yes" = "Ja";
 
 /* alert text, integer format specifier */
-"You appear to have installed fonts in your home directory.  Would you like them to be automatically activated in TeX Live %d?" = "Sie haben offenbar Schriftarten in Ihrem Home-Verzeichnis installiert. Möchten Sie, dass sie automatisch für TeX Live %d aktiviert werden?";
+"You appear to have installed fonts in your home directory.  Would you like them to be automatically activated in TeX Live %ld?" = "Sie haben offenbar Schriftarten in Ihrem Home-Verzeichnis installiert. Möchten Sie, dass sie automatisch für TeX Live %ld aktiviert werden?";
 
 /* alert message text */
 "You are attempting to remove critical parts of the underlying TeX Live infrastructure, and I won't help you do that." = "Sie versuchen kritische Bestandteile der Infrastruktur von TeX Live zu entfernen. Dies wird nicht unterstützt.";
@@ -528,4 +528,3 @@
 
 /* two integer specifiers */
 "Your TeX Live version is %lu, but your default repository URL appears to be for TeX Live %lu.  You need to manually upgrade to a newer version of TeX Live, as there will be no further updates for your version." = "Ihre Version von TeX Live ist %1$lu. Ihre Standard-Repository ist allerdings offenbar für TeX Live %2$lu vorgesehen.  Sie sollten manuell auf eine neuere Version von TeX Live aktualisieren, da Ihre Version keine weiteren Aktualisierungen erhalten wird.";
-

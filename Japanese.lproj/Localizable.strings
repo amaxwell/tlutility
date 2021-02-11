@@ -463,7 +463,7 @@
 "Would you like to set the TeX Live paper size now?" = "いまTeX Liveの用紙寸法を設定しますか？";
 
 /* alert text, integer format specifier */
-"You appear to have installed fonts in your home directory.  Would you like them to be automatically activated in TeX Live %d?" = "フォントをホームディレクトリ上に導入しているようです。これらのフォントを自動的にTeX Live %dでも有効にしますか？";
+"You appear to have installed fonts in your home directory.  Would you like them to be automatically activated in TeX Live %ld?" = "フォントをホームディレクトリ上に導入しているようです。これらのフォントを自動的にTeX Live %ldでも有効にしますか？";
 
 /* alert title */
 "You have altered the system's umask" = "システムumaskを変更しました";

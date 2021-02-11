@@ -1,10 +1,10 @@
 //
-//  NSURL_TLMExtensions.h
+//  NSStupid.m
 //  TeX Live Utility
 //
-//  Created by Adam R. Maxwell on 07/15/11.
+//  Created by Adam R. Maxwell on 02/01/21.
 /*
- This software is Copyright (c) 2010-2016
+ This software is Copyright (c) 2021
  Adam Maxwell. All rights reserved.
  
  Redistribution and use in source and binary forms, with or without
@@ -36,24 +36,15 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import <Cocoa/Cocoa.h>
+#import "NSStupid.h"
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
 
-@interface NSURL (TLMExtensions)
+// no replacement and never will be, and this is more useful for debugging than shitty NSError
+const char *TLMGetMacOSStatusErrorString(OSStatus err)
+{
+    return GetMacOSStatusErrorString(err);
+}
 
-// mirrorURL is host + systems/texlive/tlnet
-+ (NSURL *)databaseURLForTLNetURL:(NSURL *)mirrorURL;
-
-+ (BOOL)writeURLs:(NSArray *)array toPasteboard:(NSPasteboard *)pboard;
-+ (NSArray *)URLsFromPasteboard:(NSPasteboard *)pboard;
-
-// mirrorURL is host only
-+ (NSURL *)TLNetURLForMirror:(NSURL *)mirrorURL;
-
-- (BOOL)isMultiplexer;
-- (NSURL *)tlm_URLByDeletingLastPathComponent;
-- (NSURL *)tlm_URLByAppendingPathComponent:(NSString *)pathComponent;
-- (NSURL *)tlm_normalizedURL;
-- (BOOL)tlm_isEqualToFileURL:(NSURL *)other;
-
-@end
+#pragma clang diagnostic pop

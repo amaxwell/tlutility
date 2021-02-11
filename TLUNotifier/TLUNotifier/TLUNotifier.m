@@ -47,39 +47,16 @@
 
 @synthesize repository = _repository;
 
-static OSErr FindRunningAppBySignature( OSType sig, ProcessSerialNumber *psn, FSRef *fileRef )
-{
-    OSErr err;
-    ProcessInfoRec info;
-    
-    psn->highLongOfPSN = 0;
-    psn->lowLongOfPSN  = kNoProcess;
-    do{
-        err= GetNextProcess(psn);
-        if( !err ) {
-            info.processInfoLength = sizeof(info);
-            info.processName = NULL;
-            info.processAppRef = fileRef;
-            err= GetProcessInformation(psn,&info);
-        }
-    } while( !err && info.processSignature != sig );
-    
-    if( !err )
-        *psn = info.processNumber;
-    return err;
-}
-
 - (void)userNotificationCenter:(NSUserNotificationCenter *)center didActivateNotification:(NSUserNotification *)notification;
 {
     if ([notification activationType] == NSUserNotificationActivationTypeActionButtonClicked) {
-        ProcessSerialNumber psn;
-        FSRef runningApp;
-        OSStatus err = FindRunningAppBySignature('TLUm', &psn, &runningApp);
-        if (noErr == err) {
+        NSRunningApplication *targetApplication = [[NSRunningApplication runningApplicationsWithBundleIdentifier:@TLU_BUNDLE] lastObject];
+        if (targetApplication) {
             NSLog(@"TeX Live Utility is already running; sending kAEGetURL");
-            NSAppleEventDescriptor *tluProcess = [NSAppleEventDescriptor descriptorWithDescriptorType:typeProcessSerialNumber
-                                                                                                bytes:&psn
-                                                                                                length:sizeof(ProcessSerialNumber)];
+            pid_t targetPID = [targetApplication processIdentifier];
+            NSAppleEventDescriptor *tluProcess = [NSAppleEventDescriptor descriptorWithDescriptorType:typeKernelProcessID
+                                                                                                bytes:&targetPID
+                                                                                                length:sizeof(targetPID)];
             NSAppleEventDescriptor *event = [NSAppleEventDescriptor appleEventWithEventClass:kInternetEventClass
                                                                                      eventID:kAEGetURL
                                                                             targetDescriptor:tluProcess
@@ -87,7 +64,9 @@ static OSErr FindRunningAppBySignature( OSType sig, ProcessSerialNumber *psn, FS
                                                                                transactionID:kAnyTransactionID];
             NSAppleEventDescriptor *keyDesc = [NSAppleEventDescriptor descriptorWithString:[[self repository] absoluteString]];
             [event setParamDescriptor:keyDesc forKeyword:keyDirectObject];
-            err = AESendMessage([event aeDesc], NULL, kAENoReply, 0);
+            OSStatus err = AESendMessage([event aeDesc], NULL, kAENoReply, 0);
+            
+#pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
             if (noErr != err)
                 NSLog(@"Failed to send URL to TeX Live Utility with error %s", GetMacOSStatusErrorString(err));
