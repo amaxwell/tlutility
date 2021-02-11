@@ -64,7 +64,7 @@ from requests.auth import HTTPBasicAuth
 import json
 from uritemplate import expand as uri_expand 
 
-from Foundation import NSXMLDocument, NSUserDefaults, NSURL, NSXMLNodePrettyPrint
+from Foundation import NSXMLDocument, NSUserDefaults, NSURL, NSXMLNodePrettyPrint, NSXMLNodePreserveCDATA
 
 # determine the path based on the path of this program
 SOURCE_DIR = os.path.dirname(os.path.abspath(sys.argv[0]))
@@ -297,11 +297,11 @@ def update_appcast(oldVersion, newVersion, appcastSignature, tarballName, fileSi
     appcastURL = NSURL.fileURLWithPath_(APPCAST_PATH)
 
     # xml doc from the current appcast
-    (oldDoc, error) = NSXMLDocument.alloc().initWithContentsOfURL_options_error_(appcastURL, 0, None)
+    (oldDoc, error) = NSXMLDocument.alloc().initWithContentsOfURL_options_error_(appcastURL, NSXMLNodePreserveCDATA, None)
     assert oldDoc is not None, error
 
     # xml doc from the new appcast string
-    (newDoc, error) = NSXMLDocument.alloc().initWithXMLString_options_error_(newItemString, 0, None)
+    (newDoc, error) = NSXMLDocument.alloc().initWithXMLString_options_error_(newItemString, NSXMLNodePreserveCDATA, None)
     assert newDoc is not None, error
 
     # get an arry of the current item titles
