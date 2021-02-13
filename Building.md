@@ -9,15 +9,14 @@ In Terminal:
 
     git clone https://github.com/amaxwell/tlutility
     cd tlutility
-    git submodule init
-    git submodule update
+    git submodule update --init --recursive
  
 to pull the necessary submodules.
 
 ## Compile
 
 Open TeX Live Utility.xcodeproj and set the scheme to TeX Live Utility (Debug) or Release. It
-should build on Mac OS X 10.8 and later.
+should build on Mac OS X Mojave and later.
 
 You will have to create a code signing certificate named
 "TeX Live Utility Signing Certificate." This is easily done using Keychain Access, or you
