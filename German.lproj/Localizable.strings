@@ -250,10 +250,10 @@
 "No" = "Nein";
 
 /* main window status string */
-"No Backups Available" = "Es sind keine Aktualisierungen verfügbar.";
+"No Backups Available" = "Es sind keine Backups verfügbar.";
 
 /* main window status string */
-"No Updates Available" = "Es sind keine Backups verfügbar.";
+"No Updates Available" = "Es sind keine Aktualisierungen verfügbar.";
 
 /* status for package */
 "Not installed" = "Nicht installiert";
