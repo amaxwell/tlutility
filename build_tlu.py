@@ -214,7 +214,7 @@ def create_dmg_of_application(new_version_number):
         os.unlink(temp_dmg_path)
 
     nullDevice = open("/dev/null", "w")
-    cmd = ["/usr/bin/hdiutil", "create", "-srcfolder", BUILT_APP, temp_dmg_path]
+    cmd = ["/usr/bin/hdiutil", "create", "-fs", "HFS+", "-srcfolder", BUILT_APP, temp_dmg_path]
     x = Popen(cmd, stdout=nullDevice, stderr=nullDevice)
     rc = x.wait()
     assert rc == 0, "hdiutil create failed"
