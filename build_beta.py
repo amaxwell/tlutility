@@ -295,7 +295,7 @@ if __name__ == '__main__':
     dmg_or_zip_path = create_zip_of_application(new_version)
     
     # will bail if any part fails
-    notarize_dmg_or_zip(zip_path)
+    notarize_dmg_or_zip(dmg_or_zip_path)
             
     username, password = user_and_pass_for_upload()
     auth = HTTPBasicAuth(username, password)
