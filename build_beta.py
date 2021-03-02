@@ -177,11 +177,6 @@ def notarize_dmg_or_zip(dmg_path):
             log_url = output_pl["notarization-info"]["LogFileURL"]
             Popen(["/usr/bin/open", "-a", "Safari", log_url])
             
-            # xcrun stapler staple TeX\ Live\ Utility.app-1.42b17.dmg 
-            x = Popen(["xcrun", "stapler", "staple", dmg_path])
-            rc = x.wait()
-            assert rc == 0, "stapler failed"
-            
             break
         
         
@@ -296,6 +291,22 @@ if __name__ == '__main__':
     
     # will bail if any part fails
     notarize_dmg_or_zip(dmg_or_zip_path)
+    
+    if dmg_or_zip_path.endswith("dmg"):
+        # xcrun stapler staple TeX\ Live\ Utility.app-1.42b17.dmg 
+        x = Popen(["xcrun", "stapler", "staple", dmg_or_zip_path])
+        rc = x.wait()
+        assert rc == 0, "stapler failed"
+    else:
+        # staple the application, then delete the zip we notarized
+        # and make a new zip of the stapled application, because stapler
+        # won't staple a damn zip file https://developer.apple.com/forums/thread/115670
+        x = Popen(["xcrun", "stapler", "staple", BUILT_APP])
+        rc = x.wait()
+        assert rc == 0, "stapler failed"
+        os.unlink(dmg_or_zip_path)
+        dmg_or_zip_path = create_zip_of_application(new_version)
+        
             
     username, password = user_and_pass_for_upload()
     auth = HTTPBasicAuth(username, password)
