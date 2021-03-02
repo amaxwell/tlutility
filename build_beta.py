@@ -233,7 +233,7 @@ def create_zip_of_application(new_version_number):
     
     nullDevice = open("/dev/null", "w")
     cmd = ["/usr/bin/ditto", "-c", "-k", "--keepParent+", BUILT_APP, final_zip_name]
-    x = Popen(cmde)
+    x = Popen(cmd)
     rc = x.wait()
     assert rc == 0, "zip creation failed"
     
