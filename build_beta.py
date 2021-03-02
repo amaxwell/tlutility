@@ -126,7 +126,8 @@ def codesign():
     print("codesign-all.sh exited with status %s" % (rc))
     assert rc == 0, "code signing failed"
     
-def notarize_dmg(dmg_path):
+def notarize_dmg_or_zip(dmg_path):
+    """dmg_path: zip file or dmg file"""
     
     notarize_cmd = ["xcrun", "altool", "--notarize-app", "--primary-bundle-id", "com.mac.amaxwell.tlu", "--username", "amaxwell@mac.com", "--password",  "@keychain:AC_PASSWORD", "--output-format", "xml", "--file", dmg_path]
     notarize_task = Popen(notarize_cmd, cwd=SOURCE_DIR, stdout=PIPE, stderr=PIPE)
@@ -223,6 +224,21 @@ def create_dmg_of_application(new_version_number):
     os.unlink(temp_dmg_path)
     
     return final_dmg_name    
+    
+def create_zip_of_application(new_version_number):
+    
+    # Create a name for the tarball based on version number, instead
+    # of date, since I sometimes want to upload multiple betas per day.
+    final_zip_name = os.path.join(BUILD_DIR, os.path.basename(BUILT_APP) + "-" + new_version_number + ".zip")
+    
+    nullDevice = open("/dev/null", "w")
+    cmd = ["/usr/bin/ditto", "-c", "-k", "--keepParent+", BUILT_APP, final_zip_name]
+    x = Popen(cmde)
+    rc = x.wait()
+    assert rc == 0, "zip creation failed"
+    
+    return final_zip_name    
+
 
 def user_and_pass_for_upload():
     
@@ -276,11 +292,11 @@ if __name__ == '__main__':
     
     clean_and_build()
     codesign()
-    dmg_path = create_dmg_of_application(new_version)
+    dmg_or_zip_path = create_zip_of_application(new_version)
     
     # will bail if any part fails
-    notarize_dmg(dmg_path)
-        
+    notarize_dmg_or_zip(zip_path)
+            
     username, password = user_and_pass_for_upload()
     auth = HTTPBasicAuth(username, password)
     r = requests.get("https://api.github.com/user", auth=auth)
@@ -296,10 +312,11 @@ if __name__ == '__main__':
     
     r = requests.post("https://api.github.com/repos/amaxwell/tlutility/releases", data=json.dumps(payload), auth=auth)
     post_response = json.loads(r.text or r.content)
-    upload_url = uri_expand(post_response["upload_url"], {"name" : os.path.basename(dmg_path)})
+    upload_url = uri_expand(post_response["upload_url"], {"name" : os.path.basename(dmg_or_zip_path)})
     
-    file_data = open(dmg_path, "rb").read()
-    r = requests.post(upload_url, data=file_data, headers={"Content-Type" : "application/x-apple-diskimage"}, auth=auth)
+    file_data = open(dmg_or_zip_path, "rb").read()
+    mime_type = "application/x-apple-diskimage" if dmg_or_zip_path.endswith("dmg") else "application/zip"
+    r = requests.post(upload_url, data=file_data, headers={"Content-Type" : mime_type}, auth=auth)
     asset_response = json.loads(r.text or r.content)
     
     # should be part of appcast
