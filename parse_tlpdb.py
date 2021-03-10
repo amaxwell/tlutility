@@ -416,7 +416,15 @@ def _save_as_plist(packages, path_or_file):
     if python_major_version < 3:
         plistlib.writePlist(plist, path_or_file)
     else:
-        bytes_output = plistlib.writePlistToBytes(plist)
+        # Apparently writePlistToBytes() was removed in Python 3.9, but its
+        # replacement of dumps() is only available in 3.4 and later. This is
+        # some silly bullshit. Try the new method first, and fall back to the
+        # old one, I guess.
+        try:
+            bytes_output = plistlib.dumps(plist)
+        except Exception as exc:
+            bytes_output = plistlib.writePlistToBytes(plist)
+            
         str_output = bytes_output.decode("UTF-8")
         if path_or_file == sys.stdout:
             sys.stdout.write(str_output)
