@@ -818,7 +818,6 @@
 				<string>ftp.heanet.ie</string>
 				<key>urls</key>
 				<array>
-					<string>rsync://ftp.heanet.ie/mirrors/ctan.org/tex/</string>
 					<string>ftp://ftp.heanet.ie/mirrors/ctan.org/tex/</string>
 					<string>https://ftp.heanet.ie/mirrors/ctan.org/tex/</string>
 				</array>
@@ -1340,6 +1339,6 @@
 		</array>
 	</dict>
 	<key>timestamp</key>
-	<real>1614659817.779238</real>
+	<real>1615357593.718416</real>
 </dict>
 </plist>
