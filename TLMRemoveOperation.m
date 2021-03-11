@@ -73,6 +73,36 @@
     }
 }
 
+// return nil if this line doesn't contain a package name (handles old and new stdout)
+- (NSString *)_packageNameFromLine:(NSString *)line
+{
+#define REMOVE_TOKEN @"remove "
+    
+    NSString *package = nil;
+    if ([line hasPrefix:REMOVE_TOKEN]) {
+        /*
+         remove 12many
+         remove a0poster
+         */
+        package = [line substringFromIndex:[REMOVE_TOKEN length]];
+    }
+    else if ([line hasPrefix:@"["]) {
+        /*
+         [1/1, ??:??/??:??] remove: 12many
+         [2/1, 00:00/00:00] remove: a0poster
+         */
+        NSScanner *scanner = [[NSScanner alloc] initWithString:line];
+        // we already know it starts with an opening bracket, so just skip to the closing bracket
+        if ([scanner scanUpToString:@"]" intoString:NULL]) {
+            [scanner scanString:@"]" intoString:NULL];
+            if ([scanner scanString:@"remove:" intoString:NULL] && [scanner isAtEnd] == NO)
+                package = [line substringFromIndex:[scanner scanLocation] + 1];
+        }
+        [scanner release];
+    }
+    return package;
+}
+
 - (void)main
 {
     /*
@@ -100,6 +130,23 @@
      
      This is a moderately fragile system, as we are parsing output that is
      not guaranteed to be machine-readable.
+     
+     At least as of TL 2021, the stdout format has changed:
+     
+         $ tlmgr remove --force 12many a0poster
+         tlmgr: saving backups to /usr/local/texlive/2021/tlpkg/backups
+         tlmgr: 12many is needed by collection-mathscience
+         tlmgr: removing it anyway, due to --force
+         tlmgr: a0poster is needed by collection-latexextra
+         tlmgr: removing it anyway, due to --force
+         [1/1, ??:??/??:??] remove: 12many
+         [2/1, 00:00/00:00] remove: a0poster
+         tlmgr: ultimately removed these packages: 12many a0poster
+         running mktexlsr ...
+         done running mktexlsr.
+         running mtxrun --generate ...
+         done running mtxrun --generate.
+         tlmgr: package log updated: /usr/local/texlive/2021/texmf-var/web2c/tlmgr.log
 
      */
     
@@ -114,12 +161,10 @@
 
     NSMutableSet *unremovedPackages = [NSMutableSet setWithArray:[self packageNames]];
 
-#define REMOVE_TOKEN @"remove "
-
     for (NSString *line in _outputLines) {
         
-        if ([line hasPrefix:REMOVE_TOKEN]) {
-            NSString *package = [line substringFromIndex:[REMOVE_TOKEN length]];
+        NSString *package = [self _packageNameFromLine:line];
+        if (package) {
             if ([unremovedPackages containsObject:package] == NO)
                 TLMLog(__func__, @"ERROR: expected to see %@ in list of packages to remove", package);
             [unremovedPackages removeObject:package];
