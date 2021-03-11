@@ -386,13 +386,13 @@
 "The normal umask is %@ and yours is set to %@. This more restrictive umask may cause permission problems with TeX Live." = "L'umask normal est %1$@ et le vôtre est fixé à %2$@. Cet umask plus restrictif pourrait causer des problèmes de permissions avec TeX Live.";
 
 /* alert message text*/
-"The removal process appears to have failed. Would you like to show the log now or ignore this warning?" = "Le processus de suppression semble avoir échouer. Aimeriez-vous afficher le log maintenant ou ignorer cet avertissement ?";
+"The removal process appears to have failed. Would you like to show the log now or ignore this warning?" = "Le processus de suppression semble avoir échoue. Aimeriez-vous afficher le log maintenant ou ignorer cet avertissement ?";
 
 /* alert text, two integer format specifiers*/
 "The repository at %@ has TeX Live %lu, but you have TeX Live %lu installed.  You need to switch repositories in order to continue." = "Le dépôt à %1$@ a TeX Live %2$lu, mais vous avez TeX Live %3$lu installé. Vous avez besoin de permuter les dépôts avant de continuer.";
 
 /* alert message text*/
-"The restore process appears to have failed. Would you like to show the log now or ignore this warning?" = "Le processus de restauration semble avoir échouer. Aimeriez-vous afficher le log maintenant ou ignorer cet avertissement ?";
+"The restore process appears to have failed. Would you like to show the log now or ignore this warning?" = "Le processus de restauration semble avoir échoue. Aimeriez-vous afficher le log maintenant ou ignorer cet avertissement ?";
 
 /* alert message text*/
 "The TeX Live infrastructure packages have the same version after updating.  This could be a packaging problem on the server.  If you see this message repeatedly, wait until the problem is resolved in TeX Live before attempting another update." = "L'infrastructure des paquets de TeX Live a la même version après mise à jour. Cela est dû à un problème sur le serveur. Si vous voyez ce message de façon répétée, attendez que le problème soit résolu dans TeX Live avant d'essayer une autre mise à jour.";
