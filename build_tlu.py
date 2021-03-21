@@ -439,6 +439,7 @@ if __name__ == '__main__':
     
     file_data = open(dmg_or_zip_path, "rb").read()
     mime_type = "application/x-apple-diskimage" if dmg_or_zip_path.endswith("dmg") else "application/zip"
+    r = requests.post(upload_url, data=file_data, headers={"Content-Type" : mime_type}, auth=auth)
     asset_response = json.loads(r.text or r.content)
     
     # should be part of appcast
