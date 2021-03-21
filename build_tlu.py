@@ -134,7 +134,8 @@ def codesign():
     print("codesign-all.sh exited with status %s" % (rc))
     assert rc == 0, "code signing failed"
     
-def notarize_dmg(dmg_path):
+def notarize_dmg_or_zip(dmg_path):
+    """dmg_path: zip file or dmg file"""
     
     notarize_cmd = ["xcrun", "altool", "--notarize-app", "--primary-bundle-id", "com.mac.amaxwell.tlu", "--username", "amaxwell@mac.com", "--password",  "@keychain:AC_PASSWORD", "--output-format", "xml", "--file", dmg_path]
     notarize_task = Popen(notarize_cmd, cwd=SOURCE_DIR, stdout=PIPE, stderr=PIPE)
@@ -184,11 +185,6 @@ def notarize_dmg(dmg_path):
             log_url = output_pl["notarization-info"]["LogFileURL"]
             Popen(["/usr/bin/open", "-a", "Safari", log_url])
             
-            # xcrun stapler staple TeX\ Live\ Utility.app-1.42b17.dmg 
-            x = Popen(["xcrun", "stapler", "staple", dmg_path])
-            rc = x.wait()
-            assert rc == 0, "stapler failed"
-            
             break
 
 def create_tarball_of_application(newVersionNumber):
@@ -228,6 +224,20 @@ def create_dmg_of_application(new_version_number):
     os.unlink(temp_dmg_path)
     
     return final_dmg_name    
+
+def create_zip_of_application(new_version_number):
+    
+    # Create a name for the tarball based on version number, instead
+    # of date, since I sometimes want to upload multiple betas per day.
+    final_zip_name = os.path.join(BUILD_DIR, os.path.basename(BUILT_APP) + "-" + new_version_number + ".zip")
+    
+    nullDevice = open("/dev/null", "w")
+    cmd = ["/usr/bin/ditto", "-c", "-k", "--keepParent", BUILT_APP, final_zip_name]
+    x = Popen(cmd)
+    rc = x.wait()
+    assert rc == 0, "zip creation failed"
+    
+    return final_zip_name 
 
 def keyFromSecureNote():
     
@@ -390,10 +400,25 @@ if __name__ == '__main__':
     
     clean_and_build()
     codesign()
-    dmg_path = create_dmg_of_application(new_version)
+    dmg_or_zip_path = create_zip_of_application(new_version)
     
     # will bail if any part fails
-    notarize_dmg(dmg_path)
+    notarize_dmg_or_zip(dmg_or_zip_path)
+    
+    if dmg_or_zip_path.endswith("dmg"):
+        # xcrun stapler staple TeX\ Live\ Utility.app-1.42b17.dmg 
+        x = Popen(["xcrun", "stapler", "staple", dmg_or_zip_path])
+        rc = x.wait()
+        assert rc == 0, "stapler failed"
+    else:
+        # staple the application, then delete the zip we notarized
+        # and make a new zip of the stapled application, because stapler
+        # won't staple a damn zip file https://developer.apple.com/forums/thread/115670
+        x = Popen(["xcrun", "stapler", "staple", BUILT_APP])
+        rc = x.wait()
+        assert rc == 0, "stapler failed"
+        os.unlink(dmg_or_zip_path)
+        dmg_or_zip_path = create_zip_of_application(new_version)
     
     username, password = user_and_pass_for_upload()
     auth = HTTPBasicAuth(username, password)
@@ -410,16 +435,16 @@ if __name__ == '__main__':
     
     r = requests.post("https://api.github.com/repos/amaxwell/tlutility/releases", data=json.dumps(payload), auth=auth)
     post_response = json.loads(r.text or r.content)
-    upload_url = uri_expand(post_response["upload_url"], {"name" : os.path.basename(dmg_path)})
+    upload_url = uri_expand(post_response["upload_url"], {"name" : os.path.basename(dmg_or_zip_path)})
     
-    file_data = open(dmg_path, "rb").read()
-    r = requests.post(upload_url, data=file_data, headers={"Content-Type" : "application/gzip"}, auth=auth)
+    file_data = open(dmg_or_zip_path, "rb").read()
+    mime_type = "application/x-apple-diskimage" if dmg_or_zip_path.endswith("dmg") else "application/zip"
     asset_response = json.loads(r.text or r.content)
     
     # should be part of appcast
     download_url = asset_response["browser_download_url"]
     print "download_url:", download_url
     
-    appcast_signature, file_size = signature_and_size(dmg_path)    
-    update_appcast(old_version, new_version, appcast_signature, dmg_path, file_size, minimum_system_version, download_url)
+    appcast_signature, file_size = signature_and_size(dmg_or_zip_path)    
+    update_appcast(old_version, new_version, appcast_signature, dmg_or_zip_path, file_size, minimum_system_version, download_url)
 
