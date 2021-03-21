@@ -947,8 +947,7 @@
         </item>
         <item>
             <title>Version 1.47</title>
-            <description>
-            <![CDATA[
+            <description><![CDATA[
     	    <h3>Changes Since 1.41</h3>
                 <li>Minimum version is now 10.9, due to Xcode changes. Since Mountain Lion and Mojave are the only releases since 10.6.8 that haven't completely sucked, dropping 10.7 and 10.8 is no great loss.</li>
                 <li>Sparkle framework is updated from a 13-year-old version (yeah, that was bad)</li>
@@ -957,11 +956,23 @@
                 <li>Sell out my open-source principles and sign with official Apple developer certificate and notarize for Catalina and Big Sur</li>
                 <li>Fix context menu in update and other list views on Big Sur (and maybe earlier)</li>
                 <li>Revise progress bar in address field for dark mode and user-specified highlight colors (Mojave and later)</li>
-            ]]>
-            </description>
+            ]]></description>
             <pubDate>Thu, 11 Feb 2021 05:00:37 +0000</pubDate>
             <sparkle:minimumSystemVersion>10.9.0</sparkle:minimumSystemVersion>
             <enclosure url="https://github.com/amaxwell/tlutility/releases/download/1.47/TeX.Live.Utility.app-1.47.dmg" sparkle:version="1.47" length="5013804" type="application/octet-stream" sparkle:dsaSignature="MC0CFAlVSA9GvF1OhmBvNIfoRxvXVEAVAhUAgwcQmEoWgsG//FGrdVUeHbsU/D8="></enclosure>
+        </item>
+        <item>
+            <title>Version 1.49</title>
+            <description><![CDATA[
+    	    <h3>Changes Since 1.47</h3>
+    	        <li>Fix issue #111: package as a .zip file, since Big Sur can't package as HFS+, and 10.9-10.12 can't read APFS images. Sigh.</li>
+    	        <li>Minor edits to German and French localizations.</li>
+    	        <li>Fix the tlpdb parser for users who updated to Python 3.9, since the Python 3 maintainers suck at backwards compatibility.</li>
+    	        <li>Handle the current stdout from tlmgr remove, so you'll no longer see spurious errors. Since no one will RTFM to learn about Force Remove, this never gets used anyway, and has probably been broken for years.</li>
+            ]]></description>
+            <pubDate>Sun, 21 Mar 2021 22:04:02 +0000</pubDate>
+            <sparkle:minimumSystemVersion>10.9.0</sparkle:minimumSystemVersion>
+            <enclosure url="https://github.com/amaxwell/tlutility/releases/download/1.49/TeX.Live.Utility.app-1.49.zip" sparkle:version="1.49" length="5747167" type="application/octet-stream" sparkle:dsaSignature="MCwCFCQpTveyKeEwRVX1QfivBV/nN3bjAhQgQIT647XC3sbxSSP06AdHy80S1w=="></enclosure>
         </item>
     </channel>
 </rss>
