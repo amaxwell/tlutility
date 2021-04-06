@@ -7,7 +7,7 @@
 	<key>com.googlecode.mactlmgr</key>
 	<dict>
 		<key>texliveyear</key>
-		<string>2020basic</string>
+		<string>2021</string>
 	</dict>
 	<key>documentation</key>
 	<array/>
@@ -25,13 +25,13 @@
 			<key>type</key>
 			<string>unknown</string>
 			<key>value</key>
-			<string>scheme-small</string>
+			<string>scheme-full</string>
 		</dict>
 		<dict>
 			<key>key</key>
-			<string>binary_x86_64-darwin</string>
+			<string>binary_universal-darwin</string>
 			<key>name</key>
-			<string>binary_x86_64-darwin</string>
+			<string>binary_universal-darwin</string>
 			<key>type</key>
 			<string>unknown</string>
 			<key>value</key>
@@ -228,7 +228,7 @@
 			<key>type</key>
 			<string>variable</string>
 			<key>value</key>
-			<string>/usr/local/texlive/2020basic</string>
+			<string>/usr/local/texlive/2021</string>
 		</dict>
 		<dict>
 			<key>key</key>
@@ -238,7 +238,7 @@
 			<key>type</key>
 			<string>variable</string>
 			<key>value</key>
-			<string>~/Library/texlive/2020basic/texmf-config</string>
+			<string>~/Library/texlive/2021/texmf-config</string>
 		</dict>
 		<dict>
 			<key>key</key>
@@ -258,7 +258,7 @@
 			<key>type</key>
 			<string>variable</string>
 			<key>value</key>
-			<string>/usr/local/texlive/2020basic/texmf-local</string>
+			<string>/usr/local/texlive/texmf-local</string>
 		</dict>
 		<dict>
 			<key>key</key>
@@ -268,7 +268,7 @@
 			<key>type</key>
 			<string>variable</string>
 			<key>value</key>
-			<string>/usr/local/texlive/2020basic/texmf-config</string>
+			<string>/usr/local/texlive/2021/texmf-config</string>
 		</dict>
 		<dict>
 			<key>key</key>
@@ -278,7 +278,7 @@
 			<key>type</key>
 			<string>variable</string>
 			<key>value</key>
-			<string>/usr/local/texlive/2020basic/texmf-var</string>
+			<string>/usr/local/texlive/2021/texmf-var</string>
 		</dict>
 		<dict>
 			<key>key</key>
@@ -288,7 +288,7 @@
 			<key>type</key>
 			<string>variable</string>
 			<key>value</key>
-			<string>~/Library/texlive/2020basic/texmf-var</string>
+			<string>~/Library/texlive/2021/texmf-var</string>
 		</dict>
 	</array>
 </dict>
