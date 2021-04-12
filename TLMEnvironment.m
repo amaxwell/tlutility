@@ -145,6 +145,11 @@ static bool                 _didShowBadTexbinPathAlert = false;
 
 + (NSString *)_installDirectoryFromCurrentDefaults
 {
+    /*
+     Returning nil means that we end up crashing instead of showing an alert, when
+     an exception gets raised in NSURL. This happens if you're trying to run TLU on
+     a system that doesn't have TeX Live installed, or the path is hosed.
+     */
     NSString *installDirectory = nil;
     NSString *texbinPath = [[NSUserDefaults standardUserDefaults] objectForKey:TLMTexBinPathPreferenceKey];
     
@@ -205,7 +210,8 @@ static bool                 _didShowBadTexbinPathAlert = false;
  */
 + (NSString *)localDatabasePath;
 {
-    return [[[NSURL databaseURLForTLNetURL:[NSURL fileURLWithPath:[self _installDirectoryFromCurrentDefaults]]] tlm_normalizedURL] path];
+    NSString *installDirPath = [self _installDirectoryFromCurrentDefaults];
+    return installDirPath ? [[[NSURL databaseURLForTLNetURL:[NSURL fileURLWithPath:installDirPath]] tlm_normalizedURL] path] : nil;
 }
 
 + (BOOL)localDatabaseIsReadable;

@@ -233,13 +233,15 @@ static NSString     *_userAgent = nil;
 
 + (void)reloadLocalDatabase;
 {
-    TLMDatabase *db = [self databaseForMirrorURL:[NSURL fileURLWithPath:[[TLMEnvironment currentEnvironment] installDirectory]]];
+    NSString *installDirPath = [[TLMEnvironment currentEnvironment] installDirectory];
+    TLMDatabase *db = installDirPath ? [self databaseForMirrorURL:[NSURL fileURLWithPath:installDirPath]] : nil;
     [db setNeedsReload:YES];
 }
 
 + (TLMDatabase *)localDatabase;
 {
-    TLMDatabase *db = [self databaseForMirrorURL:[NSURL fileURLWithPath:[[TLMEnvironment currentEnvironment] installDirectory]]];
+    NSString *installDirPath = [[TLMEnvironment currentEnvironment] installDirectory];
+    TLMDatabase *db = installDirPath ? [self databaseForMirrorURL:[NSURL fileURLWithPath:installDirPath]] : nil;
     // will check if loaded/needs reload
     [db _reloadFromLocalFile];
     return db;
