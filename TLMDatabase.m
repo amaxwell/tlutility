@@ -705,6 +705,7 @@ static NSString *__TLMTemporaryFile()
     }
     
     _year = release;
+    _minrelease = minrelease;
     
     [_downloadLock unlock];
     
@@ -717,6 +718,13 @@ static NSString *__TLMTemporaryFile()
     [[NSNotificationCenter defaultCenter] performSelectorOnMainThread:@selector(postNotification:) withObject:note waitUntilDone:NO];
     
     return _year;
+}
+
+- (TLMDatabaseYear)minimumTexliveYear
+{
+    // force loading as a side effect
+    [self texliveYear];
+    return _minrelease;
 }
 
 @end

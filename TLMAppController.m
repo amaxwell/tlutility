@@ -308,7 +308,7 @@ static void __TLMMigrateBundleIdentifier()
         _logWindowController = [TLMLogWindowController new];
     
     // hack for TL 2017 breakage; has to be done before TLMEnvironment is used
-    if ([TLMEnvironment localDatabaseIsReadable] == NO) {
+    if ([TLMEnvironment localDatabasePath] && [TLMEnvironment localDatabaseIsReadable] == NO) {
         NSArray *args = [NSArray arrayWithObjects:@"644", [TLMEnvironment localDatabasePath], nil];
         // always run as root, so we don't create a TLMEnvironment
         TLMAuthorizedOperation *op = [[TLMAuthorizedOperation alloc] initWithAuthorizedCommand:@"/bin/chmod" options:args];

@@ -55,6 +55,7 @@ extern NSString * const TLMDatabaseVersionCheckComplete;
     NSURL           *_mirrorURL;
     NSLock          *_downloadLock;
     TLMDatabaseYear  _year;
+    TLMDatabaseYear  _minrelease;
     BOOL             _isOfficial;
     NSMutableData   *_tlpdbData;
     BOOL             _failed;
@@ -74,6 +75,7 @@ extern NSString * const TLMDatabaseVersionCheckComplete;
 - (TLMDatabasePackage *)packageNamed:(NSString *)name;
 
 @property (readonly) TLMDatabaseYear texliveYear;
+@property (readonly) TLMDatabaseYear minimumTexliveYear;
 @property (copy) NSArray *packages;
 @property (copy) NSURL *mirrorURL;
 @property (copy) NSDate *loadDate;
