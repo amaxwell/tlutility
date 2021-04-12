@@ -1014,20 +1014,24 @@ static NSURL * __TLMGPGURL()
     TLMLog(__func__, @"Checking database version in case preferences have been changed%C", TLM_ELLIPSIS);
     // should be cached, unless the user has screwed up (and that's the case we're trying to catch)
     TLMDatabase *db = [TLMDatabase databaseForMirrorURL:aURL];
-    const TLMDatabaseYear year = [[TLMEnvironment currentEnvironment] texliveYear];
+    const TLMDatabaseYear localYear = [[TLMEnvironment currentEnvironment] texliveYear];
     if ([db failed] || [db texliveYear] == TLMDatabaseUnknownYear) {
         NSAlert *alert = [[NSAlert new] autorelease];
         [alert setMessageText:NSLocalizedString(@"Unable to determine repository version", @"alert title")];
-        [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"You have TeX Live %lu installed, but the version at %@ cannot be determined.", @"alert text, integer and string format specifiers"), (long)year, [aURL absoluteString]]];
+        [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"You have TeX Live %lu installed, but the version at %@ cannot be determined.", @"alert text, integer and string format specifiers"), (long)localYear, [aURL absoluteString]]];
         [alert beginSheetModalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
         return NO;
     }
-    else if ([db texliveYear] != year) {
+    /*
+     Per email from Norbert on 11 April 2021: check if local version >= minrelease && local version <= release,
+     since tlcontrib uses 2100 as its release year.
+     */
+    else if (localYear < [db minimumTexliveYear] || localYear > [db texliveYear]) {
         NSAlert *alert = [[NSAlert new] autorelease];
         [alert setMessageText:NSLocalizedString(@"Repository has a different TeX Live version", @"alert title")];
-        [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"The repository at %@ has TeX Live %lu, but you have TeX Live %lu installed.  You need to switch repositories in order to continue.", @"alert text, two integer format specifiers"), [aURL absoluteString], (long)[db texliveYear], (long)year]];
+        [alert setInformativeText:[NSString stringWithFormat:NSLocalizedString(@"The repository at %@ has TeX Live %lu, but you have TeX Live %lu installed.  You need to switch repositories in order to continue.", @"alert text, two integer format specifiers"), [aURL absoluteString], (long)[db texliveYear], (long)localYear]];
         [alert beginSheetModalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
-        TLMLog(__func__, @"Well, this is not going to work:  %@ has TeX Live %lu, and the installed version is TeX Live %lu", [aURL absoluteString], (long)[db texliveYear], (long)year);
+        TLMLog(__func__, @"Well, this is not going to work:  %@ has TeX Live %lu, and the installed version is TeX Live %lu", [aURL absoluteString], (long)[db texliveYear], (long)localYear);
         return NO;
     }
     return YES;
