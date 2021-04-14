@@ -295,7 +295,7 @@ static NSArray * __TLMOptionArrayFromArguments(char **nullTerminatedArguments)
                 _internal->_childFinished = YES;
                 
                 // get the exit status of our child process (which is based on exit status of the tlmgr process)
-                int ret, wstatus;
+                int ret;
                 if (_internal->_task) {
                     /*
                      Calling waitpid(2) here interferes with the call in BDSKTask,
@@ -321,13 +321,25 @@ static NSArray * __TLMOptionArrayFromArguments(char **nullTerminatedArguments)
                      */
                     
                     // initialize for logging
-                    wstatus = 0;
-                    ret = HANDLE_EINTR(waitpid((int)event.ident, &wstatus, 0));
+                    int childStatus;
+                    
+                    // used to unconditionally log errno, but users kept misinterpreting it in the log
+                    if (HANDLE_EINTR(waitpid((int)event.ident, &childStatus, 0)) == -1) {
+                        // save this off, since it could change in the next call
+                        int err = errno;
+                        TLMLog(__func__, @"Waitpid failed for child pid = %d. Value of errno is %d (%s)\n", (int)event.ident, err, strerror(err));
+                        ret = EXIT_FAILURE;
+                    }
+                    else if (WIFEXITED(childStatus)) {
+                        // this is our expected case
+                        ret = WEXITSTATUS(childStatus);
+                        TLMLog(__func__, @"exit status of pid = %d was %d", (int)event.ident, ret);
+                    }
+                    else {
+                        TLMLog(__func__, @"*** ERROR *** child process pid = %d probably terminated due to signal %d", (int)event.ident, WTERMSIG(childStatus));
+                        ret = EXIT_FAILURE;
+                    }
 
-                    int err = errno;
-                    const char *errstr = -1 == ret ? strerror(err) : "No error";
-                    TLMLog(__func__, @"waitpid returned %d, WIFEXITED(%d) = %d, errno = %d (%s)", ret, wstatus, WIFEXITED(wstatus), err, errstr);
-                    ret = (ret != -1 && WIFEXITED(wstatus)) ? WEXITSTATUS(wstatus) : EXIT_FAILURE;
                 }
                 // set failure flag if ipctask failed
                 [self setFailed:(EXIT_SUCCESS != ret)];

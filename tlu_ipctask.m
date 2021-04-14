@@ -494,17 +494,22 @@ int main(int argc, char *argv[]) {
         }
         
         int childStatus;
-        ret = HANDLE_EINTR(waitpid(child, &childStatus, 0));
-        ret = (ret != -1 && WIFEXITED(childStatus)) ? WEXITSTATUS(childStatus) : EXIT_FAILURE;
         
-        if (ret) {
+        // used to unconditionally log errno, but users kept misinterpreting it in the log
+        if (HANDLE_EINTR(waitpid(child, &childStatus, 0)) == -1) {
             // save this off, since it could change in the next call
             int err = errno;
-            log_error(@"Value of errno is %s\n", strerror(err));
-            log_error(@"*** ERROR *** exit status of pid = %d was %d", child, ret);
+            log_error(@"Waitpid failed for child pid = %d. Value of errno is %d (%s)\n", child, err, strerror(err));
+            ret = EXIT_FAILURE;
+        }
+        else if (WIFEXITED(childStatus)) {
+            // this is our expected case
+            ret = WEXITSTATUS(childStatus);
+            log_notice_noparse(@"exit status of pid = %d was %d", child, ret);
         }
         else {
-            log_notice_noparse(@"exit status of pid = %d was %d", child, ret);
+            log_error(@"*** ERROR *** child process pid = %d probably terminated due to signal %d", child, WTERMSIG(childStatus));
+            ret = EXIT_FAILURE;
         }
 
     }
