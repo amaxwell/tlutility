@@ -87,7 +87,7 @@ static void __TLMMigrateBundleIdentifier()
     
     __TLMMigrateBundleIdentifier();
     
-    NSString *tlnetDefault = @"http://mirror.ctan.org/systems/texlive/tlnet";
+    NSString *tlnetDefault = @"https://mirror.ctan.org/systems/texlive/tlnet";
     
     // convert from the old-style composed path to full path, preserving user-specified settings
     NSString *userURL = [[NSUserDefaults standardUserDefaults] objectForKey:@"TLMServerURLPreferenceKey"];
@@ -136,7 +136,7 @@ static void __TLMMigrateBundleIdentifier()
     
     // disable TL critical repo by default
     [defaults setObject:[NSNumber numberWithBool:NO] forKey:TLMShouldListTLCritical];
-    [defaults setObject:@"http://tug.org/texlive/tlcritical" forKey:TLMTLCriticalRepository];
+    [defaults setObject:@"https://tug.org/texlive/tlcritical" forKey:TLMTLCriticalRepository];
     
     // no UI for this at present
     [defaults setObject:[NSNumber numberWithBool:NO] forKey:TLMEnableNetInstall];
@@ -367,19 +367,19 @@ static void __TLMMigrateBundleIdentifier()
 
 - (IBAction)openDisasterRecoveryPage:(id)sender
 {
-    NSURL *aURL = [NSURL URLWithString:@"http://tug.org/texlive/tlmgr.html"];
+    NSURL *aURL = [NSURL URLWithString:@"https://tug.org/texlive/tlmgr.html"];
     [[NSWorkspace sharedWorkspace] openURL:aURL];
 }
 
 - (IBAction)openTLUWiki:(id)sender;
 {
-    NSURL *aURL = [NSURL URLWithString:@"http://amaxwell.github.io/tlutility/"];
+    NSURL *aURL = [NSURL URLWithString:@"https://amaxwell.github.io/tlutility/"];
     [[NSWorkspace sharedWorkspace] openURL:aURL];    
 }
 
 - (IBAction)openMacTeXWiki:(id)sender;
 {
-    NSURL *aURL = [NSURL URLWithString:@"http://mactex-wiki.tug.org"];
+    NSURL *aURL = [NSURL URLWithString:@"https://mactex-wiki.tug.org"];
     [[NSWorkspace sharedWorkspace] openURL:aURL];
 }
 

@@ -704,7 +704,7 @@ static void __TLMTestAndClearEnvironmentVariable(const char *name)
     
     // point users to main MacTeX, as users get confused by the main TeX Live page
     if (UPGRADE_TAG == returnCode) {
-        NSURL *aURL = [NSURL URLWithString:@"http://tug.org/mactex/"];
+        NSURL *aURL = [NSURL URLWithString:@"https://tug.org/mactex/"];
         [[NSWorkspace sharedWorkspace] openURL:aURL];
     }
     [self release];

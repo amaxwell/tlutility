@@ -177,7 +177,7 @@ static NSURL *__TLMTLNetURL(NSString *mirrorURLString)
     
     TLMMirrorNode *multiplexorNode = [TLMMirrorNode new];
     [multiplexorNode setType:TLMMirrorNodeURL];
-    [multiplexorNode setValue:__TLMTLNetURL(@"http://mirror.ctan.org/")];
+    [multiplexorNode setValue:__TLMTLNetURL(@"https://mirror.ctan.org/")];
     [customNode addChild:multiplexorNode];
     [multiplexorNode release];
     
@@ -750,7 +750,7 @@ static NSIndexSet *__reorderIndexSetFromPasteboard(NSPasteboard *pboard)
         {
             TLMMirrorNode *child = [[TLMMirrorNode new] autorelease];
             [child setType:TLMMirrorNodeURL];
-            [child setValue:[NSURL URLWithString:@"http://"]];
+            [child setValue:[NSURL URLWithString:@"https://"]];
             [[self _customNode] addChild:child];
             [_outlineView reloadData];
             [_outlineView expandItem:[self _customNode]];

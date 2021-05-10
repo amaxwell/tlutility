@@ -18,5 +18,5 @@
         2020 = "ftp://ftp.tug.org/historic/systems/texlive/2020/tlnet-final/";
     };
     
-    CriticalMirror = "http://tug.org/texlive/tlcritical";
+    CriticalMirror = "https://tug.org/texlive/tlcritical";
 }
