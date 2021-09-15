@@ -53,7 +53,7 @@
                     <button id="33">
                         <rect key="frame" x="18" y="58" width="165" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <string key="toolTip">Checking this box may reduce performance under some conditions, but is useful if there are problems with the built-in log viewer.</string>
+                        <string key="toolTip">激活该项将在某些情况下对性能产生影响，但有助于在内置日志查看器出现问题的时候方便排查问题。</string>
                         <animations/>
                         <buttonCell key="cell" type="check" title="在系统日志中显示进度。" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="34">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -63,7 +63,7 @@
                             <action selector="toggleUseSyslog:" target="-2" id="36"/>
                         </connections>
                     </button>
-                    <button toolTip="If unchecked, pass --no-auto-install to tlmgr to avoid installing packages added to the server." id="47">
+                    <button toolTip="如果取消该项，将向 tlmgr 命令传递 --no-auto-install 参数，以避免安装服务器上新增的软件包。" id="47">
                         <rect key="frame" x="18" y="38" width="217" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <animations/>
@@ -75,7 +75,7 @@
                             <action selector="toggleAutoinstall:" target="-2" id="54"/>
                         </connections>
                     </button>
-                    <button toolTip="If unchecked, pass --no-auto-remove to tlmgr to avoid removing packages that have been removed on the server." id="49">
+                    <button toolTip="如果取消该项，将向 tlmgr 命令传递 --no-auto-remove 参数以避免卸载本地程序包，即便该程序包已经在服务器上被删除了。" id="49">
                         <rect key="frame" x="18" y="18" width="217" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <animations/>
@@ -87,7 +87,7 @@
                             <action selector="toggleAutoremove:" target="-2" id="53"/>
                         </connections>
                     </button>
-                    <button toolTip="If checked, TeX Live Utility will run the updmap command after TeX Live is modified." id="59">
+                    <button toolTip="激活该项将使 TeX Live Utility 在 TeX Live 更新之后运行 updmap 命令以自动包含用户主目录下的字体。" id="59">
                         <rect key="frame" x="18" y="78" width="211" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <animations/>
@@ -99,7 +99,7 @@
                             <action selector="toggleRunUpdmap:" target="-2" id="61"/>
                         </connections>
                     </button>
-                    <pathControl toolTip="Set the directory fo the tlmgr command and other TeX commands." verticalHuggingPriority="750" allowsExpansionToolTips="YES" id="9">
+                    <pathControl toolTip="设置 tlmgr 命令及其他 TeX 命令所在的目录。" verticalHuggingPriority="750" allowsExpansionToolTips="YES" id="9">
                         <rect key="frame" x="117" y="119" width="265" height="22"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <animations/>
