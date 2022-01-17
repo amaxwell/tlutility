@@ -107,7 +107,7 @@
     [_progressIndicator stopAnimation:nil];
     
     NSURL *fileURL = [NSURL fileURLWithPath:_downloadPath];
-    NSXMLDocument *doc = [[NSXMLDocument alloc] initWithContentsOfURL:fileURL options:0 error:NULL];
+    NSXMLDocument *doc = [[NSXMLDocument alloc] initWithContentsOfURL:fileURL options:NSXMLNodePreserveCDATA error:NULL];
     [doc autorelease];
     
     NSMutableArray *notes = [NSMutableArray array];
@@ -126,8 +126,14 @@
             else if ([name isEqualToString:@"description"]) {
                 NSMutableString *htmlString = [NSMutableString string];
                 // use appendFormat: in case of nil string and to add newlines for logging
-                for (NSXMLNode *htmlNode in [child children])
-                    [htmlString appendFormat:@"%@\n", [htmlNode XMLStringWithOptions:NSXMLNodePrettyPrint]];
+                for (NSXMLNode *htmlNode in [child children]) {
+                    NSString *xmlString = [htmlNode XMLStringWithOptions:NSXMLNodePrettyPrint];
+                    // FIXME: this is a kludge
+                    if ([xmlString rangeOfString:@"CDATA"].length)
+                        [htmlString appendFormat:@"%@\n", [htmlNode stringValue]];
+                    else
+                        [htmlString appendFormat:@"%@\n", xmlString];
+                }
                 [note setObject:htmlString forKey:@"description"];
             }
             else if ([name isEqualToString:@"enclosure"]) {
