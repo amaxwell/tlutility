@@ -46,7 +46,7 @@
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
-		<false/>
+		<true/>
 	</dict>
 	<key>NSAppleScriptEnabled</key>
 	<string>YES</string>

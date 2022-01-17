@@ -446,6 +446,18 @@ static NSString     *_userAgent = nil;
             if (_failed)
                 break;
             
+            /*
+             Well, this ruins my beachball, but it also allows URL loading from
+             https://ctan.math.ca/tex-archive/systems/texlive/tlnet
+             (and maybe fixes the .edu server problem mentioned above). Setting NSAllowsArbitraryLoads to
+             false also fixes that problem, but breaks a crapton of mirror URLs that are still http. Maybe
+             something in the bowels of CFNetwork does its own runloop stuff with certain SSL settings?
+             
+             I'd be happy just eliminating all the http mirrors from my plist, but I can't control what
+             the multiplexor hands out, so I'm stuck keeping NSAllowsArbitraryLoads for now.
+             */
+            CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0, TRUE);
+
         } while ([[self tlpdbData] length] < MIN_DATA_LENGTH);
         TLMLog(__func__, @"Downloaded %lu bytes of tlpdb for version check", (unsigned long)[[self tlpdbData] length]);
         // in case of exceeding stopTime
