@@ -523,6 +523,28 @@ static void __TLMTestAndClearEnvironmentVariable(const char *name)
     setenv("CC_FOR_BUILD", "no_compiler_found", 1);
     
     /*
+     Workaround for the Let's Encrypt cert debacle on High Sierra and Mojave. I
+     think this will be harmless on Sierra and earlier.
+     */
+    if (floor(NSAppKitVersionNumber) <= NSAppKitVersionNumber10_14)
+        setenv("CURL_CA_BUNDLE", [[[NSBundle mainBundle] pathForResource:@"cacert" ofType:@"pem"] fileSystemRepresentation], 1);
+#if 0
+    /*
+     As of 17 Jan 2022, can test with https://ctan.math.ca/tex-archive/systems/texlive/tlnet
+     Note that I had to disable NSAllowsArbitraryLoads in the Info.plist for this URL to work,
+     as the database version check was failing in URL loading (TLMDatabase). This was extremely
+     confusing, as a Foundation tool did not exhibit the same problem (timeout with no useful
+     error message. There's some bullshit logged in Xcode that may or may not be relevant, but
+     it doesn't go away even after disabling arbitrary loads, even though the load succeeds:
+     
+     Peer disconnected during the middle of a handshake. Sending errSSLClosedNoNotify(-9816) alert
+     
+     */
+    setenv("TL_DOWNLOAD_PROGRAM", "/usr/bin/curl", 1);
+    setenv("TL_DOWNLOAD_ARGS", "--user-agent texlive/curl --retry 4 --retry-delay 4 --connect-timeout 30 --fail --location --silent --output", 1);
+#endif
+    
+    /*
      I have a user on Lion who removed his environment.plist file, yet still has some bizarre
      paths for various environment variables, including TEXINPUTS.  I suspect this is set from
      launchd.conf or similar.  Sadly, users are finding and documenting this:
