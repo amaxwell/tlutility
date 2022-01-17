@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD58140DA1D0A300B32029 /* MainMenu.xib */; };
+		68020655279602A800A3B944 /* cacert.pem in Resources */ = {isa = PBXBuildFile; fileRef = 68020640279602A800A3B944 /* cacert.pem */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
@@ -370,6 +371,7 @@
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		32CA4F630368D1EE00C91783 /* TeX Live Manager_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TeX Live Manager_Prefix.pch"; sourceTree = "<group>"; };
+		68020640279602A800A3B944 /* cacert.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cacert.pem; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; explicitFileType = text.xml; fileEncoding = 4; path = Info.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* TeX Live Utility.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TeX Live Utility.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F90520D80EFDCB5400B489FE /* TLMAuthorizedOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMAuthorizedOperation.h; sourceTree = "<group>"; };
@@ -729,6 +731,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				68020640279602A800A3B944 /* cacert.pem */,
 				F9D3015019BECCDB00CDEB55 /* TexdistConfigController.xib */,
 				F918B77C14552A9B0038476C /* AddressFieldCapLeft.png */,
 				F918B77D14552A9B0038476C /* AddressFieldCapLeftInactive.png */,
@@ -1293,6 +1296,7 @@
 				F9D85F7A125E865E00C0FEC5 /* update_check.py in Resources */,
 				F99CCDE70F0EB56E00D67ED0 /* DefaultMirrors.plist in Resources */,
 				F9D3015219BECCDB00CDEB55 /* TexdistConfigController.xib in Resources */,
+				68020655279602A800A3B944 /* cacert.pem in Resources */,
 				F9D3014819BEB81E00CDEB55 /* texdist.plist in Resources */,
 				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
 				1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */,
