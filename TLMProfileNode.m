@@ -74,7 +74,7 @@
         profileType = TLMProfileVariableType;
     }
     else {
-        return nil;
+        profileType = TLMProfileOtherType;
     }
 
     TLMProfileNode *node = [[self new] autorelease];
@@ -150,19 +150,24 @@ static TLMProfileNode * __findNodeForType(TLMProfileNode *rootNode, const TLMPro
     node = __findNodeForType(rootNode, TLMProfileVariableType);
     [string appendFormat:@"%@\n", [node profileString]];
     
+#warning FIXME: wrong assumption now
+    // this also gets appended twice, since it's snarfed up in the "Other" bin
     [string appendString:@"binary-universal-darwin 1\n"];
     
     node = __findNodeForType(rootNode, TLMProfileCollectionType);
-    [string appendFormat:@"%@\n", [node profileString]];
+    if (node) [string appendFormat:@"%@\n", [node profileString]];
     
     node = __findNodeForType(rootNode, TLMProfileDocumentationType);
-    [string appendFormat:@"%@\n", [node profileString]];
+    if (node) [string appendFormat:@"%@\n", [node profileString]];
 
     node = __findNodeForType(rootNode, TLMProfileLanguageType);
-    [string appendFormat:@"%@\n", [node profileString]];
+    if (node) [string appendFormat:@"%@\n", [node profileString]];
     
     node = __findNodeForType(rootNode, TLMProfileOptionType);
-    [string appendString:[node profileString]];
+    if (node) [string appendFormat:@"%@\n", [node profileString]];
+
+    node = __findNodeForType(rootNode, TLMProfileOtherType);
+    if (node) [string appendFormat:@"%@\n", [node profileString]];
 
     return string;
 }
