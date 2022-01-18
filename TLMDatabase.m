@@ -427,6 +427,22 @@ static NSString     *_userAgent = nil;
          Typical download times under "normal" circumstances are < 1 second on a DSL connection, which is not
          too noticeable.  However, some .edu servers seem to time out for no apparent reason, and that's going
          to seem like a hang on startup.
+         
+         Update as of 17 Jan 2022:
+         I can either ruin my beachball by running the runloop in default mode on each pass, or break
+         encapsulation by letting the favicon cache use this runloop mode. There's some kind of timing or
+         ssl issue with some URLs, where if I'm running this private runloop mode and the favicon WebView
+         is loading at the same time, both fail. As of today, this is my test URL, and it hangs when
+         trying to download the head of the database:
+         
+         https://ctan.math.ca/tex-archive/systems/texlive/tlnet
+         
+         This might fix the .edu hang noted above, also, but I haven't seen it in years. Setting NSAllowsArbitraryLoads
+         to false also fixes that problem, but breaks a crapton of mirror URLs that are still http. Maybe something in
+         the bowels of CFNetwork does its own runloop stuff with certain SSL settings?
+         
+         I'd be happy just eliminating all the http mirrors from my plist, but I can't control what
+         the multiplexor hands out, so I'm stuck keeping NSAllowsArbitraryLoads for now.
          */
         NSString *rlmode = @"__TLMDatabaseDownloadRunLoopMode";
         [connection scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:rlmode];
@@ -446,17 +462,7 @@ static NSString     *_userAgent = nil;
             if (_failed)
                 break;
             
-            /*
-             Well, this ruins my beachball, but it also allows URL loading from
-             https://ctan.math.ca/tex-archive/systems/texlive/tlnet
-             (and maybe fixes the .edu server problem mentioned above). Setting NSAllowsArbitraryLoads to
-             false also fixes that problem, but breaks a crapton of mirror URLs that are still http. Maybe
-             something in the bowels of CFNetwork does its own runloop stuff with certain SSL settings?
-             
-             I'd be happy just eliminating all the http mirrors from my plist, but I can't control what
-             the multiplexor hands out, so I'm stuck keeping NSAllowsArbitraryLoads for now.
-             */
-            CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0, TRUE);
+            //CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0, TRUE);
 
         } while ([[self tlpdbData] length] < MIN_DATA_LENGTH);
         TLMLog(__func__, @"Downloaded %lu bytes of tlpdb for version check", (unsigned long)[[self tlpdbData] length]);

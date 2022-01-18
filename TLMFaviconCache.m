@@ -164,6 +164,9 @@ static void __TLMFaviconCacheInit() { _sharedCache = [TLMFaviconCache new]; }
         
         // retain cycle here; not a problem, since it expires quickly (and this is a singleton anyway)
         _cancelTimer = [NSTimer scheduledTimerWithTimeInterval:FAVICON_TIMEOUT target:self selector:@selector(_cancelFaviconLoad:) userInfo:nil repeats:NO];
+        
+#warning FIXME: see comment in TLMDatabase.m
+        [[NSRunLoop currentRunLoop] addTimer:_cancelTimer forMode:@"__TLMDatabaseDownloadRunLoopMode"];
     }
 }
 
@@ -242,7 +245,7 @@ static void __TLMFaviconCacheInit() { _sharedCache = [TLMFaviconCache new]; }
  Cache by host, since I ended up with a dictionary containing these entries:
  http://mirrors.med.harvard.edu/ctan/systems/texlive/tlnet != http://mirrors.med.harvard.edu/ctan/systems/texlive/tlnet/
  and calling tlm_normalizedURL doesn't get rid of the trailing slash (in fact,
- +[NSURL URLWithString:] addes it back on even if I delete it).
+ +[NSURL URLWithString:] adds it back on even if I delete it).
  Once again, NSURL sucks as a dictionary key.
  */
 
@@ -257,7 +260,7 @@ static void __TLMFaviconCacheInit() { _sharedCache = [TLMFaviconCache new]; }
 {
     NSParameterAssert(aURL);
     NSParameterAssert(nil == delegate || [delegate conformsToProtocol:@protocol(TLMFaviconCacheDelegate)]);
-    
+        
     // !!! early return for non-http URLs
     if ([[aURL scheme] hasPrefix:@"http"] == NO) return [self defaultFavicon];
     
