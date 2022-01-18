@@ -974,5 +974,22 @@
             <sparkle:minimumSystemVersion>10.9.0</sparkle:minimumSystemVersion>
             <enclosure url="https://github.com/amaxwell/tlutility/releases/download/1.49/TeX.Live.Utility.app-1.49.zip" sparkle:version="1.49" length="5747167" type="application/octet-stream" sparkle:dsaSignature="MCwCFCQpTveyKeEwRVX1QfivBV/nN3bjAhQgQIT647XC3sbxSSP06AdHy80S1w=="></enclosure>
         </item>
+        <item>
+            <title>Version 1.52</title>
+            <description><![CDATA[
+    	    <h3>Changes Since 1.49</h3>
+    	        <li>Added TL 2020 fallback mirror in April 2021. Oops.</li>
+                <li>No longer log errno unless waitpid fails, because users keep trying to interpret the log spew and just give me the part that they incorrectly think is relevant.</li>
+                <li>Hardcoded URLs are now https instead of http. Feel the security.</li>
+                <li>Tooltips in preference pane localized for Chinese Simplified.</li>
+                <li>Release notes window handles the CDATA section in newer appcasts. I forgot about that feature.</li>
+                <li>Added cacert.pem bundle from curl's website, to work around the broken curl in High Sierra and Mojave. This change brought to you by the Let's Encrypt certificate expiration debacle.</li>
+                <li>Changed favicon loading to use the TLMDatabase object's private runloop mode. I'm guessing there's a race condition in Apple's low-level URL loading that caused an inexplicable timeout on some SSL-enabled servers when trying to check a remote database version.</li>
+    	        <li>Versions 1.50 and 1.51 were sacrificed to Apple's notarization service.</li>
+            ]]></description>
+            <pubDate>Tue, 18 Jan 2022 04:14:09 +0000</pubDate>
+            <sparkle:minimumSystemVersion>10.9.0</sparkle:minimumSystemVersion>
+            <enclosure url="https://github.com/amaxwell/tlutility/releases/download/1.52/TeX.Live.Utility.app-1.52.zip" sparkle:version="1.52" length="5866957" type="application/octet-stream" sparkle:dsaSignature="MCwCFEIKct2mRKLze33kXwUEGe2JTEH1AhR9lK3MiWF1pzEYtGopiksNHdO0iw=="></enclosure>
+        </item>
     </channel>
 </rss>
