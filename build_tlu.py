@@ -137,11 +137,12 @@ def codesign():
 def notarize_dmg_or_zip(dmg_path):
     """dmg_path: zip file or dmg file"""
     
+    print("will notarize %s" % (dmg_path))
     notarize_cmd = ["xcrun", "altool", "--notarize-app", "--primary-bundle-id", "com.mac.amaxwell.tlu", "--username", "amaxwell@mac.com", "--password",  "@keychain:AC_PASSWORD", "--output-format", "xml", "--file", dmg_path]
     notarize_task = Popen(notarize_cmd, cwd=SOURCE_DIR, stdout=PIPE, stderr=PIPE)
     [output, error] = notarize_task.communicate()
     rc = notarize_task.returncode
-    print("altool --notarize-app exited with status %s" % (rc))
+    print("altool --notarize-app exited with status %s: %s" % (rc, error))
     assert rc == 0, "notarization failed"
     
     output_stream = io.BytesIO(output)
