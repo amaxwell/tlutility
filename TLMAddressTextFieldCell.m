@@ -41,7 +41,7 @@
 
 @implementation TLMAddressTextFieldCell
 
-#define FAVICON_INSET ((NSSize) { 3, 3 })
+#define FAVICON_INSET ((NSSize) { 5, 5 })
 
 @synthesize icon = _icon;
 @synthesize progressValue = _progressValue;
@@ -231,12 +231,16 @@ static void __adjust_text_rect(NSRect *textRect, NSView *controlView)
         CGContextSaveGState(ctxt);
         CGContextSetInterpolationQuality(ctxt, kCGInterpolationHigh);
         CGContextSetShouldAntialias(ctxt, true);
+        NSAlignmentOptions alignment = NSAlignAllEdgesInward;
         if ([controlView isFlipped]) {
             CGContextTranslateCTM(ctxt, 0, NSMaxY(iconRect));
             CGContextScaleCTM(ctxt, 1, -1);
             iconRect.origin.y = 0;
+            alignment |= NSAlignRectFlipped;
         }
-        [[self icon] drawInRect:NSInsetRect(iconRect, FAVICON_INSET.width, FAVICON_INSET.height) fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
+        NSRect iconDrawingRect = NSInsetRect(iconRect, FAVICON_INSET.width, FAVICON_INSET.height);
+        iconDrawingRect = NSIntegralRectWithOptions(iconDrawingRect, alignment);
+        [[self icon] drawInRect:iconDrawingRect fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
         CGContextRestoreGState(ctxt);
     }
     
