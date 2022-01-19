@@ -37,17 +37,16 @@
  */
 
 #import <Cocoa/Cocoa.h>
-#import <WebKit/WebKit.h>
 
-@interface TLMFaviconCache : NSObject <WebFrameLoadDelegate>
+@interface TLMFaviconCache : NSObject
 {
 @private
     NSMutableArray      *_queue;
-    WebView             *_webview;
     NSMutableDictionary *_iconsByURL;
     NSImage             *_defaultFavicon;
+    NSURLConnection     *_connection;
+    NSMutableData       *_iconData;
     BOOL                 _downloading;
-    NSTimer             *_cancelTimer;
 }
 
 + (id)sharedCache;

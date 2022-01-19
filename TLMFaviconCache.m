@@ -102,7 +102,7 @@ static void __TLMFaviconCacheInit() { _sharedCache = [TLMFaviconCache new]; }
     return _sharedCache;
 }
 
-- (NSImage *)_defaultFavicon
+- (NSImage *)_fallbackFavicon
 {    
     static bool didInit = false;
     static NSImage *icon = nil;
@@ -118,8 +118,6 @@ static void __TLMFaviconCacheInit() { _sharedCache = [TLMFaviconCache new]; }
     self = [super init];
     if (self) {
         _queue = [NSMutableArray new];
-        _webview = [[WebView alloc] initWithFrame:NSMakeRect(0, 0, 10, 10)];
-        [_webview setFrameLoadDelegate:self];
         /*
          The first call to mainFrameIcon always results in the default icon,
          even if you've loaded a site that has a favicon (e.g., utah.edu).
@@ -127,7 +125,7 @@ static void __TLMFaviconCacheInit() { _sharedCache = [TLMFaviconCache new]; }
          site loaded had a favicon.  Calling it once here takes care of the
          problem, and as a bonus it provides us with the default favicon.
          */
-        _defaultFavicon = [[_webview mainFrameIcon] retain];
+        _defaultFavicon = [[NSImage imageNamed:NSImageNameNetwork] copy];
         _iconsByURL = [NSMutableDictionary new];
     }
     return self;
@@ -135,18 +133,17 @@ static void __TLMFaviconCacheInit() { _sharedCache = [TLMFaviconCache new]; }
 
 - (void)dealloc
 {
-    [_webview stopLoading:nil];
-    [_webview setFrameLoadDelegate:nil];
-    [_webview release];
     [_queue release];
     [_iconsByURL release];
     [_defaultFavicon release];
+    [_connection release];
+    [_iconData release];
     [super dealloc];
 }
 
 - (NSImage *)defaultFavicon
 {
-    return _defaultFavicon ? _defaultFavicon : [self _defaultFavicon];
+    return _defaultFavicon ? _defaultFavicon : [self _fallbackFavicon];
 }
 
 - (_TLMFaviconQueueItem *)_currentItem
@@ -159,84 +156,95 @@ static void __TLMFaviconCacheInit() { _sharedCache = [TLMFaviconCache new]; }
     if ([_queue count] && NO == _downloading) {
         _TLMFaviconQueueItem *item = [self _currentItem];
         NSURLRequest *request = [NSURLRequest requestWithURL:[item iconURL] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:FAVICON_TIMEOUT];
-        [[_webview mainFrame] loadRequest:request];
+        
+        [_iconData release];
+        _iconData = [NSMutableData new];
+        
+        [_connection release];
+        _connection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:YES];
         _downloading = YES;
-        
-        // retain cycle here; not a problem, since it expires quickly (and this is a singleton anyway)
-        _cancelTimer = [NSTimer scheduledTimerWithTimeInterval:FAVICON_TIMEOUT target:self selector:@selector(_cancelFaviconLoad:) userInfo:nil repeats:NO];
-        
-#warning FIXME: see comment in TLMDatabase.m
-        [[NSRunLoop currentRunLoop] addTimer:_cancelTimer forMode:@"__TLMDatabaseDownloadRunLoopMode"];
+
     }
 }
 
-- (void)_cancelFaviconLoad:(NSTimer *)timer
+- (void)_cancelFaviconLoad
 {
     _TLMFaviconQueueItem *item = [self _currentItem];
-    if (timer)
-        TLMLog(__func__, @"Stopping favicon download from %@ due to timeout", [item iconURL]);
+
     // can run into partial URLs from editing, though the formatter should disallow that...
     if ([[item iconURL] host])
         [_iconsByURL setObject:[NSNull null] forKey:[[item iconURL] host]];
-    [_webview stopLoading:nil];
+    
+    [_connection cancel];
+    [_connection release];
+    _connection = nil;
+    
+    [_iconData release];
+    _iconData = nil;
+    
     if ([_queue count])
         [_queue removeLastObject];
     _downloading = NO;
-    [_cancelTimer invalidate];
-    _cancelTimer = nil;
     
     [self _downloadItems];
 }
 
-- (void)webView:(WebView *)sender didReceiveServerRedirectForProvisionalLoadForFrame:(WebFrame *)frame
+- (NSURLRequest *)connection:(NSURLConnection *)connection willSendRequest:(NSURLRequest *)request redirectResponse:(NSURLResponse *)response;
 {
-    [[[self _currentItem] otherURLs] addObject:[[[frame provisionalDataSource] request] URL]];
+    // response is nil if we are not processing a redirect
+    if (response) {
+        TLMLog(__func__, @"Stopping favicon download from %@ due to redirect", [request URL]);
+        [self _cancelFaviconLoad];
+    }
+    return request;
 }
 
-- (void)webView:(WebView *)sender didFailLoadWithError:(NSError *)error forFrame:(WebFrame *)frame;
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data;
+{
+    [_iconData appendData:data];
+}
+
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
     TLMLog(__func__, @"Failed to download favicon for %@", [[self _currentItem] iconURL]);
-    [self _cancelFaviconLoad:nil];
+    [self _cancelFaviconLoad];
 }
 
-- (void)webView:(WebView *)sender didFinishLoadForFrame:(WebFrame *)frame;
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
-    if ([frame isEqual:[sender mainFrame]]) {
-        id icon = [sender mainFrameIcon];
-        if (nil == icon)
-            icon = [NSNull null];
-        _TLMFaviconQueueItem *item = [self _currentItem];
+    TLMLog(__func__, @"Finished downloading favicon of length %ld", [_iconData length]);
 
-        /*
-         Hit an exception here once when item was nil; no idea why, but likely the delegate
-         messages are sent when I don't expect them.  Or something.  Maybe when download is
-         cancelled by the timer?
-        */
-        if (item ) {
-            [_iconsByURL setObject:icon forKey:[[item iconURL] host]];
-                    
-            // take care of redirects
-            for (NSURL *otherURL in [item otherURLs])
-                [_iconsByURL setObject:icon forKey:[otherURL host]];
-            
-            if (icon != [NSNull null]) {
-                for (id <TLMFaviconCacheDelegate> obj in [item delegates])
-                    [obj iconCache:self downloadedIcon:icon forURL:[item iconURL]];
-            }
-        }
-        else {
-            TLMLog(__func__, @"No current item loading for main frame URL %@", [sender mainFrameURL]);
-        }
+    id icon = [[[NSImage alloc] initWithData:_iconData] autorelease];
+    if (nil == icon)
+        icon = [NSNull null];
+    _TLMFaviconQueueItem *item = [self _currentItem];
 
-        [_webview stopLoading:nil];
-        if ([_queue count])
-            [_queue removeLastObject];
-        _downloading = NO;
-        [_cancelTimer invalidate];
-        _cancelTimer = nil;
+    /*
+     Hit an exception here once when item was nil; no idea why, but likely the delegate
+     messages are sent when I don't expect them.  Or something.  Maybe when download is
+     cancelled by the timer?
+    */
+    if (item ) {
+        [_iconsByURL setObject:icon forKey:[[item iconURL] host]];
+                
+        // take care of redirects
+        for (NSURL *otherURL in [item otherURLs])
+            [_iconsByURL setObject:icon forKey:[otherURL host]];
         
-        [self _downloadItems];
+        if (icon != [NSNull null]) {
+            for (id <TLMFaviconCacheDelegate> obj in [item delegates])
+                [obj iconCache:self downloadedIcon:icon forURL:[item iconURL]];
+        }
     }
+    else {
+        TLMLog(__func__, @"No current item loading for URL %@", [item iconURL]);
+    }
+
+    if ([_queue count])
+        [_queue removeLastObject];
+    _downloading = NO;
+    
+    [self _downloadItems];
 }
 
 # pragma mark API
@@ -280,8 +288,22 @@ static void __TLMFaviconCacheInit() { _sharedCache = [TLMFaviconCache new]; }
             icon = [self defaultFavicon];
     }
     else {
-        _TLMFaviconQueueItem *item = [[_TLMFaviconQueueItem alloc] initWithURL:aURL];
-        [item setIconURL:aURL];
+        
+        /*
+         WebView used to do this for us, but fails at least as of Mojave, due to botched SPI replacement or removal.
+         There are some Swift-based projects to do the same thing, since Apple's WebView replacement doesn't provide
+         a way to get it, but they're complicated and I don't feel a need to learn Swift for this silly feature. In
+         addition, we don't care about the JavaScript or CSS or whatever methods, since CTAN mirrors are serving a
+         list of files. Therefore, the old favico.ico is really the only case that matters, and that's pretty easy to
+         fetch using NSURLConnection.
+         
+         Example: https://mirrors.concertpass.com/tex-archive/systems/texlive/tlnet
+        */
+        NSURL *faviconURL = [[[NSURL alloc] initWithScheme:[aURL scheme] host:[aURL host] path:@"/favicon.ico"] autorelease];
+        TLMLog(__func__, @"Will look for favicon at %@", faviconURL);
+
+        _TLMFaviconQueueItem *item = [[_TLMFaviconQueueItem alloc] initWithURL:faviconURL];
+        [item setIconURL:faviconURL];
         if (delegate) [[item delegates] addObject:delegate];
         const NSUInteger idx = [_queue indexOfObject:item];
         if (NSNotFound != idx) {
