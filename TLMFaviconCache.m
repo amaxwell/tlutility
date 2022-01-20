@@ -161,7 +161,13 @@ static void __TLMFaviconCacheInit() { _sharedCache = [TLMFaviconCache new]; }
         _iconData = [NSMutableData new];
         
         [_connection release];
-        _connection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:YES];
+        _connection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
+        
+        // !!! this is gruesome, and maybe I should just stop using a private runloop mode for NSURLConnection in TLMDatabase.
+        NSString *rlmode = @"__TLMDatabaseDownloadRunLoopMode";
+        [_connection scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:rlmode];
+        [_connection scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+        [_connection start];
         _downloading = YES;
 
     }
