@@ -150,10 +150,6 @@ static TLMProfileNode * __findNodeForType(TLMProfileNode *rootNode, const TLMPro
     node = __findNodeForType(rootNode, TLMProfileVariableType);
     [string appendFormat:@"%@\n", [node profileString]];
     
-#warning FIXME: wrong assumption now
-    // this also gets appended twice, since it's snarfed up in the "Other" bin
-    [string appendString:@"binary-universal-darwin 1\n"];
-    
     node = __findNodeForType(rootNode, TLMProfileCollectionType);
     if (node) [string appendFormat:@"%@\n", [node profileString]];
     
