@@ -16,20 +16,20 @@ codesign $CODESIGN_FLAGS --sign "$IDENTITY" \
     "$LOCATION/Sparkle.framework/Versions/A/Resources/Autoupdate.app/Contents/MacOS/Autoupdate"
 codesign $CODESIGN_FLAGS --sign "$IDENTITY" "$LOCATION/Sparkle.framework/Versions/A"
 
-codesign $CODESIGN_FLAGS --sign "$IDENTITY" "$LOCATION/FileView.framework/Versions/A"
+codesign $CODESIGN_FLAGS --deep --sign "$IDENTITY" "$LOCATION/FileView.framework/Versions/A"
 
-codesign $CODESIGN_FLAGS --sign "$IDENTITY" "$LOCATION/Python.framework/Versions/3.9"
-codesign $CODESIGN_FLAGS --sign "$IDENTITY" "$LOCATION/Python.framework/Versions/3.9/bin/python3.9"
-codesign $CODESIGN_FLAGS --sign "$IDENTITY" "$LOCATION/Python.framework/Versions/3.9/bin/2to3-3.9"
-codesign $CODESIGN_FLAGS --sign "$IDENTITY" "$LOCATION/Python.framework/Versions/3.9/bin/idle3.9"
-codesign $CODESIGN_FLAGS --sign "$IDENTITY" "$LOCATION/Python.framework/Versions/3.9/bin/pip"
-codesign $CODESIGN_FLAGS --sign "$IDENTITY" "$LOCATION/Python.framework/Versions/3.9/bin/pip3"
-codesign $CODESIGN_FLAGS --sign "$IDENTITY" "$LOCATION/Python.framework/Versions/3.9/bin/pip3.9"
-codesign $CODESIGN_FLAGS --sign "$IDENTITY" "$LOCATION/Python.framework/Versions/3.9/bin/pydoc3.9"
-codesign $CODESIGN_FLAGS --sign "$IDENTITY" "$LOCATION/Python.framework/Versions/3.9/bin/python3.9"
-codesign $CODESIGN_FLAGS --sign "$IDENTITY" "$LOCATION/Python.framework/Versions/3.9/bin/python3.9-config"
-codesign $CODESIGN_FLAGS --sign "$IDENTITY" "$LOCATION/Python.framework/Versions/3.9/bin/xattr"
-codesign $CODESIGN_FLAGS --sign "$IDENTITY" "$LOCATION/Python.framework/Versions/3.9/bin/wheel"
+# codesign $CODESIGN_FLAGS --sign "$IDENTITY" "$LOCATION/Python.framework/Versions/3.9"
+# codesign $CODESIGN_FLAGS --sign "$IDENTITY" "$LOCATION/Python.framework/Versions/3.9/bin/python3.9"
+# codesign $CODESIGN_FLAGS --sign "$IDENTITY" "$LOCATION/Python.framework/Versions/3.9/bin/2to3-3.9"
+# codesign $CODESIGN_FLAGS --sign "$IDENTITY" "$LOCATION/Python.framework/Versions/3.9/bin/idle3.9"
+# codesign $CODESIGN_FLAGS --sign "$IDENTITY" "$LOCATION/Python.framework/Versions/3.9/bin/pip"
+# codesign $CODESIGN_FLAGS --sign "$IDENTITY" "$LOCATION/Python.framework/Versions/3.9/bin/pip3"
+# codesign $CODESIGN_FLAGS --sign "$IDENTITY" "$LOCATION/Python.framework/Versions/3.9/bin/pip3.9"
+# codesign $CODESIGN_FLAGS --sign "$IDENTITY" "$LOCATION/Python.framework/Versions/3.9/bin/pydoc3.9"
+# codesign $CODESIGN_FLAGS --sign "$IDENTITY" "$LOCATION/Python.framework/Versions/3.9/bin/python3.9"
+# codesign $CODESIGN_FLAGS --sign "$IDENTITY" "$LOCATION/Python.framework/Versions/3.9/bin/python3.9-config"
+# codesign $CODESIGN_FLAGS --sign "$IDENTITY" "$LOCATION/Python.framework/Versions/3.9/bin/xattr"
+# codesign $CODESIGN_FLAGS --sign "$IDENTITY" "$LOCATION/Python.framework/Versions/3.9/bin/wheel"
 
 
 LOCATION="${TLU_BUNDLE_PATH}"/Contents/MacOS
