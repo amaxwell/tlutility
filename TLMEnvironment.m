@@ -503,19 +503,9 @@ static void __TLMTestAndClearEnvironmentVariable(const char *name)
      I first added this in +initialize, but it didn't pick up problems when the user
      had an old Python in /usr/local/bin (and /usr/local/bin was first in PATH).
      */
-#warning probable delete
-#if 0
     NSInteger major, minor;
-    if ([self _checkSystemPythonMajorVersion:&major minorVersion:&minor] && (major != 2 || minor < 6)) {
-        // https://code.google.com/p/mactlmgr/issues/detail?id=103
-        TLMLog(__func__, @"*** WARNING *** Unsupported python version. Attempting to work around.");
-        // lowest common denominator of Python that we support
-        // NB: Yosemite symlinks Python 2.5 -> Python 2.6
-        setenv("VERSIONER_PYTHON_VERSION", "2.6", 1);
-        // check again; just log, since there's no point in trying more than one fallback version
-        [self _checkSystemPythonMajorVersion:&major minorVersion:&minor];
-    }
-#endif
+    [self _checkSystemPythonMajorVersion:&major minorVersion:&minor];
+
 }
 
 + (void)_ensureSaneEnvironment;
