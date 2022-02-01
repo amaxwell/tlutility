@@ -102,6 +102,17 @@
 				<key>country</key>
 				<string>China</string>
 				<key>name</key>
+				<string>mirrors.cloud.tencent.com</string>
+				<key>urls</key>
+				<array>
+					<string>http://mirrors.cloud.tencent.com/CTAN/</string>
+					<string>https://mirrors.cloud.tencent.com/CTAN/</string>
+				</array>
+			</dict>
+			<dict>
+				<key>country</key>
+				<string>China</string>
+				<key>name</key>
 				<string>mirrors.cqu.edu.cn</string>
 				<key>urls</key>
 				<array>
@@ -312,6 +323,16 @@
 			</dict>
 			<dict>
 				<key>country</key>
+				<string>Japan</string>
+				<key>name</key>
+				<string>ring.airnet.ne.jp</string>
+				<key>urls</key>
+				<array>
+					<string>http://ring.airnet.ne.jp/archives/text/CTAN/</string>
+				</array>
+			</dict>
+			<dict>
+				<key>country</key>
 				<string>Korea</string>
 				<key>name</key>
 				<string>cran.asia</string>
@@ -399,6 +420,16 @@
 			</dict>
 			<dict>
 				<key>country</key>
+				<string>Philippines</string>
+				<key>name</key>
+				<string>mirror.rise.ph</string>
+				<key>urls</key>
+				<array>
+					<string>http://mirror.rise.ph/ctan/</string>
+				</array>
+			</dict>
+			<dict>
+				<key>country</key>
 				<string>Singapore</string>
 				<key>name</key>
 				<string>download.nus.edu.sg</string>
@@ -406,6 +437,16 @@
 				<array>
 					<string>rsync://download.nus.edu.sg/mirror/ctan/</string>
 					<string>https://download.nus.edu.sg/mirror/ctan/</string>
+				</array>
+			</dict>
+			<dict>
+				<key>country</key>
+				<string>Taiwan</string>
+				<key>name</key>
+				<string>ftp.ntou.edu.tw</string>
+				<key>urls</key>
+				<array>
+					<string>https://ftp.ntou.edu.tw/ctan/</string>
 				</array>
 			</dict>
 			<dict>
@@ -1149,6 +1190,18 @@
 					<string>https://mirror.ox.ac.uk/sites/ctan.org/</string>
 				</array>
 			</dict>
+			<dict>
+				<key>country</key>
+				<string>United Kingdom</string>
+				<key>name</key>
+				<string>www-uxsup.csx.cam.ac.uk</string>
+				<key>urls</key>
+				<array>
+					<string>ftp://ftp-uxsup.csx.cam.ac.uk/pub/tex-archive/</string>
+					<string>http://www-uxsup.csx.cam.ac.uk/pub/tex-archive/</string>
+					<string>https://www-uxsup.csx.cam.ac.uk/pub/tex-archive/</string>
+				</array>
+			</dict>
 		</array>
 		<key>North America</key>
 		<array>
@@ -1301,6 +1354,28 @@
 				<key>country</key>
 				<string>USA</string>
 				<key>name</key>
+				<string>mirror.math.princeton.edu</string>
+				<key>urls</key>
+				<array>
+					<string>http://mirror.math.princeton.edu/pub/CTAN/</string>
+					<string>https://mirror.math.princeton.edu/pub/CTAN/</string>
+				</array>
+			</dict>
+			<dict>
+				<key>country</key>
+				<string>USA</string>
+				<key>name</key>
+				<string>mirror.mwt.me</string>
+				<key>urls</key>
+				<array>
+					<string>http://mirror.mwt.me/ctan/</string>
+					<string>https://mirror.mwt.me/ctan/</string>
+				</array>
+			</dict>
+			<dict>
+				<key>country</key>
+				<string>USA</string>
+				<key>name</key>
 				<string>mirrors.concertpass.com</string>
 				<key>urls</key>
 				<array>
@@ -1315,6 +1390,18 @@
 				<key>urls</key>
 				<array>
 					<string>https://ctan.mirrors.hoobly.com/</string>
+				</array>
+			</dict>
+			<dict>
+				<key>country</key>
+				<string>USA</string>
+				<key>name</key>
+				<string>mirrors.mit.edu</string>
+				<key>urls</key>
+				<array>
+					<string>http://mirrors.mit.edu/CTAN/</string>
+					<string>rsync://mirrors.mit.edu/CTAN/</string>
+					<string>https://mirrors.mit.edu/CTAN/</string>
 				</array>
 			</dict>
 			<dict>
@@ -1357,6 +1444,16 @@
 			</dict>
 			<dict>
 				<key>country</key>
+				<string>Australia</string>
+				<key>name</key>
+				<string>mirror.cse.unsw.edu.au</string>
+				<key>urls</key>
+				<array>
+					<string>https://mirror.cse.unsw.edu.au/pub/CTAN/</string>
+				</array>
+			</dict>
+			<dict>
+				<key>country</key>
 				<string>New Zealand</string>
 				<key>name</key>
 				<string>mirror.aut.ac.nz</string>
@@ -1384,6 +1481,6 @@
 		</array>
 	</dict>
 	<key>timestamp</key>
-	<real>1642479047.565575</real>
+	<real>1643696985.26966</real>
 </dict>
 </plist>
