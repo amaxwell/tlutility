@@ -101,6 +101,7 @@
 		F9B6B5630EF460A400CF767F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 29B97325FDCFA39411CA2CEA /* Foundation.framework */; };
 		F9B6B5EB0EF4647400CF767F /* TLMLogMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F56B4B0EF31F8800E934A9 /* TLMLogMessage.m */; };
 		F9B6B5F80EF469A600CF767F /* TLMLogServer.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B6B5F70EF469A600CF767F /* TLMLogServer.m */; };
+		F9BB95EA27A9070B00B78138 /* Python.framework in Copy Python framework */ = {isa = PBXBuildFile; fileRef = F9FEF34B27A788FE002D8D50 /* Python.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		F9C0D3CB125ECCE600B1FBE5 /* TLMLaunchAgentController.m in Sources */ = {isa = PBXBuildFile; fileRef = F9C0D3CA125ECCE600B1FBE5 /* TLMLaunchAgentController.m */; };
 		F9C0D3E7125ECF3700B1FBE5 /* LaunchAgentSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = F9C0D3E6125ECF3700B1FBE5 /* LaunchAgentSheet.xib */; };
 		F9C7260C157931E8000DF90F /* TLMToolbarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = F9C7260B157931E8000DF90F /* TLMToolbarItem.m */; };
@@ -138,8 +139,6 @@
 		F9F8BB4915DB0A1100B5D1F3 /* uninstall_local_agent.sh in Copy aux executables */ = {isa = PBXBuildFile; fileRef = F9F8BB4715DB09F900B5D1F3 /* uninstall_local_agent.sh */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		F9FAA44E0EFCBECD0040EAB2 /* TLMPapersizeController.m in Sources */ = {isa = PBXBuildFile; fileRef = F9FAA44D0EFCBECD0040EAB2 /* TLMPapersizeController.m */; };
 		F9FE58B4123EB80800B6008F /* TLMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = F9FE58B3123EB80800B6008F /* TLMDatabase.m */; };
-		F9FEF36027A788FF002D8D50 /* Python.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9FEF34B27A788FE002D8D50 /* Python.framework */; };
-		F9FEF36127A78946002D8D50 /* Python.framework in copy frameworks */ = {isa = PBXBuildFile; fileRef = F9FEF34B27A788FE002D8D50 /* Python.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -341,13 +340,23 @@
 			name = "Copy aux executables";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F9BB95E927A906FB00B78138 /* Copy Python framework */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				F9BB95EA27A9070B00B78138 /* Python.framework in Copy Python framework */,
+			);
+			name = "Copy Python framework";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F9DCD37C0F06F11300600DD2 /* copy frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				F9FEF36127A78946002D8D50 /* Python.framework in copy frameworks */,
 				F92A38B3198EFD64005C4B71 /* FileView.framework in copy frameworks */,
 				F9DCD3700F06F0F400600DD2 /* Sparkle.framework in copy frameworks */,
 			);
@@ -626,7 +635,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F9FEF36027A788FF002D8D50 /* Python.framework in Frameworks */,
 				F92A38C4198F023F005C4B71 /* FileView.framework in Frameworks */,
 				F9DCD36C0F06F0A200600DD2 /* Sparkle.framework in Frameworks */,
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
@@ -1067,6 +1075,7 @@
 				F9B139DD0EECBEEB007C0046 /* Copy aux executables */,
 				F96562A718121C75000B1464 /* Sign auxiliary executables */,
 				F9DCD37C0F06F11300600DD2 /* copy frameworks */,
+				F9BB95E927A906FB00B78138 /* Copy Python framework */,
 				F9E2C9BE0F3C00EE00D5EC49 /* CopyFiles */,
 				F9A057B70F507642008C804E /* CopyFiles */,
 				F9B396400F340E45007F95E9 /* FileView install name */,
@@ -1453,7 +1462,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\ncd ${SRCROOT}/relocatable-python\npython make_relocatable_python_framework.py --python-version 3.9.5 --pip-requirements=requirements_python3_recommended.txt --upgrade-pip\n";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\necho \"Warning: downloading and building Python.framework\" >&2\ncd ${SRCROOT}/relocatable-python\npython make_relocatable_python_framework.py --python-version 3.9.5 --pip-requirements=requirements_python3_recommended.txt --upgrade-pip\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
