@@ -16,9 +16,9 @@ codesign $CODESIGN_FLAGS --sign "$IDENTITY" \
     "$LOCATION/Sparkle.framework/Versions/A/Resources/Autoupdate.app/Contents/MacOS/Autoupdate"
 codesign $CODESIGN_FLAGS --sign "$IDENTITY" "$LOCATION/Sparkle.framework/Versions/A"
 
-codesign $CODESIGN_FLAGS --deep --sign "$IDENTITY" "$LOCATION/FileView.framework/Versions/A"
+codesign $CODESIGN_FLAGS --sign "$IDENTITY" "$LOCATION/FileView.framework/Versions/A"
 
-# codesign $CODESIGN_FLAGS --sign "$IDENTITY" "$LOCATION/Python.framework/Versions/3.9"
+codesign $CODESIGN_FLAGS --deep --sign "$IDENTITY" "$LOCATION/Python.framework"
 # codesign $CODESIGN_FLAGS --sign "$IDENTITY" "$LOCATION/Python.framework/Versions/3.9/bin/python3.9"
 # codesign $CODESIGN_FLAGS --sign "$IDENTITY" "$LOCATION/Python.framework/Versions/3.9/bin/2to3-3.9"
 # codesign $CODESIGN_FLAGS --sign "$IDENTITY" "$LOCATION/Python.framework/Versions/3.9/bin/idle3.9"
