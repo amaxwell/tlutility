@@ -238,6 +238,7 @@ def packages_from_tlpdb(flat_tlpdb, allow_partial=False):
         line = line.strip("\r\n")
     
         if len(line) == 0:
+            assert package != None, "Empty line and no package to add. Empty file?"
             all_packages.append(package)
             index_map[package.name] = package_index
             
