@@ -37,7 +37,7 @@
  */
 
 #import "TLMListUpdatesOperation.h"
-#import "TLMOutputParser.h"
+#import "TLMListUpdatesParser.h"
 #import "TLMLogServer.h"
 #import "TLMTask.h"
 #import "TLMEnvironment.h"
@@ -67,95 +67,20 @@
     [super dealloc];
 }
 
-- (void)_parsePackageLines:(NSArray *)lines withClass:(Class)parserClass
-{
-    NSParameterAssert(parserClass);
-    NSParameterAssert(lines);
-            
-    NSMutableArray *packages = [NSMutableArray new];
-    NSCharacterSet *nonWhitespace = [[NSCharacterSet whitespaceCharacterSet] invertedSet];
-    for (NSString *line in lines) {
-        if ([line rangeOfCharacterFromSet:nonWhitespace].length)
-            [packages addObject:[parserClass packageWithUpdateLine:line]];
-    }
-    _packages = [packages copy];
-    [packages release];
-
-}
-
-static NSUInteger __TLMIndexOfStringWithPrefix(NSArray *array, NSString *prefix)
-{
-    for (NSUInteger i = 0; i < [array count]; i++) {
-        if ([[array objectAtIndex:i] hasPrefix:prefix])
-            return i;
-    }
-    return NSNotFound;
-}
-
-static NSDictionary *__TLMHeaderDictionaryWithLines(NSArray *headerLines)
-{
-    NSMutableDictionary *header = [NSMutableDictionary dictionary];
-    for (NSString *line in headerLines) {
-        NSArray *keyValue = [line componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-        if ([keyValue count] > 1)
-            [header setObject:[keyValue objectAtIndex:1] forKey:[keyValue objectAtIndex:0]];
-    }
-    return header;
-}
-
-- (void)_parseLines:(NSArray *)lines
-{
-    NSParameterAssert([self isFinished]);
-    NSParameterAssert(nil == _packages);
-        
-    NSMutableArray *packageLines = [[lines mutableCopy] autorelease];
-
-    /*
-     version 2: 
-     location-url	http://mirror.hmc.edu/ctan/systems/texlive/tlnet/2008
-     total-bytes	216042383
-     end-of-header
-    */
-    NSUInteger headerStopIndex = __TLMIndexOfStringWithPrefix(packageLines, @"end-of-header");
-    NSDictionary *header = nil;
-    if (NSNotFound != headerStopIndex) {
-        header = __TLMHeaderDictionaryWithLines([packageLines subarrayWithRange:NSMakeRange(0, headerStopIndex)]);
-        [packageLines removeObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, headerStopIndex + 1)]];
-    }
-    else {
-        // saw this happen once (tlmgr returned an error)
-        TLMLog(__func__, @"*** ERROR *** header not found in output:\n%@", lines);
-        packageLines = nil;
-    }
-
-    if ([header objectForKey:@"location-url"])
-        [self setUpdateURL:[NSURL URLWithString:[header objectForKey:@"location-url"]]];
-    else
-        TLMLog(__func__, @"*** WARNING *** missing location-url in header = %@", header);
-    
-    // should be the last line in the output, so iterate in reverse order
-    NSUInteger outputStopIndex = [packageLines count];
-    while (outputStopIndex--) {
-        
-        // this marker is currently only on the machine-readable code paths, and we don't want to pass it to the parser
-        if ([[packageLines objectAtIndex:outputStopIndex] hasPrefix:@"end-of-updates"]) {
-            [packageLines removeObjectAtIndex:outputStopIndex];
-            break;
-        }
-    }
-
-    [self _parsePackageLines:packageLines withClass:[TLMOutputParser self]];
-}
-
 - (NSArray *)packages
 {
     // return nil for cancelled or failed operations (prevents logging error messages)
     if (nil == _packages && [self isFinished] && NO == [self isCancelled] && NO == [self failed]) {
         if ([[self outputData] length]) {
-            NSString *outputString = [[NSString alloc] initWithData:[self outputData] encoding:NSUTF8StringEncoding];        
-            NSArray *lines = [outputString componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+            NSString *outputString = [[NSString alloc] initWithData:[self outputData] encoding:NSUTF8StringEncoding];
+            
+            NSURL *updateURL;
+            [_packages release];
+            _packages = [[TLMListUpdatesParser packagesFromListUpdatesOutput:outputString atLocationURL:&updateURL] copy];
             [outputString release];
-            [self _parseLines:lines];
+
+            [self setUpdateURL:updateURL];
+            
         }   
         else {
             TLMLog(__func__, @"No data read from standard output stream.");

@@ -16,6 +16,9 @@
 		6839C74527A9B4DF0022E6B2 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6839C74427A9B4DF0022E6B2 /* Foundation.framework */; };
 		6839C74B27A9B5120022E6B2 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6839C74A27A9B5120022E6B2 /* CoreServices.framework */; };
 		6839C74F27A9B5690022E6B2 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6839C74E27A9B5690022E6B2 /* CoreGraphics.framework */; };
+		6839C75527A9D0CD0022E6B2 /* TLMPackage.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B134770EEB2065007C0046 /* TLMPackage.m */; };
+		6839C75927A9D2450022E6B2 /* TLMListUpdatesParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 6839C75827A9D2450022E6B2 /* TLMListUpdatesParser.m */; };
+		6839C75A27A9D2450022E6B2 /* TLMListUpdatesParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 6839C75827A9D2450022E6B2 /* TLMListUpdatesParser.m */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
@@ -397,6 +400,8 @@
 		6839C74827A9B5090022E6B2 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		6839C74A27A9B5120022E6B2 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
 		6839C74E27A9B5690022E6B2 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		6839C75827A9D2450022E6B2 /* TLMListUpdatesParser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TLMListUpdatesParser.m; sourceTree = "<group>"; };
+		6839C75D27A9D2740022E6B2 /* TLMListUpdatesParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TLMListUpdatesParser.h; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; explicitFileType = text.xml; fileEncoding = 4; path = Info.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* TeX Live Utility.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TeX Live Utility.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F90520D80EFDCB5400B489FE /* TLMAuthorizedOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMAuthorizedOperation.h; sourceTree = "<group>"; };
@@ -964,6 +969,8 @@
 				F9B134770EEB2065007C0046 /* TLMPackage.m */,
 				F9B1347B0EEB208C007C0046 /* TLMOutputParser.h */,
 				F9B1347C0EEB208C007C0046 /* TLMOutputParser.m */,
+				6839C75D27A9D2740022E6B2 /* TLMListUpdatesParser.h */,
+				6839C75827A9D2450022E6B2 /* TLMListUpdatesParser.m */,
 				F9A4A091105CA67100F5AC62 /* TLMProfileNode.h */,
 				F9A4A092105CA67100F5AC62 /* TLMProfileNode.m */,
 				F9FE58B2123EB80800B6008F /* TLMDatabase.h */,
@@ -1534,7 +1541,9 @@
 			files = (
 				6839C70327A9ACC70022E6B2 /* BDSKTask.m in Sources */,
 				6839C70627A9ACD90022E6B2 /* TLMTask.m in Sources */,
+				6839C75527A9D0CD0022E6B2 /* TLMPackage.m in Sources */,
 				6839C6F527A9AC130022E6B2 /* texliveupdatecheck.m in Sources */,
+				6839C75A27A9D2450022E6B2 /* TLMListUpdatesParser.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1606,6 +1615,7 @@
 				F93C78721AF33A6000817C34 /* TLMTexDistribution.m in Sources */,
 				F96203BF13D3656300932965 /* TLMLogWindowController.m in Sources */,
 				F929DE8413DCE00000072DDA /* TLMAddressTextField.m in Sources */,
+				6839C75927A9D2450022E6B2 /* TLMListUpdatesParser.m in Sources */,
 				F967340513E10867008C2B3E /* TLMFaviconCache.m in Sources */,
 				F9A616D513E709F000851984 /* BDSKTextViewCompletionController.m in Sources */,
 				F96737A713E8E577008C2B3E /* TLMAddressTextFieldCell.m in Sources */,

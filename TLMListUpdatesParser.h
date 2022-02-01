@@ -1,5 +1,5 @@
 //
-//  TLMOutputParser.h
+//  TLMListUpdatesParser.h
 //  TeX Live Utility
 //
 //  Created by Adam Maxwell on 12/6/08.
@@ -39,29 +39,14 @@
 #import <Cocoa/Cocoa.h>
 #import "TLMPackage.h"
 
-@protocol TLMInfoOutput
+@interface TLMListUpdatesParser : NSObject
 
-- (NSAttributedString *)attributedString;
+// result is guaranteed non-nil, but raises if outputLine is nil
+// for output of `tlmgr update --list`
++ (TLMPackage *)packageWithUpdateLine:(NSString *)outputLine;
 
-// arrays of NSURL objects; only files which exist are returned
-- (NSArray *)runFiles;
-- (NSArray *)sourceFiles;
-- (NSArray *)docFiles;
+// returns an array with TLMPackage objects for a string of stdout from tlmgr update listing
++ (NSArray *)packagesFromListUpdatesOutput:(NSString *)outputString atLocationURL:(NSURL **)actualLocation;
 
-@end
-
-
-@interface TLMOutputParser : NSObject
-
-
-// returns a plain string if parsing fails, raises if infoString is nil
-// for output of `tlmgr show'
-+ (id <TLMInfoOutput>)outputWithInfoString:(NSString *)infoString docURLs:(NSArray *)docURLs;
-
-// returns an array of TLMPackageNodes, each of which may have child nodes
-// for output of `tlmgr list`
-+ (NSArray *)nodesWithListLines:(NSArray *)listLines;
-
-+ (NSArray *)backupNodesWithListLines:(NSArray *)listLines;
 
 @end
