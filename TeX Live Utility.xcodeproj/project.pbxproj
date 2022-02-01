@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD58140DA1D0A300B32029 /* MainMenu.xib */; };
 		68020655279602A800A3B944 /* cacert.pem in Resources */ = {isa = PBXBuildFile; fileRef = 68020640279602A800A3B944 /* cacert.pem */; };
+		6839C6EB27A9A9510022E6B2 /* Python.framework in copy frameworks */ = {isa = PBXBuildFile; fileRef = F9FEF34B27A788FE002D8D50 /* Python.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
@@ -101,7 +102,6 @@
 		F9B6B5630EF460A400CF767F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 29B97325FDCFA39411CA2CEA /* Foundation.framework */; };
 		F9B6B5EB0EF4647400CF767F /* TLMLogMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F56B4B0EF31F8800E934A9 /* TLMLogMessage.m */; };
 		F9B6B5F80EF469A600CF767F /* TLMLogServer.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B6B5F70EF469A600CF767F /* TLMLogServer.m */; };
-		F9BB95EA27A9070B00B78138 /* Python.framework in Copy Python framework */ = {isa = PBXBuildFile; fileRef = F9FEF34B27A788FE002D8D50 /* Python.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		F9C0D3CB125ECCE600B1FBE5 /* TLMLaunchAgentController.m in Sources */ = {isa = PBXBuildFile; fileRef = F9C0D3CA125ECCE600B1FBE5 /* TLMLaunchAgentController.m */; };
 		F9C0D3E7125ECF3700B1FBE5 /* LaunchAgentSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = F9C0D3E6125ECF3700B1FBE5 /* LaunchAgentSheet.xib */; };
 		F9C7260C157931E8000DF90F /* TLMToolbarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = F9C7260B157931E8000DF90F /* TLMToolbarItem.m */; };
@@ -340,23 +340,13 @@
 			name = "Copy aux executables";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		F9BB95E927A906FB00B78138 /* Copy Python framework */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				F9BB95EA27A9070B00B78138 /* Python.framework in Copy Python framework */,
-			);
-			name = "Copy Python framework";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		F9DCD37C0F06F11300600DD2 /* copy frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				6839C6EB27A9A9510022E6B2 /* Python.framework in copy frameworks */,
 				F92A38B3198EFD64005C4B71 /* FileView.framework in copy frameworks */,
 				F9DCD3700F06F0F400600DD2 /* Sparkle.framework in copy frameworks */,
 			);
@@ -1075,7 +1065,6 @@
 				F9B139DD0EECBEEB007C0046 /* Copy aux executables */,
 				F96562A718121C75000B1464 /* Sign auxiliary executables */,
 				F9DCD37C0F06F11300600DD2 /* copy frameworks */,
-				F9BB95E927A906FB00B78138 /* Copy Python framework */,
 				F9E2C9BE0F3C00EE00D5EC49 /* CopyFiles */,
 				F9A057B70F507642008C804E /* CopyFiles */,
 				F9B396400F340E45007F95E9 /* FileView install name */,
@@ -1384,7 +1373,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "LOCATION=\"${BUILT_PRODUCTS_DIR}\"/\"${FRAMEWORKS_FOLDER_PATH}\"\nIDENTITY=\"TeX Live Utility Signing Certificate\"\n#IDENTITY=\"Developer ID Application: Adam Maxwell (966Z24PX4J)\"\n#codesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/Sparkle.framework/Versions/A\"\n#codesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/FileView.framework/Versions/A\"\ncodesign --verbose --force --deep --sign \"$IDENTITY\" \"$LOCATION/Python.framework\"\n";
+			shellScript = "LOCATION=\"${BUILT_PRODUCTS_DIR}\"/\"${FRAMEWORKS_FOLDER_PATH}\"\nIDENTITY=\"TeX Live Utility Signing Certificate\"\n#IDENTITY=\"Developer ID Application: Adam Maxwell (966Z24PX4J)\"\n#codesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/Sparkle.framework/Versions/A\"\n#codesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/FileView.framework/Versions/A\"\n\n# No Versions/A, so the checkbox in Copy Frameworks doesn't work properly\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/Python.framework/Versions/3.9\"\n";
 		};
 		F96562A718121C75000B1464 /* Sign auxiliary executables */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1462,7 +1451,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\necho \"Warning: downloading and building Python.framework\" >&2\ncd ${SRCROOT}/relocatable-python\npython make_relocatable_python_framework.py --python-version 3.9.5\n";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\necho \"Warning: downloading and building Python.framework\" >&2\ncd ${SRCROOT}/relocatable-python\n#python make_relocatable_python_framework.py --python-version 3.9.10\n# override default OS version by passing the baseurl template, so we can force a universal2 download\npython make_relocatable_python_framework.py --python-version 3.9.10 --os-version 11 --baseurl \"https://www.python.org/ftp/python/%s/python-%s-macos%s.pkg\"\n\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
