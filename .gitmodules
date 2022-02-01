@@ -1,12 +1,20 @@
 [submodule "DVI-qlgenerator"]
 	path = DVI-qlgenerator
 	url = https://github.com/amaxwell/DVI-qlgenerator.git
+	branch = master
 [submodule "DVIImporter"]
 	path = DVIImporter
 	url = https://github.com/amaxwell/DVIImporter.git
+	branch = master
 [submodule "fileview"]
 	path = fileview
 	url = https://github.com/amaxwell/fileview.git
+	branch = master
 [submodule "Sparkle"]
 	path = Sparkle
 	url = https://github.com/sparkle-project/Sparkle.git
+	branch = master
+[submodule "relocatable-python"]
+	path = relocatable-python
+	url = https://github.com/gregneagle/relocatable-python.git
+	branch = main
