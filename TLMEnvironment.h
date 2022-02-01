@@ -72,6 +72,9 @@ extern NSString * const TLMDefaultRepositoryChangedNotification;
 // main thread only; sets defaults
 + (void)setDefaultRepository:(NSURL *)absoluteURL;
 
+// path to internal python executable
++ (NSString *)internalPythonInterpreterPath;
+
 // returns nil when no server can be reached; pass nil to use default URL from prefs
 - (NSURL *)validServerURLFromURL:(NSURL *)fromURL;
 

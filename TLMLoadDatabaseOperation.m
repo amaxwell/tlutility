@@ -115,8 +115,8 @@
     
     BDSKTask *parseTask = [[BDSKTask new] autorelease];
     NSString *parserPath = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"parse_tlpdb.py"];
-    [parseTask setLaunchPath:parserPath];
-    [parseTask setArguments:[NSArray arrayWithObjects:@"-o", absolutePath, @"-f", @"plist", nil]];
+    [parseTask setLaunchPath:[TLMEnvironment internalPythonInterpreterPath]];
+    [parseTask setArguments:[NSArray arrayWithObjects:parserPath, @"-o", absolutePath, @"-f", @"plist", nil]];
     [parseTask setStandardInput:[[dumpTask standardOutput] fileHandleForReading]];
     [parseTask setStandardError:[NSPipe pipe]];
     [[NSNotificationCenter defaultCenter] addObserver:self 

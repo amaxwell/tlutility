@@ -321,6 +321,11 @@ static bool                 _didShowBadTexbinPathAlert = false;
     return NO;
 }
 
++ (NSString *)internalPythonInterpreterPath;
+{
+    return [[[NSBundle mainBundle] privateFrameworksPath] stringByAppendingPathComponent:@"Python.framework/Versions/Current/bin/python3"];
+}
+
 - (id)initWithInstallDirectory:(NSString *)absolutePath
 {
     NSParameterAssert(absolutePath);
@@ -498,6 +503,8 @@ static void __TLMTestAndClearEnvironmentVariable(const char *name)
      I first added this in +initialize, but it didn't pick up problems when the user
      had an old Python in /usr/local/bin (and /usr/local/bin was first in PATH).
      */
+#warning probable delete
+#if 0
     NSInteger major, minor;
     if ([self _checkSystemPythonMajorVersion:&major minorVersion:&minor] && (major != 2 || minor < 6)) {
         // https://code.google.com/p/mactlmgr/issues/detail?id=103
@@ -508,6 +515,7 @@ static void __TLMTestAndClearEnvironmentVariable(const char *name)
         // check again; just log, since there's no point in trying more than one fallback version
         [self _checkSystemPythonMajorVersion:&major minorVersion:&minor];
     }
+#endif
 }
 
 + (void)_ensureSaneEnvironment;
@@ -631,9 +639,9 @@ static void __TLMTestAndClearEnvironmentVariable(const char *name)
 + (BOOL)_checkSystemPythonMajorVersion:(NSInteger *)major minorVersion:(NSInteger *)minor;
 {
     NSString *versionCheckPath = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"python_version.py"];
-    
     TLMTask *versionCheckTask = [[TLMTask new] autorelease];
-    [versionCheckTask setLaunchPath:versionCheckPath];
+    [versionCheckTask setLaunchPath:[TLMEnvironment internalPythonInterpreterPath]];
+    [versionCheckTask setArguments:[NSArray arrayWithObject:versionCheckPath]];
     [versionCheckTask launch];
     [versionCheckTask waitUntilExit];
     BOOL ret = NO;
