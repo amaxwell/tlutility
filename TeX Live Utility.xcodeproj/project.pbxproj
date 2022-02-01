@@ -1462,7 +1462,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\necho \"Warning: downloading and building Python.framework\" >&2\ncd ${SRCROOT}/relocatable-python\npython make_relocatable_python_framework.py --python-version 3.9.5 --pip-requirements=requirements_python3_recommended.txt --upgrade-pip\n";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\necho \"Warning: downloading and building Python.framework\" >&2\ncd ${SRCROOT}/relocatable-python\npython make_relocatable_python_framework.py --python-version 3.9.5\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
