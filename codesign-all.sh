@@ -6,7 +6,7 @@ IDENTITY="Developer ID Application: Adam Maxwell (966Z24PX4J)"
 TLU_BUNDLE_PATH="$1"
 
 # see https://mjtsai.com/blog/2021/02/18/code-signing-when-building-on-apple-silicon/
-CODESIGN_FLAGS="--verbose --options runtime --timestamp --force --digest-algorithm=sha1,sha256"
+CODESIGN_FLAGS="--verbose --timestamp --force --digest-algorithm=sha1,sha256 --options runtime"
 
 LOCATION=${TLU_BUNDLE_PATH}/Contents/Frameworks
 
@@ -47,6 +47,7 @@ codesign $CODESIGN_FLAGS --sign "$IDENTITY" "$LOCATION/parse_tlpdb.py"
 codesign $CODESIGN_FLAGS --sign "$IDENTITY" "$LOCATION/agent_installer.py"
 codesign $CODESIGN_FLAGS --sign "$IDENTITY" "$LOCATION/texdist_change_default.sh"
 codesign $CODESIGN_FLAGS --sign "$IDENTITY" "$LOCATION/tlu_ipctask"
+codesign $CODESIGN_FLAGS --sign "$IDENTITY" "$LOCATION/texliveupdatecheck"
 
 codesign $CODESIGN_FLAGS --sign "$IDENTITY" "${TLU_BUNDLE_PATH}/Contents/Library/QuickLook/DVI.qlgenerator"
 codesign $CODESIGN_FLAGS --sign "$IDENTITY" "${TLU_BUNDLE_PATH}/Contents/Library/Spotlight/DVIImporter.mdimporter"
