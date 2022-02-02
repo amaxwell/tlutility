@@ -48,6 +48,7 @@ int main(int argc, const char * argv[]) {
     
     NSAutoreleasePool *pool = [NSAutoreleasePool new];
         
+    // some checks since we're likely running in the background as a launchd agent
     NSDictionary *sessionInfo = [(NSDictionary *)CGSessionCopyCurrentDictionary() autorelease];
     if (nil == sessionInfo)
         return 0;
@@ -60,9 +61,13 @@ int main(int argc, const char * argv[]) {
     if (nil == [sessionInfo objectForKey:(id)kCGSessionLoginDoneKey])
         return 0;
     
-    // display is captured; no point in continuing
-    if (CGDisplayIsCaptured(CGMainDisplayID()))
-        return 0;
+    /*
+     Used to check CGDisplayIsCaptured(CGMainDisplayID()) here for full screen mode,
+     but the call is deprecated with no replacement. The alternative is to use
+     NSApplicationPresentationOptions, but then I have to drag in AppKit for a CLI
+     tool. The hell with that: post the notification and let the OS figure out if
+     it should be displayed or not.
+     */
     
     NSString *texbinPath = [(id)CFPreferencesCopyAppValue(CFSTR("TLMTexBinPathPreferenceKey"), CFSTR("com.googlecode.mactlmgr.tlu")) autorelease];
     
