@@ -148,6 +148,7 @@
 		F9F8BB4915DB0A1100B5D1F3 /* uninstall_local_agent.sh in Copy aux executables */ = {isa = PBXBuildFile; fileRef = F9F8BB4715DB09F900B5D1F3 /* uninstall_local_agent.sh */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		F9FAA44E0EFCBECD0040EAB2 /* TLMPapersizeController.m in Sources */ = {isa = PBXBuildFile; fileRef = F9FAA44D0EFCBECD0040EAB2 /* TLMPapersizeController.m */; };
 		F9FE58B4123EB80800B6008F /* TLMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = F9FE58B3123EB80800B6008F /* TLMDatabase.m */; };
+		F9FEF37F27AA5495002D8D50 /* texliveupdatecheck in Copy aux executables */ = {isa = PBXBuildFile; fileRef = 6839C6F227A9AC130022E6B2 /* texliveupdatecheck */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -319,6 +320,13 @@
 			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
 			remoteInfo = FileView;
 		};
+		F9FEF36827AA5359002D8D50 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 6839C6F127A9AC130022E6B2;
+			remoteInfo = texliveupdatecheck;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -347,6 +355,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 6;
 			files = (
+				F9FEF37F27AA5495002D8D50 /* texliveupdatecheck in Copy aux executables */,
 				F93C786F1AF32F5800817C34 /* texdist_change_default.sh in Copy aux executables */,
 				F9E3DDC1182F415B00800308 /* TLUNotifier.app in Copy aux executables */,
 				F92034E217F0A6E300796A10 /* python_version.py in Copy aux executables */,
@@ -1150,6 +1159,7 @@
 				F9ED4C0D1990AF6100B97370 /* PBXTargetDependency */,
 				F9E3DDB7182F414900800308 /* PBXTargetDependency */,
 				F9B139D60EECBE8F007C0046 /* PBXTargetDependency */,
+				F9FEF36927AA5359002D8D50 /* PBXTargetDependency */,
 				F9DCD40E0F06F1D900600DD2 /* PBXTargetDependency */,
 				F9E2C9330F3C00AE00D5EC49 /* PBXTargetDependency */,
 				F9A057C80F5076A2008C804E /* PBXTargetDependency */,
@@ -1466,7 +1476,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "LOCATION=\"${BUILT_PRODUCTS_DIR}\"/\"${EXECUTABLE_FOLDER_PATH}\"\nIDENTITY=\"TeX Live Utility Signing Certificate\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/python_version.py\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/uninstall_local_agent.sh\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/parse_tlpdb.py\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/agent_installer.py\"\ncodesign --verbose --force --options kill --sign \"$IDENTITY\" \"$LOCATION/texdist_change_default.sh\"\ncodesign --verbose --force --options kill --sign \"$IDENTITY\" \"$LOCATION/tlu_ipctask\"\n\n";
+			shellScript = "LOCATION=\"${BUILT_PRODUCTS_DIR}\"/\"${EXECUTABLE_FOLDER_PATH}\"\nIDENTITY=\"TeX Live Utility Signing Certificate\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/python_version.py\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/uninstall_local_agent.sh\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/parse_tlpdb.py\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/agent_installer.py\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/texliveupdatecheck\"\ncodesign --verbose --force --options kill --sign \"$IDENTITY\" \"$LOCATION/texdist_change_default.sh\"\ncodesign --verbose --force --options kill --sign \"$IDENTITY\" \"$LOCATION/tlu_ipctask\"\n\n";
 		};
 		F9ACDA3814434DBC005DA800 /* Create help book */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1667,6 +1677,11 @@
 			isa = PBXTargetDependency;
 			name = FileView;
 			targetProxy = F9ED4C0C1990AF6100B97370 /* PBXContainerItemProxy */;
+		};
+		F9FEF36927AA5359002D8D50 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 6839C6F127A9AC130022E6B2 /* texliveupdatecheck */;
+			targetProxy = F9FEF36827AA5359002D8D50 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
