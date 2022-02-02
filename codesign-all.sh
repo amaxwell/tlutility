@@ -23,6 +23,8 @@ cd "$LOCATION"
 find Python.framework/Versions/3.9/lib/ -type f -perm -u=x -exec codesign $CODESIGN_FLAGS --sign "$IDENTITY" {} \;
 find Python.framework/Versions/3.9/bin/ -type f -perm -u=x -exec codesign $CODESIGN_FLAGS --sign "$IDENTITY" {} \;
 find Python.framework/Versions/3.9/lib/ -type f -name "*dylib" -exec codesign $CODESIGN_FLAGS --sign "$IDENTITY" {} \;
+find Python.framework/Versions/3.9/lib/ -type f -name "*.a" -exec codesign $CODESIGN_FLAGS --sign "$IDENTITY" {} \;
+find Python.framework/Versions/3.9/lib/ -type f -name "*.o" -exec codesign $CODESIGN_FLAGS --sign "$IDENTITY" {} \;
 popd
     
 codesign --entitlements python_entitlements.plist $CODESIGN_FLAGS --deep --sign "$IDENTITY" "$LOCATION/Python.framework/Versions/3.9/Resources/Python.app"
