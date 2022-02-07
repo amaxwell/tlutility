@@ -41,7 +41,7 @@ from shutil import copy2 as copyfile
 from plistlib import readPlist, writePlist
 
 LAUNCHCTL_PATH = "/bin/launchctl"
-SCRIPT_NAME = "update_check.py"
+SCRIPT_NAME = "texliveupdatecheck"
 PLIST_NAME = "com.googlecode.mactlmgr.update_check.plist"
 
 def log_message(msg):
@@ -125,7 +125,8 @@ def install_agent(source_path):
             # then save it out to the destination directory (avoids modifying
             # the passed-in file).
             plist = readPlist(source_path)
-            plist["ProgramArguments"][-1] = installed_script_path()
+            # rewrite entire array
+            plist["ProgramArguments"] = [installed_script_path()]
             writePlist(plist, plist_path)
         except Exception as e:
             log_message("ERROR: failed to copy %s --> %s" % (source_path, plist_path))
@@ -206,4 +207,4 @@ if __name__ == '__main__':
                 status = load_agent()
     
     exit(status)
-    
+
