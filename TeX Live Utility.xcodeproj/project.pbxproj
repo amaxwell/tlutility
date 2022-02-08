@@ -52,6 +52,7 @@
 		F942FFC513A08FD60008D8FD /* TLMDatabasePackage.m in Sources */ = {isa = PBXBuildFile; fileRef = F942FFC413A08FD60008D8FD /* TLMDatabasePackage.m */; };
 		F94E74A20EF4965100E0B78F /* TLMTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = F94E74A10EF4965100E0B78F /* TLMTableView.m */; };
 		F95620E027B21ED400A6D48F /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F95620DF27B21ED400A6D48F /* AppKit.framework */; };
+		F95620E327B2407600A6D48F /* NSStupid.m in Sources */ = {isa = PBXBuildFile; fileRef = F9E6912125C8CF4A004285CD /* NSStupid.m */; };
 		F957A4E312514B040079E07F /* TLMBackupOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F957A4E212514B040079E07F /* TLMBackupOperation.m */; };
 		F958309812695A0800DB997C /* TLMBackupCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F958309712695A0800DB997C /* TLMBackupCell.m */; };
 		F96203BF13D3656300932965 /* TLMLogWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = F96203BE13D3656300932965 /* TLMLogWindowController.m */; };
@@ -1480,7 +1481,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "LOCATION=\"${BUILT_PRODUCTS_DIR}\"/\"${EXECUTABLE_FOLDER_PATH}\"\nIDENTITY=\"TeX Live Utility Signing Certificate\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/python_version.py\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/uninstall_local_agent.sh\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/parse_tlpdb.py\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/agent_installer.py\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/texliveupdatecheck\"\ncodesign --verbose --force --options kill --sign \"$IDENTITY\" \"$LOCATION/texdist_change_default.sh\"\ncodesign --verbose --force --options kill --sign \"$IDENTITY\" \"$LOCATION/tlu_ipctask\"\n\n";
+			shellScript = "LOCATION=\"${BUILT_PRODUCTS_DIR}\"/\"${EXECUTABLE_FOLDER_PATH}\"\nIDENTITY=\"TeX Live Utility Signing Certificate\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/python_version.py\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/uninstall_local_agent.sh\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/parse_tlpdb.py\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/agent_installer.py\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/texliveupdatecheck\"\ncodesign --verbose --force --sign \"$IDENTITY\" --entitlements \"${SRCROOT}\"/TLUNotifier/TLUNotifier/TLUNotifier.entitlements \"$LOCATION/TLUNotifier.app\"\ncodesign --verbose --force --options kill --sign \"$IDENTITY\" \"$LOCATION/texdist_change_default.sh\"\ncodesign --verbose --force --options kill --sign \"$IDENTITY\" \"$LOCATION/tlu_ipctask\"\n\n";
 		};
 		F9ACDA3814434DBC005DA800 /* Create help book */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1553,6 +1554,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F95620E327B2407600A6D48F /* NSStupid.m in Sources */,
 				6839C70327A9ACC70022E6B2 /* BDSKTask.m in Sources */,
 				6839C70627A9ACD90022E6B2 /* TLMTask.m in Sources */,
 				6839C75527A9D0CD0022E6B2 /* TLMPackage.m in Sources */,

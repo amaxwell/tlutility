@@ -115,6 +115,8 @@
 {
     NSAppleEventDescriptor *desc = [event numberOfItems] ? [event descriptorAtIndex:1] : nil;
     [self setRepository:([desc stringValue] ? [NSURL URLWithString:[desc stringValue]] : nil)];
+    // logging since this is failing for reasons I don't understand
+    NSLog(@"Received AE %@", desc);
     [self _notifyUser];
 }
 

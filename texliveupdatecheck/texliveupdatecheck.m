@@ -9,6 +9,9 @@
 #import <CoreGraphics/CoreGraphics.h>
 #import "TLMListUpdatesParser.h"
 #import "TLMTask.h"
+#import "NSStupid.h"
+
+#define TLU_BUNDLE_IDENTIFIER "com.googlecode.mactlmgr.tlu"
 
 // parser calls TLMLog, so reimplement as NSLog in this target
 void TLMLog(const char *sender, NSString *format, ...)
@@ -72,17 +75,29 @@ int main(int argc, const char * argv[]) {
      it should be displayed or not.
      */
     
-    NSString *texbinPath = [(id)CFPreferencesCopyAppValue(CFSTR("TLMTexBinPathPreferenceKey"), CFSTR("com.googlecode.mactlmgr.tlu")) autorelease];
+    NSString *texbinPath = [(id)CFPreferencesCopyAppValue(CFSTR("TLMTexBinPathPreferenceKey"), CFSTR(TLU_BUNDLE_IDENTIFIER)) autorelease];
     
     // default from TLMAppController
     if (nil == texbinPath)
         texbinPath = (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber10_10) ? @"/Library/TeX/texbin" : @"/usr/texbin";
     
-    NSString *repositoryString = [(id)CFPreferencesCopyAppValue(CFSTR("TLMFullServerURLPreferenceKey"), CFSTR("com.googlecode.mactlmgr.tlu")) autorelease];
+    NSString *repositoryString = [(id)CFPreferencesCopyAppValue(CFSTR("TLMFullServerURLPreferenceKey"), CFSTR(TLU_BUNDLE_IDENTIFIER)) autorelease];
     
     // default from TLMAppController
     if (nil == repositoryString)
         repositoryString = @"https://mirror.ctan.org/systems/texlive/tlnet";
+    
+    if (floor(NSAppKitVersionNumber) <= NSAppKitVersionNumber10_14) {
+        NSURL *tluURL = [[NSWorkspace sharedWorkspace] URLForApplicationWithBundleIdentifier:@TLU_BUNDLE_IDENTIFIER];
+        NSBundle *tluBundle = nil;
+        if (tluURL)
+            tluBundle = [NSBundle bundleWithURL:tluURL];
+        const char *certPath = [[tluBundle pathForResource:@"cacert" ofType:@"pem"] fileSystemRepresentation];
+        if (certPath) {
+            NSLog(@"Setting CURL_CA_BUNDLE=%s to work around High Sierra and Mojave SSL bugs", certPath);
+            setenv("CURL_CA_BUNDLE", certPath, 1);
+        }
+    }
     
     NSURL *actualRepository = nil;
     NSInteger updateCount = check_for_updates([texbinPath stringByAppendingPathComponent:@"tlmgr"], [NSURL URLWithString:repositoryString], &actualRepository);
@@ -99,21 +114,42 @@ int main(int argc, const char * argv[]) {
     
     // try and find a running instance, since Launch Services is screwing up on Mojave and Catalina
     NSArray *runningApplications = [NSRunningApplication runningApplicationsWithBundleIdentifier:@"com.googlecode.mactlmgr.TLUNotifier"];
-    NSURL *tlnURL = [[runningApplications firstObject] bundleURL];
-    if (nil == tlnURL)
-        tlnURL = [[NSWorkspace sharedWorkspace] URLForApplicationWithBundleIdentifier:@"com.googlecode.mactlmgr.TLUNotifier"];
-    NSLog(@"Will send URL %@ to TLUNotifier %@", actualRepository, tlnURL);
+    NSRunningApplication *targetApplication = [runningApplications firstObject];
+    OSStatus ret;
     
-    if (tlnURL && actualRepository) {
-        LSLaunchURLSpec launchSpec;
-        memset(&launchSpec, 0, sizeof(LSLaunchURLSpec));
-        launchSpec.appURL = (CFURLRef)tlnURL;
-        launchSpec.launchFlags = kLSLaunchDefaults;
-        launchSpec.itemURLs = actualRepository ? (CFArrayRef)[NSArray arrayWithObject:actualRepository] : NULL;
-        OSStatus ret;
-        ret = LSOpenFromURLSpec(&launchSpec, NULL);
+    if (targetApplication) {
+        NSLog(@"TeX Live Utility is already running; sending kAEGetURL");
+        pid_t targetPID = [targetApplication processIdentifier];
+        NSAppleEventDescriptor *tlnProcess = [NSAppleEventDescriptor descriptorWithDescriptorType:typeKernelProcessID
+                                                                                            bytes:&targetPID
+                                                                                            length:sizeof(targetPID)];
+        NSAppleEventDescriptor *event = [NSAppleEventDescriptor appleEventWithEventClass:kInternetEventClass
+                                                                                 eventID:kAEGetURL
+                                                                        targetDescriptor:tlnProcess
+                                                                                returnID:kAutoGenerateReturnID
+                                                                           transactionID:kAnyTransactionID];
+        NSAppleEventDescriptor *keyDesc = [NSAppleEventDescriptor descriptorWithString:[actualRepository absoluteString]];
+        [event setParamDescriptor:keyDesc forKeyword:keyDirectObject];
+        ret = AESendMessage([event aeDesc], NULL, kAENoReply, 0);
         if (ret)
-            NSLog(@"Unable to find and launch TLUNotifier; LSOpenFromURLSpec returned %d", ret);
+            NSLog(@"AESendMessage to pid %d returned %s", targetPID, TLMGetMacOSStatusErrorString(ret));
+
+    }
+    else {
+
+        NSURL *tlnURL = [[NSWorkspace sharedWorkspace] URLForApplicationWithBundleIdentifier:@"com.googlecode.mactlmgr.TLUNotifier"];
+        NSLog(@"Will launch TLUNotifier %@ with URL %@", tlnURL, actualRepository);
+
+        if (tlnURL && actualRepository) {
+            LSLaunchURLSpec launchSpec;
+            memset(&launchSpec, 0, sizeof(LSLaunchURLSpec));
+            launchSpec.appURL = (CFURLRef)tlnURL;
+            launchSpec.launchFlags = kLSLaunchDefaults;
+            launchSpec.itemURLs = actualRepository ? (CFArrayRef)[NSArray arrayWithObject:actualRepository] : NULL;
+            ret = LSOpenFromURLSpec(&launchSpec, NULL);
+            if (ret)
+                NSLog(@"Unable to find and launch TLUNotifier; LSOpenFromURLSpec returned %s", TLMGetMacOSStatusErrorString(ret));
+        }
     }
 
     [pool release];
