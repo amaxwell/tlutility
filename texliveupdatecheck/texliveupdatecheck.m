@@ -39,6 +39,9 @@ static NSInteger check_for_updates(NSString *tlmgrAbsolutePath, NSURL *repositor
     if ([task terminationStatus])
         return -1;
     
+    if (nil == [task outputString])
+        NSLog(@"No output from %@ %@: error %@", tlmgrAbsolutePath, [options componentsJoinedByString:@" "], [task errorString]);
+    
     NSArray *packages = [TLMListUpdatesParser packagesFromListUpdatesOutput:[task outputString] atLocationURL:actualRepository];
 
     return [packages count];
@@ -81,24 +84,38 @@ int main(int argc, const char * argv[]) {
     if (nil == repositoryString)
         repositoryString = @"https://mirror.ctan.org/systems/texlive/tlnet";
     
-    NSURL *actualRepository = NULL;
+    NSURL *actualRepository = nil;
     NSInteger updateCount = check_for_updates([texbinPath stringByAppendingPathComponent:@"tlmgr"], [NSURL URLWithString:repositoryString], &actualRepository);
+    NSLog(@"Found %ld packages for update from %@", updateCount, actualRepository);
     
     if (0 == updateCount)
         return 0;
     
-    CFURLRef tlnURL;
-    OSStatus ret;
-    ret = LSFindApplicationForInfo(kLSUnknownCreator, CFSTR("com.googlecode.mactlmgr.TLUNotifier"), NULL, NULL, &tlnURL);
-    if (noErr == ret) {
+    // maybe a weird parsing error
+    if (nil == actualRepository) {
+        NSLog(@"failed to get actual repository");
+        return -1;
+    }
+    
+    // try and find a running instance, since Launch Services is screwing up on Mojave and Catalina
+    NSArray *runningApplications = [NSRunningApplication runningApplicationsWithBundleIdentifier:@"com.googlecode.mactlmgr.TLUNotifier"];
+    NSURL *tlnURL = [[runningApplications firstObject] bundleURL];
+    if (nil == tlnURL)
+        tlnURL = [[NSWorkspace sharedWorkspace] URLForApplicationWithBundleIdentifier:@"com.googlecode.mactlmgr.TLUNotifier"];
+    NSLog(@"Will send URL %@ to TLUNotifier %@", actualRepository, tlnURL);
+    
+    if (tlnURL && actualRepository) {
         LSLaunchURLSpec launchSpec;
-        launchSpec.appURL = tlnURL;
+        memset(&launchSpec, 0, sizeof(LSLaunchURLSpec));
+        launchSpec.appURL = (CFURLRef)tlnURL;
+        launchSpec.launchFlags = kLSLaunchDefaults;
         launchSpec.itemURLs = actualRepository ? (CFArrayRef)[NSArray arrayWithObject:actualRepository] : NULL;
+        OSStatus ret;
         ret = LSOpenFromURLSpec(&launchSpec, NULL);
         if (ret)
             NSLog(@"Unable to find and launch TLUNotifier; LSOpenFromURLSpec returned %d", ret);
     }
-        
+
     [pool release];
     return 0;
 }

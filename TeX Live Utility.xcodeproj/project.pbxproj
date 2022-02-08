@@ -51,6 +51,7 @@
 		F93C78721AF33A6000817C34 /* TLMTexDistribution.m in Sources */ = {isa = PBXBuildFile; fileRef = F93C78711AF33A6000817C34 /* TLMTexDistribution.m */; };
 		F942FFC513A08FD60008D8FD /* TLMDatabasePackage.m in Sources */ = {isa = PBXBuildFile; fileRef = F942FFC413A08FD60008D8FD /* TLMDatabasePackage.m */; };
 		F94E74A20EF4965100E0B78F /* TLMTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = F94E74A10EF4965100E0B78F /* TLMTableView.m */; };
+		F95620E027B21ED400A6D48F /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F95620DF27B21ED400A6D48F /* AppKit.framework */; };
 		F957A4E312514B040079E07F /* TLMBackupOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F957A4E212514B040079E07F /* TLMBackupOperation.m */; };
 		F958309812695A0800DB997C /* TLMBackupCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F958309712695A0800DB997C /* TLMBackupCell.m */; };
 		F96203BF13D3656300932965 /* TLMLogWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = F96203BE13D3656300932965 /* TLMLogWindowController.m */; };
@@ -454,6 +455,7 @@
 		F942FFC413A08FD60008D8FD /* TLMDatabasePackage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMDatabasePackage.m; sourceTree = "<group>"; };
 		F94E74A00EF4965100E0B78F /* TLMTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMTableView.h; sourceTree = "<group>"; };
 		F94E74A10EF4965100E0B78F /* TLMTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMTableView.m; sourceTree = "<group>"; };
+		F95620DF27B21ED400A6D48F /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		F957A4E112514B040079E07F /* TLMBackupOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMBackupOperation.h; sourceTree = "<group>"; };
 		F957A4E212514B040079E07F /* TLMBackupOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMBackupOperation.m; sourceTree = "<group>"; };
 		F958309612695A0800DB997C /* TLMBackupCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMBackupCell.h; sourceTree = "<group>"; };
@@ -662,6 +664,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F95620E027B21ED400A6D48F /* AppKit.framework in Frameworks */,
 				6839C74F27A9B5690022E6B2 /* CoreGraphics.framework in Frameworks */,
 				6839C74B27A9B5120022E6B2 /* CoreServices.framework in Frameworks */,
 				6839C74527A9B4DF0022E6B2 /* Foundation.framework in Frameworks */,
@@ -826,6 +829,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F95620DF27B21ED400A6D48F /* AppKit.framework */,
 				6839C74E27A9B5690022E6B2 /* CoreGraphics.framework */,
 				6839C74A27A9B5120022E6B2 /* CoreServices.framework */,
 				6839C74827A9B5090022E6B2 /* QuartzCore.framework */,

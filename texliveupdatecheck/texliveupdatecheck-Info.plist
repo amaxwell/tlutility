@@ -2,17 +2,17 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>CFBundleIdentifier</key>
-    <string>com.github.amaxwell.tlutility.texliveupdatecheck</string>
-    <key>CFBundleInfoDictionaryVersion</key>
-    <string>6.0</string>
-    <key>CFBundleName</key>
-    <string>texliveupdatecheck</string>
-    <key>CFBundleVersion</key>
-    <string>0.3</string>
-    <key>CFBundleDevelopmentRegion</key>
-    <string>English</string>
-    <key>NSSupportsSuddenTermination</key>
-    <true/>
+	<key>CFBundleIdentifier</key>
+	<string>com.github.amaxwell.tlutility.texliveupdatecheck</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>texliveupdatecheck</string>
+	<key>CFBundleVersion</key>
+	<string>0.4</string>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>NSSupportsSuddenTermination</key>
+	<true/>
 </dict>
 </plist>
