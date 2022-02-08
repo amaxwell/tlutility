@@ -1456,11 +1456,11 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
 - (void)launchAgentScriptUpdateAlertDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)context
 {
     if (NSAlertFirstButtonReturn == returnCode) {
-        NSMutableArray *options = [NSMutableArray array];
+        NSMutableArray *options = [NSMutableArray arrayWithObject:[TLMLaunchAgentController agentInstallerScriptInBundle]];
         [options addObject:@"--install"];
         [options addObject:@"--script"];
-        [options addObject:[[NSBundle mainBundle] pathForResource:@"update_check" ofType:@"py"]];     
-        TLMOperation *installOp = [[TLMOperation alloc] initWithCommand:[[NSBundle mainBundle] pathForAuxiliaryExecutable:@"agent_installer.py"] options:options];
+        [options addObject:[TLMLaunchAgentController updatecheckerExecutableInBundle]];
+        TLMOperation *installOp = [[TLMOperation alloc] initWithCommand:[TLMEnvironment internalPythonInterpreterPath] options:options];
         [self _addOperation:installOp selector:@selector(_handleLaunchAgentInstallFinishedNotification:) setRefreshingForDataSource:nil];
         [installOp release];
     }
@@ -1473,7 +1473,7 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
     [lac autorelease];
     if (returnCode & TLMLaunchAgentChanged) {
         
-        NSMutableArray *options = [NSMutableArray array];
+        NSMutableArray *options = [NSMutableArray arrayWithObject:[TLMLaunchAgentController agentInstallerScriptInBundle]];
                         
         if ((returnCode & TLMLaunchAgentEnabled) != 0) {
             
@@ -1483,14 +1483,14 @@ static NSDictionary * __TLMCopyVersionsForPackageNames(NSArray *packageNames)
             [options addObject:[lac propertyListPath]];
             
             [options addObject:@"--script"];
-            [options addObject:[[NSBundle mainBundle] pathForResource:@"update_check" ofType:@"py"]];            
+            [options addObject:[TLMLaunchAgentController updatecheckerExecutableInBundle]];
 
         }
         else {
             [options addObject:@"--remove"];
         }
                 
-        TLMOperation *installOp = [[TLMOperation alloc] initWithCommand:[[NSBundle mainBundle] pathForAuxiliaryExecutable:@"agent_installer.py"] options:options];                     
+        TLMOperation *installOp = [[TLMOperation alloc] initWithCommand:[TLMEnvironment internalPythonInterpreterPath] options:options];
         [self _addOperation:installOp selector:@selector(_handleLaunchAgentInstallFinishedNotification:) setRefreshingForDataSource:nil];
         [installOp release];
         

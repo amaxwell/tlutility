@@ -61,6 +61,10 @@ typedef NSInteger TLMLaunchAgentReturnCode;
 // returns YES if migration was done (installs new agent & script)
 + (BOOL)migrateLocalToUserIfNeeded;
 
+// absolute paths to bundle resources
++ (NSString *)agentInstallerScriptInBundle;
++ (NSString *)updatecheckerExecutableInBundle;
+
 @property (nonatomic, retain) IBOutlet NSMatrix *_scheduleMatrix;
 @property (nonatomic, retain) IBOutlet NSTextField *_dayField;
 @property (nonatomic, retain) IBOutlet NSDatePicker *_datePicker;

@@ -61,6 +61,8 @@ enum {
 @synthesize propertyListPath =_propertyListPath;
 
 #define PLIST_NAME @"com.googlecode.mactlmgr.update_check"
+#define UPDATE_CHECK_EXECUTABLE @"texliveupdatecheck"
+#define AGENT_INSTALLER_SCRIPT @"agent_installer.py"
 
 static NSString *__TLMPlistPath(NSSearchPathDomainMask domain)
 {
@@ -131,6 +133,17 @@ static NSString * __TLMGetTemporaryDirectory()
 
 + (BOOL)agentInstalled { return [self _agentInstalled:NULL]; }
 
++ (NSString *)agentInstallerScriptInBundle;
+{
+    return [[NSBundle mainBundle] pathForAuxiliaryExecutable:AGENT_INSTALLER_SCRIPT];
+    
+}
+
++ (NSString *)updatecheckerExecutableInBundle;
+{
+    return [[NSBundle mainBundle] pathForAuxiliaryExecutable:UPDATE_CHECK_EXECUTABLE];
+}
+
 + (BOOL)migrateLocalToUserIfNeeded;
 {
     NSSearchPathDomainMask domains;
@@ -140,8 +153,13 @@ static NSString * __TLMGetTemporaryDirectory()
         NSMutableArray *options = [NSMutableArray array];
         TLMOperation *copyOperation = nil;
             
+        // untested with new update checker; I'm almost certain this will never get hit, but just in case...
+        
         if ((domains & NSUserDomainMask) == 0) {
             // have to copy local to user before removing the local one
+
+            NSString *installerScriptPath = [self agentInstallerScriptInBundle];
+            [options addObject:installerScriptPath];
 
             [options addObject:@"--install"];
             
@@ -149,9 +167,9 @@ static NSString * __TLMGetTemporaryDirectory()
             [options addObject:__TLMPlistPath(NSLocalDomainMask)];
             
             [options addObject:@"--script"];
-            [options addObject:[[NSBundle mainBundle] pathForResource:@"update_check" ofType:@"py"]];
+            [options addObject:[self updatecheckerExecutableInBundle]];
         
-            copyOperation = [[TLMOperation alloc] initWithCommand:[[NSBundle mainBundle] pathForAuxiliaryExecutable:@"agent_installer.py"] options:options];
+            copyOperation = [[TLMOperation alloc] initWithCommand:[TLMEnvironment internalPythonInterpreterPath] options:options];
         }
         
         // always remove the local agent
@@ -171,8 +189,9 @@ static NSString * __TLMGetTemporaryDirectory()
     return ret;
 }
 
-CGFloat __TLMScriptVersionAtPath(NSString *absolutePath)
+static CGFloat __TLMExecutableVersionAtPath(NSString *absolutePath)
 {
+#if 0
     NSString *parent = [absolutePath stringByDeletingLastPathComponent];
     NSString *script = [NSString stringWithFormat:@"import sys; sys.path.append(\"%@\"); import update_check as uc; sys.stdout.write(str(uc.VERSION))", parent];
     TLMTask *task = [[TLMTask new] autorelease];
@@ -188,6 +207,14 @@ CGFloat __TLMScriptVersionAtPath(NSString *absolutePath)
         TLMLog(__func__, @"Failed to get version of script at %@", absolutePath);
     }
     return version;
+#endif
+    
+    NSURL *scriptURL = [NSURL fileURLWithPath:absolutePath];
+    NSDictionary *bundleInfo = [(NSDictionary *)CFBundleCopyInfoDictionaryForURL((CFURLRef)scriptURL) autorelease];
+    
+    // this always needs to be a simple float, although just testing string inequality would be fine
+    return bundleInfo ? [[bundleInfo objectForKey:(id)kCFBundleVersionKey] floatValue] : -1.0;
+
 }
 
 + (BOOL)scriptNeedsUpdate;
@@ -195,13 +222,13 @@ CGFloat __TLMScriptVersionAtPath(NSString *absolutePath)
     BOOL needsUpdate = NO;
     if ([self agentInstalled]) {
         
-        NSString *internalScript = [[NSBundle mainBundle] pathForResource:@"update_check" ofType:@"py"];
-        CGFloat internalVersion = __TLMScriptVersionAtPath(internalScript);        
+        NSString *internalScript = [self updatecheckerExecutableInBundle];
+        CGFloat internalVersion = __TLMExecutableVersionAtPath(internalScript);
         
         NSArray *applicationSupportPaths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
         NSString *appSupportPath = [[applicationSupportPaths lastObject] stringByAppendingPathComponent:@"TeX Live Utility"];
-        appSupportPath = [appSupportPath stringByAppendingPathComponent:@"update_check.py"];
-        CGFloat version = __TLMScriptVersionAtPath(appSupportPath);
+        appSupportPath = [appSupportPath stringByAppendingPathComponent:UPDATE_CHECK_EXECUTABLE];
+        CGFloat version = __TLMExecutableVersionAtPath(appSupportPath);
         if (version < internalVersion) {
             TLMLog(__func__, @"Update checker v%1.1f at %@ needs to be updated to v%1.1f", version, [appSupportPath stringByAbbreviatingWithTildeInPath], internalVersion);
             needsUpdate = YES;

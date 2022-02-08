@@ -38,7 +38,7 @@ import os
 import sys
 from subprocess import call as sync_task
 from shutil import copy2 as copyfile
-from plistlib import readPlist, writePlist
+import plistlib
 
 LAUNCHCTL_PATH = "/bin/launchctl"
 SCRIPT_NAME = "texliveupdatecheck"
@@ -74,7 +74,7 @@ def unload_agent():
 
     if ret:
         log_message("unable to unload agent %s" % (plist_path))
-    return 0
+    return ret
     
 def load_agent():
     """returns zero if the plist was loaded, raises if it does not exist"""
@@ -103,7 +103,31 @@ def uninstall_agent():
         log_message("nothing to remove")
         
     return ret
+
+def sync_agent_program_name():
+    """ensure the launch agent plist has the current program name"""
+    plist_path = installed_plist_path()
     
+    exec_path = installed_script_path()
+    
+    # mainly for the change from Python update checker to Obj-C
+    if os.path.exists(plist_path) and os.path.exists(exec_path):
+        unload_agent()
+        try:
+            # Now edit the plist in-memory so it points to the correct path,
+            # then save it out to the destination directory (avoids modifying
+            # the passed-in file).
+            with open(plist_path, "rb") as plfile:
+                plist = plistlib.load(plfile)
+            # rewrite entire array
+            plist["ProgramArguments"] = [exec_path]
+            with open(plist_path, "wb") as plfile:
+                plistlib.dump(plist, plfile, fmt=plistlib.FMT_XML)
+        except Exception as e:
+            log_message("ERROR: failed to regenerate launchd plist %s with exception %s" % (plist_path, e))
+        else:
+            load_agent()
+
 def install_agent(source_path):
     """argument is absolute path to the source property list"""
     
@@ -124,10 +148,12 @@ def install_agent(source_path):
             # Now edit the plist in-memory so it points to the correct path,
             # then save it out to the destination directory (avoids modifying
             # the passed-in file).
-            plist = readPlist(source_path)
+            with open(source_path, "rb") as plfile:
+                plist = plistlib.load(plfile)
             # rewrite entire array
             plist["ProgramArguments"] = [installed_script_path()]
-            writePlist(plist, plist_path)
+            with open(plist_path, "wb") as plfile:
+                plistlib.dump(plist, plfile, fmt=plistlib.FMT_XML)
         except Exception as e:
             log_message("ERROR: failed to copy %s --> %s" % (source_path, plist_path))
             ret = 1
@@ -199,12 +225,17 @@ if __name__ == '__main__':
             
         if options.source_script:
             status += install_script(options.source_script)
-            
+                        
         # if unloaded and we have a plist, now try to install and load it
         if status == 0 and options.source_plist:
             status = install_agent(options.source_plist)
             if status == 0:
                 status = load_agent()
+                
+        # in case the name of the script has changed; will also unload/reload
+        if 0 == status:
+            sync_agent_program_name()
+        
     
     exit(status)
 
