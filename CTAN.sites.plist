@@ -8,18 +8,6 @@
 		<array>
 			<dict>
 				<key>country</key>
-				<string>Algeria</string>
-				<key>name</key>
-				<string>ctan.epst-tlemcen.dz</string>
-				<key>urls</key>
-				<array>
-					<string>http://ctan.epst-tlemcen.dz/tex-archive/</string>
-					<string>rsync://ctan.epst-tlemcen.dz/ctan/</string>
-					<string>ftp://ctan.epst-tlemcen.dz/pub/tex-archive/</string>
-				</array>
-			</dict>
-			<dict>
-				<key>country</key>
 				<string>Morocco</string>
 				<key>name</key>
 				<string>mirror.marwan.ma</string>
@@ -1481,6 +1469,6 @@
 		</array>
 	</dict>
 	<key>timestamp</key>
-	<real>1644294868.839325</real>
+	<real>1644645899.93966</real>
 </dict>
 </plist>
