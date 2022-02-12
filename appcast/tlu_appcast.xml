@@ -991,5 +991,19 @@
             <sparkle:minimumSystemVersion>10.9.0</sparkle:minimumSystemVersion>
             <enclosure url="https://github.com/amaxwell/tlutility/releases/download/1.52/TeX.Live.Utility.app-1.52.zip" sparkle:version="1.52" length="5866957" type="application/octet-stream" sparkle:dsaSignature="MCwCFEIKct2mRKLze33kXwUEGe2JTEH1AhR9lK3MiWF1pzEYtGopiksNHdO0iw=="></enclosure>
         </item>
+        <item>
+            <title>Version 1.53</title>
+            <description><![CDATA[
+    	    <h3>Changes Since 1.52</h3>
+            <li>Started fixing the TeX Live net install hidden feature (see the Help book), but got derailed by Urgent Issues</li>
+            <li>Rewrite favicon code to not use WebView, since quit maintaining it and apparently broke it along the way</li>
+	        <li>Burned a day of vacation time to figure out how to compile and bundle a Python interpreter in the application, because shipping an updated Python is too complicated for the world's most valuable phone software company. Resolves issues 123, 124, and 125. Also, you should no longer see Apple's douchey alert that says TeX Live Utility needs to be updated to improve compatibility, as if I'm the one who sucks here.</li>
+	        <li>Entirely rewrote the scheduled update checker in Objective-C, since it was a Python-based standalone executable that lives in the Application Support folder. See previous comments if it's unclear how I feel about this. If you're using this feature to notify you of updates to TeX Live, you should get prompted to upgrade it when launching TeX Live Utility.</li>
+            <li>Updated Sparkle framework accidentally, because I added a new submodule and the cryptic git command that I found by dumpster-diving on Stack Overflow update more than I intended. Sometimes I miss CVS.</li>
+            ]]></description>
+            <pubDate>Sat, 12 Feb 2022 06:14:16 +0000</pubDate>
+            <sparkle:minimumSystemVersion>10.9.0</sparkle:minimumSystemVersion>
+            <enclosure url="https://github.com/amaxwell/tlutility/releases/download/1.53/TeX.Live.Utility.app-1.53.zip" sparkle:version="1.53" length="41036969" type="application/octet-stream" sparkle:dsaSignature="MCwCFFN7Bxcd9FWf8Aeko8JceGpJJHNrAhRFCsYnQpaATVOMw2IrpKX64asD9g=="></enclosure>
+        </item>
     </channel>
 </rss>
