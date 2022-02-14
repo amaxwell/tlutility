@@ -996,7 +996,7 @@
             <description><![CDATA[
     	    <h3>Changes Since 1.52</h3>
             <li>Started fixing the TeX Live net install hidden feature (see the Help book), but got derailed by Urgent Issues</li>
-            <li>Rewrite favicon code to not use WebView, since quit maintaining it and apparently broke it along the way</li>
+            <li>Rewrite favicon code to not use WebView, since Apple quit maintaining WebView and apparently broke it along the way</li>
 	        <li>Burned a day of vacation time to figure out how to compile and bundle a Python interpreter in the application, because shipping an updated Python is too complicated for the world's most valuable phone software company. Resolves issues 123, 124, and 125. Also, you should no longer see Apple's douchey alert that says TeX Live Utility needs to be updated to improve compatibility, as if I'm the one who sucks here.</li>
 	        <li>Entirely rewrote the scheduled update checker in Objective-C, since it was a Python-based standalone executable that lives in the Application Support folder. See previous comments if it's unclear how I feel about this. If you're using this feature to notify you of updates to TeX Live, you should get prompted to upgrade it when launching TeX Live Utility.</li>
             <li>Updated Sparkle framework accidentally, because I added a new submodule and the cryptic git command that I found by dumpster-diving on Stack Overflow update more than I intended. Sometimes I miss CVS.</li>
