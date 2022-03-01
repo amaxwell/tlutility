@@ -43,13 +43,18 @@ codesign $CODESIGN_FLAGS --deep --entitlements python_entitlements.plist --sign 
 
 LOCATION="${TLU_BUNDLE_PATH}"/Contents/MacOS
 codesign $CODESIGN_FLAGS --sign "$IDENTITY" --entitlements TLUNotifier/TLUNotifier/TLUNotifier.entitlements "$LOCATION/TLUNotifier.app"
-codesign $CODESIGN_FLAGS --sign "$IDENTITY" "$LOCATION/python_version.py"
-codesign $CODESIGN_FLAGS --sign "$IDENTITY" "$LOCATION/uninstall_local_agent.sh"
-codesign $CODESIGN_FLAGS --sign "$IDENTITY" "$LOCATION/parse_tlpdb.py"
-codesign $CODESIGN_FLAGS --sign "$IDENTITY" "$LOCATION/agent_installer.py"
-codesign $CODESIGN_FLAGS --sign "$IDENTITY" "$LOCATION/texdist_change_default.sh"
 codesign $CODESIGN_FLAGS --sign "$IDENTITY" "$LOCATION/tlu_ipctask"
 codesign $CODESIGN_FLAGS --sign "$IDENTITY" "$LOCATION/texliveupdatecheck"
+# Scripts are now in Resources, because the assholes at Apple changed bundle layout requirements somewhere along the way
+# and notarization is failing when Dick Koch includes it in the MacTeX package. Although I'm not sure this is
+# the real problem as notarization is bitching about the Python framework, and this may cause a notarization failure
+# when I try and notarize. Hooray for trying random shit until finding something that works, since this security
+# theater is a fragile house of cards.
+#codesign $CODESIGN_FLAGS --sign "$IDENTITY" "$LOCATION/python_version.py"
+#codesign $CODESIGN_FLAGS --sign "$IDENTITY" "$LOCATION/uninstall_local_agent.sh"
+#codesign $CODESIGN_FLAGS --sign "$IDENTITY" "$LOCATION/parse_tlpdb.py"
+#codesign $CODESIGN_FLAGS --sign "$IDENTITY" "$LOCATION/agent_installer.py"
+#codesign $CODESIGN_FLAGS --sign "$IDENTITY" "$LOCATION/texdist_change_default.sh"
 
 codesign $CODESIGN_FLAGS --sign "$IDENTITY" "${TLU_BUNDLE_PATH}/Contents/Library/QuickLook/DVI.qlgenerator"
 codesign $CODESIGN_FLAGS --sign "$IDENTITY" "${TLU_BUNDLE_PATH}/Contents/Library/Spotlight/DVIImporter.mdimporter"

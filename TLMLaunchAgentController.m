@@ -62,7 +62,7 @@ enum {
 
 #define PLIST_NAME @"com.googlecode.mactlmgr.update_check"
 #define UPDATE_CHECK_EXECUTABLE @"texliveupdatecheck"
-#define AGENT_INSTALLER_SCRIPT @"agent_installer.py"
+#define AGENT_INSTALLER_SCRIPT @"agent_installer"
 
 static NSString *__TLMPlistPath(NSSearchPathDomainMask domain)
 {
@@ -135,7 +135,7 @@ static NSString * __TLMGetTemporaryDirectory()
 
 + (NSString *)agentInstallerScriptInBundle;
 {
-    return [[NSBundle mainBundle] pathForAuxiliaryExecutable:AGENT_INSTALLER_SCRIPT];
+    return [[NSBundle mainBundle] pathForResource:AGENT_INSTALLER_SCRIPT ofType:@"py"];
     
 }
 
@@ -174,7 +174,7 @@ static NSString * __TLMGetTemporaryDirectory()
         
         // always remove the local agent
         [options removeAllObjects];
-        [options addObject:[[NSBundle mainBundle] pathForAuxiliaryExecutable:@"uninstall_local_agent.sh"]];
+        [options addObject:[[NSBundle mainBundle] pathForResource:@"uninstall_local_agent" ofType:@"sh"]];
         TLMAuthorizedOperation *removeOperation = [[TLMAuthorizedOperation alloc] initWithAuthorizedCommand:@"/bin/sh" options:options];
         if (copyOperation) {
             [removeOperation addDependency:copyOperation];

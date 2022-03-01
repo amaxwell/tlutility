@@ -38,7 +38,7 @@
 		F918B78D14552A9B0038476C /* SearchFieldCapRightInactive.png in Resources */ = {isa = PBXBuildFile; fileRef = F918B78314552A9B0038476C /* SearchFieldCapRightInactive.png */; };
 		F918B78E14552A9B0038476C /* TextFieldStretch.png in Resources */ = {isa = PBXBuildFile; fileRef = F918B78414552A9B0038476C /* TextFieldStretch.png */; };
 		F918B78F14552A9B0038476C /* TextFieldStretchInactive.png in Resources */ = {isa = PBXBuildFile; fileRef = F918B78514552A9B0038476C /* TextFieldStretchInactive.png */; };
-		F92034E217F0A6E300796A10 /* python_version.py in Copy aux executables */ = {isa = PBXBuildFile; fileRef = F92034D817F0A45A00796A10 /* python_version.py */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		F92034E217F0A6E300796A10 /* python_version.py in Copy scripts to Resources because the stupid assholes at Apple changed the rules again */ = {isa = PBXBuildFile; fileRef = F92034D817F0A45A00796A10 /* python_version.py */; };
 		F922D79E1038B1E1004E9B12 /* TLMDownload.m in Sources */ = {isa = PBXBuildFile; fileRef = F922D79D1038B1E1004E9B12 /* TLMDownload.m */; };
 		F925D1AB12957B1800D75BB4 /* TLMMirrorController.m in Sources */ = {isa = PBXBuildFile; fileRef = F925D1AA12957B1800D75BB4 /* TLMMirrorController.m */; };
 		F925D1B112957B5600D75BB4 /* Mirrors.xib in Resources */ = {isa = PBXBuildFile; fileRef = F925D1B012957B5600D75BB4 /* Mirrors.xib */; };
@@ -47,7 +47,7 @@
 		F92A38B3198EFD64005C4B71 /* FileView.framework in copy frameworks */ = {isa = PBXBuildFile; fileRef = F96F06D3198ED9A9001CFD1C /* FileView.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		F92A38C4198F023F005C4B71 /* FileView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F92A38C3198F023F005C4B71 /* FileView.framework */; };
 		F93BA51E19CB611F00C23004 /* texdist_2014basic.sh in Resources */ = {isa = PBXBuildFile; fileRef = F93BA51D19CB611F00C23004 /* texdist_2014basic.sh */; };
-		F93C786F1AF32F5800817C34 /* texdist_change_default.sh in Copy aux executables */ = {isa = PBXBuildFile; fileRef = F93C78661AF3284A00817C34 /* texdist_change_default.sh */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		F93C786F1AF32F5800817C34 /* texdist_change_default.sh in Copy scripts to Resources because the stupid assholes at Apple changed the rules again */ = {isa = PBXBuildFile; fileRef = F93C78661AF3284A00817C34 /* texdist_change_default.sh */; };
 		F93C78721AF33A6000817C34 /* TLMTexDistribution.m in Sources */ = {isa = PBXBuildFile; fileRef = F93C78711AF33A6000817C34 /* TLMTexDistribution.m */; };
 		F942FFC513A08FD60008D8FD /* TLMDatabasePackage.m in Sources */ = {isa = PBXBuildFile; fileRef = F942FFC413A08FD60008D8FD /* TLMDatabasePackage.m */; };
 		F94E74A20EF4965100E0B78F /* TLMTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = F94E74A10EF4965100E0B78F /* TLMTableView.m */; };
@@ -66,7 +66,7 @@
 		F967342713E10BB3008C2B3E /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F967342613E10BB3008C2B3E /* WebKit.framework */; };
 		F96737A713E8E577008C2B3E /* TLMAddressTextFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F96737A613E8E576008C2B3E /* TLMAddressTextFieldCell.m */; };
 		F97A7E500F13067C008EBCEA /* TLMTask.m in Sources */ = {isa = PBXBuildFile; fileRef = F97A7E4F0F13067C008EBCEA /* TLMTask.m */; };
-		F97B37B2128B4FE600B49CA7 /* agent_installer.py in Copy aux executables */ = {isa = PBXBuildFile; fileRef = F97B37B0128B4FCC00B49CA7 /* agent_installer.py */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		F97B37B2128B4FE600B49CA7 /* agent_installer.py in Copy scripts to Resources because the stupid assholes at Apple changed the rules again */ = {isa = PBXBuildFile; fileRef = F97B37B0128B4FCC00B49CA7 /* agent_installer.py */; };
 		F97E85740EFA18F400862882 /* TeXDistTool.icns in Resources */ = {isa = PBXBuildFile; fileRef = F97E85730EFA18F400862882 /* TeXDistTool.icns */; };
 		F97E860C0EFA3BFD00862882 /* TeXDistDocument.icns in Resources */ = {isa = PBXBuildFile; fileRef = F97E860B0EFA3BFD00862882 /* TeXDistDocument.icns */; };
 		F97EBA06143D449000E79859 /* TLMLogWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = F97EBA05143D449000E79859 /* TLMLogWindow.m */; };
@@ -118,7 +118,7 @@
 		F9C7260C157931E8000DF90F /* TLMToolbarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = F9C7260B157931E8000DF90F /* TLMToolbarItem.m */; };
 		F9C7F177139E8E550031774F /* NSString_TLMExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = F9C7F176139E8E550031774F /* NSString_TLMExtensions.m */; };
 		F9C7F188139E91E40031774F /* NSString_TLMExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = F9C7F176139E8E550031774F /* NSString_TLMExtensions.m */; };
-		F9C7F37113A124C30031774F /* parse_tlpdb.py in Copy aux executables */ = {isa = PBXBuildFile; fileRef = F9C7F37013A124B70031774F /* parse_tlpdb.py */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		F9C7F37113A124C30031774F /* parse_tlpdb.py in Copy scripts to Resources because the stupid assholes at Apple changed the rules again */ = {isa = PBXBuildFile; fileRef = F9C7F37013A124B70031774F /* parse_tlpdb.py */; };
 		F9C8920C1453366300131F23 /* LionBlueProgress.png in Resources */ = {isa = PBXBuildFile; fileRef = F9C8920A1453366300131F23 /* LionBlueProgress.png */; };
 		F9D3014819BEB81E00CDEB55 /* texdist.plist in Resources */ = {isa = PBXBuildFile; fileRef = F9D3014319BEB81E00CDEB55 /* texdist.plist */; };
 		F9D3014919BEB81E00CDEB55 /* texdist_2014.sh in Resources */ = {isa = PBXBuildFile; fileRef = F9D3014419BEB81E00CDEB55 /* texdist_2014.sh */; };
@@ -147,7 +147,7 @@
 		F9F1C11310C5ABA300D32C17 /* NSMenu_TLMExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F1C11210C5ABA300D32C17 /* NSMenu_TLMExtensions.m */; };
 		F9F1C14E10C6EEC200D32C17 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9F1C14D10C6EEC200D32C17 /* SystemConfiguration.framework */; };
 		F9F56B4C0EF31F8800E934A9 /* TLMLogMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = F9F56B4B0EF31F8800E934A9 /* TLMLogMessage.m */; };
-		F9F8BB4915DB0A1100B5D1F3 /* uninstall_local_agent.sh in Copy aux executables */ = {isa = PBXBuildFile; fileRef = F9F8BB4715DB09F900B5D1F3 /* uninstall_local_agent.sh */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		F9F8BB4915DB0A1100B5D1F3 /* uninstall_local_agent.sh in Copy scripts to Resources because the stupid assholes at Apple changed the rules again */ = {isa = PBXBuildFile; fileRef = F9F8BB4715DB09F900B5D1F3 /* uninstall_local_agent.sh */; };
 		F9FAA44E0EFCBECD0040EAB2 /* TLMPapersizeController.m in Sources */ = {isa = PBXBuildFile; fileRef = F9FAA44D0EFCBECD0040EAB2 /* TLMPapersizeController.m */; };
 		F9FE58B4123EB80800B6008F /* TLMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = F9FE58B3123EB80800B6008F /* TLMDatabase.m */; };
 		F9FEF37F27AA5495002D8D50 /* texliveupdatecheck in Copy aux executables */ = {isa = PBXBuildFile; fileRef = 6839C6F227A9AC130022E6B2 /* texliveupdatecheck */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
@@ -341,6 +341,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
+		F95620E927CDD9B600A6D48F /* Copy scripts to Resources because the stupid assholes at Apple changed the rules again */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 7;
+			files = (
+				F93C786F1AF32F5800817C34 /* texdist_change_default.sh in Copy scripts to Resources because the stupid assholes at Apple changed the rules again */,
+				F92034E217F0A6E300796A10 /* python_version.py in Copy scripts to Resources because the stupid assholes at Apple changed the rules again */,
+				F9F8BB4915DB0A1100B5D1F3 /* uninstall_local_agent.sh in Copy scripts to Resources because the stupid assholes at Apple changed the rules again */,
+				F9C7F37113A124C30031774F /* parse_tlpdb.py in Copy scripts to Resources because the stupid assholes at Apple changed the rules again */,
+				F97B37B2128B4FE600B49CA7 /* agent_installer.py in Copy scripts to Resources because the stupid assholes at Apple changed the rules again */,
+			);
+			name = "Copy scripts to Resources because the stupid assholes at Apple changed the rules again";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F9A057B70F507642008C804E /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -358,12 +373,7 @@
 			dstSubfolderSpec = 6;
 			files = (
 				F9FEF37F27AA5495002D8D50 /* texliveupdatecheck in Copy aux executables */,
-				F93C786F1AF32F5800817C34 /* texdist_change_default.sh in Copy aux executables */,
 				F9E3DDC1182F415B00800308 /* TLUNotifier.app in Copy aux executables */,
-				F92034E217F0A6E300796A10 /* python_version.py in Copy aux executables */,
-				F9F8BB4915DB0A1100B5D1F3 /* uninstall_local_agent.sh in Copy aux executables */,
-				F9C7F37113A124C30031774F /* parse_tlpdb.py in Copy aux executables */,
-				F97B37B2128B4FE600B49CA7 /* agent_installer.py in Copy aux executables */,
 				F9B139DA0EECBECD007C0046 /* tlu_ipctask in Copy aux executables */,
 			);
 			name = "Copy aux executables";
@@ -1151,6 +1161,7 @@
 				8D11072E0486CEB800E47090 /* Frameworks */,
 				F9B139DD0EECBEEB007C0046 /* Copy aux executables */,
 				F96562A718121C75000B1464 /* Sign auxiliary executables */,
+				F95620E927CDD9B600A6D48F /* Copy scripts to Resources because the stupid assholes at Apple changed the rules again */,
 				F9DCD37C0F06F11300600DD2 /* copy frameworks */,
 				F9E2C9BE0F3C00EE00D5EC49 /* CopyFiles */,
 				F9A057B70F507642008C804E /* CopyFiles */,
@@ -1481,7 +1492,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "LOCATION=\"${BUILT_PRODUCTS_DIR}\"/\"${EXECUTABLE_FOLDER_PATH}\"\nIDENTITY=\"TeX Live Utility Signing Certificate\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/python_version.py\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/uninstall_local_agent.sh\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/parse_tlpdb.py\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/agent_installer.py\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/texliveupdatecheck\"\n# parent is ad-hoc signed, and doesn't match with this\n#codesign --verbose --force --sign \"$IDENTITY\" --entitlements \"${SRCROOT}\"/TLUNotifier/TLUNotifier/TLUNotifier.entitlements \"$LOCATION/TLUNotifier.app\"\ncodesign --verbose --force --options kill --sign \"$IDENTITY\" \"$LOCATION/texdist_change_default.sh\"\ncodesign --verbose --force --options kill --sign \"$IDENTITY\" \"$LOCATION/tlu_ipctask\"\n\n";
+			shellScript = "LOCATION=\"${BUILT_PRODUCTS_DIR}\"/\"${EXECUTABLE_FOLDER_PATH}\"\nIDENTITY=\"TeX Live Utility Signing Certificate\"\n#codesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/python_version.py\"\n#codesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/uninstall_local_agent.sh\"\n#codesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/parse_tlpdb.py\"\n#codesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/agent_installer.py\"\ncodesign --verbose --force --sign \"$IDENTITY\" \"$LOCATION/texliveupdatecheck\"\n# parent is ad-hoc signed, and doesn't match with this\n#codesign --verbose --force --sign \"$IDENTITY\" --entitlements \"${SRCROOT}\"/TLUNotifier/TLUNotifier/TLUNotifier.entitlements \"$LOCATION/TLUNotifier.app\"\n#codesign --verbose --force --options kill --sign \"$IDENTITY\" \"$LOCATION/texdist_change_default.sh\"\ncodesign --verbose --force --options kill --sign \"$IDENTITY\" \"$LOCATION/tlu_ipctask\"\n\n";
 		};
 		F9ACDA3814434DBC005DA800 /* Create help book */ = {
 			isa = PBXShellScriptBuildPhase;

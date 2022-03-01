@@ -504,7 +504,7 @@ static NSString *__TLMTemporaryFile()
 
     NSString *tlpdbPath = [fileURL path];
     NSString *plistPath = __TLMTemporaryFile();
-    NSString *parserPath = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"parse_tlpdb.py"];
+    NSString *parserPath = [[NSBundle mainBundle] pathForResource:@"parse_tlpdb" ofType:@"py"];
     
     TLMTask *parseTask = [[TLMTask new] autorelease];
     [parseTask setLaunchPath:[TLMEnvironment internalPythonInterpreterPath]];
@@ -590,7 +590,7 @@ static NSString *__TLMTemporaryFile()
         [[self tlpdbData] writeToFile:tlpdbPath atomically:NO];
         
         NSString *plistPath = __TLMTemporaryFile();
-        NSString *parserPath = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"parse_tlpdb.py"];
+        NSString *parserPath = [[NSBundle mainBundle] pathForResource:@"parse_tlpdb" ofType:@"py"];
         
         TLMTask *parseTask = [[TLMTask new] autorelease];
         [parseTask setLaunchPath:[TLMEnvironment internalPythonInterpreterPath]];
@@ -667,7 +667,7 @@ static NSString *__TLMTemporaryFile()
         [[self tlpdbData] writeToFile:tlpdbPath atomically:NO];
         
         NSString *plistPath = __TLMTemporaryFile();
-        NSString *parserPath = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"parse_tlpdb.py"];
+        NSString *parserPath = [[NSBundle mainBundle] pathForResource:@"parse_tlpdb" ofType:@"py"];
         
         TLMTask *parseTask = [[TLMTask new] autorelease];
         [parseTask setLaunchPath:[TLMEnvironment internalPythonInterpreterPath]];

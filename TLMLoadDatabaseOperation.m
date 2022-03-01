@@ -114,7 +114,7 @@
     [dumpTask launch];
     
     BDSKTask *parseTask = [[BDSKTask new] autorelease];
-    NSString *parserPath = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"parse_tlpdb.py"];
+    NSString *parserPath = [[NSBundle mainBundle] pathForResource:@"parse_tlpdb" ofType:@"py"];
     [parseTask setLaunchPath:[TLMEnvironment internalPythonInterpreterPath]];
     [parseTask setArguments:[NSArray arrayWithObjects:parserPath, @"-o", absolutePath, @"-f", @"plist", nil]];
     [parseTask setStandardInput:[[dumpTask standardOutput] fileHandleForReading]];

@@ -628,7 +628,7 @@ static void __TLMTestAndClearEnvironmentVariable(const char *name)
 
 + (BOOL)_checkSystemPythonMajorVersion:(NSInteger *)major minorVersion:(NSInteger *)minor;
 {
-    NSString *versionCheckPath = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"python_version.py"];
+    NSString *versionCheckPath = [[NSBundle mainBundle] pathForResource:@"python_version" ofType:@"py"];
     TLMTask *versionCheckTask = [[TLMTask new] autorelease];
     [versionCheckTask setLaunchPath:[TLMEnvironment internalPythonInterpreterPath]];
     [versionCheckTask setArguments:[NSArray arrayWithObject:versionCheckPath]];

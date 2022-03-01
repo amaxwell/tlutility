@@ -165,7 +165,7 @@
          However, it is an added complication, and for what?
          */
         TLMLog(__func__, @"set %@ : %@", [[dist texdistPath] lastPathComponent], [dist architecture]);
-        NSString *changeScript = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"texdist_change_default.sh"];
+        NSString *changeScript = [[NSBundle mainBundle] pathForResource:@"texdist_change_default" ofType:@"sh"];
         NSArray *args = [NSArray arrayWithObject:[[dist texdistPath] lastPathComponent]];
         TLMAuthorizedOperation *op = [[TLMAuthorizedOperation alloc] initWithAuthorizedCommand:changeScript options:args];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleChangeFinishedNotification:) name:TLMOperationFinishedNotification object:op];
