@@ -131,16 +131,6 @@
 				<key>country</key>
 				<string>China</string>
 				<key>name</key>
-				<string>mirrors.huaweicloud.com</string>
-				<key>urls</key>
-				<array>
-					<string>https://mirrors.huaweicloud.com/repository/toolkit/CTAN/</string>
-				</array>
-			</dict>
-			<dict>
-				<key>country</key>
-				<string>China</string>
-				<key>name</key>
 				<string>mirrors.nju.edu.cn</string>
 				<key>urls</key>
 				<array>
@@ -925,6 +915,16 @@
 				<key>country</key>
 				<string>Poland</string>
 				<key>name</key>
+				<string>polish-mirror.evolution-host.com</string>
+				<key>urls</key>
+				<array>
+					<string>https://polish-mirror.evolution-host.com/ctan/</string>
+				</array>
+			</dict>
+			<dict>
+				<key>country</key>
+				<string>Poland</string>
+				<key>name</key>
 				<string>repo.skni.umcs.pl</string>
 				<key>urls</key>
 				<array>
@@ -1023,16 +1023,6 @@
 					<string>https://mirror.truenetwork.ru/CTAN/</string>
 					<string>ftp://mirror.truenetwork.ru/CTAN/</string>
 					<string>rsync://mirror.truenetwork.ru/CTAN/</string>
-				</array>
-			</dict>
-			<dict>
-				<key>country</key>
-				<string>Serbia</string>
-				<key>name</key>
-				<string>ctan.mirror.ftn.uns.ac.rs</string>
-				<key>urls</key>
-				<array>
-					<string>http://ctan.mirror.ftn.uns.ac.rs/</string>
 				</array>
 			</dict>
 			<dict>
@@ -1457,6 +1447,17 @@
 		<array>
 			<dict>
 				<key>country</key>
+				<string>Brazil</string>
+				<key>name</key>
+				<string>linorg.usp.br</string>
+				<key>urls</key>
+				<array>
+					<string>http://linorg.usp.br/CTAN/</string>
+					<string>https://linorg.usp.br/CTAN/</string>
+				</array>
+			</dict>
+			<dict>
+				<key>country</key>
 				<string>Chile</string>
 				<key>name</key>
 				<string>ctan.dcc.uchile.cl</string>
@@ -1469,6 +1470,6 @@
 		</array>
 	</dict>
 	<key>timestamp</key>
-	<real>1646110577.632082</real>
+	<real>1647106422.738194</real>
 </dict>
 </plist>
