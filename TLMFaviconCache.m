@@ -306,7 +306,6 @@ static void __TLMFaviconCacheInit() { _sharedCache = [TLMFaviconCache new]; }
          Example: https://mirrors.concertpass.com/tex-archive/systems/texlive/tlnet
         */
         NSURL *faviconURL = [[[NSURL alloc] initWithScheme:[aURL scheme] host:[aURL host] path:@"/favicon.ico"] autorelease];
-        TLMLog(__func__, @"Will look for favicon at %@", faviconURL);
 
         _TLMFaviconQueueItem *item = [[_TLMFaviconQueueItem alloc] initWithURL:faviconURL];
         [item setIconURL:faviconURL];
@@ -316,6 +315,7 @@ static void __TLMFaviconCacheInit() { _sharedCache = [TLMFaviconCache new]; }
             if (delegate) [[[_queue objectAtIndex:idx] delegates] addObject:delegate];
         }
         else {
+            TLMLog(__func__, @"Will look for favicon at %@", faviconURL);
             [_queue insertObject:item atIndex:0];
             [self _downloadItems];
         }
