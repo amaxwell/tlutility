@@ -483,12 +483,8 @@ static void __TLMTestAndClearEnvironmentVariable(const char *name)
     NSParameterAssert([systemPaths count]);
     
     NSParameterAssert([[NSUserDefaults standardUserDefaults] objectForKey:TLMTexBinPathPreferenceKey]);
-    /*
-     17 Nov 2014: user ended up with /usr/local/bin prepended to his PATH somehow,
-     and also had an ancient and/or broken Python version in /usr/local/bin. Since
-     we shouldn't need /usr/local/bin in the PATH, let's just remove it.
-     */
-    [systemPaths removeObject:@"/usr/local/bin"];
+    
+    // since Python is no longer an issue, try leaving /usr/local/bin in PATH to fix https://github.com/amaxwell/tlutility/issues/115
     
     // prepend TL to PATH in case of macports or fink TL
     [systemPaths insertObject:[[NSUserDefaults standardUserDefaults] objectForKey:TLMTexBinPathPreferenceKey] atIndex:0];
