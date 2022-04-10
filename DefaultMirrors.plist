@@ -1,22 +1,19 @@
 {
-    /* 
-      This dictionary only has legacy mirrors now.
-    */
-    LegacyMirrors = {
-        2008 = "ftp://ftp.tug.org/historic//systems//texlive//2008//tlnet/";
-        2009 = "ftp://ftp.tug.org/historic//systems//texlive//2009//tlnet/";
-        2010 = "ftp://ftp.tug.org/historic//systems//texlive//2010//tlnet-final/";
-        2011 = "ftp://ftp.tug.org/historic/systems/texlive/2011/tlnet-final/";
-        2012 = "ftp://ftp.tug.org/historic/systems/texlive/2012//tlnet-final/";
-        2013 = "ftp://ftp.tug.org/historic/systems/texlive/2013//tlnet-final/";
-        2014 = "ftp://ftp.tug.org/historic/systems/texlive/2014//tlnet-final/";
-        2015 = "ftp://ftp.tug.org/historic/systems/texlive/2015/tlnet-final/";
-        2016 = "ftp://ftp.tug.org/historic/systems/texlive/2016/tlnet-final/";
-        2017 = "ftp://ftp.tug.org/historic/systems/texlive/2017/tlnet-final/";
-        2018 = "ftp://ftp.tug.org/historic/systems/texlive/2018/tlnet-final/";
-        2019 = "ftp://ftp.tug.org/historic/systems/texlive/2019/tlnet-final/";
-        2020 = "ftp://ftp.tug.org/historic/systems/texlive/2020/tlnet-final/";
-    };
-    
-    CriticalMirror = "https://tug.org/texlive/tlcritical";
+	LegacyMirrors = {
+		2008 = "ftp://ftp.tug.org/historic//systems//texlive//2008//tlnet/";
+		2009 = "ftp://ftp.tug.org/historic//systems//texlive//2009//tlnet/";
+		2010 = "ftp://ftp.tug.org/historic//systems//texlive//2010//tlnet-final/";
+		2011 = "ftp://ftp.tug.org/historic/systems/texlive/2011/tlnet-final/";
+		2012 = "ftp://ftp.tug.org/historic/systems/texlive/2012//tlnet-final/";
+		2013 = "ftp://ftp.tug.org/historic/systems/texlive/2013//tlnet-final/";
+		2014 = "ftp://ftp.tug.org/historic/systems/texlive/2014//tlnet-final/";
+		2015 = "ftp://ftp.tug.org/historic/systems/texlive/2015/tlnet-final/";
+		2016 = "ftp://ftp.tug.org/historic/systems/texlive/2016/tlnet-final/";
+		2017 = "ftp://ftp.tug.org/historic/systems/texlive/2017/tlnet-final/";
+		2018 = "ftp://ftp.tug.org/historic/systems/texlive/2018/tlnet-final/";
+		2019 = "ftp://ftp.tug.org/historic/systems/texlive/2019/tlnet-final/";
+		2020 = "ftp://ftp.tug.org/historic/systems/texlive/2020/tlnet-final/";
+		2021 = "ftp://ftp.tug.org/historic/systems/texlive/2021/tlnet-final/";
+	};
+	CriticalMirror = "https://tug.org/texlive/tlcritical";
 }
