@@ -388,16 +388,6 @@
 			</dict>
 			<dict>
 				<key>country</key>
-				<string>Malaysia</string>
-				<key>name</key>
-				<string>mirrors.upm.edu.my</string>
-				<key>urls</key>
-				<array>
-					<string>https://mirrors.upm.edu.my/CTAN/</string>
-				</array>
-			</dict>
-			<dict>
-				<key>country</key>
 				<string>Philippines</string>
 				<key>name</key>
 				<string>mirror.rise.ph</string>
@@ -572,16 +562,6 @@
 				<key>urls</key>
 				<array>
 					<string>https://mirror.ibcp.fr/pub/CTAN/</string>
-				</array>
-			</dict>
-			<dict>
-				<key>country</key>
-				<string>France</string>
-				<key>name</key>
-				<string>mirrors.chevalier.io</string>
-				<key>urls</key>
-				<array>
-					<string>https://mirrors.chevalier.io/CTAN/</string>
 				</array>
 			</dict>
 			<dict>
@@ -1470,6 +1450,6 @@
 		</array>
 	</dict>
 	<key>timestamp</key>
-	<real>1647106422.738194</real>
+	<real>1649604979.234377</real>
 </dict>
 </plist>
