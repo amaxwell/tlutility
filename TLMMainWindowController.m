@@ -447,6 +447,23 @@ static NSURL * __TLMGPGURL()
                          didEndSelector:@selector(launchAgentScriptUpdateAlertDidEnd:returnCode:contextInfo:)
                             contextInfo:NULL];
     }
+    NSString *updatedAgentPlistPath = [TLMLaunchAgentController pathOfUpdatedAgentForVenturaStupidity];
+    if (updatedAgentPlistPath) {
+        TLMLog(__func__, @"Performing one-time migration to hopefully accomodate Apple's stupid interface for Ventura's stupid security theater.");
+        NSMutableArray *options = [NSMutableArray arrayWithObject:[TLMLaunchAgentController agentInstallerScriptInBundle]];
+
+        [options addObject:@"--install"];
+        
+        [options addObject:@"--plist"];
+        [options addObject:updatedAgentPlistPath];
+        
+        [options addObject:@"--script"];
+        [options addObject:[TLMLaunchAgentController updatecheckerExecutableInBundle]];
+                
+        TLMOperation *installOp = [[TLMOperation alloc] initWithCommand:[TLMEnvironment internalPythonInterpreterPath] options:options];
+        [self _addOperation:installOp selector:@selector(_handleLaunchAgentInstallFinishedNotification:) setRefreshingForDataSource:nil];
+        [installOp release];
+    }
     
 }
 

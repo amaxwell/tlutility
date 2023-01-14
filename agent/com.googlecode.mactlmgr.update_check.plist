@@ -11,8 +11,8 @@
 	<true/>
 	<key>ProgramArguments</key>
 	<array>
+		<!-- array is rewritten by the installer script -->
 		<string>/usr/bin/python</string>
-		<!-- last arg will be replaced by the installer script -->
 		<string>-c ""</string>
 	</array>
 	<key>StartCalendarInterval</key>
@@ -22,5 +22,10 @@
 		<key>Minute</key>
 		<integer>15</integer>
 	</dict>
+        <key>AssociatedBundleIdentifiers</key>
+        <array>
+                <string>com.googlecode.mactlmgr.tlu</string>
+                <string>com.github.amaxwell.tlutility.texliveupdatecheck</string>
+        </array>
 </dict>
 </plist>

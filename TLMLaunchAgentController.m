@@ -217,11 +217,38 @@ static CGFloat __TLMExecutableVersionAtPath(NSString *absolutePath)
 
 }
 
++ (NSString *)pathOfUpdatedAgentForVenturaStupidity;
+{
+    TLMLog(__func__, @"Checking to see if we need to rewrite the launch agent plist because Ventura sucks.");
+    BOOL isInstalled, allUsers;
+    NSString *plistPath;
+    NSMutableDictionary *plist = [[__TLMGetPlist(&isInstalled, &allUsers, &plistPath) mutableCopy] autorelease];
+    
+    if (NO == isInstalled) return nil;
+    
+    // key exists, nothing to do
+    if ([plist objectForKey:@"AssociatedBundleIdentifiers"]) return nil;
+    
+    NSArray *identifiers = [NSArray arrayWithObjects:@"com.googlecode.mactlmgr.tlu", @"com.github.amaxwell.tlutility.texliveupdatecheck", nil];
+    [plist setObject:identifiers forKey:@"AssociatedBundleIdentifiers"];
+    
+    if ([[NSFileManager defaultManager] fileExistsAtPath:__TLMGetTemporaryDirectory()] == NO)
+        [[NSFileManager defaultManager] createDirectoryAtPath:__TLMGetTemporaryDirectory() withIntermediateDirectories:YES attributes:nil error:NULL];
+    
+    /* Write to a temporary file, and return the path so the agent installer can handle unload/install/reload,
+     or else I have to handle that here in Cocoa. No point in reinventing the wheel again.
+     */
+    plistPath = [[__TLMGetTemporaryDirectory() stringByAppendingPathComponent:PLIST_NAME] stringByAppendingPathExtension:@"plist"];
+    [[NSPropertyListSerialization dataFromPropertyList:plist format:NSPropertyListXMLFormat_v1_0 errorDescription:NULL] writeToFile:plistPath atomically:NO];
+    
+    return plistPath;
+}
+
 + (BOOL)scriptNeedsUpdate;
 {
     BOOL needsUpdate = NO;
     if ([self agentInstalled]) {
-        
+                
         NSString *internalScript = [self updatecheckerExecutableInBundle];
         CGFloat internalVersion = __TLMExecutableVersionAtPath(internalScript);
         

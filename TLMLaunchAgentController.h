@@ -58,6 +58,11 @@ typedef NSInteger TLMLaunchAgentReturnCode;
 
 + (BOOL)agentInstalled;
 + (BOOL)scriptNeedsUpdate;
+
+// need to call after +scriptNeedsUpdate
+// returns nil if no update required
++ (NSString *)pathOfUpdatedAgentForVenturaStupidity;
+
 // returns YES if migration was done (installs new agent & script)
 + (BOOL)migrateLocalToUserIfNeeded;
 
