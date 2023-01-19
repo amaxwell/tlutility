@@ -635,12 +635,6 @@
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="563"/>
-                            <menuItem title="TeX on Mac Wiki" id="561">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="openMacTeXWiki:" target="-1" id="564"/>
-                                </connections>
-                            </menuItem>
                             <menuItem title="TeX Live マネジャー" id="457">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
