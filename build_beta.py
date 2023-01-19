@@ -133,7 +133,7 @@ def notarize_dmg_or_zip(dmg_path):
     notarize_task = Popen(notarize_cmd, cwd=SOURCE_DIR, stdout=PIPE, stderr=PIPE)
     [output, error] = notarize_task.communicate()
     rc = notarize_task.returncode
-    print("altool --notarize-app exited with status %s" % (rc))
+    print("altool --notarize-app exited with status %s: %s" % (rc, error))
     assert rc == 0, "notarization failed"
     
     output_stream = io.BytesIO(output)
