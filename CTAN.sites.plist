@@ -130,6 +130,17 @@
 				<key>country</key>
 				<string>China</string>
 				<key>name</key>
+				<string>mirrors.pku.edu.cn</string>
+				<key>urls</key>
+				<array>
+					<string>http://mirrors.pku.edu.cn/ctan/</string>
+					<string>https://mirrors.pku.edu.cn/ctan/</string>
+				</array>
+			</dict>
+			<dict>
+				<key>country</key>
+				<string>China</string>
+				<key>name</key>
 				<string>mirrors.sjtug.sjtu.edu.cn</string>
 				<key>urls</key>
 				<array>
@@ -177,16 +188,6 @@
 				<array>
 					<string>https://mirror-hk.koddos.net/CTAN/</string>
 					<string>rsync://mirror-hk.koddos.net/CTAN/</string>
-				</array>
-			</dict>
-			<dict>
-				<key>country</key>
-				<string>India</string>
-				<key>name</key>
-				<string>ctan.imsc.res.in</string>
-				<key>urls</key>
-				<array>
-					<string>http://ctan.imsc.res.in/</string>
 				</array>
 			</dict>
 			<dict>
@@ -382,16 +383,6 @@
 				<array>
 					<string>rsync://download.nus.edu.sg/mirror/ctan/</string>
 					<string>https://download.nus.edu.sg/mirror/ctan/</string>
-				</array>
-			</dict>
-			<dict>
-				<key>country</key>
-				<string>Taiwan</string>
-				<key>name</key>
-				<string>ftp.ntou.edu.tw</string>
-				<key>urls</key>
-				<array>
-					<string>https://ftp.ntou.edu.tw/ctan/</string>
 				</array>
 			</dict>
 			<dict>
@@ -1490,6 +1481,6 @@
 		</array>
 	</dict>
 	<key>timestamp</key>
-	<real>1674092977.369021</real>
+	<real>1676759739.39896</real>
 </dict>
 </plist>
