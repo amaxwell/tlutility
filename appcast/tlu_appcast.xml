@@ -1005,5 +1005,20 @@
             <sparkle:minimumSystemVersion>10.9.0</sparkle:minimumSystemVersion>
             <enclosure url="https://github.com/amaxwell/tlutility/releases/download/1.53/TeX.Live.Utility.app-1.53.zip" sparkle:version="1.53" length="41036969" type="application/octet-stream" sparkle:dsaSignature="MCwCFFN7Bxcd9FWf8Aeko8JceGpJJHNrAhRFCsYnQpaATVOMw2IrpKX64asD9g=="></enclosure>
         </item>
+        <item>
+            <title>Version 1.54</title>
+            <description><![CDATA[
+    	    <h3>Changes Since 1.53</h3>
+	        <li>Moved scripts to Resources, in another attempt to fix MacTeX signing problems. Pretty sure one understands how code signing actually works, which would also explain the state of Apple documentation.</li>
+	        <li>Eliminate redundant favicon logging, since you people keep reading my logs and trying to intepret them.</li>
+	        <li>Leave /usr/local/bin in PATH to try using the user-installed gpg, which is probably a huge mistake that will result in more bad words in the codebase as a reminder to myself when I have to remove it again.</li>
+	        <li>Fix some translation issues reported by users (thanks!)</li>
+	        <li>Removed Help menu item linking to the long-defunct MacTeX Wiki</li>
+	        <li>Added a workaround for bug 134 and 135, because some no-talent assclown at Apple decided to use developer names to identify background items added in System Preferences as part of Ventura's security theater. This led to confused users having to STFW for my name to figure out why the hell some guy named Adam Maxwell was adding to their login items. Thanks to those who reported it, and thanks to Michael Tsai for the blog post that led me to the workaround.</li>
+            ]]></description>
+            <pubDate>Sat, 18 Feb 2023 22:52:43 +0000</pubDate>
+            <sparkle:minimumSystemVersion>10.9.0</sparkle:minimumSystemVersion>
+            <enclosure url="https://github.com/amaxwell/tlutility/releases/download/1.54/TeX.Live.Utility.app-1.54.zip" sparkle:version="1.54" length="41009200" type="application/octet-stream" sparkle:dsaSignature="MCwCFBL1j5MZIUEapH+Zyec63ktYn2HPAhRUZ0TYfLvWR/8cxUK8i5aP78zH2Q=="></enclosure>
+        </item>
     </channel>
 </rss>
