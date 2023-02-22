@@ -509,7 +509,7 @@ def main():
                             <div class="top-title">
                                 <img src="%(imagePath)sIcon.png" alt="Application Icon" height="128" width="128" border="0">
                                 <h1>%(bookTitle)s</h1>
-                                <p><a href="http://%(url)s">%(url)s</a></p>
+                                <p><a href="https://%(url)s">%(url)s</a></p>
                             </div>
                             <div class="top-contents">
                                 <ul>

@@ -84,10 +84,10 @@
     <named-style id="mkRhzPcpm-u" name="Link" display-order="7">
       <style>
         <value key="font-fill">
-          <color r="3.50177e-07" g="0.501961" b="1"/>
+          <color r="1.06543e-06" g="0.501961" b="1"/>
         </value>
         <value key="underline-color">
-          <color r="3.50177e-07" g="0.501961" b="1"/>
+          <color r="1.06543e-06" g="0.501961" b="1"/>
         </value>
         <value key="underline-style">single</value>
       </style>
@@ -175,9 +175,13 @@
     </print-info>
     <auto-generate-level-styles>no</auto-generate-level-styles>
   </settings>
-  <editor content-size="{692, 761}" vertical-scrollbar-visible-width="15" column-titles-display-mode="off" ruler-visible="yes" status-visible="no">
+  <editor content-size="{692, 637}" vertical-scrollbar-visible-width="15" scroll-position="{0, 9894}" column-titles-display-mode="off" ruler-visible="yes" status-visible="no">
     <drawer display="sections" width="236"/>
     <note-split-view height="33"/>
+    <hoisted-rows ids="h2f6xuYZ-Sl"/>
+    <selected-rows ids="dJO9sBUL1qL"/>
+    <selected-columns ids="dTpN3JwYpBn"/>
+    <selected-characters range="{28, 0}"/>
     <toolbar>{
     &quot;TB Display Mode&quot; = 2;
     &quot;TB Icon Size Mode&quot; = 2;
@@ -245,7 +249,7 @@
         </text>
       </values>
       <children>
-        <item id="jj3Kw0ND2KJ">
+        <item id="jj3Kw0ND2KJ" expanded="yes">
           <style>
             <inherited-style name="Destination" idref="oQxEDq66I5w"/>
           </style>
@@ -2865,7 +2869,7 @@
             </item>
           </children>
         </item>
-        <item id="ftDBf-ySLe5" children-are-sections="yes">
+        <item id="ftDBf-ySLe5" expanded="yes" children-are-sections="yes">
           <style>
             <inherited-style name="Variables" idref="fHdhEYH17Qf"/>
           </style>
@@ -2937,7 +2941,7 @@
                     <text>
                       <p>
                         <run>
-                          <lit><cell href="http://amaxwell.github.io/tlutility/" name="amaxwell.github.io/tlutility/" type="link"/></lit>
+                          <lit>amaxwell.github.io/tlutility</lit>
                         </run>
                       </p>
                     </text>
