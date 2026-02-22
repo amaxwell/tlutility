@@ -84,10 +84,10 @@
     <named-style id="mkRhzPcpm-u" name="Link" display-order="7">
       <style>
         <value key="font-fill">
-          <color r="1.06543e-06" g="0.501961" b="1"/>
+          <color r="1.46776e-06" g="0.501961" b="1"/>
         </value>
         <value key="underline-color">
-          <color r="1.06543e-06" g="0.501961" b="1"/>
+          <color r="1.46776e-06" g="0.501961" b="1"/>
         </value>
         <value key="underline-style">single</value>
       </style>
@@ -171,17 +171,18 @@
       </first-page-headers>
     </page-adornment>
     <print-info>
+      <print-info-key name="NSPaperSize" type="size">{611.99998188018799, 792}</print-info-key>
       <print-info-key name="OOScaleDocumentToFitPageWidth" type="boolean">true</print-info-key>
     </print-info>
     <auto-generate-level-styles>no</auto-generate-level-styles>
   </settings>
-  <editor content-size="{692, 637}" vertical-scrollbar-visible-width="15" scroll-position="{0, 9894}" column-titles-display-mode="off" ruler-visible="yes" status-visible="no">
+  <editor content-size="{692, 575}" vertical-scrollbar-visible-width="15" scroll-position="{0, 9983}" column-titles-display-mode="off" ruler-visible="yes" status-visible="no">
     <drawer display="sections" width="236"/>
     <note-split-view height="33"/>
     <hoisted-rows ids="h2f6xuYZ-Sl"/>
-    <selected-rows ids="dJO9sBUL1qL"/>
-    <selected-columns ids="dTpN3JwYpBn"/>
-    <selected-characters range="{28, 0}"/>
+    <selected-rows ids="ln_zdCoCWfN"/>
+    <selected-columns ids="jFqHUGd_Dg1"/>
+    <selected-characters range="{0, 0}"/>
     <toolbar>{
     &quot;TB Display Mode&quot; = 2;
     &quot;TB Icon Size Mode&quot; = 2;
