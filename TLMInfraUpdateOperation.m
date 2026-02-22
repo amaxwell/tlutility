@@ -198,7 +198,8 @@ static NSString *__TLMGetTemporaryDirectory()
      */
     [[NSURLCache sharedURLCache] performSelectorOnMainThread:@selector(removeAllCachedResponses) withObject:nil waitUntilDone:YES modes:[NSArray arrayWithObject:NSRunLoopCommonModes]];
     
-    NSURLRequest *request = [NSURLRequest requestWithURL:aURL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:60.0];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:aURL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:60.0];
+    [request addValue:[[NSUserDefaults standardUserDefaults] stringForKey:TLMUserAgentPreferenceKey] forHTTPHeaderField:@"User-Agent"];
     
     // previous download must be finished
     NSParameterAssert(nil == _download);

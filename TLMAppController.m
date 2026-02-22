@@ -152,6 +152,9 @@ static void __TLMMigrateBundleIdentifier()
     // TL 2016 and later
     [defaults setObject:[NSNumber numberWithInt:0] forKey:TLMDisableGPGAlertPreferenceKey];
     
+    // bypass the bot test on at least one server https://tug.org/pipermail/tex-live/2026-February/052187.html
+    [defaults setObject:@"texlive/TeX Live Utility" forKey:TLMUserAgentPreferenceKey];
+    
     [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];   
 }
 
