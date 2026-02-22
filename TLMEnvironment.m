@@ -786,11 +786,12 @@ static void __TLMTestAndClearEnvironmentVariable(const char *name)
     }
 }
 
-- (BOOL)_getValidServerURL:(NSURL **)outURL repositoryYear:(TLMDatabaseYear *)outYear fromURL:(NSURL *)fromURL
+- (BOOL)_getValidServerURL:(NSURL **)outURL repositoryYear:(TLMDatabaseYear *)outYear minReleaseYear:(TLMDatabaseYear *)minReleaseYear fromURL:(NSURL *)fromURL
 {        
     NSParameterAssert(_installedYear != TLMDatabaseUnknownYear);
     NSParameterAssert(outURL);
     NSParameterAssert(outYear);
+    NSParameterAssert(minReleaseYear);
     
     /*
      Always recompute this, because if we're using the multiplexer, it's going to redirect to
@@ -800,6 +801,9 @@ static void __TLMTestAndClearEnvironmentVariable(const char *name)
     TLMDatabase *db = [TLMDatabase databaseForMirrorURL:fromURL];
     const TLMDatabaseYear repositoryYear = [db texliveYear];
     NSURL *validURL = [db mirrorURL];
+    
+    // only care about this for unofficial repo
+    *minReleaseYear = [db minimumTexliveYear];
         
     if ([db failed]) {
         
@@ -817,7 +821,7 @@ static void __TLMTestAndClearEnvironmentVariable(const char *name)
         // no fallback URL for unofficial repos, so just warn and let the user deal with it
         TLMLog(__func__, @"This appears to be a 3rd party TeX Live repository");
         if (repositoryYear != _installedYear)
-            TLMLog(__func__, @"*** WARNING *** This repository is for TeX Live %lu, but you are using TeX Live %lu", (unsigned long)repositoryYear, (unsigned long)_installedYear);
+            TLMLog(__func__, @"*** WARNING *** This repository is for TeX Live between %lu and %lu, and you are using TeX Live %lu", (unsigned long)[db minimumTexliveYear], (unsigned long)repositoryYear, (unsigned long)_installedYear);
     }
     else if (repositoryYear != _installedYear) {
         
@@ -835,8 +839,10 @@ static void __TLMTestAndClearEnvironmentVariable(const char *name)
                 [self setLegacyRepositoryURL:[NSURL URLWithString:location]];
             }
             else {
-                TLMLog(__func__, @"Version mismatch detected, but no fallback URL was found.");
+                TLMLog(__func__, @"Version mismatch detected, but no fallback URL was found. If this is the annual pretest period, change your repository. If it's a stale server, we may want to try again.");
                 // !!! return a nil URL; this is a stale server, and we might want to retry
+                
+                // !!! also happens during pretest, and I guess I should just let it keep happening
             }
         }
         
@@ -864,13 +870,14 @@ static void __TLMTestAndClearEnvironmentVariable(const char *name)
     // will be nil on failure; always initialized
     NSURL *validURL;
     TLMDatabaseYear repositoryYear;
+    TLMDatabaseYear minReleaseYear;
     
     // use the mirror from prefs if we're not checking a specific one for redirects
     if (nil == fromURL)
         fromURL = [self defaultServerURL];
     
     // false return value signifies TLMDatabase failure (usually a network problem)
-    BOOL dbFailed = [self _getValidServerURL:&validURL repositoryYear:&repositoryYear fromURL:fromURL];
+    BOOL dbFailed = [self _getValidServerURL:&validURL repositoryYear:&repositoryYear minReleaseYear:&minReleaseYear fromURL:fromURL];
 
     /*
      This is a special case for the multiplexer, which can return a stale server; retry
@@ -894,13 +901,18 @@ static void __TLMTestAndClearEnvironmentVariable(const char *name)
                 TLMLog(__func__, @"Stale repository returned from multiplexer.  Requesting another repository (attempt %d of %d).", tryCount, maxTries);
             }
 
-            dbFailed = [self _getValidServerURL:&validURL repositoryYear:&repositoryYear fromURL:fromURL];
+            dbFailed = [self _getValidServerURL:&validURL repositoryYear:&repositoryYear minReleaseYear:&minReleaseYear fromURL:fromURL];
             tryCount++;
         }
     }
     
+    /*
+     Per email from Norbert on 11 April 2021: check if local version >= minrelease && local version <= release,
+     since tlcontrib uses 2100 as its release year. This is some annoying duplication from TLMMainWindowController
+     because I'm lazy and no longer understand how this code works.
+     */
     // Moved this check out of _getValidServer:repositoryYear: to avoid issues in the loop above
-    if ((nil == validURL || repositoryYear != _installedYear) && NO == dbFailed) {
+    if ((nil == validURL || ((repositoryYear != _installedYear) && (_installedYear < minReleaseYear || _installedYear > repositoryYear))) && NO == dbFailed) {
         [self performSelectorOnMainThread:@selector(_displayFallbackServerAlertForRepositoryYear:) 
                                withObject:[NSNumber numberWithInteger:repositoryYear] 
                             waitUntilDone:NO];

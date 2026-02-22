@@ -343,7 +343,7 @@ static Class _UserNotificationClass;
 
 static NSURL * __TLMGPGURL()
 {
-    return [NSURL URLWithString:@"https://www.preining.info/tlgpg/"];
+    return [NSURL URLWithString:@"https://texlive.info/tlgpg/"];
 }
 
 - (void)checkForGPGUpdate
