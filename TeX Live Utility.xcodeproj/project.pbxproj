@@ -1508,7 +1508,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\ncd \"${SRCROOT}/HelpSource\"\n\n# need to clean the old html files out first, since renaming or adding sections\n# will leave the old files html files intact\nif [ -d \"TeX Live Utility Help\" ]; then\n\tpushd .\n\tcd \"TeX Live Utility Help\" && rm *.html\n\tpopd\nfi\n\npython OOhelpify.py \"TeX Live Utility Help.oo3\"\n";
+			shellScript = "\ncd \"${SRCROOT}/HelpSource\"\n\n# need to clean the old html files out first, since renaming or adding sections\n# will leave the old files html files intact\nif [ -d \"TeX Live Utility Help\" ]; then\n\tpushd .\n\tcd \"TeX Live Utility Help\" && rm *.html\n\tpopd\nfi\n\npython3 OOhelpify.py \"TeX Live Utility Help.oo3\"\n";
 		};
 		F9B396400F340E45007F95E9 /* FileView install name */ = {
 			isa = PBXShellScriptBuildPhase;
