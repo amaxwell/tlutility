@@ -130,15 +130,20 @@ def notarize_dmg_or_zip(dmg_path):
     """dmg_path: zip file or dmg file"""
     # xcrun altool --notarize-app --primary-bundle-id com.mac.amaxwell.tlu --username amaxwell@mac.com --password @keychain:AC_PASSWORD --output-format xml --file foo.zip
     # https://developer.apple.com/documentation/technotes/tn3147-migrating-to-the-latest-notarization-tool
+    # this is what the documentation refers to as "credentials," a bunch of mandatory arguments for every invocation
     NOTARYTOOL_CREDENTIALS=["--apple-id", "amaxwell@mac.com", "--team-id", "966Z24PX4J", "--keychain-profile", "Notarization password"]
+    
+    # can be used to test keychain:
     # xcrun notarytool history --apple-id amaxwell@mac.com --team-id 966Z24PX4J --keychain-profile "Notarization password"
+    
     notarize_cmd = ["xcrun", "notarytool", "submit"] +  NOTARYTOOL_CREDENTIALS + ["--wait", dmg_path]
     notarize_task = Popen(notarize_cmd, cwd=SOURCE_DIR, stdout=sys.stdout, stderr=sys.stderr)
     [output, error] = notarize_task.communicate()
     rc = notarize_task.returncode
-    print("altool --notarize-app exited with status %s: %s" % (rc, error))
+    print("notarytool exited with status %s: %s" % (rc, error))
     assert rc == 0, "notarization failed"
 
+    # something like this will pull the log, but it's just a bunch of json crap
     # xcrun notarytool log --apple-id amaxwell@mac.com --team-id 966Z24PX4J --keychain-profile "Notarization password" 9ff9491b-3979-4765-aa7f-96cb69c038d
 
 def create_tarball_of_application(newVersionNumber):
