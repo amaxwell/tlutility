@@ -224,7 +224,8 @@ static NSURL *__TLMTLNetURL(NSString *mirrorURLString)
             }
         }
         
-        for (NSString *countryName in countryNodes)
+        // revisiting this 15 years later: sort countries alphabetically since the euros are all mixed up
+        for (NSString *countryName in [[countryNodes allKeys] sortedArrayUsingSelector:@selector(compare:)])
             [continentNode addChild:[countryNodes objectForKey:countryName]];
         
         [_mirrorRoot addChild:continentNode];
