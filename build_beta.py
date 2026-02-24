@@ -128,58 +128,18 @@ def codesign():
     
 def notarize_dmg_or_zip(dmg_path):
     """dmg_path: zip file or dmg file"""
-    
-    notarize_cmd = ["xcrun", "altool", "--notarize-app", "--primary-bundle-id", "com.mac.amaxwell.tlu", "--username", "amaxwell@mac.com", "--password",  "@keychain:AC_PASSWORD", "--output-format", "xml", "--file", dmg_path]
-    notarize_task = Popen(notarize_cmd, cwd=SOURCE_DIR, stdout=PIPE, stderr=PIPE)
+    # xcrun altool --notarize-app --primary-bundle-id com.mac.amaxwell.tlu --username amaxwell@mac.com --password @keychain:AC_PASSWORD --output-format xml --file foo.zip
+    # https://developer.apple.com/documentation/technotes/tn3147-migrating-to-the-latest-notarization-tool
+    NOTARYTOOL_CREDENTIALS=["--apple-id", "amaxwell@mac.com" "--team-id" "966Z24PX4J" "--keychain-profile" "Notarization password"]
+    # xcrun notarytool history --apple-id amaxwell@mac.com --team-id 966Z24PX4J --keychain-profile "Notarization password"
+    notarize_cmd = ["xcrun", "notarytool", "submit"] +  NOTARYTOOL_CREDENTIALS + ["--wait", dmg_path]
+    notarize_task = Popen(notarize_cmd, cwd=SOURCE_DIR, stdout=sys.stdout, stderr=sys.stderr)
     [output, error] = notarize_task.communicate()
     rc = notarize_task.returncode
     print("altool --notarize-app exited with status %s: %s" % (rc, error))
     assert rc == 0, "notarization failed"
-    
-    output_stream = io.BytesIO(output)
-    output_pl = plistlib.readPlist(output_stream)
-    output_stream.close()
-    sys.stderr.write("%s\n" % (output))
-    assert "notarization-upload" in output_pl, "missing notarization-upload key in reply %s" % (output)
-    
-    request_uuid = output_pl["notarization-upload"]["RequestUUID"]
-    
-    while True:
-    
-        sleep(20)
-        
-        # xcrun altool --notarization-info 401e7e6d-7bce-4e0a-87bd-bcb17b40bf97 --username amaxwell@mac.com --password @keychain:AC_PASSWORD
-        
-        notarize_cmd = ["xcrun", "altool", "--notarization-info", request_uuid, "--username", "amaxwell@mac.com", "--password",  "@keychain:AC_PASSWORD", "--output-format", "xml"]
-        notarize_task = Popen(notarize_cmd, cwd=SOURCE_DIR, stdout=PIPE, stderr=PIPE)
-        [output, error] = notarize_task.communicate()
-        rc = notarize_task.returncode
-        assert rc == 0, "status request failed"
-        
-        output_stream = io.BytesIO(output)
-        output_pl = plistlib.readPlist(output_stream)
-        assert "notarization-info" in output_pl, "missing notarization-upload key in reply %s" % (output)
-        status = output_pl["notarization-info"]["Status"]
-            
-        if status == "invalid":
-            # open the URL
-            log_url = output_pl["notarization-info"]["LogFileURL"]
-            Popen(["/usr/bin/open", "-a", "Safari", log_url])
-            break
-        elif status == "in progress":
-            sys.stderr.write("notarization status not available yet for %s\n" % (request_uuid))
-            continue
-        else:
-            # staple?
-            sys.stderr.write("notarization succeeded\n")
-            sys.stdout.write("%s\n" % (output))
-                        
-            log_url = output_pl["notarization-info"]["LogFileURL"]
-            Popen(["/usr/bin/open", "-a", "Safari", log_url])
-            
-            break
-        
-        
+
+    # xcrun notarytool log --apple-id amaxwell@mac.com --team-id 966Z24PX4J --keychain-profile "Notarization password" 9ff9491b-3979-4765-aa7f-96cb69c038d
 
 def create_tarball_of_application(newVersionNumber):
     
