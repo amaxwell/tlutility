@@ -27,11 +27,11 @@
 #
 # $Header: svn+ssh://source.omnigroup.com/Source/svn/Omni/trunk/Staff/wvh/Helpify/OOhelpify.py 137210 2010-08-12 01:42:01Z wvh $
 
-import sys, os, shutil, re, commands, codecs
+import sys, os, shutil, re, subprocess, codecs
 from xml.dom.minidom import parseString
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
+#reload(sys)
+#sys.setdefaultencoding('utf-8')
 
 TEXT_NODE = 3
 IMAGE_PATH = "HelpImages/"
@@ -66,7 +66,7 @@ def fileHeader(theFile, title, robots="", isTop=False, url="", description=""):
         'title': title
         }
     
-    print >> theFile, """<html>
+    print("""<html>
 
     <head>
         <meta http-equiv="content-type" content="text/html;charset=utf-8">
@@ -81,19 +81,19 @@ def fileHeader(theFile, title, robots="", isTop=False, url="", description=""):
     'topString': topString,
     'robots': robots,
     'description': description
-    }
+    }, file=theFile)
 
 
 def fileFooter(theFile):
     """Print to a file the stuff we need at the bottom of an HTML document."""
-    print >> theFile, """
+    print("""
     </body>
-</html>"""
+</html>""", file=theFile)
 
 
 def fileFrames(theFile, title, anchor):
     """Write to a file the frameset to hold a table of contents."""
-    print >> theFile, """<html>
+    print("""<html>
 
     <head>
         <meta http-equiv="content-type" content="text/html;charset=utf-8">
@@ -116,7 +116,7 @@ def fileFrames(theFile, title, anchor):
     """ % {
     'title': title,
     'anchor': anchor
-    }
+    }, file=theFile)
 
 
 def digItem(theItem, level, inheritedStyle=[], destReached=False):
@@ -220,7 +220,7 @@ def digItem(theItem, level, inheritedStyle=[], destReached=False):
                             for pNode in findSubNodes(textNode, 'p'):
                                 for runNode in findSubNodes(pNode, 'run'):
                                     for litNode in findSubNodes(runNode, 'lit'):
-                                        oneKey = unicode(litNode.firstChild.nodeValue)
+                                        oneKey = litNode.firstChild.nodeValue
                     for childrenNode in findSubNodes(itemNode, 'children'):
                         for itemNode in findSubNodes(childrenNode, 'item'):
                             for valuesNode in findSubNodes(itemNode, 'values'):
@@ -228,7 +228,7 @@ def digItem(theItem, level, inheritedStyle=[], destReached=False):
                                     for pNode in findSubNodes(textNode, 'p'):
                                         for runNode in findSubNodes(pNode, 'run'):
                                             for litNode in findSubNodes(runNode, 'lit'):
-                                                oneValue = unicode(litNode.firstChild.nodeValue)
+                                                oneValue = litNode.firstChild.nodeValue
                                                 if oneValue == "None": oneValue = litNode.firstChild.getAttribute("href")
                                                 if oneKey == "Image Path": IMAGE_PATH = oneValue
                                                 elif oneKey == "Company URL": COMPANY_URL = oneValue
@@ -265,11 +265,11 @@ def digItem(theItem, level, inheritedStyle=[], destReached=False):
                 
             fileHeader(level2File, text, roboString, isTop=False, url=newFileName, description=abstract)
             
-            print >> level2File, """
+            print("""
             <div class="%(classes)s">
             """ % {
             'classes': ' '.join(divStyles)
-            }
+            }, file=level2File)
             
             subTextList = []
             
@@ -293,25 +293,25 @@ def digItem(theItem, level, inheritedStyle=[], destReached=False):
             
             if destReached:
                 for subText in subTextList:
-                    print >> level2File, subText['text']
+                    print(subText['text'], file=level2File)
             else:
-                print >> level2File, '        <h2>' + text + '</h2>'
-                print >> level2File, '        <ul>'
+                print('        <h2>' + text + '</h2>', file=level2File)
+                print('        <ul>', file=level2File)
                 for subText in subTextList:
                     target = "_top"
                     #if level >= 2 and not subText['destination']:
                     #    target = "right"
                     frameness = ''
-                    print >> level2File, '<li><a href="%(anchor)s.html" target="%(target)s">%(text)s</a></li>' % {
+                    print('<li><a href="%(anchor)s.html" target="%(target)s">%(text)s</a></li>' % {
                         'anchor': subText['anchor'] + frameness,
                         'target': target,
                         'text': subText['text']
-                        }          
-                print >> level2File, '        </ul>'
+                        }, file=level2File)
+                print('        </ul>', file=level2File)
                 
-            print >> level2File, """
+            print("""
             </div>
-            """
+            """, file=level2File)
             
             #make a navi thingy; suppress this stuff if you are going to index, then emit the help again with the links in it
             
@@ -327,31 +327,31 @@ def digItem(theItem, level, inheritedStyle=[], destReached=False):
                     nextTitle = itemText(theItem.nextSibling.nextSibling)
                     nextAnchor = scrubAnchor(nextTitle)
                 
-                print >> level2File, """
+                print("""
             <div class="bottom-nav">
-            """
+            """, file=level2File)
                 
                 if prevAnchor:
-                    print >> level2File, """
+                    print("""
                     <span class="left-nav"><a href="%(anchor)s.html">← %(title)s</a></span>
                 """ % {
                     'anchor': prevAnchor,
                     'title': prevTitle
-                    }
+                    }, file=level2File)
                 
                 if nextAnchor:
-                    print >> level2File, """
+                    print("""
                     <span class="right-nav"><a href="%(anchor)s.html">%(title)s →</a></span>
                 """ % {
                     'anchor': nextAnchor,
                     'title': nextTitle
-                    }
+                    }, file=level2File)
                     
                 #  <a href="top.html">Top ↑</a>      
-                print >> level2File, """
+                print("""
                 &nbsp;<br/>&nbsp;
             </div>
-            """
+            """, file=level2File)
             
             #end navi thingy
             
@@ -413,7 +413,7 @@ def itemText(theItem, style=None):              # find out the text of an item a
 
 def evaluateLeaf(theElement):           # find out if an element is text or attachment and send back the appropriate html
     if (theElement.nodeType == TEXT_NODE):
-        htmlText = unicode(theElement.toxml())
+        htmlText = theElement.toxml()
         htmlText = htmlText.replace("""“""", "&ldquo;")
         htmlText = htmlText.replace("""”""", "&rdquo;")
         htmlText = htmlText.replace("""‘""", "&lsquo;")
@@ -504,7 +504,7 @@ def main():
                     tocFile = open(outputPath + '/top.html', 'w')
                     fileHeader(tocFile, bookTitle, """<meta name="robots" content="noindex">""", isTop=True, url='top.html')
                     
-                    print >> tocFile, """
+                    print("""
                         <div class="top-all">
                             <div class="top-title">
                                 <img src="%(imagePath)sIcon.png" alt="Application Icon" height="128" width="128" border="0">
@@ -517,7 +517,7 @@ def main():
                         'imagePath': IMAGE_PATH,
                         'bookTitle': bookTitle,
                         'url': COMPANY_URL
-                        }
+                        },  file=tocFile)
                     
                     for childrenNode in findSubNodes(oneNode, 'children'):
                         for itemNode in findSubNodes(childrenNode, 'item'):
@@ -528,16 +528,16 @@ def main():
                             #    fileFrames(frameFile, subText['text'], subText['anchor'])
                             #    frameness = 'frame'
                             if subText['anchor']:
-                                print >> tocFile, '<li><a href="%(anchor)s.html">%(text)s</a></li>' % {
+                                print('<li><a href="%(anchor)s.html">%(text)s</a></li>' % {
                                     'anchor': subText['anchor'] + frameness,
                                     'text': subText['text']
-                                    }
+                                    }, file=tocFile)
                     
-                    print >> tocFile, """
+                    print("""
                                 </ul>
                             </div>
                         </div>
-                    """
+                    """, file=tocFile)
                     
                     fileFooter(tocFile)
                     tocFile.close()
@@ -545,22 +545,19 @@ def main():
             # create a help index on the iteration that has no navi
             if not oneNaviIteration:
                 # In case the user has an atypical "/Developer" directory 
-                developerDirPath = commands.getoutput("""/usr/bin/xcode-select -print-path""")
-                escapedOutputPath = outputPath.replace(' ', '\ ')
+                developerDirPath = subprocess.check_output(["/usr/bin/xcode-select", "-print-path"])
+                escapedOutputPath = outputPath
 
                 # On 10.6 and later we can use the hiutil tool and avoid the stuck UI that
                 # occurs when using "Help Indexer".
                 indexerToolPath = "/usr/bin/hiutil"
-                if os.path.exists(indexerToolPath): 
-                    helpBookOutputFileName = bookTitle.replace(' ', '\ ') + ".helpindex"
-                    escapedHelpIndexPath = escapedOutputPath + helpBookOutputFileName
-                    indexerCommandLine = """%s %s %s %s""" % (indexerToolPath, INDEXER_ARGS, escapedHelpIndexPath, escapedOutputPath)
-                else:
-                    indexerToolPath = developerDirPath + """/Applications/Utilities/Help\ Indexer.app/Contents/MacOS/Help\ Indexer"""                    
-                    indexerCommandLine = """%s %s""" % (indexerToolPath, escapedOutputPath)
+                helpBookOutputFileName = bookTitle + ".helpindex"
+                escapedHelpIndexPath = escapedOutputPath + helpBookOutputFileName
+                indexerCommandLine = [indexerToolPath,] + list(INDEXER_ARGS.split()) + [escapedHelpIndexPath, escapedOutputPath]
+
                 
-                sys.stderr.write("%s\n" % (commands.getoutput(indexerCommandLine))) 
-                print indexerCommandLine
+                sys.stderr.write("%s\n" % (subprocess.check_output(indexerCommandLine))) 
+                print("%s" % (indexerCommandLine))
         
         # check that all links are hooked up
         links.sort()
@@ -575,7 +572,7 @@ def main():
             for oneLink in anchorlessLinks:
                 sys.stderr.write("OOhelpify.py:1: warning: anchorless link: \"%s\"\n" % (oneLink))
         else:
-            print "Congratulations, all links are hooked up!"
+            print("Congratulations, all links are hooked up!")
     
     else:
         sys.stderr.write("""usage:\n python OOhelpify.py OutlinerFile.oo3\n""")

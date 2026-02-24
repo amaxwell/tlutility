@@ -15,6 +15,9 @@
 		2020 = "ftp://ftp.tug.org/historic/systems/texlive/2020/tlnet-final/";
 		2021 = "ftp://ftp.tug.org/historic/systems/texlive/2021/tlnet-final/";
 		2022 = "ftp://ftp.tug.org/historic/systems/texlive/2022/tlnet-final/";
+		2023 = "ftp://ftp.tug.org/historic/systems/texlive/2023/tlnet-final/";
+		2024 = "ftp://ftp.tug.org/historic/systems/texlive/2024/tlnet-final/";
+		2025 = "ftp://ftp.tug.org/historic/systems/texlive/2025/tlnet-final/";
 	};
 	CriticalMirror = "https://tug.org/texlive/tlcritical";
 }

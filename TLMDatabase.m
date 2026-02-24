@@ -42,8 +42,8 @@
 #import "TLMDatabasePackage.h"
 #import "TLMPackageNode.h"
 #import "TLMEnvironment.h"
-#import <WebKit/WebKit.h>
 #import "TLMSizeFormatter.h"
+#import "TLMPreferenceController.h"
 
 #define MIN_DATA_LENGTH 2048
 #define URL_TIMEOUT     30
@@ -72,7 +72,6 @@ NSString * const TLMDatabaseVersionCheckComplete = @"TLMDatabaseVersionCheckComp
 static NSMutableSet *_databases = nil;
 static NSLock       *_databasesLock = nil;
 static double        _dataTimeout = URL_TIMEOUT;
-static NSString     *_userAgent = nil;
 
 + (void)initialize
 {
@@ -86,11 +85,6 @@ static NSString     *_userAgent = nil;
             _dataTimeout = round([dataTimeout doubleValue]);
             TLMLog(__func__, @"Using custom database download timeout of %.0f seconds", _dataTimeout);
         }
-        
-        // get a user-agent for the default URL, to avoid hardcoding any framework versions
-        WebView *wv = [[WebView alloc] initWithFrame:NSMakeRect(0, 0, 1, 1)];
-        _userAgent = [[wv userAgentForURL:[[TLMEnvironment currentEnvironment] defaultServerURL]] copy];
-        [wv release];
     }
 }
 
@@ -406,14 +400,13 @@ static NSString     *_userAgent = nil;
         
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[self _tlpdbURL]];
         [request setTimeoutInterval:URL_TIMEOUT];
+        [request addValue:[[NSUserDefaults standardUserDefaults] stringForKey:TLMUserAgentPreferenceKey] forHTTPHeaderField:@"User-Agent"];
+        
         // useful for debugging when behind a caching proxy
 #if 0
         [request addValue:@"no-cache" forHTTPHeaderField:@"Pragma"];
         [request addValue:@"no-cache" forHTTPHeaderField:@"Cache-Control"];
 #endif
-        // for bug #73; that mirror was returning an http 400 with the default user agent set by CFNetwork
-        [request addValue:_userAgent ? _userAgent : @"TeX Live Utility" forHTTPHeaderField:@"User-Agent"];
-
         
         _failed = NO;
         TLMLog(__func__, @"Checking the repository version.  Please be patient.");
@@ -546,14 +539,13 @@ static NSString *__TLMTemporaryFile()
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[self _tlpdbURL]];
     [request setTimeoutInterval:URL_TIMEOUT];
+    [request addValue:[[NSUserDefaults standardUserDefaults] stringForKey:TLMUserAgentPreferenceKey] forHTTPHeaderField:@"User-Agent"];
+    
     // useful for debugging when behind a caching proxy
 #if 0
     [request addValue:@"no-cache" forHTTPHeaderField:@"Pragma"];
     [request addValue:@"no-cache" forHTTPHeaderField:@"Cache-Control"];
 #endif
-    // for bug #73; that mirror was returning an http 400 with the default user agent set by CFNetwork
-    [request addValue:_userAgent ? _userAgent : @"TeX Live Utility" forHTTPHeaderField:@"User-Agent"];
-    
     
     _failed = NO;
     TLMLog(__func__, @"Downloading remote package database.");

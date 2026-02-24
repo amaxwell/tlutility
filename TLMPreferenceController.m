@@ -60,6 +60,7 @@ NSString * const TLMEnableUserUpdmapPreferenceKey = @"TLMEnableUserUpdmapPrefere
 NSString * const TLMDisableUpdmapAlertPreferenceKey = @"TLMDisableUpdmapAlertPreferenceKey"; /* NO                     */
 NSString * const TLMDisableGPGAlertPreferenceKey = @"TLMDisableGPGAlertPreferenceKey";       /* 0                      */
 NSString * const TLMDisableUmaskWarningKey = @"TLMDisableUmaskWarningKey";         /* NO                               */
+NSString * const TLMUserAgentPreferenceKey = @"TLMUserAgentPreferenceKey";         /* texlive/TeX Live Utility         */
 
 #define URL_TIMEOUT   30.0
 
