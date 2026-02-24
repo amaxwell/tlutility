@@ -130,7 +130,7 @@ def notarize_dmg_or_zip(dmg_path):
     """dmg_path: zip file or dmg file"""
     # xcrun altool --notarize-app --primary-bundle-id com.mac.amaxwell.tlu --username amaxwell@mac.com --password @keychain:AC_PASSWORD --output-format xml --file foo.zip
     # https://developer.apple.com/documentation/technotes/tn3147-migrating-to-the-latest-notarization-tool
-    NOTARYTOOL_CREDENTIALS=["--apple-id", "amaxwell@mac.com" "--team-id" "966Z24PX4J" "--keychain-profile" "Notarization password"]
+    NOTARYTOOL_CREDENTIALS=["--apple-id", "amaxwell@mac.com", "--team-id", "966Z24PX4J", "--keychain-profile", "Notarization password"]
     # xcrun notarytool history --apple-id amaxwell@mac.com --team-id 966Z24PX4J --keychain-profile "Notarization password"
     notarize_cmd = ["xcrun", "notarytool", "submit"] +  NOTARYTOOL_CREDENTIALS + ["--wait", dmg_path]
     notarize_task = Popen(notarize_cmd, cwd=SOURCE_DIR, stdout=sys.stdout, stderr=sys.stderr)
