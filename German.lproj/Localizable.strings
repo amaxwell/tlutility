@@ -528,3 +528,15 @@
 
 /* two integer specifiers */
 "Your TeX Live version is %lu, but your default repository URL appears to be for TeX Live %lu.  You need to manually upgrade to a newer version of TeX Live, as there will be no further updates for your version." = "Ihre Version von TeX Live ist %1$lu. Ihre Standard-Repository ist allerdings offenbar für TeX Live %2$lu vorgesehen.  Sie sollten manuell auf eine neuere Version von TeX Live aktualisieren, da Ihre Version keine weiteren Aktualisierungen erhalten wird.";
+
+/* alert button title */
+"Just Crash" = "Just Crash";
+
+/* alert button title */
+"MacTeX Website" = "MacTeX Website";
+
+/* alert sheet title */
+"TeX Live Manager Database Not Found." = "TeX Live Manager Database Not Found.";
+
+/* alert message text */
+"The TeX Live Manager database could not be found. Package managers such as Homebrew may install a lobotomized version of TeX Live that can only be updated using the package manager itself. Please install TeX Live using MacTeX, BasicTeX, or the standard UNIX installer." = "The TeX Live Manager database could not be found. Package managers such as Homebrew may install a lobotomized version of TeX Live that can only be updated using the package manager itself. Please install TeX Live using MacTeX, BasicTeX, or the standard UNIX installer.";

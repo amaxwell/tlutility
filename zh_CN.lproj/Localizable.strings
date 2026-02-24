@@ -527,3 +527,15 @@
 
 /* alert title */
 "Update security validation of packages?" = "Update security validation of packages?";
+
+/* alert button title */
+"Just Crash" = "Just Crash";
+
+/* alert button title */
+"MacTeX Website" = "MacTeX Website";
+
+/* alert sheet title */
+"TeX Live Manager Database Not Found." = "TeX Live Manager Database Not Found.";
+
+/* alert message text */
+"The TeX Live Manager database could not be found. Package managers such as Homebrew may install a lobotomized version of TeX Live that can only be updated using the package manager itself. Please install TeX Live using MacTeX, BasicTeX, or the standard UNIX installer." = "The TeX Live Manager database could not be found. Package managers such as Homebrew may install a lobotomized version of TeX Live that can only be updated using the package manager itself. Please install TeX Live using MacTeX, BasicTeX, or the standard UNIX installer.";

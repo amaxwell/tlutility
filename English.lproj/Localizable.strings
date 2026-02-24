@@ -217,6 +217,9 @@
 "Local version is newer " = "Local version is newer ";
 
 /* alert button title */
+"MacTeX Website" = "MacTeX Website";
+
+/* alert button title */
 "Manually" = "Manually";
 
 /* value in tableview */
@@ -373,6 +376,9 @@
 /* No comment provided by engineer. */
 "TeX Live 2008 is not supported" = "TeX Live 2008 is not supported";
 
+/* alert sheet title */
+"TeX Live Manager Database Not Found." = "TeX Live Manager Database Not Found.";
+
 /* alert title */
 "TeX Live paper size does not match system default" = "TeX Live paper size does not match system default";
 
@@ -399,6 +405,9 @@
 
 /* alert message text */
 "The TeX Live infrastructure packages have the same version after updating.  This could be a packaging problem on the server.  If you see this message repeatedly, wait until the problem is resolved in TeX Live before attempting another update." = "The TeX Live infrastructure packages have the same version after updating.  This could be a packaging problem on the server.  If you see this message repeatedly, wait until the problem is resolved in TeX Live before attempting another update.";
+
+/* alert message text */
+"The TeX Live Manager database could not be found. Package managers such as Homebrew may install a lobotomized version of TeX Live that can only be updated using the package manager itself. Please install TeX Live using MacTeX, BasicTeX, or the standard UNIX installer." = "The TeX Live Manager database could not be found. Package managers such as Homebrew may install a lobotomized version of TeX Live that can only be updated using the package manager itself. Please install TeX Live using MacTeX, BasicTeX, or the standard UNIX installer.";
 
 /* alert message text in preferences */
 "The tlmgr and kpsewhich tools must be present in this folder for basic functionality." = "The tlmgr and kpsewhich tools must be present in this folder for basic functionality.";

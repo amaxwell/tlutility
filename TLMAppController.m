@@ -312,15 +312,36 @@ static void __TLMMigrateBundleIdentifier()
     
     // hack for TL 2017 breakage; has to be done before TLMEnvironment is used
     if ([TLMEnvironment localDatabasePath] && [TLMEnvironment localDatabaseIsReadable] == NO) {
-        NSArray *args = [NSArray arrayWithObjects:@"644", [TLMEnvironment localDatabasePath], nil];
-        // always run as root, so we don't create a TLMEnvironment
-        TLMAuthorizedOperation *op = [[TLMAuthorizedOperation alloc] initWithAuthorizedCommand:@"/bin/chmod" options:args];
-        TLMLog(__func__, @"Fixing database permissions at %@…", [TLMEnvironment localDatabasePath]);
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(_handleFixPermissionsFinishedNotification:)
-                                                     name:TLMOperationFinishedNotification
-                                                   object:op];
-        [[TLMReadWriteOperationQueue defaultQueue] addOperation:op];
+        
+        if ([[NSFileManager defaultManager] fileExistsAtPath:[TLMEnvironment localDatabasePath]] == NO) {
+            
+            /*
+             The Homebrew dipshits ship a lobotomized TeX Live that includes tlmgr, but does not include a tlpdb
+             https://github.com/amaxwell/tlutility/issues/144
+             Shipping without tlmgr would be more understandable than shipping a tlmgr that just doesn't work.
+             */
+            TLMLog(__func__, @"No tlpdb at %@. May be Homebrew's lobotomized TeX Live.", [TLMEnvironment localDatabasePath]);
+            NSAlert *alert = [[NSAlert new] autorelease];
+            [alert setMessageText:NSLocalizedString(@"TeX Live Manager Database Not Found.", @"alert sheet title")];
+            [alert setInformativeText:NSLocalizedString(@"Package managers such as Homebrew may install a lobotomized version of TeX Live that can only be updated using the package manager itself. Please install TeX Live using MacTeX, BasicTeX, or the standard UNIX installer.", @"alert message text")];
+            [alert addButtonWithTitle:NSLocalizedString(@"MacTeX Website", @"alert button title")];
+            NSModalResponse rv = [alert runModal];
+            if (NSAlertFirstButtonReturn == rv)
+                [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"https://tug.org/mactex"]];
+                
+        }
+        else {
+            // original TL 2017 hack
+            NSArray *args = [NSArray arrayWithObjects:@"644", [TLMEnvironment localDatabasePath], nil];
+            // always run as root, so we don't create a TLMEnvironment
+            TLMAuthorizedOperation *op = [[TLMAuthorizedOperation alloc] initWithAuthorizedCommand:@"/bin/chmod" options:args];
+            TLMLog(__func__, @"Fixing database permissions at %@…", [TLMEnvironment localDatabasePath]);
+            [[NSNotificationCenter defaultCenter] addObserver:self
+                                                     selector:@selector(_handleFixPermissionsFinishedNotification:)
+                                                         name:TLMOperationFinishedNotification
+                                                       object:op];
+            [[TLMReadWriteOperationQueue defaultQueue] addOperation:op];
+        }
     }
     else {
         [self _continueApplicationDidFinishLaunching];
