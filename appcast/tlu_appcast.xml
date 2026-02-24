@@ -1020,5 +1020,21 @@
             <sparkle:minimumSystemVersion>10.9.0</sparkle:minimumSystemVersion>
             <enclosure url="https://github.com/amaxwell/tlutility/releases/download/1.54/TeX.Live.Utility.app-1.54.zip" sparkle:version="1.54" length="41009200" type="application/octet-stream" sparkle:dsaSignature="MCwCFBL1j5MZIUEapH+Zyec63ktYn2HPAhRUZ0TYfLvWR/8cxUK8i5aP78zH2Q=="></enclosure>
         </item>
+        <item>
+            <title>Version 1.55</title>
+            <description><![CDATA[
+    	    <h3>Changes Since 1.54</h3>
+    	        <li>Fix bug 137, homepage link in Help Book.</li>
+                <li>First release in a long time, since I don't use TeX anymore and resent the very idea of paying Apple annually for the privilege of giving away free and open-source software. Also, I'm really lazy. Please accept my apologies for all the annoying issues you've encountered in this mission-critical software.</li>
+    	        <li>Updated mirror list, which was three years out of date.</li>
+    	        <li>Added missing legacy mirrors, which was even more out of date.</li>
+    	        <li>Added an alert on startup when user tries Homebrew's lobotomized MacTeX, because those lunatics left tlmgr but removed its database. Thanks for nothing, guys. Bug 142 and 144.</li>
+    	        <li>Use a custom user-agent to work around the Anubis bot trap on texlive.info. Can't wait to see what else breaks because of this, thanks to the profusion of degenerate Artificial Insemination fetishists scraping websites to feed their models.</li>
+    	        <li>Lists of countries in Repository/Continent are now sorted. No idea how you people let me get away with that one for the last fifteen years.</li>
+            ]]></description>
+            <pubDate>Tue, 24 Feb 2026 18:45:10 +0000</pubDate>
+            <sparkle:minimumSystemVersion>10.9.0</sparkle:minimumSystemVersion>
+            <enclosure url="https://github.com/amaxwell/tlutility/releases/download/1.55/TeX.Live.Utility.app-1.55.zip" sparkle:version="1.55" length="41009935" type="application/octet-stream" sparkle:dsaSignature="MCwCFAK30MDNOfEUmOWg5E/Yv/Wx/jbAAhRU1tsu3JtmMlJeid40IvyU/xAcWg=="></enclosure>
+        </item>
     </channel>
 </rss>
