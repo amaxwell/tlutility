@@ -7,7 +7,7 @@
 	<key>com.googlecode.mactlmgr</key>
 	<dict>
 		<key>texliveyear</key>
-		<string>2021</string>
+		<string>2026</string>
 	</dict>
 	<key>documentation</key>
 	<array/>
@@ -228,7 +228,7 @@
 			<key>type</key>
 			<string>variable</string>
 			<key>value</key>
-			<string>/usr/local/texlive/2021</string>
+			<string>/usr/local/texlive/2026</string>
 		</dict>
 		<dict>
 			<key>key</key>
@@ -238,7 +238,7 @@
 			<key>type</key>
 			<string>variable</string>
 			<key>value</key>
-			<string>~/Library/texlive/2021/texmf-config</string>
+			<string>~/Library/texlive/2026/texmf-config</string>
 		</dict>
 		<dict>
 			<key>key</key>
@@ -268,7 +268,7 @@
 			<key>type</key>
 			<string>variable</string>
 			<key>value</key>
-			<string>/usr/local/texlive/2021/texmf-config</string>
+			<string>/usr/local/texlive/2026/texmf-config</string>
 		</dict>
 		<dict>
 			<key>key</key>
@@ -278,7 +278,7 @@
 			<key>type</key>
 			<string>variable</string>
 			<key>value</key>
-			<string>/usr/local/texlive/2021/texmf-var</string>
+			<string>/usr/local/texlive/2026/texmf-var</string>
 		</dict>
 		<dict>
 			<key>key</key>
@@ -288,7 +288,7 @@
 			<key>type</key>
 			<string>variable</string>
 			<key>value</key>
-			<string>~/Library/texlive/2021/texmf-var</string>
+			<string>~/Library/texlive/2026/texmf-var</string>
 		</dict>
 	</array>
 </dict>
