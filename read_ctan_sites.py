@@ -41,7 +41,10 @@ from tempfile import NamedTemporaryFile
 from subprocess import call as launch_task
 from urlparse import urlsplit
 
-SITES_URL = "http://dante.ctan.org/tex-archive/CTAN.sites"
+# new URLS as of 24 Feb 2026 came from here:
+# https://tug.org/pipermail/tex-live-commits/2023-April/025521.html
+
+SITES_URL = "https://ctan.org/tex-archive/CTAN.sites"
 
 JUNK    = 0 << 1
 COUNTRY = 1 << 2
@@ -100,9 +103,10 @@ def mirmon_sites():
     
     outname = dst.name
     
-    ret = launch_task(["/usr/bin/rsync", "rsync://comedy.dante.de/MirMon/mirmon.state", outname])
+    ret = launch_task(["/usr/bin/rsync", "rsync://rsync.dante.ctan.org/MirMon/mirmon.state", outname])
     
     if ret:
+        print "#WARNING: mirmon rsync failed"
         return [], []
     
     good_mirror_urls = []
@@ -193,12 +197,13 @@ if __name__ == '__main__':
                 state &= ~MIRROR
             
             saved_line = line
-            
+        
+        assert len(continents) > 0, "no continents in CTAN.sites"
             
         good_mirmon_urls, bad_mirmon_urls = mirmon_sites()
         bad_mirmon_hosts = set([urlsplit(url).hostname for url in bad_mirmon_urls])
-        print bad_mirmon_urls
-        print good_mirmon_urls
+        print "bad", bad_mirmon_urls
+        print "good", good_mirmon_urls
         
         for continent in continents:
             
