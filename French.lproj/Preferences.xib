@@ -63,7 +63,7 @@
                     <button toolTip="If unchecked, pass --no-auto-install to tlmgr to avoid installing packages added to the server." misplaced="YES" id="47">
                         <rect key="frame" x="18" y="38" width="478" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title="Ajouter les nouveaux paquets pour s'harmoniser au serveur pendant la màj." bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="48">
+                        <buttonCell key="cell" type="check" title="Ajouter les nouveaux paquets pour correspondre au serveur pendant la màj." bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="48">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -74,7 +74,7 @@
                     <button toolTip="If unchecked, pass --no-auto-remove to tlmgr to avoid removing packages that have been removed on the server." misplaced="YES" id="49">
                         <rect key="frame" x="18" y="18" width="484" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title="Supprimer les paquets effacés pour s'harmoniser au serveur pendant la màj." bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="50">
+                        <buttonCell key="cell" type="check" title="Supprimer les paquets effacés pour correspondre au serveur pendant la màj." bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="50">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -85,7 +85,7 @@
                     <button toolTip="If checked, TeX Live Utility will run the updmap command after TeX Live is modified." misplaced="YES" id="59">
                         <rect key="frame" x="18" y="78" width="413" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title="Activer automatiquement les polices dans mon dossier peronnel." bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="60">
+                        <buttonCell key="cell" type="check" title="Activer automatiquement les polices dans mon dossier personnel." bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="60">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
