@@ -89,7 +89,7 @@
                             <menuItem isSeparatorItem="YES" id="74" userLabel="2">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Format d'impression..." keyEquivalent="P" id="77" userLabel="5">
+                            <menuItem title="Format d’impression…" keyEquivalent="P" id="77" userLabel="5">
                                 <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
                                 <connections>
                                     <action selector="runPageLayout:" target="-1" id="87"/>
@@ -151,7 +151,7 @@
                             <menuItem title="Rechercher" id="218">
                                 <menu key="submenu" title="Find" id="220">
                                     <items>
-                                        <menuItem title="Rechercher..." tag="1" keyEquivalent="f" id="209">
+                                        <menuItem title="Rechercher…" tag="1" keyEquivalent="f" id="209">
                                             <connections>
                                                 <action selector="performFindPanelAction:" target="-1" id="241"/>
                                             </connections>
@@ -567,13 +567,13 @@
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="624"/>
-                            <menuItem title="Afficher la barre d'outils" keyEquivalent="t" id="622">
+                            <menuItem title="Afficher la barre d’outils" keyEquivalent="t" id="622">
                                 <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 <connections>
                                     <action selector="toggleToolbarShown:" target="-1" id="625"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Personnaliser la barre d'outils…" id="623">
+                            <menuItem title="Personnaliser la barre d’outils…" id="623">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="runToolbarCustomizationPalette:" target="-1" id="626"/>
