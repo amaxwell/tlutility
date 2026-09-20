@@ -211,8 +211,9 @@ static void log_lines_and_clear(NSMutableData *data, bool is_warning)
 #define ARG_SERVER_NAME 1
 #define ARG_LOG_FLAGS   2
 #define ARG_OP_ADDRESS  3
-#define ARG_CMD         4
-#define ARG_CMD_ARGS    5
+#define ARG_PATH        4
+#define ARG_CMD         5
+#define ARG_CMD_ARGS    6
     
 int main(int argc, char *argv[]) {
     
@@ -274,6 +275,13 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
     
+    if (strlen(argv[ARG_PATH]) == 0) {
+        log_error(@"*** ERROR *** PATH argument required");
+        exit(1);
+    }
+    setenv("PATH", argv[ARG_PATH], 1);
+    log_notice_noparse(@"tlu_ipctask: PATH=%s\n", argv[ARG_PATH]);
+    
     /* Need this after fork(), so fail if we can't get it */
     struct passwd *nobody = getpwnam("nobody");
     if (NULL == nobody) {
@@ -313,6 +321,9 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
     
+    /*
+     sudo -H defaults write com.googlecode.mactlmgr.tlmgr_cwrapper LogEnvironment -bool TRUE
+     */
     if ([[NSUserDefaults standardUserDefaults] boolForKey:@"LogEnvironment"]) {
         NSMutableDictionary *environment = [NSMutableDictionary dictionary];
         char **env = environ;

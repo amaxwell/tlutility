@@ -456,10 +456,10 @@ static BOOL __TLMCheckSignature()
         /*
          *** IMPORTANT: change the arg count offset if tlu_ipctask options change. ***
          
-         Use calloc to zero the arg vector, then add the two required options for tlu_ipctask
+         Use calloc to zero the arg vector, then add the three required options for tlu_ipctask
          before adding the subprocess path and options.  A terminating 0 is required.
          */
-        char **args = NSZoneCalloc([self zone], ([_internal->_options count] + 4), sizeof(char *));
+        char **args = NSZoneCalloc([self zone], ([_internal->_options count] + 5), sizeof(char *));
         int i = 0;
         
         // first argument is the DO server name for IPC
@@ -470,6 +470,9 @@ static BOOL __TLMCheckSignature()
         
         // third argument is address of the operation
         args[i++] = (char *)[[NSString stringWithFormat:@"%lu", (unsigned long)self] saneFileSystemRepresentation];
+        
+        // fourth argument is PATH, since tasks spawned by AEWP on Golden Gate no longer inherit PATH
+        args[i++] = getenv("PATH");
         
         // remaining options are the command to execute and its options
         for (NSString *option in _internal->_options) {
