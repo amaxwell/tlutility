@@ -269,7 +269,7 @@
                 <text>
                   <p>
                     <run>
-                      <lit>TeX Live Utility is a Mac OS X graphical interface for the TeX Live Manager, a program included with recent versions of </lit>
+                      <lit>TeX Live Utility is a macOS graphical interface for the TeX Live Manager, a program included with recent versions of </lit>
                     </run>
                     <run>
                       <lit><cell href="http://www.tug.org/texlive" name="TeX Live" type="link"/></lit>
@@ -1801,7 +1801,7 @@
                         <text>
                           <p>
                             <run>
-                              <lit>The BasicTeX distribution is popular for laptops with limited disk space, and is approximately 100 MB vs. 2 GB for the full MacTeX installation.</lit>
+                              <lit>The BasicTeX distribution is popular for laptops with limited disk space, and is approximately 100 MB vs. 10 GB for the full MacTeX installation.</lit>
                             </run>
                           </p>
                         </text>
@@ -2104,7 +2104,7 @@
                               <lit>tlmgr</lit>
                             </run>
                             <run>
-                              <lit> command-line tool that TeX Live Utility uses. For Mac OS X 10.11 and later, the correct path is /</lit>
+                              <lit> command-line tool that TeX Live Utility uses. For OS X 10.11 and later, the correct path is /</lit>
                             </run>
                             <run>
                               <style>
@@ -2113,7 +2113,7 @@
                               <lit>Library/TeX/texbin</lit>
                             </run>
                             <run>
-                              <lit> if you have MacTeX 2015 or later; if you have an earlier version of MacTeX on OS X 10.11, the note below on the standard UNIX installer applies. If you use MacTeX 2014 and earlier on Mac OS X 10.10 and earlier, the setting of </lit>
+                              <lit> if you have MacTeX 2015 or later; if you have an earlier version of MacTeX on OS X 10.11, the note below on the standard UNIX installer applies. If you use MacTeX 2014 and earlier on OS X 10.10 and earlier, the setting of </lit>
                             </run>
                             <run>
                               <style>
@@ -2604,7 +2604,7 @@
                               <lit><cell href="http://www.tug.org/twg/mactex/award/2007/gerben/aboutgwtex.html" name="gwTeX" type="link"/></lit>
                             </run>
                             <run>
-                              <lit>, and is consistent with the extant documentation on TeX for Mac OS X.</lit>
+                              <lit>, and is consistent with the extant documentation on TeX for macOS.</lit>
                             </run>
                           </p>
                         </text>
