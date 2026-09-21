@@ -8,16 +8,16 @@
 "%lu packages are available for update.  Of these, the TeX Live installer packages listed here must be updated first.  Update now?" = "%lu paquets sont disponibles pour mise à jour. Parmi eux, les paquets de l’installeur de TeX Live listés ici seront mis à jour en premier.  Mettre à jour maintenant ?";
 
 /* heading in info panel */
-"\nDoc Files:\n" = "\nDoc fichiers :\n";
+"\nDoc Files:\n" = "\nFichiers de documentation :\n";
 
 /* heading in info panel */
 "\nDocumentation:\n" = "\nDocumentation :\n";
 
 /* heading in info panel */
-"\nRun Files:\n" = "\nRun fichiers :\n";
+"\nRun Files:\n" = "\nFichiers opérationnels :\n";
 
 /* heading in info panel */
-"\nSource Files:\n" = "\nSource fichiers :\n";
+"\nSource Files:\n" = "\nFichiers source :\n";
 
 /* alert text */
 "A newer version of the scheduled update script is available.  Would you like to install it now?" = "Une version plus récente du script de mise à jour programmée est disponible. Voulez-vous l’installer maintenant ?";
@@ -47,7 +47,7 @@
 "Beginning download and installation of packages" = "Début du téléchargement et de l’installation des paquets";
 
 /* No comment provided by engineer. */
-"Beginning download of %.1f kbytes" = "Début du téléchargement de %.1f Ko";
+"Beginning download of %.1f kbytes" = "Début du téléchargement de %.1f ko";
 
 /* alert button title
    button title */
@@ -63,7 +63,7 @@
 "Change command-line default?" = "Changer la ligne de commande par défaut ?";
 
 /* status message*/
-"Changing Documentation Option Failed" = "Changing Documentation Option Failed";
+"Changing Documentation Option Failed" = "Échec de la modification de l’option de documentation";
 
 /* button title in open panel (must be short)
    Menu item title */
@@ -94,7 +94,7 @@
 "Description:\n" = "Description : \n";
 
 /* all caps tableview group title */
-"DOC FILES" = "DOC FILES";
+"DOC FILES" = "FICHIERS DE DOCUMENTATION";
 
 /* button title */
 "Done" = "Terminé";
@@ -139,10 +139,10 @@
 "Forcibly removed " = "Supprimé de force ";
 
 /* alert message text*/
-"If you cancel the installation process, it may leave your TeX installation in an unknown state.  You can ignore this warning and cancel anyway, or keep waiting until the installation finishes." = "Si vous arrêtez l’installation, cela peut laisser votre installation TeX dans un état inconnu.  Vous pouvez ignorer cet avertissement et annuler quand même, ou attendre jusqu’à ce que l'installation finisse.";
+"If you cancel the installation process, it may leave your TeX installation in an unknown state.  You can ignore this warning and cancel anyway, or keep waiting until the installation finishes." = "Si vous arrêtez l’installation, cela peut laisser votre installation TeX dans un état inconnu. Vous pouvez ignorer cet avertissement et annuler quand même, ou attendre jusqu’à ce que l’installation finisse.";
 
 /* alert message text*/
-"If you close the window, the installation process may leave your TeX installation in an unknown state.  You can ignore this warning and close the window, or wait until the installation finishes." = "Si vous fermez la fenêtre, cela peut laisser votre installation TeX dans un état inconnu.  Vous pouvez ignorer cet avertissement et annuler quand même, ou attendre jusqu’à ce que l'installation finisse.";
+"If you close the window, the installation process may leave your TeX installation in an unknown state.  You can ignore this warning and close the window, or wait until the installation finishes." = "Si vous fermez la fenêtre, cela peut laisser votre installation TeX dans un état inconnu. Vous pouvez ignorer cet avertissement et annuler quand même, ou attendre jusqu’à ce que l’installation finisse.";
 
 /* alert message text*/
 "If you have installed TeX Live, you need to tell TeX Live Utility where to find TeX programs. For MacTeX 2015 and later, you should use /Library/TeX/texbin. Change settings now?" = "Si vous avez déjà installé TeX Live, vous avez besoin de dire à TeX Live Utility où trouver les programmes TeX. Pour MacTeX 2015 et au delà, vous devriez utiliser /Library/TeX/texbin. Changer les réglages maintenant ?";
@@ -229,7 +229,7 @@
 "Name" = "Nom";
 
 /* alert title in preferences */
-"Necessary programs for TeX Live do not exist in that folder" = "Necessary programs for TeX Live do not exist in that folder";
+"Necessary programs for TeX Live do not exist in that folder" = "Les programmes nécessaires pour TeX Live n’existent pas dans ce dossier";
 
 /* status for package */
 "Needs removal" = "Suppression nécessaire";
@@ -329,7 +329,7 @@
 "Restore Succeeded" = "La restauration a réussi.";
 
 /* all caps tableview group title */
-"RUN FILES" = "RUN FILES";
+"RUN FILES" = "FICHIERS OPÉRATIONNELS";
 
 /* No comment provided by engineer.*/
 "Running updmap…" = "updmap en fonction…";
@@ -356,7 +356,7 @@
 "Some of these packages cannot be removed." = "Certains de ces paquets ne peuvent être supprimés.";
 
 /* all caps tableview group title */
-"SOURCE FILES" = "SOURCE FILES";
+"SOURCE FILES" = "FICHIERS SOURCE";
 
 /* heading in info panel */
 "Status:" = "Statut :";
@@ -383,7 +383,7 @@
 "The location in the TeX Live database was not changed" = "La localisation dans la base de données TeX Live est inchangée";
 
 /* alert text, two string format specifiers*/
-"The normal umask is %@ and yours is set to %@. This more restrictive umask may cause permission problems with TeX Live." = "L'umask normal est %1$@ et le vôtre est fixé à %2$@. Cet umask plus restrictif pourrait causer des problèmes de permissions avec TeX Live.";
+"The normal umask is %@ and yours is set to %@. This more restrictive umask may cause permission problems with TeX Live." = "L’umask normal est %1$@ et le vôtre est fixé à %2$@. Cet umask plus restrictif pourrait causer des problèmes de permissions avec TeX Live.";
 
 /* alert message text*/
 "The removal process appears to have failed. Would you like to show the log now or ignore this warning?" = "Le processus de suppression semble avoir échoué. Aimeriez-vous afficher le log maintenant ou ignorer cet avertissement ?";
@@ -524,7 +524,7 @@
 "Your TeX Live version is %lu, but your default repository URL appears to be for TeX Live %lu.  You need to manually upgrade to a newer version of TeX Live, as there will be no further updates for your version." = "Votre version de TeX Live est %1$lu, mais l’URL de votre dépôt par défaut semble être celle de TeX Live %2$lu. Vous avez besoin de mettre à jour manuellement vers une version de TeX Live plus récente, car il n’y aura pas de mises à jour ultérieures pour votre version.";
 
 /* alert text */
-"An update is available for GnuPG, which you previously installed for security validation of packages." = "An update is available for GnuPG, which you previously installed for security validation of packages.";
+"An update is available for GnuPG, which you previously installed for security validation of packages." = "Une mise à jour est disponible pour GnuPG, que vous avez précédemment installé pour la validation sécurisée des paquets.";
 
 /* alert title */
 "Update security validation of packages?" = "Update security validation of packages?";
