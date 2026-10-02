@@ -1046,5 +1046,15 @@
             <sparkle:minimumSystemVersion>10.9.0</sparkle:minimumSystemVersion>
             <enclosure url="https://github.com/amaxwell/tlutility/releases/download/1.57/TeX.Live.Utility.app-1.57.zip" sparkle:version="1.57" length="41010470" type="application/octet-stream" sparkle:dsaSignature="MCwCFCjxHzlgi9JPuLuJURfrYLp/Dw1MAhRerugEfAczgMfhY5rXlqCqZRH1+g=="></enclosure>
         </item>
+        <item>
+            <title>Version 1.58</title>
+            <description><![CDATA[
+    	    <h3>Changes Since 1.57</h3>
+    	        <li>Love too release yet another new version with just a single fix for someone else's problem. This time the culprit is Apple, which chose to lobotomize the PATH environment in processes spawned by AuthorizationExecuteWithPrivileges on Golden Gate, thus breaking my code that's worked since 2008. "Enjoy that security theater, kids," I say from my mummified rest on Mojave, where the supply of new software has dried up like the desert itself, along with my programming ability.</li>
+            ]]></description>
+            <pubDate>Fri, 02 Oct 2026 00:41:36 +0000</pubDate>
+            <sparkle:minimumSystemVersion>10.9.0</sparkle:minimumSystemVersion>
+            <enclosure url="https://github.com/amaxwell/tlutility/releases/download/1.58/TeX.Live.Utility.app-1.58.zip" sparkle:version="1.58" length="41009919" type="application/octet-stream" sparkle:dsaSignature="MCwCFAWT4dsqmrc97KbLuUmBZVOhPA2yAhQfThlyd2vi7YmKiXOZxi8htG7EMQ=="></enclosure>
+        </item>
     </channel>
 </rss>
