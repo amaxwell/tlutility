@@ -491,6 +491,18 @@
 				<key>country</key>
 				<string>Czechia</string>
 				<key>name</key>
+				<string>ftp.cvut.cz</string>
+				<key>urls</key>
+				<array>
+					<string>ftp://ftp.cvut.cz/tex-archive/</string>
+					<string>http://ftp.cvut.cz/tex-archive/</string>
+					<string>https://ftp.cvut.cz/CTAN/</string>
+				</array>
+			</dict>
+			<dict>
+				<key>country</key>
+				<string>Czechia</string>
+				<key>name</key>
 				<string>ftp.fi.muni.cz</string>
 				<key>urls</key>
 				<array>
@@ -616,6 +628,16 @@
 				<array>
 					<string>ftp://mirrors.ircam.fr/pub/CTAN/</string>
 					<string>https://mirrors.ircam.fr/pub/CTAN/</string>
+				</array>
+			</dict>
+			<dict>
+				<key>country</key>
+				<string>France</string>
+				<key>name</key>
+				<string>mirror.xjj.sh</string>
+				<key>urls</key>
+				<array>
+					<string>https://mirror.xjj.sh/ctan/</string>
 				</array>
 			</dict>
 			<dict>
@@ -1539,6 +1561,6 @@
 		</array>
 	</dict>
 	<key>timestamp</key>
-	<real>1789879188.751484</real>
+	<real>1790901498.403941</real>
 </dict>
 </plist>
